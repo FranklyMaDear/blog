@@ -15,30 +15,34 @@
                 <div class="animated-emoji">💎</div>
             </div>
             <p class="tagline">Ηλεκτρονικά βιβλία και PDF resources για developers</p>
+            
+            <!-- Κουμπί για Αρχική Σελίδα -->
+            <div class="home-button-container">
+                <a href="index.html" class="home-btn">
+                    🏠 Πίσω στην Αρχική Σελίδα
+                </a>
+            </div>
         </header>
 
-        <nav class="nav-container">
-            <div class="nav-grid">
-                <a href="index.html" class="nav-btn">🏠 Αρχική</a>
-                <a href="articles.html" class="nav-btn">📚 Άρθρα</a>
-                <a href="videos.html" class="nav-btn">🎬 Βίντεο</a>
-                <a href="apps.html" class="nav-btn">📱 Εφαρμογές</a>
-                <a href="games.html" class="nav-btn">🎮 Παιχνίδια</a>
-                <a href="digital-products.html" class="nav-btn active">📚 Digital Books</a>
-            </div>
-        </nav>
-
-        <main class="main-content">
-            <div class="filters-section">
-                <h3>🔍 Φίλτρα Κατηγοριών</h3>
-                <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">Όλα</button>
-                    <button class="filter-btn" data-filter="programming">Προγραμματισμός</button>
-                    <button class="filter-btn" data-filter="webdev">Web Development</button>
-                    <button class="filter-btn" data-filter="free">Δωρεάν</button>
+        <!-- Roll-up Navigation -->
+        <div class="rollup-nav">
+            <button class="rollup-toggle" onclick="toggleNav()">
+                📂 Μενού Πλοήγησης
+                <span class="arrow">▼</span>
+            </button>
+            <div class="nav-container" id="navContainer">
+                <div class="nav-grid">
+                    <a href="index.html" class="nav-btn">🏠 Αρχική</a>
+                    <a href="articles.html" class="nav-btn">📚 Άρθρα</a>
+                    <a href="videos.html" class="nav-btn">🎬 Βίντεο</a>
+                    <a href="apps.html" class="nav-btn">📱 Εφαρμογές</a>
+                    <a href="games.html" class="nav-btn">🎮 Παιχνίδια</a>
+                    <a href="digital-products.html" class="nav-btn active">📚 Digital Books</a>
                 </div>
             </div>
+        </div>
 
+        <main class="main-content">
             <div class="content-grid">
                 <!-- Python Activity Book -->
                 <div class="product-item" data-category="programming free">
@@ -53,10 +57,10 @@
                         <div class="social-share">
                             <button class="share-btn" onclick="toggleShareMenu('python-activity')">📤</button>
                             <div class="share-menu" id="share-python-activity">
-                                <a href="#" onclick="shareOnFacebook('Python Activity Book', 'activity-book.html')">📘 Facebook</a>
-                                <a href="#" onclick="shareOnTwitter('Python Activity Book', 'activity-book.html')">🐦 Twitter</a>
-                                <a href="#" onclick="shareOnLinkedIn('Python Activity Book', 'activity-book.html')">💼 LinkedIn</a>
-                                <a href="#" onclick="copyLink(window.location.href.replace('digital-products.html', 'activity-book.html'))">🔗 Copy Link</a>
+                                <a href="#" onclick="shareOnFacebook('Python Activity Book', 'https://blog.franklymadear.com/activity-book.html')">📘 Facebook</a>
+                                <a href="#" onclick="shareOnTwitter('Python Activity Book', 'https://blog.franklymadear.com/activity-book.html')">🐦 Twitter</a>
+                                <a href="#" onclick="shareOnLinkedIn('Python Activity Book', 'https://blog.franklymadear.com/activity-book.html')">💼 LinkedIn</a>
+                                <a href="#" onclick="copyLink('https://blog.franklymadear.com/activity-book.html')">🔗 Copy Link</a>
                             </div>
                         </div>
                     </div>
@@ -85,9 +89,13 @@
                         <span class="rating">⭐ 5.0/5</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Άλλα προϊόντα μπορείς να προσθέσεις εδώ -->
-                
+            <!-- Additional Home Button at Bottom -->
+            <div class="home-button-container bottom">
+                <a href="index.html" class="home-btn">
+                    🏠 Επιστροφή στην Αρχική Σελίδα
+                </a>
             </div>
         </main>
 
@@ -96,38 +104,28 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
     <script>
-        // Filter functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const productItems = document.querySelectorAll('.product-item');
+        // Roll-up navigation functionality
+        function toggleNav() {
+            const navContainer = document.getElementById('navContainer');
+            const arrow = document.querySelector('.arrow');
+            const isHidden = navContainer.style.display === 'none';
+            
+            if (isHidden) {
+                navContainer.style.display = 'block';
+                arrow.textContent = '▲';
+            } else {
+                navContainer.style.display = 'none';
+                arrow.textContent = '▼';
+            }
+        }
 
-            filterButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    const filter = this.getAttribute('data-filter');
-                    
-                    productItems.forEach(item => {
-                        const categories = item.getAttribute('data-category').split(' ');
-                        if (filter === 'all' || categories.includes(filter)) {
-                            item.style.display = 'block';
-                            setTimeout(() => {
-                                item.style.opacity = '1';
-                                item.style.transform = 'translateY(0)';
-                            }, 100);
-                        } else {
-                            item.style.opacity = '0';
-                            item.style.transform = 'translateY(20px)';
-                            setTimeout(() => {
-                                item.style.display = 'none';
-                            }, 300);
-                        }
-                    });
-                });
-            });
+        // Αρχική κατάσταση - κλειστό menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const navContainer = document.getElementById('navContainer');
+            const arrow = document.querySelector('.arrow');
+            navContainer.style.display = 'none';
+            arrow.textContent = '▼';
         });
 
         // Social share functions
@@ -172,5 +170,115 @@
             }
         });
     </script>
+
+    <style>
+        /* Styles for home button */
+        .home-button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .home-button-container.bottom {
+            margin: 40px 0 20px 0;
+        }
+
+        .home-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #FF5252, #FF7B47);
+        }
+
+        /* Roll-up Navigation Styles */
+        .rollup-nav {
+            margin-bottom: 20px;
+        }
+
+        .rollup-toggle {
+            width: 100%;
+            background: linear-gradient(135deg, #9B5DE5, #7B4DE5);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(155, 93, 229, 0.3);
+        }
+
+        .rollup-toggle:hover {
+            background: linear-gradient(135deg, #8A4DE5, #6B3DE5);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(155, 93, 229, 0.4);
+        }
+
+        .arrow {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-container {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 10px;
+            box-shadow: var(--shadow);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Remove filter styles since we don't need them anymore */
+        .filters-section {
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .rollup-toggle {
+                font-size: 1rem;
+                padding: 12px 15px;
+            }
+            
+            .nav-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .rollup-toggle {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </body>
 </html>
