@@ -34,21 +34,59 @@
             padding: 3rem 2rem;
             text-align: center;
             margin-bottom: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #e74c3c, #2ecc71, #f39c12);
         }
 
         .blog-header h1 {
-            font-size: 2.8rem;
+            font-size: 3rem;
             margin-bottom: 0.5rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-weight: 800;
         }
 
         .blog-header p {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Back to Home */
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 12px 25px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .back-home:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateX(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
 
         /* Navigation Menu */
@@ -56,25 +94,33 @@
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             flex-wrap: wrap;
+            background: rgba(255,255,255,0.95);
+            padding: 1.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         .nav-btn {
             background: white;
             color: #333;
-            padding: 12px 24px;
-            border-radius: 25px;
+            padding: 15px 30px;
+            border-radius: 30px;
             text-decoration: none;
             font-weight: bold;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
         }
 
         .nav-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
 
         .nav-btn.articles { border-color: #667eea; color: #667eea; }
@@ -84,55 +130,52 @@
 
         .nav-btn.active {
             color: white;
+            transform: translateY(-2px);
         }
         .nav-btn.articles.active { background: #667eea; }
         .nav-btn.videos.active { background: #e74c3c; }
         .nav-btn.apps.active { background: #2ecc71; }
         .nav-btn.games.active { background: #f39c12; }
 
-        /* Back Home */
-        .back-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 2rem;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 10px 20px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .back-home:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateX(-5px);
-        }
-
         /* Posts Grid */
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
             margin-bottom: 3rem;
         }
 
         /* Post Cards */
         .post {
             background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             border-top: 5px solid #667eea;
             position: relative;
             overflow: hidden;
         }
 
+        .post::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
         .post:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        }
+
+        .post:hover::before {
+            opacity: 1;
         }
 
         .post.video { border-top-color: #e74c3c; }
@@ -142,15 +185,18 @@
         .post h2 {
             margin-top: 0;
             color: #333;
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
         }
 
         .category-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: bold;
             margin-bottom: 1rem;
             color: white;
@@ -164,27 +210,29 @@
         .date {
             color: #888;
             font-size: 0.9em;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             display: block;
         }
 
         .post p {
             color: #555;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+            margin-bottom: 1.8rem;
+            line-height: 1.7;
+            font-size: 1rem;
         }
 
         .read-more {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             background: #667eea;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 25px;
             border-radius: 25px;
             text-decoration: none;
             font-weight: bold;
             transition: all 0.3s ease;
+            font-size: 0.95rem;
         }
 
         .post.video .read-more { background: #e74c3c; }
@@ -192,39 +240,30 @@
         .post.game .read-more { background: #f39c12; }
 
         .read-more:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
         }
 
-        /* Stats Section */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .blog-header {
+                padding: 2.5rem 1.5rem;
+            }
+            
+            .blog-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .posts-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 1.5rem;
+            }
         }
 
-        .stat-card {
-            background: rgba(255,255,255,0.95);
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #667eea;
-            display: block;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -232,23 +271,71 @@
             
             .blog-header {
                 padding: 2rem 1rem;
+                margin-bottom: 1.5rem;
             }
             
             .blog-header h1 {
                 font-size: 2rem;
             }
             
-            .posts-grid {
-                grid-template-columns: 1fr;
+            .blog-header p {
+                font-size: 1.1rem;
             }
             
             .nav-menu {
+                padding: 1rem;
+                margin-bottom: 2rem;
+                gap: 0.8rem;
+            }
+            
+            .nav-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+                flex: 1;
+                min-width: 120px;
+                justify-content: center;
+            }
+            
+            .posts-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .post {
+                padding: 2rem 1.5rem;
+            }
+            
+            .back-home {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .blog-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .blog-header p {
+                font-size: 1rem;
+            }
+            
+            .nav-menu {
+                flex-direction: column;
                 gap: 0.5rem;
             }
             
             .nav-btn {
-                padding: 10px 16px;
-                font-size: 0.9rem;
+                min-width: auto;
+                padding: 15px 20px;
+            }
+            
+            .post {
+                padding: 1.5rem;
+            }
+            
+            .post h2 {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -258,7 +345,7 @@
         <!-- Blog Header -->
         <div class="blog-header">
             <h1>📝 FranklyMaDear Blog</h1>
-            <p>Καθημερινά βίντεο, updates & tutorials</p>
+            <p>Ανακαλύψτε tutorials, εφαρμογές και παιχνίδια για developers</p>
         </div>
 
         <!-- Back to Home -->
@@ -268,30 +355,18 @@
 
         <!-- Navigation Menu -->
         <div class="nav-menu">
-            <a href="#articles" class="nav-btn articles active">📄 Άρθρα</a>
-            <a href="#videos" class="nav-btn videos">🎥 Βίντεο</a>
-            <a href="#apps" class="nav-btn apps">📱 Εφαρμογές</a>
-            <a href="#games" class="nav-btn games">🎮 Παιχνίδια</a>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-card">
-                <span class="stat-number">24</span>
-                <span class="stat-label">Άρθρα</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">15</span>
-                <span class="stat-label">Βίντεο</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">8</span>
-                <span class="stat-label">Εφαρμογές</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-number">12</span>
-                <span class="stat-label">Παιχνίδια</span>
-            </div>
+            <a href="#articles" class="nav-btn articles active">
+                📄 Άρθρα
+            </a>
+            <a href="#videos" class="nav-btn videos">
+                🎥 Βίντεο
+            </a>
+            <a href="#apps" class="nav-btn apps">
+                📱 Εφαρμογές
+            </a>
+            <a href="#games" class="nav-btn games">
+                🎮 Παιχνίδια
+            </a>
         </div>
 
         <!-- Posts Grid -->
@@ -367,7 +442,7 @@
                     // Add active class to clicked button
                     this.classList.add('active');
                     
-                    // Here you can add filtering functionality
+                    // Filter posts by category
                     const category = this.classList[1]; // articles, videos, etc.
                     filterPosts(category);
                 });
