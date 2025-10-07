@@ -72,11 +72,8 @@
                     </div>
                     
                     <div class="hero-actions">
-                        <button class="primary-btn" onclick="showAdAndDownload('Python Activity Book', 'ebooks/python-activity-book.pdf')">
+                        <button class="primary-btn" onclick="showAdAndDownload()">
                             🐍 Download Δωρεάν
-                        </button>
-                        <button class="secondary-btn" onclick="previewSample()">
-                            👁️ Δείγμα
                         </button>
                     </div>
                 </div>
@@ -102,38 +99,13 @@
                     <div class="detail-card">
                         <div class="detail-icon">🎮</div>
                         <h3>Game Development</h3>
-                        <p>Δημιούργησε δικά σου παιχνίδια: Hangman, Tic-Tac-Toe, κλπ</p>
+                        <p>Δημιουργησε δικά σου παιχνίδια: Hangman, Tic-Tac-Toe, κλπ</p>
                     </div>
                     
                     <div class="detail-card">
                         <div class="detail-icon">📊</div>
                         <h3>Real Projects</h3>
                         <p>Πρακτικά projects: Calculator, Weather App, To-Do List</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sample Exercises -->
-            <div class="sample-section">
-                <h2>🎯 Δείγμα Ασκήσεων</h2>
-                
-                <div class="exercise-grid">
-                    <div class="exercise-card">
-                        <h4>🎲 Number Guessing Game</h4>
-                        <p>Γράψε ένα παιχνίδι όπου ο υπολογιστής "σκέφτεται" έναν αριθμό και ο χρήστης προσπαθεί να τον μαντέψει.</p>
-                        <span class="difficulty easy">Εύκολο</span>
-                    </div>
-                    
-                    <div class="exercise-card">
-                        <h4>📝 To-Do List App</h4>
-                        <p>Δημιούργησε μια εφαρμογή λίστας tasks με δυνατότητα προσθήκης, διαγραφής και επεξεργασίας.</p>
-                        <span class="difficulty medium">Μεσαίο</span>
-                    </div>
-                    
-                    <div class="exercise-card">
-                        <h4>🌦️ Weather Dashboard</h4>
-                        <p>Φτιάξε ένα dashboard καιρού που εμφανίζει δεδομένα από API με ωραία γραφικά.</p>
-                        <span class="difficulty hard">Δύσκολο</span>
                     </div>
                 </div>
             </div>
@@ -156,54 +128,8 @@
                     </div>
                 </div>
                 <button id="downloadAfterAd" class="download-now-btn" style="display: none;" 
-                        onclick="proceedWithDownload()">
+                        onclick="startRealDownload()">
                     📥 Download Τώρα
-                </button>
-            </div>
-        </div>
-
-        <!-- Preview Modal -->
-        <div id="previewModal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closePreviewModal()">&times;</span>
-                <h3>👁️ Δείγμα - Python Activity Book</h3>
-                <div class="preview-content">
-                    <div class="preview-page">
-                        <h4>🎯 Άσκηση 1: Number Guessing Game</h4>
-                        <p><strong>Στόχος:</strong> Να δημιουργήσεις ένα παιχνίδι μαντεψίματος αριθμών.</p>
-                        
-                        <div class="code-sample">
-                            <pre><code>import random
-
-def number_guessing_game():
-    secret_number = random.randint(1, 100)
-    attempts = 0
-    
-    print("🎮 Μάντεψε τον αριθμό (1-100)!")
-    
-    while True:
-        try:
-            guess = int(input("Δώσε τον αριθμό σου: "))
-            attempts += 1
-            
-            if guess < secret_number:
-                print("📈 Ψηλότερα!")
-            elif guess > secret_number:
-                print("📉 Χαμηλότερα!")
-            else:
-                print(f"🎉 Σωστά! Το βρήκες σε {attempts} προσπάθειες!")
-                break
-                
-        except ValueError:
-            print("⚠️ Παρακαλώ δώσε έναν έγκυρο αριθμό!")
-
-# Καλείς τη συνάρτηση
-number_guessing_game()</code></pre>
-                        </div>
-                    </div>
-                </div>
-                <button class="primary-btn" onclick="closePreviewModal(); showAdAndDownload('Python Activity Book', 'ebooks/python-activity-book.pdf')">
-                    🐍 Download Ολόκληρο Βιβλίο
                 </button>
             </div>
         </div>
@@ -213,15 +139,18 @@ number_guessing_game()</code></pre>
         </footer>
     </div>
 
-    <script src="script.js"></script>
     <script>
         // Μεταβλητές για το download
-        let pendingDownload = null;
         let countdownInterval = null;
+        let downloadAttempted = false;
 
         // Συνάρτηση για εμφάνιση ad πριν το download
-        function showAdAndDownload(bookTitle, fileName) {
-            pendingDownload = { title: bookTitle, file: fileName };
+        function showAdAndDownload() {
+            if (downloadAttempted) {
+                // Αν έχει ήδη προσπαθήσει, κατευθείαν download
+                startRealDownload();
+                return;
+            }
             
             // Εμφάνιση modal
             const modal = document.getElementById('adModal');
@@ -261,12 +190,25 @@ number_guessing_game()</code></pre>
             }, 1000);
         }
 
-        // Προχωράμε με το download μετά το ad
-        function proceedWithDownload() {
-            if (pendingDownload) {
-                closeAdModal();
-                simulateDownload(pendingDownload.title, pendingDownload.file);
-            }
+        // ΠΡΑΓΜΑΤΙΚΟ DOWNLOAD
+        function startRealDownload() {
+            downloadAttempted = true;
+            closeAdModal();
+            
+            // Δημιουργία πραγματικού download link
+            const downloadLink = document.createElement('a');
+            downloadLink.href = 'ebooks/python-activity-book.pdf';
+            downloadLink.download = 'Python-Activity-Book-FranklyMaDear.pdf';
+            
+            // Προσθήκη στο DOM και click
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            
+            // Εμφάνιση μηνύματος επιτυχίας
+            setTimeout(() => {
+                alert('📥 Το βιβλίο κατεβασε επιτυχώς! Ευχαριστούμε!');
+            }, 1000);
         }
 
         // Κλείσιμο ad modal
@@ -274,49 +216,28 @@ number_guessing_game()</code></pre>
             const modal = document.getElementById('adModal');
             modal.style.display = 'none';
             clearInterval(countdownInterval);
-            pendingDownload = null;
             
             // Reset UI
             document.getElementById('downloadAfterAd').style.display = 'none';
             document.getElementById('countdown').style.display = 'inline';
         }
 
-        // Προσομοίωση download
-        function simulateDownload(bookTitle, fileName) {
-            // Δημιουργία download link
-            const downloadLink = document.createElement('a');
-            downloadLink.href = fileName;
-            downloadLink.download = fileName.split('/').pop();
-            document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            
-            // Εμφάνιση μηνύματος επιτυχίας
-            setTimeout(() => {
-                alert(`📥 Download completed: ${bookTitle}`);
-            }, 1000);
-        }
-
-        // Συναρτήσεις για preview
-        function previewSample() {
-            document.getElementById('previewModal').style.display = 'block';
-        }
-
-        function closePreviewModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
-
         // Κλείσιμο modal όταν κλικάρεις έξω
         window.addEventListener('click', function(event) {
             const adModal = document.getElementById('adModal');
-            const previewModal = document.getElementById('previewModal');
-            
             if (event.target === adModal) {
                 closeAdModal();
             }
-            if (event.target === previewModal) {
-                closePreviewModal();
-            }
+        });
+
+        // Απενεργοποίηση δεξιού κλικ για προστασία περιεχομένου
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Απενεργοποίηση copy-paste για προστασία περιεχομένου
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
         });
     </script>
 </body>
