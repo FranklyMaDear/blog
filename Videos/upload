@@ -1,1 +1,382 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Video Uploader | Facebook Reel Στυλ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #6e48aa, #9d50bb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        .upload-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: #6e48aa;
+            background: rgba(110, 72, 170, 0.1);
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            color: #6e48aa;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .upload-subtext {
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #6e48aa, #9d50bb);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(110, 72, 170, 0.4);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .video-preview {
+            margin-top: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        .video-preview video {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .github-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid #6e48aa;
+        }
+
+        .github-info h3 {
+            margin-bottom: 10px;
+            color: #6e48aa;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            opacity: 0.7;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .upload-container {
+                padding: 20px;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GitHub Video Uploader</h1>
+            <p class="subtitle">Ανέβασμα βίντεο με στυλ Facebook Reels</p>
+        </header>
+
+        <div class="upload-container">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <p class="upload-text">Σύρετε και αφήστε το βίντεο εδώ</p>
+                <p class="upload-subtext">ή</p>
+                <button class="btn" id="browseBtn">
+                    <i>📂</i> Επιλέξτε Αρχείο
+                </button>
+                <input type="file" id="fileInput" accept="video/*" style="display: none;">
+            </div>
+
+            <div class="form-group">
+                <label for="repoName">Όνομα Repository:</label>
+                <input type="text" id="repoName" placeholder="π.χ. my-video-project">
+            </div>
+
+            <div class="form-group">
+                <label for="videoTitle">Τίτλος Βίντεο:</label>
+                <input type="text" id="videoTitle" placeholder="Εισάγετε τίτλο για το βίντεο">
+            </div>
+
+            <div class="form-group">
+                <label for="videoDesc">Περιγραφή:</label>
+                <textarea id="videoDesc" rows="3" placeholder="Περιγράψτε το βίντεο σας"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="visibility">Ορατότητα:</label>
+                <select id="visibility">
+                    <option value="public">Δημόσιο</option>
+                    <option value="private">Ιδιωτικό</option>
+                </select>
+            </div>
+
+            <div class="video-preview" id="videoPreview">
+                <h3>Προεπισκόπηση Βίντεο</h3>
+                <video id="previewPlayer" controls></video>
+            </div>
+
+            <div class="github-info">
+                <h3>Πληροφορίες GitHub</h3>
+                <p>Το βίντεο θα αποθηκευτεί στο GitHub repository που ορίσατε. Μπορείτε να το χρησιμοποιήσετε σε README αρχεία ή να το ενσωματώσετε σε ιστοσελίδες.</p>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="resetBtn">
+                    <i>↺</i> Επαναφορά
+                </button>
+                <button class="btn" id="uploadBtn">
+                    <i>⬆️</i> Αποστολή στο GitHub
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>GitHub Video Uploader | Σχεδιασμένο με στυλ Facebook Reels</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const browseBtn = document.getElementById('browseBtn');
+            const videoPreview = document.getElementById('videoPreview');
+            const previewPlayer = document.getElementById('previewPlayer');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const repoName = document.getElementById('repoName');
+            const videoTitle = document.getElementById('videoTitle');
+            const videoDesc = document.getElementById('videoDesc');
+            const visibility = document.getElementById('visibility');
+
+            // Άνοιγμα file dialog όταν πατιέται το browse button
+            browseBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+
+            // Χειρισμός drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#6e48aa';
+                uploadArea.style.background = 'rgba(110, 72, 170, 0.2)';
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                uploadArea.style.background = 'transparent';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                uploadArea.style.background = 'transparent';
+                
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            // Χειρισμός επιλογής αρχείου
+            fileInput.addEventListener('change', function() {
+                if (this.files.length) {
+                    handleFile(this.files[0]);
+                }
+            });
+
+            // Συνάρτηση χειρισμού αρχείου
+            function handleFile(file) {
+                if (file.type.startsWith('video/')) {
+                    const url = URL.createObjectURL(file);
+                    previewPlayer.src = url;
+                    videoPreview.style.display = 'block';
+                    
+                    // Αυτόματη συμπλήρωση τίτλου αν είναι κενό
+                    if (!videoTitle.value) {
+                        videoTitle.value = file.name.replace(/\.[^/.]+$/, "");
+                    }
+                    
+                    // Αυτόματη συμπλήρωση repository αν είναι κενό
+                    if (!repoName.value) {
+                        repoName.value = file.name.replace(/\.[^/.]+$/, "") + "-repo";
+                    }
+                } else {
+                    alert('Παρακαλώ επιλέξτε ένα αρχείο βίντεο.');
+                }
+            }
+
+            // Επαναφορά φόρμας
+            resetBtn.addEventListener('click', function() {
+                fileInput.value = '';
+                previewPlayer.src = '';
+                videoPreview.style.display = 'none';
+                repoName.value = '';
+                videoTitle.value = '';
+                videoDesc.value = '';
+                visibility.value = 'public';
+            });
+
+            // Προσομοίωση αποστολής
+            uploadBtn.addEventListener('click', function() {
+                if (!fileInput.files.length) {
+                    alert('Παρακαλώ επιλέξτε ένα βίντεο πριν την αποστολή.');
+                    return;
+                }
+                
+                if (!repoName.value || !videoTitle.value) {
+                    alert('Παρακαλώ συμπληρώστε τα υποχρεωτικά πεδία.');
+                    return;
+                }
+                
+                // Προσομοίωση αποστολής
+                uploadBtn.innerHTML = '<i>⏳</i> Αποστολή...';
+                uploadBtn.disabled = true;
+                
+                setTimeout(function() {
+                    alert(`Το βίντεο "${videoTitle.value}" ανέβηκε επιτυχώς στο GitHub repository "${repoName.value}"!`);
+                    uploadBtn.innerHTML = '<i>⬆️</i> Αποστολή στο GitHub';
+                    uploadBtn.disabled = false;
+                }, 2000);
+            });
+        });
+    </script>
+</body>
+</html>
