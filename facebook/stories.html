@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Reels - Τα Βίντεό Μου</title>
+    <title>Facebook Reels</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,726 +14,843 @@
         }
         
         body {
-            background-color: #f0f2f5;
-            color: #1c1e21;
-        }
-        
-        /* Header Facebook */
-        .facebook-header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 16px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo-search {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .facebook-logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1877f2;
-        }
-        
-        .search-bar {
-            background-color: #f0f2f5;
-            border-radius: 20px;
-            padding: 8px 12px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .search-bar i {
-            color: #65676b;
-            margin-right: 6px;
-        }
-        
-        .search-bar input {
-            background: transparent;
-            border: none;
-            outline: none;
-            width: 200px;
-        }
-        
-        .nav-icons {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .nav-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f2f5;
-            color: #65676b;
-            cursor: pointer;
-        }
-        
-        .nav-icon.active {
-            color: #1877f2;
-        }
-        
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-        
-        .user-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background-color: #1877f2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: #000;
             color: white;
-            font-weight: bold;
-        }
-        
-        /* Main Content */
-        .main-container {
-            display: flex;
-            max-width: 1200px;
-            margin: 20px auto;
-            gap: 20px;
-        }
-        
-        /* Left Sidebar */
-        .left-sidebar {
-            width: 280px;
-        }
-        
-        .sidebar-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            border-radius: 8px;
-            margin-bottom: 4px;
-            cursor: pointer;
-        }
-        
-        .sidebar-item:hover {
-            background-color: #f0f2f5;
-        }
-        
-        .sidebar-item.active {
-            background-color: #e7f3ff;
-            color: #1877f2;
-        }
-        
-        .sidebar-item i {
-            font-size: 20px;
-            margin-right: 12px;
-            width: 24px;
-            text-align: center;
-        }
-        
-        .sidebar-divider {
-            height: 1px;
-            background-color: #e4e6eb;
-            margin: 12px 0;
+            height: 100vh;
+            overflow: hidden;
         }
         
         /* Reels Container */
-        .reels-feed {
-            flex: 1;
+        .reels-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
+        /* Reels Header */
         .reels-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
         }
         
         .reels-title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 700;
         }
         
-        .create-reel {
-            background-color: #1877f2;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
+        .header-actions {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .header-icon {
+            font-size: 20px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         
-        /* Reel Card */
-        .reel-card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-        
-        .reel-header {
-            display: flex;
-            align-items: center;
-            padding: 12px 16px;
-        }
-        
-        .reel-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #1877f2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .reel-user-info {
+        /* Reels Feed */
+        .reels-feed {
             flex: 1;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
         }
         
-        .reel-username {
-            font-weight: 600;
-        }
-        
-        .reel-time {
-            font-size: 13px;
-            color: #65676b;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        .reel-options {
-            color: #65676b;
-            cursor: pointer;
-        }
-        
-        .reel-content {
+        .reel-item {
+            height: 100vh;
+            scroll-snap-align: start;
             position: relative;
+            display: flex;
+            align-items: flex-end;
         }
         
         .reel-video {
-            width: 100%;
-            height: 500px;
-            background-color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 18px;
-        }
-        
-        .reel-actions {
             position: absolute;
-            right: 16px;
-            bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
         }
         
-        .action-button {
+        /* BACKGROUND EXACTLY LIKE THE IMAGE */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, #8B4513 0%, #A0522D 25%, #CD853F 50%, #DEB887 75%, #F5DEB3 100%);
+            z-index: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            color: white;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-        }
-        
-        .action-button i {
+            justify-content: center;
             font-size: 24px;
-            margin-bottom: 4px;
-            background: rgba(0,0,0,0.3);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .action-button span {
-            font-size: 12px;
-            font-weight: 600;
-        }
-        
-        .reel-description {
-            padding: 12px 16px;
-        }
-        
-        .reel-stats {
-            display: flex;
-            justify-content: space-between;
-            padding: 0 16px 12px;
-            font-size: 14px;
-            color: #65676b;
-        }
-        
-        .reel-interactions {
-            display: flex;
-            border-top: 1px solid #e4e6eb;
-            padding: 6px 0;
-        }
-        
-        .interaction-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #65676b;
-        }
-        
-        .interaction-btn:hover {
-            background-color: #f0f2f5;
-        }
-        
-        .interaction-btn.active {
-            color: #1877f2;
-        }
-        
-        /* Right Sidebar */
-        .right-sidebar {
-            width: 280px;
-        }
-        
-        .contacts-header {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-        }
-        
-        .contacts-title {
-            font-weight: 600;
-            color: #65676b;
-        }
-        
-        .contact-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            cursor: pointer;
-        }
-        
-        .contact-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background-color: #e4e6eb;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1877f2;
             font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
-        .contact-name {
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%, transparent 100%);
+            z-index: 2;
+            display: flex;
+        }
+        
+        /* Video Info Left - EXACT STYLE FROM IMAGE */
+        .video-info {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 100px;
+        }
+        
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .video-category {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .video-explore {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .video-caption {
+            font-size: 18px;
+            margin-bottom: 10px;
+            line-height: 1.4;
             font-weight: 500;
         }
         
-        /* Responsive */
-        @media (max-width: 1100px) {
-            .left-sidebar, .right-sidebar {
-                display: none;
-            }
-            
-            .main-container {
-                justify-content: center;
-            }
-            
-            .reels-feed {
-                max-width: 680px;
-            }
+        .video-no-sound {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        @media (max-width: 700px) {
-            .search-bar input {
-                width: 150px;
-            }
-            
-            .reel-video {
-                height: 400px;
-            }
+        .no-sound-icon {
+            font-size: 16px;
+        }
+        
+        /* Comment Input - EXACT STYLE FROM IMAGE */
+        .comment-input-container {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 12px 16px;
+            margin-top: 10px;
+        }
+        
+        .comment-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 15px;
+            outline: none;
+        }
+        
+        .comment-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .comment-action {
+            color: rgba(255,255,255,0.7);
+            font-size: 16px;
+        }
+        
+        /* Right Actions */
+        .video-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            padding-bottom: 100px;
+            gap: 25px;
+        }
+        
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .action-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+            font-size: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .action-count {
+            font-size: 13px;
+            font-weight: 600;
+        }
+        
+        .user-avatar-sm {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid white;
+            margin-bottom: 6px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #000;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid #262626;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+        
+        .nav-label {
+            font-size: 10px;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: #0095f6;
+        }
+        
+        .nav-item.active .nav-label {
+            color: #0095f6;
+        }
+        
+        /* Create Reel Button */
+        .create-reel {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            z-index: 101;
+            cursor: pointer;
+        }
+        
+        /* Progress Bar */
+        .reel-progress {
+            position: absolute;
+            top: 60px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            gap: 4px;
+            z-index: 3;
+        }
+        
+        .progress-item {
+            flex: 1;
+            height: 2px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: white;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .progress-item.active .progress-fill {
+            animation: progress 10s linear forwards;
+        }
+        
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        
+        /* Comments Panel */
+        .comments-panel {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            right: 0;
+            background: #262626;
+            border-radius: 20px 20px 0 0;
+            padding: 20px;
+            padding-bottom: 80px;
+            z-index: 200;
+            transition: bottom 0.3s ease;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .comments-panel.active {
+            bottom: 0;
+        }
+        
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .comments-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .close-comments {
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .comment-item {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .comment-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #00b894, #00cec9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .comment-content {
+            flex: 1;
+        }
+        
+        .comment-user {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .comment-text {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .comment-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 6px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .comment-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        
+        /* Hide scrollbar */
+        .reels-feed::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .reels-feed {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 <body>
-    <!-- Facebook Header -->
-    <header class="facebook-header">
-        <div class="header-container">
-            <div class="logo-search">
-                <div class="facebook-logo">facebook</div>
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Αναζήτηση στο Facebook">
-                </div>
-            </div>
-            
-            <div class="nav-icons">
-                <div class="nav-icon active">
-                    <i class="fas fa-home"></i>
-                </div>
-                <div class="nav-icon">
-                    <i class="fab fa-youtube"></i>
-                </div>
-                <div class="nav-icon">
-                    <i class="fas fa-store"></i>
-                </div>
-                <div class="nav-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="nav-icon">
-                    <i class="fas fa-bell"></i>
-                </div>
-            </div>
-            
-            <div class="user-menu">
-                <div class="user-avatar">Σ</div>
-                <span>Σεβ</span>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="main-container">
-        <!-- Left Sidebar -->
-        <div class="left-sidebar">
-            <div class="sidebar-item active">
-                <i class="fas fa-user"></i>
-                <span>Σεβαστός</span>
-            </div>
-            <div class="sidebar-item">
-                <i class="fas fa-user-friends"></i>
-                <span>Φίλοι</span>
-            </div>
-            <div class="sidebar-item">
-                <i class="fab fa-youtube"></i>
-                <span>Watch</span>
-            </div>
-            <div class="sidebar-item">
-                <i class="fas fa-flag"></i>
-                <span>Σελίδες</span>
-            </div>
-            <div class="sidebar-item">
-                <i class="fas fa-users"></i>
-                <span>Ομάδες</span>
-            </div>
-            
-            <div class="sidebar-divider"></div>
-            
-            <div class="sidebar-item">
-                <i class="fas fa-calendar"></i>
-                <span>Events</span>
-            </div>
-            <div class="sidebar-item">
-                <i class="fas fa-briefcase"></i>
-                <span>Jobs</span>
+    <div class="reels-container">
+        <!-- Header -->
+        <div class="reels-header">
+            <div class="reels-title">Reels</div>
+            <div class="header-actions">
+                <i class="fas fa-search header-icon"></i>
+                <i class="fas fa-camera header-icon"></i>
             </div>
         </div>
 
         <!-- Reels Feed -->
         <div class="reels-feed">
-            <div class="reels-header">
-                <div class="reels-title">Reels</div>
-                <button class="create-reel">
-                    <i class="fas fa-plus"></i>
-                    Δημιουργία Reel
-                </button>
-            </div>
-            
-            <!-- Reel 1 -->
-            <div class="reel-card">
-                <div class="reel-header">
-                    <div class="reel-avatar">Σ</div>
-                    <div class="reel-user-info">
-                        <div class="reel-username">Σεβαστός</div>
-                        <div class="reel-time">
-                            <span>2 ώρες · </span>
-                            <i class="fas fa-globe-europe"></i>
-                        </div>
+            <!-- Main Reel - EXACTLY LIKE THE IMAGE -->
+            <div class="reel-item">
+                <!-- Progress Bar -->
+                <div class="reel-progress">
+                    <div class="progress-item active">
+                        <div class="progress-fill"></div>
                     </div>
-                    <div class="reel-options">
-                        <i class="fas fa-ellipsis-h"></i>
+                    <div class="progress-item"></div>
+                    <div class="progress-item"></div>
+                </div>
+                
+                <!-- Video Background - Like the image -->
+                <div class="video-background">
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">🎭</div>
+                        <div>ΘΕΙΑ ΜΕ ΑΥΤΙΑ</div>
                     </div>
                 </div>
                 
-                <div class="reel-content">
-                    <div class="reel-video">
-                        <div>Βίντεο 1 - Δημιουργικό Project</div>
+                <div class="video-overlay">
+                    <!-- Left Side - Video Info -->
+                    <div class="video-info">
+                        <div class="video-header">
+                            <div class="video-category">Για εσάς</div>
+                            <div class="video-explore">Εξερεύνηση</div>
+                        </div>
+                        
+                        <div class="video-caption">
+                            Άλλα λέει η Θεια μ και άλλα ακούν τ' αυ...
+                        </div>
+                        
+                        <div class="video-no-sound">
+                            <i class="fas fa-volume-mute no-sound-icon"></i>
+                            <span>Το βίντεο δεν έχει ήχο</span>
+                        </div>
+                        
+                        <div class="comment-input-container">
+                            <input type="text" class="comment-input" placeholder="Προσθέστε ένα σχόλιο">
+                            <div class="comment-actions">
+                                <span class="comment-action">😊</span>
+                                <span class="comment-action">📷</span>
+                                <span class="comment-action">🎭</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="reel-actions">
-                        <div class="action-button">
-                            <i class="fas fa-heart"></i>
-                            <span>1.2K</span>
+                    <!-- Right Side - Actions -->
+                    <div class="video-actions">
+                        <div class="action-item" onclick="toggleLike(this)">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-count">4.2K</div>
                         </div>
-                        <div class="action-button">
-                            <i class="fas fa-comment"></i>
-                            <span>245</span>
+                        
+                        <div class="action-item" onclick="toggleComments()">
+                            <div class="action-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="action-count">327</div>
                         </div>
-                        <div class="action-button">
-                            <i class="fas fa-share"></i>
-                            <span>Κοινοποίηση</span>
+                        
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="action-count">Κοινοποίηση</div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="reel-description">
-                    <p>Μια δημιουργική ιδέα που αναπτύχθηκε πρόσφατα! 😍 #creativity #project</p>
-                </div>
-                
-                <div class="reel-stats">
-                    <div class="reel-likes">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>1.2K</span>
-                    </div>
-                    <div class="reel-comments-shares">
-                        <span>245 σχόλια · 89 κοινοποιήσεις</span>
-                    </div>
-                </div>
-                
-                <div class="reel-interactions">
-                    <div class="interaction-btn active">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>Like</span>
-                    </div>
-                    <div class="interaction-btn">
-                        <i class="fas fa-comment"></i>
-                        <span>Comment</span>
-                    </div>
-                    <div class="interaction-btn">
-                        <i class="fas fa-share"></i>
-                        <span>Share</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Reel 2 -->
-            <div class="reel-card">
-                <div class="reel-header">
-                    <div class="reel-avatar">Σ</div>
-                    <div class="reel-user-info">
-                        <div class="reel-username">Σεβαστός</div>
-                        <div class="reel-time">
-                            <span>1 ημέρα · </span>
-                            <i class="fas fa-globe-europe"></i>
+                        
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
                         </div>
-                    </div>
-                    <div class="reel-options">
-                        <i class="fas fa-ellipsis-h"></i>
-                    </div>
-                </div>
-                
-                <div class="reel-content">
-                    <div class="reel-video">
-                        <div>Βίντεο 2 - Tutorial Μέρος 1</div>
-                    </div>
-                    
-                    <div class="reel-actions">
-                        <div class="action-button">
-                            <i class="fas fa-heart"></i>
-                            <span>2.4K</span>
+                        
+                        <div class="action-item">
+                            <div class="user-avatar-sm">Θ</div>
                         </div>
-                        <div class="action-button">
-                            <i class="fas fa-comment"></i>
-                            <span>512</span>
-                        </div>
-                        <div class="action-button">
-                            <i class="fas fa-share"></i>
-                            <span>Κοινοποίηση</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="reel-description">
-                    <p>Βασικές τεχνικές για αρχάριους! Ποιος θέλει μέρος 2; 👍 #tutorial #beginners</p>
-                </div>
-                
-                <div class="reel-stats">
-                    <div class="reel-likes">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>2.4K</span>
-                    </div>
-                    <div class="reel-comments-shares">
-                        <span>512 σχόλια · 210 κοινοποιήσεις</span>
-                    </div>
-                </div>
-                
-                <div class="reel-interactions">
-                    <div class="interaction-btn">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>Like</span>
-                    </div>
-                    <div class="interaction-btn">
-                        <i class="fas fa-comment"></i>
-                        <span>Comment</span>
-                    </div>
-                    <div class="interaction-btn">
-                        <i class="fas fa-share"></i>
-                        <span>Share</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Reel 3 -->
-            <div class="reel-card">
-                <div class="reel-header">
-                    <div class="reel-avatar">Σ</div>
-                    <div class="reel-user-info">
-                        <div class="reel-username">Σεβαστός</div>
-                        <div class="reel-time">
-                            <span>3 ημέρες · </span>
-                            <i class="fas fa-globe-europe"></i>
-                        </div>
+            <!-- Additional Reel 2 -->
+            <div class="reel-item">
+                <div class="reel-progress">
+                    <div class="progress-item"></div>
+                    <div class="progress-item active">
+                        <div class="progress-fill"></div>
                     </div>
-                    <div class="reel-options">
-                        <i class="fas fa-ellipsis-h"></i>
+                    <div class="progress-item"></div>
+                </div>
+                
+                <div class="video-background" style="background: linear-gradient(45deg, #4834d4, #686de0);">
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">😂</div>
+                        <div>ΑΣΤΕΙΕΣ ΘΕΙΑΣ</div>
                     </div>
                 </div>
                 
-                <div class="reel-content">
-                    <div class="reel-video">
-                        <div>Βίντεο 3 - Behind The Scenes</div>
+                <div class="video-overlay">
+                    <div class="video-info">
+                        <div class="video-header">
+                            <div class="video-category">Για εσάς</div>
+                            <div class="video-explore">Εξερεύνηση</div>
+                        </div>
+                        
+                        <div class="video-caption">
+                            Η θεία μου όταν προσπαθεί να χρησιμοποιήσει smartphone 📱
+                        </div>
+                        
+                        <div class="video-no-sound">
+                            <i class="fas fa-volume-mute no-sound-icon"></i>
+                            <span>Το βίντεο δεν έχει ήχο</span>
+                        </div>
+                        
+                        <div class="comment-input-container">
+                            <input type="text" class="comment-input" placeholder="Προσθέστε ένα σχόλιο">
+                            <div class="comment-actions">
+                                <span class="comment-action">😊</span>
+                                <span class="comment-action">📷</span>
+                                <span class="comment-action">😂</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div class="reel-actions">
-                        <div class="action-button">
-                            <i class="fas fa-heart"></i>
-                            <span>3.7K</span>
+                    <div class="video-actions">
+                        <div class="action-item" onclick="toggleLike(this)">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-count">2.8K</div>
                         </div>
-                        <div class="action-button">
-                            <i class="fas fa-comment"></i>
-                            <span>892</span>
+                        
+                        <div class="action-item" onclick="toggleComments()">
+                            <div class="action-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="action-count">189</div>
                         </div>
-                        <div class="action-button">
-                            <i class="fas fa-share"></i>
-                            <span>Κοινοποίηση</span>
+                        
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="action-count">Κοινοποίηση</div>
+                        </div>
+                        
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="action-item">
+                            <div class="user-avatar-sm">Θ</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="reel-description">
-                    <p>Πώς δημιουργήθηκε το τελευταίο project! Behind the scenes 🎬 #behindthescenes #makingof</p>
-                </div>
-                
-                <div class="reel-stats">
-                    <div class="reel-likes">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>3.7K</span>
-                    </div>
-                    <div class="reel-comments-shares">
-                        <span>892 σχόλια · 451 κοινοποιήσεις</span>
+            </div>
+            
+            <!-- Additional Reel 3 -->
+            <div class="reel-item">
+                <div class="reel-progress">
+                    <div class="progress-item"></div>
+                    <div class="progress-item"></div>
+                    <div class="progress-item active">
+                        <div class="progress-fill"></div>
                     </div>
                 </div>
                 
-                <div class="reel-interactions">
-                    <div class="interaction-btn">
-                        <i class="fas fa-thumbs-up"></i>
-                        <span>Like</span>
+                <div class="video-background" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                    <div style="text-align: center;">
+                        <div style="font-size: 32px; margin-bottom: 10px;">👵</div>
+                        <div>ΘΕΙΑ ΣΤΟ ΤΗΛΕΦΩΝΟ</div>
                     </div>
-                    <div class="interaction-btn">
-                        <i class="fas fa-comment"></i>
-                        <span>Comment</span>
+                </div>
+                
+                <div class="video-overlay">
+                    <div class="video-info">
+                        <div class="video-header">
+                            <div class="video-category">Για εσάς</div>
+                            <div class="video-explore">Εξερεύνηση</div>
+                        </div>
+                        
+                        <div class="video-caption">
+                            "Εγώ σου λέω ένα πράγμα..." - Η θεία μου σε κάθε τηλεφώνημα
+                        </div>
+                        
+                        <div class="video-no-sound">
+                            <i class="fas fa-volume-mute no-sound-icon"></i>
+                            <span>Το βίντεο δεν έχει ήχο</span>
+                        </div>
+                        
+                        <div class="comment-input-container">
+                            <input type="text" class="comment-input" placeholder="Προσθέστε ένα σχόλιο">
+                            <div class="comment-actions">
+                                <span class="comment-action">😊</span>
+                                <span class="comment-action">📷</span>
+                                <span class="comment-action">👵</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="interaction-btn">
-                        <i class="fas fa-share"></i>
-                        <span>Share</span>
+                    
+                    <div class="video-actions">
+                        <div class="action-item" onclick="toggleLike(this)">
+                            <div class="action-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="action-count">3.5K</div>
+                        </div>
+                        
+                        <div class="action-item" onclick="toggleComments()">
+                            <div class="action-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="action-count">256</div>
+                        </div>
+                        
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="action-count">Κοινοποίηση</div>
+                        </div>
+                        
+                        <div class="action-item">
+                            <div class="action-icon">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="action-item">
+                            <div class="user-avatar-sm">Θ</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Right Sidebar -->
-        <div class="right-sidebar">
-            <div class="contacts-header">
-                <div class="contacts-title">Επαφές</div>
-                <div>
-                    <i class="fas fa-video"></i>
-                    <i class="fas fa-search"></i>
-                    <i class="fas fa-ellipsis-h"></i>
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <a href="#" class="nav-item">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Αρχική</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-search nav-icon"></i>
+                <span class="nav-label">Αναζήτηση</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <i class="fab fa-youtube nav-icon"></i>
+                <span class="nav-label">Reels</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-shopping-bag nav-icon"></i>
+                <span class="nav-label">Marketplace</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user nav-icon"></i>
+                <span class="nav-label">Προφίλ</span>
+            </a>
+        </div>
+
+        <!-- Create Reel Button -->
+        <div class="create-reel">
+            <i class="fas fa-plus"></i>
+        </div>
+
+        <!-- Comments Panel -->
+        <div class="comments-panel" id="commentsPanel">
+            <div class="comments-header">
+                <div class="comments-title">Σχόλια</div>
+                <div class="close-comments" onclick="toggleComments()">
+                    <i class="fas fa-times"></i>
                 </div>
             </div>
             
-            <div class="contact-item">
-                <div class="contact-avatar">Μ</div>
-                <div class="contact-name">Μαρία</div>
+            <div class="comment-item">
+                <div class="comment-avatar">Μ</div>
+                <div class="comment-content">
+                    <div class="comment-user">Μαρία</div>
+                    <div class="comment-text">Πολύ αστείο! Η δική μου θεία είναι ακριβώς έτσι! 😂</div>
+                    <div class="comment-actions">
+                        <div class="comment-action">
+                            <i class="far fa-heart"></i>
+                            <span>45</span>
+                        </div>
+                        <span>2 ώρες</span>
+                    </div>
+                </div>
             </div>
-            <div class="contact-item">
-                <div class="contact-avatar">Ν</div>
-                <div class="contact-name">Νίκος</div>
+            
+            <div class="comment-item">
+                <div class="comment-avatar">Ν</div>
+                <div class="comment-content">
+                    <div class="comment-user">Νίκος</div>
+                    <div class="comment-text">Τι ακριβώς άκουσε η θεία; 😅</div>
+                    <div class="comment-actions">
+                        <div class="comment-action">
+                            <i class="far fa-heart"></i>
+                            <span>67</span>
+                        </div>
+                        <span>5 ώρες</span>
+                    </div>
+                </div>
             </div>
-            <div class="contact-item">
-                <div class="contact-avatar">Ε</div>
-                <div class="contact-name">Ελένη</div>
-            </div>
-            <div class="contact-item">
-                <div class="contact-avatar">Γ</div>
-                <div class="contact-name">Γιώργος</div>
-            </div>
-            <div class="contact-item">
-                <div class="contact-avatar">Κ</div>
-                <div class="contact-name">Κατερίνα</div>
+            
+            <div class="comment-item">
+                <div class="comment-avatar">Γ</div>
+                <div class="comment-content">
+                    <div class="comment-user">Γιώργος</div>
+                    <div class="comment-text">Αυτό συμβαίνει κάθε φορά που μιλάω με τη θεία μου! 👵</div>
+                    <div class="comment-actions">
+                        <div class="comment-action">
+                            <i class="far fa-heart"></i>
+                            <span>89</span>
+                        </div>
+                        <span>1 ημέρα</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Interactive like buttons
-        document.querySelectorAll('.interaction-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const isLikeButton = this.querySelector('.fa-thumbs-up');
+        // Like functionality
+        function toggleLike(element) {
+            const icon = element.querySelector('i');
+            const count = element.querySelector('.action-count');
+            
+            if (icon.classList.contains('fas')) {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                let currentCount = parseInt(count.textContent);
+                count.textContent = formatCount(currentCount - 1);
+            } else {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                let currentCount = parseInt(count.textContent);
+                count.textContent = formatCount(currentCount + 1);
+            }
+        }
+        
+        function formatCount(count) {
+            if (count >= 1000) {
+                return (count / 1000).toFixed(1) + 'K';
+            }
+            return count.toString();
+        }
+        
+        // Comments panel functionality
+        function toggleComments() {
+            const panel = document.getElementById('commentsPanel');
+            panel.classList.toggle('active');
+        }
+        
+        // Progress bar animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressItems = document.querySelectorAll('.progress-item');
+            
+            // Reset all progress bars
+            progressItems.forEach(item => {
+                const fill = item.querySelector('.progress-fill');
+                fill.style.width = '0%';
+                fill.style.animation = 'none';
+            });
+            
+            // Activate first progress bar
+            if (progressItems.length > 0) {
+                const firstFill = progressItems[0].querySelector('.progress-fill');
+                firstFill.style.animation = 'progress 10s linear forwards';
+            }
+        });
+        
+        // Scroll to change reels
+        let currentReel = 0;
+        const reels = document.querySelectorAll('.reel-item');
+        
+        document.querySelector('.reels-feed').addEventListener('scroll', function() {
+            const scrollTop = this.scrollTop;
+            const windowHeight = window.innerHeight;
+            
+            currentReel = Math.round(scrollTop / windowHeight);
+            
+            // Update progress bars
+            const progressItems = document.querySelectorAll('.progress-item');
+            progressItems.forEach((item, index) => {
+                const fill = item.querySelector('.progress-fill');
+                fill.style.animation = 'none';
                 
-                if (isLikeButton) {
-                    this.classList.toggle('active');
-                    
-                    const reelCard = this.closest('.reel-card');
-                    const likesCount = reelCard.querySelector('.reel-likes span');
-                    const heartCount = reelCard.querySelector('.action-button .fa-heart').nextElementSibling;
-                    
-                    if (this.classList.contains('active')) {
-                        // Increase likes
-                        let currentLikes = parseInt(likesCount.textContent);
-                        let currentHearts = parseInt(heartCount.textContent);
-                        
-                        likesCount.textContent = (currentLikes + 1) + 'K';
-                        heartCount.textContent = (currentHearts + 1) + 'K';
-                    } else {
-                        // Decrease likes
-                        let currentLikes = parseInt(likesCount.textContent);
-                        let currentHearts = parseInt(heartCount.textContent);
-                        
-                        likesCount.textContent = (currentLikes - 1) + 'K';
-                        heartCount.textContent = (currentHearts - 1) + 'K';
-                    }
+                if (index === currentReel) {
+                    setTimeout(() => {
+                        fill.style.animation = 'progress 10s linear forwards';
+                    }, 100);
+                } else if (index < currentReel) {
+                    fill.style.width = '100%';
+                } else {
+                    fill.style.width = '0%';
                 }
+            });
+        });
+        
+        // Comment input functionality
+        document.querySelectorAll('.comment-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.background = 'rgba(255,255,255,0.15)';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.background = 'rgba(255,255,255,0.1)';
             });
         });
     </script>
