@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Facebook Story Style</title>
+  <!-- Προεπισκόπηση Οθόνης -->
+  <meta property="og:title" content="Άλλα λέει η Θεία μ και ά...">
+  <meta property="og:description" content="Facebook Story">
+  <meta property="og:image" content="logo.png">
+  <meta property="og:url" content="https://yourwebsite.com/stories.html">
+  <meta name="twitter:card" content="summary_large_image">
   <style>
     body {
       margin: 0;
@@ -81,32 +87,9 @@
       cursor: pointer;
       z-index: 100;
     }
-
-    /* Ad container styling */
-    #monetag-ad {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 9999;
-      background: rgba(0,0,0,0.9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
   </style>
 </head>
 <body>
-
-  <!-- Ad Container -->
-  <div id="monetag-ad">
-    <div style="text-align: center;">
-      <div style="color: white; margin-bottom: 20px;">Φορτώνει διαφήμιση...</div>
-      <!-- Script από το monetag -->
-     <script>(function(s){s.dataset.zone='9981373',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    </div>
-  </div>
 
   <!-- Story Header -->
   <div class="story-header">
@@ -116,7 +99,7 @@
 
   <!-- Video -->
   <div class="story-video">
-    <video id="mainVideo" controls muted loop playsinline>
+    <video id="mainVideo" controls muted loop playsinline autoplay>
       <source src="fanny.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
@@ -138,24 +121,14 @@
 
   <script>
     const video = document.getElementById('mainVideo');
-    const adContainer = document.getElementById('monetag-ad');
 
-    // Αναμονή για τη φόρτωση της διαφήμισης
-    window.addEventListener('load', function() {
-      // Περίμενε 3 δευτερόλεπτα για τη διαφήμιση
-      setTimeout(function() {
-        // Κλείσιμο διαφήμισης και έναρξη βίντεο
-        adContainer.style.display = 'none';
-        
-        // Ενεργοποίηση βίντεο
-        video.play().then(() => {
-          video.muted = false;
-        }).catch(error => {
-          console.log('Auto-play error:', error);
-          // Fallback: Εμφάνιση controls αν αποτύχει το autoplay
-          video.controls = true;
-        });
-      }, 3000);
+    // Αυτόματη αναπαραγωγή βίντεο με φωνή
+    video.play().then(() => {
+      video.muted = false; // Ενεργοποίηση ήχου μετά την έναρξη
+    }).catch(error => {
+      console.log('Auto-play error:', error);
+      // Εμφάνιση controls αν αποτύχει το autoplay
+      video.controls = true;
     });
 
     // Fullscreen function
