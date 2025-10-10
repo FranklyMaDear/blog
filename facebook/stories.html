@@ -3,48 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facebook Story Style</title>
+  <title>Άλλα λέει η Θεία μ και ά...</title>
   <!-- Προεπισκόπηση Οθόνης -->
   <meta property="og:title" content="Άλλα λέει η Θεία μ και ά...">
   <meta property="og:description" content="Facebook Story">
   <meta property="og:image" content="logo.png">
   <meta property="og:url" content="https://yourwebsite.com/stories.html">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="video.other">
+  <meta property="og:video" content="https://yourwebsite.com/fanny.mp4">
+  <meta property="og:video:type" content="video/mp4">
+  <meta name="twitter:card" content="player">
+  <meta name="twitter:player" content="https://yourwebsite.com/stories.html">
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
       background: #000;
       font-family: Arial, sans-serif;
       color: white;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       height: 100vh;
       overflow: hidden;
-    }
-
-    .story-header {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      z-index: 10;
       position: relative;
     }
 
-    .story-header img {
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
-      margin-right: 10px;
-      border: 2px solid #888;
-    }
-
-    .story-video {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
+    .video-container {
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
     }
 
     video {
@@ -53,31 +44,79 @@
       object-fit: cover;
     }
 
+    .story-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
+    }
+
+    .story-header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+      border: 2px solid #1877f2;
+    }
+
+    .story-header span {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .instagram-username {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.8);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 16px;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
     .reaction-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 15px 0;
-      gap: 20px;
-      z-index: 10;
-      position: relative;
-      background: transparent; /* Διαφανές background */
+      padding: 10px 0;
+      gap: 15px;
+      z-index: 100;
     }
 
     .reaction-emoji {
-      font-size: 40px; /* Μεγαλύτερα emojis */
+      font-size: 32px;
       cursor: pointer;
-      transition: transform 0.2s;
-      padding: 8px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8); /* Σκιά για καλύτερη ορατότητα */
-      filter: drop-shadow(0 0 8px rgba(0,0,0,0.6)); /* Επιπλέον σκιά */
+      transition: all 0.3s ease;
+      padding: 5px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.3);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(5px);
     }
 
     .reaction-emoji:hover {
-      transform: scale(1.4); /* Μεγαλύτερο hover effect */
+      transform: scale(1.3);
+      background: rgba(255,255,255,0.2);
     }
 
-    /* Κρύψη scrollbar και browser elements */
+    /* Κρύψη όλων των browser elements */
     ::-webkit-scrollbar {
       display: none;
     }
@@ -85,23 +124,37 @@
     body {
       -ms-overflow-style: none;
       scrollbar-width: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
-    /* Instagram username style */
-    .instagram-username {
+    /* Fullscreen overlay για κλικ */
+    .click-overlay {
       position: fixed;
-      bottom: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.7);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 14px;
-      z-index: 100;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 50;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+
+  <!-- Click Overlay για fullscreen -->
+  <div class="click-overlay" id="clickOverlay"></div>
+
+  <!-- Video Container -->
+  <div class="video-container">
+    <video id="mainVideo" loop playsinline webkit-playsinline>
+      <source src="fanny.mp4" type="video/mp4">
+      Το βίντεο δεν υποστηρίζεται.
+    </video>
+  </div>
 
   <!-- Story Header -->
   <div class="story-header">
@@ -109,18 +162,10 @@
     <span>Άλλα λέει η Θεία μ και ά...</span>
   </div>
 
-  <!-- Video -->
-  <div class="story-video">
-    <video id="mainVideo" muted loop playsinline>
-      <source src="fanny.mp4" type="video/mp4">
-      Το βίντεο δεν υποστηρίζεται.
-    </video>
-  </div>
-
   <!-- Instagram Username -->
   <div class="instagram-username">@susanmaloo</div>
 
-  <!-- Reaction Bar με Emojis - ΧΩΡΙΣ ΠΛΑΙΣΙΟ -->
+  <!-- Reaction Bar -->
   <div class="reaction-bar">
     <div class="reaction-emoji">➕</div>
     <div class="reaction-emoji">❤️</div>
@@ -135,36 +180,59 @@
 
   <script>
     const video = document.getElementById('mainVideo');
+    const clickOverlay = document.getElementById('clickOverlay');
 
-    // Αυτόματο fullscreen και έναρξη βίντεο όταν φορτώσει η σελίδα
-    document.addEventListener('DOMContentLoaded', function() {
-      // Αμέσως fullscreen
-      if (video.requestFullscreen) {
-        video.requestFullscreen();
-      } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen();
-      } else if (video.msRequestFullscreen) {
-        video.msRequestFullscreen();
-      }
+    // Function για fullscreen
+    function enterFullscreen() {
+      const element = document.documentElement;
       
-      // Αναμονή για fullscreen και then play
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+    }
+
+    // Αυτόματο play και fullscreen όταν φορτώσει
+    document.addEventListener('DOMContentLoaded', function() {
+      // Προσπάθεια fullscreen
+      setTimeout(enterFullscreen, 100);
+      
+      // Αυτόματο play με delay
       setTimeout(() => {
         video.play().then(() => {
+          console.log('Video started playing');
           video.muted = false;
         }).catch(error => {
-          console.log('Auto-play error:', error);
+          console.log('Auto-play failed:', error);
+          // Show play button overlay
+          clickOverlay.style.display = 'block';
         });
-      }, 1000);
+      }, 500);
     });
 
-    // Επανάληψη fullscreen αν ο χρήστης βγει
+    // Κλικ anywhere για play/fullscreen
+    clickOverlay.addEventListener('click', function() {
+      enterFullscreen();
+      video.play().then(() => {
+        video.muted = false;
+        this.style.display = 'none';
+      });
+    });
+
+    // Fullscreen change events
     document.addEventListener('fullscreenchange', function() {
       if (!document.fullscreenElement) {
-        setTimeout(() => {
-          if (video.requestFullscreen) {
-            video.requestFullscreen();
-          }
-        }, 500);
+        // Αν βγει από fullscreen, ξαναμπαίνει
+        setTimeout(enterFullscreen, 100);
+      }
+    });
+
+    document.addEventListener('webkitfullscreenchange', function() {
+      if (!document.webkitFullscreenElement) {
+        setTimeout(enterFullscreen, 100);
       }
     });
 
@@ -173,32 +241,48 @@
       if (video.muted) {
         video.muted = false;
       }
-      // Επανάληψη fullscreen αν χρειαστεί
-      if (!document.fullscreenElement) {
-        if (video.requestFullscreen) {
-          video.requestFullscreen();
-        }
-      }
     });
 
-    // Προσθήκη event listeners για τα emojis
+    // Event listeners για emojis
     document.querySelectorAll('.reaction-emoji').forEach(emoji => {
-      emoji.addEventListener('click', function() {
+      emoji.addEventListener('click', function(e) {
+        e.stopPropagation();
         alert('Αντίδραση: ' + this.textContent);
       });
     });
 
-    // Απενεργοποίηση context menu (δεξί κλικ)
+    // Απενεργοποίηση context menu και browser controls
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
+      return false;
     });
 
-    // Απενεργοποίηση κλειδιών που μπορεί να εμφανίσουν browser menus
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I') || (e.ctrlKey && e.key === 'u')) {
+      if (e.key === 'F12' || e.ctrlKey || e.metaKey) {
         e.preventDefault();
       }
     });
+
+    // iOS specific - κρύψη browser bars
+    document.addEventListener('touchstart', function() {
+      enterFullscreen();
+    });
+
+    // Κρύψη address bar σε mobile browsers
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        window.scrollTo(0, 1);
+      }, 0);
+    });
+
+    // Resize για fullscreen experience
+    window.addEventListener('resize', function() {
+      if (window.innerHeight > window.innerWidth) {
+        // Portrait mode - ensure fullscreen
+        enterFullscreen();
+      }
+    });
+
   </script>
 
 </body>
