@@ -222,12 +222,12 @@
 </head>
 <body>
 
-  <!-- Ad Overlay -->
+  <!-- Ad Overlay - ΜΕΣΑ σε αυτό το container θα φορτώσει η διαφήμιση -->
   <div class="ad-overlay" id="adOverlay">
     <div class="ad-container">
       <div class="ad-timer" id="adTimer">Η διαφήμιση κλείνει σε 10</div>
       
-      <!-- Monetag Ad Container -->
+      <!-- Monetag Ad Container - ΜΕΣΑ εδώ θα εμφανιστεί η διαφήμιση -->
       <div class="monetag-ad-container" id="monetagAdContainer">
         <div class="ad-loading" id="adLoading">
           Φορτώνει διαφήμιση...<br>
@@ -237,6 +237,9 @@
       
       <button class="skip-ad" onclick="skipAd()">Παράβλεψη Διαφήμισης</button>
     </div>
+
+    <!-- Το Monetag script ΜΕΣΑ στο ad overlay -->
+    <script src="https://fpyf8.com/88/tag.min.js" data-zone="175808" async data-cfasync="false"></script>
   </div>
 
   <!-- Click Overlay για fullscreen -->
@@ -339,49 +342,40 @@
       }, 1000);
     }
 
-    // Φόρτωση Monetag ad
-    function loadMonetagAd() {
-      const script = document.createElement('script');
-      script.src = 'https://fpyf8.com/88/tag.min.js';
-      script.setAttribute('data-zone', '175808');
-      script.setAttribute('data-cfasync', 'false');
-      script.async = true;
+    // Ελέγχει αν η διαφήμιση έχει φορτώσει
+    function checkAdLoaded() {
+      // Έλεγχος αν υπάρχουν διαφημίσεις στο container
+      const adElements = monetagContainer.querySelectorAll('iframe, img, div[id*="ad"], div[class*="ad"]');
       
-      // Event listeners για το script
-      script.onload = function() {
-        console.log('Monetag script loaded successfully');
+      if (adElements.length > 0) {
+        console.log('Ad content detected');
         adLoaded = true;
         adLoading.style.display = 'none';
-      };
-      
-      script.onerror = function() {
-        console.log('Monetag script failed to load');
-        adLoading.innerHTML = 'Δεν φορτώθηκε διαφήμιση<br><span style="font-size: 12px; opacity: 0.7;">Το βίντεο θα ξεκινήσει σύντομα</span>';
-        // Αν αποτύχει το script, κλείνει σε 3 δευτερόλεπτα
-        setTimeout(closeAd, 3000);
-      };
-      
-      monetagContainer.appendChild(script);
-      
-      // Fallback: Αν μετά από 5 δευτερόλεπτα δεν έχει φορτώσει, προχωράμε
-      setTimeout(() => {
-        if (!adLoaded) {
-          console.log('Monetag loading timeout - proceeding to video');
-          closeAd();
-        }
-      }, 5000);
+      } else {
+        // Συνεχίζει να ελέγχει κάθε 500ms
+        setTimeout(checkAdLoaded, 500);
+      }
     }
 
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
-      // Φόρτωση Monetag ad
-      loadMonetagAd();
+      // Ξεκινάει έλεγχο για φόρτωση διαφήμισης
+      setTimeout(checkAdLoaded, 1000);
       
       // Ξεκινάει το χρονόμετρο της διαφήμισης
       startAdTimer();
       
       // Προσπάθεια fullscreen
       setTimeout(enterFullscreen, 100);
+
+      // Fallback: Αν μετά από 8 δευτερόλεπτα δεν έχει φορτώσει διαφήμιση, προχωράμε
+      setTimeout(() => {
+        if (!adLoaded) {
+          console.log('Ad loading timeout - proceeding to video');
+          adLoading.innerHTML = 'Δεν φορτώθηκε διαφήμιση<br><span style="font-size: 12px; opacity: 0.7;">Το βίντεο ξεκινάει...</span>';
+          setTimeout(closeAd, 2000);
+        }
+      }, 8000);
     });
 
     // Κλικ anywhere για play/fullscreen
