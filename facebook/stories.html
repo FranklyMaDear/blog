@@ -1,402 +1,150 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facebook Reels</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-        }
-        
-        body {
-            background-color: #000;
-            color: white;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        .reels-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 16px;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-        }
-        
-        .reels-title {
-            font-size: 24px;
-            font-weight: 700;
-        }
-        
-        .header-actions {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .header-icon {
-            font-size: 20px;
-            cursor: pointer;
-        }
-        
-        .video-container {
-            height: 100vh;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-        }
-        
-        /* Αλλαγή: Πραγματικό video */
-        .reel-video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: 1;
-        }
-        
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%, transparent 100%);
-            z-index: 2;
-            display: flex;
-        }
-        
-        .video-info {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            padding-bottom: 100px;
-        }
-        
-        .video-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .video-category {
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
-        .video-explore {
-            font-size: 16px;
-            color: rgba(255,255,255,0.8);
-        }
-        
-        .video-caption {
-            font-size: 18px;
-            margin-bottom: 15px;
-            line-height: 1.4;
-            font-weight: 500;
-        }
-        
-        .video-no-sound {
-            font-size: 14px;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .comment-input-container {
-            display: flex;
-            align-items: center;
-            background: rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 12px 16px;
-        }
-        
-        .comment-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 15px;
-            outline: none;
-        }
-        
-        .comment-input::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
-        
-        .comment-actions {
-            display: flex;
-            gap: 12px;
-        }
-        
-        .comment-action {
-            color: rgba(255,255,255,0.7);
-            font-size: 16px;
-        }
-        
-        .video-actions {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-            padding-bottom: 100px;
-            gap: 25px;
-        }
-        
-        .action-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .action-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 6px;
-            font-size: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .action-count {
-            font-size: 13px;
-            font-weight: 600;
-        }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #000;
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            border-top: 1px solid #262626;
-            z-index: 100;
-        }
-        
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            text-decoration: none;
-        }
-        
-        .nav-icon {
-            font-size: 24px;
-            margin-bottom: 4px;
-        }
-        
-        .nav-label {
-            font-size: 10px;
-        }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Facebook Story Style - Monetag Ad</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Προσθήκη για multiple reels */
-        .reels-feed {
-            height: 100vh;
-            overflow-y: scroll;
-            scroll-snap-type: y mandatory;
-        }
-        
-        .reel-item {
-            height: 100vh;
-            scroll-snap-align: start;
-            position: relative;
-            display: flex;
-            align-items: flex-end;
-        }
-    </style>
+  .story {
+    width: 360px;
+    height: 640px;
+    margin: 24px auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: #000;
+    background-image: url('background.jpg'); /* άλλαξε με δικό σου background */
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+  }
+
+  .topbar {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 20;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid rgba(255,255,255,0.6);
+  }
+
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .title {
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  .media {
+    position: absolute;
+    top: 60px;
+    bottom: 70px;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* === ΚΑΤΩ ΜΠΑΡΑ REACTIONS (ΜΑΥΡΗ, ΜΕ +) === */
+  .reactions-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    z-index: 30;
+  }
+
+  .reaction {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .reaction img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  .reaction:hover {
+    transform: translateY(-5px) scale(1.05);
+  }
+
+  @media (max-width:420px){
+    .story { width: 92vw; height: calc(92vw * (16/9)); }
+  }
+</style>
 </head>
 <body>
-    <div class="reels-header">
-        <div class="reels-title">Reels</div>
-        <div class="header-actions">
-            <i class="fas fa-search header-icon"></i>
-            <i class="fas fa-camera header-icon"></i>
-        </div>
-    </div>
 
-    <div class="reels-feed">
-        <!-- Reel 1 -->
-        <div class="reel-item">
-            <!-- ΒΙΝΤΕΟ 1: Αντικατέστησε το src με το δικό σου βίντεο -->
-            <video class="reel-video" autoplay muted loop controls>
-                <source src="video1.mp4" type="video/mp4">
-                Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
-            </video>
-            
-            <div class="video-overlay">
-                <div class="video-info">
-                    <div class="video-header">
-                        <div class="video-category">Για εσάς</div>
-                        <div class="video-explore">Εξερεύνηση</div>
-                    </div>
-                    
-                    <div class="video-caption">
-                        Άλλα λέει η Θεια μ και άλλα ακούν τ' αυ...
-                    </div>
-                    
-                    <div class="video-no-sound">
-                        <i class="fas fa-volume-mute"></i>
-                        <span>Το βίντεο δεν έχει ήχο</span>
-                    </div>
-                    
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" placeholder="Προσθέστε ένα σχόλιο">
-                        <div class="comment-actions">
-                            <span class="comment-action">😊</span>
-                            <span class="comment-action">📷</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="video-actions">
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="action-count">4.2K</div>
-                    </div>
-                    
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-comment"></i>
-                        </div>
-                        <div class="action-count">327</div>
-                    </div>
-                    
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-share"></i>
-                        </div>
-                        <div class="action-count">32</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="story" id="storyRoot">
+  <!-- Επάνω μπάρα -->
+  <div class="topbar">
+    <div class="avatar"><img src="avatar.jpg" alt="avatar"></div>
+    <div class="title">Άλλα λέει η Θεία μ και ά...</div>
+  </div>
 
-        <!-- Reel 2 -->
-        <div class="reel-item">
-            <!-- ΒΙΝΤΕΟ 2: Αντικατέστησε το src με το δικό σου βίντεο -->
-            <video class="reel-video" autoplay muted loop controls>
-                <source src="video2.mp4" type="video/mp4">
-                Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
-            </video>
-            
-            <div class="video-overlay">
-                <div class="video-info">
-                    <div class="video-header">
-                        <div class="video-category">Για εσάς</div>
-                        <div class="video-explore">Εξερεύνηση</div>
-                    </div>
-                    
-                    <div class="video-caption">
-                        Δεύτερο βίντεο - Δικό σου περιεχόμενο!
-                    </div>
-                    
-                    <div class="video-no-sound">
-                        <i class="fas fa-volume-mute"></i>
-                        <span>Το βίντεο δεν έχει ήχο</span>
-                    </div>
-                    
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" placeholder="Προσθέστε ένα σχόλιο">
-                        <div class="comment-actions">
-                            <span class="comment-action">😊</span>
-                            <span class="comment-action">📷</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="video-actions">
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="action-count">2.1K</div>
-                    </div>
-                    
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-comment"></i>
-                        </div>
-                        <div class="action-count">156</div>
-                    </div>
-                    
-                    <div class="action-item">
-                        <div class="action-icon">
-                            <i class="fas fa-share"></i>
-                        </div>
-                        <div class="action-count">18</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+  <!-- Βίντεο -->
+  <div class="media">
+    <video id="storyVideo" playsinline webkit-playsinline muted preload="metadata"></video>
+  </div>
 
-    <div class="bottom-nav">
-        <a href="#" class="nav-item">
-            <i class="fas fa-home nav-icon"></i>
-            <span class="nav-label">Αρχική</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-search nav-icon"></i>
-            <span class="nav-label">Αναζήτηση</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fab fa-youtube nav-icon"></i>
-            <span class="nav-label">Reels</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-shopping-bag nav-icon"></i>
-            <span class="nav-label">Marketplace</span>
-        </a>
-        <a href="#" class="nav-item">
-            <i class="fas fa-user nav-icon"></i>
-            <span class="nav-label">Προφίλ</span>
-        </a>
-    </div>
+  <!-- Κάτω μαύρη μπάρα με όλα τα εικονίδια -->
+  <div class="reactions-bar">
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t4f/1/32/1f39e.png" alt="plus"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/tb0/1/32/2764.png" alt="love"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t61/1/32/1f44d.png" alt="like"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t6c/1/32/1f604.png" alt="haha"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t1b/1/32/1f970.png" alt="care"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t46/1/32/1f62e.png" alt="wow"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t5d/1/32/1f622.png" alt="sad"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t8b/1/32/1f620.png" alt="angry"></div>
+    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t2e/1/32/2728.png" alt="sparkle"></div>
+  </div>
+</div>
 
-    <script>
-        // Script για να σταματάει το βίντεο όταν δεν είναι ορατό
-        const videos = document.querySelectorAll('.reel-video');
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.play();
-                } else {
-                    entry.target.pause();
-                }
-            });
-        }, { threshold: 0.5 });
-        
-        videos.forEach(video => {
-            observer.observe(video);
-        });
-    </script>
+<script>
+const BACKGROUND_URL = 'background.jpg'; // άλλαξε με το δικό σου background
+const VIDEO_URL = 'https://raw.githubusercontent.com/<user>/<repo>/main/video.mp4'; // το βίντεό σου στο GitHub
+
+const root = document.getElementById('storyRoot');
+root.style.backgroundImage = `url("${BACKGROUND_URL}")`;
+
+const video = document.getElementById('storyVideo');
+video.src = VIDEO_URL;
+video.poster = BACKGROUND_URL;
+</script>
+
 </body>
 </html>
