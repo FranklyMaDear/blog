@@ -83,8 +83,8 @@
       background: #166fe5;
     }
 
-    /* Direct Ad Container */
-    .direct-ad-container {
+    /* Monetag Ad Container */
+    .monetag-ad-container {
       width: 100%;
       max-width: 400px;
       height: 300px;
@@ -97,13 +97,6 @@
       position: relative;
       overflow: hidden;
       border: 2px solid rgba(255,255,255,0.1);
-    }
-
-    .direct-ad-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 15px;
     }
 
     .ad-loading {
@@ -234,8 +227,8 @@
     <div class="ad-container">
       <div class="ad-timer" id="adTimer">Η διαφήμιση κλείνει σε 10</div>
       
-      <!-- Direct Ad Container -->
-      <div class="direct-ad-container" id="directAdContainer">
+      <!-- Monetag Ad Container -->
+      <div class="monetag-ad-container" id="monetagAdContainer">
         <div class="ad-loading" id="adLoading">
           Φορτώνει διαφήμιση...<br>
           <span style="font-size: 12px; opacity: 0.7;">Αν δεν φορτώσει, το βίντεο θα ξεκινήσει αυτόματα</span>
@@ -285,7 +278,7 @@
     const adOverlay = document.getElementById('adOverlay');
     const videoContainer = document.getElementById('videoContainer');
     const adTimer = document.getElementById('adTimer');
-    const directAdContainer = document.getElementById('directAdContainer');
+    const monetagContainer = document.getElementById('monetagAdContainer');
     const adLoading = document.getElementById('adLoading');
 
     let adSeconds = 10;
@@ -346,35 +339,34 @@
       }, 1000);
     }
 
-    // Φόρτωση διαφήμισης
-    function loadAd() {
-      const iframe = document.createElement('iframe');
-      iframe.src = 'https://otieu.com/4/10000601';
-      iframe.style.width = '100%';
-      iframe.style.height = '100%';
-      iframe.style.border = 'none';
-      iframe.style.borderRadius = '15px';
+    // Φόρτωση Monetag ad
+    function loadMonetagAd() {
+      const script = document.createElement('script');
+      script.src = 'https://fpyf8.com/88/tag.min.js';
+      script.setAttribute('data-zone', '175808');
+      script.setAttribute('data-cfasync', 'false');
+      script.async = true;
       
-      // Event listeners για iframe
-      iframe.onload = function() {
-        console.log('Ad loaded successfully');
+      // Event listeners για το script
+      script.onload = function() {
+        console.log('Monetag script loaded successfully');
         adLoaded = true;
         adLoading.style.display = 'none';
       };
       
-      iframe.onerror = function() {
-        console.log('Ad failed to load');
+      script.onerror = function() {
+        console.log('Monetag script failed to load');
         adLoading.innerHTML = 'Δεν φορτώθηκε διαφήμιση<br><span style="font-size: 12px; opacity: 0.7;">Το βίντεο θα ξεκινήσει σύντομα</span>';
-        // Αν αποτύχει η διαφήμιση, κλείνει σε 3 δευτερόλεπτα
+        // Αν αποτύχει το script, κλείνει σε 3 δευτερόλεπτα
         setTimeout(closeAd, 3000);
       };
       
-      directAdContainer.appendChild(iframe);
+      monetagContainer.appendChild(script);
       
       // Fallback: Αν μετά από 5 δευτερόλεπτα δεν έχει φορτώσει, προχωράμε
       setTimeout(() => {
         if (!adLoaded) {
-          console.log('Ad loading timeout - proceeding to video');
+          console.log('Monetag loading timeout - proceeding to video');
           closeAd();
         }
       }, 5000);
@@ -382,8 +374,8 @@
 
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
-      // Φόρτωση διαφήμισης
-      loadAd();
+      // Φόρτωση Monetag ad
+      loadMonetagAd();
       
       // Ξεκινάει το χρονόμετρο της διαφήμισης
       startAdTimer();
