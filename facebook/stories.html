@@ -71,7 +71,7 @@
 
     .instagram-username {
       position: absolute;
-      bottom: 100px;
+      bottom: 120px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.8);
@@ -80,31 +80,39 @@
       font-size: 16px;
       z-index: 100;
       backdrop-filter: blur(10px);
+      text-align: center;
+      white-space: nowrap;
     }
 
     .reaction-bar {
       position: absolute;
       bottom: 20px;
-      left: 0;
-      right: 0;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 10px 0;
-      gap: 15px;
+      padding: 10px 15px;
+      gap: 12px;
       z-index: 100;
+      background: rgba(0,0,0,0.5);
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+      max-width: 90vw;
+      flex-wrap: wrap;
     }
 
     .reaction-emoji {
-      font-size: 32px;
+      font-size: 28px;
       cursor: pointer;
       transition: all 0.3s ease;
       padding: 5px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.9);
       background: rgba(0,0,0,0.3);
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -118,15 +126,15 @@
 
     /* Κουμπί Κοινοποίησης */
     .share-btn {
-      font-size: 28px;
+      font-size: 24px;
       cursor: pointer;
       transition: all 0.3s ease;
       padding: 8px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.9);
       background: rgba(24, 119, 242, 0.8);
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 45px;
+      height: 45px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -138,6 +146,114 @@
     .share-btn:hover {
       transform: scale(1.3);
       background: rgba(24, 119, 242, 1);
+    }
+
+    /* Share Modal */
+    .share-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.95);
+      padding: 25px;
+      border-radius: 20px;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      min-width: 280px;
+      max-width: 90vw;
+    }
+
+    .share-modal.active {
+      display: flex;
+    }
+
+    .share-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .share-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .close-share {
+      background: #ff4444;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .share-options {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .share-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .share-option:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .share-icon {
+      font-size: 32px;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+    }
+
+    .share-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .add-story {
+      background: #1877f2;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .add-story:hover {
+      background: #166fe5;
     }
 
     /* Κρύψη όλων των browser elements */
@@ -153,6 +269,27 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .reaction-bar {
+        bottom: 15px;
+        padding: 8px 12px;
+        gap: 10px;
+      }
+      
+      .reaction-emoji, .share-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+      }
+      
+      .instagram-username {
+        bottom: 100px;
+        font-size: 14px;
+        padding: 8px 16px;
+      }
     }
   </style>
 </head>
@@ -177,7 +314,7 @@
 
   <!-- Reaction Bar -->
   <div class="reaction-bar">
-    <button class="share-btn" onclick="shareStory()" title="Κοινοποίηση">↗️</button>
+    <button class="share-btn" onclick="openShareModal()" title="Κοινοποίηση">↗️</button>
     <div class="reaction-emoji">❤️</div>
     <div class="reaction-emoji">👍</div>
     <div class="reaction-emoji">😂</div>
@@ -188,16 +325,51 @@
     <div class="reaction-emoji">✨</div>
   </div>
 
+  <!-- Share Modal -->
+  <div class="share-modal" id="shareModal">
+    <div class="share-header">
+      <div class="share-title">Κοινοποίηση</div>
+      <button class="close-share" onclick="closeShareModal()">×</button>
+    </div>
+    
+    <div class="share-options">
+      <div class="share-option" onclick="shareToFacebook()">
+        <div class="share-icon">📘</div>
+        <div class="share-label">Facebook</div>
+      </div>
+      
+      <div class="share-option" onclick="shareToInstagram()">
+        <div class="share-icon">📷</div>
+        <div class="share-label">Instagram</div>
+      </div>
+      
+      <div class="share-option" onclick="copyLink()">
+        <div class="share-icon">🔗</div>
+        <div class="share-label">Αντιγραφή</div>
+      </div>
+      
+      <div class="share-option" onclick="shareToWhatsApp()">
+        <div class="share-icon">💬</div>
+        <div class="share-label">WhatsApp</div>
+      </div>
+    </div>
+    
+    <button class="add-story" onclick="addToStory()">
+      <span>+</span> Προσθήκη στο Story σας
+    </button>
+  </div>
+
   <!-- Νέο Monetag Script -->
   <script>
     (function(s){
-      s.dataset.zone='9978610',
-      s.src='https://forfrogadiertor.com/tag.min.js'
+      s.dataset.zone='10021632',
+      s.src='https://groleegni.net/vignette.min.js'
     })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
   </script>
 
   <script>
     const video = document.getElementById('mainVideo');
+    const shareModal = document.getElementById('shareModal');
 
     // Function για fullscreen
     function enterFullscreen() {
@@ -212,26 +384,45 @@
       }
     }
 
-    // Function για κοινοποίηση
-    function shareStory() {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Άλλα λέει η Θεία μ και ά...',
-          text: 'Δες αυτό το βίντεο!',
-          url: window.location.href
-        }).then(() => {
-          console.log('Thanks for sharing!');
-        }).catch(console.error);
-      } else {
-        // Fallback για browsers που δεν υποστηρίζουν Web Share API
-        const url = window.location.href;
-        navigator.clipboard.writeText(url).then(() => {
-          alert('Το link αντιγράφηκε στο clipboard! 🎬');
-        }).catch(() => {
-          // Fallback αν δεν λειτουργεί το clipboard
-          prompt('Αντιγράψτε αυτό το link:', url);
-        });
-      }
+    // Share Modal functions
+    function openShareModal() {
+      shareModal.classList.add('active');
+    }
+
+    function closeShareModal() {
+      shareModal.classList.remove('active');
+    }
+
+    function shareToFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+      closeShareModal();
+    }
+
+    function shareToInstagram() {
+      alert('Ανοίξτε το Instagram και κοινοποιήστε το link! 📷');
+      closeShareModal();
+    }
+
+    function shareToWhatsApp() {
+      const text = encodeURIComponent('Δες αυτό το βίντεο! ' + window.location.href);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+      closeShareModal();
+    }
+
+    function copyLink() {
+      const url = window.location.href;
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Το link αντιγράφηκε στο clipboard! 📋');
+      }).catch(() => {
+        prompt('Αντιγράψτε αυτό το link:', url);
+      });
+      closeShareModal();
+    }
+
+    function addToStory() {
+      alert('+ Προσθήκη στο Story σας - Λειτουργία Soon! ✨');
+      closeShareModal();
     }
 
     // Function για έναρξη βίντεο
@@ -240,7 +431,6 @@
       
       video.play().then(() => {
         console.log('Video started playing');
-        // Ενεργοποίηση ήχου μετά από λίγο
         setTimeout(() => {
           video.muted = false;
         }, 1000);
@@ -251,10 +441,7 @@
 
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
-      // Προσπάθεια fullscreen
       setTimeout(enterFullscreen, 100);
-      
-      // Έναρξη βίντεο
       startVideo();
     });
 
@@ -284,6 +471,13 @@
         e.stopPropagation();
         alert('Αντίδραση: ' + this.textContent);
       });
+    });
+
+    // Κλείσιμο modal με κλικ έξω
+    shareModal.addEventListener('click', function(e) {
+      if (e.target === shareModal) {
+        closeShareModal();
+      }
     });
 
     // Απενεργοποίηση context menu και browser controls
