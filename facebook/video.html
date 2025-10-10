@@ -3,202 +3,739 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τα Βίντεό Μου</title>
+    <title>Facebook Reels - Τα Βίντεό Μου</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #f0f2f5;
+            color: #1c1e21;
         }
         
-        .container {
-            max-width: 1000px;
+        /* Header Facebook */
+        .facebook-header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 16px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
-        header {
-            text-align: center;
-            padding: 30px 0;
+        .logo-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
         
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .facebook-logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1877f2;
         }
         
-        .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        .search-bar {
+            background-color: #f0f2f5;
+            border-radius: 20px;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
         }
         
-        .videos-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+        .search-bar i {
+            color: #65676b;
+            margin-right: 6px;
         }
         
-        .video-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
-        }
-        
-        .video-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 177.78%; /* 9:16 aspect ratio */
-        }
-        
-        .video-wrapper video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .search-bar input {
+            background: transparent;
             border: none;
+            outline: none;
+            width: 200px;
         }
         
-        .video-info {
-            padding: 15px;
+        .nav-icons {
+            display: flex;
+            gap: 8px;
         }
         
-        .video-title {
-            font-size: 1.1rem;
-            margin-bottom: 8px;
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f2f5;
+            color: #65676b;
+            cursor: pointer;
+        }
+        
+        .nav-icon.active {
+            color: #1877f2;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #1877f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Main Content */
+        .main-container {
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+        }
+        
+        /* Left Sidebar */
+        .left-sidebar {
+            width: 280px;
+        }
+        
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            cursor: pointer;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .sidebar-item.active {
+            background-color: #e7f3ff;
+            color: #1877f2;
+        }
+        
+        .sidebar-item i {
+            font-size: 20px;
+            margin-right: 12px;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .sidebar-divider {
+            height: 1px;
+            background-color: #e4e6eb;
+            margin: 12px 0;
+        }
+        
+        /* Reels Container */
+        .reels-feed {
+            flex: 1;
+        }
+        
+        .reels-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .reels-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .create-reel {
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        /* Reel Card */
+        .reel-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+        
+        .reel-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+        }
+        
+        .reel-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #1877f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .reel-user-info {
+            flex: 1;
+        }
+        
+        .reel-username {
             font-weight: 600;
         }
         
-        .video-desc {
-            font-size: 0.9rem;
-            opacity: 0.8;
+        .reel-time {
+            font-size: 13px;
+            color: #65676b;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
         
-        .video-stats {
+        .reel-options {
+            color: #65676b;
+            cursor: pointer;
+        }
+        
+        .reel-content {
+            position: relative;
+        }
+        
+        .reel-video {
+            width: 100%;
+            height: 500px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .reel-actions {
+            position: absolute;
+            right: 16px;
+            bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .action-button i {
+            font-size: 24px;
+            margin-bottom: 4px;
+            background: rgba(0,0,0,0.3);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .action-button span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .reel-description {
+            padding: 12px 16px;
+        }
+        
+        .reel-stats {
             display: flex;
             justify-content: space-between;
-            margin-top: 10px;
-            font-size: 0.8rem;
-            opacity: 0.7;
+            padding: 0 16px 12px;
+            font-size: 14px;
+            color: #65676b;
         }
         
-        footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px;
-            opacity: 0.7;
-            font-size: 0.9rem;
+        .reel-interactions {
+            display: flex;
+            border-top: 1px solid #e4e6eb;
+            padding: 6px 0;
         }
         
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+        .interaction-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #65676b;
+        }
+        
+        .interaction-btn:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .interaction-btn.active {
+            color: #1877f2;
+        }
+        
+        /* Right Sidebar */
+        .right-sidebar {
+            width: 280px;
+        }
+        
+        .contacts-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        
+        .contacts-title {
+            font-weight: 600;
+            color: #65676b;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            cursor: pointer;
+        }
+        
+        .contact-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background-color: #e4e6eb;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1877f2;
+            font-weight: bold;
+        }
+        
+        .contact-name {
+            font-weight: 500;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .left-sidebar, .right-sidebar {
+                display: none;
             }
             
-            .videos-container {
-                grid-template-columns: 1fr;
+            .main-container {
+                justify-content: center;
+            }
+            
+            .reels-feed {
+                max-width: 680px;
+            }
+        }
+        
+        @media (max-width: 700px) {
+            .search-bar input {
+                width: 150px;
+            }
+            
+            .reel-video {
+                height: 400px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Τα Βίντεό Μου</h1>
-            <p class="subtitle">Δες τα πιο πρόσφατα βίντεο που έχω δημιουργήσει</p>
-        </header>
-        
-        <main>
-            <div class="videos-container">
-                <!-- Βίντεο 1 -->
-                <div class="video-card">
-                    <div class="video-wrapper">
-                        <video controls poster="https://via.placeholder.com/300x533/6a11cb/ffffff?text=Βίντεο+1">
-                            <source src="video1.mp4" type="video/mp4">
-                            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
-                        </video>
+    <!-- Facebook Header -->
+    <header class="facebook-header">
+        <div class="header-container">
+            <div class="logo-search">
+                <div class="facebook-logo">facebook</div>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Αναζήτηση στο Facebook">
+                </div>
+            </div>
+            
+            <div class="nav-icons">
+                <div class="nav-icon active">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fab fa-youtube"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-store"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+            </div>
+            
+            <div class="user-menu">
+                <div class="user-avatar">Σ</div>
+                <span>Σεβ</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <div class="sidebar-item active">
+                <i class="fas fa-user"></i>
+                <span>Σεβαστός</span>
+            </div>
+            <div class="sidebar-item">
+                <i class="fas fa-user-friends"></i>
+                <span>Φίλοι</span>
+            </div>
+            <div class="sidebar-item">
+                <i class="fab fa-youtube"></i>
+                <span>Watch</span>
+            </div>
+            <div class="sidebar-item">
+                <i class="fas fa-flag"></i>
+                <span>Σελίδες</span>
+            </div>
+            <div class="sidebar-item">
+                <i class="fas fa-users"></i>
+                <span>Ομάδες</span>
+            </div>
+            
+            <div class="sidebar-divider"></div>
+            
+            <div class="sidebar-item">
+                <i class="fas fa-calendar"></i>
+                <span>Events</span>
+            </div>
+            <div class="sidebar-item">
+                <i class="fas fa-briefcase"></i>
+                <span>Jobs</span>
+            </div>
+        </div>
+
+        <!-- Reels Feed -->
+        <div class="reels-feed">
+            <div class="reels-header">
+                <div class="reels-title">Reels</div>
+                <button class="create-reel">
+                    <i class="fas fa-plus"></i>
+                    Δημιουργία Reel
+                </button>
+            </div>
+            
+            <!-- Reel 1 -->
+            <div class="reel-card">
+                <div class="reel-header">
+                    <div class="reel-avatar">Σ</div>
+                    <div class="reel-user-info">
+                        <div class="reel-username">Σεβαστός</div>
+                        <div class="reel-time">
+                            <span>2 ώρες · </span>
+                            <i class="fas fa-globe-europe"></i>
+                        </div>
                     </div>
-                    <div class="video-info">
-                        <div class="video-title">Δημιουργικό Project</div>
-                        <div class="video-desc">Μια δημιουργική ιδέα που αναπτύχθηκε πρόσφατα</div>
-                        <div class="video-stats">
-                            <span>1.2K προβολές</span>
-                            <span>3 ημέρες πριν</span>
+                    <div class="reel-options">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                
+                <div class="reel-content">
+                    <div class="reel-video">
+                        <div>Βίντεο 1 - Δημιουργικό Project</div>
+                    </div>
+                    
+                    <div class="reel-actions">
+                        <div class="action-button">
+                            <i class="fas fa-heart"></i>
+                            <span>1.2K</span>
+                        </div>
+                        <div class="action-button">
+                            <i class="fas fa-comment"></i>
+                            <span>245</span>
+                        </div>
+                        <div class="action-button">
+                            <i class="fas fa-share"></i>
+                            <span>Κοινοποίηση</span>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Βίντεο 2 -->
-                <div class="video-card">
-                    <div class="video-wrapper">
-                        <video controls poster="https://via.placeholder.com/300x533/2575fc/ffffff?text=Βίντεο+2">
-                            <source src="video2.mp4" type="video/mp4">
-                            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
-                        </video>
+                <div class="reel-description">
+                    <p>Μια δημιουργική ιδέα που αναπτύχθηκε πρόσφατα! 😍 #creativity #project</p>
+                </div>
+                
+                <div class="reel-stats">
+                    <div class="reel-likes">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>1.2K</span>
                     </div>
-                    <div class="video-info">
-                        <div class="video-title">Tutorial Μέρος 1</div>
-                        <div class="video-desc">Βασικές τεχνικές για αρχάριους</div>
-                        <div class="video-stats">
-                            <span>2.4K προβολές</span>
-                            <span>1 εβδομάδα πριν</span>
-                        </div>
+                    <div class="reel-comments-shares">
+                        <span>245 σχόλια · 89 κοινοποιήσεις</span>
                     </div>
                 </div>
                 
-                <!-- Βίντεο 3 -->
-                <div class="video-card">
-                    <div class="video-wrapper">
-                        <video controls poster="https://via.placeholder.com/300x533/ff6b6b/ffffff?text=Βίντεο+3">
-                            <source src="video3.mp4" type="video/mp4">
-                            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
-                        </video>
+                <div class="reel-interactions">
+                    <div class="interaction-btn active">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Like</span>
                     </div>
-                    <div class="video-info">
-                        <div class="video-title">Behind The Scenes</div>
-                        <div class="video-desc">Πώς δημιουργήθηκε το τελευταίο project</div>
-                        <div class="video-stats">
-                            <span>3.7K προβολές</span>
-                            <span>2 εβδομάδες πριν</span>
-                        </div>
+                    <div class="interaction-btn">
+                        <i class="fas fa-comment"></i>
+                        <span>Comment</span>
+                    </div>
+                    <div class="interaction-btn">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
                     </div>
                 </div>
             </div>
-        </main>
-        
-        <footer>
-            <p>© 2023 Τα Βίντεό Μου. All rights reserved.</p>
-        </footer>
+            
+            <!-- Reel 2 -->
+            <div class="reel-card">
+                <div class="reel-header">
+                    <div class="reel-avatar">Σ</div>
+                    <div class="reel-user-info">
+                        <div class="reel-username">Σεβαστός</div>
+                        <div class="reel-time">
+                            <span>1 ημέρα · </span>
+                            <i class="fas fa-globe-europe"></i>
+                        </div>
+                    </div>
+                    <div class="reel-options">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                
+                <div class="reel-content">
+                    <div class="reel-video">
+                        <div>Βίντεο 2 - Tutorial Μέρος 1</div>
+                    </div>
+                    
+                    <div class="reel-actions">
+                        <div class="action-button">
+                            <i class="fas fa-heart"></i>
+                            <span>2.4K</span>
+                        </div>
+                        <div class="action-button">
+                            <i class="fas fa-comment"></i>
+                            <span>512</span>
+                        </div>
+                        <div class="action-button">
+                            <i class="fas fa-share"></i>
+                            <span>Κοινοποίηση</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reel-description">
+                    <p>Βασικές τεχνικές για αρχάριους! Ποιος θέλει μέρος 2; 👍 #tutorial #beginners</p>
+                </div>
+                
+                <div class="reel-stats">
+                    <div class="reel-likes">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>2.4K</span>
+                    </div>
+                    <div class="reel-comments-shares">
+                        <span>512 σχόλια · 210 κοινοποιήσεις</span>
+                    </div>
+                </div>
+                
+                <div class="reel-interactions">
+                    <div class="interaction-btn">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Like</span>
+                    </div>
+                    <div class="interaction-btn">
+                        <i class="fas fa-comment"></i>
+                        <span>Comment</span>
+                    </div>
+                    <div class="interaction-btn">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Reel 3 -->
+            <div class="reel-card">
+                <div class="reel-header">
+                    <div class="reel-avatar">Σ</div>
+                    <div class="reel-user-info">
+                        <div class="reel-username">Σεβαστός</div>
+                        <div class="reel-time">
+                            <span>3 ημέρες · </span>
+                            <i class="fas fa-globe-europe"></i>
+                        </div>
+                    </div>
+                    <div class="reel-options">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                </div>
+                
+                <div class="reel-content">
+                    <div class="reel-video">
+                        <div>Βίντεο 3 - Behind The Scenes</div>
+                    </div>
+                    
+                    <div class="reel-actions">
+                        <div class="action-button">
+                            <i class="fas fa-heart"></i>
+                            <span>3.7K</span>
+                        </div>
+                        <div class="action-button">
+                            <i class="fas fa-comment"></i>
+                            <span>892</span>
+                        </div>
+                        <div class="action-button">
+                            <i class="fas fa-share"></i>
+                            <span>Κοινοποίηση</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="reel-description">
+                    <p>Πώς δημιουργήθηκε το τελευταίο project! Behind the scenes 🎬 #behindthescenes #makingof</p>
+                </div>
+                
+                <div class="reel-stats">
+                    <div class="reel-likes">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>3.7K</span>
+                    </div>
+                    <div class="reel-comments-shares">
+                        <span>892 σχόλια · 451 κοινοποιήσεις</span>
+                    </div>
+                </div>
+                
+                <div class="reel-interactions">
+                    <div class="interaction-btn">
+                        <i class="fas fa-thumbs-up"></i>
+                        <span>Like</span>
+                    </div>
+                    <div class="interaction-btn">
+                        <i class="fas fa-comment"></i>
+                        <span>Comment</span>
+                    </div>
+                    <div class="interaction-btn">
+                        <i class="fas fa-share"></i>
+                        <span>Share</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="contacts-header">
+                <div class="contacts-title">Επαφές</div>
+                <div>
+                    <i class="fas fa-video"></i>
+                    <i class="fas fa-search"></i>
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+            
+            <div class="contact-item">
+                <div class="contact-avatar">Μ</div>
+                <div class="contact-name">Μαρία</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-avatar">Ν</div>
+                <div class="contact-name">Νίκος</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-avatar">Ε</div>
+                <div class="contact-name">Ελένη</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-avatar">Γ</div>
+                <div class="contact-name">Γιώργος</div>
+            </div>
+            <div class="contact-item">
+                <div class="contact-avatar">Κ</div>
+                <div class="contact-name">Κατερίνα</div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Απλό script για να σταματάει η αναπαραγωγή όταν ανοίγει άλλο βίντεο
-        document.addEventListener('play', function(e){
-            var videos = document.getElementsByTagName('video');
-            for(var i = 0; i < videos.length; i++){
-                if(videos[i] != e.target){
-                    videos[i].pause();
+        // Interactive like buttons
+        document.querySelectorAll('.interaction-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const isLikeButton = this.querySelector('.fa-thumbs-up');
+                
+                if (isLikeButton) {
+                    this.classList.toggle('active');
+                    
+                    const reelCard = this.closest('.reel-card');
+                    const likesCount = reelCard.querySelector('.reel-likes span');
+                    const heartCount = reelCard.querySelector('.action-button .fa-heart').nextElementSibling;
+                    
+                    if (this.classList.contains('active')) {
+                        // Increase likes
+                        let currentLikes = parseInt(likesCount.textContent);
+                        let currentHearts = parseInt(heartCount.textContent);
+                        
+                        likesCount.textContent = (currentLikes + 1) + 'K';
+                        heartCount.textContent = (currentHearts + 1) + 'K';
+                    } else {
+                        // Decrease likes
+                        let currentLikes = parseInt(likesCount.textContent);
+                        let currentHearts = parseInt(heartCount.textContent);
+                        
+                        likesCount.textContent = (currentLikes - 1) + 'K';
+                        heartCount.textContent = (currentHearts - 1) + 'K';
+                    }
                 }
-            }
-        }, true);
+            });
+        });
     </script>
 </body>
 </html>
