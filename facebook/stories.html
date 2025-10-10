@@ -83,8 +83,8 @@
       background: #166fe5;
     }
 
-    /* Monetag Ad Container */
-    .monetag-ad-container {
+    /* Direct Ad Container */
+    .direct-ad-container {
       width: 320px;
       height: 250px;
       background: rgba(255,255,255,0.1);
@@ -97,7 +97,9 @@
       overflow: hidden;
     }
 
-    .monetag-ad-container iframe {
+    .direct-ad-container iframe {
+      width: 100%;
+      height: 100%;
       border: none;
       border-radius: 10px;
     }
@@ -222,14 +224,11 @@
   <!-- Ad Overlay -->
   <div class="ad-overlay" id="adOverlay">
     <div class="ad-container">
-      <div class="ad-timer" id="adTimer">Η διαφήμιση κλείνει σε 5</div>
+      <div class="ad-timer" id="adTimer">Η διαφήμιση κλείνει σε 10</div>
       
-      <!-- Monetag Ad Container -->
-      <div class="monetag-ad-container" id="monetagAdContainer">
-        <div style="color: white; text-align: center;">
-          <div>Φορτώνει διαφήμιση...</div>
-          <div style="font-size: 12px; margin-top: 10px;">Monetag</div>
-        </div>
+      <!-- Direct Ad Container -->
+      <div class="direct-ad-container">
+        <iframe src="https://otieu.com/4/10000601" frameborder="0" scrolling="no"></iframe>
       </div>
       
       <button class="skip-ad" onclick="skipAd()">Παράβλεψη Διαφήμισης</button>
@@ -275,9 +274,8 @@
     const adOverlay = document.getElementById('adOverlay');
     const videoContainer = document.getElementById('videoContainer');
     const adTimer = document.getElementById('adTimer');
-    const monetagContainer = document.getElementById('monetagAdContainer');
 
-    let adSeconds = 5;
+    let adSeconds = 10; // Αυξημένο σε 10 δευτερόλεπτα
     let adCountdown;
 
     // Function για fullscreen
@@ -322,7 +320,7 @@
       }, 500);
     }
 
-    // Χρονόμετρο διαφήμισης
+    // Χρονόμετρο διαφήμισης - 10 δευτερόλεπτα
     function startAdTimer() {
       adCountdown = setInterval(() => {
         adSeconds--;
@@ -334,35 +332,9 @@
       }, 1000);
     }
 
-    // Φόρτωση Monetag ad
-    function loadMonetagAd() {
-      // Δημιουργία script element για monetag
-      const script = document.createElement('script');
-      script.src = 'https://aiharsoreersu.net/act/files/tag.min.js?z=9978488';
-      script.setAttribute('data-cfasync', 'false');
-      script.async = true;
-      
-      // Προσθήκη event listener για όταν φορτώσει το script
-      script.onload = function() {
-        console.log('Monetag ad loaded successfully');
-        // Εδώ το monetag θα εμφανίσει τη διαφήμιση αυτόματα στο container
-      };
-      
-      script.onerror = function() {
-        console.log('Monetag ad failed to load');
-        monetagContainer.innerHTML = '<div style="color: white; text-align: center;">Δεν φορτώθηκε διαφήμιση</div>';
-      };
-      
-      // Προσθήκη του script στο monetag container
-      monetagContainer.appendChild(script);
-    }
-
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
-      // Φόρτωση monetag ad
-      loadMonetagAd();
-      
-      // Ξεκινάει το χρονόμετρο της διαφήμισης
+      // Ξεκινάει το χρονόμετρο της διαφήμισης - 10 δευτερόλεπτα
       startAdTimer();
       
       // Προσπάθεια fullscreen
