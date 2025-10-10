@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Video Viewer | Facebook Στυλ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            color: #1c1e21;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: #1877f2;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1877f2;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: none;
+            background: #f0f2f5;
+            font-size: 15px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-icons i {
+            font-size: 22px;
+            color: #65676b;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            flex: 1;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-item:hover {
+            background: #f0f2f5;
+        }
+
+        .sidebar-item i {
+            font-size: 20px;
+            color: #1877f2;
+            width: 30px;
+            text-align: center;
+        }
+
+        .sidebar-item.active {
+            background: #e7f3ff;
+        }
+
+        /* Video Feed */
+        .video-feed {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .video-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .video-header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #1877f2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .video-info h3 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .video-info p {
+            font-size: 13px;
+            color: #65676b;
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+        }
+
+        .video-container video {
+            width: 100%;
+            display: block;
+        }
+
+        .video-actions {
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #e4e6eb;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #65676b;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            background: #f0f2f5;
+        }
+
+        .action-btn i {
+            font-size: 18px;
+        }
+
+        .video-stats {
+            padding: 0 16px 10px;
+            font-size: 13px;
+            color: #65676b;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .video-description {
+            padding: 0 16px 12px;
+            font-size: 14px;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            width: 300px;
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .right-sidebar h2 {
+            font-size: 17px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e4e6eb;
+        }
+
+        .contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .contact:hover {
+            background: #f0f2f5;
+        }
+
+        .contact-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #42b883;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .contact-name {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Video Upload Section */
+        .video-upload {
+            background: #ffffff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .upload-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .upload-header i {
+            font-size: 24px;
+            color: #1877f2;
+        }
+
+        .upload-header h2 {
+            font-size: 18px;
+        }
+
+        .upload-area {
+            border: 2px dashed #dadde1;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .upload-area:hover {
+            border-color: #1877f2;
+            background: #f7f9fa;
+        }
+
+        .upload-area i {
+            font-size: 40px;
+            color: #1877f2;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .upload-subtext {
+            font-size: 14px;
+            color: #65676b;
+        }
+
+        .github-url-input {
+            margin-top: 15px;
+        }
+
+        .github-url-input input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid #dddfe2;
+            font-size: 15px;
+        }
+
+        .upload-btn {
+            background: #1877f2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        .upload-btn:hover {
+            background: #166fe5;
+        }
+
+        /* Footer */
+        footer {
+            background: #ffffff;
+            padding: 20px 0;
+            margin-top: 30px;
+            border-top: 1px solid #dddfe2;
+        }
+
+        .footer-content {
+            text-align: center;
+            color: #65676b;
+            font-size: 14px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .search-bar {
+                max-width: 300px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .search-bar {
+                order: 3;
+                max-width: 100%;
+                margin: 10px 0 0;
+            }
+            
+            .nav-icons {
+                margin-left: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fab fa-github"></i>
+                    <h1>GitHub Video Viewer</h1>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" placeholder="Αναζήτηση βίντεο...">
+                </div>
+                
+                <div class="nav-icons">
+                    <i class="fas fa-home"></i>
+                    <i class="fas fa-tv"></i>
+                    <i class="fas fa-users"></i>
+                    <i class="fas fa-bell"></i>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="main-content">
+            <!-- Left Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Αρχική Σελίδα</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Βίντεο</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-user-friends"></i>
+                    <span>Φίλοι</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Αποθηκευμένα</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-history"></i>
+                    <span>Ιστορικό</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-star"></i>
+                    <span>Αγαπημένα</span>
+                </div>
+                <div class="sidebar-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Ρυθμίσεις</span>
+                </div>
+            </div>
+
+            <!-- Video Feed -->
+            <div class="video-feed">
+                <!-- Video Upload Section -->
+                <div class="video-upload">
+                    <div class="upload-header">
+                        <i class="fas fa-video"></i>
+                        <h2>Ανέβασμα Βίντεο από GitHub</h2>
+                    </div>
+                    
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p class="upload-text">Σύρετε και αφήστε το βίντεο εδώ</p>
+                        <p class="upload-subtext">ή</p>
+                        <button class="upload-btn">Επιλέξτε Αρχείο</button>
+                    </div>
+                    
+                    <div class="github-url-input">
+                        <input type="text" placeholder="Εισαγάγετε GitHub URL βίντεο...">
+                    </div>
+                </div>
+
+                <!-- Video Cards -->
+                <div class="video-card">
+                    <div class="video-header">
+                        <div class="profile-pic">MK</div>
+                        <div class="video-info">
+                            <h3>Maria Konstantinou</h3>
+                            <p>Πριν 2 ώρες · <i class="fas fa-globe-europe"></i></p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-description">
+                        <p>Δημοφιλές βίντεο από το GitHub - Tutorial για React Hooks</p>
+                    </div>
+                    
+                    <div class="video-container">
+                        <video controls poster="https://placehold.co/600x400/1877f2/white?text=GitHub+Video">
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
+                        </video>
+                    </div>
+                    
+                    <div class="video-stats">
+                        <div class="likes">
+                            <i class="fas fa-thumbs-up"></i> 2.5K
+                        </div>
+                        <div class="comments-shares">
+                            245 Σχόλια · 78 Κοινοποιήσεις
+                        </div>
+                    </div>
+                    
+                    <div class="video-actions">
+                        <div class="action-btn">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>Like</span>
+                        </div>
+                        <div class="action-btn">
+                            <i class="far fa-comment"></i>
+                            <span>Σχόλιο</span>
+                        </div>
+                        <div class="action-btn">
+                            <i class="far fa-share-square"></i>
+                            <span>Κοινοποίηση</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card">
+                    <div class="video-header">
+                        <div class="profile-pic">DC</div>
+                        <div class="video-info">
+                            <h3>Dimitris Charalampous</h3>
+                            <p>Πριν 1 ημέρα · <i class="fas fa-user-friends"></i></p>
+                        </div>
+                    </div>
+                    
+                    <div class="video-description">
+                        <p>Νέο βίντεο από το GitHub repository μου - Vue.js animations</p>
+                    </div>
+                    
+                    <div class="video-container">
+                        <video controls poster="https://placehold.co/600x400/42b883/white?text=Vue.js+Demo">
+                            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+                            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
+                        </video>
+                    </div>
+                    
+                    <div class="video-stats">
+                        <div class="likes">
+                            <i class="fas fa-thumbs-up"></i> 1.8K
+                        </div>
+                        <div class="comments-shares">
+                            189 Σχόλια · 45 Κοινοποιήσεις
+                        </div>
+                    </div>
+                    
+                    <div class="video-actions">
+                        <div class="action-btn">
+                            <i class="far fa-thumbs-up"></i>
+                            <span>Like</span>
+                        </div>
+                        <div class="action-btn">
+                            <i class="far fa-comment"></i>
+                            <span>Σχόλιο</span>
+                        </div>
+                        <div class="action-btn">
+                            <i class="far fa-share-square"></i>
+                            <span>Κοινοποίηση</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="right-sidebar">
+                <h2>Επαφές</h2>
+                
+                <div class="contact">
+                    <div class="contact-avatar">AK</div>
+                    <div class="contact-name">Anna Karagianni</div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar">PN</div>
+                    <div class="contact-name">Panagiotis Nikolaou</div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar">EP</div>
+                    <div class="contact-name">Eleni Papadopoulou</div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar">GS</div>
+                    <div class="contact-name">Giorgos Samaras</div>
+                </div>
+                
+                <div class="contact">
+                    <div class="contact-avatar">KS</div>
+                    <div class="contact-name">Katerina Sotiropoulou</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>GitHub Video Viewer &copy; 2023 - Πλατφόρμα προβολής βίντεο από GitHub με στυλ Facebook</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Προσομοίωση ανεβάσματος βίντεο
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadBtn = uploadArea.querySelector('.upload-btn');
+            
+            uploadBtn.addEventListener('click', function() {
+                alert('Θα ανοίξει ένα παράθυρο επιλογής αρχείου. Σε πραγματική εφαρμογή, εδώ θα μπορούσατε να επιλέξετε ένα βίντεο από τον υπολογιστή σας.');
+            });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#1877f2';
+                uploadArea.style.background = '#f0f8ff';
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.style.borderColor = '#dadde1';
+                uploadArea.style.background = 'transparent';
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = '#dadde1';
+                uploadArea.style.background = 'transparent';
+                alert('Βίντεο ανέβηκε επιτυχώς! Σε πραγματική εφαρμογή, το βίντεο θα προστεθεί στη ροή.');
+            });
+            
+            // Προσθήκη απλής λειτουργικότητας για τα κουμπιά Like
+            const likeButtons = document.querySelectorAll('.action-btn');
+            
+            likeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    const text = this.querySelector('span');
+                    
+                    if (icon.classList.contains('fa-thumbs-up')) {
+                        if (icon.classList.contains('far')) {
+                            icon.classList.remove('far');
+                            icon.classList.add('fas');
+                            icon.style.color = '#1877f2';
+                            text.textContent = 'Liked';
+                        } else {
+                            icon.classList.remove('fas');
+                            icon.classList.add('far');
+                            icon.style.color = '';
+                            text.textContent = 'Like';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
