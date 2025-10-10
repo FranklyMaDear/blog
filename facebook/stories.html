@@ -83,6 +83,25 @@
       background: #166fe5;
     }
 
+    /* Monetag Ad Container */
+    .monetag-ad-container {
+      width: 320px;
+      height: 250px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 20px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .monetag-ad-container iframe {
+      border: none;
+      border-radius: 10px;
+    }
+
     .video-container {
       width: 100vw;
       height: 100vh;
@@ -194,6 +213,7 @@
       height: 100%;
       z-index: 50;
       cursor: pointer;
+      display: none;
     }
   </style>
 </head>
@@ -203,8 +223,15 @@
   <div class="ad-overlay" id="adOverlay">
     <div class="ad-container">
       <div class="ad-timer" id="adTimer">Η διαφήμιση κλείνει σε 5</div>
-      <!-- Monetag Ad -->
-      <div id="monetag-ad"></div>
+      
+      <!-- Monetag Ad Container -->
+      <div class="monetag-ad-container" id="monetagAdContainer">
+        <div style="color: white; text-align: center;">
+          <div>Φορτώνει διαφήμιση...</div>
+          <div style="font-size: 12px; margin-top: 10px;">Monetag</div>
+        </div>
+      </div>
+      
       <button class="skip-ad" onclick="skipAd()">Παράβλεψη Διαφήμισης</button>
     </div>
   </div>
@@ -242,15 +269,13 @@
     <div class="reaction-emoji">✨</div>
   </div>
 
-  <!-- Monetag Script -->
-  <script>(function(s){s.dataset.zone='9978639',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-
   <script>
     const video = document.getElementById('mainVideo');
     const clickOverlay = document.getElementById('clickOverlay');
     const adOverlay = document.getElementById('adOverlay');
     const videoContainer = document.getElementById('videoContainer');
     const adTimer = document.getElementById('adTimer');
+    const monetagContainer = document.getElementById('monetagAdContainer');
 
     let adSeconds = 5;
     let adCountdown;
@@ -309,8 +334,34 @@
       }, 1000);
     }
 
+    // Φόρτωση Monetag ad
+    function loadMonetagAd() {
+      // Δημιουργία script element για monetag
+      const script = document.createElement('script');
+      script.src = 'https://aiharsoreersu.net/act/files/tag.min.js?z=9978488';
+      script.setAttribute('data-cfasync', 'false');
+      script.async = true;
+      
+      // Προσθήκη event listener για όταν φορτώσει το script
+      script.onload = function() {
+        console.log('Monetag ad loaded successfully');
+        // Εδώ το monetag θα εμφανίσει τη διαφήμιση αυτόματα στο container
+      };
+      
+      script.onerror = function() {
+        console.log('Monetag ad failed to load');
+        monetagContainer.innerHTML = '<div style="color: white; text-align: center;">Δεν φορτώθηκε διαφήμιση</div>';
+      };
+      
+      // Προσθήκη του script στο monetag container
+      monetagContainer.appendChild(script);
+    }
+
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
+      // Φόρτωση monetag ad
+      loadMonetagAd();
+      
       // Ξεκινάει το χρονόμετρο της διαφήμισης
       startAdTimer();
       
