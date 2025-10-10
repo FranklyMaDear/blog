@@ -1,150 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Facebook Story Style - Monetag Ad</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook Story Style</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-  .story {
-    width: 360px;
-    height: 640px;
-    margin: 24px auto;
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    background-color: #000;
-    background-image: url('background.jpg'); /* άλλαξε με δικό σου background */
-    background-size: cover;
-    background-position: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
-  }
+    .story-header {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+    }
 
-  .topbar {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    right: 12px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 20;
-  }
+    .story-header img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      margin-right: 10px;
+      border: 2px solid #888;
+    }
 
-  .avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid rgba(255,255,255,0.6);
-  }
+    .story-video {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    video {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+    }
 
-  .title {
-    color: #fff;
-    font-weight: 600;
-    font-size: 15px;
-  }
+    .reaction-bar {
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 0;
+      gap: 10px;
+    }
 
-  .media {
-    position: absolute;
-    top: 60px;
-    bottom: 70px;
-    left: 0;
-    right: 0;
-    overflow: hidden;
-  }
+    .reaction-bar img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
 
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    .reaction-bar img:hover {
+      transform: scale(1.2);
+    }
 
-  /* === ΚΑΤΩ ΜΠΑΡΑ REACTIONS (ΜΑΥΡΗ, ΜΕ +) === */
-  .reactions-bar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    z-index: 30;
-  }
+    /* Overlay Διαφήμισης */
+    .ad-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
 
-  .reaction {
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.15s ease;
-  }
-
-  .reaction img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    user-select: none;
-    -webkit-user-drag: none;
-  }
-
-  .reaction:hover {
-    transform: translateY(-5px) scale(1.05);
-  }
-
-  @media (max-width:420px){
-    .story { width: 92vw; height: calc(92vw * (16/9)); }
-  }
-</style>
+    .ad-message {
+      font-size: 18px;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="story" id="storyRoot">
-  <!-- Επάνω μπάρα -->
-  <div class="topbar">
-    <div class="avatar"><img src="avatar.jpg" alt="avatar"></div>
-    <div class="title">Άλλα λέει η Θεία μ και ά...</div>
+  <!-- Διαφημιστικό Overlay -->
+  <div class="ad-overlay" id="ad">
+    <div id="monetag-ad">
+      <!-- Εδώ ενσωματώνεται ο διαφημιστικός σου κώδικας -->
+      <script>
+        (function(s){
+          s.dataset.zone='9974402';
+          s.src='https://al5sm.com/tag.min.js';
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+      </script>
+    </div>
+    <div class="ad-message" id="adTimer">Η διαφήμιση θα κλείσει σε 5 δευτερόλεπτα...</div>
   </div>
 
-  <!-- Βίντεο -->
-  <div class="media">
-    <video id="storyVideo" playsinline webkit-playsinline muted preload="metadata"></video>
+  <!-- Story Header -->
+  <div class="story-header">
+    <img src="https://i.imgur.com/1hFfT2B.png" alt="profile">
+    <span>Άλλα λέει η Θεία μ και ά...</span>
   </div>
 
-  <!-- Κάτω μαύρη μπάρα με όλα τα εικονίδια -->
-  <div class="reactions-bar">
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t4f/1/32/1f39e.png" alt="plus"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/tb0/1/32/2764.png" alt="love"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t61/1/32/1f44d.png" alt="like"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t6c/1/32/1f604.png" alt="haha"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t1b/1/32/1f970.png" alt="care"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t46/1/32/1f62e.png" alt="wow"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t5d/1/32/1f622.png" alt="sad"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t8b/1/32/1f620.png" alt="angry"></div>
-    <div class="reaction"><img src="https://static.xx.fbcdn.net/images/emoji.php/v9/t2e/1/32/2728.png" alt="sparkle"></div>
+  <!-- Video -->
+  <div class="story-video">
+    <video id="mainVideo" controls muted loop>
+      <source src="video.mp4" type="video/mp4">
+      Το βίντεο δεν υποστηρίζεται.
+    </video>
   </div>
-</div>
 
-<script>
-const BACKGROUND_URL = 'background.jpg'; // άλλαξε με το δικό σου background
-const VIDEO_URL = 'https://raw.githubusercontent.com/<user>/<repo>/main/video.mp4'; // το βίντεό σου στο GitHub
+  <!-- Reaction Bar -->
+  <div class="reaction-bar">
+    <img src="https://i.imgur.com/Dl4cqhz.png" alt="plus">
+    <img src="https://i.imgur.com/8xv6TLr.png" alt="heart">
+    <img src="https://i.imgur.com/IVa5oh6.png" alt="like">
+    <img src="https://i.imgur.com/gkxZ4KZ.png" alt="haha">
+    <img src="https://i.imgur.com/TJX8qkW.png" alt="love">
+    <img src="https://i.imgur.com/ljsO9XQ.png" alt="wow">
+    <img src="https://i.imgur.com/1t7gGZs.png" alt="sad">
+    <img src="https://i.imgur.com/YBt7zG7.png" alt="angry">
+    <img src="https://i.imgur.com/JIgrKjB.png" alt="sparkle">
+  </div>
 
-const root = document.getElementById('storyRoot');
-root.style.backgroundImage = `url("${BACKGROUND_URL}")`;
+  <!-- Script για το χρονόμετρο -->
+  <script>
+    let seconds = 5;
+    const adTimer = document.getElementById('adTimer');
+    const adOverlay = document.getElementById('ad');
+    const video = document.getElementById('mainVideo');
 
-const video = document.getElementById('storyVideo');
-video.src = VIDEO_URL;
-video.poster = BACKGROUND_URL;
-</script>
+    const countdown = setInterval(() => {
+      seconds--;
+      adTimer.textContent = `Η διαφήμιση θα κλείσει σε ${seconds} δευτερόλεπτα...`;
+      if (seconds <= 0) {
+        clearInterval(countdown);
+        adOverlay.style.display = 'none';
+        video.play();
+      }
+    }, 1000);
+  </script>
 
 </body>
 </html>
