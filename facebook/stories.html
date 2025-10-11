@@ -146,10 +146,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
     }
 
     .reaction-emoji:hover {
       transform: scale(1.2);
+      background: rgba(255, 255, 255, 0.2);
     }
 
     /* Animation effect για emoji */
@@ -167,6 +170,27 @@
       100% {
         transform: scale(1.3);
       }
+    }
+
+    /* Facebook-style reaction labels */
+    .reaction-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 10px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
+
+    .reaction-emoji:hover .reaction-label {
+      opacity: 1;
     }
 
     /* Κουμπί Κοινοποίησης */
@@ -414,13 +438,34 @@
   <!-- Reaction Bar -->
   <div class="reaction-bar">
     <div class="share-btn" onclick="openShareModal()" title="Κοινοποίηση">+</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('❤️')">❤️</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('👍')">👍</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😂')">😂</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😍')">😍</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😯')">😯</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😢')">😢</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😠')">😠</div>
+    <div class="reaction-emoji" onclick="reactToEmoji('❤️', 'Αγάπη')">
+      ❤️
+      <div class="reaction-label">Αγάπη</div>
+    </div>
+    <div class="reaction-emoji" onclick="reactToEmoji('👍', 'Μου αρέσει')">
+      👍
+      <div class="reaction-label">Μου αρέσει</div>
+    </div>
+    <div class="reaction-emoji" onclick="reactToEmoji('😂', 'Χαχα')">
+      😂
+      <div class="reaction-label">Χαχα</div>
+    </div>
+    <div class="reaction-emoji" onclick="reactToEmoji('😍', 'Υπέροχο')">
+      😍
+      <div class="reaction-label">Υπέροχο</div>
+    </div>
+    <div class="reaction-emoji" onclick="reactToEmoji('😯', 'Ουάου')">
+      😯
+      <div class="reaction-label">Ουάου</div>
+    </div>
+    <div class="reaction-emoji" onclick="reactToEmoji('😢', 'Λυπημένο')">
+      😢
+      <div class="reaction-label">Λυπημένο</div>
+    </div>
+    <div class="reaction-emoji" onclick="reactToEmoji('😠', 'Θυμωμένο')">
+      😠
+      <div class="reaction-label">Θυμωμένο</div>
+    </div>
   </div>
 
   <!-- Share Modal -->
@@ -457,14 +502,6 @@
     </button>
   </div>
 
-  <!-- Monetag Script -->
-  <script>
-    (function(s){
-      s.dataset.zone='9973751',
-      s.src='https://al5sm.com/tag.min.js'
-    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-  </script>
-
   <script>
     const video = document.getElementById('mainVideo');
     const shareModal = document.getElementById('shareModal');
@@ -484,14 +521,14 @@
     }
 
     // Function για emoji reaction με animation
-    function reactToEmoji(emoji) {
-      const emojiElement = event.target;
+    function reactToEmoji(emoji, label) {
+      const emojiElement = event.target.closest('.reaction-emoji');
       
       // Προσθήκη animation class
       emojiElement.classList.add('clicked');
       
       // Εμφάνιση μηνύματος
-      showReactionMessage(emoji);
+      showReactionMessage(emoji, label);
       
       // Αφαίρεση animation class μετά το τέλος
       setTimeout(() => {
@@ -500,10 +537,10 @@
     }
 
     // Εμφάνιση μηνύματος αντίδρασης
-    function showReactionMessage(emoji) {
+    function showReactionMessage(emoji, label) {
       // Δημιουργία floating message
       const message = document.createElement('div');
-      message.textContent = `Αντίδραση: ${emoji}`;
+      message.textContent = `${emoji} ${label}`;
       message.style.position = 'fixed';
       message.style.top = '50%';
       message.style.left = '50%';
@@ -574,6 +611,7 @@
     function startVideo() {
       enterFullscreen();
       
+      // Προσπάθεια αυτόματης αναπαραγωγής
       video.play().then(() => {
         console.log('Video started playing');
         // Κρύψη του play button όταν το βίντεο ξεκινήσει
@@ -603,7 +641,18 @@
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
       setTimeout(enterFullscreen, 100);
-      startVideo();
+      
+      // Προσθήκη event listener για να ελέγξουμε αν το βίντεο είναι διαθέσιμο
+      video.addEventListener('loadeddata', function() {
+        console.log('Video loaded, attempting to play');
+        startVideo();
+      });
+      
+      video.addEventListener('error', function() {
+        console.error('Error loading video');
+        playButton.classList.remove('hidden');
+        alert('Πρόβλημα φόρτωσης βίντεο. Παρακαλώ ελέγξτε τη σύνδεσή σας.');
+      });
     });
 
     // Fullscreen change events
