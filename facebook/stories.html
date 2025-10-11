@@ -43,16 +43,14 @@
       object-fit: cover;
     }
 
-    /* *************************************************************** */
-    /* OVERLAY ΓΙΑ ΤΟ PLAY BUTTON (ΔΙΑΦΑΝΕΣ) */
-    /* *************************************************************** */
+    /* OVERLAY ΓΙΑ ΤΟ PLAY BUTTON */
     .video-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: transparent; /* Διαφανές για να φαίνεται το βίντεο */
+      background: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -93,8 +91,6 @@
       border-bottom: 12px solid transparent;
       margin-left: 4px;
     }
-    
-    /* *************************************************************** */
     
     .story-header {
       position: absolute;
@@ -146,7 +142,6 @@
       display: none;
     }
 
-    /* CSS για τα Emoji Κειμένου - Διαστάσεις (όπως είναι OK) */
     .reaction-emoji {
       font-size: 32px;
       cursor: pointer;
@@ -251,8 +246,6 @@
       background: rgba(150, 150, 150, 1);
     }
     
-    /* ... (Κώδικας Modal και Ad - δεν άλλαξαν) ... */
-
     .share-modal {
       position: fixed;
       top: 50%;
@@ -360,9 +353,11 @@
       background: #166fe5;
     }
 
+    /* *************************************************************** */
+    /* ΔΙΟΡΘΩΣΗ: ΑΥΞΗΣΗ ΤΟΥ BOTTOM ΓΙΑ ΑΠΟΣΤΑΣΗ ΑΠΟ ΤΑ EMOJI */
     .ad-container {
       position: absolute;
-      bottom: 80px;
+      bottom: 120px; /* Αλλαγή από 80px σε 120px */
       left: 50%;
       transform: translateX(-50%);
       width: 320px;
@@ -375,6 +370,7 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
     }
+    /* *************************************************************** */
 
     .ad-label {
       font-size: 10px;
@@ -477,7 +473,8 @@
       }
       
       .ad-container {
-        bottom: 70px;
+        /* Προσαρμογή και εδώ για να κρατήσουμε την απόσταση */
+        bottom: 100px; /* Αλλαγή από 70px σε 100px */
         width: 280px;
       }
     }
@@ -514,6 +511,8 @@
       }
       
       .ad-container {
+        /* Προσαρμογή και εδώ */
+        bottom: 100px;
         width: 260px;
       }
     }
@@ -647,7 +646,7 @@
     // Function για την έναρξη του βίντεο και την απενεργοποίηση του overlay
     function playVideoAndUnmute(event) {
         // Βεβαιωνόμαστε ότι το κλικ δεν είναι από τα reactions/modal
-        if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal')) {
+        if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container')) {
             return; 
         }
         
@@ -686,17 +685,15 @@
         videoOverlay.addEventListener('click', playVideoAndUnmute);
         
         // Προσθέτουμε έναν global listener για να καλύψουμε όλη την οθόνη
-        // Χρησιμοποιούμε capture: true για να ενεργοποιηθεί πριν από άλλα events
         document.addEventListener('click', playVideoAndUnmute, true); 
         
-        // ΔΙΟΡΘΩΣΗ: Ζητάμε από τον browser να φορτώσει τα metadata για να εμφανιστεί το πρώτο καρέ.
+        // Ζητάμε από τον browser να φορτώσει τα metadata για να εμφανιστεί το πρώτο καρέ.
         video.load();
 
         // Εξασφάλιση ότι το βίντεο είναι σε pause στην αρχή
         video.pause();
     });
     
-    // ... (Οι υπόλοιπες συναρτήσεις - reactToEmoji, share, ad - παραμένουν) ...
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
       
@@ -749,6 +746,7 @@
     }
 
     function shareToFacebook() {
+      // Το window.location.href είναι το δυναμικό link
       const url = encodeURIComponent(window.location.href);
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
       closeShareModal();
@@ -760,12 +758,14 @@
     }
 
     function shareToWhatsApp() {
+      // Το window.location.href είναι το δυναμικό link
       const text = encodeURIComponent('Δες αυτό το βίντεο! ' + window.location.href);
       window.open(`https://wa.me/?text=${text}`, '_blank');
       closeShareModal();
     }
 
     function copyLink() {
+      // Το window.location.href είναι το δυναμικό link
       const url = window.location.href;
       navigator.clipboard.writeText(url).then(() => {
         alert('Το link αντιγράφηκε στο clipboard! 📋');
