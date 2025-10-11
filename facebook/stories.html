@@ -43,10 +43,59 @@
       object-fit: cover;
     }
 
-    /* ******************************************************************* */
-    /* ΑΦΑΙΡΕΘΗΚΕ ΤΟ PLAY BUTTON - ΔΕΝ ΘΕΛΟΥΜΕ ΝΑ ΕΜΦΑΝΙΖΕΤΑΙ ΣΤΟ CSS/HTML */
-    /* ******************************************************************* */
+    /* *************************************************************** */
+    /* ΕΠΑΝΑΦΟΡΑ PLAY BUTTON / OVERLAY */
+    /* *************************************************************** */
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); /* Σκούρο overlay για να φαίνεται το κουμπί */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+    
+    .video-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
 
+    .play-button {
+      width: 80px;
+      height: 80px;
+      background: rgba(24, 119, 242, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .play-button:hover {
+      transform: scale(1.1);
+      background: rgba(24, 119, 242, 1);
+    }
+
+    .play-button::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 20px solid white;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      margin-left: 4px;
+    }
+    
+    /* *************************************************************** */
+    
     .story-header {
       position: absolute;
       top: 0;
@@ -201,9 +250,9 @@
       transform: scale(1.1);
       background: rgba(150, 150, 150, 1);
     }
+    
     /* ... (Κώδικας Modal και Ad - δεν άλλαξαν) ... */
 
-    /* Share Modal - (όπως ήταν) */
     .share-modal {
       position: fixed;
       top: 50%;
@@ -311,7 +360,6 @@
       background: #166fe5;
     }
 
-    /* Διαφημίσεις */
     .ad-container {
       position: absolute;
       bottom: 80px;
@@ -367,7 +415,6 @@
       cursor: pointer;
     }
 
-    /* Κρύψη όλων των browser elements */
     ::-webkit-scrollbar {
       display: none;
     }
@@ -384,6 +431,17 @@
 
     /* Mobile optimizations */
     @media (max-width: 480px) {
+      .play-button {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .play-button::after {
+        border-left-width: 16px;
+        border-top-width: 10px;
+        border-bottom-width: 10px;
+      }
+      
       .reaction-bar {
         bottom: 10px;
         padding: 6px 10px;
@@ -425,6 +483,17 @@
     }
 
     @media (max-width: 360px) {
+      .play-button {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .play-button::after {
+        border-left-width: 14px;
+        border-top-width: 8px;
+        border-bottom-width: 8px;
+      }
+      
       .reaction-bar {
         gap: 4px;
       }
@@ -453,10 +522,14 @@
 <body>
 
   <div class="video-container" id="videoContainer">
-    <video id="mainVideo" loop playsinline webkit-playsinline autoplay muted>
+    <video id="mainVideo" loop playsinline webkit-playsinline muted>
       <source src="golden.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
+    
+    <div class="video-overlay" id="videoOverlay">
+        <div class="play-button"></div>
+    </div>
   </div>
 
   <div class="story-header">
@@ -554,6 +627,7 @@
 
   <script>
     const video = document.getElementById('mainVideo');
+    const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
     const adContainer = document.getElementById('adContainer');
 
@@ -570,54 +644,65 @@
       }
     }
 
-    // Function για αυτόματη έναρξη βίντεο
-    function startVideoAggressive() {
-      // Δοκιμάζουμε να παίξει το βίντεο αμέσως. 
-      // Πρέπει να είναι muted (όπως είναι στο HTML) για να επιτραπεί.
-      video.play().then(() => {
-        console.log('Video started playing automatically and muted.');
-      }).catch(error => {
-        console.error('Auto-play failed, video is paused:', error);
-        // Αν αποτύχει, αφήνουμε τον χρήστη να κάνει κλικ για να ξεκινήσει (και να ενεργοποιήσει τον ήχο)
-      });
+    // Function για την έναρξη του βίντεο και την απενεργοποίηση του overlay
+    function playVideoAndUnmute(event) {
+        // Βεβαιωνόμαστε ότι το κλικ δεν είναι από τα reactions/modal
+        if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal')) {
+            return; 
+        }
+        
+        // Απόκρυψη του overlay
+        videoOverlay.classList.add('hidden');
+        
+        // 1. Έναρξη αναπαραγωγής
+        video.play().then(() => {
+            console.log('Video started playing.');
+            
+            // 2. Ενεργοποίηση ήχου (θα επιτραπεί λόγω του κλικ)
+            if (video.muted) {
+                video.muted = false;
+                console.log('Video unmuted.');
+            }
+            
+            // 3. Προσπάθεια fullscreen
+            enterFullscreen();
+        }).catch(error => {
+            console.error('Failed to play video:', error);
+            // Σε περίπτωση αποτυχίας, ξαναεμφανίζουμε το overlay
+            videoOverlay.classList.remove('hidden');
+            alert('Αδύνατη η αναπαραγωγή βίντεο. Δοκιμάστε ξανά.');
+        });
+        
+        // Αφαιρούμε τον event listener μετά το πρώτο κλικ για να μην τρέχει συνέχεια
+        videoOverlay.removeEventListener('click', playVideoAndUnmute);
+        document.removeEventListener('click', playVideoAndUnmute, true);
     }
-
+    
     // ***************************************************************
-    // ΕΝΕΡΓΟΠΟΙΗΣΗ ΤΗΣ ΑΥΤΟΜΑΤΗΣ ΑΝΑΠΑΡΑΓΩΓΗΣ ΜΕ ΤΗΝ ΦΟΡΤΩΣΗ ΤΗΣ ΣΕΛΙΔΑΣ
+    // ΕΝΕΡΓΟΠΟΙΗΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ ΜΟΝΟ ΜΕ ΚΛΙΚ/ΑΓΓΙΓΜΑ
     // ***************************************************************
     document.addEventListener('DOMContentLoaded', function() {
-      startVideoAggressive();
-    });
-    
-    // Ακόμα πιο σίγουρο: με το που φορτώσει το βίντεο
-    video.addEventListener('loadedmetadata', startVideoAggressive);
-
-    // Ενεργοποίηση ήχου και Fullscreen με το πρώτο κλικ του χρήστη
-    document.addEventListener('click', function() {
-      if (video.muted) {
-        video.muted = false;
-        console.log('Unmuting video on first click.');
-      }
-      
-      // Ξεκινάμε το βίντεο αν δεν παίζει (σε περίπτωση που το startVideoAggressive απέτυχε)
-      if (video.paused) {
-          video.play();
-      }
-      
-      // Δοκιμάζουμε να μπούμε σε fullscreen με το κλικ
-      enterFullscreen(); 
-    }, { once: true }); // Μόνο για το πρώτο κλικ
-
-    // Ενεργοποίηση ήχου για κάθε επόμενο κλικ (σε περίπτωση που ο χρήστης ξαναπατήσει)
-    document.addEventListener('click', function() {
-        if (video.paused) {
-             video.play();
-        }
+        // Προσθέτουμε τον listener στο overlay
+        videoOverlay.addEventListener('click', playVideoAndUnmute);
+        
+        // Προσθέτουμε έναν global listener για να καλύψουμε όλη την οθόνη
+        // Χρησιμοποιούμε capture: true για να ενεργοποιηθεί πριν από άλλα events
+        document.addEventListener('click', playVideoAndUnmute, true); 
+        
+        // Εξασφάλιση ότι το βίντεο είναι σε pause στην αρχή
+        video.pause();
     });
     
     // ... (Οι υπόλοιπες συναρτήσεις - reactToEmoji, share, ad - παραμένουν) ...
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
+      
+      // Πρώτα βεβαιωνόμαστε ότι το βίντεο παίζει, αλλιώς δεν έχει νόημα το reaction
+      if (video.paused) {
+          alert('Παρακαλώ πατήστε πρώτα το κουμπί Play για να ξεκινήσει το βίντεο.');
+          return;
+      }
+      
       emojiElement.classList.add('clicked');
       showReactionMessage(emoji, label);
       setTimeout(() => {
