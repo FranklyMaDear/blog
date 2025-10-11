@@ -9,7 +9,7 @@
   <meta property="og:image" content="logo.png">
   <meta property="og:url" content="https://yourwebsite.com/stories.html">
   <meta property="og:type" content="video.other">
-  <meta property="og:video" content="https://yourwebsite.com/golden.mp4">
+  <meta property="og:video" content="https://yourwebsite.com/gold2.mp4">
   <meta property="og:video:type" content="video/mp4">
   <meta name="twitter:card" content="player">
   <meta name="twitter:player" content="https://yourwebsite.com/stories.html">
@@ -353,11 +353,9 @@
       background: #166fe5;
     }
 
-    /* *************************************************************** */
-    /* ΔΙΟΡΘΩΣΗ: ΑΥΞΗΣΗ ΤΟΥ BOTTOM ΓΙΑ ΑΠΟΣΤΑΣΗ ΑΠΟ ΤΑ EMOJI */
     .ad-container {
       position: absolute;
-      bottom: 120px; /* Αλλαγή από 80px σε 120px */
+      bottom: 120px; 
       left: 50%;
       transform: translateX(-50%);
       width: 320px;
@@ -370,7 +368,6 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
     }
-    /* *************************************************************** */
 
     .ad-label {
       font-size: 10px;
@@ -473,8 +470,7 @@
       }
       
       .ad-container {
-        /* Προσαρμογή και εδώ για να κρατήσουμε την απόσταση */
-        bottom: 100px; /* Αλλαγή από 70px σε 100px */
+        bottom: 100px;
         width: 280px;
       }
     }
@@ -511,7 +507,6 @@
       }
       
       .ad-container {
-        /* Προσαρμογή και εδώ */
         bottom: 100px;
         width: 260px;
       }
@@ -522,23 +517,14 @@
 
   <div class="video-container" id="videoContainer">
     <video id="mainVideo" loop playsinline webkit-playsinline muted preload="auto">
-      <source src="gold2.mp4" type="video/mp4">
+      <source id="videoSource" src="gold2.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
     
     <div class="video-overlay" id="videoOverlay">
         <div class="play-button"></div>
     </div>
-  <div class="video-container" id="videoContainer">
-    <video id="mainVideo" loop playsinline webkit-playsinline muted preload="auto">
-      <source src="golden.mp4" type="video/mp4">
-      Το βίντεο δεν υποστηρίζεται.
-    </video>
-    
-    <div class="video-overlay" id="videoOverlay">
-        <div class="play-button"></div>
-    </div>
-  </div>
+  </div> 
 
   <div class="story-header">
     <img src="logo.png" alt="profile">
@@ -548,7 +534,8 @@
   <div class="ad-container" id="adContainer">
     <button class="ad-close" onclick="closeAd()">×</button>
     <div class="ad-label">Διαφήμιση</div>
-    <div class="ad-content"> Στηρίξτε μας . Κάντε κλικ θα δείτε μια διαφήμιση. Επιστρέψτε και πατήστε  Play να δείτε το βίντεο.</div>
+    <div class="ad-content"> Στηρίξτε μας .
+      Κάντε κλικ θα δείτε μια διαφήμιση. Επιστρέψτε και πατήστε  Play να δείτε το βίντεο.</div>
     <button class="ad-button" onclick="visitAd()">Δείτε περισσότερα</button>
   </div>
 
@@ -564,7 +551,8 @@
     
     <div class="reaction-emoji blue-like" onclick="reactToEmoji('👍', 'Μου αρέσει')">
       👍
-      <div class="reaction-label">Μου αρέσει</div>
+      <div 
+        class="reaction-label">Μου αρέσει</div>
     </div>
     
     <div class="reaction-emoji" onclick="reactToEmoji('😂', 'Χαχα')">
@@ -582,7 +570,8 @@
       <div class="reaction-label">Ουάου</div>
     </div>
     
-    <div class="reaction-emoji" onclick="reactToEmoji('😢', 'Λυπημένο')">
+    <div class="reaction-emoji" onclick="reactToEmoji('😢', 
+        'Λυπημένο')">
       😢
       <div class="reaction-label">Λυπημένο</div>
     </div>
@@ -601,6 +590,7 @@
     
     <div class="share-options">
       <div class="share-option" onclick="shareToFacebook()">
+        
         <div class="share-icon">📘</div>
         <div class="share-label">Facebook</div>
       </div>
@@ -615,6 +605,7 @@
         <div class="share-label">Αντιγραφή</div>
       </div>
       
+  
       <div class="share-option" onclick="shareToWhatsApp()">
         <div class="share-icon">💬</div>
         <div class="share-label">WhatsApp</div>
@@ -638,11 +629,47 @@
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
     const adContainer = document.getElementById('adContainer');
+    const videoSource = document.getElementById('videoSource'); // Νέα μεταβλητή για το source
+    
+    // ***************************************************************
+    // ΝΕΟΣ ΚΩΔΙΚΑΣ ΓΙΑ ΠΛΕΙΛΙΣΤΑ
+    // ***************************************************************
+    const videoList = [
+        "gold2.mp4",
+        "video3.mp4", // Το 2ο βίντεο
+        "video4.mp4"  // Το 3ο βίντεο
+    ];
+    let currentVideoIndex = 0; // Ξεκινάμε από το πρώτο βίντεο
+    
+    function loadNextVideo() {
+        // Υπολογίζουμε τον δείκτη του επόμενου βίντεο
+        currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
+        
+        // Ορίζουμε τη νέα πηγή
+        videoSource.src = videoList[currentVideoIndex];
+        
+        // Λόγω αλλαγής src, πρέπει να φορτώσουμε και να παίξουμε το βίντεο
+        video.load();
+        
+        // Αν το βίντεο ήταν σε pause (π.χ. μετά από χειροκίνητη παύση),
+        // δεν το παίζουμε αυτόματα. Διαφορετικά, συνεχίζουμε.
+        // Εφόσον ο listener είναι στο 'ended', θα παίξει μόνο αν τελείωσε το προηγούμενο.
+        // Αν θέλουμε να παίζει σε λούπα τα 3 βίντεο, το παίζουμε:
+        video.play().catch(error => {
+             // Εδώ μπορεί να υπάρχει πρόβλημα με autoplay σε κινητά/browsers.
+             // Αν συμβεί, θα πρέπει να περιμένουμε το επόμενο κλικ του χρήστη.
+             console.log("Αδύνατη η αυτόματη αναπαραγωγή του επόμενου βίντεο. " + error);
+        });
 
+        // Επειδή έχουμε βάλει 'loop' στο <video>, πρέπει να το αφαιρέσουμε
+        // για να δουλέψει ο listener 'ended'
+        video.loop = false;
+    }
+    // ***************************************************************
+    
     // Function για fullscreen (Μόνο με κλικ χρήστη)
     function enterFullscreen() {
       const element = document.documentElement;
-      
       if (element.requestFullscreen) {
         element.requestFullscreen();
       } else if (element.webkitRequestFullscreen) {
@@ -656,7 +683,7 @@
     function playVideoAndUnmute(event) {
         // Βεβαιωνόμαστε ότι το κλικ δεν είναι από τα reactions/modal
         if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container')) {
-            return; 
+            return;
         }
         
         // Απόκρυψη του overlay
@@ -669,18 +696,19 @@
             // 2. Ενεργοποίηση ήχου (θα επιτραπεί λόγω του κλικ)
             if (video.muted) {
                 video.muted = false;
-                console.log('Video unmuted.');
+         
+               console.log('Video unmuted.');
             }
             
             // 3. Προσπάθεια fullscreen
             enterFullscreen();
         }).catch(error => {
             console.error('Failed to play video:', error);
-            // Σε περίπτωση αποτυχίας, ξαναεμφανίζουμε το overlay
+            // Σε περίπτωση 
+            // αποτυχίας, ξαναεμφανίζουμε το overlay
             videoOverlay.classList.remove('hidden');
             alert('Αδύνατη η αναπαραγωγή βίντεο. Δοκιμάστε ξανά.');
         });
-        
         // Αφαιρούμε τον event listener μετά το πρώτο κλικ για να μην τρέχει συνέχεια
         videoOverlay.removeEventListener('click', playVideoAndUnmute);
         document.removeEventListener('click', playVideoAndUnmute, true);
@@ -696,6 +724,7 @@
         // Προσθέτουμε έναν global listener για να καλύψουμε όλη την οθόνη
         document.addEventListener('click', playVideoAndUnmute, true); 
         
+ 
         // Ζητάμε από τον browser να φορτώσει τα metadata για να εμφανιστεί το πρώτο καρέ.
         video.load();
 
@@ -705,7 +734,6 @@
     
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
-      
       // Πρώτα βεβαιωνόμαστε ότι το βίντεο παίζει
       if (video.paused) {
           alert('Παρακαλώ πατήστε πρώτα το κουμπί Play για να ξεκινήσει το βίντεο.');
@@ -807,16 +835,17 @@
           setTimeout(() => {
             adContainer.style.display = 'none';
           }, 1000);
+   
         }, 10000);
       }
     }, 1000);
-
-    // Επαναλαμβανόμενη αναπαραγωγή (για το loop)
-    video.addEventListener('ended', function() {
-      video.currentTime = 0;
-      video.play();
-    });
-
+    
+    // ***************************************************************
+    // ΝΕΟΣ LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ
+    // ***************************************************************
+    video.addEventListener('ended', loadNextVideo);
+    
+    // Αφαιρούμε τον παλιό listener: video.addEventListener('ended', function() { video.currentTime = 0; video.play(); });
   </script>
 
 </body>
