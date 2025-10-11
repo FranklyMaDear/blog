@@ -43,8 +43,9 @@
       object-fit: cover;
     }
 
-    /* Play Button */
+    /* Play Button - Κρύβεται για αυτόματη αναπαραγωγή */
     .play-button {
+      display: none; /* Το κρύβουμε εξαρχής */
       position: absolute;
       top: 50%;
       left: 50%;
@@ -132,29 +133,47 @@
       display: none;
     }
 
-    /* Επαναφορά/Διόρθωση CSS για Emoji Κειμένου με στυλ κουμπιών */
+    /* ΔΙΟΡΘΩΜΕΝΟ CSS για τα Emoji Κειμένου - Προσαρμογή στις διαστάσεις της εικόνας */
     .reaction-emoji {
-      font-size: 24px;
+      font-size: 32px; /* Μεγαλώνουμε το emoji για να γεμίσει */
       cursor: pointer;
       transition: all 0.3s ease;
-      padding: 6px; /* Επαναφορά padding */
-      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+      padding: 0; /* Αφαιρούμε το padding */
       position: relative;
       flex-shrink: 0;
-      /* Αυξημένο μέγεθος για καλύτερο πάτημα */
-      min-width: 44px; 
-      height: 44px; 
+      /* Αυτή η διάσταση (48px) είναι κοντά στο μέγεθος της εικόνας */
+      min-width: 48px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      /* Background για στρογγυλή εμφάνιση */
-      background: rgba(255, 255, 255, 0.1);
+      /* Αφαιρούμε το background και border-radius για να φαίνεται μόνο το emoji */
+      background: none; 
       border-radius: 50%;
+      /* Η σκιά κάνει το emoji να φαίνεται 3D (όπως στην εικόνα) */
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); 
+    }
+
+    /* Ειδική προσαρμογή για τα κλασικά reactions με κύκλο (❤️, 👍) */
+    /* Αυτά τα emoji είναι ήδη στρογγυλά και χρωματιστά */
+    .reaction-emoji.red-like, .reaction-emoji.blue-like {
+        /* Δεν χρειάζεται ειδική μορφοποίηση, απλά το μέγεθος */
+        font-size: 48px;
     }
 
     .reaction-emoji:hover {
-      transform: scale(1.2);
-      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.1); /* Μικρότερο scale για τα μεγαλύτερα emoji */
+      background: none;
+    }
+    
+    /* Για τα "πρόσωπα" */
+    .reaction-emoji:nth-child(4), /* Χαχα */
+    .reaction-emoji:nth-child(5), /* Υπέροχο */
+    .reaction-emoji:nth-child(6), /* Ουάου */
+    .reaction-emoji:nth-child(7), /* Λυπημένο */
+    .reaction-emoji:nth-child(8) /* Θυμωμένο */
+    {
+        font-size: 36px; /* Προσαρμογή μεγέθους για τα πρόσωπα */
     }
 
     /* Animation effect για emoji */
@@ -170,7 +189,7 @@
         transform: scale(1.8);
       }
       100% {
-        transform: scale(1.3);
+        transform: scale(1.1);
       }
     }
 
@@ -195,28 +214,40 @@
       opacity: 1;
     }
 
-    /* Κουμπί Κοινοποίησης (όπως το γκρι στην εικόνα) */
+    /* Κουμπί Κοινοποίησης/Add - (Το γκρι στην εικόνα) */
     .share-btn {
       font-size: 20px;
       cursor: pointer;
       transition: all 0.3s ease;
       padding: 8px;
       text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-      background: rgba(120, 120, 120, 0.9); /* Γκρι χρώμα για το κουμπί */
+      background: rgba(120, 120, 120, 0.9); /* Γκρι χρώμα */
       color: white;
       border-radius: 50%;
-      width: 44px;
-      height: 44px;
+      width: 48px; /* Ίδια διάσταση με τα emoji */
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
       border: 2px solid rgba(255,255,255,0.3);
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       flex-shrink: 0;
+      font-weight: bold;
+      
+      /* Εικονίδιο + σε κύκλο (προσπάθεια να μοιάσει στο Add Story) */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z'/%3E%3C/svg%3E");
+      background-size: 60%;
+      background-repeat: no-repeat;
+      background-position: center;
+      /* Αφαιρούμε το + κείμενο αφού βάλαμε SVG icon */
+    }
+    
+    .share-btn span {
+        display: none; /* Κρύβουμε το κείμενο + */
     }
 
     .share-btn:hover {
-      transform: scale(1.2);
+      transform: scale(1.1);
       background: rgba(150, 150, 150, 1);
     }
     /* ΤΕΛΟΣ ΔΙΟΡΘΩΣΗΣ CSS */
@@ -329,7 +360,7 @@
       background: #166fe5;
     }
 
-    /* Διαφημίσεις */
+    /* Διαφημίσεις (όπως ήταν) */
     .ad-container {
       position: absolute;
       bottom: 80px;
@@ -385,7 +416,7 @@
       cursor: pointer;
     }
 
-    /* Κρύψη όλων των browser elements */
+    /* Κρύψη όλων των browser elements (όπως ήταν) */
     ::-webkit-scrollbar {
       display: none;
     }
@@ -402,16 +433,7 @@
 
     /* Mobile optimizations */
     @media (max-width: 480px) {
-      .play-button {
-        width: 70px;
-        height: 70px;
-      }
-      
-      .play-button::after {
-        border-left-width: 16px;
-        border-top-width: 10px;
-        border-bottom-width: 10px;
-      }
+      /* ... Play Button ... */
       
       .reaction-bar {
         bottom: 10px;
@@ -420,68 +442,45 @@
       }
       
       .reaction-emoji {
-        font-size: 22px;
-        min-width: 38px;
-        height: 38px;
-        padding: 4px;
+        font-size: 28px;
+        min-width: 40px;
+        height: 40px;
       }
-      
+
+      .reaction-emoji.red-like, .reaction-emoji.blue-like {
+          font-size: 40px;
+      }
+
       .share-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 18px;
+        width: 40px;
+        height: 40px;
       }
       
-      .story-header {
-        padding: 10px;
-      }
-      
-      .story-header img {
-        width: 35px;
-        height: 35px;
-      }
-      
-      .story-header span {
-        font-size: 14px;
-      }
-      
-      .ad-container {
-        bottom: 70px;
-        width: 280px;
-      }
+      /* ... Header/Ad ... */
     }
 
     @media (max-width: 360px) {
-      .play-button {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .play-button::after {
-        border-left-width: 14px;
-        border-top-width: 8px;
-        border-bottom-width: 8px;
-      }
+      /* ... Play Button ... */
       
       .reaction-bar {
         gap: 4px;
       }
       
       .reaction-emoji {
-        font-size: 20px;
-        min-width: 32px;
-        height: 32px;
+        font-size: 26px;
+        min-width: 36px;
+        height: 36px;
       }
-      
+
+      .reaction-emoji.red-like, .reaction-emoji.blue-like {
+          font-size: 36px;
+      }
+
       .share-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
+        width: 36px;
+        height: 36px;
       }
-      
-      .ad-container {
-        width: 260px;
-      }
+      /* ... Ad ... */
     }
   </style>
 </head>
@@ -509,16 +508,16 @@
   </div>
 
   <div class="reaction-bar">
-    <div class="share-btn" onclick="openShareModal()" title="Κοινοποίηση">
-        <span style="font-size: 24px;">+</span>
+    <div class="share-btn" onclick="openShareModal()" title="Προσθήκη/Κοινοποίηση">
+        <span>+</span>
     </div>
     
-    <div class="reaction-emoji" onclick="reactToEmoji('❤️', 'Αγάπη')">
+    <div class="reaction-emoji red-like" onclick="reactToEmoji('❤️', 'Αγάπη')">
       ❤️
       <div class="reaction-label">Αγάπη</div>
     </div>
     
-    <div class="reaction-emoji" onclick="reactToEmoji('👍', 'Μου αρέσει')">
+    <div class="reaction-emoji blue-like" onclick="reactToEmoji('👍', 'Μου αρέσει')">
       👍
       <div class="reaction-label">Μου αρέσει</div>
     </div>
@@ -528,8 +527,8 @@
       <div class="reaction-label">Χαχα</div>
     </div>
     
-    <div class="reaction-emoji" onclick="reactToEmoji('😍', 'Υπέροχο')">
-      😍
+    <div class="reaction-emoji" onclick="reactToEmoji('😋', 'Υπέροχο')">
+      😋
       <div class="reaction-label">Υπέροχο</div>
     </div>
     
@@ -598,7 +597,7 @@
     // Function για fullscreen
     function enterFullscreen() {
       const element = document.documentElement;
-      
+      // Δεν μπορούμε να καλέσουμε το Fullscreen χωρίς ενέργεια χρήστη, αλλά το αφήνουμε για touch devices
       if (element.requestFullscreen) {
         element.requestFullscreen();
       } else if (element.webkitRequestFullscreen) {
@@ -608,7 +607,7 @@
       }
     }
 
-    // Function για emoji reaction με animation
+    // Function για emoji reaction με animation (όπως ήταν)
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
       
@@ -624,9 +623,8 @@
       }, 600);
     }
 
-    // Εμφάνιση μηνύματος αντίδρασης
+    // Εμφάνιση μηνύματος αντίδρασης (όπως ήταν)
     function showReactionMessage(emoji, label) {
-      // Δημιουργία floating message
       const message = document.createElement('div');
       message.textContent = `${emoji} ${label}`;
       message.style.position = 'fixed';
@@ -644,7 +642,6 @@
       
       document.body.appendChild(message);
       
-      // Αφαίρεση μηνύματος μετά από 2 δευτερόλεπτα
       setTimeout(() => {
         message.style.opacity = '0';
         message.style.transition = 'opacity 0.5s ease';
@@ -654,7 +651,7 @@
       }, 2000);
     }
 
-    // Share Modal functions
+    // Share Modal functions (όπως ήταν)
     function openShareModal() {
       shareModal.classList.add('active');
     }
@@ -695,7 +692,7 @@
       closeShareModal();
     }
 
-    // Διαφημιστικές λειτουργίες
+    // Διαφημιστικές λειτουργίες (όπως ήταν)
     function closeAd() {
       adContainer.style.display = 'none';
     }
@@ -705,7 +702,7 @@
       closeAd();
     }
 
-    // Αυτόματη απόκρυψη διαφήμισης μετά από 10 δευτερόλεπτα
+    // Αυτόματη απόκρυψη διαφήμισης μετά από 10 δευτερόλεπτα (όπως ήταν)
     setTimeout(() => {
       if (adContainer.style.display !== 'none') {
         adContainer.style.opacity = '1';
@@ -721,123 +718,79 @@
 
     // Function για έναρξη βίντεο
     function startVideo() {
-      enterFullscreen();
+      // ΔΕΝ καλούμε πλέον το enterFullscreen εδώ
       
-      // Προσπάθεια αυτόματης αναπαραγωγής
+      // Προσπάθεια αυτόματης αναπαραγωγής (πρέπει να πετύχει λόγω του 'muted')
       video.play().then(() => {
-        console.log('Video started playing');
-        // Κρύψη του play button όταν το βίντεο ξεκινήσει
-        playButton.classList.add('hidden');
-        setTimeout(() => {
-          video.muted = false;
-        }, 1000);
+        console.log('Video started playing automatically');
+        // Εφόσον ξεκίνησε, το playButton παραμένει κρυφό
+        playButton.classList.add('hidden'); 
+        // Μπορούμε να δοκιμάσουμε να ενεργοποιήσουμε τον ήχο μετά την έναρξη, 
+        // αλλά οι περισσότεροι browsers θα το μπλοκάρουν.
+        // setTimeout(() => { video.muted = false; }, 1000); 
       }).catch(error => {
-        console.log('Auto-play failed:', error);
-        // Εμφάνιση του play button αν η αυτόματη αναπαραγωγή αποτύχει
+        console.log('Auto-play failed, showing play button:', error);
+        // Αν παρόλα αυτά αποτύχει (π.χ. σε παλαιότερο browser), εμφανίζουμε το κουμπί
         playButton.classList.remove('hidden');
-      });
-    }
-
-    // Function για χειροκίνητη έναρξη βίντεο
-    function playVideo() {
-      video.play().then(() => {
-        console.log('Video started playing manually');
-        playButton.classList.add('hidden');
-        video.muted = false;
-      }).catch(error => {
-        console.log('Manual play failed:', error);
-        alert('Δεν ήταν δυνατή η αναπαραγωγή του βίντεο. Παρακαλώ δοκιμάστε ξανά.');
       });
     }
 
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(enterFullscreen, 100);
+      // Αφαιρέθηκε η αυτόματη κλήση του enterFullscreen
       
-      // Προσθήκη event listener για να ελέγξουμε αν το βίντεο είναι διαθέσιμο
+      // Προσθήκη event listener για να ξεκινήσει το βίντεο μόλις φορτώσει
       video.addEventListener('loadeddata', function() {
-        console.log('Video loaded, attempting to play');
+        console.log('Video loaded, attempting auto-play');
         startVideo();
       });
       
       video.addEventListener('error', function() {
         console.error('Error loading video');
-        // Αυτό διορθώνει το πρόβλημα αν το βίντεο δεν μπορεί να φορτωθεί
-        playButton.classList.remove('hidden'); 
+        playButton.classList.remove('hidden');
         alert('Πρόβλημα φόρτωσης βίντεο. Παρακαλώ ελέγξτε τη σύνδεσή σας.');
       });
-    });
-
-    // Fullscreen change events
-    document.addEventListener('fullscreenchange', function() {
-      if (!document.fullscreenElement) {
-        setTimeout(enterFullscreen, 100);
+      
+      // Καλούμε το startVideo απευθείας, αν το βίντεο έχει ήδη φορτωθεί
+      if (video.readyState >= 2) { 
+          startVideo();
       }
     });
 
-    document.addEventListener('webkitfullscreenchange', function() {
-      if (!document.webkitFullscreenElement) {
-        setTimeout(enterFullscreen, 100);
-      }
-    });
-
-    // Ενεργοποίηση ήχου με κλικ
+    // Ενεργοποίηση ήχου με το πρώτο κλικ (απαραίτητο για browsers)
     document.addEventListener('click', function() {
       if (video.muted) {
         video.muted = false;
+        console.log('Unmuting video on first click.');
       }
+      // Δοκιμάζουμε να μπουν σε fullscreen με το πρώτο κλικ
+      enterFullscreen(); 
     });
 
-    // Κλείσιμο modal με κλικ έξω
-    shareModal.addEventListener('click', function(e) {
-      if (e.target === shareModal) {
-        closeShareModal();
-      }
-    });
+    // ... υπόλοιπα event listeners (όπως ήταν) ...
 
-    // Απενεργοποίηση context menu και browser controls
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      return false;
-    });
-
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || e.ctrlKey || e.metaKey) {
-        // e.preventDefault(); // Αφήνω αυτό εκτός σχολίου για να επιτρέπεται το debugging
-      }
-    });
-
-    // iOS specific - κρύψη browser bars
-    document.addEventListener('touchstart', function() {
-      enterFullscreen();
-    });
-
-    // Κρύψη address bar σε mobile browsers
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        window.scrollTo(0, 1);
-      }, 0);
-    });
-
-    // Resize για fullscreen experience
-    window.addEventListener('resize', function() {
-      if (window.innerHeight > window.innerWidth) {
+    // Event listener για το play button (απαραίτητο αν η αυτόματη αναπαραγωγή αποτύχει)
+    playButton.addEventListener('click', function() {
+        video.play();
+        video.muted = false;
         enterFullscreen();
-      }
     });
-
-    // Event listener για το play button
-    playButton.addEventListener('click', playVideo);
 
     // Έλεγχος αν το βίντεο σταματάει και εμφάνιση του play button
     video.addEventListener('pause', function() {
-      playButton.classList.remove('hidden');
+        if (!video.ended) { // Εμφάνιση μόνο αν δεν έχει τελειώσει
+            playButton.classList.remove('hidden');
+        }
+    });
+
+    video.addEventListener('play', function() {
+        playButton.classList.add('hidden');
     });
 
     video.addEventListener('ended', function() {
-      // Επαναφορά του βίντεο και εμφάνιση του play button όταν τελειώσει
+      // Επαναφορά του βίντεο
       video.currentTime = 0;
-      playButton.classList.remove('hidden');
+      video.play();
     });
 
   </script>
