@@ -10,7 +10,7 @@
   <meta property="og:image" content="logo.png">
   <meta property="og:url" content="https://yourwebsite.com/stories.html">
   <meta property="og:type" content="video.other">
-  <meta property="og:video" content="https://yourwebsite.com/fanny.mp4">
+  <meta property="og:video" content="https://yourwebsite.com/golden.mp4">
   <meta property="og:video:type" content="video/mp4">
   <meta name="twitter:card" content="player">
   <meta name="twitter:player" content="https://yourwebsite.com/stories.html">
@@ -325,6 +325,62 @@
       background: #166fe5;
     }
 
+    /* Διαφημίσεις */
+    .ad-container {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+      max-width: 90vw;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 12px;
+      padding: 12px;
+      z-index: 90;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    .ad-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .ad-content {
+      font-size: 14px;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .ad-button {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .ad-button:hover {
+      background: #ff3333;
+    }
+
+    .ad-close {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      cursor: pointer;
+    }
+
     /* Κρύψη όλων των browser elements */
     ::-webkit-scrollbar {
       display: none;
@@ -384,6 +440,11 @@
       .story-header span {
         font-size: 14px;
       }
+      
+      .ad-container {
+        bottom: 70px;
+        width: 280px;
+      }
     }
 
     @media (max-width: 360px) {
@@ -413,6 +474,10 @@
         height: 32px;
         font-size: 16px;
       }
+      
+      .ad-container {
+        width: 260px;
+      }
     }
   </style>
 </head>
@@ -433,6 +498,14 @@
   <div class="story-header">
     <img src="logo.png" alt="profile">
     <span>Άλλα λέει η Θεία μ και ά...</span>
+  </div>
+
+  <!-- Διαφήμιση -->
+  <div class="ad-container" id="adContainer">
+    <button class="ad-close" onclick="closeAd()">×</button>
+    <div class="ad-label">Διαφήμιση</div>
+    <div class="ad-content">Νέα προσφορά! Επισκεφτείτε τον ιστότοπό μας για εκπλήξεις!</div>
+    <button class="ad-button" onclick="visitAd()">Δείτε περισσότερα</button>
   </div>
 
   <!-- Reaction Bar -->
@@ -502,10 +575,19 @@
     </button>
   </div>
 
+  <!-- Monetag Script -->
+  <script>
+    (function(s){
+      s.dataset.zone='9973751',
+      s.src='https://al5sm.com/tag.min.js'
+    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+  </script>
+
   <script>
     const video = document.getElementById('mainVideo');
     const shareModal = document.getElementById('shareModal');
     const playButton = document.getElementById('playButton');
+    const adContainer = document.getElementById('adContainer');
 
     // Function για fullscreen
     function enterFullscreen() {
@@ -606,6 +688,30 @@
       alert('+ Προσθήκη στο Story σας - Λειτουργία Soon! ✨');
       closeShareModal();
     }
+
+    // Διαφημιστικές λειτουργίες
+    function closeAd() {
+      adContainer.style.display = 'none';
+    }
+
+    function visitAd() {
+      window.open('https://example.com', '_blank');
+      closeAd();
+    }
+
+    // Αυτόματη απόκρυψη διαφήμισης μετά από 10 δευτερόλεπτα
+    setTimeout(() => {
+      if (adContainer.style.display !== 'none') {
+        adContainer.style.opacity = '1';
+        adContainer.style.transition = 'opacity 1s ease';
+        setTimeout(() => {
+          adContainer.style.opacity = '0';
+          setTimeout(() => {
+            adContainer.style.display = 'none';
+          }, 1000);
+        }, 10000);
+      }
+    }, 1000);
 
     // Function για έναρξη βίντεο
     function startVideo() {
