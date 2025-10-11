@@ -30,12 +30,62 @@
       position: relative;
     }
 
+    /* Ad Overlay */
+    .ad-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ad-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .ad-timer {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.8);
+      padding: 10px 15px;
+      border-radius: 20px;
+      font-size: 14px;
+      backdrop-filter: blur(10px);
+    }
+
+    .skip-ad {
+      position: absolute;
+      bottom: 30px;
+      background: #1877f2;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
     .video-container {
       width: 100vw;
       height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
+      display: none;
     }
 
     video {
@@ -256,30 +306,31 @@
       -ms-user-select: none;
       user-select: none;
     }
-
-    /* Ad Container */
-    .ad-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 320px;
-      height: 250px;
-      z-index: 1000;
-      display: none;
-    }
-
-    .ad-container.active {
-      display: block;
-    }
   </style>
 </head>
 <body>
 
+  <!-- Ad Overlay -->
+  <div class="ad-overlay" id="adOverlay">
+    <div class="ad-container">
+      <div class="ad-timer" id="adTimer">Η διαφήμιση κλείνει σε 5</div>
+      
+      <!-- Ad Content -->
+      <div id="adContent" style="width: 320px; height: 250px; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex; justify-content: center; align-items: center;">
+        <div style="color: white; text-align: center;">
+          <div>Φορτώνει διαφήμιση...</div>
+          <div style="font-size: 12px; margin-top: 10px;">Διαφήμιση</div>
+        </div>
+      </div>
+      
+      <button class="skip-ad" onclick="skipAd()">Παράβλεψη Διαφήμισης</button>
+    </div>
+  </div>
+
   <!-- Video Container -->
   <div class="video-container" id="videoContainer">
-    <video id="mainVideo" loop playsinline webkit-playsinline autoplay muted>
-      <source src="golden.mp4" type="video/mp4">
+    <video id="mainVideo" loop playsinline webkit-playsinline muted>
+      <source src="fanny.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
   </div>
@@ -300,7 +351,6 @@
     <div class="reaction-emoji" onclick="reactToEmoji('😯')">😯</div>
     <div class="reaction-emoji" onclick="reactToEmoji('😢')">😢</div>
     <div class="reaction-emoji" onclick="reactToEmoji('😠')">😠</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('✨')">✨</div>
   </div>
 
   <!-- Share Modal -->
@@ -340,6 +390,13 @@
   <script>
     const video = document.getElementById('mainVideo');
     const shareModal = document.getElementById('shareModal');
+    const adOverlay = document.getElementById('adOverlay');
+    const videoContainer = document.getElementById('videoContainer');
+    const adTimer = document.getElementById('adTimer');
+    const adContent = document.getElementById('adContent');
+
+    let adSeconds = 5;
+    let adCountdown;
 
     // Function για fullscreen
     function enterFullscreen() {
@@ -352,6 +409,55 @@
       } else if (element.msRequestFullscreen) {
         element.msRequestFullscreen();
       }
+    }
+
+    // Function για κλείσιμο διαφήμισης
+    function closeAd() {
+      clearInterval(adCountdown);
+      adOverlay.style.display = 'none';
+      videoContainer.style.display = 'block';
+      startVideo();
+    }
+
+    // Function για skip διαφήμισης
+    function skipAd() {
+      closeAd();
+    }
+
+    // Χρονόμετρο διαφήμισης
+    function startAdTimer() {
+      adCountdown = setInterval(() => {
+        adSeconds--;
+        adTimer.textContent = `Η διαφήμιση κλείνει σε ${adSeconds}`;
+        
+        if (adSeconds <= 0) {
+          closeAd();
+        }
+      }, 1000);
+    }
+
+    // Φόρτωση διαφήμισης
+    function loadAd() {
+      // Προσθήκη iframe για διαφήμιση
+      const iframe = document.createElement('iframe');
+      iframe.src = 'https://otieu.com/4/10000601';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = 'none';
+      iframe.style.borderRadius = '10px';
+      
+      iframe.onload = function() {
+        console.log('Ad loaded successfully');
+      };
+      
+      iframe.onerror = function() {
+        console.log('Ad failed to load');
+        // Fallback αν αποτύχει η διαφήμιση
+        setTimeout(closeAd, 2000);
+      };
+      
+      adContent.innerHTML = '';
+      adContent.appendChild(iframe);
     }
 
     // Function για emoji reaction με animation
@@ -457,8 +563,14 @@
 
     // Αρχικοποίηση όταν φορτώσει η σελίδα
     document.addEventListener('DOMContentLoaded', function() {
+      // Φόρτωση διαφήμισης
+      loadAd();
+      
+      // Ξεκινάει το χρονόμετρο της διαφήμισης
+      startAdTimer();
+      
+      // Προσπάθεια fullscreen
       setTimeout(enterFullscreen, 100);
-      startVideo();
     });
 
     // Fullscreen change events
