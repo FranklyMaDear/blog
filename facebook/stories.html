@@ -44,15 +44,15 @@
     }
 
     /* *************************************************************** */
-    /* ΔΙΟΡΘΩΣΗ: ΑΦΑΙΡΕΣΗ ΣΚΟΥΡΟΥ BACKGROUND ΑΠΟ ΤΟ OVERLAY */
+    /* OVERLAY ΓΙΑ ΤΟ PLAY BUTTON (ΔΙΑΦΑΝΕΣ) */
+    /* *************************************************************** */
     .video-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      /* ΑΛΛΑΓΗ: Αφαιρούμε το σκούρο background */
-      background: transparent; 
+      background: transparent; /* Διαφανές για να φαίνεται το βίντεο */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -522,7 +522,7 @@
 <body>
 
   <div class="video-container" id="videoContainer">
-    <video id="mainVideo" loop playsinline webkit-playsinline muted>
+    <video id="mainVideo" loop playsinline webkit-playsinline muted preload="auto">
       <source src="golden.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
@@ -689,6 +689,9 @@
         // Χρησιμοποιούμε capture: true για να ενεργοποιηθεί πριν από άλλα events
         document.addEventListener('click', playVideoAndUnmute, true); 
         
+        // ΔΙΟΡΘΩΣΗ: Ζητάμε από τον browser να φορτώσει τα metadata για να εμφανιστεί το πρώτο καρέ.
+        video.load();
+
         // Εξασφάλιση ότι το βίντεο είναι σε pause στην αρχή
         video.pause();
     });
@@ -697,7 +700,7 @@
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
       
-      // Πρώτα βεβαιωνόμαστε ότι το βίντεο παίζει, αλλιώς δεν έχει νόημα το reaction
+      // Πρώτα βεβαιωνόμαστε ότι το βίντεο παίζει
       if (video.paused) {
           alert('Παρακαλώ πατήστε πρώτα το κουμπί Play για να ξεκινήσει το βίντεο.');
           return;
