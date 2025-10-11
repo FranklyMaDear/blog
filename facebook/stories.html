@@ -44,6 +44,45 @@
       object-fit: cover;
     }
 
+    /* Play Button */
+    .play-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: rgba(24, 119, 242, 0.9);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 50;
+      transition: all 0.3s ease;
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .play-button:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: rgba(24, 119, 242, 1);
+    }
+
+    .play-button::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 20px solid white;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      margin-left: 4px;
+    }
+
+    .play-button.hidden {
+      display: none;
+    }
+
     .story-header {
       position: absolute;
       top: 0;
@@ -279,6 +318,17 @@
 
     /* Mobile optimizations */
     @media (max-width: 480px) {
+      .play-button {
+        width: 70px;
+        height: 70px;
+      }
+      
+      .play-button::after {
+        border-left-width: 16px;
+        border-top-width: 10px;
+        border-bottom-width: 10px;
+      }
+      
       .reaction-bar {
         bottom: 10px;
         padding: 6px 10px;
@@ -313,6 +363,17 @@
     }
 
     @media (max-width: 360px) {
+      .play-button {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .play-button::after {
+        border-left-width: 14px;
+        border-top-width: 8px;
+        border-bottom-width: 8px;
+      }
+      
       .reaction-bar {
         gap: 4px;
       }
@@ -339,6 +400,9 @@
       <source src="golden.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
+    
+    <!-- Play Button -->
+    <div class="play-button" id="playButton"></div>
   </div>
 
   <!-- Story Header -->
@@ -404,6 +468,7 @@
   <script>
     const video = document.getElementById('mainVideo');
     const shareModal = document.getElementById('shareModal');
+    const playButton = document.getElementById('playButton');
 
     // Function για fullscreen
     function enterFullscreen() {
@@ -511,11 +576,27 @@
       
       video.play().then(() => {
         console.log('Video started playing');
+        // Κρύψη του play button όταν το βίντεο ξεκινήσει
+        playButton.classList.add('hidden');
         setTimeout(() => {
           video.muted = false;
         }, 1000);
       }).catch(error => {
         console.log('Auto-play failed:', error);
+        // Εμφάνιση του play button αν η αυτόματη αναπαραγωγή αποτύχει
+        playButton.classList.remove('hidden');
+      });
+    }
+
+    // Function για χειροκίνητη έναρξη βίντεο
+    function playVideo() {
+      video.play().then(() => {
+        console.log('Video started playing manually');
+        playButton.classList.add('hidden');
+        video.muted = false;
+      }).catch(error => {
+        console.log('Manual play failed:', error);
+        alert('Δεν ήταν δυνατή η αναπαραγωγή του βίντεο. Παρακαλώ δοκιμάστε ξανά.');
       });
     }
 
@@ -581,6 +662,20 @@
       if (window.innerHeight > window.innerWidth) {
         enterFullscreen();
       }
+    });
+
+    // Event listener για το play button
+    playButton.addEventListener('click', playVideo);
+
+    // Έλεγχος αν το βίντεο σταματάει και εμφάνιση του play button
+    video.addEventListener('pause', function() {
+      playButton.classList.remove('hidden');
+    });
+
+    video.addEventListener('ended', function() {
+      // Επαναφορά του βίντεο και εμφάνιση του play button όταν τελειώσει
+      video.currentTime = 0;
+      playButton.classList.remove('hidden');
     });
 
   </script>
