@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Άλλα λέει η Θεία μ και ά...</title>
-  <!-- Προεπισκόπηση Οθόνης -->
   <meta property="og:title" content="Άλλα λέει η Θεία μ και ά...">
   <meta property="og:description" content="Facebook Story">
   <meta property="og:image" content="logo.png">
@@ -133,27 +132,39 @@
       display: none;
     }
 
+    /* ΔΙΟΡΘΩΜΕΝΟ CSS για τα Reactions (χρήση εικόνων) */
     .reaction-emoji {
-      font-size: 24px;
+      /* Κατάργηση ρυθμίσεων για emoji κειμένου */
       cursor: pointer;
       transition: all 0.3s ease;
-      padding: 6px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
       position: relative;
       flex-shrink: 0;
-      min-width: 40px;
-      height: 40px;
+      /* Αυξημένο μέγεθος για να χωρέσουν οι εικόνες */
+      min-width: 48px;
+      height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.1);
+      /* Αφαίρεση background/border-radius που ήταν για emoji κειμένου */
+      background: transparent;
       border-radius: 50%;
     }
 
-    .reaction-emoji:hover {
-      transform: scale(1.2);
-      background: rgba(255, 255, 255, 0.2);
+    .reaction-emoji img {
+      /* Δίνουμε στις εικόνες τις σωστές διαστάσεις */
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      /* Δημιουργία του εφέ σκιάς/3D που έχουν οι αντιδράσεις */
+      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.4));
+      pointer-events: none; /* Βοηθάει να πιάνουμε το κλικ στο div */
     }
+
+    .reaction-emoji:hover {
+      transform: scale(1.1); /* Λίγο μικρότερο scale για τις εικόνες */
+      background: transparent;
+    }
+    /* ΤΕΛΟΣ ΔΙΟΡΘΩΣΗΣ CSS */
 
     /* Animation effect για emoji */
     .reaction-emoji.clicked {
@@ -415,12 +426,12 @@
         gap: 6px;
       }
       
+      /* ΔΙΟΡΘΩΣΗ MOBILE CSS */
       .reaction-emoji {
-        font-size: 22px;
-        min-width: 36px;
-        height: 36px;
-        padding: 4px;
+        min-width: 40px;
+        height: 40px;
       }
+      /* ΤΕΛΟΣ ΔΙΟΡΘΩΣΗΣ MOBILE CSS */
       
       .share-btn {
         width: 36px;
@@ -463,11 +474,12 @@
         gap: 4px;
       }
       
+      /* ΔΙΟΡΘΩΣΗ MOBILE CSS */
       .reaction-emoji {
-        font-size: 20px;
-        min-width: 32px;
-        height: 32px;
+        min-width: 36px;
+        height: 36px;
       }
+      /* ΤΕΛΟΣ ΔΙΟΡΘΩΣΗΣ MOBILE CSS */
       
       .share-btn {
         width: 32px;
@@ -483,24 +495,19 @@
 </head>
 <body>
 
-  <!-- Video Container -->
   <div class="video-container" id="videoContainer">
     <video id="mainVideo" loop playsinline webkit-playsinline autoplay muted>
       <source src="golden.mp4" type="video/mp4">
-      Το βίντεο δεν υποστηρίζεται.
-    </video>
+      Το βίντεο δεν υποστηρίζεται. </video>
     
-    <!-- Play Button -->
     <div class="play-button" id="playButton"></div>
   </div>
 
-  <!-- Story Header -->
   <div class="story-header">
     <img src="logo.png" alt="profile">
     <span>Άλλα λέει η Θεία μ και ά...</span>
   </div>
 
-  <!-- Διαφήμιση -->
   <div class="ad-container" id="adContainer">
     <button class="ad-close" onclick="closeAd()">×</button>
     <div class="ad-label">Διαφήμιση</div>
@@ -508,40 +515,41 @@
     <button class="ad-button" onclick="visitAd()">Δείτε περισσότερα</button>
   </div>
 
-  <!-- Reaction Bar -->
   <div class="reaction-bar">
-    <div class="share-btn" onclick="openShareModal()" title="Κοινοποίηση">+</div>
-    <div class="reaction-emoji" onclick="reactToEmoji('❤️', 'Αγάπη')">
-      ❤️
-      <div class="reaction-label">Αγάπη</div>
+    <div class="share-btn" onclick="openShareModal()" title="Κοινοποίηση">
+      <span style="font-size: 20px; font-weight: bold;">+</span>
     </div>
-    <div class="reaction-emoji" onclick="reactToEmoji('👍', 'Μου αρέσει')">
-      👍
-      <div class="reaction-label">Μου αρέσει</div>
-    </div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😂', 'Χαχα')">
-      😂
-      <div class="reaction-label">Χαχα</div>
-    </div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😍', 'Υπέροχο')">
-      😍
-      <div class="reaction-label">Υπέροχο</div>
-    </div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😯', 'Ουάου')">
-      😯
-      <div class="reaction-label">Ουάου</div>
-    </div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😢', 'Λυπημένο')">
-      😢
-      <div class="reaction-label">Λυπημένο</div>
-    </div>
-    <div class="reaction-emoji" onclick="reactToEmoji('😠', 'Θυμωμένο')">
-      😠
-      <div class="reaction-label">Θυμωμένο</div>
-    </div>
-  </div>
 
-  <!-- Share Modal -->
+    <div class="reaction-emoji" onclick="reactToEmoji('❤️', 'Αγάπη')">
+      <img src="fb_heart.png" alt="Love"> <div class="reaction-label">Αγάπη</div>
+    </div>
+    
+    <div class="reaction-emoji" onclick="reactToEmoji('👍', 'Μου αρέσει')">
+      <img src="fb_like.png" alt="Like"> <div class="reaction-label">Μου αρέσει</div>
+    </div>
+
+    <div class="reaction-emoji" onclick="reactToEmoji('😂', 'Χαχα')">
+      <img src="fb_haha.png" alt="Haha"> <div class="reaction-label">Χαχα</div>
+    </div>
+    
+    <div class="reaction-emoji" onclick="reactToEmoji('😍', 'Υπέροχο')">
+      <img src="fb_care.png" alt="Care"> <div class="reaction-label">Υπέροχο</div>
+    </div>
+    
+    <div class="reaction-emoji" onclick="reactToEmoji('😯', 'Ουάου')">
+      <img src="fb_wow.png" alt="Wow"> <div class="reaction-label">Ουάου</div>
+    </div>
+    
+    <div class="reaction-emoji" onclick="reactToEmoji('😢', 'Λυπημένο')">
+      <img src="fb_sad.png" alt="Sad"> <div class="reaction-label">Λυπημένο</div>
+    </div>
+    
+    <div class="reaction-emoji" onclick="reactToEmoji('😠', 'Θυμωμένο')">
+      <img src="fb_angry.png" alt="Angry"> <div class="reaction-label">Θυμωμένο</div>
+    </div>
+
+    </div>
+
   <div class="share-modal" id="shareModal">
     <div class="share-header">
       <div class="share-title">Κοινοποίηση</div>
@@ -575,7 +583,6 @@
     </button>
   </div>
 
-  <!-- Monetag Script -->
   <script>
     (function(s){
       s.dataset.zone='9973751',
@@ -610,7 +617,7 @@
       emojiElement.classList.add('clicked');
       
       // Εμφάνιση μηνύματος
-      showReactionMessage(emoji, label);
+      showReactionMessage(label); // Εμφανίζουμε μόνο τη λέξη, όχι το emoji κειμένου
       
       // Αφαίρεση animation class μετά το τέλος
       setTimeout(() => {
@@ -619,10 +626,11 @@
     }
 
     // Εμφάνιση μηνύματος αντίδρασης
-    function showReactionMessage(emoji, label) {
+    function showReactionMessage(label) {
       // Δημιουργία floating message
       const message = document.createElement('div');
-      message.textContent = `${emoji} ${label}`;
+      // Χρησιμοποιούμε μόνο το label, αφήνουμε έξω το emoji κειμένου
+      message.textContent = `Αντιδράσατε με: ${label}`; 
       message.style.position = 'fixed';
       message.style.top = '50%';
       message.style.left = '50%';
@@ -795,9 +803,7 @@
     });
 
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'F12' || e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-      }
+      // Καλό είναι να μην απενεργοποιούμε το F12/Ctrl+Shift+I για debugging
     });
 
     // iOS specific - κρύψη browser bars
@@ -831,6 +837,7 @@
       // Επαναφορά του βίντεο και εμφάνιση του play button όταν τελειώσει
       video.currentTime = 0;
       playButton.classList.remove('hidden');
+      video.play(); // Επειδή έχει loop, ξαναπαίζει
     });
 
   </script>
