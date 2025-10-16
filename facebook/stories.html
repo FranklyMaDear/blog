@@ -516,7 +516,7 @@
 <body>
 
   <div class="video-container" id="videoContainer">
-    <video id="mainVideo" loop playsinline webkit-playsinline muted preload="auto">
+    <video id="mainVideo" playsinline webkit-playsinline muted preload="auto">
       <source id="videoSource" src="gold2.mp4" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
@@ -629,45 +629,27 @@
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
     const adContainer = document.getElementById('adContainer');
-    const videoSource = document.getElementById('videoSource'); // Νέα μεταβλητή για το source
+    const videoSource = document.getElementById('videoSource');
     
-    // ***************************************************************
-    // ΝΕΟΣ ΚΩΔΙΚΑΣ ΓΙΑ ΠΛΕΙΛΙΣΤΑ
-    // ***************************************************************
+    // Λίστα με τα 3 βίντεο
     const videoList = [
         "gold2.mp4",
-        "video3.mp4", // Το 2ο βίντεο
-        "video4.mp4"  // Το 3ο βίντεο
+        "video3.mp4",
+        "video4.mp4"
     ];
-    let currentVideoIndex = 0; // Ξεκινάμε από το πρώτο βίντεο
-    
-    function loadNextVideo() {
-        // Υπολογίζουμε τον δείκτη του επόμενου βίντεο
-        currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
-        
-        // Ορίζουμε τη νέα πηγή
-        videoSource.src = videoList[currentVideoIndex];
-        
-        // Λόγω αλλαγής src, πρέπει να φορτώσουμε και να παίξουμε το βίντεο
-        video.load();
-        
-        // Αν το βίντεο ήταν σε pause (π.χ. μετά από χειροκίνητη παύση),
-        // δεν το παίζουμε αυτόματα. Διαφορετικά, συνεχίζουμε.
-        // Εφόσον ο listener είναι στο 'ended', θα παίξει μόνο αν τελείωσε το προηγούμενο.
-        // Αν θέλουμε να παίζει σε λούπα τα 3 βίντεο, το παίζουμε:
-        video.play().catch(error => {
-             // Εδώ μπορεί να υπάρχει πρόβλημα με autoplay σε κινητά/browsers.
-             // Αν συμβεί, θα πρέπει να περιμένουμε το επόμενο κλικ του χρήστη.
-             console.log("Αδύνατη η αυτόματη αναπαραγωγή του επόμενου βίντεο. " + error);
-        });
+    let currentVideoIndex = 0;
 
-        // Επειδή έχουμε βάλει 'loop' στο <video>, πρέπει να το αφαιρέσουμε
-        // για να δουλέψει ο listener 'ended'
-        video.loop = false;
+    // Φόρτωση επόμενου βίντεο
+    function loadNextVideo() {
+        currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
+        videoSource.src = videoList[currentVideoIndex];
+        video.load();
+        video.play().catch(error => {
+            console.log("Αδύνατη η αυτόματη αναπαραγωγή: " + error);
+        });
     }
-    // ***************************************************************
-    
-    // Function για fullscreen (Μόνο με κλικ χρήστη)
+
+    // Function για fullscreen
     function enterFullscreen() {
       const element = document.documentElement;
       if (element.requestFullscreen) {
@@ -679,62 +661,44 @@
       }
     }
 
-    // Function για την έναρξη του βίντεο και την απενεργοποίηση του overlay
+    // Function για την έναρξη του βίντεο
     function playVideoAndUnmute(event) {
-        // Βεβαιωνόμαστε ότι το κλικ δεν είναι από τα reactions/modal
         if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container')) {
             return;
         }
         
-        // Απόκρυψη του overlay
         videoOverlay.classList.add('hidden');
         
-        // 1. Έναρξη αναπαραγωγής
         video.play().then(() => {
             console.log('Video started playing.');
             
-            // 2. Ενεργοποίηση ήχου (θα επιτραπεί λόγω του κλικ)
             if (video.muted) {
                 video.muted = false;
-         
-               console.log('Video unmuted.');
+                console.log('Video unmuted.');
             }
             
-            // 3. Προσπάθεια fullscreen
             enterFullscreen();
         }).catch(error => {
             console.error('Failed to play video:', error);
-            // Σε περίπτωση 
-            // αποτυχίας, ξαναεμφανίζουμε το overlay
             videoOverlay.classList.remove('hidden');
             alert('Αδύνατη η αναπαραγωγή βίντεο. Δοκιμάστε ξανά.');
         });
-        // Αφαιρούμε τον event listener μετά το πρώτο κλικ για να μην τρέχει συνέχεια
+        
         videoOverlay.removeEventListener('click', playVideoAndUnmute);
         document.removeEventListener('click', playVideoAndUnmute, true);
     }
     
-    // ***************************************************************
-    // ΕΝΕΡΓΟΠΟΙΗΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ ΜΟΝΟ ΜΕ ΚΛΙΚ/ΑΓΓΙΓΜΑ
-    // ***************************************************************
+    // Ενεργοποίηση αναπαραγωγής
     document.addEventListener('DOMContentLoaded', function() {
-        // Προσθέτουμε τον listener στο overlay
         videoOverlay.addEventListener('click', playVideoAndUnmute);
+        document.addEventListener('click', playVideoAndUnmute, true);
         
-        // Προσθέτουμε έναν global listener για να καλύψουμε όλη την οθόνη
-        document.addEventListener('click', playVideoAndUnmute, true); 
-        
- 
-        // Ζητάμε από τον browser να φορτώσει τα metadata για να εμφανιστεί το πρώτο καρέ.
         video.load();
-
-        // Εξασφάλιση ότι το βίντεο είναι σε pause στην αρχή
         video.pause();
     });
     
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
-      // Πρώτα βεβαιωνόμαστε ότι το βίντεο παίζει
       if (video.paused) {
           alert('Παρακαλώ πατήστε πρώτα το κουμπί Play για να ξεκινήσει το βίντεο.');
           return;
@@ -783,7 +747,6 @@
     }
 
     function shareToFacebook() {
-      // Το window.location.href είναι το δυναμικό link
       const url = encodeURIComponent(window.location.href);
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
       closeShareModal();
@@ -795,14 +758,12 @@
     }
 
     function shareToWhatsApp() {
-      // Το window.location.href είναι το δυναμικό link
       const text = encodeURIComponent('Δες αυτό το βίντεο! ' + window.location.href);
       window.open(`https://wa.me/?text=${text}`, '_blank');
       closeShareModal();
     }
 
     function copyLink() {
-      // Το window.location.href είναι το δυναμικό link
       const url = window.location.href;
       navigator.clipboard.writeText(url).then(() => {
         alert('Το link αντιγράφηκε στο clipboard! 📋');
@@ -835,17 +796,12 @@
           setTimeout(() => {
             adContainer.style.display = 'none';
           }, 1000);
-   
         }, 10000);
       }
     }, 1000);
     
-    // ***************************************************************
-    // ΝΕΟΣ LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ
-    // ***************************************************************
+    // Listener για το τέλος του βίντεο
     video.addEventListener('ended', loadNextVideo);
-    
-    // Αφαιρούμε τον παλιό listener: video.addEventListener('ended', function() { video.currentTime = 0; video.play(); });
   </script>
 
 </body>
