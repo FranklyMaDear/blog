@@ -14,6 +14,7 @@
   <meta name="twitter:card" content="player">
   <meta name="twitter:player" content="https://yourwebsite.com/stories.html">
   <style>
+    /* Ολα τα styles παραμένουν ίδια */
     * {
       margin: 0;
       padding: 0;
@@ -43,7 +44,6 @@
       object-fit: cover;
     }
 
-    /* OVERLAY ΓΙΑ ΤΟ PLAY BUTTON */
     .video-overlay {
       position: absolute;
       top: 0;
@@ -137,7 +137,6 @@
       overflow-x: auto;
     }
 
-    /* Hide scrollbar for reaction bar */
     .reaction-bar::-webkit-scrollbar {
       display: none;
     }
@@ -551,8 +550,7 @@
     
     <div class="reaction-emoji blue-like" onclick="reactToEmoji('👍', 'Μου αρέσει')">
       👍
-      <div 
-        class="reaction-label">Μου αρέσει</div>
+      <div class="reaction-label">Μου αρέσει</div>
     </div>
     
     <div class="reaction-emoji" onclick="reactToEmoji('😂', 'Χαχα')">
@@ -570,8 +568,7 @@
       <div class="reaction-label">Ουάου</div>
     </div>
     
-    <div class="reaction-emoji" onclick="reactToEmoji('😢', 
-        'Λυπημένο')">
+    <div class="reaction-emoji" onclick="reactToEmoji('😢', 'Λυπημένο')">
       😢
       <div class="reaction-label">Λυπημένο</div>
     </div>
@@ -590,7 +587,6 @@
     
     <div class="share-options">
       <div class="share-option" onclick="shareToFacebook()">
-        
         <div class="share-icon">📘</div>
         <div class="share-label">Facebook</div>
       </div>
@@ -605,7 +601,6 @@
         <div class="share-label">Αντιγραφή</div>
       </div>
       
-  
       <div class="share-option" onclick="shareToWhatsApp()">
         <div class="share-icon">💬</div>
         <div class="share-label">WhatsApp</div>
@@ -631,25 +626,50 @@
     const adContainer = document.getElementById('adContainer');
     const videoSource = document.getElementById('videoSource');
     
-    // Λίστα με τα 3 βίντεο
+    // ΧΡΗΣΗ ΤΩΝ ΠΡΑΓΜΑΤΙΚΩΝ ΒΙΝΤΕΟ ΠΟΥ ΥΠΑΡΧΟΥΝ
     const videoList = [
         "gold2.mp4",
-        "video3.mp4",
-        "video4.mp4"
+        "golden.mp4"  // Το δεύτερο βίντεο που έχετε
     ];
     let currentVideoIndex = 0;
 
-    // Φόρτωση επόμενου βίντεο
     function loadNextVideo() {
         currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
-        videoSource.src = videoList[currentVideoIndex];
+        const nextVideo = videoList[currentVideoIndex];
+        console.log('Φόρτωση επόμενου βίντεο:', nextVideo);
+        
+        videoSource.src = nextVideo;
         video.load();
+        
         video.play().catch(error => {
             console.log("Αδύνατη η αυτόματη αναπαραγωγή: " + error);
+            // Εμφάνιση μηνύματος για τον χρήστη
+            showVideoMessage(`Δεν βρέθηκε το βίντεο: ${nextVideo}`);
         });
     }
 
-    // Function για fullscreen
+    function showVideoMessage(message) {
+      const msg = document.createElement('div');
+      msg.textContent = message;
+      msg.style.position = 'fixed';
+      msg.style.top = '50%';
+      msg.style.left = '50%';
+      msg.style.transform = 'translate(-50%, -50%)';
+      msg.style.background = 'rgba(255,0,0,0.8)';
+      msg.style.color = 'white';
+      msg.style.padding = '15px 25px';
+      msg.style.borderRadius = '15px';
+      msg.style.fontSize = '16px';
+      msg.style.zIndex = '1000';
+      msg.style.textAlign = 'center';
+      
+      document.body.appendChild(msg);
+      
+      setTimeout(() => {
+        document.body.removeChild(msg);
+      }, 3000);
+    }
+
     function enterFullscreen() {
       const element = document.documentElement;
       if (element.requestFullscreen) {
@@ -661,7 +681,6 @@
       }
     }
 
-    // Function για την έναρξη του βίντεο
     function playVideoAndUnmute(event) {
         if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container')) {
             return;
@@ -688,7 +707,6 @@
         document.removeEventListener('click', playVideoAndUnmute, true);
     }
     
-    // Ενεργοποίηση αναπαραγωγής
     document.addEventListener('DOMContentLoaded', function() {
         videoOverlay.addEventListener('click', playVideoAndUnmute);
         document.addEventListener('click', playVideoAndUnmute, true);
