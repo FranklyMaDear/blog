@@ -155,6 +155,43 @@
       margin-left: 2px;
     }
 
+    /* PREVIOUS BUTTON */
+    .prev-video-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 60;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .prev-video-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-50%) scale(1.1);
+      opacity: 1;
+    }
+
+    .prev-video-btn::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-right: 12px solid white;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      margin-right: 2px;
+    }
+
     .video-counter {
       position: absolute;
       top: 70px;
@@ -426,33 +463,34 @@
       transform: translateX(-50%);
       width: 320px;
       max-width: 90vw;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.9);
       border-radius: 12px;
-      padding: 12px;
+      padding: 15px;
       z-index: 90;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       text-align: center;
+      display: none;
     }
 
     .ad-label {
       font-size: 10px;
       color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       text-transform: uppercase;
     }
 
     .ad-content {
       font-size: 14px;
       color: white;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .ad-button {
       background: #ff4444;
       color: white;
       border: none;
-      padding: 6px 12px;
+      padding: 8px 16px;
       border-radius: 16px;
       font-size: 12px;
       cursor: pointer;
@@ -465,8 +503,8 @@
 
     .ad-close {
       position: absolute;
-      top: 6px;
-      right: 8px;
+      top: 8px;
+      right: 10px;
       background: none;
       border: none;
       color: rgba(255, 255, 255, 0.6);
@@ -501,7 +539,7 @@
         border-bottom-width: 10px;
       }
       
-      .next-video-btn {
+      .next-video-btn, .prev-video-btn {
         width: 40px;
         height: 40px;
         right: 10px;
@@ -509,6 +547,12 @@
       
       .next-video-btn::after {
         border-left-width: 10px;
+        border-top-width: 6px;
+        border-bottom-width: 6px;
+      }
+      
+      .prev-video-btn::after {
+        border-right-width: 10px;
         border-top-width: 6px;
         border-bottom-width: 6px;
       }
@@ -555,6 +599,7 @@
       .ad-container {
         bottom: 100px;
         width: 280px;
+        padding: 12px;
       }
     }
 
@@ -570,7 +615,7 @@
         border-bottom-width: 8px;
       }
       
-      .next-video-btn {
+      .next-video-btn, .prev-video-btn {
         width: 35px;
         height: 35px;
       }
@@ -616,6 +661,9 @@
         <div class="play-button"></div>
     </div>
 
+    <!-- Previous Video Button -->
+    <button class="prev-video-btn" id="prevVideoBtn" title="Προηγούμενο βίντεο"></button>
+
     <!-- Next Video Button -->
     <button class="next-video-btn" id="nextVideoBtn" title="Επόμενο βίντεο"></button>
 
@@ -631,12 +679,12 @@
     <span>Άλλα λέει η Θεία μ και ά...</span>
   </div>
 
+  <!-- Menotag Ad Container -->
   <div class="ad-container" id="adContainer">
     <button class="ad-close" onclick="closeAd()">×</button>
     <div class="ad-label">Διαφήμιση</div>
-    <div class="ad-content"> Στηρίξτε μας .
-      Κάντε κλικ θα δείτε μια διαφήμιση. Επιστρέψτε και πατήστε  Play να δείτε το βίντεο.</div>
-    <button class="ad-button" onclick="visitAd()">Δείτε περισσότερα</button>
+    <div class="ad-content">Παρακαλώ δείτε αυτή τη σύντομη διαφήμιση για να συνεχίσετε</div>
+    <button class="ad-button" onclick="visitAd()">Δείτε τη διαφήμιση</button>
   </div>
 
   <div class="reaction-bar">
@@ -724,6 +772,7 @@
     const adContainer = document.getElementById('adContainer');
     const videoSource = document.getElementById('videoSource');
     const nextVideoBtn = document.getElementById('nextVideoBtn');
+    const prevVideoBtn = document.getElementById('prevVideoBtn');
     const videoCounter = document.getElementById('videoCounter');
     const shareIndicator = document.getElementById('shareIndicator');
     const videoShareInfo = document.getElementById('videoShareInfo');
@@ -748,6 +797,7 @@
     ];
     
     let currentVideoIndex = 0;
+    let isFirstVisit = true;
 
     // Function για να πάρουμε το video index από το URL
     function getVideoIndexFromURL() {
@@ -779,17 +829,25 @@
       currentVideoName.textContent = videoTitles[currentVideoIndex];
     }
 
+    function updateNavigationButtons() {
+      // Εμφάνιση/απόκρυψη previous button
+      if (currentVideoIndex > 0) {
+        prevVideoBtn.style.display = 'flex';
+      } else {
+        prevVideoBtn.style.display = 'none';
+      }
+      
+      // Εμφάνιση/απόκρυψη next button
+      if (currentVideoIndex < videoList.length - 1) {
+        nextVideoBtn.style.display = 'flex';
+      } else {
+        nextVideoBtn.style.display = 'none';
+      }
+    }
+
     // ΑΦΑΙΡΕΣΑΜΕ ΤΗΝ ΕΝΗΜΕΡΩΣΗ ΤΟΥ SHARE INDICATOR
     function updateShareIndicator() {
       // Δεν κάνουμε τίποτα - το share indicator είναι κρυφό
-    }
-
-    function showNextButton() {
-      nextVideoBtn.style.display = 'flex';
-    }
-
-    function hideNextButton() {
-      nextVideoBtn.style.display = 'none';
     }
 
     async function loadCurrentVideo() {
@@ -809,8 +867,10 @@
       // Ορίζουμε το source του βίντεο
       videoSource.src = currentVideo;
       
-      // Εμφανίζουμε το overlay play button
-      videoOverlay.classList.remove('hidden');
+      // Εμφανίζουμε το overlay play button ΜΟΝΟ αν το βίντεο δεν παίζει
+      if (video.paused) {
+        videoOverlay.classList.remove('hidden');
+      }
       
       // Φορτώνουμε το βίντεο
       video.load();
@@ -819,11 +879,15 @@
       updateURL();
       updateVideoCounter();
       updateShareIndicator();
-      
-      // Εμφάνιση next button
-      showNextButton();
+      updateNavigationButtons();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
+      
+      // Εμφάνιση διαφήμισης μόνο στην πρώτη επίσκεψη και στο πρώτο βίντεο
+      if (isFirstVisit && currentVideoIndex === 0) {
+        setTimeout(showAd, 1000);
+        isFirstVisit = false;
+      }
     }
 
     function loadNextVideo() {
@@ -837,11 +901,35 @@
         video.play().then(() => {
           console.log('Αυτόματη αναπαραγωγή επόμενου βίντεο');
           video.muted = false;
+          // ΚΡΥΒΟΥΜΕ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
+          videoOverlay.classList.add('hidden');
         }).catch(error => {
           console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
           videoOverlay.classList.remove('hidden');
         });
       }, 500);
+    }
+
+    function loadPrevVideo() {
+      if (videoList.length === 0) return;
+      
+      if (currentVideoIndex > 0) {
+        currentVideoIndex = currentVideoIndex - 1;
+        loadCurrentVideo();
+        
+        // ΑΥΤΟΜΗ ΑΝΑΠΑΡΑΓΩΓΗ ΜΕΤΑ ΤΗΝ ΕΠΟΜΕΝΗ ΦΟΡΤΩΣΗ
+        setTimeout(() => {
+          video.play().then(() => {
+            console.log('Αυτόματη αναπαραγωγή προηγούμενου βίντεο');
+            video.muted = false;
+            // ΚΡΥΒΟΥΜΕ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
+            videoOverlay.classList.add('hidden');
+          }).catch(error => {
+            console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
+            videoOverlay.classList.remove('hidden');
+          });
+        }, 500);
+      }
     }
 
     function enterFullscreen() {
@@ -856,7 +944,7 @@
     }
 
     function playVideoAndUnmute(event) {
-      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container') || event.target.closest('.next-video-btn')) {
+      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
         return;
       }
       
@@ -901,10 +989,24 @@
       // Προσθέτουμε τους listeners
       videoOverlay.addEventListener('click', playVideoAndUnmute);
       nextVideoBtn.addEventListener('click', loadNextVideo);
+      prevVideoBtn.addEventListener('click', loadPrevVideo);
       
-      // Εμφάνιση next button από την αρχή
-      showNextButton();
+      // Κρύβουμε αρχικά τα βελάκια
+      updateNavigationButtons();
     });
+    
+    function showAd() {
+      adContainer.style.display = 'block';
+      adContainer.style.opacity = '1';
+      
+      // Αυτόματο κλείσιμο διαφήμισης μετά από 10 δευτερόλεπτα
+      setTimeout(() => {
+        adContainer.style.opacity = '0';
+        setTimeout(() => {
+          adContainer.style.display = 'none';
+        }, 1000);
+      }, 10000);
+    }
     
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
@@ -985,31 +1087,31 @@
     }
 
     function closeAd() {
-      adContainer.style.display = 'none';
+      adContainer.style.opacity = '0';
+      setTimeout(() => {
+        adContainer.style.display = 'none';
+      }, 500);
     }
 
     function visitAd() {
-      window.open('https://example.com', '_blank');
+      window.open('https://otieu.com/4/10021790', '_blank');
       closeAd();
     }
-
-    // Αυτόματο κλείσιμο διαφήμισης μετά από 10 δευτερόλεπτα
-    setTimeout(() => {
-      if (adContainer.style.display !== 'none') {
-        adContainer.style.opacity = '1';
-        setTimeout(() => {
-          adContainer.style.opacity = '0';
-          setTimeout(() => {
-            adContainer.style.display = 'none';
-          }, 1000);
-        }, 10000);
-      }
-    }, 1000);
     
     // LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ - ΑΥΤΟΜΗ ΕΠΟΜΕΝΗ ΑΝΑΠΑΡΑΓΩΓΗ
     video.addEventListener('ended', function() {
       console.log('Το βίντεο τελείωσε, φόρτωση επόμενου...');
       loadNextVideo();
+    });
+    
+    // LISTENER ΓΙΑ ΝΑ ΚΡΥΒΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
+    video.addEventListener('play', function() {
+      videoOverlay.classList.add('hidden');
+    });
+    
+    // LISTENER ΓΙΑ ΝΑ ΕΜΦΑΝΙΖΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΥΕΙ ΤΟ ΒΙΝΤΕΟ
+    video.addEventListener('pause', function() {
+      videoOverlay.classList.remove('hidden');
     });
     
     // Listener για σφάλματα βίντεο
