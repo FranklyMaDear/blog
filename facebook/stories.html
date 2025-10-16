@@ -411,89 +411,14 @@
       background: #166fe5;
     }
 
-    /* ΚΟΥΜΠΙ ΔΙΑΦΗΜΙΣΗΣ ΓΙΑ ΒΙΝΤΕΟ 2-6 */
-    .ad-container {
-      position: absolute;
-      bottom: 120px; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 320px;
-      max-width: 90vw;
-      background: rgba(0, 0, 0, 0.95);
-      border-radius: 12px;
-      padding: 15px;
-      z-index: 90;
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      text-align: center;
-      display: none;
-      animation: adPulse 2s infinite;
-      box-shadow: 0 0 25px rgba(255, 100, 100, 0.4);
-    }
-
-    @keyframes adPulse {
-      0% {
-        box-shadow: 0 0 15px rgba(255, 100, 100, 0.4);
-        transform: translateX(-50%) scale(1);
-      }
-      50% {
-        box-shadow: 0 0 30px rgba(255, 100, 100, 0.7);
-        transform: translateX(-50%) scale(1.02);
-      }
-      100% {
-        box-shadow: 0 0 15px rgba(255, 100, 100, 0.4);
-        transform: translateX(-50%) scale(1);
-      }
-    }
-
-    .ad-label {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-    }
-
-    .ad-content {
-      font-size: 14px;
-      color: white;
-      margin-bottom: 10px;
-    }
-
-    .ad-button {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 16px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .ad-button:hover {
-      background: #ff3333;
-      transform: scale(1.05);
-    }
-
-    .ad-close {
-      position: absolute;
-      top: 8px;
-      right: 10px;
-      background: none;
-      border: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    /* FULL-SCREEN AD OVERLAY ΓΙΑ ΒΙΝΤΕΟ 1 */
+    /* FULL-SCREEN AD OVERLAY ΓΙΑ ΟΛΑ ΤΑ ΒΙΝΤΕΟ */
     .fullscreen-ad-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 80;
       display: none;
       cursor: pointer;
@@ -611,12 +536,6 @@
       .story-header span {
         font-size: 14px;
       }
-      
-      .ad-container {
-        bottom: 100px;
-        width: 280px;
-        padding: 12px;
-      }
 
       .fullscreen-ad-title {
         font-size: 20px;
@@ -657,12 +576,6 @@
       .share-btn {
         width: 36px;
         height: 36px;
-      }
-      
-      .ad-container {
-        bottom: 90px;
-        width: 260px;
-        padding: 10px;
       }
       
       .story-header {
@@ -718,12 +631,12 @@
     <!-- Share Indicator - ΑΦΑΙΡΕΘΗΚΕ -->
     <div class="share-indicator" id="shareIndicator"></div>
 
-    <!-- FULLSCREEN AD OVERLAY ΜΟΝΟ ΓΙΑ ΠΡΩΤΟ ΒΙΝΤΕΟ -->
+    <!-- FULLSCREEN AD OVERLAY ΓΙΑ ΟΛΑ ΤΑ ΒΙΝΤΕΟ -->
     <div class="fullscreen-ad-overlay" id="fullscreenAdOverlay">
       <div class="fullscreen-ad-content">
         <div class="fullscreen-ad-title">Διαφήμιση</div>
         <div class="fullscreen-ad-message">Αγγίξτε την οθόνη για να προχωρήσετε στο βίντεο</div>
-        <button class="fullscreen-ad-button" onclick="visitAd()">Δείτε τη διαφήμιση</button>
+        <button class="fullscreen-ad-button" onclick="loadVignetteAd()">Δείτε τη διαφήμιση</button>
       </div>
     </div>
   </div> 
@@ -731,14 +644,6 @@
   <div class="story-header">
     <img src="logo.png" alt="profile">
     <span>Άλλα λέει η Θεία μ και ά...</span>
-  </div>
-
-  <!-- ΚΟΥΜΠΙ ΔΙΑΦΗΜΙΣΗΣ ΜΟΝΟ ΓΙΑ ΒΙΝΤΕΟ 2-6 -->
-  <div class="ad-container" id="adContainer">
-    <button class="ad-close" onclick="closeAd()">×</button>
-    <div class="ad-label">Διαφήμιση</div>
-    <div class="ad-content">Παρακαλώ δείτε αυτή τη σύντομη διαφήμιση για να συνεχίσετε</div>
-    <button class="ad-button" onclick="visitAd()">Δείτε τη διαφήμιση</button>
   </div>
 
   <div class="reaction-bar">
@@ -823,7 +728,6 @@
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
-    const adContainer = document.getElementById('adContainer');
     const fullscreenAdOverlay = document.getElementById('fullscreenAdOverlay');
     const videoSource = document.getElementById('videoSource');
     const videoCounter = document.getElementById('videoCounter');
@@ -854,7 +758,7 @@
     ];
     
     let currentVideoIndex = 0;
-    let adShownForSession = false;
+    let adShownForCurrentVideo = false;
 
     // Function για να πάρουμε το video index από το URL
     function getVideoIndexFromURL() {
@@ -910,9 +814,9 @@
       const currentVideo = videoList[currentVideoIndex];
       console.log('Προσπάθεια φόρτωσης:', currentVideo);
       
-      // Κλείνουμε όλες τις διαφημίσεις όταν αλλάζουμε βίντεο
-      closeAd();
+      // Κλείνουμε τη διαφήμιση όταν αλλάζουμε βίντεο
       closeFullscreenAd();
+      adShownForCurrentVideo = false;
       
       // Κρύβουμε το preview
       videoPreview.style.display = 'none';
@@ -936,18 +840,10 @@
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
-      // ΕΙΔΙΚΗ ΠΕΡΙΠΤΩΣΗ: ΜΟΝΟ ΓΙΑ ΤΟ ΠΡΩΤΟ ΒΙΝΤΕΟ ΑΝΟΙΓΕΙ FULLSCREEN ΔΙΑΦΗΜΙΣΗ
-      if (currentVideoIndex === 0 && !adShownForSession) {
-        setTimeout(() => {
-          showFullscreenAd();
-        }, 1000);
-      }
-      // Για τα υπόλοιπα βίντεο, εμφάνιση κανονικού κουμπιού διαφήμισης
-      else if (currentVideoIndex > 0 && !adShownForSession) {
-        setTimeout(() => {
-          showAd();
-        }, 1500);
-      }
+      // Εμφάνιση fullscreen διαφήμισης για ΟΛΑ τα βίντεο
+      setTimeout(() => {
+        showFullscreenAd();
+      }, 1000);
     }
 
     function loadNextVideo() {
@@ -992,38 +888,29 @@
       }
     }
 
-    function showAd() {
-      adContainer.style.display = 'block';
-      adShownForSession = true;
-      
-      // Αυτόματο κλείσιμο διαφήμισης μετά από 8 δευτερόλεπτα
-      setTimeout(() => {
-        closeAd();
-      }, 8000);
-    }
-
     function showFullscreenAd() {
-      fullscreenAdOverlay.style.display = 'block';
-      adShownForSession = true;
-      
-      // Αυτόματο κλείσιμο fullscreen διαφήμισης μετά από 10 δευτερόλεπτα
-      setTimeout(() => {
-        closeFullscreenAd();
-      }, 10000);
-    }
-
-    function closeAd() {
-      adContainer.style.display = 'none';
+      if (!adShownForCurrentVideo) {
+        fullscreenAdOverlay.style.display = 'block';
+        adShownForCurrentVideo = true;
+        
+        // Αυτόματο κλείσιμο fullscreen διαφήμισης μετά από 10 δευτερόλεπτα
+        setTimeout(() => {
+          closeFullscreenAd();
+        }, 10000);
+      }
     }
 
     function closeFullscreenAd() {
       fullscreenAdOverlay.style.display = 'none';
     }
 
-    function visitAd() {
-      // Ανοίγει τη διαφήμιση monetag σε νέο παράθυρο
-      window.open('https://otieu.com/4/10049108', '_blank');
-      closeAd();
+    function loadVignetteAd() {
+      // Φόρτωση του vignette ad script
+      (function(s){
+        s.dataset.zone='9981373',
+        s.src='https://groleegni.net/vignette.min.js'
+      })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+      
       closeFullscreenAd();
     }
 
@@ -1146,26 +1033,6 @@
       // ΑΥΤΟΜΑΤΗ ΕΠΟΜΕΝΗ ΦΟΡΤΩΣΗ ΜΟΝΟ ΑΝ ΕΙΝΑΙ ΔΙΑΘΕΣΙΜΟ ΕΠΟΜΕΝΟ ΒΙΝΤΕΟ
       if (currentVideoIndex < videoList.length - 1) {
         setTimeout(loadNextVideo, 2000);
-      }
-    });
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') {
-        loadNextVideo();
-      } else if (event.key === 'ArrowLeft') {
-        loadPrevVideo();
-      } else if (event.key === ' ') {
-        event.preventDefault();
-        if (video.paused) {
-          video.play().then(() => {
-            video.muted = false;
-            videoOverlay.classList.add('hidden');
-          });
-        } else {
-          video.pause();
-          videoOverlay.classList.remove('hidden');
-        }
       }
     });
 
