@@ -117,6 +117,56 @@
       font-weight: bold;
     }
 
+    /* NEXT BUTTON */
+    .next-video-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 60;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .next-video-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-50%) scale(1.1);
+      opacity: 1;
+    }
+
+    .next-video-btn::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-left: 12px solid white;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      margin-left: 2px;
+    }
+
+    .video-counter {
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      z-index: 100;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
+      padding: 5px;
+    }
+
     .reaction-bar {
       position: absolute;
       bottom: 15px;
@@ -435,6 +485,23 @@
         border-bottom-width: 10px;
       }
       
+      .next-video-btn {
+        width: 40px;
+        height: 40px;
+        right: 10px;
+      }
+      
+      .next-video-btn::after {
+        border-left-width: 10px;
+        border-top-width: 6px;
+        border-bottom-width: 6px;
+      }
+      
+      .video-counter {
+        font-size: 12px;
+        top: 60px;
+      }
+      
       .reaction-bar {
         bottom: 10px;
         padding: 6px 10px;
@@ -487,6 +554,11 @@
         border-bottom-width: 8px;
       }
       
+      .next-video-btn {
+        width: 35px;
+        height: 35px;
+      }
+      
       .reaction-bar {
         gap: 4px;
       }
@@ -524,6 +596,12 @@
     <div class="video-overlay" id="videoOverlay">
         <div class="play-button"></div>
     </div>
+
+    <!-- Next Video Button -->
+    <button class="next-video-btn" id="nextVideoBtn" title="Επόμενο βίντεο" style="display: none;"></button>
+
+    <!-- Video Counter -->
+    <div class="video-counter" id="videoCounter"></div>
   </div> 
 
   <div class="story-header">
@@ -626,6 +704,8 @@
     const shareModal = document.getElementById('shareModal');
     const adContainer = document.getElementById('adContainer');
     const videoSource = document.getElementById('videoSource');
+    const nextVideoBtn = document.getElementById('nextVideoBtn');
+    const videoCounter = document.getElementById('videoCounter');
     
     // ΒΑΣΕΙ ΤΗΣ ΕΙΚΟΝΑΣ ΣΟΥ - ΤΑ ΒΙΝΤΕΟ ΕΙΝΑΙ ΣΤΟΝ ΦΑΚΕΛΟ stories/
     const videoList = [
@@ -639,16 +719,16 @@
     
     let currentVideoIndex = 0;
 
-    // Έλεγχος αν τα βίντεο υπάρχουν πριν την φόρτωση
-    function checkVideoExists(url, callback) {
-      const xhr = new XMLHttpRequest();
-      xhr.open('HEAD', url, true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4) {
-          callback(xhr.status === 200);
-        }
-      };
-      xhr.send();
+    function updateVideoCounter() {
+      videoCounter.textContent = `${currentVideoIndex + 1} / ${videoList.length}`;
+    }
+
+    function showNextButton() {
+      nextVideoBtn.style.display = 'flex';
+    }
+
+    function hideNextButton() {
+      nextVideoBtn.style.display = 'none';
     }
 
     function loadCurrentVideo() {
@@ -660,18 +740,16 @@
       const currentVideo = videoList[currentVideoIndex];
       console.log('Προσπάθεια φόρτωσης:', currentVideo);
       
-      // Έλεγχος αν το βίντεο υπάρχει
-      checkVideoExists(currentVideo, function(exists) {
-        if (exists) {
-          videoSource.src = currentVideo;
-          video.load();
-          console.log('Βίντεο φορτώθηκε:', currentVideo);
-        } else {
-          console.error('Βίντεο δεν βρέθηκε:', currentVideo);
-          // Προσπάθεια φόρτωσης επόμενου βίντεο
-          loadNextVideo();
-        }
-      });
+      videoSource.src = currentVideo;
+      video.load();
+      
+      // Ενημέρωση counter
+      updateVideoCounter();
+      
+      // Απόκρυψη next button μέχρι να παιχτεί το βίντεο
+      hideNextButton();
+      
+      console.log('Βίντεο φορτώθηκε:', currentVideo);
     }
 
     function loadNextVideo() {
@@ -697,7 +775,7 @@
     }
 
     function playVideoAndUnmute(event) {
-      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container')) {
+      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container') || event.target.closest('.next-video-btn')) {
         return;
       }
       
@@ -717,11 +795,14 @@
         }
         
         enterFullscreen();
+        
+        // Εμφάνιση next button μόνο αφού ξεκινήσει το βίντεο
+        showNextButton();
+        
       }).catch(error => {
         console.error('Failed to play video:', error);
         videoOverlay.classList.remove('hidden');
         
-        // Δείξε συγκεκριμένο μήνυμα λάθους
         if (error.name === 'NotAllowedError') {
           alert('Ο browser δεν επέτρεψε την αναπαραγωγή. Παρακαλώ επιτρέψτε τον ήχο.');
         } else {
@@ -740,7 +821,8 @@
       
       // Προσθέτουμε τους listeners
       videoOverlay.addEventListener('click', playVideoAndUnmute);
-      document.addEventListener('click', playVideoAndUnmute, true); 
+      document.addEventListener('click', playVideoAndUnmute, true);
+      nextVideoBtn.addEventListener('click', loadNextVideo);
       
       // Εξασφάλιση ότι το βίντεο είναι σε pause στην αρχή
       video.pause();
