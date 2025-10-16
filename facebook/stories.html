@@ -119,86 +119,32 @@
       font-weight: bold;
     }
 
-    /* NEXT BUTTON - ΒΕΛΤΙΩΜΕΝΟ */
-    .next-video-btn {
+    /* INVISIBLE CLICKABLE AREAS FOR NAVIGATION */
+    .nav-area {
       position: absolute;
-      right: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.25);
-      border: none;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 0;
+      height: 100%;
+      z-index: 40;
       cursor: pointer;
-      z-index: 60;
-      backdrop-filter: blur(15px);
-      transition: all 0.3s ease;
-      opacity: 0.9;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+      transition: background 0.2s ease;
     }
 
-    .next-video-btn:hover {
-      background: rgba(255, 255, 255, 0.35);
-      transform: translateY(-50%) scale(1.15);
-      opacity: 1;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    .prev-area {
+      left: 0;
+      width: 25%;
     }
 
-    .next-video-btn::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: 14px solid white;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      margin-left: 3px;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+    .next-area {
+      right: 0;
+      width: 25%;
     }
 
-    /* PREVIOUS BUTTON - ΒΕΛΤΙΩΜΕΝΟ */
-    .prev-video-btn {
-      position: absolute;
-      left: 15px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.25);
-      border: none;
-      width: 55px;
-      height: 55px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 60;
-      backdrop-filter: blur(15px);
-      transition: all 0.3s ease;
-      opacity: 0.9;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    .nav-area:hover {
+      background: rgba(255, 255, 255, 0.05);
     }
 
-    .prev-video-btn:hover {
-      background: rgba(255, 255, 255, 0.35);
-      transform: translateY(-50%) scale(1.15);
-      opacity: 1;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .prev-video-btn::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-right: 14px solid white;
-      border-top: 10px solid transparent;
-      border-bottom: 10px solid transparent;
-      margin-right: 3px;
-      filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+    .nav-area:active {
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .video-counter {
@@ -571,25 +517,6 @@
         border-bottom-width: 10px;
       }
       
-      .next-video-btn, .prev-video-btn {
-        width: 50px;
-        height: 50px;
-        right: 10px;
-        left: 10px;
-      }
-      
-      .next-video-btn::after {
-        border-left-width: 12px;
-        border-top-width: 8px;
-        border-bottom-width: 8px;
-      }
-      
-      .prev-video-btn::after {
-        border-right-width: 12px;
-        border-top-width: 8px;
-        border-bottom-width: 8px;
-      }
-      
       .video-counter {
         font-size: 12px;
         top: 60px;
@@ -648,13 +575,6 @@
         border-bottom-width: 8px;
       }
       
-      .next-video-btn, .prev-video-btn {
-        width: 45px;
-        height: 45px;
-        right: 8px;
-        left: 8px;
-      }
-      
       .reaction-bar {
         gap: 4px;
         padding: 5px 8px;
@@ -707,11 +627,6 @@
         border-bottom-width: 7px;
       }
       
-      .next-video-btn, .prev-video-btn {
-        width: 40px;
-        height: 40px;
-      }
-      
       .reaction-bar {
         gap: 3px;
       }
@@ -749,23 +664,6 @@
         border-top-width: 14px;
         border-bottom-width: 14px;
       }
-      
-      .next-video-btn, .prev-video-btn {
-        width: 65px;
-        height: 65px;
-      }
-      
-      .next-video-btn::after {
-        border-left-width: 16px;
-        border-top-width: 10px;
-        border-bottom-width: 10px;
-      }
-      
-      .prev-video-btn::after {
-        border-right-width: 16px;
-        border-top-width: 10px;
-        border-bottom-width: 10px;
-      }
     }
   </style>
 </head>
@@ -780,15 +678,13 @@
     <!-- Video Preview Image -->
     <img id="videoPreview" class="video-preview" src="" alt="Video preview" style="display: none;">
     
+    <!-- INVISIBLE NAVIGATION AREAS -->
+    <div class="nav-area prev-area" id="prevArea" title="Προηγούμενο βίντεο"></div>
+    <div class="nav-area next-area" id="nextArea" title="Επόμενο βίντεο"></div>
+    
     <div class="video-overlay" id="videoOverlay">
         <div class="play-button"></div>
     </div>
-
-    <!-- Previous Video Button -->
-    <button class="prev-video-btn touch-optimized" id="prevVideoBtn" title="Προηγούμενο βίντεο"></button>
-
-    <!-- Next Video Button -->
-    <button class="next-video-btn touch-optimized" id="nextVideoBtn" title="Επόμενο βίντεο"></button>
 
     <!-- Video Counter -->
     <div class="video-counter" id="videoCounter"></div>
@@ -894,13 +790,13 @@
     const shareModal = document.getElementById('shareModal');
     const adContainer = document.getElementById('adContainer');
     const videoSource = document.getElementById('videoSource');
-    const nextVideoBtn = document.getElementById('nextVideoBtn');
-    const prevVideoBtn = document.getElementById('prevVideoBtn');
     const videoCounter = document.getElementById('videoCounter');
     const shareIndicator = document.getElementById('shareIndicator');
     const videoShareInfo = document.getElementById('videoShareInfo');
     const currentVideoName = document.getElementById('currentVideoName');
     const videoPreview = document.getElementById('videoPreview');
+    const prevArea = document.getElementById('prevArea');
+    const nextArea = document.getElementById('nextArea');
 
     // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ ΟΛΑ ΤΑ ΒΙΝΤΕΟ
     const videoList = [
@@ -954,19 +850,17 @@
       currentVideoName.textContent = videoTitles[currentVideoIndex];
     }
 
-    function updateNavigationButtons() {
-      // Εμφάνιση/απόκρυψη previous button
-      if (currentVideoIndex > 0) {
-        prevVideoBtn.style.display = 'flex';
+    function updateNavigationAreas() {
+      // Εμφάνιση/απόκρυψη navigation areas ανάλογα με τη θέση
+      if (currentVideoIndex === 0) {
+        prevArea.style.display = 'none';
+        nextArea.style.display = 'block';
+      } else if (currentVideoIndex === videoList.length - 1) {
+        prevArea.style.display = 'block';
+        nextArea.style.display = 'none';
       } else {
-        prevVideoBtn.style.display = 'none';
-      }
-      
-      // Εμφάνιση/απόκρυψη next button
-      if (currentVideoIndex < videoList.length - 1) {
-        nextVideoBtn.style.display = 'flex';
-      } else {
-        nextVideoBtn.style.display = 'none';
+        prevArea.style.display = 'block';
+        nextArea.style.display = 'block';
       }
     }
 
@@ -995,10 +889,10 @@
       // Φορτώνουμε το βίντεο
       video.load();
       
-      // Ενημέρωση URL, counter και share info
+      // Ενημέρωση URL, counter και navigation
       updateURL();
       updateVideoCounter();
-      updateNavigationButtons();
+      updateNavigationAreas();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
@@ -1136,6 +1030,10 @@
       closeShareModal();
     }
 
+    // Event Listeners για τα navigation areas
+    prevArea.addEventListener('click', loadPrevVideo);
+    nextArea.addEventListener('click', loadNextVideo);
+
     // Event Listeners
     videoOverlay.addEventListener('click', () => {
       video.play().then(() => {
@@ -1147,7 +1045,10 @@
       });
     });
 
-    video.addEventListener('click', () => {
+    video.addEventListener('click', (event) => {
+      // Αποφεύγουμε conflict με τα navigation areas
+      if (event.target.closest('.nav-area')) return;
+      
       if (video.paused) {
         video.play().then(() => {
           video.muted = false;
@@ -1172,9 +1073,6 @@
       }
     });
 
-    nextVideoBtn.addEventListener('click', loadNextVideo);
-    prevVideoBtn.addEventListener('click', loadPrevVideo);
-
     // Keyboard navigation
     document.addEventListener('keydown', (event) => {
       if (event.key === 'ArrowRight') {
@@ -1195,7 +1093,7 @@
       }
     });
 
-    // Touch events για mobile
+    // Touch events για mobile swipe
     let touchStartX = 0;
     let touchEndX = 0;
     
