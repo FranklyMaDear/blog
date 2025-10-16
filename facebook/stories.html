@@ -168,17 +168,9 @@
       padding: 5px;
     }
 
+    /* ΑΦΑΙΡΕΣΑΜΕ ΤΟ SHARE INDICATOR */
     .share-indicator {
-      position: absolute;
-      top: 100px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
-      z-index: 100;
-      padding: 3px;
-      background: rgba(0,0,0,0.3);
+      display: none;
     }
 
     .video-preview {
@@ -526,11 +518,6 @@
         top: 60px;
       }
       
-      .share-indicator {
-        font-size: 10px;
-        top: 85px;
-      }
-      
       .reaction-bar {
         bottom: 10px;
         padding: 6px 10px;
@@ -635,7 +622,7 @@
     <!-- Video Counter -->
     <div class="video-counter" id="videoCounter"></div>
     
-    <!-- Share Indicator -->
+    <!-- Share Indicator - ΑΦΑΙΡΕΘΗΚΕ -->
     <div class="share-indicator" id="shareIndicator"></div>
   </div> 
 
@@ -792,9 +779,9 @@
       currentVideoName.textContent = videoTitles[currentVideoIndex];
     }
 
+    // ΑΦΑΙΡΕΣΑΜΕ ΤΗΝ ΕΝΗΜΕΡΩΣΗ ΤΟΥ SHARE INDICATOR
     function updateShareIndicator() {
-      const shareURL = getCurrentVideoShareURL();
-      shareIndicator.textContent = `Σύνδεσμος: ${shareURL}`;
+      // Δεν κάνουμε τίποτα - το share indicator είναι κρυφό
     }
 
     function showNextButton() {
@@ -803,14 +790,6 @@
 
     function hideNextButton() {
       nextVideoBtn.style.display = 'none';
-    }
-
-    // ΑΠΛΟΥΣΤΕΥΜΕΝΗ ΣΥΝΑΡΤΗΣΗ PREVIEW
-    function createVideoPreview(videoUrl) {
-      return new Promise((resolve) => {
-        // Χρησιμοποιούμε απλό μαύρο background αντί για preview
-        resolve(null);
-      });
     }
 
     async function loadCurrentVideo() {
@@ -852,6 +831,17 @@
       
       currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
       loadCurrentVideo();
+      
+      // ΑΥΤΟΜΗ ΑΝΑΠΑΡΑΓΩΓΗ ΜΕΤΑ ΤΗΝ ΕΠΟΜΕΝΗ ΦΟΡΤΩΣΗ
+      setTimeout(() => {
+        video.play().then(() => {
+          console.log('Αυτόματη αναπαραγωγή επόμενου βίντεο');
+          video.muted = false;
+        }).catch(error => {
+          console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
+          videoOverlay.classList.remove('hidden');
+        });
+      }, 500);
     }
 
     function enterFullscreen() {
@@ -1016,8 +1006,11 @@
       }
     }, 1000);
     
-    // Listener για το τέλος του βίντεο
-    video.addEventListener('ended', loadNextVideo);
+    // LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ - ΑΥΤΟΜΗ ΕΠΟΜΕΝΗ ΑΝΑΠΑΡΑΓΩΓΗ
+    video.addEventListener('ended', function() {
+      console.log('Το βίντεο τελείωσε, φόρτωση επόμενου...');
+      loadNextVideo();
+    });
     
     // Listener για σφάλματα βίντεο
     video.addEventListener('error', function(e) {
