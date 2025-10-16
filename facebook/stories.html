@@ -780,12 +780,17 @@
     const videoPreview = document.getElementById('videoPreview');
 
     // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ ΟΛΑ ΤΑ ΒΙΝΤΕΟ
+    // ΓΙΑ ΝΑ ΠΡΟΣΘΕΣΕΙΣ ΚΑΙ ΑΛΛΑ ΒΙΝΤΕΟ, ΑΠΛΑ ΠΡΟΣΘΕΣΤΕ ΤΑ ΣΤΗΝ ΛΙΣΤΑ ΕΔΩ:
     const videoList = [
         "stories/video1.mp4",
         "stories/video2.mp4",
         "stories/video3.mp4",
         "stories/video4.mp4",
         "stories/video5.mp4"
+        // Για να προσθέσετε κι άλλα βίντεο, απλά προσθέστε εδώ:
+        // "stories/video6.mp4",
+        // "stories/video7.mp4",
+        // "stories/video8.mp4",
     ];
     
     const videoTitles = [
@@ -794,10 +799,14 @@
         "Βίντεο 3",
         "Βίντεο 4",
         "Βίντεο 5"
+        // Και τα αντίστοιχα ονόματα:
+        // "Βίντεο 6",
+        // "Βίντεο 7", 
+        // "Βίντεο 8",
     ];
     
     let currentVideoIndex = 0;
-    let isFirstVisit = true;
+    let adShownForSession = false; // Για να ελέγχουμε αν έχει δει διαφήμιση αυτή τη συνεδρία
 
     // Function για να πάρουμε το video index από το URL
     function getVideoIndexFromURL() {
@@ -883,10 +892,9 @@
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
-      // Εμφάνιση διαφήμισης μόνο στην πρώτη επίσκεψη και στο πρώτο βίντεο
-      if (isFirstVisit && currentVideoIndex === 0) {
-        setTimeout(showAd, 1000);
-        isFirstVisit = false;
+      // Εμφάνιση διαφήμισης μόνο στην πρώτη φορά που ανοίγει οποιοδήποτε βίντεο
+      if (!adShownForSession) {
+        setTimeout(showAd, 1500);
       }
     }
 
@@ -998,13 +1006,11 @@
     function showAd() {
       adContainer.style.display = 'block';
       adContainer.style.opacity = '1';
+      adShownForSession = true; // Σημειώνουμε ότι ο χρήστης έχει δει διαφήμιση
       
       // Αυτόματο κλείσιμο διαφήμισης μετά από 10 δευτερόλεπτα
       setTimeout(() => {
-        adContainer.style.opacity = '0';
-        setTimeout(() => {
-          adContainer.style.display = 'none';
-        }, 1000);
+        closeAd();
       }, 10000);
     }
     
@@ -1094,7 +1100,7 @@
     }
 
     function visitAd() {
-      window.open('https://otieu.com/4/10021790', '_blank');
+      window.open('https://otieu.com/4/10049108', '_blank');
       closeAd();
     }
     
