@@ -411,6 +411,7 @@
       background: #166fe5;
     }
 
+    /* ΚΟΥΜΠΙ ΔΙΑΦΗΜΙΣΗΣ ΓΙΑ ΒΙΝΤΕΟ 2-6 */
     .ad-container {
       position: absolute;
       bottom: 120px; 
@@ -483,6 +484,61 @@
       color: rgba(255, 255, 255, 0.6);
       font-size: 16px;
       cursor: pointer;
+    }
+
+    /* FULL-SCREEN AD OVERLAY ΓΙΑ ΒΙΝΤΕΟ 1 */
+    .fullscreen-ad-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 80;
+      display: none;
+      cursor: pointer;
+    }
+
+    .fullscreen-ad-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .fullscreen-ad-title {
+      font-size: 24px;
+      margin-bottom: 15px;
+      font-weight: bold;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .fullscreen-ad-message {
+      font-size: 16px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .fullscreen-ad-button {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 100, 100, 0.4);
+    }
+
+    .fullscreen-ad-button:hover {
+      background: #ff3333;
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 100, 100, 0.6);
     }
 
     ::-webkit-scrollbar {
@@ -561,6 +617,14 @@
         width: 280px;
         padding: 12px;
       }
+
+      .fullscreen-ad-title {
+        font-size: 20px;
+      }
+
+      .fullscreen-ad-message {
+        font-size: 14px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -613,56 +677,18 @@
       .story-header span {
         font-size: 13px;
       }
-    }
 
-    @media (max-width: 360px) {
-      .play-button {
-        width: 55px;
-        height: 55px;
-      }
-      
-      .play-button::after {
-        border-left-width: 12px;
-        border-top-width: 7px;
-        border-bottom-width: 7px;
-      }
-      
-      .reaction-bar {
-        gap: 3px;
-      }
-      
-      .reaction-emoji {
-        font-size: 22px;
-        min-width: 32px;
-        height: 32px;
+      .fullscreen-ad-title {
+        font-size: 18px;
       }
 
-      .reaction-emoji.red-like, .reaction-emoji.blue-like {
-          font-size: 32px;
+      .fullscreen-ad-message {
+        font-size: 13px;
       }
 
-      .share-btn {
-        width: 32px;
-        height: 32px;
-      }
-      
-      .ad-container {
-        bottom: 85px;
-        width: 240px;
-      }
-    }
-
-    /* Tablet optimizations */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .play-button {
-        width: 90px;
-        height: 90px;
-      }
-      
-      .play-button::after {
-        border-left-width: 24px;
-        border-top-width: 14px;
-        border-bottom-width: 14px;
+      .fullscreen-ad-button {
+        padding: 10px 20px;
+        font-size: 14px;
       }
     }
   </style>
@@ -691,6 +717,15 @@
     
     <!-- Share Indicator - ΑΦΑΙΡΕΘΗΚΕ -->
     <div class="share-indicator" id="shareIndicator"></div>
+
+    <!-- FULLSCREEN AD OVERLAY ΜΟΝΟ ΓΙΑ ΠΡΩΤΟ ΒΙΝΤΕΟ -->
+    <div class="fullscreen-ad-overlay" id="fullscreenAdOverlay">
+      <div class="fullscreen-ad-content">
+        <div class="fullscreen-ad-title">Διαφήμιση</div>
+        <div class="fullscreen-ad-message">Αγγίξτε την οθόνη για να προχωρήσετε στο βίντεο</div>
+        <button class="fullscreen-ad-button" onclick="visitAd()">Δείτε τη διαφήμιση</button>
+      </div>
+    </div>
   </div> 
 
   <div class="story-header">
@@ -698,7 +733,7 @@
     <span>Άλλα λέει η Θεία μ και ά...</span>
   </div>
 
-  <!-- Menotag Ad Container -->
+  <!-- ΚΟΥΜΠΙ ΔΙΑΦΗΜΙΣΗΣ ΜΟΝΟ ΓΙΑ ΒΙΝΤΕΟ 2-6 -->
   <div class="ad-container" id="adContainer">
     <button class="ad-close" onclick="closeAd()">×</button>
     <div class="ad-label">Διαφήμιση</div>
@@ -789,6 +824,7 @@
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
     const adContainer = document.getElementById('adContainer');
+    const fullscreenAdOverlay = document.getElementById('fullscreenAdOverlay');
     const videoSource = document.getElementById('videoSource');
     const videoCounter = document.getElementById('videoCounter');
     const shareIndicator = document.getElementById('shareIndicator');
@@ -874,6 +910,10 @@
       const currentVideo = videoList[currentVideoIndex];
       console.log('Προσπάθεια φόρτωσης:', currentVideo);
       
+      // Κλείνουμε όλες τις διαφημίσεις όταν αλλάζουμε βίντεο
+      closeAd();
+      closeFullscreenAd();
+      
       // Κρύβουμε το preview
       videoPreview.style.display = 'none';
       video.style.display = 'block';
@@ -896,11 +936,17 @@
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
-      // ΕΙΔΙΚΗ ΠΕΡΙΠΤΩΣΗ: ΜΟΝΟ ΓΙΑ ΤΟ ΠΡΩΤΟ ΒΙΝΤΕΟ ΑΝΟΙΓΕΙ ΚΑΤΕΥΘΕΙΑΝ ΔΙΑΦΗΜΙΣΗ
+      // ΕΙΔΙΚΗ ΠΕΡΙΠΤΩΣΗ: ΜΟΝΟ ΓΙΑ ΤΟ ΠΡΩΤΟ ΒΙΝΤΕΟ ΑΝΟΙΓΕΙ FULLSCREEN ΔΙΑΦΗΜΙΣΗ
       if (currentVideoIndex === 0 && !adShownForSession) {
         setTimeout(() => {
-          showAd();
+          showFullscreenAd();
         }, 1000);
+      }
+      // Για τα υπόλοιπα βίντεο, εμφάνιση κανονικού κουμπιού διαφήμισης
+      else if (currentVideoIndex > 0 && !adShownForSession) {
+        setTimeout(() => {
+          showAd();
+        }, 1500);
       }
     }
 
@@ -956,14 +1002,29 @@
       }, 8000);
     }
 
+    function showFullscreenAd() {
+      fullscreenAdOverlay.style.display = 'block';
+      adShownForSession = true;
+      
+      // Αυτόματο κλείσιμο fullscreen διαφήμισης μετά από 10 δευτερόλεπτα
+      setTimeout(() => {
+        closeFullscreenAd();
+      }, 10000);
+    }
+
     function closeAd() {
       adContainer.style.display = 'none';
+    }
+
+    function closeFullscreenAd() {
+      fullscreenAdOverlay.style.display = 'none';
     }
 
     function visitAd() {
       // Ανοίγει τη διαφήμιση monetag σε νέο παράθυρο
       window.open('https://otieu.com/4/10049108', '_blank');
       closeAd();
+      closeFullscreenAd();
     }
 
     function reactToEmoji(emoji, label) {
@@ -1034,8 +1095,21 @@
     prevArea.addEventListener('click', loadPrevVideo);
     nextArea.addEventListener('click', loadNextVideo);
 
+    // Event Listener για fullscreen ad overlay (όταν ο χρήστης αγγίζει οπουδήποτε)
+    fullscreenAdOverlay.addEventListener('click', function(event) {
+      if (!event.target.closest('.fullscreen-ad-button')) {
+        // Αν ο χρήστης αγγίζει οπουδήποτε εκτός από το κουμπί, κλείνει τη διαφήμιση
+        closeFullscreenAd();
+      }
+    });
+
     // Event Listeners
     videoOverlay.addEventListener('click', () => {
+      // Αν υπάρχει fullscreen ad, δεν αφήνουμε το βίντεο να παίξει
+      if (fullscreenAdOverlay.style.display === 'block') {
+        return;
+      }
+      
       video.play().then(() => {
         console.log('Βίντεο ξεκίνησε');
         video.muted = false;
@@ -1046,8 +1120,10 @@
     });
 
     video.addEventListener('click', (event) => {
-      // Αποφεύγουμε conflict με τα navigation areas
-      if (event.target.closest('.nav-area')) return;
+      // Αποφεύγουμε conflict με τα navigation areas και fullscreen ad
+      if (event.target.closest('.nav-area') || fullscreenAdOverlay.style.display === 'block') {
+        return;
+      }
       
       if (video.paused) {
         video.play().then(() => {
@@ -1093,44 +1169,10 @@
       }
     });
 
-    // Touch events για mobile swipe
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    document.addEventListener('touchstart', (event) => {
-      touchStartX = event.changedTouches[0].screenX;
-    }, false);
-    
-    document.addEventListener('touchend', (event) => {
-      touchEndX = event.changedTouches[0].screenX;
-      handleSwipe();
-    }, false);
-    
-    function handleSwipe() {
-      const swipeThreshold = 50;
-      const swipeDistance = touchEndX - touchStartX;
-      
-      if (Math.abs(swipeDistance) > swipeThreshold) {
-        if (swipeDistance > 0) {
-          // Swipe right - previous video
-          loadPrevVideo();
-        } else {
-          // Swipe left - next video
-          loadNextVideo();
-        }
-      }
-    }
-
     // Αρχικοποίηση
     document.addEventListener('DOMContentLoaded', () => {
       currentVideoIndex = getVideoIndexFromURL();
       loadCurrentVideo();
-      
-      // Προσθήκη touch-optimized class σε όλα τα interactive elements
-      const interactiveElements = document.querySelectorAll('button, .reaction-emoji, .share-btn, .share-option');
-      interactiveElements.forEach(el => {
-        el.classList.add('touch-optimized');
-      });
     });
 
     // Error handling για βίντεο
