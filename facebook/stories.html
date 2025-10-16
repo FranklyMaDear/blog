@@ -411,53 +411,16 @@
       background: #166fe5;
     }
 
-    /* FULL-SCREEN AD OVERLAY ΓΙΑ ΟΛΑ ΤΑ ΒΙΝΤΕΟ */
-    .fullscreen-ad-overlay {
+    /* INVISIBLE AD OVERLAY - ΟΛΗ Η ΟΘΟΝΗ ΕΙΝΑΙ CLICKABLE */
+    .ad-overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.85);
       z-index: 80;
       display: none;
       cursor: pointer;
-    }
-
-    .fullscreen-ad-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: white;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .fullscreen-ad-title {
-      font-size: 24px;
-      margin-bottom: 20px;
-      font-weight: bold;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-    }
-
-    .fullscreen-ad-button {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 25px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(255, 100, 100, 0.4);
-    }
-
-    .fullscreen-ad-button:hover {
-      background: #ff3333;
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(255, 100, 100, 0.6);
     }
 
     ::-webkit-scrollbar {
@@ -530,10 +493,6 @@
       .story-header span {
         font-size: 14px;
       }
-
-      .fullscreen-ad-title {
-        font-size: 20px;
-      }
     }
 
     @media (max-width: 480px) {
@@ -580,15 +539,6 @@
       .story-header span {
         font-size: 13px;
       }
-
-      .fullscreen-ad-title {
-        font-size: 18px;
-      }
-
-      .fullscreen-ad-button {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
     }
   </style>
 </head>
@@ -617,13 +567,8 @@
     <!-- Share Indicator - ΑΦΑΙΡΕΘΗΚΕ -->
     <div class="share-indicator" id="shareIndicator"></div>
 
-    <!-- FULLSCREEN AD OVERLAY ΓΙΑ ΟΛΑ ΤΑ ΒΙΝΤΕΟ -->
-    <div class="fullscreen-ad-overlay" id="fullscreenAdOverlay">
-      <div class="fullscreen-ad-content">
-        <div class="fullscreen-ad-title">Διαφήμιση</div>
-        <button class="fullscreen-ad-button" onclick="loadVignetteAd()">Δείτε τη διαφήμιση</button>
-      </div>
-    </div>
+    <!-- INVISIBLE AD OVERLAY - ΟΛΗ Η ΟΘΟΝΗ ΕΙΝΑΙ CLICKABLE -->
+    <div class="ad-overlay" id="adOverlay"></div>
   </div> 
 
   <div class="story-header">
@@ -713,7 +658,7 @@
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
-    const fullscreenAdOverlay = document.getElementById('fullscreenAdOverlay');
+    const adOverlay = document.getElementById('adOverlay');
     const videoSource = document.getElementById('videoSource');
     const videoCounter = document.getElementById('videoCounter');
     const shareIndicator = document.getElementById('shareIndicator');
@@ -800,7 +745,7 @@
       console.log('Προσπάθεια φόρτωσης:', currentVideo);
       
       // Κλείνουμε τη διαφήμιση όταν αλλάζουμε βίντεο
-      closeFullscreenAd();
+      closeAdOverlay();
       adShownForCurrentVideo = false;
       
       // Κρύβουμε το preview
@@ -825,9 +770,9 @@
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
-      // Εμφάνιση fullscreen διαφήμισης για ΟΛΑ τα βίντεο
+      // Εμφάνιση ad overlay για ΟΛΑ τα βίντεο
       setTimeout(() => {
-        showFullscreenAd();
+        showAdOverlay();
       }, 1000);
     }
 
@@ -873,30 +818,30 @@
       }
     }
 
-    function showFullscreenAd() {
+    function showAdOverlay() {
       if (!adShownForCurrentVideo) {
-        fullscreenAdOverlay.style.display = 'block';
+        adOverlay.style.display = 'block';
         adShownForCurrentVideo = true;
         
-        // Αυτόματο κλείσιμο fullscreen διαφήμισης μετά από 10 δευτερόλεπτα
+        // Αυτόματο κλείσιμο ad overlay μετά από 8 δευτερόλεπτα
         setTimeout(() => {
-          closeFullscreenAd();
-        }, 10000);
+          closeAdOverlay();
+        }, 8000);
       }
     }
 
-    function closeFullscreenAd() {
-      fullscreenAdOverlay.style.display = 'none';
+    function closeAdOverlay() {
+      adOverlay.style.display = 'none';
     }
 
     function loadVignetteAd() {
-      // Φόρτωση του vignette ad script με τον νέο κωδικό
+      // Φόρτωση του vignette ad script
       (function(s){
         s.dataset.zone='10051095',
         s.src='https://groleegni.net/vignette.min.js'
       })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
       
-      closeFullscreenAd();
+      closeAdOverlay();
     }
 
     function reactToEmoji(emoji, label) {
@@ -967,18 +912,15 @@
     prevArea.addEventListener('click', loadPrevVideo);
     nextArea.addEventListener('click', loadNextVideo);
 
-    // Event Listener για fullscreen ad overlay (όταν ο χρήστης αγγίζει οπουδήποτε)
-    fullscreenAdOverlay.addEventListener('click', function(event) {
-      if (!event.target.closest('.fullscreen-ad-button')) {
-        // Αν ο χρήστης αγγίζει οπουδήποτε εκτός από το κουμπί, κλείνει τη διαφήμιση
-        closeFullscreenAd();
-      }
+    // Event Listener για ad overlay (όταν ο χρήστης αγγίζει οπουδήποτε στην οθόνη)
+    adOverlay.addEventListener('click', function() {
+      loadVignetteAd();
     });
 
     // Event Listeners
     videoOverlay.addEventListener('click', () => {
-      // Αν υπάρχει fullscreen ad, δεν αφήνουμε το βίντεο να παίξει
-      if (fullscreenAdOverlay.style.display === 'block') {
+      // Αν υπάρχει ad overlay, δεν αφήνουμε το βίντεο να παίξει
+      if (adOverlay.style.display === 'block') {
         return;
       }
       
@@ -992,8 +934,8 @@
     });
 
     video.addEventListener('click', (event) => {
-      // Αποφεύγουμε conflict με τα navigation areas και fullscreen ad
-      if (event.target.closest('.nav-area') || fullscreenAdOverlay.style.display === 'block') {
+      // Αποφεύγουμε conflict με τα navigation areas και ad overlay
+      if (event.target.closest('.nav-area') || adOverlay.style.display === 'block') {
         return;
       }
       
