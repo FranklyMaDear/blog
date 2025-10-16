@@ -731,13 +731,6 @@
   </div>
 
   <script>
-    (function(s){
-      s.dataset.zone='9973751',
-      s.src='https://al5sm.com/tag.min.js'
-    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-  </script>
-
-  <script>
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
@@ -750,17 +743,21 @@
     const currentVideoName = document.getElementById('currentVideoName');
     const videoPreview = document.getElementById('videoPreview');
 
-    // ΒΑΣΕΙ ΤΗΣ ΕΙΚΟΝΑΣ ΣΟΥ - ΤΑ ΒΙΝΤΕΟ ΕΙΝΑΙ ΣΤΟΝ ΦΑΚΕΛΟ stories/
+    // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ ΟΛΑ ΤΑ ΒΙΝΤΕΟ
     const videoList = [
         "stories/video1.mp4",
         "stories/video2.mp4",
-        "stories/video3.mp4"
+        "stories/video3.mp4",
+        "stories/video4.mp4",
+        "stories/video5.mp4"
     ];
     
     const videoTitles = [
         "Βίντεο 1",
         "Βίντεο 2", 
-        "Βίντεο 3"
+        "Βίντεο 3",
+        "Βίντεο 4",
+        "Βίντεο 5"
     ];
     
     let currentVideoIndex = 0;
@@ -771,12 +768,12 @@
       const videoParam = urlParams.get('video');
       
       if (videoParam) {
-        const index = parseInt(videoParam) - 1; // Μετατροπή από "1" σε 0, "2" σε 1, κλπ.
+        const index = parseInt(videoParam) - 1;
         if (index >= 0 && index < videoList.length) {
           return index;
         }
       }
-      return 0; // Default στο πρώτο βίντεο
+      return 0;
     }
 
     // Function για να αλλάξουμε το URL χωρίς reload
@@ -808,63 +805,35 @@
       nextVideoBtn.style.display = 'none';
     }
 
+    // ΑΠΛΟΥΣΤΕΥΜΕΝΗ ΣΥΝΑΡΤΗΣΗ PREVIEW
     function createVideoPreview(videoUrl) {
       return new Promise((resolve) => {
-        const tempVideo = document.createElement('video');
-        tempVideo.src = videoUrl;
-        tempVideo.crossOrigin = 'anonymous';
-        tempVideo.preload = 'metadata';
-        
-        tempVideo.addEventListener('loadeddata', function() {
-          // Προσπαθούμε να πάρουμε το πρώτο καρέ
-          tempVideo.currentTime = 0.1; // Μικρό χρονικό διάστημα για να πιάσει καρέ
-        });
-
-        tempVideo.addEventListener('seeked', function() {
-          const canvas = document.createElement('canvas');
-          canvas.width = tempVideo.videoWidth;
-          canvas.height = tempVideo.videoHeight;
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-          
-          const dataUrl = canvas.toDataURL();
-          resolve(dataUrl);
-        });
-
-        tempVideo.addEventListener('error', function() {
-          // Αν αποτύχει, χρησιμοποιούμε απλό μαύρο background
-          resolve(null);
-        });
+        // Χρησιμοποιούμε απλό μαύρο background αντί για preview
+        resolve(null);
       });
     }
 
     async function loadCurrentVideo() {
       if (videoList.length === 0) {
         console.error('Δεν υπάρχουν βίντεο στη λίστα');
+        alert('Δεν υπάρχουν διαθέσιμα βίντεο!');
         return;
       }
       
       const currentVideo = videoList[currentVideoIndex];
       console.log('Προσπάθεια φόρτωσης:', currentVideo);
       
-      // Κρύβουμε το preview πρώτα
+      // Κρύβουμε το preview
       videoPreview.style.display = 'none';
       video.style.display = 'block';
       
+      // Ορίζουμε το source του βίντεο
       videoSource.src = currentVideo;
       
-      // Προσπαθούμε να δημιουργήσουμε preview
-      try {
-        const previewUrl = await createVideoPreview(currentVideo);
-        if (previewUrl) {
-          videoPreview.src = previewUrl;
-          videoPreview.style.display = 'block';
-          video.style.display = 'none';
-        }
-      } catch (error) {
-        console.log('Δεν μπορεί να δημιουργηθεί preview:', error);
-      }
+      // Εμφανίζουμε το overlay play button
+      videoOverlay.classList.remove('hidden');
       
+      // Φορτώνουμε το βίντεο
       video.load();
       
       // Ενημέρωση URL, counter και share info
@@ -872,7 +841,7 @@
       updateVideoCounter();
       updateShareIndicator();
       
-      // Εμφάνιση next button πάντα
+      // Εμφάνιση next button
       showNextButton();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
@@ -883,10 +852,6 @@
       
       currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
       loadCurrentVideo();
-      
-      video.play().catch(error => {
-        console.log("Αδύνατη η αυτόματη αναπαραγωγή: " + error);
-      });
     }
 
     function enterFullscreen() {
@@ -910,10 +875,7 @@
         return;
       }
       
-      // Κρύβουμε το preview και εμφανίζουμε το βίντεο
-      videoPreview.style.display = 'none';
-      video.style.display = 'block';
-      
+      // Κρύβουμε το overlay
       videoOverlay.classList.add('hidden');
       
       video.play().then(() => {
@@ -936,12 +898,9 @@
           alert('Αδύνατη η αναπαραγωγή βίντεο. Δοκιμάστε ξανά.');
         }
       });
-      
-      videoOverlay.removeEventListener('click', playVideoAndUnmute);
-      document.removeEventListener('click', playVideoAndUnmute, true);
     }
     
-    // ΕΝΕΡΓΟΠΟΙΗΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ ΜΟΝΟ ΜΕ ΚΛΙΚ/ΑΓΓΙΓΜΑ
+    // ΕΝΕΡΓΟΠΟΙΗΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ
     document.addEventListener('DOMContentLoaded', function() {
       // Πάρε το video index από το URL
       currentVideoIndex = getVideoIndexFromURL();
@@ -951,7 +910,6 @@
       
       // Προσθέτουμε τους listeners
       videoOverlay.addEventListener('click', playVideoAndUnmute);
-      document.addEventListener('click', playVideoAndUnmute, true);
       nextVideoBtn.addEventListener('click', loadNextVideo);
       
       // Εμφάνιση next button από την αρχή
@@ -960,7 +918,7 @@
     
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
-      if (video.paused && video.style.display !== 'none') {
+      if (video.paused) {
         alert('Παρακαλώ πατήστε πρώτα το κουμπί Play για να ξεκινήσει το βίντεο.');
         return;
       }
@@ -1000,7 +958,6 @@
     }
 
     function openShareModal() {
-      // Ενημέρωση των πληροφοριών κοινοποίησης
       updateVideoCounter();
       shareModal.classList.add('active');
     }
@@ -1037,11 +994,6 @@
       closeShareModal();
     }
 
-    function addToStory() {
-      alert('+ Προσθήκη στο Story σας - Λειτουργία Soon! ✨');
-      closeShareModal();
-    }
-
     function closeAd() {
       adContainer.style.display = 'none';
     }
@@ -1051,10 +1003,10 @@
       closeAd();
     }
 
+    // Αυτόματο κλείσιμο διαφήμισης μετά από 10 δευτερόλεπτα
     setTimeout(() => {
       if (adContainer.style.display !== 'none') {
         adContainer.style.opacity = '1';
-        adContainer.style.transition = 'opacity 1s ease';
         setTimeout(() => {
           adContainer.style.opacity = '0';
           setTimeout(() => {
@@ -1066,6 +1018,12 @@
     
     // Listener για το τέλος του βίντεο
     video.addEventListener('ended', loadNextVideo);
+    
+    // Listener για σφάλματα βίντεο
+    video.addEventListener('error', function(e) {
+      console.error('Σφάλμα βίντεο:', e);
+      alert('Σφάλμα φόρτωσης βίντεο. Παρακαλώ ελέγξτε αν τα αρχεία βίντεο υπάρχουν στον φάκελο stories/');
+    });
   </script>
 
 </body>
