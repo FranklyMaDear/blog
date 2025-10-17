@@ -160,11 +160,6 @@
       padding: 5px;
     }
 
-    /* ΑΦΑΙΡΕΣΑΜΕ ΤΟ SHARE INDICATOR */
-    .share-indicator {
-      display: none;
-    }
-
     .video-preview {
       position: absolute;
       top: 0;
@@ -393,36 +388,6 @@
       color: rgba(255,255,255,0.8);
     }
 
-    .add-story {
-      background: #1877f2;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 20px;
-      font-size: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .add-story:hover {
-      background: #166fe5;
-    }
-
-    /* INVISIBLE AD OVERLAY - ΟΛΗ Η ΟΘΟΝΗ ΕΙΝΑΙ CLICKABLE */
-    .ad-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 80;
-      display: none;
-      cursor: pointer;
-    }
-
     ::-webkit-scrollbar {
       display: none;
     }
@@ -563,12 +528,6 @@
 
     <!-- Video Counter -->
     <div class="video-counter" id="videoCounter"></div>
-    
-    <!-- Share Indicator - ΑΦΑΙΡΕΘΗΚΕ -->
-    <div class="share-indicator" id="shareIndicator"></div>
-
-    <!-- INVISIBLE AD OVERLAY - ΟΛΗ Η ΟΘΟΝΗ ΕΙΝΑΙ CLICKABLE -->
-    <div class="ad-overlay" id="adOverlay"></div>
   </div> 
 
   <div class="story-header">
@@ -658,10 +617,8 @@
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
-    const adOverlay = document.getElementById('adOverlay');
     const videoSource = document.getElementById('videoSource');
     const videoCounter = document.getElementById('videoCounter');
-    const shareIndicator = document.getElementById('shareIndicator');
     const videoShareInfo = document.getElementById('videoShareInfo');
     const currentVideoName = document.getElementById('currentVideoName');
     const videoPreview = document.getElementById('videoPreview');
@@ -688,7 +645,7 @@
     ];
     
     let currentVideoIndex = 0;
-    let adShownForCurrentVideo = false;
+    let adShownForSession = false;
 
     // Function για να πάρουμε το video index από το URL
     function getVideoIndexFromURL() {
@@ -744,10 +701,6 @@
       const currentVideo = videoList[currentVideoIndex];
       console.log('Προσπάθεια φόρτωσης:', currentVideo);
       
-      // Κλείνουμε τη διαφήμιση όταν αλλάζουμε βίντεο
-      closeAdOverlay();
-      adShownForCurrentVideo = false;
-      
       // Κρύβουμε το preview
       videoPreview.style.display = 'none';
       video.style.display = 'block';
@@ -770,10 +723,13 @@
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
-      // Εμφάνιση ad overlay για ΟΛΑ τα βίντεο
-      setTimeout(() => {
-        showAdOverlay();
-      }, 1000);
+      // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΔΙΑΦΗΜΙΣΗΣ ΜΕΤΑ ΑΠΟ 2 ΔΕΥΤΕΡΟΛΕΠΤΑ
+      if (!adShownForSession) {
+        setTimeout(() => {
+          loadVignetteAd();
+          adShownForSession = true;
+        }, 2000);
+      }
     }
 
     function loadNextVideo() {
@@ -818,30 +774,12 @@
       }
     }
 
-    function showAdOverlay() {
-      if (!adShownForCurrentVideo) {
-        adOverlay.style.display = 'block';
-        adShownForCurrentVideo = true;
-        
-        // Αυτόματο κλείσιμο ad overlay μετά από 8 δευτερόλεπτα
-        setTimeout(() => {
-          closeAdOverlay();
-        }, 8000);
-      }
-    }
-
-    function closeAdOverlay() {
-      adOverlay.style.display = 'none';
-    }
-
     function loadVignetteAd() {
-      // Φόρτωση του vignette ad script
+      // Φόρτωση του vignette ad script με τον ΝΕΟ κωδικό
       (function(s){
-        s.dataset.zone='10051095',
+        s.dataset.zone='10052066',
         s.src='https://groleegni.net/vignette.min.js'
       })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-      
-      closeAdOverlay();
     }
 
     function reactToEmoji(emoji, label) {
@@ -912,18 +850,8 @@
     prevArea.addEventListener('click', loadPrevVideo);
     nextArea.addEventListener('click', loadNextVideo);
 
-    // Event Listener για ad overlay (όταν ο χρήστης αγγίζει οπουδήποτε στην οθόνη)
-    adOverlay.addEventListener('click', function() {
-      loadVignetteAd();
-    });
-
     // Event Listeners
     videoOverlay.addEventListener('click', () => {
-      // Αν υπάρχει ad overlay, δεν αφήνουμε το βίντεο να παίξει
-      if (adOverlay.style.display === 'block') {
-        return;
-      }
-      
       video.play().then(() => {
         console.log('Βίντεο ξεκίνησε');
         video.muted = false;
@@ -934,8 +862,8 @@
     });
 
     video.addEventListener('click', (event) => {
-      // Αποφεύγουμε conflict με τα navigation areas και ad overlay
-      if (event.target.closest('.nav-area') || adOverlay.style.display === 'block') {
+      // Αποφεύγουμε conflict με τα navigation areas
+      if (event.target.closest('.nav-area')) {
         return;
       }
       
