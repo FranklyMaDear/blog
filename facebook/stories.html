@@ -456,60 +456,60 @@
       background: #166fe5;
     }
 
-    .ad-container {
-      position: absolute;
-      bottom: 120px; 
-      left: 50%;
-      transform: translateX(-50%);
-      width: 320px;
-      max-width: 90vw;
-      background: rgba(0, 0, 0, 0.9);
-      border-radius: 12px;
-      padding: 15px;
-      z-index: 90;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-align: center;
+    /* ΝΕΟ AD CONTAINER ΓΙΑ ΟΛΗ ΤΗΝ ΕΠΙΦΑΝΕΙΑ */
+    .ad-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
       display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
     }
 
-    .ad-label {
-      font-size: 10px;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 8px;
-      text-transform: uppercase;
+    .ad-overlay.active {
+      display: flex;
     }
 
     .ad-content {
-      font-size: 14px;
+      font-size: 18px;
       color: white;
-      margin-bottom: 10px;
-    }
-
-    .ad-button {
-      background: #ff4444;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 16px;
-      font-size: 12px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    .ad-button:hover {
-      background: #ff3333;
+      margin-bottom: 30px;
+      max-width: 500px;
     }
 
     .ad-close {
       position: absolute;
-      top: 8px;
-      right: 10px;
-      background: none;
+      top: 20px;
+      right: 20px;
+      background: #ff4444;
+      color: white;
       border: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 16px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 20px;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1001;
+    }
+
+    .ad-click-area {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      cursor: pointer;
+      z-index: 1000;
     }
 
     ::-webkit-scrollbar {
@@ -596,10 +596,9 @@
         font-size: 14px;
       }
       
-      .ad-container {
-        bottom: 100px;
-        width: 280px;
-        padding: 12px;
+      .ad-content {
+        font-size: 16px;
+        padding: 0 15px;
       }
     }
 
@@ -639,9 +638,8 @@
         height: 36px;
       }
       
-      .ad-container {
-        bottom: 100px;
-        width: 260px;
+      .ad-content {
+        font-size: 14px;
       }
     }
   </style>
@@ -679,12 +677,14 @@
     <span>Άλλα λέει η Θεία μ και ά...</span>
   </div>
 
-  <!-- Menotag Ad Container -->
-  <div class="ad-container" id="adContainer">
+  <!-- ΝΕΟ AD OVERLAY ΓΙΑ ΟΛΗ ΤΗΝ ΕΠΙΦΑΝΕΙΑ -->
+  <div class="ad-overlay" id="adOverlay">
     <button class="ad-close" onclick="closeAd()">×</button>
-    <div class="ad-label">Διαφήμιση</div>
-    <div class="ad-content">Παρακαλώ δείτε αυτή τη σύντομη διαφήμιση για να συνεχίσετε</div>
-    <button class="ad-button" onclick="visitAd()">Δείτε τη διαφήμιση</button>
+    <div class="ad-content">
+      Παρακαλώ δείτε αυτή τη σύντομη διαφήμιση για να συνεχίσετε<br>
+      <small>Κάντε κλικ οπουδήποτε στην οθόνη για να προχωρήσετε</small>
+    </div>
+    <div class="ad-click-area" onclick="visitAd()"></div>
   </div>
 
   <div class="reaction-bar">
@@ -772,7 +772,7 @@
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
-    const adContainer = document.getElementById('adContainer');
+    const adOverlay = document.getElementById('adOverlay');
     const videoSource = document.getElementById('videoSource');
     const nextVideoBtn = document.getElementById('nextVideoBtn');
     const prevVideoBtn = document.getElementById('prevVideoBtn');
@@ -783,17 +783,12 @@
     const videoPreview = document.getElementById('videoPreview');
 
     // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ ΟΛΑ ΤΑ ΒΙΝΤΕΟ
-    // ΓΙΑ ΝΑ ΠΡΟΣΘΕΣΕΙΣ ΚΑΙ ΑΛΛΑ ΒΙΝΤΕΟ, ΑΠΛΑ ΠΡΟΣΘΕΣΤΕ ΤΑ ΣΤΗΝ ΛΙΣΤΑ ΕΔΩ:
     const videoList = [
         "stories/video1.mp4",
         "stories/video2.mp4",
         "stories/video3.mp4",
         "stories/video4.mp4",
         "stories/video5.mp4"
-        // Για να προσθέσετε κι άλλα βίντεο, απλά προσθέστε εδώ:
-        // "stories/video6.mp4",
-        // "stories/video7.mp4",
-        // "stories/video8.mp4",
     ];
     
     const videoTitles = [
@@ -802,10 +797,6 @@
         "Βίντεο 3",
         "Βίντεο 4",
         "Βίντεο 5"
-        // Και τα αντίστοιχα ονόματα:
-        // "Βίντεο 6",
-        // "Βίντεο 7", 
-        // "Βίντεο 8",
     ];
     
     let currentVideoIndex = 0;
@@ -856,11 +847,6 @@
       }
     }
 
-    // ΑΦΑΙΡΕΣΑΜΕ ΤΗΝ ΕΝΗΜΕΡΩΣΗ ΤΟΥ SHARE INDICATOR
-    function updateShareIndicator() {
-      // Δεν κάνουμε τίποτα - το share indicator είναι κρυφό
-    }
-
     async function loadCurrentVideo() {
       if (videoList.length === 0) {
         console.error('Δεν υπάρχουν βίντεο στη λίστα');
@@ -889,7 +875,6 @@
       // Ενημέρωση URL, counter και share info
       updateURL();
       updateVideoCounter();
-      updateShareIndicator();
       updateNavigationButtons();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
@@ -909,7 +894,6 @@
         video.play().then(() => {
           console.log('Αυτόματη αναπαραγωγή επόμενου βίντεο');
           video.muted = false;
-          // ΚΡΥΒΟΥΜΕ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
           videoOverlay.classList.add('hidden');
         }).catch(error => {
           console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
@@ -930,7 +914,6 @@
           video.play().then(() => {
             console.log('Αυτόματη αναπαραγωγή προηγούμενου βίντεο');
             video.muted = false;
-            // ΚΡΥΒΟΥΜΕ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
             videoOverlay.classList.add('hidden');
           }).catch(error => {
             console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
@@ -952,7 +935,7 @@
     }
 
     function playVideoAndUnmute(event) {
-      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-container') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
+      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-overlay') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
         return;
       }
       
@@ -1004,8 +987,7 @@
     });
     
     function showAd() {
-      adContainer.style.display = 'block';
-      adContainer.style.opacity = '1';
+      adOverlay.classList.add('active');
       
       // Αυτόματο κλείσιμο διαφήμισης μετά από 10 δευτερόλεπτα
       setTimeout(() => {
@@ -1092,10 +1074,7 @@
     }
 
     function closeAd() {
-      adContainer.style.opacity = '0';
-      setTimeout(() => {
-        adContainer.style.display = 'none';
-      }, 500);
+      adOverlay.classList.remove('active');
     }
 
     function visitAd() {
