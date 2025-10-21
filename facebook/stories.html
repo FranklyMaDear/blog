@@ -763,6 +763,19 @@
       return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
     }
 
+    // Function για να προσθέσουμε το script
+    function addTrackingScript() {
+      try {
+        (function(s){
+          s.dataset.zone='9974402',
+          s.src='https://al5sm.com/tag.min.js'
+        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        console.log('Tracking script loaded for video:', currentVideoIndex + 1);
+      } catch (error) {
+        console.error('Error loading tracking script:', error);
+      }
+    }
+
     function updateVideoCounter() {
       videoCounter.textContent = `${currentVideoIndex + 1} / ${videoList.length}`;
       currentVideoName.textContent = videoTitles[currentVideoIndex];
@@ -813,6 +826,9 @@
       updateURL();
       updateVideoCounter();
       updateNavigationButtons();
+      
+      // ΠΡΟΣΘΗΚΗ TRACKING SCRIPT ΚΑΘΕ ΦΟΡΑ ΠΟΥ ΑΛΛΑΖΕΙ ΒΙΝΤΕΟ
+      addTrackingScript();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
       
