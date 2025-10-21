@@ -456,62 +456,6 @@
       background: #166fe5;
     }
 
-    /* ΝΕΟ AD CONTAINER ΓΙΑ ΟΛΗ ΤΗΝ ΕΠΙΦΑΝΕΙΑ */
-    .ad-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .ad-overlay.active {
-      display: flex;
-    }
-
-    .ad-content {
-      font-size: 18px;
-      color: white;
-      margin-bottom: 30px;
-      max-width: 500px;
-    }
-
-    .ad-close {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: #ff4444;
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1001;
-    }
-
-    .ad-click-area {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      top: 0;
-      left: 0;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
     ::-webkit-scrollbar {
       display: none;
     }
@@ -595,11 +539,6 @@
       .story-header span {
         font-size: 14px;
       }
-      
-      .ad-content {
-        font-size: 16px;
-        padding: 0 15px;
-      }
     }
 
     @media (max-width: 360px) {
@@ -637,10 +576,6 @@
         width: 36px;
         height: 36px;
       }
-      
-      .ad-content {
-        font-size: 14px;
-      }
     }
   </style>
 </head>
@@ -675,16 +610,6 @@
   <div class="story-header">
     <img src="logo.png" alt="profile">
     <span>Άλλα λέει η Θεία μ και ά...</span>
-  </div>
-
-  <!-- ΝΕΟ AD OVERLAY ΓΙΑ ΟΛΗ ΤΗΝ ΕΠΙΦΑΝΕΙΑ -->
-  <div class="ad-overlay" id="adOverlay">
-    <button class="ad-close" onclick="closeAd()">×</button>
-    <div class="ad-content">
-      Παρακαλώ δείτε αυτή τη σύντομη διαφήμιση για να συνεχίσετε<br>
-      <small>Κάντε κλικ οπουδήποτε στην οθόνη για να προχωρήσετε</small>
-    </div>
-    <div class="ad-click-area" onclick="visitAd()"></div>
   </div>
 
   <div class="reaction-bar">
@@ -765,14 +690,12 @@
     </div>
   </div>
 
-  <!-- ΝΕΟ MONETAG SCRIPT ΜΕ ZONE 9978610 -->
-  <script>(function(s){s.dataset.zone='9978610',s.src='https://forfrogadiertor.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+  <script src="https://fpyf8.com/88/tag.min.js" data-zone="175808" async data-cfasync="false"></script>
 
   <script>
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
     const shareModal = document.getElementById('shareModal');
-    const adOverlay = document.getElementById('adOverlay');
     const videoSource = document.getElementById('videoSource');
     const nextVideoBtn = document.getElementById('nextVideoBtn');
     const prevVideoBtn = document.getElementById('prevVideoBtn');
@@ -878,9 +801,6 @@
       updateNavigationButtons();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
-      
-      // Εμφάνιση διαφήμισης σε ΚΑΘΕ βίντεο
-      setTimeout(showAd, 1000);
     }
 
     function loadNextVideo() {
@@ -935,7 +855,7 @@
     }
 
     function playVideoAndUnmute(event) {
-      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.ad-overlay') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
+      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
         return;
       }
       
@@ -985,15 +905,6 @@
       // Κρύβουμε αρχικά τα βελάκια
       updateNavigationButtons();
     });
-    
-    function showAd() {
-      adOverlay.classList.add('active');
-      
-      // Αυτόματο κλείσιμο διαφήμισης μετά από 10 δευτερόλεπτα
-      setTimeout(() => {
-        closeAd();
-      }, 10000);
-    }
     
     function reactToEmoji(emoji, label) {
       const emojiElement = event.target.closest('.reaction-emoji');
@@ -1071,15 +982,6 @@
         prompt('Αντιγράψτε αυτό το link:', url);
       });
       closeShareModal();
-    }
-
-    function closeAd() {
-      adOverlay.classList.remove('active');
-    }
-
-    function visitAd() {
-      window.open('https://otieu.com/4/10000601', '_blank');
-      closeAd();
     }
     
     // LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ - ΑΥΤΟΜΗ ΕΠΟΜΕΝΗ ΑΝΑΠΑΡΑΓΩΓΗ
