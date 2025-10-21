@@ -582,7 +582,7 @@
 <body>
 
   <div class="video-container" id="videoContainer">
-    <video id="mainVideo" playsinline webkit-playsinline muted preload="metadata">
+    <video id="mainVideo" playsinline webkit-playsinline muted preload="auto" autoplay>
       <source id="videoSource" src="" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
     </video>
@@ -590,7 +590,7 @@
     <!-- Video Preview Image -->
     <img id="videoPreview" class="video-preview" src="" alt="Video preview" style="display: none;">
     
-    <div class="video-overlay" id="videoOverlay">
+    <div class="video-overlay hidden" id="videoOverlay">
         <div class="play-button"></div>
     </div>
 
@@ -669,6 +669,11 @@
         <div class="share-label">Facebook</div>
       </div>
       
+      <div class="share-option" onclick="shareToTwitter()">
+        <div class="share-icon">🐦</div>
+        <div class="share-label">Twitter/X</div>
+      </div>
+      
       <div class="share-option" onclick="shareToInstagram()">
         <div class="share-icon">📷</div>
         <div class="share-label">Instagram</div>
@@ -723,6 +728,7 @@
     ];
     
     let currentVideoIndex = 0;
+    let isFirstLoad = true;
 
     // Function για να πάρουμε το video index από το URL
     function getVideoIndexFromURL() {
@@ -801,6 +807,21 @@
       updateNavigationButtons();
       
       console.log('Βίντεο φορτώθηκε:', currentVideo);
+      
+      // ΑΥΤΟΜΑΤΗ ΑΝΑΠΑΡΑΓΩΓΗ ΜΟΝΟ ΣΤΟ ΠΡΩΤΟ ΦΟΡΤΩΜΑ
+      if (isFirstLoad) {
+        setTimeout(() => {
+          video.play().then(() => {
+            console.log('Αυτόματη αναπαραγωγή πρώτου βίντεο');
+            video.muted = false;
+            videoOverlay.classList.add('hidden');
+          }).catch(error => {
+            console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
+            videoOverlay.classList.remove('hidden');
+          });
+        }, 500);
+        isFirstLoad = false;
+      }
     }
 
     function loadNextVideo() {
@@ -958,7 +979,15 @@
 
     function shareToFacebook() {
       const url = encodeURIComponent(getCurrentVideoShareURL());
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
+      closeShareModal();
+    }
+
+    function shareToTwitter() {
+      const url = encodeURIComponent(getCurrentVideoShareURL());
+      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
       closeShareModal();
     }
 
@@ -969,7 +998,7 @@
     }
 
     function shareToWhatsApp() {
-      const text = encodeURIComponent(`Δες αυτό το βίντεο! ${getCurrentVideoShareURL()}`);
+      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]} ${getCurrentVideoShareURL()}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
       closeShareModal();
     }
@@ -977,7 +1006,7 @@
     function copyLink() {
       const url = getCurrentVideoShareURL();
       navigator.clipboard.writeText(url).then(() => {
-        alert(`Το link για το ${videoTitles[currentVideoIndex]} αντιγράφηκε στο clipboard! 📋`);
+        alert(`Το link για το "${videoTitles[currentVideoIndex]}" αντιγράφηκε στο clipboard! 📋`);
       }).catch(() => {
         prompt('Αντιγράψτε αυτό το link:', url);
       });
@@ -1004,6 +1033,15 @@
     video.addEventListener('error', function(e) {
       console.error('Σφάλμα βίντεο:', e);
       alert('Σφάλμα φόρτωσης βίντεο. Παρακαλώ ελέγξτε αν τα αρχεία βίντεο υπάρχουν στον φάκελο stories/');
+    });
+
+    // ΒΕΛΤΙΩΜΕΝΗ ΑΥΤΟΜΑΤΗ ΑΝΑΠΑΡΑΓΩΓΗ
+    video.addEventListener('loadeddata', function() {
+      if (isFirstLoad) {
+        video.play().catch(e => {
+          console.log('Αυτόματη αναπαραγωγή απέτυχε, απαιτείται χειροκίνητο κλικ:', e);
+        });
+      }
     });
   </script>
 
