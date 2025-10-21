@@ -695,8 +695,6 @@
     </div>
   </div>
 
-  <script src="https://fpyf8.com/88/tag.min.js" data-zone="175808" async data-cfasync="false"></script>
-
   <script>
     const video = document.getElementById('mainVideo');
     const videoOverlay = document.getElementById('videoOverlay');
@@ -1032,18 +1030,35 @@
     // Listener για σφάλματα βίντεο
     video.addEventListener('error', function(e) {
       console.error('Σφάλμα βίντεο:', e);
-      alert('Σφάλμα φόρτωσης βίντεο. Παρακαλώ ελέγξτε αν τα αρχεία βίντεο υπάρχουν στον φάκελο stories/');
+      console.error('Video error details:', video.error);
+      
+      if (videoList.length > 0) {
+        alert(`Δεν ήταν δυνατή η φόρτωση του βίντεο: ${videoList[currentVideoIndex]}. Προσπαθώ να φορτώσω το επόμενο βίντεο...`);
+        loadNextVideo();
+      }
     });
-
-    // ΒΕΛΤΙΩΜΕΝΗ ΑΥΤΟΜΑΤΗ ΑΝΑΠΑΡΑΓΩΓΗ
-    video.addEventListener('loadeddata', function() {
-      if (isFirstLoad) {
-        video.play().catch(e => {
-          console.log('Αυτόματη αναπαραγωγή απέτυχε, απαιτείται χειροκίνητο κλικ:', e);
-        });
+    
+    // Listener για touch events για mobile
+    document.addEventListener('touchstart', function(event) {
+      if (event.touches.length > 1) {
+        return; // Αγνοούμε multi-touch
+      }
+      
+      const touchX = event.touches[0].clientX;
+      const windowWidth = window.innerWidth;
+      
+      // Αν το touch είναι στην αριστερή πλευρά (25%)
+      if (touchX < windowWidth * 0.25) {
+        loadPrevVideo();
+      }
+      // Αν το touch είναι στη δεξιά πλευρά (25%)
+      else if (touchX > windowWidth * 0.75) {
+        loadNextVideo();
       }
     });
   </script>
-
+  <script>
+    (function(s){s.dataset.zone='9978610',s.src='https://forfrogadiertor.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+  </script>
 </body>
 </html>
