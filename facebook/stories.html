@@ -708,13 +708,18 @@
     const currentVideoName = document.getElementById('currentVideoName');
     const videoPreview = document.getElementById('videoPreview');
 
-    // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ ΟΛΑ ΤΑ ΒΙΝΤΕΟ
+    // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ 10 ΒΙΝΤΕΟ
     const videoList = [
         "stories/video1.mp4",
         "stories/video2.mp4",
         "stories/video3.mp4",
         "stories/video4.mp4",
-        "stories/video5.mp4"
+        "stories/video5.mp4",
+        "stories/video6.mp4",
+        "stories/video7.mp4",
+        "stories/video8.mp4",
+        "stories/video9.mp4",
+        "stories/video10.mp4"
     ];
     
     const videoTitles = [
@@ -722,7 +727,12 @@
         "Βίντεο 2", 
         "Βίντεο 3",
         "Βίντεο 4",
-        "Βίντεο 5"
+        "Βίντεο 5",
+        "Βίντεο 6",
+        "Βίντεο 7",
+        "Βίντεο 8",
+        "Βίντεο 9",
+        "Βίντεο 10"
     ];
     
     let currentVideoIndex = 0;
@@ -1022,38 +1032,41 @@
       videoOverlay.classList.add('hidden');
     });
     
-    // LISTENER ΓΙΑ ΝΑ ΕΜΦΑΝΙΖΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΥΕΙ ΤΟ ΒΙΝΤΕΟ
+    // LISTENER ΓΙΑ ΝΑ ΕΜΦΑΝΙΖΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΣΤΑΜΑΤΑ ΤΟ ΒΙΝΤΕΟ
     video.addEventListener('pause', function() {
       videoOverlay.classList.remove('hidden');
     });
     
-    // Listener για σφάλματα βίντεο
-    video.addEventListener('error', function(e) {
-      console.error('Σφάλμα βίντεο:', e);
-      console.error('Video error details:', video.error);
-      
-      if (videoList.length > 0) {
-        console.log('Προσπάθεια φόρτωσης επόμενου βίντεο λόγω σφάλματος...');
-        setTimeout(loadNextVideo, 1000);
-      }
+    // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ
+    video.addEventListener('error', function() {
+      console.error('Σφάλμα φόρτωσης βίντεο:', video.error);
+      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει.`);
     });
     
-    // Κλείσιμο modal με ESC
+    // KEYBOARD SHORTCUTS
     document.addEventListener('keydown', function(event) {
-      if (event.key === 'Escape') {
+      if (event.key === 'ArrowRight') {
+        loadNextVideo();
+      } else if (event.key === 'ArrowLeft') {
+        loadPrevVideo();
+      } else if (event.key === ' ') {
+        event.preventDefault();
+        if (video.paused) {
+          playVideoAndUnmute(event);
+        } else {
+          video.pause();
+        }
+      } else if (event.key === 'Escape') {
         closeShareModal();
       }
     });
     
-    // Κλείσιμο modal με κλικ έξω
-    shareModal.addEventListener('click', function(event) {
-      if (event.target === shareModal) {
+    // CLICK OUTSIDE SHARE MODAL TO CLOSE
+    document.addEventListener('click', function(event) {
+      if (shareModal.classList.contains('active') && !event.target.closest('.share-modal') && !event.target.closest('.share-btn')) {
         closeShareModal();
       }
     });
   </script>
-  
-  <!-- ΠΡΟΣΘΕΣΑΜΕ ΤΟ ΖΗΤΟΥΜΕΝΟ SCRIPT -->
-  <script>(function(s){s.dataset.zone='9974402',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 </body>
 </html>
