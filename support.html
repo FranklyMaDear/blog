@@ -12,6 +12,110 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <link rel="stylesheet" href="style.css">
     <style>
+        /* Enhanced Header Styles */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo a {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .logo a:hover {
+            transform: translateY(-2px);
+            text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a:hover:before {
+            left: 0;
+        }
+
+        .nav-links a.active {
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        /* Enhanced language selector */
+        .language-selector {
+            margin-left: 10px;
+        }
+
+        .language-dropdown {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .language-dropdown:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .language-dropdown option {
+            background: #667eea;
+            color: white;
+        }
+
         /* Support Page Specific Styles */
         .support-section {
             padding: 60px 0;
@@ -93,6 +197,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-primary:hover {
@@ -153,48 +259,6 @@
             opacity: 0.9;
         }
 
-        /* Active navigation link */
-        .nav-links a.active {
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        /* Footer improvements */
-        .footer {
-            background: #2c3e50;
-            color: white;
-            padding: 30px 0 15px;
-            margin-top: 0;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 20px;
-        }
-
-        .footer-section h3 {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-
-        .footer-section p, 
-        .footer-section li, 
-        .footer-section a {
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 15px;
-            text-align: center;
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
         /* Compact support text styles */
         .compact-support-text {
             text-align: center;
@@ -219,8 +283,98 @@
             color: rgba(255,255,255,0.9);
         }
 
+        /* Compact Footer Styles */
+        .footer {
+            background: #1a2530;
+            color: white;
+            padding: 25px 0 15px;
+            margin-top: 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .footer-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #667eea;
+        }
+
+        .footer-section p, 
+        .footer-section li, 
+        .footer-section a {
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: 6px;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+            text-align: center;
+            font-size: 0.75rem;
+            opacity: 0.7;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
         /* Responsive design for support section */
         @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                padding: 10px 5%;
+            }
+            
+            .logo {
+                margin-bottom: 10px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .nav-links a {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .language-selector {
+                margin-left: 0;
+                margin-top: 5px;
+            }
+            
             .support-section {
                 padding: 40px 0;
             }
@@ -265,7 +419,7 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Enhanced Header -->
     <header class="header">
         <nav class="nav">
             <div class="logo">
@@ -359,7 +513,7 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Compact Footer -->
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
@@ -369,16 +523,16 @@
                 </div>
                 <div class="footer-section">
                     <h3 data-key="games">Παιχνίδια</h3>
-                    <ul style="list-style: none;">
-                        <li><a href="chess/index.html" style="color: #ccc; text-decoration: none;">Chess</a></li>
-                        <li><a href="sudoku/sudoku-1player.html" style="color: #ccc; text-decoration: none;">Sudoku 1 Player</a></li>
-                        <li><a href="sudoku/sudoku.html" style="color: #ccc; text-decoration: none;">Sudoku 2 Players</a></li>
-                        <li><a href="4x4/connect4.html" style="color: #ccc; text-decoration: none;">4x4 Connect 4</a></li>
-                        <li><a href="balloon/index.html" style="color: #ccc; text-decoration: none;">Balloon Pop</a></li>
-                        <li><a href="calculator/index.html" style="color: #ccc; text-decoration: none;">Calculator</a></li>
-                        <li><a href="animals/index.html" style="color: #ccc; text-decoration: none;">Animals</a></li>
-                        <li><a href="http://blog.franklymadear.com/" style="color: #ccc; text-decoration: none;">Blog</a></li>
-                        <li><a href="support.html" style="color: #ccc; text-decoration: none;">Στηρίξτε μας</a></li>
+                    <ul>
+                        <li><a href="chess/index.html">Chess</a></li>
+                        <li><a href="sudoku/sudoku-1player.html">Sudoku 1 Player</a></li>
+                        <li><a href="sudoku/sudoku.html">Sudoku 2 Players</a></li>
+                        <li><a href="4x4/connect4.html">4x4 Connect 4</a></li>
+                        <li><a href="balloon/index.html">Balloon Pop</a></li>
+                        <li><a href="calculator/index.html">Calculator</a></li>
+                        <li><a href="animals/index.html">Animals</a></li>
+                        <li><a href="http://blog.franklymadear.com/">Blog</a></li>
+                        <li><a href="support.html">Στηρίξτε μας</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -646,18 +800,11 @@
         };
 
         // Language selector functionality
-        const languageSelect = document.getElementById('language-select');
-        
-        const savedLanguage = localStorage.getItem('preferredLanguage') || 'el';
-        languageSelect.value = savedLanguage;
-        updateLanguage(savedLanguage);
-        
-        languageSelect.addEventListener('change', (e) => {
-            const selectedLanguage = e.target.value;
-            localStorage.setItem('preferredLanguage', selectedLanguage);
-            updateLanguage(selectedLanguage);
+        document.getElementById('language-select').addEventListener('change', function(e) {
+            const lang = e.target.value;
+            updateLanguage(lang);
         });
-        
+
         function updateLanguage(lang) {
             const elements = document.querySelectorAll('[data-key]');
             elements.forEach(element => {
@@ -667,6 +814,9 @@
                 }
             });
         }
+
+        // Initialize with Greek
+        updateLanguage('el');
     </script>
 </body>
 </html>
