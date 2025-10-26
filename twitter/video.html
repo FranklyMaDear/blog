@@ -3,38 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨FranklyMaDear🎬</title>
+    <title>✨FMD🎬 - Video</title>
     <link rel="icon" type="image/png" href="index.png">
     <link rel="apple-touch-icon" href="index.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="✨FranklyMaDear🎬">
-    <meta property="og:description" content="Watch this amazing video from FranklyMaDear">
-    <meta property="og:image" content="https://blog.franklymadear.com/twitter/video-thumbnail.jpg">
-    <meta property="og:image:width" content="720">
-    <meta property="og:image:height" content="1280">
-    <meta property="og:url" content="https://blog.franklymadear.com/twitter/video.html">
-    <meta property="og:type" content="video.other">
-    <meta property="og:video" content="https://blog.franklymadear.com/twitter/video1.mp4">
-    <meta property="og:video:type" content="video/mp4">
-    <meta property="og:video:width" content="720">
-    <meta property="og:video:height" content="1280">
-    <meta property="og:site_name" content="FranklyMaDear">
-    
-    <!-- Twitter Card Meta Tags για EMBEDDED VIDEO -->
-    <meta name="twitter:card" content="player">
-    <meta name="twitter:site" content="@zamanfoutista">
-    <meta name="twitter:creator" content="@zamanfoutista">
-    <meta name="twitter:title" content="✨FranklyMaDear🎬">
-    <meta name="twitter:description" content="Watch this amazing video from FranklyMaDear">
-    <meta name="twitter:image" content="https://blog.franklymadear.com/twitter/video-thumbnail.jpg">
-    <meta name="twitter:player" content="https://blog.franklymadear.com/twitter/video-embed.html">
-    <meta name="twitter:player:width" content="720">
-    <meta name="twitter:player:height" content="1280">
-    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/twitter/video1.mp4">
-    <meta name="twitter:player:stream:content_type" content="video/mp4">
     
     <style>
         * {
@@ -46,29 +19,103 @@
         body {
             background: #000;
             color: white;
+            font-family: Arial, sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        .video-container {
-            width: 100%;
+        .container {
             max-width: 720px;
             margin: 0 auto;
-            background: #000;
+            padding: 20px;
         }
 
-        .video-player {
-            width: 100%;
-            position: relative;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .video-player video {
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #888;
+            font-size: 1.1rem;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .video-card {
+            background: #111;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .video-thumbnail {
             width: 100%;
-            height: auto;
+            height: 200px;
+            object-fit: cover;
             display: block;
         }
 
-        .video-overlay {
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .video-description {
+            color: #aaa;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        /* Video Player Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 720px;
+            position: relative;
+        }
+
+        .modal-video {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .modal-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -81,20 +128,40 @@
             pointer-events: none;
         }
 
-        .logo {
-            color: white;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
             font-size: 1.5rem;
             font-weight: bold;
         }
 
-        .video-controls {
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            pointer-events: all;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-controls {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%;
         }
 
-        .play-button {
+        .modal-play-btn {
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -108,7 +175,7 @@
             transition: all 0.3s ease;
         }
 
-        .play-button:hover {
+        .modal-play-btn:hover {
             transform: scale(1.1);
             background: white;
         }
@@ -118,10 +185,10 @@
             margin-left: 5px;
         }
 
-        .social-sharing {
+        .modal-footer {
             display: flex;
-            gap: 15px;
             justify-content: center;
+            gap: 15px;
             pointer-events: all;
         }
 
@@ -148,31 +215,63 @@
             color: #333;
         }
 
-        .video-started .play-button {
-            opacity: 0;
-            pointer-events: none;
+        /* Loading */
+        .loading {
+            text-align: center;
+            color: #888;
+            padding: 40px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="video-container">
-        <div class="video-player">
-            <video id="mainVideo" poster="video-thumbnail.jpg" style="width:100%">
-                <source src="video1.mp4" type="video/mp4">
+    <div class="container">
+        <div class="header">
+            <div class="logo">✨FMD🎬</div>
+            <div class="tagline">Video </div>
+        </div>
+
+        <div class="video-grid" id="videoGrid">
+            <!-- Videos will be loaded here dynamically -->
+            <div class="loading">Loading videos...</div>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="modal-content">
+            <video class="modal-video" id="modalVideo" controls>
                 Your browser does not support the video tag.
             </video>
-            <div class="video-overlay">
-                <div class="logo">✨FranklyMaDear🎬</div>
-                <div class="video-controls">
-                    <button class="play-button" id="playButton">
+            <div class="modal-overlay">
+                <div class="modal-header">
+                    <div class="modal-title" id="modalTitle">Video Title</div>
+                    <button class="close-btn" id="closeModal">×</button>
+                </div>
+                <div class="modal-controls">
+                    <button class="modal-play-btn" id="modalPlayBtn">
                         <span class="play-icon">▶️</span>
                     </button>
                 </div>
-                <div class="social-sharing">
-                    <button class="btn btn-share" onclick="copyVideoLink()">
+                <div class="modal-footer">
+                    <button class="btn btn-share" id="copyLinkBtn">
                         <span>📋</span> Copy Link
                     </button>
-                    <button class="btn btn-twitter" onclick="shareOnTwitter()">
+                    <button class="btn btn-twitter" id="shareTwitterBtn">
                         <span>🐦</span> Twitter
                     </button>
                 </div>
@@ -181,41 +280,171 @@
     </div>
 
     <script>
-        const video = document.getElementById('mainVideo');
-        const playButton = document.getElementById('playButton');
+        // Video Data - ADD YOUR VIDEOS HERE
+        const videoData = [
+            {
+                id: 1,
+                title: "JavaScript Basics Tutorial",
+                description: "Learn the fundamentals of JavaScript programming",
+                videoUrl: "video1.mp4",
+                thumbnail: "thumb1.jpg",
+                shareUrl: "https://blog.franklymadear.com/twitter/video1.html"
+            },
+            {
+                id: 2,
+                title: "CSS Animations Masterclass",
+                description: "Create stunning animations with CSS",
+                videoUrl: "video2.mp4",
+                thumbnail: "thumb2.jpg",
+                shareUrl: "https://blog.franklymadear.com/twitter/video2.html"
+            },
+            {
+                id: 3,
+                title: "React Components Guide",
+                description: "Build reusable React components",
+                videoUrl: "video3.mp4",
+                thumbnail: "thumb3.jpg",
+                shareUrl: "https://blog.franklymadear.com/twitter/video3.html"
+            },
+            {
+                id: 4,
+                title: "Python for Beginners",
+                description: "Start your Python programming journey",
+                videoUrl: "video4.mp4",
+                thumbnail: "thumb4.jpg",
+                shareUrl: "https://blog.franklymadear.com/twitter/video4.html"
+            },
+            {
+                id: 5,
+                title: "Web Design Principles",
+                description: "Modern web design techniques and best practices",
+                videoUrl: "video5.mp4",
+                thumbnail: "thumb5.jpg",
+                shareUrl: "https://blog.franklymadear.com/twitter/video5.html"
+            },
+            {
+                id: 6,
+                title: "Git & GitHub Tutorial",
+                description: "Version control and collaboration with Git",
+                videoUrl: "video6.mp4",
+                thumbnail: "thumb6.jpg",
+                shareUrl: "https://blog.franklymadear.com/twitter/video6.html"
+            }
+        ];
 
-        playButton.addEventListener('click', function() {
-            video.play();
-            document.querySelector('.video-player').classList.add('video-started');
-            playButton.style.display = 'none';
-        });
+        // DOM Elements
+        const videoGrid = document.getElementById('videoGrid');
+        const videoModal = document.getElementById('videoModal');
+        const modalVideo = document.getElementById('modalVideo');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalPlayBtn = document.getElementById('modalPlayBtn');
+        const closeModal = document.getElementById('closeModal');
+        const copyLinkBtn = document.getElementById('copyLinkBtn');
+        const shareTwitterBtn = document.getElementById('shareTwitterBtn');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            video.play().then(() => {
-                document.querySelector('.video-player').classList.add('video-started');
-                playButton.style.display = 'none';
-            }).catch(error => {
-                playButton.style.display = 'flex';
+        let currentVideo = null;
+
+        // Load videos into grid
+        function loadVideos() {
+            videoGrid.innerHTML = '';
+            
+            videoData.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
+                videoCard.innerHTML = `
+                    <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-description">${video.description}</div>
+                    </div>
+                `;
+                
+                videoCard.addEventListener('click', () => openVideoModal(video));
+                videoGrid.appendChild(videoCard);
             });
-        });
-
-        function shareOnTwitter() {
-            const text = encodeURIComponent("Check out this amazing video from FranklyMaDear! 🎬✨");
-            const url = encodeURIComponent("https://blog.franklymadear.com/twitter/video.html");
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-            window.open(twitterUrl, '_blank', 'width=600,height=400');
         }
 
-        function copyVideoLink() {
-            const videoLink = "https://blog.franklymadear.com/twitter/video.html";
-            navigator.clipboard.writeText(videoLink);
-            alert('Link copied!');
+        // Open video modal
+        function openVideoModal(video) {
+            currentVideo = video;
+            modalVideo.src = video.videoUrl;
+            modalTitle.textContent = video.title;
+            videoModal.style.display = 'flex';
+            
+            // Try to auto-play
+            modalVideo.play().then(() => {
+                modalPlayBtn.style.display = 'none';
+            }).catch(() => {
+                modalPlayBtn.style.display = 'flex';
+            });
         }
 
-        video.addEventListener('ended', function() {
-            document.querySelector('.video-player').classList.remove('video-started');
-            playButton.style.display = 'flex';
+        // Close video modal
+        function closeVideoModal() {
+            videoModal.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.currentTime = 0;
+            modalPlayBtn.style.display = 'flex';
+        }
+
+        // Play video in modal
+        modalPlayBtn.addEventListener('click', () => {
+            modalVideo.play();
+            modalPlayBtn.style.display = 'none';
         });
+
+        // Close modal events
+        closeModal.addEventListener('click', closeVideoModal);
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+
+        // Copy link
+        copyLinkBtn.addEventListener('click', () => {
+            if (currentVideo) {
+                navigator.clipboard.writeText(currentVideo.shareUrl);
+                alert('Link copied to clipboard!');
+            }
+        });
+
+        // Share on Twitter
+        shareTwitterBtn.addEventListener('click', () => {
+            if (currentVideo) {
+                const text = encodeURIComponent(`Check out "${currentVideo.title}" by FranklyMaDear! 🎬✨`);
+                const url = encodeURIComponent(currentVideo.shareUrl);
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+                window.open(twitterUrl, '_blank', 'width=600,height=400');
+            }
+        });
+
+        // Handle video end
+        modalVideo.addEventListener('ended', () => {
+            modalPlayBtn.style.display = 'flex';
+        });
+
+        // Handle video pause
+        modalVideo.addEventListener('pause', () => {
+            if (!modalVideo.ended) {
+                modalPlayBtn.style.display = 'flex';
+            }
+        });
+
+        // Handle video play
+        modalVideo.addEventListener('play', () => {
+            modalPlayBtn.style.display = 'none';
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadVideos);
     </script>
 </body>
 </html>
