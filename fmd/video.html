@@ -159,15 +159,6 @@
             pointer-events: none;
         }
 
-        .upload-section {
-            background: #111;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
         .upload-btn {
             background: #1DA1F2;
             color: white;
@@ -176,26 +167,10 @@
             border-radius: 25px;
             cursor: pointer;
             font-size: 1rem;
-            margin: 10px 0;
-            display: inline-flex;
+            margin: 20px auto;
+            display: block;
             align-items: center;
             gap: 8px;
-        }
-
-        .instructions {
-            margin-top: 20px;
-            color: #aaa;
-            font-size: 0.9rem;
-            text-align: left;
-        }
-
-        .instructions ol {
-            padding-left: 20px;
-            margin-top: 10px;
-        }
-
-        .instructions li {
-            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -206,26 +181,10 @@
     <div class="header">
         <h1>✨FmD🎬</h1>
         <p>Share these videos exclusively on Twitter</p>
-    </div>
-
-    <div class="upload-section">
-        <h2>Easy Video Upload</h2>
-        <p>Add new videos to your gallery (up to 5)</p>
         <button class="upload-btn" onclick="document.getElementById('videoUpload').click()">
             <span>📤</span> Upload Video
         </button>
         <input type="file" id="videoUpload" accept="video/*" style="display:none" onchange="handleVideoUpload(event)">
-        
-        <div class="instructions">
-            <p><strong>How to upload:</strong></p>
-            <ol>
-                <li>Click "Upload Video"</li>
-                <li>Select your video file (MP4 recommended)</li>
-                <li>Add a title for your video</li>
-                <li>The video will appear in your gallery</li>
-                <li>Use the Twitter button to share directly</li>
-            </ol>
-        </div>
     </div>
 
     <div class="video-gallery" id="videoGallery">
@@ -317,6 +276,21 @@
                 videoEl.parentElement.parentElement.classList.remove('video-started');
                 playButton.style.display = 'flex';
             });
+
+            // Set the first frame as poster automatically for uploaded videos
+            if (video.videoUrl.startsWith('blob:')) {
+                videoEl.addEventListener('loadeddata', function() {
+                    // Create a canvas to capture the first frame
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = videoEl.videoWidth;
+                    canvas.height = videoEl.videoHeight;
+                    ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+                    
+                    // Set the first frame as poster
+                    videoEl.poster = canvas.toDataURL();
+                });
+            }
             
             return videoItem;
         }
@@ -350,7 +324,7 @@
                 id: videoCount,
                 title: title,
                 videoUrl: videoUrl,
-                thumbnail: "video-thumbnail.jpg",
+                thumbnail: "", // Will be set automatically from first frame
                 embedUrl: `https://blog.franklymadear.com/twitter/video-embed.html?video=${videoCount}`
             };
             
