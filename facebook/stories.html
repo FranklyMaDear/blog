@@ -4,15 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Άλλα λέει η Θεία μ και ά...</title>
+  
+  <!-- Βασικά Open Graph Meta Tags -->
   <meta property="og:title" content="Άλλα λέει η Θεία μ και ά...">
   <meta property="og:description" content="Facebook Story">
-  <meta property="og:image" content="logo.png">
+  <meta property="og:image" content="https://yourwebsite.com/logo.png">
   <meta property="og:url" content="https://yourwebsite.com/stories.html">
   <meta property="og:type" content="video.other">
   <meta property="og:video" content="https://yourwebsite.com/gold2.mp4">
   <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:width" content="1280">
+  <meta property="og:video:height" content="720">
+  
+  <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="player">
+  <meta name="twitter:site" content="@yourtwitterhandle">
+  <meta name="twitter:title" content="Άλλα λέει η Θεία μ και ά...">
+  <meta name="twitter:description" content="Facebook Story">
+  <meta name="twitter:image" content="https://yourwebsite.com/logo.png">
   <meta name="twitter:player" content="https://yourwebsite.com/stories.html">
+  <meta name="twitter:player:width" content="1280">
+  <meta name="twitter:player:height" content="720">
+  <meta name="twitter:player:stream" content="https://yourwebsite.com/gold2.mp4">
+  <meta name="twitter:player:stream:content_type" content="video/mp4">
+  
   <style>
     * {
       margin: 0;
@@ -1004,62 +1019,84 @@
     function shareToFacebook() {
       const url = encodeURIComponent(getCurrentVideoShareURL());
       const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
-      closeShareModal();
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank');
     }
 
     function shareToTwitter() {
       const url = encodeURIComponent(getCurrentVideoShareURL());
       const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
-      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
-      closeShareModal();
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
     }
 
     function shareToInstagram() {
-      const url = getCurrentVideoShareURL();
-      alert(`Ανοίξτε το Instagram και κοινοποιήστε αυτόν τον σύνδεσμο: ${url}`);
-      closeShareModal();
+      alert('Για κοινοποίηση στο Instagram, χρησιμοποιήστε την εφαρμογή από το κινητό σας.');
     }
 
     function shareToWhatsApp() {
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]} ${getCurrentVideoShareURL()}`);
-      window.open(`https://wa.me/?text=${text}`, '_blank');
-      closeShareModal();
+      const url = encodeURIComponent(getCurrentVideoShareURL());
+      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
+      window.open(`https://wa.me/?text=${text}%20${url}`, '_blank');
     }
 
     function copyLink() {
       const url = getCurrentVideoShareURL();
       navigator.clipboard.writeText(url).then(() => {
-        alert(`Το link για το "${videoTitles[currentVideoIndex]}" αντιγράφηκε στο clipboard! 📋`);
-      }).catch(() => {
-        prompt('Αντιγράψτε αυτό το link:', url);
+        alert('Ο σύνδεσμος αντιγράφηκε στο clipboard!');
+      }).catch(err => {
+        console.error('Αποτυχία αντιγραφής: ', err);
+        alert('Αποτυχία αντιγραφής του συνδέσμου.');
       });
-      closeShareModal();
     }
-    
-    // LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ - ΑΥΤΟΜΗ ΕΠΟΜΕΝΗ ΑΝΑΠΑΡΑΓΩΓΗ
-    video.addEventListener('ended', function() {
-      console.log('Το βίντεο τελείωσε, φόρτωση επόμενου...');
-      loadNextVideo();
+
+    // Κλείσιμο modal με ESC
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeShareModal();
+      }
     });
-    
-    // LISTENER ΓΙΑ ΝΑ ΚΡΥΒΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
+
+    // Κλείσιμο modal με κλικ έξω από το modal
+    shareModal.addEventListener('click', function(event) {
+      if (event.target === shareModal) {
+        closeShareModal();
+      }
+    });
+
+    // Αναπαραγωγή/παύση με κλικ στο βίντεο
+    video.addEventListener('click', function(event) {
+      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
+        return;
+      }
+      
+      if (video.paused) {
+        video.play();
+        videoOverlay.classList.add('hidden');
+      } else {
+        video.pause();
+        videoOverlay.classList.remove('hidden');
+      }
+    });
+
+    // Απόκρυψη overlay όταν παίζει το βίντεο
     video.addEventListener('play', function() {
       videoOverlay.classList.add('hidden');
     });
-    
-    // LISTENER ΓΙΑ ΝΑ ΕΜΦΑΝΙΖΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΣΤΑΜΑΤΑ ΤΟ ΒΙΝΤΕΟ
+
+    // Εμφάνιση overlay όταν το βίντεο σταματάει
     video.addEventListener('pause', function() {
       videoOverlay.classList.remove('hidden');
     });
-    
-    // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ
-    video.addEventListener('error', function() {
-      console.error('Σφάλμα φόρτωσης βίντεο:', video.error);
-      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει.`);
+
+    // Αυτόματη φόρτωση επόμενου βίντεο όταν τελειώνει το τρέχον
+    video.addEventListener('ended', function() {
+      if (currentVideoIndex < videoList.length - 1) {
+        loadNextVideo();
+      } else {
+        videoOverlay.classList.remove('hidden');
+      }
     });
-    
-    // KEYBOARD SHORTCUTS
+
+    // Keyboard navigation
     document.addEventListener('keydown', function(event) {
       if (event.key === 'ArrowRight') {
         loadNextVideo();
@@ -1068,21 +1105,42 @@
       } else if (event.key === ' ') {
         event.preventDefault();
         if (video.paused) {
-          playVideoAndUnmute(event);
+          video.play();
+          videoOverlay.classList.add('hidden');
         } else {
           video.pause();
+          videoOverlay.classList.remove('hidden');
         }
-      } else if (event.key === 'Escape') {
-        closeShareModal();
       }
     });
-    
-    // CLICK OUTSIDE SHARE MODAL TO CLOSE
-    document.addEventListener('click', function(event) {
-      if (shareModal.classList.contains('active') && !event.target.closest('.share-modal') && !event.target.closest('.share-btn')) {
-        closeShareModal();
-      }
+
+    // Swipe support για mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', function(event) {
+      touchStartX = event.changedTouches[0].screenX;
     });
+
+    document.addEventListener('touchend', function(event) {
+      touchEndX = event.changedTouches[0].screenX;
+      handleSwipe();
+    });
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          // Swipe αριστερά - επόμενο βίντεο
+          loadNextVideo();
+        } else {
+          // Swipe δεξιά - προηγούμενο βίντεο
+          loadPrevVideo();
+        }
+      }
+    }
   </script>
 </body>
 </html>
