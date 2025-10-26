@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FranklyMaDear Blog</title>
+    <title>FranklyMaDear Blog - Διαχείριση Βίντεο</title>
     <link rel="icon" type="image/png" href="index.png">
     <link rel="apple-touch-icon" href="index.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Styling για το Support Card */
+        /* Βασικά στυλ από το αρχικό αρχείο */
         .support-card {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
@@ -53,6 +53,145 @@
             font-size: 2.5rem;
             color: white;
         }
+
+        /* Νέα στυλ για τη σελίδα βίντεο */
+        .video-management {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-form {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #2575fc;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #1a67e8;
+        }
+
+        .btn-twitter {
+            background-color: #1DA1F2;
+            color: white;
+        }
+
+        .btn-twitter:hover {
+            background-color: #0d8bd9;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .video-card {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+
+        .video-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .video-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .video-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .empty-state .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .notification {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .notification-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .notification-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +201,7 @@
                 <h1>🎨 FranklyMaDear Blog</h1>
                 <div class="animated-emoji">✨</div>
             </div>
-            <p class="tagline">Ανακαλύψτε Ψηφιακά Βιβλία,Digital Products Δωρεάν!</p>
+            <p class="tagline">Ανακαλύψτε Ψηφιακά Βιβλία, Digital Products Δωρεάν!</p>
         </header>
 
         <main class="main-content">
@@ -105,6 +244,45 @@
                 </a>
             </div>
 
+            <!-- Τμήμα διαχείρισης βίντεο -->
+            <section class="video-management">
+                <h2>🎬 Διαχείριση Βίντεο</h2>
+                <p>Ανεβάστε και διαχειριστείτε τα βίντεό σας και κοινοποιήστε τα στο Twitter.</p>
+                
+                <div id="notification" class="notification"></div>
+                
+                <form id="videoForm" class="video-form">
+                    <div class="form-group">
+                        <label for="videoTitle">Τίτλος Βίντεο</label>
+                        <input type="text" id="videoTitle" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="videoDescription">Περιγραφή</label>
+                        <textarea id="videoDescription" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="videoUrl">URL Βίντεο (YouTube, Vimeo, ή άλλο)</label>
+                        <input type="url" id="videoUrl" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="videoThumbnail">URL Εικόνας (προαιρετικό)</label>
+                        <input type="url" id="videoThumbnail" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Αποθήκευση Βίντεο</button>
+                </form>
+                
+                <div id="videoContainer">
+                    <h3>Τα Αποθηκευμένα Βίντεο</h3>
+                    <div id="videoGrid" class="video-grid">
+                        <!-- Τα βίντεο θα προστεθούν δυναμικά εδώ -->
+                    </div>
+                </div>
+            </section>
+
             <div class="featured-section">
                 <h2>🌟 Δημοφιλή Απόσπασμα</h2>
                 <div class="featured-card">
@@ -121,6 +299,133 @@
     <!-- Buy Me a Coffee Widget -->
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
-    <script src="script.js"></script>
+    <script>
+        // Λειτουργικότητα για τη διαχείριση βίντεο
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoForm = document.getElementById('videoForm');
+            const videoGrid = document.getElementById('videoGrid');
+            const notification = document.getElementById('notification');
+            
+            // Φόρτωση βίντεο από το localStorage κατά την εκκίνηση
+            loadVideos();
+            
+            // Επεξεργασία υποβολής φόρμας
+            videoForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const title = document.getElementById('videoTitle').value;
+                const description = document.getElementById('videoDescription').value;
+                const url = document.getElementById('videoUrl').value;
+                const thumbnail = document.getElementById('videoThumbnail').value || getDefaultThumbnail(url);
+                
+                // Αποθήκευση βίντεο
+                saveVideo(title, description, url, thumbnail);
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                showNotification('Το βίντεο αποθηκεύτηκε επιτυχώς!', 'success');
+                
+                // Επαναφορά φόρμας
+                videoForm.reset();
+            });
+            
+            // Φόρτωση βίντεο από το localStorage
+            function loadVideos() {
+                const videos = getVideosFromStorage();
+                
+                if (videos.length === 0) {
+                    videoGrid.innerHTML = `
+                        <div class="empty-state">
+                            <div class="card-icon">📹</div>
+                            <h3>Δεν υπάρχουν ακόμα βίντεο</h3>
+                            <p>Προσθέστε το πρώτο σας βίντεο χρησιμοποιώντας τη φόρμα παραπάνω.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                videoGrid.innerHTML = '';
+                
+                videos.forEach((video, index) => {
+                    const videoCard = document.createElement('div');
+                    videoCard.className = 'video-card';
+                    videoCard.innerHTML = `
+                        <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
+                        <div class="video-info">
+                            <h4 class="video-title">${video.title}</h4>
+                            <p class="video-description">${video.description}</p>
+                            <div class="video-actions">
+                                <a href="${video.url}" target="_blank" class="btn btn-primary">Προβολή</a>
+                                <button class="btn btn-twitter" onclick="shareToTwitter(${index})">Κοινοποίηση στο Twitter</button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    videoGrid.appendChild(videoCard);
+                });
+            }
+            
+            // Αποθήκευση βίντεο στο localStorage
+            function saveVideo(title, description, url, thumbnail) {
+                const videos = getVideosFromStorage();
+                videos.push({ title, description, url, thumbnail });
+                localStorage.setItem('franklymadear-videos', JSON.stringify(videos));
+                loadVideos();
+            }
+            
+            // Ανάκτηση βίντεο από το localStorage
+            function getVideosFromStorage() {
+                const videosJSON = localStorage.getItem('franklymadear-videos');
+                return videosJSON ? JSON.parse(videosJSON) : [];
+            }
+            
+            // Προσθήκη προεπιλεγμένης εικόνας βάσει URL
+            function getDefaultThumbnail(url) {
+                // Για YouTube βίντεο
+                if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    const videoId = extractYouTubeId(url);
+                    if (videoId) {
+                        return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                    }
+                }
+                
+                // Προεπιλεγμένη εικόνα
+                return 'https://via.placeholder.com/300x180.png?text=Video+Thumbnail';
+            }
+            
+            // Εξαγωγή YouTube ID από URL
+            function extractYouTubeId(url) {
+                const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[7].length === 11) ? match[7] : null;
+            }
+            
+            // Εμφάνιση ειδοποιήσεων
+            function showNotification(message, type) {
+                notification.textContent = message;
+                notification.className = `notification notification-${type}`;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Κοινοποίηση στο Twitter (για χρήση σε global scope)
+            window.shareToTwitter = function(videoIndex) {
+                const videos = getVideosFromStorage();
+                const video = videos[videoIndex];
+                
+                if (!video) {
+                    showNotification('Το βίντεο δεν βρέθηκε.', 'error');
+                    return;
+                }
+                
+                const tweetText = encodeURIComponent(`Δείτε αυτό το βίντεο: ${video.title} - ${video.url}`);
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+                
+                window.open(twitterUrl, '_blank', 'width=600,height=400');
+            };
+        });
+    </script>
 </body>
 </html>
