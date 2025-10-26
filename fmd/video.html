@@ -174,28 +174,21 @@
     </div>
 
     <script>
-        // Sample videos with proper thumbnails
+        // Sample videos with proper PNG thumbnails
         const videos = [
             {
                 id: 1,
                 title: "My Creative Video 1",
                 videoUrl: "video1.mp4",
-                thumbnail: "thumbnail1.jpg", // Make sure this file exists
+                thumbnail: "thumbnail1.png", // Changed to PNG
                 embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=1"
             },
             {
                 id: 2,
                 title: "My Creative Video 2", 
                 videoUrl: "video2.mp4",
-                thumbnail: "thumbnail2.jpg", // Make sure this file exists
+                thumbnail: "thumbnail2.png", // Changed to PNG
                 embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=2"
-            },
-            {
-                id: 3,
-                title: "My Creative Video 3",
-                videoUrl: "video3.mp4",
-                thumbnail: "thumbnail3.jpg", // Make sure this file exists
-                embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=3"
             }
         ];
 
@@ -264,6 +257,12 @@
 
             // Preload thumbnail to ensure it displays
             const img = new Image();
+            img.onload = function() {
+                console.log(`Thumbnail loaded: ${video.thumbnail}`);
+            };
+            img.onerror = function() {
+                console.error(`Failed to load thumbnail: ${video.thumbnail}`);
+            };
             img.src = video.thumbnail;
             
             return videoItem;
