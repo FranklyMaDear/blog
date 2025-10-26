@@ -9,6 +9,12 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
+    <!-- Open Graph tags for Twitter sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="FmD Videos">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:creator" content="@FranklyMaDear">
+    
     <style>
         * {
             margin: 0;
@@ -194,6 +200,9 @@
     </style>
 </head>
 <body>
+    <!-- Ad script -->
+    <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async></script>
+
     <div class="header">
         <h1>✨FmD🎬</h1>
         <p>Share these videos exclusively on Twitter</p>
@@ -230,19 +239,22 @@
                 id: 1,
                 title: "My Creative Video 1",
                 videoUrl: "video1.mp4",
-                thumbnail: "video-thumbnail.jpg"
+                thumbnail: "video-thumbnail.jpg",
+                embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=1"
             },
             {
                 id: 2,
                 title: "My Creative Video 2",
                 videoUrl: "video2.mp4",
-                thumbnail: "video-thumbnail.jpg"
+                thumbnail: "video-thumbnail.jpg",
+                embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=2"
             },
             {
                 id: 3,
                 title: "My Creative Video 3",
                 videoUrl: "video3.mp4",
-                thumbnail: "video-thumbnail.jpg"
+                thumbnail: "video-thumbnail.jpg",
+                embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=3"
             }
         ];
 
@@ -289,8 +301,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- Ad script for each video -->
-                <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async><\/script>
             `;
             
             // Add event listeners for this video
@@ -340,7 +350,8 @@
                 id: videoCount,
                 title: title,
                 videoUrl: videoUrl,
-                thumbnail: "video-thumbnail.jpg" // You could generate a thumbnail here
+                thumbnail: "video-thumbnail.jpg",
+                embedUrl: `https://blog.franklymadear.com/twitter/video-embed.html?video=${videoCount}`
             };
             
             videos.push(newVideo);
@@ -352,22 +363,24 @@
             event.target.value = '';
         }
 
-        // Share on Twitter
+        // Share on Twitter with individual video links
         function shareOnTwitter(videoId) {
             const video = videos.find(v => v.id === videoId);
             if (!video) return;
             
             const text = encodeURIComponent(`Check out "${video.title}" from FranklyMaDear! 🎬✨`);
-            const url = encodeURIComponent("https://blog.franklymadear.com/twitter/video.html");
+            const url = encodeURIComponent(video.embedUrl);
             const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
             window.open(twitterUrl, '_blank', 'width=600,height=400');
         }
 
-        // Copy video link
+        // Copy individual video link
         function copyVideoLink(videoId) {
-            const videoLink = "https://blog.franklymadear.com/twitter/video.html";
-            navigator.clipboard.writeText(videoLink);
-            alert('Link copied!');
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            navigator.clipboard.writeText(video.embedUrl);
+            alert('Video link copied!');
         }
 
         // Initialize the gallery when page loads
