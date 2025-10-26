@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FranklyMaDear Blog - Βίντεο</title>
+    <title>FranklyMaDear Blog - Το Βίντεό Μου</title>
     <link rel="icon" type="image/png" href="index.png">
     <link rel="apple-touch-icon" href="index.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     
-    <!-- Open Graph Meta Tags για social media sharing -->
+    <!-- Open Graph Meta Tags για Facebook -->
     <meta property="og:title" content="FranklyMaDear Blog - Το Βίντεό Μου">
     <meta property="og:description" content="Αυτό είναι το πρώτο μου βίντεο που ανέβασα στο blog. Περιέχει χρήσιμο εκπαιδευτικό περιεχόμενο και tutorials για προγραμματισμό και ανάπτυξη λογισμικού.">
     <meta property="og:image" content="https://raw.githubusercontent.com/FranklyMaDear/blog/main/twitter/video-thumbnail.jpg">
@@ -21,14 +21,12 @@
     <meta property="og:video:height" content="720">
     
     <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="player">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@FranklyMaDear">
     <meta name="twitter:title" content="FranklyMaDear Blog - Το Βίντεό Μου">
     <meta name="twitter:description" content="Αυτό είναι το πρώτο μου βίντεο που ανέβασα στο blog. Περιέχει χρήσιμο εκπαιδευτικό περιεχόμενο.">
     <meta name="twitter:image" content="https://raw.githubusercontent.com/FranklyMaDear/blog/main/twitter/video-thumbnail.jpg">
-    <meta name="twitter:player" content="https://franklymadear.github.io/blog/twitter/video.html">
-    <meta name="twitter:player:width" content="1280">
-    <meta name="twitter:player:height" content="720">
+    <meta name="twitter:creator" content="@FranklyMaDear">
     
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -216,53 +214,15 @@
             transform: translateY(-2px);
         }
 
-        .btn-linkedin {
-            background: #0A66C2;
+        .btn-share {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
         }
 
-        .btn-linkedin:hover {
-            background: #0958aa;
-            box-shadow: 0 5px 15px rgba(10, 102, 194, 0.3);
+        .btn-share:hover {
+            background: linear-gradient(135deg, #5a0db5 0%, #1a67e8 100%);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
             transform: translateY(-2px);
-        }
-
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-        }
-
-        .btn-whatsapp:hover {
-            background: #20bd5c;
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .featured-section {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-            text-align: center;
-        }
-
-        .featured-section h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-
-        .featured-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-style: italic;
-            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
-            max-width: 700px;
-            margin: 0 auto;
         }
 
         .footer {
@@ -278,6 +238,25 @@
             margin-top: 1rem;
             color: #7f8c8d;
             font-size: 0.9rem;
+        }
+
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .copy-notification.show {
+            opacity: 1;
         }
 
         /* Responsive Design */
@@ -331,17 +310,14 @@
                     </div>
 
                     <div class="social-sharing">
+                        <button class="btn btn-share" onclick="copyVideoLink()">
+                            <span>📋</span> Αντιγραφή Συνδέσμου
+                        </button>
                         <button class="btn btn-twitter" onclick="shareOnTwitter()">
                             <span>🐦</span> Twitter
                         </button>
                         <button class="btn btn-facebook" onclick="shareOnFacebook()">
                             <span>📘</span> Facebook
-                        </button>
-                        <button class="btn btn-linkedin" onclick="shareOnLinkedIn()">
-                            <span>💼</span> LinkedIn
-                        </button>
-                        <button class="btn btn-whatsapp" onclick="shareOnWhatsApp()">
-                            <span>💚</span> WhatsApp
                         </button>
                     </div>
                     
@@ -350,18 +326,15 @@
                     </div>
                 </div>
             </section>
-
-            <div class="featured-section">
-                <h2>🌟 Δημοφιλή Απόσπασμα</h2>
-                <div class="featured-card">
-                    <p>"Η τεχνολογία είναι πιο δημιουργική όταν χρησιμοποιείται για να βοηθάει τους ανθρώπους να μαθαίνουν και να μεγαλώνουν!"</p>
-                </div>
-            </div>
         </main>
 
         <footer class="footer">
             <p>Made with ❤️ by FranklyMaDear</p>
         </footer>
+    </div>
+
+    <div id="copyNotification" class="copy-notification">
+        ✅ Ο σύνδεσμος αντιγράφηκε!
     </div>
 
     <script>
@@ -379,16 +352,31 @@
             window.open(facebookUrl, '_blank', 'width=600,height=400');
         }
 
-        function shareOnLinkedIn() {
-            const url = encodeURIComponent(window.location.href);
-            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
-            window.open(linkedinUrl, '_blank', 'width=600,height=400');
+        function copyVideoLink() {
+            const videoLink = window.location.href;
+            
+            // Χρήση του Clipboard API
+            navigator.clipboard.writeText(videoLink).then(function() {
+                showCopyNotification();
+            }).catch(function(err) {
+                // Fallback για παλιά browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = videoLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showCopyNotification();
+            });
         }
 
-        function shareOnWhatsApp() {
-            const text = encodeURIComponent("Δείτε αυτό το βίντεο: " + window.location.href);
-            const whatsappUrl = `https://wa.me/?text=${text}`;
-            window.open(whatsappUrl, '_blank', 'width=600,height=600');
+        function showCopyNotification() {
+            const notification = document.getElementById('copyNotification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
         }
 
         // Δημιουργία thumbnail από το πρώτο καρέ του βίντεο
@@ -406,7 +394,7 @@
                 // Σχεδιάζουμε το πρώτο καρέ
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 
-                // Μετατρέπουμε σε data URL (θα μπορούσε να αποθηκευτεί)
+                // Μετατρέπουμε σε data URL
                 const thumbnailDataUrl = canvas.toDataURL('image/jpeg');
                 console.log('Thumbnail created:', thumbnailDataUrl);
             });
