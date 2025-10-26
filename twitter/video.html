@@ -3,23 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FranklyMaDear Blog - Διαχείριση Βίντεο</title>
+    <title>FranklyMaDear Blog - Βίντεο</title>
     <link rel="icon" type="image/png" href="index.png">
     <link rel="apple-touch-icon" href="index.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Βασικά στυλ από το αρχικό αρχείο */
-        .support-card {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
         }
 
-        .support-card::before {
+        .header::before {
             content: "";
             position: absolute;
             top: 0;
@@ -28,169 +51,255 @@
             bottom: 0;
             background: 
                 radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
             z-index: 1;
         }
 
-        .support-card > * {
+        .header > * {
             position: relative;
             z-index: 2;
-            color: white !important;
         }
 
-        .support-card h3,
-        .support-card p {
-            color: white !important;
-        }
-
-        .support-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(37, 117, 252, 0.3);
-        }
-
-        .support-card .card-icon {
-            font-size: 2.5rem;
-            color: white;
-        }
-
-        /* Νέα στυλ για τη σελίδα βίντεο */
-        .video-management {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background-color: #f8f9fa;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .video-form {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .form-group {
+        .logo {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
         }
 
-        .form-group label {
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #333;
+        .logo h1 {
+            font-family: 'Comic Neue', cursive;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .form-control {
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-family: 'Nunito', sans-serif;
-            font-size: 1rem;
+        .animated-emoji {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
         }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            font-family: 'Nunito', sans-serif;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        .btn-primary {
-            background-color: #2575fc;
-            color: white;
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .btn-primary:hover {
-            background-color: #1a67e8;
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
-        .btn-twitter {
-            background-color: #1DA1F2;
-            color: white;
-        }
-
-        .btn-twitter:hover {
-            background-color: #0d8bd9;
+        .page-title::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 2px;
         }
 
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
         }
 
         .video-card {
-            background-color: white;
-            border-radius: 12px;
+            background: white;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
         }
 
         .video-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
         .video-thumbnail {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
+            display: block;
         }
 
         .video-info {
-            padding: 1rem;
+            padding: 20px;
         }
 
         .video-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: #333;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            line-height: 1.3;
         }
 
         .video-description {
-            color: #666;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .video-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #95a5a6;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
         }
 
         .video-actions {
             display: flex;
-            justify-content: space-between;
+            gap: 10px;
         }
 
-        .empty-state {
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(to right, #5a0db5, #1a67e8);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .btn-twitter {
+            background: #1DA1F2;
+            color: white;
+        }
+
+        .btn-twitter:hover {
+            background: #0d8bd9;
+            box-shadow: 0 5px 15px rgba(29, 161, 242, 0.3);
+        }
+
+        .btn-github {
+            background: #333;
+            color: white;
+        }
+
+        .btn-github:hover {
+            background: #222;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(to right, #ff8a00, #ff2070);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 3px 10px rgba(255, 138, 0, 0.3);
+        }
+
+        .featured-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .featured-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .featured-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-style: italic;
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.3);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            color: #7f8c8d;
+            border-top: 1px solid #eaeaea;
+            margin-top: 2rem;
+        }
+
+        .loading {
             text-align: center;
             padding: 2rem;
-            color: #666;
+            font-size: 1.2rem;
+            color: #7f8c8d;
         }
 
-        .empty-state .card-icon {
-            font-size: 3rem;
+        .github-info {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .github-info p {
             margin-bottom: 1rem;
         }
 
-        .notification {
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .notification-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .notification-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            .page-title {
+                font-size: 1.8rem;
+            }
         }
     </style>
 </head>
@@ -205,88 +314,24 @@
         </header>
 
         <main class="main-content">
-            <div class="category-grid">
-                <!-- DIGITAL BOOKS - ΠΡΩΤΗ ΘΕΣΗ -->
-                <a href="digital-products.html" class="category-card digital-card">
-                    <div class="card-icon">📚</div>
-                    <h3>Digital Books</h3>
-                    <p>Ηλεκτρονικά βιβλία</p>
-                    <div class="card-badge">Νέο Activity Book!</div>
-                </a>
-
-                <!-- Στηρίξτε μας Card - ΤΩΡΑ ΠΑΝΩ ΠΑΝΩ -->
-                <a href="support.html" class="category-card support-card">
-                    <div class="card-icon">⭐</div>
-                    <h3>Στηρίξτε μας</h3>
-                    <p>Βοηθήστε μας να συνεχίσουμε να προσφέρουμε δωρεάν περιεχόμενο</p>
-                    <div class="card-badge">Νέο!</div>
-                </a>
-
-                <a href="facebook/stories.html" class="category-card article-card">
-                    <div class="card-icon">📚</div>
-                    <h3>Stories</h3>
-                    <p>Δείτε τα καλύτερα Stories</p>
-                    <div class="card-badge"> 2 νέα</div>
-                </a>
-                <a href="twitter/video.html" class="category-card video-card">
-                    <div class="card-icon">🎬</div>
-                    <h3>Βίντεο</h3>
-                    <p>Παρακολουθήστε εκπαιδευτικά βίντεο και tutorials</p>
-                    <div class="card-badge">8 νέα</div>
-                </a>
-
-                <!-- Digital Products -->
-                <a href="digital-products.html" class="category-card digital-card">
-                    <div class="card-icon">🛒</div>
-                    <h3>Digital Products</h3>
-                    <p>Προϊόντα, templates και resources για developers</p>
-                    <div class="card-badge">7 νέα</div>
+            <h1 class="page-title">📹 Βίντεο από το GitHub</h1>
+            
+            <div class="github-info">
+                <p>Τα βίντεο φιλοξενούνται απευθείας στο GitHub repository. Κάντε κλικ σε οποιοδήποτε βίντεο για να το δείτε!</p>
+                <a href="https://github.com/yourusername/your-repo" target="_blank" class="btn btn-github">
+                    <span>📂</span> GitHub Repository
                 </a>
             </div>
 
-            <!-- Τμήμα διαχείρισης βίντεο -->
-            <section class="video-management">
-                <h2>🎬 Διαχείριση Βίντεο</h2>
-                <p>Ανεβάστε και διαχειριστείτε τα βίντεό σας και κοινοποιήστε τα στο Twitter.</p>
-                
-                <div id="notification" class="notification"></div>
-                
-                <form id="videoForm" class="video-form">
-                    <div class="form-group">
-                        <label for="videoTitle">Τίτλος Βίντεο</label>
-                        <input type="text" id="videoTitle" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="videoDescription">Περιγραφή</label>
-                        <textarea id="videoDescription" class="form-control" rows="3"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="videoUrl">URL Βίντεο (YouTube, Vimeo, ή άλλο)</label>
-                        <input type="url" id="videoUrl" class="form-control" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="videoThumbnail">URL Εικόνας (προαιρετικό)</label>
-                        <input type="url" id="videoThumbnail" class="form-control">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">Αποθήκευση Βίντεο</button>
-                </form>
-                
-                <div id="videoContainer">
-                    <h3>Τα Αποθηκευμένα Βίντεο</h3>
-                    <div id="videoGrid" class="video-grid">
-                        <!-- Τα βίντεο θα προστεθούν δυναμικά εδώ -->
-                    </div>
-                </div>
-            </section>
+            <div id="videoContainer" class="video-grid">
+                <!-- Τα βίντεο θα φορτώνονται εδώ δυναμικά -->
+                <div class="loading">Φόρτωση βίντεο...</div>
+            </div>
 
             <div class="featured-section">
                 <h2>🌟 Δημοφιλή Απόσπασμα</h2>
                 <div class="featured-card">
-                    <p>"Ο καλύτερος τρόπος για να μάθεις προγραμματισμό είναι μέσα από τη πρακτική και τη δημιουργία!"</p>
+                    <p>"Η τεχνολογία είναι πιο δημιουργική όταν χρησιμοποιείται για να βοηθάει τους ανθρώπους να μαθαίνουν και να μεγαλώνουν!"</p>
                 </div>
             </div>
         </main>
@@ -296,136 +341,144 @@
         </footer>
     </div>
 
-    <!-- Buy Me a Coffee Widget -->
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
-
     <script>
-        // Λειτουργικότητα για τη διαχείριση βίντεο
+        // Δεδομένα για τα βίντεο - θα τα αντικαταστήσεις με τα δικά σου URLs από το GitHub
+        const videoData = [
+            {
+                id: 1,
+                title: "Εισαγωγή στον Προγραμματισμό",
+                description: "Μάθετε τα βασικά του προγραμματισμού με αυτό το εισαγωγικό βίντεο.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/intro-to-programming.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/programming-thumb.jpg",
+                duration: "15:30",
+                category: "Εκπαίδευση"
+            },
+            {
+                id: 2,
+                title: "Δημιουργία Ιστοσελίδας από το Μηδέν",
+                description: "Βήμα-βήμα οδηγός για τη δημιουργία μιας responsive ιστοσελίδας.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/website-from-scratch.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/website-thumb.jpg",
+                duration: "22:45",
+                category: "Web Development"
+            },
+            {
+                id: 3,
+                title: "CSS Animation Techniques",
+                description: "Δημιουργία εντυπωσιακών animations με CSS και JavaScript.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/css-animations.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/css-animations-thumb.jpg",
+                duration: "18:20",
+                category: "Design"
+            },
+            {
+                id: 4,
+                title: "JavaScript Fundamentals",
+                description: "Οι βασικές έννοιες της JavaScript που πρέπει να γνωρίζει κάθε developer.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/javascript-fundamentals.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/javascript-thumb.jpg",
+                duration: "25:10",
+                category: "Programming"
+            },
+            {
+                id: 5,
+                title: "Git & GitHub για Αρχάριους",
+                description: "Μάθετε πώς να χρησιμοποιείτε το Git και το GitHub για τα projects σας.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/git-github-tutorial.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/git-thumb.jpg",
+                duration: "20:05",
+                category: "Tools"
+            },
+            {
+                id: 6,
+                title: "Responsive Web Design",
+                description: "Τεχνικές για τη δημιουργία sites που φαίνονται τέλεια σε όλες τις συσκευές.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/responsive-design.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/responsive-thumb.jpg",
+                duration: "17:40",
+                category: "Web Development"
+            },
+            {
+                id: 7,
+                title: "React Components Basics",
+                description: "Εισαγωγή στη δημιουργία και χρήση components στο React.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/react-components.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/react-thumb.jpg",
+                duration: "19:55",
+                category: "Frameworks"
+            },
+            {
+                id: 8,
+                title: "Python για Data Analysis",
+                description: "Χρήση της Python και βιβλιοθηκών όπως η Pandas για ανάλυση δεδομένων.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/python-data-analysis.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/python-thumb.jpg",
+                duration: "28:15",
+                category: "Data Science"
+            },
+            {
+                id: 9,
+                title: "UI/UX Design Principles",
+                description: "Βασικές αρχές σχεδιασμού διεπαφής χρήστη και εμπειρίας χρήστη.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/ui-ux-principles.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/uiux-thumb.jpg",
+                duration: "16:30",
+                category: "Design"
+            },
+            {
+                id: 10,
+                title: "Node.js Backend Development",
+                description: "Δημιουργία backend εφαρμογών με Node.js και Express.",
+                videoUrl: "https://raw.githubusercontent.com/yourusername/your-repo/main/videos/nodejs-backend.mp4",
+                thumbnail: "https://raw.githubusercontent.com/yourusername/your-repo/main/thumbnails/nodejs-thumb.jpg",
+                duration: "24:50",
+                category: "Backend"
+            }
+        ];
+
+        // Φόρτωση των βίντεο στη σελίδα
         document.addEventListener('DOMContentLoaded', function() {
-            const videoForm = document.getElementById('videoForm');
-            const videoGrid = document.getElementById('videoGrid');
-            const notification = document.getElementById('notification');
+            const videoContainer = document.getElementById('videoContainer');
             
-            // Φόρτωση βίντεο από το localStorage κατά την εκκίνηση
-            loadVideos();
+            // Καθαρίζουμε το loading message
+            videoContainer.innerHTML = '';
             
-            // Επεξεργασία υποβολής φόρμας
-            videoForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+            // Προσθέτουμε τα βίντεο στο grid
+            videoData.forEach(video => {
+                const videoCard = document.createElement('div');
+                videoCard.className = 'video-card';
                 
-                const title = document.getElementById('videoTitle').value;
-                const description = document.getElementById('videoDescription').value;
-                const url = document.getElementById('videoUrl').value;
-                const thumbnail = document.getElementById('videoThumbnail').value || getDefaultThumbnail(url);
+                videoCard.innerHTML = `
+                    <div class="video-badge">${video.category}</div>
+                    <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="video-description">${video.description}</p>
+                        <div class="video-meta">
+                            <span>⏱️ ${video.duration}</span>
+                            <span>👁️ ${Math.floor(Math.random() * 1000) + 100} προβολές</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="${video.videoUrl}" target="_blank" class="btn btn-primary">
+                                <span>▶️</span> Παράθεση Βίντεο
+                            </a>
+                            <button class="btn btn-twitter" onclick="shareVideo('${video.title}', '${video.videoUrl}')">
+                                <span>🐦</span> Twitter
+                            </button>
+                        </div>
+                    </div>
+                `;
                 
-                // Αποθήκευση βίντεο
-                saveVideo(title, description, url, thumbnail);
-                
-                // Εμφάνιση μηνύματος επιτυχίας
-                showNotification('Το βίντεο αποθηκεύτηκε επιτυχώς!', 'success');
-                
-                // Επαναφορά φόρμας
-                videoForm.reset();
+                videoContainer.appendChild(videoCard);
             });
-            
-            // Φόρτωση βίντεο από το localStorage
-            function loadVideos() {
-                const videos = getVideosFromStorage();
-                
-                if (videos.length === 0) {
-                    videoGrid.innerHTML = `
-                        <div class="empty-state">
-                            <div class="card-icon">📹</div>
-                            <h3>Δεν υπάρχουν ακόμα βίντεο</h3>
-                            <p>Προσθέστε το πρώτο σας βίντεο χρησιμοποιώντας τη φόρμα παραπάνω.</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                videoGrid.innerHTML = '';
-                
-                videos.forEach((video, index) => {
-                    const videoCard = document.createElement('div');
-                    videoCard.className = 'video-card';
-                    videoCard.innerHTML = `
-                        <img src="${video.thumbnail}" alt="${video.title}" class="video-thumbnail">
-                        <div class="video-info">
-                            <h4 class="video-title">${video.title}</h4>
-                            <p class="video-description">${video.description}</p>
-                            <div class="video-actions">
-                                <a href="${video.url}" target="_blank" class="btn btn-primary">Προβολή</a>
-                                <button class="btn btn-twitter" onclick="shareToTwitter(${index})">Κοινοποίηση στο Twitter</button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    videoGrid.appendChild(videoCard);
-                });
-            }
-            
-            // Αποθήκευση βίντεο στο localStorage
-            function saveVideo(title, description, url, thumbnail) {
-                const videos = getVideosFromStorage();
-                videos.push({ title, description, url, thumbnail });
-                localStorage.setItem('franklymadear-videos', JSON.stringify(videos));
-                loadVideos();
-            }
-            
-            // Ανάκτηση βίντεο από το localStorage
-            function getVideosFromStorage() {
-                const videosJSON = localStorage.getItem('franklymadear-videos');
-                return videosJSON ? JSON.parse(videosJSON) : [];
-            }
-            
-            // Προσθήκη προεπιλεγμένης εικόνας βάσει URL
-            function getDefaultThumbnail(url) {
-                // Για YouTube βίντεο
-                if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    const videoId = extractYouTubeId(url);
-                    if (videoId) {
-                        return `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-                    }
-                }
-                
-                // Προεπιλεγμένη εικόνα
-                return 'https://via.placeholder.com/300x180.png?text=Video+Thumbnail';
-            }
-            
-            // Εξαγωγή YouTube ID από URL
-            function extractYouTubeId(url) {
-                const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-                const match = url.match(regExp);
-                return (match && match[7].length === 11) ? match[7] : null;
-            }
-            
-            // Εμφάνιση ειδοποιήσεων
-            function showNotification(message, type) {
-                notification.textContent = message;
-                notification.className = `notification notification-${type}`;
-                notification.style.display = 'block';
-                
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 5000);
-            }
-            
-            // Κοινοποίηση στο Twitter (για χρήση σε global scope)
-            window.shareToTwitter = function(videoIndex) {
-                const videos = getVideosFromStorage();
-                const video = videos[videoIndex];
-                
-                if (!video) {
-                    showNotification('Το βίντεο δεν βρέθηκε.', 'error');
-                    return;
-                }
-                
-                const tweetText = encodeURIComponent(`Δείτε αυτό το βίντεο: ${video.title} - ${video.url}`);
-                const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
-                
-                window.open(twitterUrl, '_blank', 'width=600,height=400');
-            };
         });
+
+        // Συνάρτηση για κοινοποίηση στο Twitter
+        function shareVideo(title, url) {
+            const tweetText = encodeURIComponent(`Δείτε αυτό το βίντεο: "${title}" ${url}`);
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}`;
+            window.open(twitterUrl, '_blank', 'width=600,height=400');
+        }
     </script>
 </body>
 </html>
