@@ -12,8 +12,10 @@
     <!-- Open Graph tags for Twitter sharing -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="FmD Videos">
-    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:card" content="player">
     <meta property="twitter:creator" content="@FranklyMaDear">
+    <meta property="twitter:player:width" content="300">
+    <meta property="twitter:player:height" content="533">
     
     <style>
         * {
@@ -158,10 +160,18 @@
             opacity: 0;
             pointer-events: none;
         }
+
+        .ad-container {
+            text-align: center;
+            padding: 10px;
+            background: #222;
+            margin: 5px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
-    <!-- Ad script -->
+    <!-- Main ad script -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async></script>
 
     <div class="header">
@@ -174,21 +184,23 @@
     </div>
 
     <script>
-        // Sample videos with proper PNG thumbnails
+        // Videos with individual embed pages
         const videos = [
             {
                 id: 1,
                 title: "My Creative Video 1",
                 videoUrl: "video1.mp4",
-                thumbnail: "thumbnail1.png", // Changed to PNG
-                embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=1"
+                thumbnail: "thumbnail1.png",
+                embedUrl: "https://blog.franklymadear.com/twitter/video1-embed.html",
+                twitterUrl: "https://blog.franklymadear.com/twitter/video1.html"
             },
             {
                 id: 2,
                 title: "My Creative Video 2", 
                 videoUrl: "video2.mp4",
-                thumbnail: "thumbnail2.png", // Changed to PNG
-                embedUrl: "https://blog.franklymadear.com/twitter/video-embed.html?video=2"
+                thumbnail: "thumbnail2.png",
+                embedUrl: "https://blog.franklymadear.com/twitter/video2-embed.html",
+                twitterUrl: "https://blog.franklymadear.com/twitter/video2.html"
             }
         ];
 
@@ -203,14 +215,13 @@
             });
         }
 
-        // Create video element HTML
+        // Create video element HTML with ad
         function createVideoElement(video) {
             const videoItem = document.createElement('div');
             videoItem.className = 'video-item';
             videoItem.innerHTML = `
                 <div class="video-container">
                     <div class="video-player">
-                        <!-- Use poster attribute to show first frame -->
                         <video id="video${video.id}" poster="${video.thumbnail}" preload="metadata" style="width:100%">
                             <source src="${video.videoUrl}" type="video/mp4">
                             Your browser does not support the video tag.
@@ -232,6 +243,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="ad-container">
+                    <!-- Ad for each video -->
+                    <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async><\/script>
                 </div>
             `;
             
@@ -255,35 +270,29 @@
                 playButton.style.display = 'flex';
             });
 
-            // Preload thumbnail to ensure it displays
+            // Preload thumbnail
             const img = new Image();
-            img.onload = function() {
-                console.log(`Thumbnail loaded: ${video.thumbnail}`);
-            };
-            img.onerror = function() {
-                console.error(`Failed to load thumbnail: ${video.thumbnail}`);
-            };
             img.src = video.thumbnail;
             
             return videoItem;
         }
 
-        // Share on Twitter with proper URL
+        // Share on Twitter with individual video URLs
         function shareOnTwitter(videoId) {
             const video = videos.find(v => v.id === videoId);
             if (!video) return;
             
-            // Use the actual video page URL, not embed URL
-            const pageUrl = "https://blog.franklymadear.com/twitter/video.html";
             const text = encodeURIComponent(`Check out "${video.title}" from FranklyMaDear! 🎬✨`);
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(pageUrl)}`;
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(video.twitterUrl)}`;
             window.open(twitterUrl, '_blank', 'width=600,height=400');
         }
 
-        // Copy video page link
+        // Copy individual video link
         function copyVideoLink(videoId) {
-            const pageUrl = "https://blog.franklymadear.com/twitter/video.html";
-            navigator.clipboard.writeText(pageUrl);
+            const video = videos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            navigator.clipboard.writeText(video.twitterUrl);
             alert('Video link copied!');
         }
 
