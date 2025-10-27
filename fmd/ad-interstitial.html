@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔴 Διαφήμιση</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #000;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #countdown {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #ff4444;
+        }
+        #continueBtn {
+            padding: 15px 30px;
+            background: #1DA1F2;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        #adContainer {
+            width: 100%;
+            max-width: 400px;
+            margin: 20px auto;
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h2>🔴 ΔΙΑΦΗΜΙΣΗ</h2>
+    <p>Η προβολή βίντεο θα ξεκινήσει σε:</p>
+    <div id="countdown">5</div>
+    
+    <div id="adContainer">
+        <!-- Εδώ θα φορτωθεί η διαφήμιση από το Monetag -->
+    </div>
+    
+    <button id="continueBtn" style="display:none;">Συνέχεια στο Βίντεο</button>
+
+    <script>
+        // Χρόνος αναμονής σε δευτερόλεπτα
+        const WAIT_TIME = 5;
+        let countdown = WAIT_TIME;
+        const countdownElement = document.getElementById('countdown');
+        const continueBtn = document.getElementById('continueBtn');
+        
+        // Φόρτωση διαφήμισης Monetag
+        function loadMonetagAd() {
+            var script = document.createElement('script');
+            script.src = 'https://otieu.com/4/10000601';
+            document.getElementById('adContainer').appendChild(script);
+        }
+        
+        // Countdown timer
+        const timer = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(timer);
+                showContinueButton();
+            }
+        }, 1000);
+        
+        function showContinueButton() {
+            countdownElement.style.display = 'none';
+            continueBtn.style.display = 'block';
+        }
+        
+        // Συνάρτηση μετάβασης στο βίντεο
+        function continueToVideo() {
+            window.location.href = 'video1-player.html';
+        }
+        
+        // Event listeners
+        continueBtn.addEventListener('click', continueToVideo);
+        
+        // Φόρτωση διαφήμισης αμέσως
+        loadMonetagAd();
+        
+        // Προαιρετικά: Αυτόματη συνέχεια μετά από παραπάνω χρόνο
+        setTimeout(() => {
+            if (countdown > 0) {
+                clearInterval(timer);
+                showContinueButton();
+            }
+        }, 8000); // Μέγιστος χρόνος αναμονής 8 δευτερόλεπτα
+    </script>
+</body>
+</html>
