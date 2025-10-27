@@ -16,78 +16,6 @@
         .video-player video { width: 100%; height: 100%; object-fit: cover; }
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
 
-        /* Ad Play Button */
-        .ad-play-button { 
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px; 
-            height: 100px; 
-            border-radius: 50%; 
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            border: none; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 25;
-            animation: pulseAd 2s infinite;
-        }
-        
-        @keyframes pulseAd {
-            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
-            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 12px 35px rgba(76, 175, 80, 0.7); }
-            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
-        }
-
-        .ad-play-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-        .ad-play-button:hover::before {
-            transform: translateX(100%);
-        }
-        .ad-play-button:hover {
-            transform: translate(-50%, -50%) scale(1.15);
-            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.6);
-        }
-        .ad-play-button:active {
-            transform: translate(-50%, -50%) scale(0.95);
-        }
-        
-        .ad-play-icon {
-            font-size: 2.5rem;
-            color: white;
-            margin-left: 8px;
-            font-weight: bold;
-        }
-
-        .ad-label {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #4CAF50;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
         /* Regular Play Button */
         .play-button-container { 
             display: flex; 
@@ -258,12 +186,6 @@
                         <source src="video1.mp4" type="video/mp4">
                     </video>
                     
-                    <!-- Ad Play Button -->
-                    <button class="ad-play-button" onclick="openAd('https://otieu.com/4/10000601')">
-                        <span class="ad-play-icon">▶</span>
-                        <div class="ad-label">AD</div>
-                    </button>
-                    
                     <div class="video-overlay">
                         <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
                         <div class="play-button-container">
@@ -313,12 +235,6 @@
                         <source src="video2.mp4" type="video/mp4">
                     </video>
                     
-                    <!-- Ad Play Button -->
-                    <button class="ad-play-button" onclick="openAd('https://otieu.com/4/10000601')">
-                        <span class="ad-play-icon">▶</span>
-                        <div class="ad-label">AD</div>
-                    </button>
-                    
                     <div class="video-overlay">
                         <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
                         <div class="play-button-container">
@@ -362,52 +278,29 @@
     </div>
 
     <script>
-        // Ad Functions
-        function openAd(adUrl) {
-            window.open(adUrl, '_blank');
-            // Hide ad after click
-            event.target.closest('.ad-play-button').style.display = 'none';
-        }
-
-        // Play video function - modified to handle ads
+        // Play video function
         function playVideo(button) {
             const videoPlayer = button.closest('.video-player');
             const video = videoPlayer.querySelector('video');
-            const adButton = videoPlayer.querySelector('.ad-play-button');
-            
-            // Hide ad when playing video
-            if (adButton) {
-                adButton.style.display = 'none';
-            }
             
             video.play();
             button.style.display = 'none';
         }
 
-        // Show ad when video pauses or ends
+        // Show play button when video pauses or ends
         document.querySelectorAll('video').forEach(video => {
             video.addEventListener('play', function() {
-                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
-                if (adButton) {
-                    adButton.style.display = 'none';
-                }
+                const playButton = this.parentElement.querySelector('.play-button');
+                playButton.style.display = 'none';
             });
             
             video.addEventListener('pause', function() {
-                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
                 const playButton = this.parentElement.querySelector('.play-button');
-                if (adButton && playButton.style.display === 'none') {
-                    adButton.style.display = 'flex';
-                }
                 playButton.style.display = 'flex';
             });
             
             video.addEventListener('ended', function() {
-                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
                 const playButton = this.parentElement.querySelector('.play-button');
-                if (adButton) {
-                    adButton.style.display = 'flex';
-                }
                 playButton.style.display = 'flex';
             });
         });
