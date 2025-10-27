@@ -49,7 +49,7 @@
         .video-container {
             position: relative;
             width: 100%;
-            padding-top: 177.78%;
+            padding-top: 177.78%; /* 9:16 aspect ratio */
         }
 
         .video-player {
@@ -163,6 +163,7 @@
     </style>
 </head>
 <body>
+    <!-- Ad script -->
     <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async></script>
 
     <div class="header">
@@ -171,10 +172,11 @@
     </div>
 
     <div class="video-gallery" id="videoGallery">
-        <!-- Videos will be added here dynamically -->
+        <!-- Videos will be loaded here -->
     </div>
 
     <script>
+        // Videos data - MAKE SURE THESE FILES EXIST!
         const videos = [
             {
                 id: 1,
@@ -192,6 +194,7 @@
             }
         ];
 
+        // Initialize the gallery
         function initGallery() {
             const gallery = document.getElementById('videoGallery');
             gallery.innerHTML = '';
@@ -202,14 +205,16 @@
             });
         }
 
+        // Create video element HTML
         function createVideoElement(video) {
             const videoItem = document.createElement('div');
             videoItem.className = 'video-item';
             videoItem.innerHTML = `
                 <div class="video-container">
                     <div class="video-player">
-                        <video id="video${video.id}" poster="${video.thumbnail}" preload="metadata">
+                        <video id="video${video.id}" poster="${video.thumbnail}" preload="metadata" style="width:100%">
                             <source src="${video.videoUrl}" type="video/mp4">
+                            Your browser does not support the video tag.
                         </video>
                         <div class="video-overlay">
                             <div class="video-title">${video.title}</div>
@@ -230,10 +235,12 @@
                     </div>
                 </div>
                 <div class="ad-container">
+                    <!-- Ad for each video -->
                     <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async><\/script>
                 </div>
             `;
             
+            // Add event listeners for this video
             const videoEl = videoItem.querySelector(`#video${video.id}`);
             const playButton = videoItem.querySelector(`#playButton${video.id}`);
             
@@ -244,16 +251,19 @@
             });
             
             videoEl.addEventListener('pause', function() {
+                videoEl.parentElement.parentElement.classList.remove('video-started');
                 playButton.style.display = 'flex';
             });
 
             videoEl.addEventListener('ended', function() {
+                videoEl.parentElement.parentElement.classList.remove('video-started');
                 playButton.style.display = 'flex';
             });
 
             return videoItem;
         }
 
+        // Share on Twitter
         function shareOnTwitter(videoId) {
             const video = videos.find(v => v.id === videoId);
             if (!video) return;
@@ -263,6 +273,7 @@
             window.open(twitterUrl, '_blank', 'width=600,height=400');
         }
 
+        // Copy video link
         function copyVideoLink(videoId) {
             const video = videos.find(v => v.id === videoId);
             if (!video) return;
@@ -271,7 +282,10 @@
             alert('Video link copied!');
         }
 
-        document.addEventListener('DOMContentLoaded', initGallery);
+        // Initialize the gallery when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initGallery();
+        });
     </script>
 </body>
 </html>
