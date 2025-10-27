@@ -108,7 +108,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .skip-ad {
-            margin-top: 15px;
+            margin-top: 20px;
             padding: 10px 20px;
             background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
@@ -122,12 +122,6 @@
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
-        .ad-countdown {
-            margin: 15px 0;
-            font-size: 1.2rem;
-            color: #4CAF50;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -140,7 +134,6 @@
                     <div style="color: #4CAF50; font-size: 2rem; margin-bottom: 15px;">✨</div>
                 </div>
             </div>
-            <div class="ad-countdown" id="adCountdown">3s</div>
             <button class="skip-ad" onclick="skipAd()" id="skipButton">Skip Ad</button>
         </div>
     </div>
@@ -160,7 +153,6 @@
 
     <script>
         let adTimer;
-        let countdown = 3;
         let isTwitterEmbed = false;
 
         // Check if embedded in Twitter
@@ -178,27 +170,6 @@
             (function(s){s.dataset.zone='10021779',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
         }
 
-        function startAdCountdown() {
-            const countdownElement = document.getElementById('adCountdown');
-            const skipButton = document.getElementById('skipButton');
-            countdown = 3;
-            
-            countdownElement.textContent = `${countdown}s`;
-            skipButton.disabled = true;
-            
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                countdownElement.textContent = `${countdown}s`;
-                
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    skipAd();
-                } else if (countdown <= 1) {
-                    skipButton.disabled = false;
-                }
-            }, 1000);
-        }
-
         function skipAd() {
             clearTimeout(adTimer);
             document.getElementById('adOverlay').style.display = 'none';
@@ -213,7 +184,8 @@
             if (isTwitterEmbed || Math.random() > 0.3) {
                 document.getElementById('adOverlay').style.display = 'flex';
                 loadAdScript();
-                startAdCountdown();
+                // Auto-skip after 3 seconds
+                adTimer = setTimeout(skipAd, 3000);
             } else {
                 // Direct play without ad sometimes
                 document.getElementById('mainVideo').play();
@@ -229,7 +201,8 @@
                 setTimeout(() => {
                     document.getElementById('adOverlay').style.display = 'flex';
                     loadAdScript();
-                    startAdCountdown();
+                    // Auto-skip after 3 seconds
+                    adTimer = setTimeout(skipAd, 3000);
                 }, 500);
             }
         });
