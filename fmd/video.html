@@ -15,7 +15,7 @@
         .video-player video { width: 100%; height: 100%; object-fit: cover; }
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
         
-        /* Play Button with Ad */
+        /* Play Button */
         .play-button-container { 
             display: flex; 
             justify-content: center; 
@@ -164,29 +164,9 @@
         .share-icon {
             font-size: 1.2rem;
         }
-
-        /* Ad Badge on Play Button */
-        .ad-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: linear-gradient(135deg, #ffd700, #ff6b00);
-            color: #000;
-            font-size: 0.7rem;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-weight: bold;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
     </style>
 </head>
 <body>
-    <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async></script>
-
     <div class="header">
         <h1>✨FmD🎬</h1>
         <p> Videos by FmD </p>
@@ -201,11 +181,10 @@
                         <source src="video1.mp4" type="video/mp4">
                     </video>
                     <div class="video-overlay">
-                        <div class="video-title" style="visibility: hidden;">My Creative Video 1</div>
+                        <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
                         <div class="play-button-container">
-                            <button class="play-button" onclick="playVideo(this, 'https://otieu.com/4/10000601')">
+                            <button class="play-button" onclick="playVideo(this)">
                                 <span class="play-icon">▶</span>
-                                <div class="ad-badge">AD</div>
                             </button>
                         </div>
                         <div class="social-sharing">
@@ -258,11 +237,10 @@
                         <source src="video2.mp4" type="video/mp4">
                     </video>
                     <div class="video-overlay">
-                        <div class="video-title" style="visibility: hidden;">My Creative Video 2</div>
+                        <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
                         <div class="play-button-container">
-                            <button class="play-button" onclick="playVideo(this, 'https://otieu.com/4/10000601')">
+                            <button class="play-button" onclick="playVideo(this)">
                                 <span class="play-icon">▶</span>
-                                <div class="ad-badge">AD</div>
                             </button>
                         </div>
                         <div class="social-sharing">
@@ -309,35 +287,11 @@
     </div>
 
     <script>
-        // Play video with ad integration
-        function playVideo(button, adUrl) {
+        // Play video function
+        function playVideo(button) {
             const video = button.closest('.video-player').querySelector('video');
-            
-            // Load and show ad
-            loadMonetagAd(adUrl);
-            
-            // Play video after a short delay
-            setTimeout(() => {
-                video.play();
-                button.style.display = 'none';
-            }, 100);
-        }
-
-        // Load Monetag ad
-        function loadMonetagAd(adUrl) {
-            // Remove existing ad script if any
-            const existingScript = document.querySelector('script[src="' + adUrl + '"]');
-            if (existingScript) {
-                existingScript.remove();
-            }
-            
-            // Create new ad script
-            const script = document.createElement('script');
-            script.src = adUrl;
-            script.async = true;
-            document.head.appendChild(script);
-            
-            console.log('Monetag ad loaded:', adUrl);
+            video.play();
+            button.style.display = 'none';
         }
 
         // Add video event listeners
