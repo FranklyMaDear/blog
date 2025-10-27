@@ -31,79 +31,41 @@
         .video-player video { width: 100%; height: 100%; object-fit: cover; }
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
 
-        /* Ad Play Button */
-        .ad-play-button { 
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px; 
-            height: 100px; 
-            border-radius: 50%; 
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            border: none; 
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 25;
-            animation: pulseAd 2s infinite;
-        }
-        
-        @keyframes pulseAd {
-            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
-            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 12px 35px rgba(76, 175, 80, 0.7); }
-            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
-        }
-
-        .ad-play-button::before {
-            content: '';
-            position: absolute;
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-        .ad-play-button:hover::before {
-            transform: translateX(100%);
+        .ad-content {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .ad-play-button:hover {
-            transform: translate(-50%, -50%) scale(1.15);
-            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.6);
-        }
-        .ad-play-button:active {
-            transform: translate(-50%, -50%) scale(0.95);
-        }
-        
-        .ad-play-icon {
-            font-size: 2.5rem;
+        .skip-ad {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff6b6b;
             color: white;
-            margin-left: 8px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
             font-weight: bold;
         }
 
-        .ad-label {
-            position: absolute;
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: #4CAF50;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-
-        /* Regular Play Button */
+        /* Play Button */
         .play-button-container { 
             display: flex; 
             justify-content: center; 
@@ -124,30 +86,9 @@
             justify-content: center;
             box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 20;
-        }
-        .play-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-        .play-button:hover::before {
-            transform: translateX(100%);
         }
         .play-button:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
-        }
-        .play-button:active {
-            transform: scale(0.95);
         }
         .play-icon {
             font-size: 2rem;
@@ -155,14 +96,12 @@
             margin-left: 4px;
         }
 
-        /* Enhanced Share Button */
+        /* Share Button */
         .social-sharing { 
             display: flex; 
             gap: 10px; 
             justify-content: center; 
             flex-wrap: wrap; 
-            position: relative;
-            z-index: 20;
         }
         .btn { 
             padding: 12px 20px; 
@@ -170,111 +109,27 @@
             border-radius: 25px; 
             cursor: pointer; 
             font-weight: bold;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-share { 
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white; 
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-        .btn-share:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-        .btn-share::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s ease;
-        }
-        .btn-share:hover::before {
-            left: 100%;
-        }
-
-        /* Enhanced Share Menu */
-        .share-menu { 
-            display: none; 
-            position: absolute; 
-            bottom: 70px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            background: rgba(34, 34, 34, 0.95); 
-            backdrop-filter: blur(10px);
-            border-radius: 15px; 
-            padding: 15px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            z-index: 21;
-            border: 1px solid rgba(255,255,255,0.1);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateX(-50%) translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
-        }
-        .share-menu.active { display: block; }
-        .share-options { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 12px; 
-        }
-        .share-option { 
-            background: linear-gradient(135deg, #444, #333);
-            border: none; 
-            color: white; 
-            padding: 10px 15px; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 0.8rem; 
-            text-align: center; 
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            min-width: 70px;
-        }
-        .share-option:hover { 
-            background: linear-gradient(135deg, #555, #444);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .share-option:active {
-            transform: translateY(0);
-        }
-        .share-icon {
-            font-size: 1.2rem;
-        }
-
-        /* Twitter-specific styles */
-        .twitter-cta {
-            text-align: center;
-            padding: 10px;
-            background: linear-gradient(135deg, #1DA1F2, #0d8bd9);
-            margin: 10px 20px;
-            border-radius: 10px;
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
+    <!-- Ad Overlay -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-content">
+            <h2>🎬 Support the Creator!</h2>
+            <p>Watch a quick ad to unlock this amazing video</p>
+            <div style="margin: 20px 0; min-height: 250px;" id="adContainer">
+                <!-- Ad will load here -->
+            </div>
+            <button class="skip-ad" onclick="skipAd()">Skip Ad</button>
+        </div>
+    </div>
+
     <div class="header">
         <h1>✨FmD🎬</h1>
         <p>Amazing Creative Videos - Support the Creator!</p>
-        <div class="twitter-cta">
-            🐦 Share on Twitter to support more content!
-        </div>
     </div>
 
     <div class="video-gallery">
@@ -286,47 +141,16 @@
                         <source src="video1.mp4" type="video/mp4">
                     </video>
                     
-                    <!-- Ad Play Button -->
-                    <button class="ad-play-button" onclick="openAd()">
-                        <span class="ad-play-icon">▶</span>
-                        <div class="ad-label">Support Creator</div>
-                    </button>
-                    
                     <div class="video-overlay">
-                        <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
                         <div class="play-button-container">
-                            <button class="play-button" onclick="playVideo(this)">
+                            <button class="play-button" onclick="showAdAndPlay(this)">
                                 <span class="play-icon">▶</span>
                             </button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="toggleShareMenu(this)">
-                                📤 Share
+                            <button class="btn" onclick="shareToTwitter()">
+                                🐦 Share on Twitter
                             </button>
-                            <div class="share-menu">
-                                <div class="share-options">
-                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video1.html', '🎬 Check out this amazing creative video from FranklyMaDear! Support the creator! ✨')">
-                                        <span class="share-icon">📘</span>
-                                        Facebook
-                                    </button>
-                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video1.html', '🎬 Amazing creative video! Watch and support the creator @FranklyMaDear ✨')">
-                                        <span class="share-icon">🐦</span>
-                                        X/Twitter
-                                    </button>
-                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video1.html', '🎬 Check out this amazing creative video from FranklyMaDear! Support the creator! ✨')">
-                                        <span class="share-icon">📱</span>
-                                        Telegram
-                                    </button>
-                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video1.html', '🎬 Check out this amazing creative video from FranklyMaDear! Support the creator! ✨')">
-                                        <span class="share-icon">💚</span>
-                                        WhatsApp
-                                    </button>
-                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video1.html')">
-                                        <span class="share-icon">🔗</span>
-                                        Copy Link
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -341,47 +165,16 @@
                         <source src="video2.mp4" type="video/mp4">
                     </video>
                     
-                    <!-- Ad Play Button -->
-                    <button class="ad-play-button" onclick="openAd()">
-                        <span class="ad-play-icon">▶</span>
-                        <div class="ad-label">Support Creator</div>
-                    </button>
-                    
                     <div class="video-overlay">
-                        <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
                         <div class="play-button-container">
-                            <button class="play-button" onclick="playVideo(this)">
+                            <button class="play-button" onclick="showAdAndPlay(this)">
                                 <span class="play-icon">▶</span>
                             </button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="toggleShareMenu(this)">
-                                📤 Share
+                            <button class="btn" onclick="shareToTwitter()">
+                                🐦 Share on Twitter
                             </button>
-                            <div class="share-menu">
-                                <div class="share-options">
-                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video2.html', '🎬 Check out this amazing creative video from FranklyMaDear! Support the creator! ✨')">
-                                        <span class="share-icon">📘</span>
-                                        Facebook
-                                    </button>
-                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video2.html', '🎬 Amazing creative video! Watch and support the creator @FranklyMaDear ✨')">
-                                        <span class="share-icon">🐦</span>
-                                        X/Twitter
-                                    </button>
-                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video2.html', '🎬 Check out this amazing creative video from FranklyMaDear! Support the creator! ✨')">
-                                        <span class="share-icon">📱</span>
-                                        Telegram
-                                    </button>
-                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video2.html', '🎬 Check out this amazing creative video from FranklyMaDear! Support the creator! ✨')">
-                                        <span class="share-icon">💚</span>
-                                        WhatsApp
-                                    </button>
-                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video2.html')">
-                                        <span class="share-icon">🔗</span>
-                                        Copy Link
-                                    </button>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -390,191 +183,61 @@
     </div>
 
     <script>
-        // Ad Functions with new ad script
-        function openAd() {
-            // Load the new ad script
+        let currentVideoButton = null;
+
+        // Show ad and then play video
+        function showAdAndPlay(button) {
+            currentVideoButton = button;
+            showAd();
+        }
+
+        function showAd() {
+            const adOverlay = document.getElementById('adOverlay');
+            adOverlay.style.display = 'flex';
+            
+            // Load the ad script
             (function(s){
                 s.dataset.zone='10052066',
                 s.src='https://groleegni.net/vignette.min.js'
-            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-            
-            // Track ad click
-            console.log('Ad clicked - revenue generated');
-            
-            // Hide ad after click but show message
-            const adButton = event.target.closest('.ad-play-button');
-            adButton.innerHTML = '<div style="color: white; text-align: center;">✅ Thank you!<br><small>Supporting creator</small></div>';
-            setTimeout(() => {
-                adButton.style.display = 'none';
-            }, 2000);
+            })(document.getElementById('adContainer').appendChild(document.createElement('script')));
         }
 
-        // Play video function - modified to handle ads
-        function playVideo(button) {
-            const videoPlayer = button.closest('.video-player');
-            const video = videoPlayer.querySelector('video');
-            const adButton = videoPlayer.querySelector('.ad-play-button');
+        function skipAd() {
+            const adOverlay = document.getElementById('adOverlay');
+            adOverlay.style.display = 'none';
             
-            // Show ad reminder if they haven't clicked it
-            if (adButton && adButton.style.display !== 'none') {
-                if(confirm('Support the creator by watching a quick ad first? Cancel to play video directly.')) {
-                    adButton.click();
-                    return;
-                }
+            // Play the video after ad
+            if (currentVideoButton) {
+                const videoPlayer = currentVideoButton.closest('.video-player');
+                const video = videoPlayer.querySelector('video');
+                video.play();
+                currentVideoButton.style.display = 'none';
             }
-            
-            video.play();
-            button.style.display = 'none';
         }
 
-        // Show ad when video pauses or ends
+        // Auto-show ad for Twitter visitors
+        if (document.referrer.includes('twitter.com') || document.referrer.includes('t.co')) {
+            // Show ad immediately for Twitter visitors
+            setTimeout(showAd, 1000);
+        }
+
+        // Video event listeners
         document.querySelectorAll('video').forEach(video => {
             video.addEventListener('play', function() {
-                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
-                if (adButton) {
-                    adButton.style.display = 'none';
-                }
-            });
-            
-            video.addEventListener('pause', function() {
-                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
                 const playButton = this.parentElement.querySelector('.play-button');
-                if (adButton && playButton.style.display === 'none') {
-                    adButton.style.display = 'flex';
-                }
-                playButton.style.display = 'flex';
+                playButton.style.display = 'none';
             });
             
             video.addEventListener('ended', function() {
-                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
                 const playButton = this.parentElement.querySelector('.play-button');
-                if (adButton) {
-                    adButton.style.display = 'flex';
-                    // Reset ad button if it was clicked
-                    adButton.innerHTML = '<span class="ad-play-icon">▶</span><div class="ad-label">Support Creator</div>';
-                }
                 playButton.style.display = 'flex';
-                
-                // Show thank you message
-                showThankYouMessage();
             });
         });
 
-        // Fixed Share functionality
-        function toggleShareMenu(button) {
-            // Close all other share menus first
-            document.querySelectorAll('.share-menu').forEach(menu => {
-                if (menu !== button.nextElementSibling) {
-                    menu.classList.remove('active');
-                }
-            });
-            
-            // Toggle current share menu
-            const shareMenu = button.nextElementSibling;
-            shareMenu.classList.toggle('active');
-            
-            // Prevent the click from closing the menu immediately
-            event.stopPropagation();
-        }
-
-        function shareTo(platform, url, text) {
-            const encodedUrl = encodeURIComponent(url);
-            const encodedText = encodeURIComponent(text);
-            
-            let shareUrl = '';
-            
-            switch(platform) {
-                case 'facebook':
-                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
-                    break;
-                case 'twitter':
-                    shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
-                    break;
-                case 'telegram':
-                    shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
-                    break;
-                case 'whatsapp':
-                    shareUrl = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`;
-                    break;
-            }
-            
-            if (shareUrl) {
-                window.open(shareUrl, '_blank', 'width=600,height=400');
-            }
-            
-            // Track sharing
-            console.log(`Shared to ${platform}: ${url}`);
-            
-            // Close the share menu
-            document.querySelectorAll('.share-menu').forEach(menu => {
-                menu.classList.remove('active');
-            });
-        }
-
-        function copyLink(url) {
-            navigator.clipboard.writeText(url).then(() => {
-                alert('✅ Link copied to clipboard! Share it on Twitter to support the creator! 🐦');
-            }).catch(() => {
-                // Fallback for older browsers
-                const textArea = document.createElement('textarea');
-                textArea.value = url;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert('✅ Link copied to clipboard! Share it on Twitter to support the creator! 🐦');
-            });
-            
-            // Close the share menu
-            document.querySelectorAll('.share-menu').forEach(menu => {
-                menu.classList.remove('active');
-            });
-        }
-
-        // Close share menus when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.share-menu') && !event.target.closest('.btn-share')) {
-                document.querySelectorAll('.share-menu').forEach(menu => {
-                    menu.classList.remove('active');
-                });
-            }
-        });
-
-        // Prevent video click from triggering share menu close
-        document.querySelectorAll('.video-player').forEach(player => {
-            player.addEventListener('click', function(event) {
-                event.stopPropagation();
-            });
-        });
-
-        // Thank you message after video ends
-        function showThankYouMessage() {
-            const message = document.createElement('div');
-            message.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                background: rgba(0,0,0,0.9);
-                color: white;
-                padding: 20px;
-                border-radius: 10px;
-                text-align: center;
-                z-index: 1000;
-                border: 2px solid #4CAF50;
-            `;
-            message.innerHTML = `
-                <h3>🎬 Thank you for watching!</h3>
-                <p>Support more content by sharing on Twitter! 🐦</p>
-                <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 15px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">OK</button>
-            `;
-            document.body.appendChild(message);
-        }
-
-        // Auto-track Twitter referrals
-        if (document.referrer.includes('twitter.com') || document.referrer.includes('t.co')) {
-            console.log('Visitor from Twitter - potential for virality!');
-            // You can add special treatment for Twitter visitors here
+        function shareToTwitter() {
+            const url = encodeURIComponent('https://blog.franklymadear.com/fmd/video.html');
+            const text = encodeURIComponent('🎬 Check out these amazing creative videos from FranklyMaDear! Support the creator! ✨');
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
         }
     </script>
 </body>
