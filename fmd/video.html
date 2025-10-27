@@ -16,10 +16,14 @@
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
         .video-title { color: white; font-size: 1rem; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
         .play-button { width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; cursor: pointer; }
-        .social-sharing { display: flex; gap: 10px; justify-content: center; }
+        .social-sharing { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .btn { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; }
-        .btn-twitter { background: #1DA1F2; color: white; }
         .btn-share { background: rgba(255,255,255,0.9); color: #333; }
+        .share-menu { display: none; position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); background: #222; border-radius: 10px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 10; }
+        .share-menu.active { display: block; }
+        .share-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .share-option { background: #333; border: none; color: white; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; text-align: center; }
+        .share-option:hover { background: #444; }
     </style>
 </head>
 <body>
@@ -39,13 +43,23 @@
                         <source src="video1.mp4" type="video/mp4">
                     </video>
                     <div class="video-overlay">
-                        <div class="video-title">My Creative Video 1</div>
+                        <div class="video-title" style="visibility: hidden;">My Creative Video 1</div>
                         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                             <button class="play-button" onclick="this.parentElement.parentElement.parentElement.querySelector('video').play(); this.style.display='none'">▶️</button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="navigator.clipboard.writeText('https://blog.franklymadear.com/fmd/video1.html'); alert('Link copied!')">📋 Copy Link</button>
-                            <button class="btn btn-twitter" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('Check out \"My Creative Video 1\" from FranklyMaDear! 🎬✨') + '&url=' + encodeURIComponent('https://blog.franklymadear.com/fmd/video1.html'), '_blank')">🐦 Twitter</button>
+                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">📤 Share</button>
+                            <div class="share-menu">
+                                <div class="share-options">
+                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Facebook</button>
+                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">X</button>
+                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Telegram</button>
+                                    <button class="share-option" onclick="shareTo('discord', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Discord</button>
+                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">WhatsApp</button>
+                                    <button class="share-option" onclick="shareTo('viber', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Viber</button>
+                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video1.html')">Copy Link</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,13 +74,23 @@
                         <source src="video2.mp4" type="video/mp4">
                     </video>
                     <div class="video-overlay">
-                        <div class="video-title">My Creative Video 2</div>
+                        <div class="video-title" style="visibility: hidden;">My Creative Video 2</div>
                         <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
                             <button class="play-button" onclick="this.parentElement.parentElement.parentElement.querySelector('video').play(); this.style.display='none'">▶️</button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="navigator.clipboard.writeText('https://blog.franklymadear.com/fmd/video2.html'); alert('Link copied!')">📋 Copy Link</button>
-                            <button class="btn btn-twitter" onclick="window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('Check out \"My Creative Video 2\" from FranklyMaDear! 🎬✨') + '&url=' + encodeURIComponent('https://blog.franklymadear.com/fmd/video2.html'), '_blank')">🐦 Twitter</button>
+                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">📤 Share</button>
+                            <div class="share-menu">
+                                <div class="share-options">
+                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Facebook</button>
+                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">X</button>
+                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Telegram</button>
+                                    <button class="share-option" onclick="shareTo('discord', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Discord</button>
+                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">WhatsApp</button>
+                                    <button class="share-option" onclick="shareTo('viber', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Viber</button>
+                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video2.html')">Copy Link</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,6 +112,72 @@
                 this.parentElement.classList.remove('video-started');
                 this.parentElement.querySelector('.play-button').style.display = 'flex';
             });
+        });
+
+        // Share functionality
+        function toggleShareMenu(button, url, text) {
+            // Close all other share menus
+            document.querySelectorAll('.share-menu').forEach(menu => {
+                menu.classList.remove('active');
+            });
+            
+            // Toggle current share menu
+            const shareMenu = button.nextElementSibling;
+            shareMenu.classList.toggle('active');
+        }
+
+        function shareTo(platform, url, text) {
+            const encodedUrl = encodeURIComponent(url);
+            const encodedText = encodeURIComponent(text);
+            
+            switch(platform) {
+                case 'facebook':
+                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank');
+                    break;
+                case 'twitter':
+                    window.open(`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`, '_blank');
+                    break;
+                case 'telegram':
+                    window.open(`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`, '_blank');
+                    break;
+                case 'discord':
+                    // Discord doesn't have a direct share URL, so we'll copy to clipboard
+                    navigator.clipboard.writeText(`${text} ${url}`).then(() => {
+                        alert('Content copied! You can now paste it in Discord.');
+                    });
+                    break;
+                case 'whatsapp':
+                    window.open(`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`, '_blank');
+                    break;
+                case 'viber':
+                    window.open(`viber://forward?text=${encodedText}%20${encodedUrl}`, '_blank');
+                    break;
+            }
+            
+            // Close the share menu
+            document.querySelectorAll('.share-menu').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+
+        function copyLink(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+            });
+            
+            // Close the share menu
+            document.querySelectorAll('.share-menu').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+
+        // Close share menus when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.social-sharing')) {
+                document.querySelectorAll('.share-menu').forEach(menu => {
+                    menu.classList.remove('active');
+                });
+            }
         });
     </script>
 </body>
