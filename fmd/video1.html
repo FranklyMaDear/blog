@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FranklyMaDear Video</title>
+    <title>Creative Video</title>
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@FranklyMaDear">
-    <meta name="twitter:creator" content="@FranklyMaDear">
-    <meta name="twitter:title" content="FranklyMaDear">
-    <meta name="twitter:description" content="🎬 Creative Video">
+    <meta name="twitter:title" content="Creative Video">
+    <meta name="twitter:description" content="🎬 Watch this amazing video">
     <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
     <meta name="twitter:image:alt" content="Creative Video">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="FranklyMaDear">
-    <meta property="og:description" content="🎬 Creative Video">
+    <meta property="og:title" content="Creative Video">
+    <meta property="og:description" content="🎬 Watch this amazing video">
     <meta property="og:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
     <meta property="og:url" content="https://blog.franklymadear.com/fmd/video1.html">
-    <meta property="og:site_name" content="FranklyMaDear">
     
     <style>
         * {
@@ -69,115 +67,47 @@
             justify-content: center;
             font-size: 2rem;
         }
-        .ad-overlay {
+        .ad-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 2000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-        .close-ad {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        .share-buttons {
-            position: fixed;
-            bottom: 20px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-        }
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
+    <!-- Monetag Ad -->
+    <div class="ad-container">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '10021790',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="https://otieu.com/4/10021790"></script>
+    </div>
+
     <div class="video-container">
-        <video poster="thumbnail1.png">
+        <video controls autoplay poster="thumbnail1.png">
             <source src="video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         
         <div class="play-overlay">
-            <button class="play-button" onclick="showAd()">
+            <button class="play-button" onclick="playVideo()">
                 ▶️
             </button>
         </div>
     </div>
 
-    <!-- Ad Overlay -->
-    <div class="ad-overlay" id="adOverlay">
-        <button class="close-ad" onclick="closeAd()">×</button>
-        <h3 style="margin-bottom: 20px; color: white;">Advertisement</h3>
-        <!-- Monetag Ad -->
-        <div>
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '10021790',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="https://otieu.com/4/10021790"></script>
-        </div>
-        <button class="btn" onclick="closeAdAndPlay()" style="margin-top: 20px;">
-            Continue to Video
-        </button>
-    </div>
-    
-    <div class="share-buttons">
-        <button class="btn" onclick="copyVideoLink()">
-            <span>📋</span> Copy Link
-        </button>
-    </div>
-
     <script>
-        let adShown = false;
-
-        function showAd() {
-            if (!adShown) {
-                document.getElementById('adOverlay').style.display = 'flex';
-                adShown = true;
-            } else {
-                playVideo();
-            }
-        }
-
-        function closeAd() {
-            document.getElementById('adOverlay').style.display = 'none';
-        }
-
-        function closeAdAndPlay() {
-            document.getElementById('adOverlay').style.display = 'none';
-            playVideo();
-        }
-
         function playVideo() {
             const video = document.querySelector('video');
             const overlay = document.querySelector('.play-overlay');
@@ -185,11 +115,13 @@
             overlay.style.display = 'none';
         }
 
-        function copyVideoLink() {
-            const videoLink = 'https://blog.franklymadear.com/fmd/video1.html';
-            navigator.clipboard.writeText(videoLink);
-            alert('Video link copied to clipboard!');
-        }
+        // Auto-play when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.querySelector('video');
+            video.play().catch(function(error) {
+                console.log('Auto-play was prevented');
+            });
+        });
 
         // Hide play overlay when video starts playing
         document.querySelector('video').addEventListener('play', function() {
@@ -199,7 +131,6 @@
         // Show play overlay when video ends
         document.querySelector('video').addEventListener('ended', function() {
             document.querySelector('.play-overlay').style.display = 'block';
-            adShown = false; // Reset ad flag for next play
         });
     </script>
 </body>
