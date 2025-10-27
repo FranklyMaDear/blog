@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative Video</title>
+    <title>Creative Video - Support the Creator | FmD</title>
     
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
+    <!-- Enhanced Twitter Card -->
+    <meta name="twitter:card" content="player">
     <meta name="twitter:site" content="@FranklyMaDear">
-    <meta name="twitter:title" content="Creative Video">
-    <meta name="twitter:description" content="🎬 Watch this amazing video">
+    <meta name="twitter:title" content="🎬 Amazing Creative Video - Watch Now!">
+    <meta name="twitter:description" content="Watch this incredible creative video and support the creator with a quick ad!">
     <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
-    <meta name="twitter:image:alt" content="Creative Video">
+    <meta name="twitter:image:alt" content="Creative Video Preview">
 
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Creative Video">
-    <meta property="og:description" content="🎬 Watch this amazing video">
+    <!-- Enhanced Open Graph -->
+    <meta property="og:type" content="video.other">
+    <meta property="og:title" content="Creative Video - FranklyMaDear">
+    <meta property="og:description" content="🎬 Watch this amazing creative video and support the creator!">
     <meta property="og:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
     <meta property="og:url" content="https://blog.franklymadear.com/fmd/video1.html">
     
@@ -67,11 +67,78 @@
             justify-content: center;
             font-size: 2rem;
         }
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+        .ad-content {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+        }
+        .skip-ad {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .support-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 999;
+        }
     </style>
 </head>
 <body>
+    <!-- Ad Overlay -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-content">
+            <h3>🎬 Support the Creator!</h3>
+            <p>Watch a quick ad to help create more amazing content</p>
+            <div style="margin: 15px 0;">
+                <!-- Your Monetag Ad -->
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : '10021790',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="https://otieu.com/4/10021790"></script>
+            </div>
+            <button class="skip-ad" onclick="skipAd()">Skip Ad (5s)</button>
+        </div>
+    </div>
+
+    <div class="support-message">
+        Support creator by watching ads! 🎬
+    </div>
+
     <div class="video-container">
-        <video controls autoplay poster="thumbnail1.png">
+        <video controls autoplay poster="thumbnail1.png" id="mainVideo">
             <source src="video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -84,19 +151,28 @@
     </div>
 
     <script>
-        function playVideo() {
-            const video = document.querySelector('video');
-            const overlay = document.querySelector('.play-overlay');
-            video.play();
-            overlay.style.display = 'none';
+        let adTimer;
+        
+        function skipAd() {
+            clearTimeout(adTimer);
+            document.getElementById('adOverlay').style.display = 'none';
+            document.getElementById('mainVideo').play();
         }
 
-        // Auto-play when page loads
+        function playVideo() {
+            // Show ad first
+            document.getElementById('adOverlay').style.display = 'flex';
+            
+            // Auto-skip ad after 5 seconds
+            adTimer = setTimeout(skipAd, 5000);
+        }
+
+        // Auto-play when page loads but show ad first
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.querySelector('video');
-            video.play().catch(function(error) {
-                console.log('Auto-play was prevented');
-            });
+            // Show ad overlay instead of auto-playing
+            document.getElementById('adOverlay').style.display = 'flex';
+            adTimer = setTimeout(skipAd, 5000);
         });
 
         // Hide play overlay when video starts playing
@@ -107,6 +183,15 @@
         // Show play overlay when video ends
         document.querySelector('video').addEventListener('ended', function() {
             document.querySelector('.play-overlay').style.display = 'block';
+            // Show thank you message
+            alert('🎬 Thank you for watching! Share on Twitter to support more content! 🐦');
+        });
+
+        // Track video engagement
+        document.querySelector('video').addEventListener('timeupdate', function() {
+            if (this.currentTime > 10) {
+                console.log('User watched more than 10 seconds - good engagement');
+            }
         });
     </script>
 </body>
