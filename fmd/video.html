@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨FmD🎬</title>
     
-    <!-- Ad Script from otieu.com -->
-    <script type="text/javascript" src="https://otieu.com/4/10000601"></script>
-    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; color: white; font-family: Arial; }
@@ -19,83 +16,86 @@
         .video-player video { width: 100%; height: 100%; object-fit: cover; }
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
 
-        /* Video Ad Overlay */
-        .video-ad-overlay {
+        /* Ad Play Button */
+        .ad-play-button { 
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #ff6b6b;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            z-index: 20;
-            backdrop-filter: blur(10px);
-            min-width: 250px;
-            cursor: pointer;
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            border: none; 
+            cursor: pointer; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 25;
             animation: pulseAd 2s infinite;
         }
         
         @keyframes pulseAd {
-            0% { border-color: #ff6b6b; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
-            50% { border-color: #ff8e8e; box-shadow: 0 0 20px rgba(255, 107, 107, 0.8); }
-            100% { border-color: #ff6b6b; box-shadow: 0 0 10px rgba(255, 107, 107, 0.5); }
+            0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
+            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 12px 35px rgba(76, 175, 80, 0.7); }
+            100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
         }
 
-        .ad-content {
-            color: white;
-        }
-
-        .ad-title {
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #ff6b6b;
-        }
-
-        .ad-description {
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            opacity: 0.9;
-        }
-
-        .ad-button {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .ad-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
-        }
-
-        .close-ad {
+        .ad-play-button::before {
+            content: '';
             position: absolute;
-            top: 5px;
-            right: 10px;
-            background: none;
-            border: none;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        .ad-play-button:hover::before {
+            transform: translateX(100%);
+        }
+        .ad-play-button:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+            box-shadow: 0 15px 40px rgba(76, 175, 80, 0.6);
+        }
+        .ad-play-button:active {
+            transform: translate(-50%, -50%) scale(0.95);
+        }
+        
+        .ad-play-icon {
+            font-size: 2.5rem;
             color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            z-index: 21;
+            margin-left: 8px;
+            font-weight: bold;
         }
 
-        /* Play Button */
+        .ad-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #4CAF50;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Regular Play Button */
         .play-button-container { 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             height: 100%;
             position: relative;
-            z-index: 10;
+            z-index: 20;
         }
         .play-button { 
             width: 80px; 
@@ -111,7 +111,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            z-index: 10;
+            z-index: 20;
         }
         .play-button::before {
             content: '';
@@ -147,7 +147,7 @@
             justify-content: center; 
             flex-wrap: wrap; 
             position: relative;
-            z-index: 10;
+            z-index: 20;
         }
         .btn { 
             padding: 12px 20px; 
@@ -194,7 +194,7 @@
             border-radius: 15px; 
             padding: 15px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-            z-index: 11;
+            z-index: 21;
             border: 1px solid rgba(255,255,255,0.1);
             animation: slideUp 0.3s ease;
         }
@@ -258,15 +258,11 @@
                         <source src="video1.mp4" type="video/mp4">
                     </video>
                     
-                    <!-- Ad Overlay for Video 1 -->
-                    <div class="video-ad-overlay" id="adOverlay1">
-                        <button class="close-ad" onclick="closeAd('adOverlay1')">×</button>
-                        <div class="ad-content" onclick="openAd('https://otieu.com/4/10000601')">
-                            <div class="ad-title">📢 Advertisment</div>
-                            <div class="ad-description">Click to discover amazing content!</div>
-                            <button class="ad-button">Click Here</button>
-                        </div>
-                    </div>
+                    <!-- Ad Play Button -->
+                    <button class="ad-play-button" onclick="openAd('https://otieu.com/4/10000601')">
+                        <span class="ad-play-icon">▶</span>
+                        <div class="ad-label">AD</div>
+                    </button>
                     
                     <div class="video-overlay">
                         <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
@@ -276,11 +272,32 @@
                             </button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                            <button class="btn btn-share" onclick="toggleShareMenu(this)">
                                 📤 Share
                             </button>
                             <div class="share-menu">
-                                <!-- Share options remain the same -->
+                                <div class="share-options">
+                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📘</span>
+                                        Facebook
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">🐦</span>
+                                        X
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📱</span>
+                                        Telegram
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💚</span>
+                                        WhatsApp
+                                    </button>
+                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video1.html')">
+                                        <span class="share-icon">🔗</span>
+                                        Copy Link
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -296,15 +313,11 @@
                         <source src="video2.mp4" type="video/mp4">
                     </video>
                     
-                    <!-- Ad Overlay for Video 2 -->
-                    <div class="video-ad-overlay" id="adOverlay2">
-                        <button class="close-ad" onclick="closeAd('adOverlay2')">×</button>
-                        <div class="ad-content" onclick="openAd('https://otieu.com/4/10000601')">
-                            <div class="ad-title">📢 Advertisment</div>
-                            <div class="ad-description">Click to discover amazing content!</div>
-                            <button class="ad-button">Click Here</button>
-                        </div>
-                    </div>
+                    <!-- Ad Play Button -->
+                    <button class="ad-play-button" onclick="openAd('https://otieu.com/4/10000601')">
+                        <span class="ad-play-icon">▶</span>
+                        <div class="ad-label">AD</div>
+                    </button>
                     
                     <div class="video-overlay">
                         <div class="video-title" style="visibility: hidden;">✨FmD🎬</div>
@@ -314,11 +327,32 @@
                             </button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                            <button class="btn btn-share" onclick="toggleShareMenu(this)">
                                 📤 Share
                             </button>
                             <div class="share-menu">
-                                <!-- Share options remain the same -->
+                                <div class="share-options">
+                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📘</span>
+                                        Facebook
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">🐦</span>
+                                        X
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📱</span>
+                                        Telegram
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this amazing video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💚</span>
+                                        WhatsApp
+                                    </button>
+                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video2.html')">
+                                        <span class="share-icon">🔗</span>
+                                        Copy Link
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -331,21 +365,19 @@
         // Ad Functions
         function openAd(adUrl) {
             window.open(adUrl, '_blank');
-        }
-
-        function closeAd(adId) {
-            document.getElementById(adId).style.display = 'none';
+            // Hide ad after click
+            event.target.closest('.ad-play-button').style.display = 'none';
         }
 
         // Play video function - modified to handle ads
         function playVideo(button) {
             const videoPlayer = button.closest('.video-player');
             const video = videoPlayer.querySelector('video');
-            const adOverlay = videoPlayer.querySelector('.video-ad-overlay');
+            const adButton = videoPlayer.querySelector('.ad-play-button');
             
             // Hide ad when playing video
-            if (adOverlay) {
-                adOverlay.style.display = 'none';
+            if (adButton) {
+                adButton.style.display = 'none';
             }
             
             video.play();
@@ -355,65 +387,74 @@
         // Show ad when video pauses or ends
         document.querySelectorAll('video').forEach(video => {
             video.addEventListener('play', function() {
-                const adOverlay = this.closest('.video-player').querySelector('.video-ad-overlay');
-                if (adOverlay) {
-                    adOverlay.style.display = 'none';
+                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
+                if (adButton) {
+                    adButton.style.display = 'none';
                 }
             });
             
             video.addEventListener('pause', function() {
-                const adOverlay = this.closest('.video-player').querySelector('.video-ad-overlay');
-                if (adOverlay) {
-                    adOverlay.style.display = 'block';
+                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
+                const playButton = this.parentElement.querySelector('.play-button');
+                if (adButton && playButton.style.display === 'none') {
+                    adButton.style.display = 'flex';
                 }
-                this.parentElement.querySelector('.play-button').style.display = 'flex';
+                playButton.style.display = 'flex';
             });
             
             video.addEventListener('ended', function() {
-                const adOverlay = this.closest('.video-player').querySelector('.video-ad-overlay');
-                if (adOverlay) {
-                    adOverlay.style.display = 'block';
+                const adButton = this.closest('.video-player').querySelector('.ad-play-button');
+                const playButton = this.parentElement.querySelector('.play-button');
+                if (adButton) {
+                    adButton.style.display = 'flex';
                 }
-                this.parentElement.querySelector('.play-button').style.display = 'flex';
+                playButton.style.display = 'flex';
             });
         });
 
-        // The rest of your existing JavaScript remains the same
-        function toggleShareMenu(button, url, text) {
+        // Fixed Share functionality
+        function toggleShareMenu(button) {
+            // Close all other share menus first
             document.querySelectorAll('.share-menu').forEach(menu => {
-                menu.classList.remove('active');
+                if (menu !== button.nextElementSibling) {
+                    menu.classList.remove('active');
+                }
             });
+            
+            // Toggle current share menu
             const shareMenu = button.nextElementSibling;
             shareMenu.classList.toggle('active');
+            
+            // Prevent the click from closing the menu immediately
+            event.stopPropagation();
         }
 
         function shareTo(platform, url, text) {
             const encodedUrl = encodeURIComponent(url);
             const encodedText = encodeURIComponent(text);
             
+            let shareUrl = '';
+            
             switch(platform) {
                 case 'facebook':
-                    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank');
+                    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
                     break;
                 case 'twitter':
-                    window.open(`https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`, '_blank');
+                    shareUrl = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
                     break;
                 case 'telegram':
-                    window.open(`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`, '_blank');
-                    break;
-                case 'discord':
-                    navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-                        alert('Content copied! You can now paste it in Discord.');
-                    });
+                    shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`;
                     break;
                 case 'whatsapp':
-                    window.open(`https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`, '_blank');
-                    break;
-                case 'viber':
-                    window.open(`viber://forward?text=${encodedText}%20${encodedUrl}`, '_blank');
+                    shareUrl = `https://api.whatsapp.com/send?text=${encodedText}%20${encodedUrl}`;
                     break;
             }
             
+            if (shareUrl) {
+                window.open(shareUrl, '_blank', 'width=600,height=400');
+            }
+            
+            // Close the share menu
             document.querySelectorAll('.share-menu').forEach(menu => {
                 menu.classList.remove('active');
             });
@@ -422,18 +463,37 @@
         function copyLink(url) {
             navigator.clipboard.writeText(url).then(() => {
                 alert('Link copied to clipboard!');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = url;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Link copied to clipboard!');
             });
+            
+            // Close the share menu
             document.querySelectorAll('.share-menu').forEach(menu => {
                 menu.classList.remove('active');
             });
         }
 
+        // Close share menus when clicking outside
         document.addEventListener('click', function(event) {
-            if (!event.target.closest('.social-sharing')) {
+            if (!event.target.closest('.share-menu') && !event.target.closest('.btn-share')) {
                 document.querySelectorAll('.share-menu').forEach(menu => {
                     menu.classList.remove('active');
                 });
             }
+        });
+
+        // Prevent video click from triggering share menu close
+        document.querySelectorAll('.video-player').forEach(player => {
+            player.addEventListener('click', function(event) {
+                event.stopPropagation();
+            });
         });
     </script>
 </body>
