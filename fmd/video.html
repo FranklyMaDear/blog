@@ -14,17 +14,174 @@
         .video-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .video-player video { width: 100%; height: 100%; object-fit: cover; }
         .video-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 15px; }
-        .video-title { color: white; font-size: 1rem; font-weight: bold; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
-        .play-button { width: 60px; height: 60px; border-radius: 50%; background: rgba(255,255,255,0.9); border: none; cursor: pointer; }
-        .social-sharing { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-        .btn { padding: 8px 15px; border: none; border-radius: 20px; cursor: pointer; }
-        .btn-share { background: rgba(255,255,255,0.9); color: #333; }
-        .share-menu { display: none; position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%); background: #222; border-radius: 10px; padding: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 10; }
+        
+        /* Play Button with Ad */
+        .play-button-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100%;
+            position: relative;
+        }
+        .play-button { 
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%; 
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            border: none; 
+            cursor: pointer; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .play-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+        .play-button:hover::before {
+            transform: translateX(100%);
+        }
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.6);
+        }
+        .play-button:active {
+            transform: scale(0.95);
+        }
+        .play-icon {
+            font-size: 2rem;
+            color: white;
+            margin-left: 4px;
+        }
+
+        /* Enhanced Share Button */
+        .social-sharing { 
+            display: flex; 
+            gap: 10px; 
+            justify-content: center; 
+            flex-wrap: wrap; 
+        }
+        .btn { 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-share { 
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; 
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .btn-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        .btn-share::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .btn-share:hover::before {
+            left: 100%;
+        }
+
+        /* Enhanced Share Menu */
+        .share-menu { 
+            display: none; 
+            position: absolute; 
+            bottom: 70px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: rgba(34, 34, 34, 0.95); 
+            backdrop-filter: blur(10px);
+            border-radius: 15px; 
+            padding: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            z-index: 10;
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
         .share-menu.active { display: block; }
-        .share-options { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .share-option { background: #333; border: none; color: white; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; text-align: center; }
-        .share-option:hover { background: #444; }
-        .ad-container { display: flex; justify-content: center; padding: 20px; background: #111; margin: 20px auto; max-width: 1200px; border-radius: 10px; }
+        .share-options { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 12px; 
+        }
+        .share-option { 
+            background: linear-gradient(135deg, #444, #333);
+            border: none; 
+            color: white; 
+            padding: 10px 15px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 0.8rem; 
+            text-align: center; 
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            min-width: 70px;
+        }
+        .share-option:hover { 
+            background: linear-gradient(135deg, #555, #444);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .share-option:active {
+            transform: translateY(0);
+        }
+        .share-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Ad Badge on Play Button */
+        .ad-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ffd700, #ff6b00);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
     </style>
 </head>
 <body>
@@ -33,18 +190,6 @@
     <div class="header">
         <h1>✨FmD🎬</h1>
         <p> Videos by FmD </p>
-    </div>
-
-    <!-- Monetag Advertisement -->
-    <div class="ad-container">
-        <script>
-            (function() {
-                var script = document.createElement('script');
-                script.src = "https://otieu.com/4/10000601";
-                script.async = true;
-                document.head.appendChild(script);
-            })();
-        </script>
     </div>
 
     <div class="video-gallery">
@@ -57,20 +202,46 @@
                     </video>
                     <div class="video-overlay">
                         <div class="video-title" style="visibility: hidden;">My Creative Video 1</div>
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                            <button class="play-button" onclick="this.parentElement.parentElement.parentElement.querySelector('video').play(); this.style.display='none'">▶️</button>
+                        <div class="play-button-container">
+                            <button class="play-button" onclick="playVideo(this, 'https://otieu.com/4/10000601')">
+                                <span class="play-icon">▶</span>
+                                <div class="ad-badge">AD</div>
+                            </button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">📤 Share</button>
+                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                📤 Share
+                            </button>
                             <div class="share-menu">
                                 <div class="share-options">
-                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Facebook</button>
-                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">X</button>
-                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Telegram</button>
-                                    <button class="share-option" onclick="shareTo('discord', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Discord</button>
-                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">WhatsApp</button>
-                                    <button class="share-option" onclick="shareTo('viber', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">Viber</button>
-                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video1.html')">Copy Link</button>
+                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📘</span>
+                                        Facebook
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">🐦</span>
+                                        X
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📱</span>
+                                        Telegram
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('discord', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💬</span>
+                                        Discord
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💚</span>
+                                        WhatsApp
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('viber', 'https://blog.franklymadear.com/fmd/video1.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💜</span>
+                                        Viber
+                                    </button>
+                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video1.html')">
+                                        <span class="share-icon">🔗</span>
+                                        Copy Link
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -88,20 +259,46 @@
                     </video>
                     <div class="video-overlay">
                         <div class="video-title" style="visibility: hidden;">My Creative Video 2</div>
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
-                            <button class="play-button" onclick="this.parentElement.parentElement.parentElement.querySelector('video').play(); this.style.display='none'">▶️</button>
+                        <div class="play-button-container">
+                            <button class="play-button" onclick="playVideo(this, 'https://otieu.com/4/10000601')">
+                                <span class="play-icon">▶</span>
+                                <div class="ad-badge">AD</div>
+                            </button>
                         </div>
                         <div class="social-sharing">
-                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">📤 Share</button>
+                            <button class="btn btn-share" onclick="toggleShareMenu(this, 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                📤 Share
+                            </button>
                             <div class="share-menu">
                                 <div class="share-options">
-                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Facebook</button>
-                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">X</button>
-                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Telegram</button>
-                                    <button class="share-option" onclick="shareTo('discord', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Discord</button>
-                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">WhatsApp</button>
-                                    <button class="share-option" onclick="shareTo('viber', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">Viber</button>
-                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video2.html')">Copy Link</button>
+                                    <button class="share-option" onclick="shareTo('facebook', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📘</span>
+                                        Facebook
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('twitter', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">🐦</span>
+                                        X
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('telegram', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">📱</span>
+                                        Telegram
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('discord', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💬</span>
+                                        Discord
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('whatsapp', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💚</span>
+                                        WhatsApp
+                                    </button>
+                                    <button class="share-option" onclick="shareTo('viber', 'https://blog.franklymadear.com/fmd/video2.html', 'Check out this video from FranklyMaDear! 🎬✨')">
+                                        <span class="share-icon">💜</span>
+                                        Viber
+                                    </button>
+                                    <button class="share-option" onclick="copyLink('https://blog.franklymadear.com/fmd/video2.html')">
+                                        <span class="share-icon">🔗</span>
+                                        Copy Link
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -112,6 +309,37 @@
     </div>
 
     <script>
+        // Play video with ad integration
+        function playVideo(button, adUrl) {
+            const video = button.closest('.video-player').querySelector('video');
+            
+            // Load and show ad
+            loadMonetagAd(adUrl);
+            
+            // Play video after a short delay
+            setTimeout(() => {
+                video.play();
+                button.style.display = 'none';
+            }, 100);
+        }
+
+        // Load Monetag ad
+        function loadMonetagAd(adUrl) {
+            // Remove existing ad script if any
+            const existingScript = document.querySelector('script[src="' + adUrl + '"]');
+            if (existingScript) {
+                existingScript.remove();
+            }
+            
+            // Create new ad script
+            const script = document.createElement('script');
+            script.src = adUrl;
+            script.async = true;
+            document.head.appendChild(script);
+            
+            console.log('Monetag ad loaded:', adUrl);
+        }
+
         // Add video event listeners
         document.querySelectorAll('video').forEach(video => {
             video.addEventListener('play', function() {
@@ -154,7 +382,6 @@
                     window.open(`https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`, '_blank');
                     break;
                 case 'discord':
-                    // Discord doesn't have a direct share URL, so we'll copy to clipboard
                     navigator.clipboard.writeText(`${text} ${url}`).then(() => {
                         alert('Content copied! You can now paste it in Discord.');
                     });
