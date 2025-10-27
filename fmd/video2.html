@@ -42,11 +42,33 @@
             align-items: center;
             justify-content: center;
             padding: 0;
+            position: relative;
         }
         video {
             width: 100%;
             height: 100vh;
             object-fit: cover;
+        }
+        .ad-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            text-align: center;
+        }
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px auto;
         }
         .share-buttons {
             position: fixed;
@@ -71,10 +93,29 @@
 </head>
 <body>
     <div class="video-container">
-        <video controls autoplay poster="thumbnail2.png">
+        <video poster="thumbnail2.png">
             <source src="video2.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        
+        <div class="ad-overlay">
+            <button class="play-button" onclick="playVideo()">
+                ▶️
+            </button>
+            <!-- Monetag Ad -->
+            <div>
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : '10000601',
+                        'format' : 'iframe',
+                        'height' : 60,
+                        'width' : 468,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="https://otieu.com/4/10000601"></script>
+            </div>
+        </div>
     </div>
     
     <div class="share-buttons">
@@ -82,23 +123,29 @@
             <span>📋</span> Copy Link
         </button>
     </div>
-    
-    <!-- Ad script -->
-    <script src="https://3nbf4.com/act/files/tag.min.js?z=10021853" data-cfasync="false" async></script>
 
     <script>
+        function playVideo() {
+            const video = document.querySelector('video');
+            const overlay = document.querySelector('.ad-overlay');
+            video.play();
+            overlay.style.display = 'none';
+        }
+
         function copyVideoLink() {
             const videoLink = 'https://blog.franklymadear.com/fmd/video2.html';
             navigator.clipboard.writeText(videoLink);
             alert('Video link copied to clipboard!');
         }
 
-        // Auto-play and fullscreen experience
-        document.addEventListener('DOMContentLoaded', function() {
-            const video = document.querySelector('video');
-            video.play().catch(function(error) {
-                console.log('Auto-play was prevented:', error);
-            });
+        // Hide overlay when video starts playing
+        document.querySelector('video').addEventListener('play', function() {
+            document.querySelector('.ad-overlay').style.display = 'none';
+        });
+
+        // Show overlay when video ends
+        document.querySelector('video').addEventListener('ended', function() {
+            document.querySelector('.ad-overlay').style.display = 'block';
         });
     </script>
 </body>
