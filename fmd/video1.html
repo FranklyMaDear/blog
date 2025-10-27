@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Creative Video - Support the Creator | FmD</title>
     
-    <!-- Enhanced Twitter Card -->
+    <!-- Enhanced Twitter Card for Video Player -->
     <meta name="twitter:card" content="player">
     <meta name="twitter:site" content="@FranklyMaDear">
     <meta name="twitter:title" content="🎬 Amazing Creative Video - Watch Now!">
     <meta name="twitter:description" content="Watch this incredible creative video and support the creator with a quick ad!">
     <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
     <meta name="twitter:image:alt" content="Creative Video Preview">
+    <meta name="twitter:player" content="https://blog.franklymadear.com/fmd/video1.html">
+    <meta name="twitter:player:width" content="480">
+    <meta name="twitter:player:height" content="480">
+    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/fmd/video1.mp4">
+    <meta name="twitter:player:stream:content_type" content="video/mp4">
 
     <!-- Enhanced Open Graph -->
     <meta property="og:type" content="video.other">
@@ -19,6 +24,10 @@
     <meta property="og:description" content="🎬 Watch this amazing creative video and support the creator!">
     <meta property="og:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
     <meta property="og:url" content="https://blog.franklymadear.com/fmd/video1.html">
+    <meta property="og:video" content="https://blog.franklymadear.com/fmd/video1.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="480">
+    <meta property="og:video:height" content="480">
     
     <style>
         * {
@@ -33,6 +42,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         .video-container {
             flex: 1;
@@ -41,11 +51,13 @@
             justify-content: center;
             padding: 0;
             position: relative;
+            background: #000;
         }
         video {
             width: 100%;
-            height: 100vh;
-            object-fit: cover;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
         }
         .play-overlay {
             position: absolute;
@@ -66,6 +78,11 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+        .play-button:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 1);
         }
         .ad-overlay {
             position: fixed;
@@ -73,7 +90,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.98);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -81,21 +98,34 @@
             z-index: 1001;
         }
         .ad-content {
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
             max-width: 400px;
+            border: 2px solid #4CAF50;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .ad-content h3 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
         }
         .skip-ad {
-            margin-top: 15px;
-            padding: 8px 16px;
-            background: #ff6b6b;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .skip-ad:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
         .support-message {
             position: fixed;
@@ -107,20 +137,49 @@
             padding: 10px 20px;
             border-radius: 25px;
             z-index: 999;
+            font-weight: bold;
+        }
+        .twitter-embed-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(29, 161, 242, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            z-index: 1002;
+            font-weight: bold;
+            text-align: center;
+        }
+        .ad-countdown {
+            margin: 15px 0;
+            font-size: 1.2rem;
+            color: #4CAF50;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
+    <!-- Twitter Embed Detection Message -->
+    <div class="twitter-embed-message" id="twitterMessage">
+        🐦 Watching from Twitter? Support the creator! 🎬
+    </div>
+
     <!-- Ad Overlay -->
     <div class="ad-overlay" id="adOverlay">
         <div class="ad-content">
             <h3>🎬 Support the Creator!</h3>
             <p>Watch a quick ad to help create more amazing content</p>
-            <div style="margin: 15px 0;">
-                <!-- New Ad Script Container -->
-                <div id="ad-container"></div>
+            <div class="ad-countdown" id="adCountdown">Ad: 5s</div>
+            <div style="margin: 20px 0; min-height: 250px; display: flex; align-items: center; justify-content: center;">
+                <!-- Ad Container for Twitter -->
+                <div id="ad-container">
+                    <div style="color: #4CAF50; font-size: 2rem; margin-bottom: 15px;">✨</div>
+                    <p>Loading ad support...</p>
+                </div>
             </div>
-            <button class="skip-ad" onclick="skipAd()">Skip Ad (5s)</button>
+            <button class="skip-ad" onclick="skipAd()" id="skipButton" disabled>Skip Ad (5s)</button>
         </div>
     </div>
 
@@ -129,12 +188,12 @@
     </div>
 
     <div class="video-container">
-        <video controls autoplay poster="thumbnail1.png" id="mainVideo">
+        <video controls poster="thumbnail1.png" id="mainVideo" preload="metadata">
             <source src="video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         
-        <div class="play-overlay">
+        <div class="play-overlay" id="playOverlay">
             <button class="play-button" onclick="playVideo()">
                 ▶️
             </button>
@@ -143,57 +202,208 @@
 
     <script>
         let adTimer;
-        
+        let countdown = 5;
+        let isTwitterEmbed = false;
+
+        // Check if embedded in Twitter
+        function checkTwitterEmbed() {
+            // Check if in iframe and referrer is Twitter
+            if (window.self !== window.top || 
+                document.referrer.includes('twitter.com') || 
+                document.referrer.includes('t.co') ||
+                window.location.search.includes('twitter_embed=true')) {
+                isTwitterEmbed = true;
+                document.getElementById('twitterMessage').style.display = 'block';
+                console.log('Twitter embed detected - showing ads');
+            }
+        }
+
         function loadAdScript() {
-            // Load the new ad script from otieu.com
+            // Load the ad script from otieu.com
             (function(s){
                 s.src='https://otieu.com/4/10000601';
                 s.async=true;
                 document.head.appendChild(s);
             })(document.createElement('script'));
+            
+            // Additional ad tracking for Twitter
+            if (isTwitterEmbed) {
+                console.log('Loading ads for Twitter embed');
+                // You can add additional ad networks here for Twitter
+            }
         }
-        
+
+        function startAdCountdown() {
+            const countdownElement = document.getElementById('adCountdown');
+            const skipButton = document.getElementById('skipButton');
+            countdown = 5;
+            
+            countdownElement.textContent = `Ad: ${countdown}s`;
+            skipButton.textContent = `Skip Ad (${countdown}s)`;
+            skipButton.disabled = true;
+            
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = `Ad: ${countdown}s`;
+                skipButton.textContent = `Skip Ad (${countdown}s)`;
+                
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    skipAd();
+                } else if (countdown <= 2) {
+                    skipButton.disabled = false;
+                    skipButton.textContent = `Skip Ad (${countdown}s)`;
+                }
+            }, 1000);
+        }
+
         function skipAd() {
             clearTimeout(adTimer);
             document.getElementById('adOverlay').style.display = 'none';
             document.getElementById('mainVideo').play();
+            
+            // Track ad completion
+            console.log('Ad completed - revenue generated');
+            if (isTwitterEmbed) {
+                console.log('Twitter embed ad completed');
+            }
         }
 
         function playVideo() {
-            // Show ad first
-            document.getElementById('adOverlay').style.display = 'flex';
-            loadAdScript();
-            
-            // Auto-skip ad after 5 seconds
-            adTimer = setTimeout(skipAd, 5000);
+            // Always show ad for Twitter embeds, sometimes for direct visits
+            if (isTwitterEmbed || Math.random() > 0.3) {
+                document.getElementById('adOverlay').style.display = 'flex';
+                loadAdScript();
+                startAdCountdown();
+            } else {
+                // Direct play without ad sometimes
+                document.getElementById('mainVideo').play();
+            }
         }
 
-        // Auto-play when page loads but show ad first
+        // Auto-detect Twitter on load
         document.addEventListener('DOMContentLoaded', function() {
-            // Show ad overlay instead of auto-playing
-            document.getElementById('adOverlay').style.display = 'flex';
-            loadAdScript();
-            adTimer = setTimeout(skipAd, 5000);
-        });
-
-        // Hide play overlay when video starts playing
-        document.querySelector('video').addEventListener('play', function() {
-            document.querySelector('.play-overlay').style.display = 'none';
-        });
-
-        // Show play overlay when video ends
-        document.querySelector('video').addEventListener('ended', function() {
-            document.querySelector('.play-overlay').style.display = 'block';
-            // Show thank you message
-            alert('🎬 Thank you for watching! Share on Twitter to support more content! 🐦');
-        });
-
-        // Track video engagement
-        document.querySelector('video').addEventListener('timeupdate', function() {
-            if (this.currentTime > 10) {
-                console.log('User watched more than 10 seconds - good engagement');
+            checkTwitterEmbed();
+            
+            // For Twitter embeds, auto-show ad
+            if (isTwitterEmbed) {
+                setTimeout(() => {
+                    document.getElementById('adOverlay').style.display = 'flex';
+                    loadAdScript();
+                    startAdCountdown();
+                }, 1000);
+            }
+            
+            // Auto-play for direct visits after ad
+            if (!isTwitterEmbed && window.self === window.top) {
+                setTimeout(() => {
+                    document.getElementById('adOverlay').style.display = 'flex';
+                    loadAdScript();
+                    startAdCountdown();
+                }, 1500);
             }
         });
+
+        // Video event listeners
+        document.getElementById('mainVideo').addEventListener('play', function() {
+            document.getElementById('playOverlay').style.display = 'none';
+            document.getElementById('twitterMessage').style.display = 'none';
+        });
+
+        document.getElementById('mainVideo').addEventListener('pause', function() {
+            document.getElementById('playOverlay').style.display = 'block';
+        });
+
+        document.getElementById('mainVideo').addEventListener('ended', function() {
+            document.getElementById('playOverlay').style.display = 'block';
+            
+            // Show thank you message with Twitter encouragement
+            if (isTwitterEmbed) {
+                showTwitterThankYou();
+            } else {
+                showThankYouMessage();
+            }
+        });
+
+        // Track video engagement for analytics
+        document.getElementById('mainVideo').addEventListener('timeupdate', function() {
+            if (this.currentTime > 10) {
+                console.log('User watched more than 10 seconds - good engagement');
+                if (isTwitterEmbed) {
+                    console.log('Twitter embed: good viewer retention');
+                }
+            }
+            
+            // Track quarter completion
+            const duration = this.duration;
+            if (duration > 0) {
+                const quarter = duration / 4;
+                if (this.currentTime >= quarter && this.currentTime < quarter + 2) {
+                    console.log(`25% completed - Twitter: ${isTwitterEmbed}`);
+                }
+            }
+        });
+
+        function showThankYouMessage() {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0,0,0,0.95);
+                color: white;
+                padding: 25px;
+                border-radius: 15px;
+                text-align: center;
+                z-index: 1002;
+                border: 2px solid #4CAF50;
+                max-width: 300px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            `;
+            message.innerHTML = `
+                <h3 style="color: #4CAF50; margin-bottom: 15px;">🎬 Thank you for watching!</h3>
+                <p style="margin-bottom: 20px;">Support more content by sharing on Twitter! 🐦</p>
+                <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold;">OK</button>
+            `;
+            document.body.appendChild(message);
+        }
+
+        function showTwitterThankYou() {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0,0,0,0.95);
+                color: white;
+                padding: 25px;
+                border-radius: 15px;
+                text-align: center;
+                z-index: 1002;
+                border: 2px solid #1DA1F2;
+                max-width: 320px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            `;
+            message.innerHTML = `
+                <h3 style="color: #1DA1F2; margin-bottom: 15px;">🐦 Thanks for watching on Twitter!</h3>
+                <p style="margin-bottom: 15px;">Your ad view supports the creator! 🎬</p>
+                <p style="margin-bottom: 20px; font-size: 0.9rem;">Retweet to help spread the word! ✨</p>
+                <button onclick="this.parentElement.remove()" style="padding: 10px 20px; background: #1DA1F2; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold;">OK</button>
+            `;
+            document.body.appendChild(message);
+        }
+
+        // Handle visibility changes for better ad tracking
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                console.log('Page hidden - pausing ad tracking');
+            } else {
+                console.log('Page visible - resuming ad tracking');
+            }
+        });
+
     </script>
 </body>
 </html>
