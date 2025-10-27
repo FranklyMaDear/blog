@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Creative Video - Support the Creator | FmD</title>
+    <title>✨FmD🎬</title>
     
     <!-- Enhanced Twitter Card for Video Player -->
     <meta name="twitter:card" content="player">
@@ -91,51 +91,18 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.98);
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 1001;
-        }
-        .ad-content {
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            max-width: 400px;
-            border: 2px solid #4CAF50;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .skip-ad {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .skip-ad:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
         }
     </style>
 </head>
 <body>
     <!-- Ad Overlay -->
     <div class="ad-overlay" id="adOverlay">
-        <div class="ad-content">
-            <div style="margin: 20px 0; min-height: 250px; display: flex; align-items: center; justify-content: center;">
-                <!-- Ad Container -->
-                <div id="ad-container">
-                    <div style="color: #4CAF50; font-size: 2rem; margin-bottom: 15px;">✨</div>
-                </div>
-            </div>
-            <button class="skip-ad" onclick="skipAd()" id="skipButton">Skip Ad</button>
-        </div>
+        <!-- Ad content will be loaded here by the ad script -->
     </div>
 
     <div class="video-container">
@@ -152,7 +119,6 @@
     </div>
 
     <script>
-        let adTimer;
         let isTwitterEmbed = false;
 
         // Check if embedded in Twitter
@@ -170,22 +136,16 @@
             (function(s){s.dataset.zone='10021779',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
         }
 
-        function skipAd() {
-            clearTimeout(adTimer);
-            document.getElementById('adOverlay').style.display = 'none';
-            document.getElementById('mainVideo').play();
-            
-            // Track ad completion
-            console.log('Ad completed - revenue generated');
-        }
-
         function playVideo() {
             // Always show ad for Twitter embeds, sometimes for direct visits
             if (isTwitterEmbed || Math.random() > 0.3) {
                 document.getElementById('adOverlay').style.display = 'flex';
                 loadAdScript();
-                // Auto-skip after 3 seconds
-                adTimer = setTimeout(skipAd, 3000);
+                // Auto-hide ad overlay and play video after 3 seconds
+                setTimeout(() => {
+                    document.getElementById('adOverlay').style.display = 'none';
+                    document.getElementById('mainVideo').play();
+                }, 3000);
             } else {
                 // Direct play without ad sometimes
                 document.getElementById('mainVideo').play();
@@ -201,8 +161,11 @@
                 setTimeout(() => {
                     document.getElementById('adOverlay').style.display = 'flex';
                     loadAdScript();
-                    // Auto-skip after 3 seconds
-                    adTimer = setTimeout(skipAd, 3000);
+                    // Auto-hide ad overlay and play video after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById('adOverlay').style.display = 'none';
+                        document.getElementById('mainVideo').play();
+                    }, 3000);
                 }, 500);
             }
         });
