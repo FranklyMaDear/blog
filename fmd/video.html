@@ -313,6 +313,20 @@
       object-fit: cover;
       z-index: 1;
     }
+
+    .error-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      z-index: 1000;
+      max-width: 80%;
+    }
     
     .share-modal {
       position: fixed;
@@ -674,10 +688,34 @@
       }
     }
 
+    function showErrorMessage(message) {
+      // Αφαίρεση υπαρχόντων error messages
+      const existingError = document.querySelector('.error-message');
+      if (existingError) {
+        existingError.remove();
+      }
+      
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-message';
+      errorDiv.innerHTML = `
+        <h3>Σφάλμα Φόρτωσης Βίντεο</h3>
+        <p>${message}</p>
+        <p>Παρακαλώ ελέγξτε τα αρχεία στον φάκελο.</p>
+      `;
+      document.body.appendChild(errorDiv);
+      
+      // Αφαίρεση μετά από 10 δευτερόλεπτα
+      setTimeout(() => {
+        if (errorDiv.parentNode) {
+          errorDiv.parentNode.removeChild(errorDiv);
+        }
+      }, 10000);
+    }
+
     async function loadCurrentVideo() {
       if (videoList.length === 0) {
         console.error('Δεν υπάρχουν βίντεο στη λίστα');
-        alert('Δεν υπάρχουν διαθέσιμα βίντεο!');
+        showErrorMessage('Δεν υπάρχουν διαθέσιμα βίντεο!');
         return;
       }
       
@@ -752,6 +790,7 @@
       }).catch(error => {
         console.error('Failed to play video after ad:', error);
         videoOverlay.classList.remove('hidden');
+        showErrorMessage(`Σφάλμα αναπαραγωγής: ${error.message}`);
       });
     }
 
@@ -781,6 +820,7 @@
         }).catch(error => {
           console.error('Failed to play video:', error);
           videoOverlay.classList.remove('hidden');
+          showErrorMessage(`Σφάλμα αναπαραγωγής: ${error.message}`);
         });
       }
     }
@@ -872,7 +912,8 @@
     // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ
     video.addEventListener('error', function() {
       console.error('Σφάλμα φόρτωσης βίντεο:', video.error);
-      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει.`);
+      const errorMessage = `Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει στον φάκελο.`;
+      showErrorMessage(errorMessage);
     });
     
     // KEYBOARD SHORTCUTS
@@ -906,6 +947,25 @@
         console.log('User watched more than 10 seconds - good engagement');
       }
     });
+
+    // TEST: Check if video files exist
+    function testVideoFiles() {
+      console.log('=== TESTING VIDEO FILES ===');
+      videoList.forEach((videoFile, index) => {
+        const testVideo = document.createElement('video');
+        testVideo.src = videoFile;
+        testVideo.onloadeddata = () => {
+          console.log(`✅ ${videoFile} exists and is accessible`);
+        };
+        testVideo.onerror = () => {
+          console.error(`❌ ${videoFile} NOT FOUND or inaccessible`);
+          showErrorMessage(`Το αρχείο ${videoFile} δεν βρέθηκε στον φάκελο!`);
+        };
+      });
+    }
+
+    // Run test after page loads
+    setTimeout(testVideoFiles, 1000);
   </script>
 </body>
 </html>
