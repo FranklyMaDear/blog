@@ -5,18 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>✨FmD🎬</title>
     
-    <!-- Enhanced Twitter Card for Video Player -->
+    <!-- Enhanced Twitter Card -->
     <meta name="twitter:card" content="player">
     <meta name="twitter:site" content="@FranklyMaDear">
     <meta name="twitter:title" content="🎬 Amazing Creative Video - Watch Now!">
-    <meta name="twitter:description" content="Watch this incredible creative video and support the creator with a quick ad!">
+    <meta name="twitter:description" content="Watch this incredible creative video and support the creator!">
     <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
-    <meta name="twitter:image:alt" content="Creative Video Preview">
-    <meta name="twitter:player" content="https://blog.franklymadear.com/fmd/video1.html">
-    <meta name="twitter:player:width" content="480">
-    <meta name="twitter:player:height" content="480">
-    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/fmd/video1.mp4">
-    <meta name="twitter:player:stream:content_type" content="video/mp4">
 
     <!-- Enhanced Open Graph -->
     <meta property="og:type" content="video.other">
@@ -24,10 +18,6 @@
     <meta property="og:description" content="🎬 Watch this amazing creative video and support the creator!">
     <meta property="og:image" content="https://blog.franklymadear.com/fmd/thumbnail1.png">
     <meta property="og:url" content="https://blog.franklymadear.com/fmd/video1.html">
-    <meta property="og:video" content="https://blog.franklymadear.com/fmd/video1.mp4">
-    <meta property="og:video:type" content="video/mp4">
-    <meta property="og:video:width" content="480">
-    <meta property="og:video:height" content="480">
     
     <style>
         * {
@@ -42,8 +32,42 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
+
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .ad-content {
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .skip-ad {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         .video-container {
             flex: 1;
             display: flex;
@@ -51,20 +75,18 @@
             justify-content: center;
             padding: 0;
             position: relative;
-            background: #000;
         }
         video {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
-            background: #000;
+            height: 100vh;
+            object-fit: cover;
         }
         .play-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1000;
+            z-index: 100;
             text-align: center;
         }
         .play-button {
@@ -78,125 +100,70 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            transition: all 0.3s ease;
-        }
-        .play-button:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 1);
-        }
-        .ad-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.98);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1001;
         }
     </style>
 </head>
 <body>
     <!-- Ad Overlay -->
     <div class="ad-overlay" id="adOverlay">
-        <!-- Ad content will be loaded here by the ad script -->
+        <div class="ad-content">
+            <h2>🎬 Support the Creator!</h2>
+            <p>Watch a quick ad to unlock this amazing video</p>
+            <div style="margin: 20px 0; min-height: 250px;" id="adContainer">
+                <!-- Ad will load here -->
+            </div>
+            <button class="skip-ad" onclick="skipAd()">Skip Ad</button>
+        </div>
     </div>
 
     <div class="video-container">
-        <video controls poster="thumbnail1.png" id="mainVideo" preload="metadata">
+        <video poster="thumbnail1.png" id="mainVideo">
             <source src="video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         
-        <div class="play-overlay" id="playOverlay">
-            <button class="play-button" onclick="playVideo()">
+        <div class="play-overlay">
+            <button class="play-button" onclick="showAdAndPlay()">
                 ▶️
             </button>
         </div>
     </div>
 
     <script>
-        let isTwitterEmbed = false;
-
-        // Check if embedded in Twitter
-        function checkTwitterEmbed() {
-            if (window.self !== window.top || 
-                document.referrer.includes('twitter.com') || 
-                document.referrer.includes('t.co') ||
-                window.location.search.includes('twitter_embed=true')) {
-                isTwitterEmbed = true;
-            }
-        }
-
-        function loadAdScript() {
-            // Load the new ad script from al5sm.com
-            (function(s){s.dataset.zone='10021779',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-        }
-
-        function playVideo() {
-            // Always show ad for Twitter embeds, sometimes for direct visits
-            if (isTwitterEmbed || Math.random() > 0.3) {
-                document.getElementById('adOverlay').style.display = 'flex';
-                loadAdScript();
-                // Auto-hide ad overlay and play video after 3 seconds
-                setTimeout(() => {
-                    document.getElementById('adOverlay').style.display = 'none';
-                    document.getElementById('mainVideo').play();
-                }, 3000);
-            } else {
-                // Direct play without ad sometimes
-                document.getElementById('mainVideo').play();
-            }
-        }
-
-        // Auto-detect Twitter on load
-        document.addEventListener('DOMContentLoaded', function() {
-            checkTwitterEmbed();
+        function showAdAndPlay() {
+            const adOverlay = document.getElementById('adOverlay');
+            adOverlay.style.display = 'flex';
             
-            // For Twitter embeds, auto-show ad
-            if (isTwitterEmbed) {
-                setTimeout(() => {
-                    document.getElementById('adOverlay').style.display = 'flex';
-                    loadAdScript();
-                    // Auto-hide ad overlay and play video after 3 seconds
-                    setTimeout(() => {
-                        document.getElementById('adOverlay').style.display = 'none';
-                        document.getElementById('mainVideo').play();
-                    }, 3000);
-                }, 500);
-            }
-        });
+            // Load the new ad script
+            const adScript = document.createElement('script');
+            adScript.src = 'https://otieu.com/4/10000601';
+            document.getElementById('adContainer').appendChild(adScript);
+        }
+
+        function skipAd() {
+            const adOverlay = document.getElementById('adOverlay');
+            adOverlay.style.display = 'none';
+            
+            // Play the video
+            const video = document.getElementById('mainVideo');
+            const playOverlay = document.querySelector('.play-overlay');
+            video.play();
+            playOverlay.style.display = 'none';
+        }
+
+        // Auto-show ad for Twitter visitors
+        if (document.referrer.includes('twitter.com') || document.referrer.includes('t.co')) {
+            // Show ad immediately for Twitter visitors
+            setTimeout(showAdAndPlay, 500);
+        }
 
         // Video event listeners
         document.getElementById('mainVideo').addEventListener('play', function() {
-            document.getElementById('playOverlay').style.display = 'none';
-        });
-
-        document.getElementById('mainVideo').addEventListener('pause', function() {
-            document.getElementById('playOverlay').style.display = 'block';
+            document.querySelector('.play-overlay').style.display = 'none';
         });
 
         document.getElementById('mainVideo').addEventListener('ended', function() {
-            document.getElementById('playOverlay').style.display = 'block';
-        });
-
-        // Track video engagement for analytics
-        document.getElementById('mainVideo').addEventListener('timeupdate', function() {
-            if (this.currentTime > 10) {
-                console.log('User watched more than 10 seconds - good engagement');
-            }
-        });
-
-        // Handle visibility changes for better ad tracking
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                console.log('Page hidden - pausing ad tracking');
-            } else {
-                console.log('Page visible - resuming ad tracking');
-            }
+            document.querySelector('.play-overlay').style.display = 'block';
         });
     </script>
 </body>
