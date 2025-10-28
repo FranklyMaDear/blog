@@ -12,6 +12,11 @@
   <meta name="twitter:description" content="Watch these incredible creative videos and support the creator with a quick ad!">
   <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/video/thumbnail1.png">
   <meta name="twitter:image:alt" content="Creative Videos Preview">
+  <meta name="twitter:player" content="https://blog.franklymadear.com/fmd/video.html">
+  <meta name="twitter:player:width" content="720">
+  <meta name="twitter:player:height" content="1280">
+  <meta name="twitter:player:stream" content="https://blog.franklymadear.com/fmd/video/video1.mp4">
+  <meta name="twitter:player:stream:content_type" content="video/mp4">
 
   <!-- Enhanced Open Graph -->
   <meta property="og:type" content="video.other">
@@ -19,6 +24,10 @@
   <meta property="og:description" content="🎬 Watch these amazing creative videos and support the creator!">
   <meta property="og:image" content="https://blog.franklymadear.com/fmd/video/thumbnail1.png">
   <meta property="og:url" content="https://blog.franklymadear.com/fmd/video.html">
+  <meta property="og:video" content="https://blog.franklymadear.com/fmd/video/video1.mp4">
+  <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:width" content="720">
+  <meta property="og:video:height" content="1280">
   
   <style>
     * {
@@ -545,15 +554,57 @@
   </div>
 
   <script>
-    // Λίστα με τα βίντεο
+    // Λίστα με 10 βίντεο
     const videos = [
       {
-        src: "https://blog.franklymadear.com/fmd/video/video1.mp4",
-        preview: "https://blog.franklymadear.com/fmd/video/thumbnail1.png"
+        src: "video/video1.mp4",
+        preview: "video/thumbnail1.png",
+        title: "Creative Video 1"
       },
       {
-        src: "https://blog.franklymadear.com/fmd/video/video2.mp4",
-        preview: "https://blog.franklymadear.com/fmd/video/thumbnail2.png"
+        src: "video/video2.mp4",
+        preview: "video/thumbnail2.png",
+        title: "Creative Video 2"
+      },
+      {
+        src: "video/video3.mp4",
+        preview: "video/thumbnail3.png",
+        title: "Creative Video 3"
+      },
+      {
+        src: "video/video4.mp4",
+        preview: "video/thumbnail4.png",
+        title: "Creative Video 4"
+      },
+      {
+        src: "video/video5.mp4",
+        preview: "video/thumbnail5.png",
+        title: "Creative Video 5"
+      },
+      {
+        src: "video/video6.mp4",
+        preview: "video/thumbnail6.png",
+        title: "Creative Video 6"
+      },
+      {
+        src: "video/video7.mp4",
+        preview: "video/thumbnail7.png",
+        title: "Creative Video 7"
+      },
+      {
+        src: "video/video8.mp4",
+        preview: "video/thumbnail8.png",
+        title: "Creative Video 8"
+      },
+      {
+        src: "video/video9.mp4",
+        preview: "video/thumbnail9.png",
+        title: "Creative Video 9"
+      },
+      {
+        src: "video/video10.mp4",
+        preview: "video/thumbnail10.png",
+        title: "Creative Video 10"
       }
     ];
 
@@ -583,9 +634,31 @@
 
     // Αρχικοποίηση
     function init() {
+      currentVideoIndex = getVideoIndexFromURL();
       loadVideo(currentVideoIndex);
       setupEventListeners();
       updateVideoCounter();
+      updateNavigationButtons();
+    }
+
+    // Ανάγνωση index από URL
+    function getVideoIndexFromURL() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const videoParam = urlParams.get('video');
+      
+      if (videoParam) {
+        const index = parseInt(videoParam) - 1;
+        if (index >= 0 && index < videos.length) {
+          return index;
+        }
+      }
+      return 0;
+    }
+
+    // Ενημέρωση URL
+    function updateURL() {
+      const newURL = `${window.location.pathname}?video=${currentVideoIndex + 1}`;
+      window.history.replaceState({}, '', newURL);
     }
 
     // Φόρτωση βίντεο
@@ -608,20 +681,23 @@
       isVideoEnded = false;
       videoOverlay.classList.remove('hidden');
       
-      // Απόκρυψη κουμπιών πλοήγησης αν υπάρχει μόνο ένα βίντεο
+      // Ενημέρωση URL
+      updateURL();
+      
+      console.log('Φόρτωση βίντεο:', video.src);
+    }
+
+    // Ενημέρωση κουμπιών πλοήγησης
+    function updateNavigationButtons() {
       if (videos.length <= 1) {
         prevVideoBtn.style.display = 'none';
         nextVideoBtn.style.display = 'none';
         videoCounter.style.display = 'none';
       } else {
-        prevVideoBtn.style.display = index === 0 ? 'none' : 'block';
-        nextVideoBtn.style.display = index === videos.length - 1 ? 'none' : 'block';
+        prevVideoBtn.style.display = currentVideoIndex === 0 ? 'none' : 'block';
+        nextVideoBtn.style.display = currentVideoIndex === videos.length - 1 ? 'none' : 'block';
         videoCounter.style.display = 'block';
       }
-      
-      // Προετοιμασία για autoplay
-      mainVideo.muted = true;
-      mainVideo.playsInline = true;
     }
 
     // Ρύθμιση event listeners
@@ -668,6 +744,27 @@
       // Χειρισμός σφαλμάτων βίντεο
       mainVideo.addEventListener('error', handleVideoError);
       videoSource.addEventListener('error', handleVideoError);
+
+      // Πλήκτρα πληκτρολογίου
+      document.addEventListener('keydown', handleKeyPress);
+    }
+
+    // Χειρισμός πλήκτρων πληκτρολογίου
+    function handleKeyPress(event) {
+      switch(event.key) {
+        case 'ArrowLeft':
+          event.preventDefault();
+          goToPreviousVideo();
+          break;
+        case 'ArrowRight':
+          event.preventDefault();
+          goToNextVideo();
+          break;
+        case ' ':
+          event.preventDefault();
+          togglePlayPause();
+          break;
+      }
     }
 
     // Έναρξη αναπαραγωγής
@@ -708,6 +805,7 @@
         currentVideoIndex++;
         loadVideo(currentVideoIndex);
         updateVideoCounter();
+        updateNavigationButtons();
       }
     }
 
@@ -717,6 +815,7 @@
         currentVideoIndex--;
         loadVideo(currentVideoIndex);
         updateVideoCounter();
+        updateNavigationButtons();
       }
     }
 
@@ -735,6 +834,7 @@
             currentVideoIndex++;
             loadVideo(currentVideoIndex);
             updateVideoCounter();
+            updateNavigationButtons();
           }, 1000);
         } else {
           // Επανάληψη από την αρχή αν είναι το τελευταίο βίντεο
@@ -742,6 +842,7 @@
             currentVideoIndex = 0;
             loadVideo(currentVideoIndex);
             updateVideoCounter();
+            updateNavigationButtons();
           }, 3000);
         }
       }
@@ -763,6 +864,7 @@
         currentVideoIndex++;
         loadVideo(currentVideoIndex);
         updateVideoCounter();
+        updateNavigationButtons();
       }
     }
 
@@ -791,8 +893,8 @@
 
     // Κοινή χρήση σε πλατφόρμες
     function shareOnPlatform(platform) {
-      const url = encodeURIComponent(window.location.href);
-      const text = encodeURIComponent('🎬 Δείτε αυτό το εκπληκτικό βίντεο!');
+      const url = encodeURIComponent(getCurrentVideoShareURL());
+      const text = encodeURIComponent(`🎬 ${videos[currentVideoIndex].title} - FranklyMaDear`);
       
       let shareUrl = '';
       
@@ -815,9 +917,25 @@
       hideShareModal();
     }
 
+    // Λήψη URL για κοινή χρήση
+    function getCurrentVideoShareURL() {
+      return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
+    }
+
     // Αντιγραφή συνδέσμου
     function copyLink() {
-      navigator.clipboard.writeText(window.location.href).then(() => {
+      const url = getCurrentVideoShareURL();
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Ο σύνδεσμος αντιγράφηκε!');
+        hideShareModal();
+      }).catch(() => {
+        // Fallback για παλιά browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
         alert('Ο σύνδεσμος αντιγράφηκε!');
         hideShareModal();
       });
@@ -841,17 +959,42 @@
         // Εμφάνιση μηνύματος σφάλματος
         const errorMsg = document.createElement('div');
         errorMsg.className = 'error-message';
-        errorMsg.textContent = 'Δεν ήταν δυνατή η φόρτωση του βίντεο. Παρακαλώ δοκιμάστε ξανά.';
+        errorMsg.innerHTML = `
+          <h3>Σφάλμα Φόρτωσης Βίντεο</h3>
+          <p>Δεν ήταν δυνατή η φόρτωση του βίντεο: ${videos[currentVideoIndex].src}</p>
+          <p>Παρακαλώ ελέγξτε αν το αρχείο υπάρχει στον φάκελο.</p>
+        `;
         document.body.appendChild(errorMsg);
         
         setTimeout(() => {
-          errorMsg.remove();
-        }, 5000);
+          if (errorMsg.parentNode) {
+            errorMsg.parentNode.removeChild(errorMsg);
+          }
+        }, 10000);
       }
     }
 
+    // Έλεγχος ύπαρξης αρχείων βίντεο
+    function testVideoFiles() {
+      console.log('=== ΈΛΕΓΧΟΣ ΑΡΧΕΙΩΝ ΒΙΝΤΕΟ ===');
+      videos.forEach((video, index) => {
+        const testVideo = document.createElement('video');
+        testVideo.src = video.src;
+        testVideo.onloadeddata = () => {
+          console.log(`✅ ${video.src} - Βρέθηκε`);
+        };
+        testVideo.onerror = () => {
+          console.error(`❌ ${video.src} - Δεν βρέθηκε`);
+        };
+      });
+    }
+
     // Εκκίνηση όταν η σελίδα φορτώσει
-    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('DOMContentLoaded', function() {
+      init();
+      // Έλεγχος αρχείων μετά από 2 δευτερόλεπτα
+      setTimeout(testVideoFiles, 2000);
+    });
     
     // Αποφυγή ανανέωσης κατά την αναπαραγωγή βίντεο
     window.addEventListener('beforeunload', (event) => {
