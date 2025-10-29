@@ -37,11 +37,116 @@
             overflow: hidden;
         }
         
+        /* Background Effects */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(226, 74, 144, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(144, 226, 74, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 80%;
+            left: 20%;
+            animation-delay: -10s;
+            animation-duration: 18s;
+        }
+        
+        .floating-element:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            left: 70%;
+            animation-delay: -7s;
+            animation-duration: 22s;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(100px, 0) rotate(180deg);
+            }
+            75% {
+                transform: translate(50px, -50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
         .video-container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            background: #000;
+            background: transparent;
+            z-index: 2;
         }
         
         video {
@@ -50,6 +155,8 @@
             object-fit: contain;
             outline: none;
             cursor: pointer;
+            position: relative;
+            z-index: 3;
         }
         
         /* Ad Container */
@@ -70,12 +177,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 15;
             cursor: pointer;
+            backdrop-filter: blur(5px);
         }
         
         .play-button {
@@ -87,6 +195,13 @@
             justify-content: center;
             align-items: center;
             border: 3px solid white;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.8);
         }
         
         .play-button::after {
@@ -102,10 +217,58 @@
         .play-overlay.hidden {
             display: none;
         }
+        
+        /* Subtle border glow effect */
+        .video-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95%;
+            height: 95%;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            animation: glowRotate 6s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        @keyframes glowRotate {
+            0% {
+                background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            }
+            25% {
+                background: linear-gradient(135deg, transparent, rgba(144, 226, 74, 0.1), transparent);
+            }
+            50% {
+                background: linear-gradient(225deg, transparent, rgba(226, 74, 144, 0.1), transparent);
+            }
+            75% {
+                background: linear-gradient(315deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            }
+            100% {
+                background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Background Container -->
+    <div class="background-container">
+        <div class="animated-bg"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+    </div>
+    
     <div class="video-container">
+        <!-- Video Glow Effect -->
+        <div class="video-glow"></div>
+        
         <!-- Ad Container -->
         <div id="ad-container"></div>
         
