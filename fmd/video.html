@@ -30,74 +30,143 @@
     
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: Arial, sans-serif;
-        }
-        .video-container {
-            width: 100%;
-            max-width: 800px;
+            padding: 0;
             background: #000;
-            border-radius: 15px;
+            font-family: Arial, sans-serif;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            margin: 20px 0;
         }
+        
+        .video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+        
         video {
             width: 100%;
-            display: block;
+            height: 100%;
+            object-fit: contain;
             outline: none;
         }
-        .video-info {
-            padding: 20px;
-            color: white;
-            text-align: center;
-            background: #2d2d2d;
+        
+        /* Minimal Ad Overlay */
+        .ad-overlay {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #4A90E2;
+            z-index: 10;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
         }
+        
+        .ad-overlay a {
+            color: #4A90E2;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .ad-overlay:hover {
+            background: rgba(74, 144, 226, 0.9);
+        }
+        
+        .ad-overlay:hover a {
+            color: white;
+        }
+        
+        .ad-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Remove all other elements */
+        .video-info,
         .ad-container {
-            width: 100%;
-            max-width: 800px;
-            text-align: center;
-            margin: 20px 0;
+            display: none;
         }
     </style>
 </head>
 <body>
-    <!-- Monetag Ad -->
-    <div class="ad-container">
-        <a href="https://otieu.com/4/10000601" target="_blank">
-            <img src="https://via.placeholder.com/800x100/4A90E2/FFFFFF?text=Monetag+Advertisement" alt="Ad" style="max-width:100%;border-radius:8px;">
-        </a>
-    </div>
-
-    <!-- Video Player -->
+    <!-- Clean Video Container with Minimal Ad -->
     <div class="video-container">
+        <!-- Minimal Ad Overlay -->
+        <div class="ad-overlay" id="videoAd">
+            <a href="https://otieu.com/4/10000601" target="_blank" title="Monetag Ad">
+                🔗 Ad
+            </a>
+        </div>
+        
+        <!-- Clean Video Player -->
         <video 
             controls 
             autoplay
             muted
             playsinline
-            poster="thumbnail1.png"
-            preload="metadata"
+            preload="auto"
         >
             <source src="video1.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-        <div class="video-info">
-            <h2>FinaltyMaDear Video</h2>
-            <p>Exclusive content</p>
-        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.querySelector('video');
+            const adOverlay = document.getElementById('videoAd');
+            
+            // Auto-play video
             video.play().catch(e => console.log('Autoplay prevented:', e));
+            
+            // Hide ad after 8 seconds
+            setTimeout(() => {
+                adOverlay.classList.add('hidden');
+            }, 8000);
+            
+            // Show ad when video is paused
+            video.addEventListener('pause', () => {
+                adOverlay.classList.remove('hidden');
+            });
+            
+            // Hide ad when video plays
+            video.addEventListener('play', () => {
+                setTimeout(() => {
+                    adOverlay.classList.add('hidden');
+                }, 5000);
+            });
+            
+            // Toggle ad on video click (except when clicking controls)
+            video.addEventListener('click', (e) => {
+                if (e.target === video) {
+                    adOverlay.classList.toggle('hidden');
+                }
+            });
+            
+            // Hide controls after 3 seconds of inactivity
+            let controlsTimeout;
+            function hideControls() {
+                video.style.cursor = 'none';
+                video.controls = false;
+            }
+            
+            function showControls() {
+                video.style.cursor = 'default';
+                video.controls = true;
+                clearTimeout(controlsTimeout);
+                controlsTimeout = setTimeout(hideControls, 3000);
+            }
+            
+            video.addEventListener('mousemove', showControls);
+            video.addEventListener('touchstart', showControls);
+            
+            // Initial hide controls
+            setTimeout(hideControls, 3000);
         });
     </script>
 </body>
