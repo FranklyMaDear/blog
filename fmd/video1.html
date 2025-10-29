@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinaltyMaDear Video</title>
+    
+    <!-- Twitter Player Card Meta Tags -->
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:site" content="@FmD699">
+    <meta name="twitter:title" content="FinaltyMaDear Exclusive Video">
+    <meta name="twitter:description" content="Watch this exclusive video content">
+    <meta name="twitter:player" content="https://blog.franklymadear.com/fmd/video.html">
+    <meta name="twitter:player:width" content="1280">
+    <meta name="twitter:player:height" content="720">
+    <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/thumbnail.png">
+    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/fmd/video.mp4">
+    <meta name="twitter:player:stream:content_type" content="video/mp4">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:type" content="video.other">
+    <meta property="og:title" content="FinaltyMaDear Exclusive Video">
+    <meta property="og:description" content="Watch this exclusive video content">
+    <meta property="og:image" content="https://blog.franklymadear.com/fmd/thumbnail.png">
+    <meta property="og:url" content="https://blog.franklymadear.com/fmd/video.html">
+    <meta property="og:video" content="https://blog.franklymadear.com/fmd/video.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="1280">
+    <meta property="og:video:height" content="720">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        /* Background Effects */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .animated-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(74, 144, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(226, 74, 144, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(144, 226, 74, 0.05) 0%, transparent 50%);
+            animation: bgPulse 8s ease-in-out infinite;
+        }
+        
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+        
+        .floating-element:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+        
+        .floating-element:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -5s;
+            animation-duration: 25s;
+        }
+        
+        .floating-element:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 80%;
+            left: 20%;
+            animation-delay: -10s;
+            animation-duration: 18s;
+        }
+        
+        .floating-element:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            left: 70%;
+            animation-delay: -7s;
+            animation-duration: 22s;
+        }
+        
+        @keyframes bgPulse {
+            0%, 100% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(50px, 50px) rotate(90deg);
+            }
+            50% {
+                transform: translate(100px, 0) rotate(180deg);
+            }
+            75% {
+                transform: translate(50px, -50px) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: transparent;
+            z-index: 2;
+        }
+        
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 3;
+        }
+        
+        /* Ad Container */
+        #ad-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            pointer-events: none;
+        }
+        
+        /* Play overlay for better UX */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 15;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+        }
+        
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid white;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(74, 144, 226, 0.8);
+        }
+        
+        .play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 25px solid white;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            margin-left: 5px;
+        }
+        
+        .play-overlay.hidden {
+            display: none;
+        }
+        
+        /* Subtle border glow effect */
+        .video-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 95%;
+            height: 95%;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            animation: glowRotate 6s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        @keyframes glowRotate {
+            0% {
+                background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            }
+            25% {
+                background: linear-gradient(135deg, transparent, rgba(144, 226, 74, 0.1), transparent);
+            }
+            50% {
+                background: linear-gradient(225deg, transparent, rgba(226, 74, 144, 0.1), transparent);
+            }
+            75% {
+                background: linear-gradient(315deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            }
+            100% {
+                background: linear-gradient(45deg, transparent, rgba(74, 144, 226, 0.1), transparent);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Container -->
+    <div class="background-container">
+        <div class="animated-bg"></div>
+        <div class="floating-elements">
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+            <div class="floating-element"></div>
+        </div>
+    </div>
+    
+    <div class="video-container">
+        <!-- Video Glow Effect -->
+        <div class="video-glow"></div>
+        
+        <!-- Ad Container -->
+        <div id="ad-container"></div>
+        
+        <!-- Play Overlay -->
+        <div class="play-overlay" id="playOverlay">
+            <div class="play-button"></div>
+        </div>
+        
+        <!-- Video Player -->
+        <video 
+            controls 
+            muted
+            playsinline
+            preload="auto"
+            poster="thumbnail.png"
+            id="videoPlayer"
+        >
+            <source src="video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('videoPlayer');
+            const playOverlay = document.getElementById('playOverlay');
+            let adLoaded = false;
+            
+            // Function to load monetag ad
+            function loadAd() {
+                if (!adLoaded) {
+                    try {
+                        // Monetag script
+                        (function(s){
+                            s.dataset.zone='10113668',
+                            s.src='https://groleegni.net/vignette.min.js'
+                        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+                        adLoaded = true;
+                        console.log('Monetag ad loaded successfully');
+                    } catch(e) {
+                        console.log('Ad loading error:', e);
+                    }
+                }
+            }
+            
+            // Click on overlay to play video and load ad
+            playOverlay.addEventListener('click', function() {
+                video.play().catch(e => console.log('Video play prevented:', e));
+                loadAd();
+                playOverlay.classList.add('hidden');
+            });
+            
+            // Load ad when video starts playing (from controls or any method)
+            video.addEventListener('play', function() {
+                loadAd();
+                playOverlay.classList.add('hidden');
+            });
+            
+            // Click on video to play and load ad
+            video.addEventListener('click', function() {
+                if (video.paused) {
+                    video.play().catch(e => console.log('Video play prevented:', e));
+                    loadAd();
+                }
+            });
+            
+            // Auto-hide overlay if video starts playing automatically
+            video.addEventListener('playing', function() {
+                playOverlay.classList.add('hidden');
+                loadAd();
+            });
+        });
+    </script>
+</body>
+</html>
