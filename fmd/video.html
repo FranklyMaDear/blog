@@ -157,18 +157,24 @@
                 playOverlay.classList.add('hidden');
             });
             
-            // Also load ad when video starts playing (in case controls are used)
+            // Load ad when video starts playing (from controls or any method)
             video.addEventListener('play', function() {
                 loadAd();
                 playOverlay.classList.add('hidden');
             });
             
-            // Click on video to show/hide controls and ensure ad is loaded
+            // Click on video to play and load ad
             video.addEventListener('click', function() {
                 if (video.paused) {
                     video.play().catch(e => console.log('Video play prevented:', e));
                     loadAd();
                 }
+            });
+            
+            // Auto-hide overlay if video starts playing automatically
+            video.addEventListener('playing', function() {
+                playOverlay.classList.add('hidden');
+                loadAd();
             });
         });
     </script>
