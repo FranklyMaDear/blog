@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creative Videos - Support the Creator | FmD</title>
   
-  <!-- Twitter Card - Χρησιμοποιούμε summary_large_image που είναι πιο αξιόπιστο -->
+  <!-- Dynamic Twitter Card - Θα ενημερώνονται με JavaScript -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@FranklyMaDear">
   <meta name="twitter:creator" content="@FranklyMaDear">
-  <meta name="twitter:title" content="🎬 Creative Videos - FranklyMaDear">
-  <meta name="twitter:description" content="Watch amazing creative videos and support the creator!">
-  <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/video/thumbnail1.png">
+  <meta name="twitter:title" content="Creative Videos - FranklyMaDear">
+  <meta name="twitter:description" content="🎬 Watch amazing creative videos and support the creator!">
+  <meta name="twitter:image" content="">
   <meta name="twitter:image:alt" content="Creative Video Preview">
 
-  <!-- Open Graph -->
+  <!-- Dynamic Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Creative Videos - FranklyMaDear">
   <meta property="og:description" content="🎬 Watch these amazing creative videos and support the creator!">
-  <meta property="og:image" content="https://blog.franklymadear.com/fmd/video/thumbnail1.png">
-  <meta property="og:url" content="https://blog.franklymadear.com/fmd/video.html">
+  <meta property="og:image" content="">
+  <meta property="og:url" content="">
   <meta property="og:site_name" content="FranklyMaDear">
   
   <style>
@@ -547,7 +547,7 @@
   </div>
 
   <script>
-    // Λίστα με 10 βίντεο
+    // Λίστα με 10 βίντεο - ΒΕΒΑΙΩΘΕΙΤΕ ΟΤΙ ΟΛΑ ΤΑ ΑΡΧΕΙΑ ΥΠΑΡΧΟΥΝ!
     const videos = [
       {
         src: "video/video1.mp4",
@@ -562,9 +562,9 @@
         shareImage: "https://blog.franklymadear.com/fmd/video/thumbnail2.png"
       },
       {
-        src: "video/video3.mp4",
+        src: "video/video3.mp4", 
         preview: "video/thumbnail3.png",
-        title: "Creative Video 3",
+        title: "Creative Video 3 - Παπαγάλος",
         shareImage: "https://blog.franklymadear.com/fmd/video/thumbnail3.png"
       },
       {
@@ -640,6 +640,41 @@
       setupEventListeners();
       updateVideoCounter();
       updateNavigationButtons();
+      updateMetaTags(); // ΕΝΗΜΕΡΩΣΗ META TAGS
+    }
+
+    // ΕΝΗΜΕΡΩΣΗ META TAGS ΓΙΑ ΚΟΙΝΗ ΧΡΗΣΗ
+    function updateMetaTags() {
+      const currentVideo = videos[currentVideoIndex];
+      const currentURL = getCurrentVideoShareURL();
+      
+      console.log('Ενημέρωση meta tags για:', currentVideo.title);
+      
+      // Ενημέρωση Twitter Card
+      const twitterImage = document.querySelector('meta[name="twitter:image"]');
+      const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+      const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+      
+      if (twitterImage) twitterImage.content = currentVideo.shareImage + '?v=' + Date.now();
+      if (twitterTitle) twitterTitle.content = `🎬 ${currentVideo.title} - FranklyMaDear`;
+      if (twitterDescription) twitterDescription.content = `Watch this amazing video: ${currentVideo.title}`;
+      
+      // Ενημέρωση Open Graph
+      const ogImage = document.querySelector('meta[property="og:image"]');
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      
+      if (ogImage) ogImage.content = currentVideo.shareImage + '?v=' + Date.now();
+      if (ogTitle) ogTitle.content = `${currentVideo.title} - FranklyMaDear`;
+      if (ogDescription) ogDescription.content = `🎬 ${currentVideo.title} - Watch now!`;
+      if (ogUrl) ogUrl.content = currentURL;
+      
+      // Ενημέρωση τίτλου σελίδας
+      document.title = `${currentVideo.title} - Creative Videos | FmD`;
+      
+      // Ενημέρωση poster για το βίντεο
+      mainVideo.poster = currentVideo.preview;
     }
 
     // Ανάγνωση index από URL
@@ -681,8 +716,9 @@
       isVideoEnded = false;
       videoOverlay.classList.remove('hidden');
       
-      // Ενημέρωση URL
+      // Ενημέρωση URL και meta tags
       updateURL();
+      updateMetaTags();
       
       console.log('Φόρτωση βίντεο:', video.src);
     }
