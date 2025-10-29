@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creative Videos - Support the Creator | FmD</title>
   
-  <!-- Dynamic Twitter Card - Θα ενημερώνονται με JavaScript -->
+  <!-- Dynamic Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@FranklyMaDear">
   <meta name="twitter:creator" content="@FranklyMaDear">
@@ -547,7 +547,7 @@
   </div>
 
   <script>
-    // Λίστα με 10 βίντεο - ΒΕΒΑΙΩΘΕΙΤΕ ΟΤΙ ΟΛΑ ΤΑ ΑΡΧΕΙΑ ΥΠΑΡΧΟΥΝ!
+    // Λίστα με 10 βίντεο
     const videos = [
       {
         src: "video/video1.mp4",
@@ -640,7 +640,7 @@
       setupEventListeners();
       updateVideoCounter();
       updateNavigationButtons();
-      updateMetaTags(); // ΕΝΗΜΕΡΩΣΗ META TAGS
+      updateMetaTags();
     }
 
     // ΕΝΗΜΕΡΩΣΗ META TAGS ΓΙΑ ΚΟΙΝΗ ΧΡΗΣΗ
@@ -916,22 +916,25 @@
       shareModal.classList.remove('active');
     }
 
-    // Κοινή χρήση σε πλατφόρμες
+    // ΝΕΟ SHARE FUNCTION - Χρησιμοποιεί static pages για κάθε βίντεο
     function shareOnPlatform(platform) {
-      const url = encodeURIComponent(getCurrentVideoShareURL());
-      const text = encodeURIComponent(`🎬 ${videos[currentVideoIndex].title} - FranklyMaDear`);
+      const videoNumber = currentVideoIndex + 1;
+      const videoTitle = videos[currentVideoIndex].title;
       
+      // Χρησιμοποιούμε τις στατικές σελίδες για κάθε βίντεο
       let shareUrl = '';
+      const staticPageUrl = `https://blog.franklymadear.com/fmd/video${videoNumber}.html`;
+      const text = encodeURIComponent(`🎬 ${videoTitle} - FranklyMaDear`);
       
       switch(platform) {
         case 'twitter':
-          shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+          shareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(staticPageUrl)}`;
           break;
         case 'facebook':
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(staticPageUrl)}`;
           break;
         case 'whatsapp':
-          shareUrl = `https://wa.me/?text=${text}%20${url}`;
+          shareUrl = `https://wa.me/?text=${text}%20${encodeURIComponent(staticPageUrl)}`;
           break;
       }
       
@@ -942,20 +945,17 @@
       hideShareModal();
     }
 
-    // Λήψη URL για κοινή χρήση
-    function getCurrentVideoShareURL() {
-      return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
-    }
-
-    // Αντιγραφή συνδέσμου
+    // ΝΕΟ COPY LINK FUNCTION
     function copyLink() {
-      const url = getCurrentVideoShareURL();
-      navigator.clipboard.writeText(url).then(() => {
+      const videoNumber = currentVideoIndex + 1;
+      const staticPageUrl = `https://blog.franklymadear.com/fmd/video${videoNumber}.html`;
+      
+      navigator.clipboard.writeText(staticPageUrl).then(() => {
         alert('Ο σύνδεσμος αντιγράφηκε!');
         hideShareModal();
       }).catch(() => {
         const textArea = document.createElement('textarea');
-        textArea.value = url;
+        textArea.value = staticPageUrl;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand('copy');
@@ -963,6 +963,11 @@
         alert('Ο σύνδεσμος αντιγράφηκε!');
         hideShareModal();
       });
+    }
+
+    // Λήψη URL για κοινή χρήση (παλιό function - χρησιμοποιείται ακόμα από άλλα μέρη)
+    function getCurrentVideoShareURL() {
+      return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
     }
 
     // Εκκίνηση όταν η σελίδα φορτώσει
