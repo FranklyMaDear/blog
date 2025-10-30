@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinaltyMaDear Exclusive Video</title>
+    <title>🎬FmD✨</title>
     
     <!-- Structured Data for Rich Results -->
     <script type="application/ld+json">
@@ -12,10 +12,10 @@
         "@type": "VideoObject",
         "name": "FinaltyMaDear Exclusive Video",
         "description": "Watch this exclusive video content from FinaltyMaDear",
-        "thumbnailUrl": "https://blog.franklymadear.com/fmd/thumbnail5.png",
+        "thumbnailUrl": "https://blog.franklymadear.com/fmd/video/thumbnail5.png",
         "uploadDate": "2024-01-01T00:00:00+00:00",
-        "contentUrl": "https://blog.franklymadear.com/fmd/video5.mp4",
-        "embedUrl": "https://blog.franklymadear.com/fmd/video5.html"
+        "contentUrl": "https://blog.franklymadear.com/fmd/video/video5.mp4",
+        "embedUrl": "https://blog.franklymadear.com/fmd/video/video5.html"
     }
     </script>
     
@@ -24,32 +24,38 @@
     <meta name="twitter:site" content="@FmD699">
     <meta name="twitter:title" content="FinaltyMaDear Exclusive Video">
     <meta name="twitter:description" content="Watch this exclusive video content from FinaltyMaDear">
-    <meta name="twitter:player" content="https://blog.franklymadear.com/fmd/video5.html">
+    <meta name="twitter:player" content="https://blog.franklymadear.com/fmd/video/video5.html">
     <meta name="twitter:player:width" content="1280">
     <meta name="twitter:player:height" content="720">
-    <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/thumbnail5.png">
-    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/fmd/video5.mp4">
+    <meta name="twitter:image" content="https://blog.franklymadear.com/fmd/video/thumbnail5.png">
+    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/fmd/video/video5.mp4">
     <meta name="twitter:player:stream:content_type" content="video/mp4">
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="video.other">
     <meta property="og:title" content="FinaltyMaDear Exclusive Video">
     <meta property="og:description" content="Watch this exclusive video content from FinaltyMaDear">
-    <meta property="og:image" content="https://blog.franklymadear.com/fmd/thumbnail5.png">
-    <meta property="og:url" content="https://blog.franklymadear.com/fmd/video5.html">
-    <meta property="og:video" content="https://blog.franklymadear.com/fmd/video5.mp4">
+    <meta property="og:image" content="https://blog.franklymadear.com/fmd/video/thumbnail5.png">
+    <meta property="og:url" content="https://blog.franklymadear.com/fmd/video/video5.html">
+    <meta property="og:video" content="https://blog.franklymadear.com/fmd/video/video5.mp4">
     <meta property="og:video:type" content="video/mp4">
     <meta property="og:video:width" content="1280">
     <meta property="og:video:height" content="720">
-    <meta property="og:site_name" content="FinaltyMaDear">
+    <meta property="og:site_name" content="🎬FmD✨">
     
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
             background: #000;
             font-family: Arial, sans-serif;
             overflow: hidden;
+            height: 100vh;
+            width: 100vw;
         }
         
         /* Enhanced Background Effects */
@@ -164,7 +170,9 @@
         }
         
         .video-container {
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
             background: transparent;
@@ -179,6 +187,32 @@
             cursor: pointer;
             position: relative;
             z-index: 3;
+        }
+        
+        /* Fullscreen controls */
+        .fullscreen-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .fullscreen-btn {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .fullscreen-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: rgba(255, 255, 255, 0.8);
         }
         
         /* Ad Container */
@@ -291,6 +325,27 @@
                 box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
             }
         }
+        
+        /* Hide browser UI in fullscreen */
+        :-webkit-full-screen {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        :-moz-full-screen {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        :-ms-fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        
+        :fullscreen {
+            width: 100% !important;
+            height: 100% !important;
+        }
     </style>
 </head>
 <body>
@@ -308,6 +363,12 @@
     <div class="video-container">
         <!-- Video Glow Effect -->
         <div class="video-glow"></div>
+        
+        <!-- Fullscreen Controls -->
+        <div class="fullscreen-controls">
+            <button class="fullscreen-btn" id="enterFullscreen">📺 Fullscreen</button>
+            <button class="fullscreen-btn" id="exitFullscreen" style="display:none;">✕ Exit</button>
+        </div>
         
         <!-- Ad Container -->
         <div id="ad-container">
@@ -350,7 +411,70 @@
             const video = document.getElementById('videoPlayer');
             const playOverlay = document.getElementById('playOverlay');
             const adContainer = document.getElementById('ad-container');
+            const enterFullscreenBtn = document.getElementById('enterFullscreen');
+            const exitFullscreenBtn = document.getElementById('exitFullscreen');
             let adLoaded = false;
+            
+            // Fullscreen functionality
+            function enterFullscreen() {
+                const element = document.documentElement;
+                
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                } else if (element.mozRequestFullScreen) {
+                    element.mozRequestFullScreen();
+                } else if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                } else if (element.msRequestFullscreen) {
+                    element.msRequestFullscreen();
+                }
+            }
+            
+            function exitFullscreen() {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.mozCancelFullScreen) {
+                    document.mozCancelFullScreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+            }
+            
+            // Fullscreen event listeners
+            enterFullscreenBtn.addEventListener('click', enterFullscreen);
+            exitFullscreenBtn.addEventListener('click', exitFullscreen);
+            
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+            
+            function handleFullscreenChange() {
+                if (document.fullscreenElement || 
+                    document.webkitFullscreenElement || 
+                    document.mozFullScreenElement || 
+                    document.msFullscreenElement) {
+                    enterFullscreenBtn.style.display = 'none';
+                    exitFullscreenBtn.style.display = 'block';
+                } else {
+                    enterFullscreenBtn.style.display = 'block';
+                    exitFullscreenBtn.style.display = 'none';
+                }
+            }
+            
+            // Auto-enter fullscreen when video starts playing
+            function autoEnterFullscreen() {
+                setTimeout(() => {
+                    if (!document.fullscreenElement && 
+                        !document.webkitFullscreenElement && 
+                        !document.mozFullScreenElement && 
+                        !document.msFullscreenElement) {
+                        enterFullscreen();
+                    }
+                }, 500);
+            }
             
             // Function to load ads
             function loadAds() {
@@ -383,12 +507,14 @@
                 video.play().catch(e => console.log('Video play prevented:', e));
                 loadAds();
                 playOverlay.classList.add('hidden');
+                autoEnterFullscreen();
             });
             
             // Load ads when video starts playing
             video.addEventListener('play', function() {
                 loadAds();
                 playOverlay.classList.add('hidden');
+                autoEnterFullscreen();
             });
             
             // Click on video to play and load ads
@@ -396,6 +522,7 @@
                 if (video.paused) {
                     video.play().catch(e => console.log('Video play prevented:', e));
                     loadAds();
+                    autoEnterFullscreen();
                 }
             });
             
@@ -403,10 +530,22 @@
             video.addEventListener('playing', function() {
                 playOverlay.classList.add('hidden');
                 loadAds();
+                autoEnterFullscreen();
             });
             
             // Hide ad container initially, show when video plays
             adContainer.style.display = 'none';
+            
+            // Try to auto-play and enter fullscreen on page load
+            setTimeout(() => {
+                video.play().then(() => {
+                    loadAds();
+                    playOverlay.classList.add('hidden');
+                    autoEnterFullscreen();
+                }).catch(e => {
+                    console.log('Auto-play prevented, waiting for user interaction');
+                });
+            }, 1000);
         });
     </script>
 </body>
