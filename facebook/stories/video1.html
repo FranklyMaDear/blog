@@ -4,23 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Άλλα λέει η Θεία μ και ά...</title>
+  
   <!-- Open Graph Meta Tags για Facebook -->
   <meta property="og:title" content="Άλλα λέει η Θεία μ και ά...">
   <meta property="og:description" content="Facebook Story">
   <meta property="og:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail1.png">
-  <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories.html">
-  <meta property="og:type" content="video.other">
-  <meta property="og:video" content="https://blog.franklymadear.com/facebook/stories/video1.mp4">
-  <meta property="og:video:type" content="video/mp4">
-  <meta property="og:video:width" content="1280">
-  <meta property="og:video:height" content="720">
+  <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories/video1.html">
+  <meta property="og:type" content="website">
   
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="player">
-  <meta name="twitter:player" content="https://blog.franklymadear.com/facebook/stories/video1.mp4">
-  <meta name="twitter:player:width" content="1280">
-  <meta name="twitter:player:height" content="720">
+  <!-- Twitter Card Meta Tags - Αλλαγή για να δείχνει στη σελίδα με τη διαφήμιση -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Άλλα λέει η Θεία μ και ά...">
+  <meta name="twitter:description" content="Δες αυτό το βίντεο">
   <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail1.png">
+  <meta name="twitter:url" content="https://blog.franklymadear.com/facebook/stories/video1.html">
+  
   <style>
     * {
       margin: 0;
@@ -1097,8 +1095,21 @@
         
         // Check if we need to show the ad
         if (!hasPlayedAd) {
-            showAd();
-            hasPlayedAd = true;
+            // Show preview image immediately
+            videoPreview.src = videoPreviews[currentVideoIndex];
+            videoPreview.style.display = 'block';
+            video.style.display = 'none';
+            videoOverlay.classList.remove('hidden');
+            
+            // Set video source for when ad finishes
+            videoSource.src = videoList[currentVideoIndex];
+            video.load();
+            
+            updateURL();
+            updateVideoCounter();
+            updateNavigationButtons();
+            
+            console.log('Page loaded - showing preview and waiting for user to play');
         } else {
             loadVideo(currentVideoIndex);
         }
@@ -1141,7 +1152,23 @@
     function closeAd() {
         clearInterval(countdownInterval);
         adOverlay.classList.remove('active');
-        loadVideo(currentVideoIndex);
+        playVideoAfterAd();
+    }
+
+    // Play video after ad finishes
+    function playVideoAfterAd() {
+        videoOverlay.classList.add('hidden');
+        videoPreview.style.display = 'none';
+        video.style.display = 'block';
+        
+        video.play().then(() => {
+            console.log('Video started playing successfully after ad');
+            // Unmute the video when user interacts
+            video.muted = false;
+        }).catch(e => {
+            console.log('Auto-play prevented after ad:', e);
+            videoOverlay.classList.remove('hidden');
+        });
     }
 
     // Load video function - ΔΙΟΡΘΩΜΕΝΗ
@@ -1195,24 +1222,24 @@
       }
     }
 
-    // Play video function - ΔΙΟΡΘΩΜΕΝΗ
+    // Play video function - ΤΩΡΑ ΕΜΦΑΝΙΖΕΙ ΠΡΩΤΑ ΤΗ ΔΙΑΦΗΜΙΣΗ
     function playVideo() {
-        videoOverlay.classList.add('hidden');
-        videoPreview.style.display = 'none';
-        video.style.display = 'block';
-        
-        video.play().then(() => {
-            console.log('Video started playing successfully');
-            // Unmute the video when user interacts
-            video.muted = false;
-        }).catch(e => {
-            console.log('Auto-play prevented:', e);
-            videoOverlay.classList.remove('hidden');
-            // If autoplay is blocked, show instructions
-            if (e.name === 'NotAllowedError') {
-                alert('Παρακαλώ πατήστε το play button για να ξεκινήσει το βίντεο με ήχο.');
-            }
-        });
+        if (!hasPlayedAd) {
+            showAd();
+            hasPlayedAd = true;
+        } else {
+            videoOverlay.classList.add('hidden');
+            videoPreview.style.display = 'none';
+            video.style.display = 'block';
+            
+            video.play().then(() => {
+                console.log('Video started playing successfully');
+                video.muted = false;
+            }).catch(e => {
+                console.log('Auto-play prevented:', e);
+                videoOverlay.classList.remove('hidden');
+            });
+        }
     }
 
     // Next video function
@@ -1285,35 +1312,35 @@
       return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
     }
 
-    // ΒΕΛΤΙΩΜΕΝΕΣ Share functions για να χρησιμοποιούν το direct video URL
+    // ΒΕΛΤΙΩΜΕΝΕΣ Share functions για Twitter - τώρα δείχνει στη σελίδα με τη διαφήμιση
     function shareToFacebook() {
-      const url = encodeURIComponent("https://blog.franklymadear.com/facebook/stories/video1.mp4");
+      const url = encodeURIComponent(getCurrentVideoShareURL());
       const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
       closeShareModal();
     }
 
     function shareToTwitter() {
-      const url = encodeURIComponent("https://blog.franklymadear.com/facebook/stories/video1.mp4");
+      const url = encodeURIComponent(getCurrentVideoShareURL());
       const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
       window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
       closeShareModal();
     }
 
     function shareToInstagram() {
-      const url = "https://blog.franklymadear.com/facebook/stories/video1.mp4";
+      const url = getCurrentVideoShareURL();
       alert(`Ανοίξτε το Instagram και κοινοποιήστε αυτόν τον σύνδεσμο: ${url}`);
       closeShareModal();
     }
 
     function shareToWhatsApp() {
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]} https://blog.franklymadear.com/facebook/stories/video1.mp4`);
+      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]} ${getCurrentVideoShareURL()}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
       closeShareModal();
     }
 
     function copyLink() {
-      const url = "https://blog.franklymadear.com/facebook/stories/video1.mp4";
+      const url = getCurrentVideoShareURL();
       navigator.clipboard.writeText(url).then(() => {
         alert(`Το link για το "${videoTitles[currentVideoIndex]}" αντιγράφηκε στο clipboard! 📋`);
       }).catch(() => {
