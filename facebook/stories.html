@@ -271,17 +271,19 @@
       position: relative;
     }
     
-    .ad-close {
+    /* ΚΕΝΤΡΙΚΟ ΚΟΥΜΠΙ CLOSE AD */
+    .ad-close-center {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       background: #e74c3c;
       color: white;
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 24px;
       cursor: pointer;
       z-index: 3;
       display: flex;
@@ -289,19 +291,20 @@
       align-items: center;
       font-weight: bold;
       transition: all 0.3s ease;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+      border: 3px solid white;
     }
     
-    .ad-close:hover {
+    .ad-close-center:hover {
       background: #c0392b;
-      transform: scale(1.1);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: 0 6px 25px rgba(0,0,0,0.9);
     }
     
-    .ad-close:disabled {
+    .ad-close-center:disabled {
       background: #7f8c8d;
       cursor: not-allowed;
-      transform: none;
+      transform: translate(-50%, -50%);
     }
     
     .ad-footer {
@@ -793,6 +796,12 @@
       .story-header span {
         font-size: 14px;
       }
+
+      .ad-close-center {
+        width: 70px;
+        height: 70px;
+        font-size: 20px;
+      }
     }
 
     @media (max-width: 360px) {
@@ -830,6 +839,12 @@
         width: 36px;
         height: 36px;
       }
+
+      .ad-close-center {
+        width: 60px;
+        height: 60px;
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -854,7 +869,8 @@
         <div class="ad-timer">Time: <span id="countdown">5</span>s</div>
       </div>
       
-      <button class="ad-close" id="close-ad" disabled>✕</button>
+      <!-- ΚΕΝΤΡΙΚΟ ΚΟΥΜΠΙ CLOSE -->
+      <button class="ad-close-center" id="close-ad" disabled>✕</button>
       
       <!-- Ad Display - Full Size -->
       <div id="ad-display">
@@ -1120,7 +1136,7 @@
         loadVideo(currentVideoIndex);
     }
 
-    // Load video function
+    // Load video function - ΔΙΟΡΘΩΜΕΝΗ
     function loadVideo(index) {
         if (index >= 0 && index < videoList.length) {
             currentVideoIndex = index;
@@ -1130,7 +1146,13 @@
             videoPreview.style.display = 'block';
             video.style.display = 'none';
             
+            // Set video source and load
             videoSource.src = videoList[index];
+            
+            // Clear any previous error state
+            video.error = null;
+            
+            // Load the video
             video.load();
             
             updateURL();
@@ -1139,6 +1161,8 @@
             
             // Show play overlay
             videoOverlay.classList.remove('hidden');
+            
+            console.log('Loading video:', videoList[index]);
         }
     }
 
@@ -1163,16 +1187,23 @@
       }
     }
 
-    // Play video function
+    // Play video function - ΔΙΟΡΘΩΜΕΝΗ
     function playVideo() {
         videoOverlay.classList.add('hidden');
         videoPreview.style.display = 'none';
         video.style.display = 'block';
+        
         video.play().then(() => {
-            console.log('Video started playing');
+            console.log('Video started playing successfully');
+            // Unmute the video when user interacts
+            video.muted = false;
         }).catch(e => {
             console.log('Auto-play prevented:', e);
             videoOverlay.classList.remove('hidden');
+            // If autoplay is blocked, show instructions
+            if (e.name === 'NotAllowedError') {
+                alert('Παρακαλώ πατήστε το play button για να ξεκινήσει το βίντεο με ήχο.');
+            }
         });
     }
 
@@ -1305,10 +1336,24 @@
       videoOverlay.classList.remove('hidden');
     });
     
-    // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ
+    // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ - ΒΕΛΤΙΩΜΕΝΟ
     video.addEventListener('error', function() {
       console.error('Σφάλμα φόρτωσης βίντεο:', video.error);
-      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει.`);
+      console.error('Video source:', videoSource.src);
+      
+      // Try to show preview image if video fails
+      videoPreview.style.display = 'block';
+      video.style.display = 'none';
+      videoOverlay.classList.remove('hidden');
+      
+      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει και είναι προσβάσιμο.`);
+    });
+
+    // LISTENER για successful video load
+    video.addEventListener('loadeddata', function() {
+      console.log('Video loaded successfully:', videoSource.src);
+      videoPreview.style.display = 'none';
+      video.style.display = 'block';
     });
 
     // Swipe functionality for mobile
