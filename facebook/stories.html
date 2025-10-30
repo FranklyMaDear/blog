@@ -29,12 +29,124 @@
       position: relative;
     }
 
+    /* Enhanced Background Effects */
+    .background-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      overflow: hidden;
+    }
+    
+    .animated-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+          radial-gradient(circle at 20% 80%, rgba(41, 128, 185, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, rgba(231, 76, 60, 0.3) 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, rgba(46, 204, 113, 0.2) 0%, transparent 50%),
+          radial-gradient(circle at 60% 60%, rgba(155, 89, 182, 0.25) 0%, transparent 50%),
+          radial-gradient(circle at 30% 70%, rgba(241, 196, 15, 0.15) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite;
+    }
+    
+    .floating-elements {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .floating-element {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    }
+    
+    .floating-element:nth-child(1) {
+      width: 100px;
+      height: 100px;
+      top: 10%;
+      left: 10%;
+      animation-delay: 0s;
+      animation-duration: 20s;
+      background: radial-gradient(circle, rgba(52, 152, 219, 0.3), transparent 70%);
+    }
+    
+    .floating-element:nth-child(2) {
+      width: 150px;
+      height: 150px;
+      top: 60%;
+      left: 80%;
+      animation-delay: -5s;
+      animation-duration: 25s;
+      background: radial-gradient(circle, rgba(231, 76, 60, 0.3), transparent 70%);
+    }
+    
+    .floating-element:nth-child(3) {
+      width: 80px;
+      height: 80px;
+      top: 80%;
+      left: 20%;
+      animation-delay: -10s;
+      animation-duration: 18s;
+      background: radial-gradient(circle, rgba(46, 204, 113, 0.3), transparent 70%);
+    }
+    
+    .floating-element:nth-child(4) {
+      width: 120px;
+      height: 120px;
+      top: 30%;
+      left: 70%;
+      animation-delay: -7s;
+      animation-duration: 22s;
+      background: radial-gradient(circle, rgba(155, 89, 182, 0.3), transparent 70%);
+    }
+    
+    @keyframes bgPulse {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.9;
+        transform: scale(1.05);
+      }
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(50px, 50px) rotate(90deg);
+      }
+      50% {
+        transform: translate(100px, 0) rotate(180deg);
+      }
+      75% {
+        transform: translate(50px, -50px) rotate(270deg);
+      }
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
+    }
+
     .video-container {
       width: 100vw;
       height: 100vh;
       position: fixed;
       top: 0;
       left: 0;
+      z-index: 2;
     }
 
     video {
@@ -42,6 +154,171 @@
       height: 100%;
       object-fit: cover;
       background: #000;
+      z-index: 3;
+      position: relative;
+    }
+
+    /* Enhanced border glow effect */
+    .video-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 95%;
+      height: 95%;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
+      animation: glowRotate 6s linear infinite;
+      pointer-events: none;
+      z-index: 2;
+      box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
+    }
+    
+    @keyframes glowRotate {
+      0% {
+        background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
+        box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
+      }
+      25% {
+        background: linear-gradient(135deg, transparent, rgba(46, 204, 113, 0.3), transparent);
+        box-shadow: 0 0 50px rgba(46, 204, 113, 0.2);
+      }
+      50% {
+        background: linear-gradient(225deg, transparent, rgba(231, 76, 60, 0.3), transparent);
+        box-shadow: 0 0 50px rgba(231, 76, 60, 0.2);
+      }
+      75% {
+        background: linear-gradient(315deg, transparent, rgba(155, 89, 182, 0.3), transparent);
+        box-shadow: 0 0 50px rgba(155, 89, 182, 0.2);
+      }
+      100% {
+        background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
+        box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
+      }
+    }
+
+    /* Ad Overlay - Full Video Size */
+    #ad-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.98);
+      z-index: 50;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    
+    #ad-overlay.active {
+      display: flex;
+    }
+    
+    .ad-content {
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+      border-radius: 0;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
+      border: 3px solid #333;
+    }
+    
+    .ad-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #e74c3c, #3498db);
+      padding: 15px;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .ad-title {
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .ad-timer {
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      background: rgba(0,0,0,0.7);
+      padding: 5px 15px;
+      border-radius: 20px;
+      min-width: 80px;
+      text-align: center;
+    }
+    
+    /* Ad container - Full size */
+    #ad-display {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      position: relative;
+    }
+    
+    .ad-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+    
+    .ad-close:hover {
+      background: #c0392b;
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+    }
+    
+    .ad-close:disabled {
+      background: #7f8c8d;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .ad-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #2c3e50, #34495e);
+      padding: 12px;
+      z-index: 2;
+      text-align: center;
+    }
+    
+    .ad-message {
+      color: #ecf0f1;
+      font-size: 14px;
+      font-weight: bold;
     }
 
     /* OVERLAY ΓΙΑ ΤΟ PLAY BUTTON */
@@ -51,13 +328,13 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 15;
       cursor: pointer;
-      transition: opacity 0.3s ease;
+      backdrop-filter: blur(5px);
     }
     
     .video-overlay.hidden {
@@ -68,29 +345,29 @@
     .play-button {
       width: 80px;
       height: 80px;
-      background: rgba(24, 119, 242, 0.9);
+      background: rgba(0, 0, 0, 0.7);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 3px solid rgba(255, 255, 255, 0.8);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border: 3px solid white;
+      box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
       transition: all 0.3s ease;
     }
 
     .play-button:hover {
       transform: scale(1.1);
-      background: rgba(24, 119, 242, 1);
+      box-shadow: 0 0 30px rgba(52, 152, 219, 0.9);
     }
 
     .play-button::after {
       content: '';
       width: 0;
       height: 0;
-      border-left: 20px solid white;
-      border-top: 12px solid transparent;
-      border-bottom: 12px solid transparent;
-      margin-left: 4px;
+      border-left: 25px solid white;
+      border-top: 15px solid transparent;
+      border-bottom: 15px solid transparent;
+      margin-left: 5px;
     }
     
     .story-header {
@@ -581,7 +858,50 @@
 </head>
 <body>
 
+  <!-- Background Container -->
+  <div class="background-container">
+    <div class="animated-bg"></div>
+    <div class="floating-elements">
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+      <div class="floating-element"></div>
+    </div>
+  </div>
+
+  <!-- Ad Overlay - Full Video Size -->
+  <div id="ad-overlay">
+    <div class="ad-content">
+      <div class="ad-header">
+        <div class="ad-title">📢 ADVERTISEMENT</div>
+        <div class="ad-timer">Time: <span id="countdown">5</span>s</div>
+      </div>
+      
+      <button class="ad-close" id="close-ad" disabled>✕</button>
+      
+      <!-- Ad Display - Full Size -->
+      <div id="ad-display">
+        <!-- New Ad Script -->
+        <script src="https://fpyf8.com/88/tag.min.js" data-zone="175808" async data-cfasync="false"></script>
+        
+        <!-- Fallback content -->
+        <div id="fallback-ad" style="display: none; color: white; text-align: center;">
+          <h3>Advertisement</h3>
+          <p>Please wait while the ad loads...</p>
+          <p>Video will play in <span id="fallback-countdown">5</span> seconds</p>
+        </div>
+      </div>
+      
+      <div class="ad-footer">
+        <div class="ad-message">Video will start automatically after advertisement</div>
+      </div>
+    </div>
+  </div>
+
   <div class="video-container" id="videoContainer">
+    <!-- Video Glow Effect -->
+    <div class="video-glow"></div>
+    
     <video id="mainVideo" playsinline webkit-playsinline muted preload="auto" autoplay>
       <source id="videoSource" src="" type="video/mp4">
       Το βίντεο δεν υποστηρίζεται.
@@ -707,6 +1027,11 @@
     const videoShareInfo = document.getElementById('videoShareInfo');
     const currentVideoName = document.getElementById('currentVideoName');
     const videoPreview = document.getElementById('videoPreview');
+    const adOverlay = document.getElementById('ad-overlay');
+    const closeAdBtn = document.getElementById('close-ad');
+    const countdownElement = document.getElementById('countdown');
+    const fallbackCountdown = document.getElementById('fallback-countdown');
+    const fallbackAd = document.getElementById('fallback-ad');
 
     // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ 10 ΒΙΝΤΕΟ
     const videoList = [
@@ -722,367 +1047,219 @@
         "stories/video10.mp4"
     ];
     
-    const videoTitles = [
-        "Βίντεο 1",
-        "Βίντεο 2", 
-        "Βίντεο 3",
-        "Βίντεο 4",
-        "Βίντεο 5",
-        "Βίντεο 6",
-        "Βίντεο 7",
-        "Βίντεο 8",
-        "Βίντεο 9",
-        "Βίντεο 10"
+    const videoPreviews = [
+        "stories/preview1.jpg",
+        "stories/preview2.jpg",
+        "stories/preview3.jpg",
+        "stories/preview4.jpg",
+        "stories/preview5.jpg",
+        "stories/preview6.jpg",
+        "stories/preview7.jpg",
+        "stories/preview8.jpg",
+        "stories/preview9.jpg",
+        "stories/preview10.jpg"
     ];
-    
+
     let currentVideoIndex = 0;
-    let isFirstLoad = true;
+    let hasPlayedAd = false;
+    let countdownInterval;
 
-    // Function για να πάρουμε το video index από το URL
-    function getVideoIndexFromURL() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const videoParam = urlParams.get('video');
-      
-      if (videoParam) {
-        const index = parseInt(videoParam) - 1;
-        if (index >= 0 && index < videoList.length) {
-          return index;
-        }
-      }
-      return 0;
-    }
-
-    // Function για να αλλάξουμε το URL χωρίς reload
-    function updateURL() {
-      const newURL = `${window.location.pathname}?video=${currentVideoIndex + 1}`;
-      window.history.replaceState({}, '', newURL);
-    }
-
-    // Function για να πάρουμε το share URL για το τρέχον βίντεο
-    function getCurrentVideoShareURL() {
-      return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
-    }
-
-    // Function για να προσθέσουμε το script
-    function addTrackingScript() {
-      try {
-        (function(s){
-          s.dataset.zone='9974402',
-          s.src='https://al5sm.com/tag.min.js'
-        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-        console.log('Tracking script loaded for video:', currentVideoIndex + 1);
-      } catch (error) {
-        console.error('Error loading tracking script:', error);
-      }
-    }
-
-    function updateVideoCounter() {
-      videoCounter.textContent = `${currentVideoIndex + 1} / ${videoList.length}`;
-      currentVideoName.textContent = videoTitles[currentVideoIndex];
-    }
-
-    function updateNavigationButtons() {
-      // Εμφάνιση/απόκρυψη previous button
-      if (currentVideoIndex > 0) {
-        prevVideoBtn.style.display = 'flex';
-      } else {
-        prevVideoBtn.style.display = 'none';
-      }
-      
-      // Εμφάνιση/απόκρυψη next button
-      if (currentVideoIndex < videoList.length - 1) {
-        nextVideoBtn.style.display = 'flex';
-      } else {
-        nextVideoBtn.style.display = 'none';
-      }
-    }
-
-    async function loadCurrentVideo() {
-      if (videoList.length === 0) {
-        console.error('Δεν υπάρχουν βίντεο στη λίστα');
-        alert('Δεν υπάρχουν διαθέσιμα βίντεο!');
-        return;
-      }
-      
-      const currentVideo = videoList[currentVideoIndex];
-      console.log('Προσπάθεια φόρτωσης:', currentVideo);
-      
-      // Κρύβουμε το preview
-      videoPreview.style.display = 'none';
-      video.style.display = 'block';
-      
-      // Ορίζουμε το source του βίντεο
-      videoSource.src = currentVideo;
-      
-      // Εμφανίζουμε το overlay play button ΜΟΝΟ αν το βίντεο δεν παίζει
-      if (video.paused) {
-        videoOverlay.classList.remove('hidden');
-      }
-      
-      // Φορτώνουμε το βίντεο
-      video.load();
-      
-      // Ενημέρωση URL, counter και share info
-      updateURL();
-      updateVideoCounter();
-      updateNavigationButtons();
-      
-      // ΠΡΟΣΘΗΚΗ TRACKING SCRIPT ΚΑΘΕ ΦΟΡΑ ΠΟΥ ΑΛΛΑΖΕΙ ΒΙΝΤΕΟ
-      addTrackingScript();
-      
-      console.log('Βίντεο φορτώθηκε:', currentVideo);
-      
-      // ΑΥΤΟΜΑΤΗ ΑΝΑΠΑΡΑΓΩΓΗ ΜΟΝΟ ΣΤΟ ΠΡΩΤΟ ΦΟΡΤΩΜΑ
-      if (isFirstLoad) {
-        setTimeout(() => {
-          video.play().then(() => {
-            console.log('Αυτόματη αναπαραγωγή πρώτου βίντεο');
-            video.muted = false;
-            videoOverlay.classList.add('hidden');
-          }).catch(error => {
-            console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
-            videoOverlay.classList.remove('hidden');
-          });
-        }, 500);
-        isFirstLoad = false;
-      }
-    }
-
-    function loadNextVideo() {
-      if (videoList.length === 0) return;
-      
-      currentVideoIndex = (currentVideoIndex + 1) % videoList.length;
-      loadCurrentVideo();
-      
-      // ΑΥΤΟΜΗ ΑΝΑΠΑΡΑΓΩΓΗ ΜΕΤΑ ΤΗΝ ΕΠΟΜΕΝΗ ΦΟΡΤΩΣΗ
-      setTimeout(() => {
-        video.play().then(() => {
-          console.log('Αυτόματη αναπαραγωγή επόμενου βίντεο');
-          video.muted = false;
-          videoOverlay.classList.add('hidden');
-        }).catch(error => {
-          console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
-          videoOverlay.classList.remove('hidden');
-        });
-      }, 500);
-    }
-
-    function loadPrevVideo() {
-      if (videoList.length === 0) return;
-      
-      if (currentVideoIndex > 0) {
-        currentVideoIndex = currentVideoIndex - 1;
-        loadCurrentVideo();
-        
-        // ΑΥΤΟΜΗ ΑΝΑΠΑΡΑΓΩΓΗ ΜΕΤΑ ΤΗΝ ΕΠΟΜΕΝΗ ΦΟΡΤΩΣΗ
-        setTimeout(() => {
-          video.play().then(() => {
-            console.log('Αυτόματη αναπαραγωγή προηγούμενου βίντεο');
-            video.muted = false;
-            videoOverlay.classList.add('hidden');
-          }).catch(error => {
-            console.log('Αδύνατη η αυτόματη αναπαραγωγή: ' + error);
-            videoOverlay.classList.remove('hidden');
-          });
-        }, 500);
-      }
-    }
-
-    function enterFullscreen() {
-      const element = document.documentElement;
-      if (element.requestFullscreen) {
-        element.requestFullscreen();
-      } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-      } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
-      }
-    }
-
-    function playVideoAndUnmute(event) {
-      if (event.target.closest('.reaction-bar') || event.target.closest('.share-modal') || event.target.closest('.next-video-btn') || event.target.closest('.prev-video-btn')) {
-        return;
-      }
-      
-      if (videoList.length === 0) {
-        alert('Δεν υπάρχουν διαθέσιμα βίντεο!');
-        return;
-      }
-      
-      // Κρύβουμε το overlay
-      videoOverlay.classList.add('hidden');
-      
-      video.play().then(() => {
-        console.log('Video started playing.');
-        
-        if (video.muted) {
-          video.muted = false;
-          console.log('Video unmuted.');
-        }
-        
-        enterFullscreen();
-        
-      }).catch(error => {
-        console.error('Failed to play video:', error);
-        videoOverlay.classList.remove('hidden');
-        
-        if (error.name === 'NotAllowedError') {
-          alert('Ο browser δεν επέτρεψε την αναπαραγωγή. Παρακαλώ επιτρέψτε τον ήχο.');
+    // Initialize video
+    function initVideo() {
+        // Check if we need to show the ad
+        if (!hasPlayedAd) {
+            showAd();
+            hasPlayedAd = true;
         } else {
-          alert('Αδύνατη η αναπαραγωγή βίντεο. Δοκιμάστε ξανά.');
+            loadVideo(currentVideoIndex);
         }
-      });
-    }
-    
-    // ΕΝΕΡΓΟΠΟΙΗΣΗ ΑΝΑΠΑΡΑΓΩΓΗΣ
-    document.addEventListener('DOMContentLoaded', function() {
-      // Πάρε το video index από το URL
-      currentVideoIndex = getVideoIndexFromURL();
-      
-      // Φόρτωσε το βίντεο
-      loadCurrentVideo();
-      
-      // Προσθέτουμε τους listeners
-      videoOverlay.addEventListener('click', playVideoAndUnmute);
-      nextVideoBtn.addEventListener('click', loadNextVideo);
-      prevVideoBtn.addEventListener('click', loadPrevVideo);
-      
-      // Κρύβουμε αρχικά τα βελάκια
-      updateNavigationButtons();
-    });
-    
-    function reactToEmoji(emoji, label) {
-      const emojiElement = event.target.closest('.reaction-emoji');
-      if (video.paused) {
-        alert('Παρακαλώ πατήστε πρώτα το κουμπί Play για να ξεκινήσει το βίντεο.');
-        return;
-      }
-      
-      emojiElement.classList.add('clicked');
-      showReactionMessage(emoji, label);
-      setTimeout(() => {
-        emojiElement.classList.remove('clicked');
-      }, 600);
     }
 
-    function showReactionMessage(emoji, label) {
-      const message = document.createElement('div');
-      message.textContent = `${emoji} ${label}`;
-      message.style.position = 'fixed';
-      message.style.top = '50%';
-      message.style.left = '50%';
-      message.style.transform = 'translate(-50%, -50%)';
-      message.style.background = 'rgba(0,0,0,0.8)';
-      message.style.color = 'white';
-      message.style.padding = '10px 20px';
-      message.style.borderRadius = '20px';
-      message.style.fontSize = '18px';
-      message.style.zIndex = '1000';
-      message.style.backdropFilter = 'blur(10px)';
-      message.style.border = '1px solid rgba(255,255,255,0.2)';
-      
-      document.body.appendChild(message);
-      
-      setTimeout(() => {
-        message.style.opacity = '0';
-        message.style.transition = 'opacity 0.5s ease';
+    // Show ad function
+    function showAd() {
+        adOverlay.classList.add('active');
+        
+        // Start countdown
+        let countdown = 5;
+        countdownElement.textContent = countdown;
+        fallbackCountdown.textContent = countdown;
+        
+        // Check if ad script loaded successfully
+        let adLoaded = false;
         setTimeout(() => {
-          document.body.removeChild(message);
-        }, 500);
-      }, 2000);
+            // Check if ad content is visible
+            const adElements = document.querySelectorAll('iframe, img, div[id*="ad"], div[class*="ad"]');
+            adLoaded = adElements.length > 2; // More than the fallback ad
+            
+            if (!adLoaded) {
+                fallbackAd.style.display = 'block';
+            }
+        }, 1000);
+        
+        countdownInterval = setInterval(() => {
+            countdown--;
+            countdownElement.textContent = countdown;
+            fallbackCountdown.textContent = countdown;
+            
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                closeAdBtn.disabled = false;
+            }
+        }, 1000);
     }
 
+    // Close ad function
+    function closeAd() {
+        clearInterval(countdownInterval);
+        adOverlay.classList.remove('active');
+        loadVideo(currentVideoIndex);
+    }
+
+    // Load video function
+    function loadVideo(index) {
+        if (index >= 0 && index < videoList.length) {
+            currentVideoIndex = index;
+            
+            // Show preview image while video loads
+            videoPreview.src = videoPreviews[index];
+            videoPreview.style.display = 'block';
+            video.style.display = 'none';
+            
+            videoSource.src = videoList[index];
+            video.load();
+            
+            videoCounter.textContent = `Βίντεο ${index + 1} από ${videoList.length}`;
+            currentVideoName.textContent = index + 1;
+            
+            // Hide previous button if first video
+            prevVideoBtn.style.display = index === 0 ? 'none' : 'flex';
+            
+            // Hide next button if last video
+            nextVideoBtn.style.display = index === videoList.length - 1 ? 'none' : 'flex';
+            
+            // Show play overlay
+            videoOverlay.classList.remove('hidden');
+        }
+    }
+
+    // Play video function
+    function playVideo() {
+        videoOverlay.classList.add('hidden');
+        videoPreview.style.display = 'none';
+        video.style.display = 'block';
+        video.play().catch(e => console.log('Auto-play prevented:', e));
+    }
+
+    // Next video function
+    function nextVideo() {
+        if (currentVideoIndex < videoList.length - 1) {
+            loadVideo(currentVideoIndex + 1);
+        }
+    }
+
+    // Previous video function
+    function prevVideo() {
+        if (currentVideoIndex > 0) {
+            loadVideo(currentVideoIndex - 1);
+        }
+    }
+
+    // React to emoji function
+    function reactToEmoji(emoji, label) {
+        const emojiElement = event.currentTarget;
+        emojiElement.classList.add('clicked');
+        
+        // Show share indicator with reaction
+        shareIndicator.textContent = `Αντέδρασες με ${emoji} ${label}`;
+        shareIndicator.style.display = 'block';
+        
+        setTimeout(() => {
+            emojiElement.classList.remove('clicked');
+            shareIndicator.style.display = 'none';
+        }, 2000);
+        
+        // Log reaction
+        console.log(`Reacted with ${emoji} (${label}) to video ${currentVideoIndex + 1}`);
+    }
+
+    // Share modal functions
     function openShareModal() {
-      updateVideoCounter();
-      shareModal.classList.add('active');
+        shareModal.classList.add('active');
     }
 
     function closeShareModal() {
-      shareModal.classList.remove('active');
+        shareModal.classList.remove('active');
     }
 
+    // Share functions
     function shareToFacebook() {
-      const url = encodeURIComponent(getCurrentVideoShareURL());
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
-      closeShareModal();
+        const shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
+        window.open(shareUrl, '_blank');
+        closeShareModal();
     }
 
     function shareToTwitter() {
-      const url = encodeURIComponent(getCurrentVideoShareURL());
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
-      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
-      closeShareModal();
+        const shareUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=Δες αυτό το βίντεο!`;
+        window.open(shareUrl, '_blank');
+        closeShareModal();
     }
 
     function shareToInstagram() {
-      const url = getCurrentVideoShareURL();
-      alert(`Ανοίξτε το Instagram και κοινοποιήστε αυτόν τον σύνδεσμο: ${url}`);
-      closeShareModal();
+        alert('Για κοινοποίηση στο Instagram, αντιγράψτε τον σύνδεσμο και επικολλήστε τον στην περιγραφή της δημοσίευσής σας.');
+        copyLink();
+        closeShareModal();
     }
 
     function shareToWhatsApp() {
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]} ${getCurrentVideoShareURL()}`);
-      window.open(`https://wa.me/?text=${text}`, '_blank');
-      closeShareModal();
+        const shareUrl = `https://api.whatsapp.com/send?text=Δες αυτό το βίντεο! ${encodeURIComponent(window.location.href)}`;
+        window.open(shareUrl, '_blank');
+        closeShareModal();
     }
 
     function copyLink() {
-      const url = getCurrentVideoShareURL();
-      navigator.clipboard.writeText(url).then(() => {
-        alert(`Το link για το "${videoTitles[currentVideoIndex]}" αντιγράφηκε στο clipboard! 📋`);
-      }).catch(() => {
-        prompt('Αντιγράψτε αυτό το link:', url);
-      });
-      closeShareModal();
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('Ο σύνδεσμος αντιγράφηκε στο πρόχειρο!');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+        });
+        closeShareModal();
     }
+
+    // Event listeners
+    videoOverlay.addEventListener('click', playVideo);
+    nextVideoBtn.addEventListener('click', nextVideo);
+    prevVideoBtn.addEventListener('click', prevVideo);
+    closeAdBtn.addEventListener('click', closeAd);
+
+    // Swipe functionality for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
     
-    // LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ - ΑΥΤΟΜΗ ΕΠΟΜΕΝΗ ΑΝΑΠΑΡΑΓΩΓΗ
-    video.addEventListener('ended', function() {
-      console.log('Το βίντεο τελείωσε, φόρτωση επόμενου...');
-      loadNextVideo();
-    });
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, false);
     
-    // LISTENER ΓΙΑ ΝΑ ΚΡΥΒΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
-    video.addEventListener('play', function() {
-      videoOverlay.classList.add('hidden');
-    });
+    document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, false);
     
-    // LISTENER ΓΙΑ ΝΑ ΕΜΦΑΝΙΖΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΣΤΑΜΑΤΑ ΤΟ ΒΙΝΤΕΟ
-    video.addEventListener('pause', function() {
-      videoOverlay.classList.remove('hidden');
-    });
-    
-    // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ
-    video.addEventListener('error', function() {
-      console.error('Σφάλμα φόρτωσης βίντεο:', video.error);
-      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει.`);
-    });
-    
-    // KEYBOARD SHORTCUTS
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'ArrowRight') {
-        loadNextVideo();
-      } else if (event.key === 'ArrowLeft') {
-        loadPrevVideo();
-      } else if (event.key === ' ') {
-        event.preventDefault();
-        if (video.paused) {
-          playVideoAndUnmute(event);
-        } else {
-          video.pause();
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        
+        if (touchEndX < touchStartX - swipeThreshold) {
+            // Swipe left - next video
+            nextVideo();
         }
-      } else if (event.key === 'Escape') {
-        closeShareModal();
-      }
-    });
-    
-    // CLICK OUTSIDE SHARE MODAL TO CLOSE
-    document.addEventListener('click', function(event) {
-      if (shareModal.classList.contains('active') && !event.target.closest('.share-modal') && !event.target.closest('.share-btn')) {
-        closeShareModal();
-      }
-    });
+        
+        if (touchEndX > touchStartX + swipeThreshold) {
+            // Swipe right - previous video
+            prevVideo();
+        }
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', initVideo);
   </script>
 </body>
 </html>
