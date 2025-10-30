@@ -189,29 +189,65 @@
             z-index: 3;
         }
         
-        /* Fullscreen controls - REMOVED */
-        
-        /* Ad Container */
-        #ad-container {
-            position: absolute;
+        /* Ad Overlay for Twitter */
+        #ad-overlay {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 20;
-            pointer-events: none;
-            display: flex;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 50;
+            display: none;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
         }
         
-        .ad-banner {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 90%;
+        #ad-overlay.active {
+            display: flex;
+        }
+        
+        .ad-content {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            padding: 30px;
+            border-radius: 15px;
             text-align: center;
-            pointer-events: auto;
+            max-width: 90%;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+            border: 2px solid #444;
+        }
+        
+        .ad-title {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .ad-close {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .ad-close:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+        
+        .ad-timer {
+            color: #3498db;
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: bold;
         }
         
         /* Play overlay for better UX */
@@ -336,26 +372,23 @@
         </div>
     </div>
     
+    <!-- Ad Overlay for Twitter -->
+    <div id="ad-overlay">
+        <div class="ad-content">
+            <div class="ad-title">📢 ADS
+        </div>
+            <div id="ad-display">
+                <!-- Ad content will be loaded here -->
+                <p style="color: #ccc; margin-bottom: 15px;">The ad will be completed in: <span id="countdown">5</span> δευτερόλεπτα</p>
+                <div id="monetag-ad-container"></div>
+            </div>
+            <button class="ad-close" id="close-ad">✕ Closed</button>
+        </div>
+    </div>
+    
     <div class="video-container">
         <!-- Video Glow Effect -->
         <div class="video-glow"></div>
-        
-        <!-- Ad Container -->
-        <div id="ad-container">
-            <div class="ad-banner">
-                <!-- Google AdSense -->
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                     data-ad-slot="XXXXXXXXXX"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
         
         <!-- Play Overlay -->
         <div class="play-overlay" id="playOverlay">
@@ -380,8 +413,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('videoPlayer');
             const playOverlay = document.getElementById('playOverlay');
-            const adContainer = document.getElementById('ad-container');
-            let adLoaded = false;
+            const adOverlay = document.getElementById('ad-overlay');
+            const closeAdBtn = document.getElementById('close-ad');
+            const countdownElement = document.getElementById('countdown');
+            let adShown = false;
+            let countdownTimer;
             
             // Fullscreen functionality
             function enterFullscreen() {
@@ -398,18 +434,6 @@
                 }
             }
             
-            function exitFullscreen() {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.mozCancelFullScreen) {
-                    document.mozCancelFullScreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-            }
-            
             // Auto-enter fullscreen when video starts playing
             function autoEnterFullscreen() {
                 setTimeout(() => {
@@ -422,80 +446,122 @@
                 }, 500);
             }
             
-            // Function to load ads
-            function loadAds() {
-                if (!adLoaded) {
-                    try {
-                        // Option 1: Google AdSense (already in HTML)
-                        console.log('Google AdSense loaded');
+            // Show ad overlay with countdown
+            function showAdOverlay() {
+                if (!adShown) {
+                    adShown = true;
+                    adOverlay.classList.add('active');
+                    video.pause();
+                    
+                    // Start countdown from 5 seconds
+                    let countdown = 5;
+                    countdownElement.textContent = countdown;
+                    
+                    countdownTimer = setInterval(() => {
+                        countdown--;
+                        countdownElement.textContent = countdown;
                         
-                        // Option 2: Monetag as fallback
-                        (function(s){
-                            s.dataset.zone='10113668',
-                            s.src='https://groleegni.net/vignette.min.js'
-                        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-                        
-                        adLoaded = true;
-                        console.log('Ads loaded successfully');
-                        
-                        // Hide ad after 10 seconds
-                        setTimeout(() => {
-                            adContainer.style.display = 'none';
-                        }, 10000);
-                    } catch(e) {
-                        console.log('Ad loading error:', e);
-                    }
+                        if (countdown <= 0) {
+                            clearInterval(countdownTimer);
+                            closeAdOverlay();
+                        }
+                    }, 1000);
+                    
+                    // Load Monetag ad
+                    loadMonetagAd();
                 }
             }
             
-            // Click on overlay to play video and load ads
-            playOverlay.addEventListener('click', function() {
-                video.play().catch(e => console.log('Video play prevented:', e));
-                loadAds();
-                playOverlay.classList.add('hidden');
-                autoEnterFullscreen();
-            });
-            
-            // Load ads when video starts playing
-            video.addEventListener('play', function() {
-                loadAds();
-                playOverlay.classList.add('hidden');
-                autoEnterFullscreen();
-            });
-            
-            // Click on video to play and load ads
-            video.addEventListener('click', function() {
-                if (video.paused) {
-                    video.play().catch(e => console.log('Video play prevented:', e));
-                    loadAds();
+            // Close ad overlay
+            function closeAdOverlay() {
+                adOverlay.classList.remove('active');
+                clearInterval(countdownTimer);
+                
+                // Resume video
+                setTimeout(() => {
+                    video.play().catch(e => console.log('Video play error:', e));
                     autoEnterFullscreen();
+                }, 500);
+            }
+            
+            // Load Monetag ad
+            function loadMonetagAd() {
+                try {
+                    // Check if we're in an iframe (Twitter embed)
+                    if (window.self !== window.top) {
+                        console.log('Loading in iframe - using direct Monetag script');
+                        
+                        // Direct Monetag implementation for iframe
+                        (function(s){
+                            s.dataset.zone='10113668';
+                            s.src='https://groleegni.net/vignette.min.js';
+                            s.onload = function() {
+                                console.log('Monetag ad loaded successfully in iframe');
+                            };
+                        })(document.getElementById('monetag-ad-container').appendChild(document.createElement('script')));
+                    } else {
+                        console.log('Loading in main window - using standard ad methods');
+                        // Standard ad loading for direct access
+                        (function(s){
+                            s.dataset.zone='10113668';
+                            s.src='https://groleegni.net/vignette.min.js';
+                        })(document.getElementById('monetag-ad-container').appendChild(document.createElement('script')));
+                    }
+                } catch(e) {
+                    console.log('Ad loading error:', e);
+                }
+            }
+            
+            // Event Listeners
+            closeAdBtn.addEventListener('click', closeAdOverlay);
+            
+            // Click on overlay to play video and show ad
+            playOverlay.addEventListener('click', function() {
+                showAdOverlay();
+                playOverlay.classList.add('hidden');
+            });
+            
+            // Show ad when video starts playing (for direct play)
+            video.addEventListener('play', function() {
+                if (!adShown) {
+                    showAdOverlay();
+                }
+                playOverlay.classList.add('hidden');
+            });
+            
+            // Click on video to play and show ad
+            video.addEventListener('click', function() {
+                if (video.paused && !adShown) {
+                    showAdOverlay();
                 }
             });
             
             // Auto-hide overlay if video starts playing automatically
             video.addEventListener('playing', function() {
                 playOverlay.classList.add('hidden');
-                loadAds();
-                autoEnterFullscreen();
+                if (!adShown) {
+                    showAdOverlay();
+                }
             });
             
-            // Hide ad container initially, show when video plays
-            adContainer.style.display = 'none';
-            
-            // Try to auto-play and enter fullscreen on page load
+            // Try to auto-play on page load (with ad)
             setTimeout(() => {
-                video.play().then(() => {
-                    loadAds();
-                    playOverlay.classList.add('hidden');
-                    autoEnterFullscreen();
-                }).catch(e => {
-                    console.log('Auto-play prevented, waiting for user interaction');
-                });
+                if (!adShown) {
+                    video.play().then(() => {
+                        // Ad will be shown via the play event listener
+                    }).catch(e => {
+                        console.log('Auto-play prevented, waiting for user interaction');
+                    });
+                }
             }, 1000);
+            
+            // Handle visibility change for better ad experience
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden && adOverlay.classList.contains('active')) {
+                    video.pause();
+                }
+            });
         });
     </script>
-    
-    <!-- Monetag Ad Script -->
-    <script>(function(s){s.dataset.zone='10113668',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
 </body>
 </html>
