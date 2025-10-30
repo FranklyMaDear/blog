@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="el">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -214,8 +214,10 @@
             border-radius: 15px;
             text-align: center;
             max-width: 90%;
+            max-height: 90%;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
             border: 2px solid #444;
+            cursor: pointer;
         }
         
         .ad-title {
@@ -248,6 +250,19 @@
             font-size: 18px;
             margin-top: 15px;
             font-weight: bold;
+        }
+        
+        /* Ad container for Monetag */
+        #monetag-ad-container {
+            width: 100%;
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
         }
         
         /* Play overlay for better UX */
@@ -374,15 +389,34 @@
     
     <!-- Ad Overlay for Twitter -->
     <div id="ad-overlay">
-        <div class="ad-content">
-            <div class="ad-title">📢 ADS
-        </div>
+        <div class="ad-content" id="ad-content">
+            <div class="ad-title">📢 ADVERTISEMENT</div>
             <div id="ad-display">
-                <!-- Ad content will be loaded here -->
-                <p style="color: #ccc; margin-bottom: 15px;">The ad will be completed in: <span id="countdown">5</span> δευτερόλεπτα</p>
-                <div id="monetag-ad-container"></div>
+                <p style="color: #ccc; margin-bottom: 15px;">Ad will complete in: <span id="countdown">5</span> seconds</p>
+                <!-- Monetag Ad Container with Script -->
+                <div id="monetag-ad-container">
+                    <script>
+                        (function(s){
+                            s.dataset.zone = '10113668';
+                            s.src = 'https://groleegni.net/vignette.min.js';
+                            s.onload = function() {
+                                console.log('Monetag ad loaded successfully');
+                            };
+                            s.onerror = function() {
+                                console.log('Monetag ad failed to load');
+                                // Fallback ad content
+                                document.getElementById('monetag-ad-container').innerHTML = 
+                                    '<div style="color: white; text-align: center;">' +
+                                    '<p>Advertisement</p>' +
+                                    '<p>Click anywhere to continue</p>' +
+                                    '</div>';
+                            };
+                        })(document.createElement('script'));
+                    </script>
+                </div>
             </div>
-            <button class="ad-close" id="close-ad">✕ Closed</button>
+            <button class="ad-close" id="close-ad">✕ Close Ad</button>
+            <div class="ad-timer">Video will play after ad</div>
         </div>
     </div>
     
@@ -414,6 +448,7 @@
             const video = document.getElementById('videoPlayer');
             const playOverlay = document.getElementById('playOverlay');
             const adOverlay = document.getElementById('ad-overlay');
+            const adContent = document.getElementById('ad-content');
             const closeAdBtn = document.getElementById('close-ad');
             const countdownElement = document.getElementById('countdown');
             let adShown = false;
@@ -466,9 +501,6 @@
                             closeAdOverlay();
                         }
                     }, 1000);
-                    
-                    // Load Monetag ad
-                    loadMonetagAd();
                 }
             }
             
@@ -484,36 +516,15 @@
                 }, 500);
             }
             
-            // Load Monetag ad
-            function loadMonetagAd() {
-                try {
-                    // Check if we're in an iframe (Twitter embed)
-                    if (window.self !== window.top) {
-                        console.log('Loading in iframe - using direct Monetag script');
-                        
-                        // Direct Monetag implementation for iframe
-                        (function(s){
-                            s.dataset.zone='10113668';
-                            s.src='https://groleegni.net/vignette.min.js';
-                            s.onload = function() {
-                                console.log('Monetag ad loaded successfully in iframe');
-                            };
-                        })(document.getElementById('monetag-ad-container').appendChild(document.createElement('script')));
-                    } else {
-                        console.log('Loading in main window - using standard ad methods');
-                        // Standard ad loading for direct access
-                        (function(s){
-                            s.dataset.zone='10113668';
-                            s.src='https://groleegni.net/vignette.min.js';
-                        })(document.getElementById('monetag-ad-container').appendChild(document.createElement('script')));
-                    }
-                } catch(e) {
-                    console.log('Ad loading error:', e);
-                }
-            }
-            
             // Event Listeners
             closeAdBtn.addEventListener('click', closeAdOverlay);
+            
+            // Click anywhere on ad content to potentially trigger ad interaction
+            adContent.addEventListener('click', function(e) {
+                if (e.target !== closeAdBtn) {
+                    console.log('Ad content clicked - may trigger ad interaction');
+                }
+            });
             
             // Click on overlay to play video and show ad
             playOverlay.addEventListener('click', function() {
