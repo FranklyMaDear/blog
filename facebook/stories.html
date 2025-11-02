@@ -205,93 +205,20 @@
       }
     }
 
-    /* Ad Overlay */
-    #ad-overlay {
-      position: fixed;
+    /* Transparent Overlay */
+    .transparent-overlay {
+      position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 100;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    
-    #ad-overlay.active {
-      display: flex;
-    }
-    
-    .ad-content {
-      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-      border-radius: 15px;
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
-      border: 2px solid #333;
-    }
-    
-    .ad-header {
-      background: linear-gradient(90deg, #e74c3c, #3498db);
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .ad-title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    .close-ad-btn {
-      background: #ff4444;
-      color: white;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      background: transparent;
+      z-index: 50;
       cursor: pointer;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      border: 2px solid white;
     }
     
-    .close-ad-btn:hover {
-      background: #cc0000;
-      transform: scale(1.1);
-    }
-    
-    #ad-display {
-      width: 100%;
-      min-height: 300px;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    
-    .ad-footer {
-      background: linear-gradient(90deg, #2c3e50, #34495e);
-      padding: 12px;
-      text-align: center;
-    }
-    
-    .ad-message {
-      color: #ecf0f1;
-      font-size: 14px;
-      font-weight: bold;
+    .transparent-overlay.hidden {
+      display: none;
     }
 
     /* PLAY BUTTON OVERLAY */
@@ -766,11 +693,6 @@
       .story-header span {
         font-size: 14px;
       }
-
-      .ad-content {
-        width: 95%;
-        margin: 10px;
-      }
     }
 
     @media (max-width: 360px) {
@@ -824,25 +746,8 @@
     </div>
   </div>
 
-  <!-- Ad Overlay -->
-  <div id="ad-overlay">
-    <div class="ad-content">
-      <div class="ad-header">
-        <div class="ad-title">📢 ADVERTISEMENT</div>
-        <button class="close-ad-btn" id="close-ad-btn">✕</button>
-      </div>
-      
-      <!-- Ad Display -->
-      <div id="ad-display">
-        <!-- Ad Script will be loaded here -->
-        <script src="https://3nbf4.com/act/files/tag.min.js?z=9978488" data-cfasync="false" async></script>
-      </div>
-      
-      <div class="ad-footer">
-        <div class="ad-message">Close the ad to watch the video</div>
-      </div>
-    </div>
-  </div>
+  <!-- Transparent Overlay for Ad Click -->
+  <div class="transparent-overlay" id="transparentOverlay"></div>
 
   <div class="video-container" id="videoContainer">
     <!-- Video Glow Effect -->
@@ -969,9 +874,7 @@
     const videoShareInfo = document.getElementById('videoShareInfo');
     const currentVideoName = document.getElementById('currentVideoName');
     const videoPreview = document.getElementById('videoPreview');
-    const adOverlay = document.getElementById('ad-overlay');
-    const closeAdBtn = document.getElementById('close-ad-btn');
-    const adDisplay = document.getElementById('ad-display');
+    const transparentOverlay = document.getElementById('transparentOverlay');
 
     // UPDATED VIDEO LIST WITH 9 VIDEOS
     const videoList = [
@@ -1011,7 +914,7 @@
     ];
 
     let currentVideoIndex = 0;
-    let hasPlayedAd = false;
+    let hasClickedAd = false;
 
     // Function to get video index from URL
     function getVideoIndexFromURL() {
@@ -1043,7 +946,7 @@
         video.style.display = 'none';
         videoOverlay.classList.remove('hidden');
         
-        // Set video source for when ad finishes
+        // Set video source
         videoSource.src = videoList[currentVideoIndex];
         video.load();
         
@@ -1054,38 +957,27 @@
         console.log('Page loaded - showing preview and waiting for user to play');
     }
 
-    // Show ad function
-    function showAd() {
-        adOverlay.classList.add('active');
-        
-        // Add ad script to ad display container
-        setTimeout(() => {
-            const adScript = document.createElement('script');
-            adScript.src = 'https://3nbf4.com/act/files/tag.min.js?z=9978488';
-            adScript.setAttribute('data-cfasync', 'false');
-            adScript.async = true;
-            adDisplay.appendChild(adScript);
-        }, 100);
+    // Redirect to ad URL
+    function redirectToAd() {
+        if (!hasClickedAd) {
+            hasClickedAd = true;
+            window.open('https://otieu.com/4/10021790', '_blank');
+            // After clicking ad, play the video
+            setTimeout(playVideo, 100);
+        }
     }
 
-    // Close ad function
-    function closeAd() {
-        adOverlay.classList.remove('active');
-        playVideoAfterAd();
-    }
-
-    // Play video after ad finishes
-    function playVideoAfterAd() {
+    // Play video function
+    function playVideo() {
         videoOverlay.classList.add('hidden');
         videoPreview.style.display = 'none';
         video.style.display = 'block';
         
         video.play().then(() => {
-            console.log('Video started playing successfully after ad');
-            // Unmute the video when user interacts
+            console.log('Video started playing successfully');
             video.muted = false;
         }).catch(e => {
-            console.log('Auto-play prevented after ad:', e);
+            console.log('Auto-play prevented:', e);
             videoOverlay.classList.remove('hidden');
         });
     }
@@ -1116,6 +1008,10 @@
             // Show play overlay
             videoOverlay.classList.remove('hidden');
             
+            // Reset ad click for new video
+            hasClickedAd = false;
+            transparentOverlay.classList.remove('hidden');
+            
             console.log('Loading video:', videoList[index]);
         }
     }
@@ -1139,42 +1035,6 @@
       } else {
         nextVideoBtn.style.display = 'none';
       }
-    }
-
-    // Play video function - NOW SHOWS AD FIRST
-    function playVideo() {
-        if (!hasPlayedAd) {
-            showAd();
-            hasPlayedAd = true;
-        } else {
-            videoOverlay.classList.add('hidden');
-            videoPreview.style.display = 'none';
-            video.style.display = 'block';
-            
-            video.play().then(() => {
-                console.log('Video started playing successfully');
-                video.muted = false;
-            }).catch(e => {
-                console.log('Auto-play prevented:', e);
-                videoOverlay.classList.remove('hidden');
-            });
-        }
-    }
-
-    // Next video function
-    function nextVideo() {
-        if (currentVideoIndex < videoList.length - 1) {
-            currentVideoIndex++;
-            loadVideo(currentVideoIndex);
-        }
-    }
-
-    // Previous video function
-    function prevVideo() {
-        if (currentVideoIndex > 0) {
-            currentVideoIndex--;
-            loadVideo(currentVideoIndex);
-        }
     }
 
     // React to emoji function
@@ -1269,10 +1129,10 @@
     }
 
     // Event listeners
-    videoOverlay.addEventListener('click', playVideo);
+    videoOverlay.addEventListener('click', redirectToAd);
+    transparentOverlay.addEventListener('click', redirectToAd);
     nextVideoBtn.addEventListener('click', nextVideo);
     prevVideoBtn.addEventListener('click', prevVideo);
-    closeAdBtn.addEventListener('click', closeAd);
 
     // VIDEO END LISTENER - AUTO NEXT PLAYBACK
     video.addEventListener('ended', function() {
@@ -1283,11 +1143,13 @@
     // HIDE PLAY BUTTON WHEN VIDEO PLAYS
     video.addEventListener('play', function() {
       videoOverlay.classList.add('hidden');
+      transparentOverlay.classList.add('hidden');
     });
     
     // SHOW PLAY BUTTON WHEN VIDEO PAUSES
     video.addEventListener('pause', function() {
       videoOverlay.classList.remove('hidden');
+      transparentOverlay.classList.remove('hidden');
     });
     
     // VIDEO LOAD ERROR HANDLER
@@ -1299,6 +1161,7 @@
       videoPreview.style.display = 'block';
       video.style.display = 'none';
       videoOverlay.classList.remove('hidden');
+      transparentOverlay.classList.remove('hidden');
       
       alert(`Video loading error: ${videoList[currentVideoIndex]}. Please check if the file exists and is accessible.`);
     });
@@ -1345,11 +1208,7 @@
         prevVideo();
       } else if (event.key === ' ') {
         event.preventDefault();
-        if (video.paused) {
-          playVideo();
-        } else {
-          video.pause();
-        }
+        redirectToAd();
       } else if (event.key === 'Escape') {
         closeShareModal();
       }
