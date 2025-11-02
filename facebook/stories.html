@@ -3,27 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Player</title>
+  <title>Amazing Video Collection</title>
   
   <!-- Open Graph Meta Tags for Facebook -->
   <meta property="og:title" content="Amazing Video Collection">
   <meta property="og:description" content="Watch the most entertaining videos">
   <meta property="og:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail1.png">
   <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories/video1.html">
-  <meta property="og:type" content="video.other">
-  <meta property="og:video" content="https://blog.franklymadear.com/facebook/stories/video1.mp4">
-  <meta property="og:video:type" content="video/mp4">
-  <meta property="og:video:width" content="720">
-  <meta property="og:video:height" content="1280">
+  <meta property="og:type" content="website">
   
   <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="player">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Amazing Video Collection">
   <meta name="twitter:description" content="Watch the most entertaining videos">
   <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail1.png">
-  <meta name="twitter:player" content="https://blog.franklymadear.com/facebook/stories/video1.html">
-  <meta name="twitter:player:width" content="720">
-  <meta name="twitter:player:height" content="1280">
   <meta name="twitter:url" content="https://blog.franklymadear.com/facebook/stories/video1.html">
   
   <style>
@@ -741,6 +734,9 @@
 
     <!-- Video Counter -->
     <div class="video-counter" id="videoCounter"></div>
+
+    <!-- Ad Script INSIDE the video container -->
+    <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
   </div> 
 
   <div class="reaction-bar">
@@ -878,6 +874,26 @@
 
     let currentVideoIndex = 0;
     let hasClickedAd = false;
+    let isInSocialMediaApp = false;
+
+    // Check if we're in a social media app
+    function checkSocialMediaApp() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      isInSocialMediaApp = userAgent.includes('facebook') || 
+                          userAgent.includes('twitter') || 
+                          userAgent.includes('fbios') || 
+                          userAgent.includes('fban') ||
+                          userAgent.includes('twitterforiphone') ||
+                          userAgent.includes('twitterforandroid');
+      
+      if (isInSocialMediaApp) {
+        console.log('Running in social media app - disabling ads');
+        // Auto-play video immediately in social media apps
+        setTimeout(() => {
+          playVideo();
+        }, 1000);
+      }
+    }
 
     // Function to get video index from URL
     function getVideoIndexFromURL() {
@@ -897,40 +913,17 @@
     function updateURL() {
       const newURL = `${window.location.pathname}?video=${currentVideoIndex + 1}`;
       window.history.replaceState({}, '', newURL);
-      
-      // Update Open Graph and Twitter meta tags dynamically
-      updateSocialMetaTags();
-    }
-
-    // Update social media meta tags
-    function updateSocialMetaTags() {
-      const currentVideoUrl = getCurrentVideoShareURL();
-      const currentTitle = videoTitles[currentVideoIndex];
-      const currentImage = videoPreviews[currentVideoIndex];
-      const currentVideo = videoList[currentVideoIndex];
-      
-      // Update Open Graph tags
-      document.querySelector('meta[property="og:url"]').setAttribute('content', currentVideoUrl);
-      document.querySelector('meta[property="og:title"]').setAttribute('content', currentTitle);
-      document.querySelector('meta[property="og:image"]').setAttribute('content', currentImage);
-      document.querySelector('meta[property="og:video"]').setAttribute('content', currentVideo);
-      
-      // Update Twitter tags
-      document.querySelector('meta[name="twitter:url"]').setAttribute('content', currentVideoUrl);
-      document.querySelector('meta[name="twitter:title"]').setAttribute('content', currentTitle);
-      document.querySelector('meta[name="twitter:image"]').setAttribute('content', currentImage);
-      document.querySelector('meta[name="twitter:player"]').setAttribute('content', currentVideoUrl);
     }
 
     // Initialize video
     function initVideo() {
+        checkSocialMediaApp();
         currentVideoIndex = getVideoIndexFromURL();
         
         // Show preview image immediately
         videoPreview.src = videoPreviews[currentVideoIndex];
         videoPreview.style.display = 'block';
         video.style.display = 'none';
-        videoOverlay.classList.remove('hidden');
         
         // Set video source
         videoSource.src = videoList[currentVideoIndex];
@@ -940,23 +933,43 @@
         updateVideoCounter();
         updateNavigationButtons();
         
-        console.log('Page loaded - showing preview and waiting for user to play');
+        if (!isInSocialMediaApp) {
+          videoOverlay.classList.remove('hidden');
+          console.log('Page loaded - showing preview and waiting for user to play');
+        } else {
+          console.log('Running in social media app - auto-playing video');
+        }
     }
 
     // Redirect to ad URL
     function redirectToAd() {
-        if (!hasClickedAd) {
+        if (!hasClickedAd && !isInSocialMediaApp) {
             hasClickedAd = true;
-            // Open ad in new tab
-            const adWindow = window.open('https://otieu.com/4/10021790', '_blank');
             
-            // Focus back to the video page after a short delay
-            setTimeout(() => {
-                window.focus();
+            // Create a more reliable ad opening method
+            const openAd = () => {
+              try {
+                const adWindow = window.open('https://otieu.com/4/10021790', '_blank');
+                if (adWindow) {
+                  // Focus back to our window after ad opens
+                  setTimeout(() => {
+                    window.focus();
+                    playVideo();
+                  }, 1000);
+                } else {
+                  // If popup blocked, play video directly
+                  playVideo();
+                }
+              } catch (e) {
+                // If any error, just play the video
                 playVideo();
-            }, 500);
+              }
+            };
+            
+            // Try to open ad
+            openAd();
         } else {
-            // If ad already clicked, just play the video
+            // If ad already clicked or in social media app, just play the video
             playVideo();
         }
     }
@@ -968,14 +981,20 @@
         videoPreview.style.display = 'none';
         video.style.display = 'block';
         
-        video.play().then(() => {
-            console.log('Video started playing successfully');
-            video.muted = false;
-        }).catch(e => {
-            console.log('Auto-play prevented:', e);
-            videoOverlay.classList.remove('hidden');
-            transparentOverlay.classList.remove('hidden');
-        });
+        // Force video to play with user interaction
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('Video started playing successfully');
+                video.muted = false;
+            }).catch(e => {
+                console.log('Auto-play prevented:', e);
+                // Show play button if auto-play fails
+                videoOverlay.classList.remove('hidden');
+                transparentOverlay.classList.remove('hidden');
+            });
+        }
     }
 
     // Load video function
@@ -1004,9 +1023,16 @@
             updateVideoCounter();
             updateNavigationButtons();
             
-            // Show play overlay
-            videoOverlay.classList.remove('hidden');
-            transparentOverlay.classList.remove('hidden');
+            // Show play overlay only if not in social media app
+            if (!isInSocialMediaApp) {
+              videoOverlay.classList.remove('hidden');
+              transparentOverlay.classList.remove('hidden');
+            } else {
+              // Auto-play in social media apps
+              setTimeout(() => {
+                playVideo();
+              }, 500);
+            }
             
             // Reset ad click for new video
             hasClickedAd = false;
@@ -1163,8 +1189,10 @@
     
     // SHOW PLAY BUTTON WHEN VIDEO PAUSES
     video.addEventListener('pause', function() {
-      videoOverlay.classList.remove('hidden');
-      transparentOverlay.classList.remove('hidden');
+      if (!isInSocialMediaApp) {
+        videoOverlay.classList.remove('hidden');
+        transparentOverlay.classList.remove('hidden');
+      }
     });
     
     // VIDEO LOAD ERROR HANDLER
@@ -1175,8 +1203,10 @@
       // Try to show preview image if video fails
       videoPreview.style.display = 'block';
       video.style.display = 'none';
-      videoOverlay.classList.remove('hidden');
-      transparentOverlay.classList.remove('hidden');
+      if (!isInSocialMediaApp) {
+        videoOverlay.classList.remove('hidden');
+        transparentOverlay.classList.remove('hidden');
+      }
       
       alert(`Video loading error: ${videoList[currentVideoIndex]}. Please check if the file exists and is accessible.`);
     });
