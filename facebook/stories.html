@@ -1,1423 +1,246 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Άλλα λέει η Θεία μ και ά...</title>
-  <!-- Open Graph Meta Tags για Facebook -->
-  <meta property="og:title" content="Άλλα λέει η Θεία μ και ά...">
-  <meta property="og:description" content="Facebook Story">
-  <meta property="og:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail1.png">
-  <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories.html">
-  <meta property="og:type" content="video.other">
-  <meta property="og:video" content="https://blog.franklymadear.com/facebook/stories/video1.mp4">
-  <meta property="og:video:type" content="video/mp4">
-  <meta property="og:video:width" content="1280">
-  <meta property="og:video:height" content="720">
-  
-  <!-- Twitter Card Meta Tags -->
-  <meta name="twitter:card" content="player">
-  <meta name="twitter:player" content="https://blog.franklymadear.com/facebook/stories/video1.mp4">
-  <meta name="twitter:player:width" content="1280">
-  <meta name="twitter:player:height" content="720">
-  <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail1.png">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      background: #000;
-      font-family: Arial, sans-serif;
-      color: white;
-      height: 100vh;
-      overflow: hidden;
-      position: relative;
-    }
-
-    /* Enhanced Background Effects */
-    .background-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-      overflow: hidden;
-    }
-    
-    .animated-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-          radial-gradient(circle at 20% 80%, rgba(41, 128, 185, 0.3) 0%, transparent 50%),
-          radial-gradient(circle at 80% 20%, rgba(231, 76, 60, 0.3) 0%, transparent 50%),
-          radial-gradient(circle at 40% 40%, rgba(46, 204, 113, 0.2) 0%, transparent 50%),
-          radial-gradient(circle at 60% 60%, rgba(155, 89, 182, 0.25) 0%, transparent 50%),
-          radial-gradient(circle at 30% 70%, rgba(241, 196, 15, 0.15) 0%, transparent 50%);
-      animation: bgPulse 8s ease-in-out infinite;
-    }
-    
-    .floating-elements {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .floating-element {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 50%;
-      animation: float 15s infinite linear;
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-    }
-    
-    .floating-element:nth-child(1) {
-      width: 100px;
-      height: 100px;
-      top: 10%;
-      left: 10%;
-      animation-delay: 0s;
-      animation-duration: 20s;
-      background: radial-gradient(circle, rgba(52, 152, 219, 0.3), transparent 70%);
-    }
-    
-    .floating-element:nth-child(2) {
-      width: 150px;
-      height: 150px;
-      top: 60%;
-      left: 80%;
-      animation-delay: -5s;
-      animation-duration: 25s;
-      background: radial-gradient(circle, rgba(231, 76, 60, 0.3), transparent 70%);
-    }
-    
-    .floating-element:nth-child(3) {
-      width: 80px;
-      height: 80px;
-      top: 80%;
-      left: 20%;
-      animation-delay: -10s;
-      animation-duration: 18s;
-      background: radial-gradient(circle, rgba(46, 204, 113, 0.3), transparent 70%);
-    }
-    
-    .floating-element:nth-child(4) {
-      width: 120px;
-      height: 120px;
-      top: 30%;
-      left: 70%;
-      animation-delay: -7s;
-      animation-duration: 22s;
-      background: radial-gradient(circle, rgba(155, 89, 182, 0.3), transparent 70%);
-    }
-    
-    @keyframes bgPulse {
-      0%, 100% {
-        opacity: 0.6;
-        transform: scale(1);
-      }
-      50% {
-        opacity: 0.9;
-        transform: scale(1.05);
-      }
-    }
-    
-    @keyframes float {
-      0% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-      25% {
-        transform: translate(50px, 50px) rotate(90deg);
-      }
-      50% {
-        transform: translate(100px, 0) rotate(180deg);
-      }
-      75% {
-        transform: translate(50px, -50px) rotate(270deg);
-      }
-      100% {
-        transform: translate(0, 0) rotate(360deg);
-      }
-    }
-
-    .video-container {
-      width: 100vw;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 2;
-    }
-
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background: #000;
-      z-index: 3;
-      position: relative;
-    }
-
-    /* Enhanced border glow effect */
-    .video-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 95%;
-      height: 95%;
-      border: 2px solid transparent;
-      border-radius: 10px;
-      background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
-      animation: glowRotate 6s linear infinite;
-      pointer-events: none;
-      z-index: 2;
-      box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
-    }
-    
-    @keyframes glowRotate {
-      0% {
-        background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
-        box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
-      }
-      25% {
-        background: linear-gradient(135deg, transparent, rgba(46, 204, 113, 0.3), transparent);
-        box-shadow: 0 0 50px rgba(46, 204, 113, 0.2);
-      }
-      50% {
-        background: linear-gradient(225deg, transparent, rgba(231, 76, 60, 0.3), transparent);
-        box-shadow: 0 0 50px rgba(231, 76, 60, 0.2);
-      }
-      75% {
-        background: linear-gradient(315deg, transparent, rgba(155, 89, 182, 0.3), transparent);
-        box-shadow: 0 0 50px rgba(155, 89, 182, 0.2);
-      }
-      100% {
-        background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
-        box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
-      }
-    }
-
-    /* Ad Overlay - Full Video Size */
-    #ad-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.98);
-      z-index: 50;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
-    
-    #ad-overlay.active {
-      display: flex;
-    }
-    
-    .ad-content {
-      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-      border-radius: 0;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 100px rgba(0, 0, 0, 0.9);
-      border: 3px solid #333;
-    }
-    
-    .ad-header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(90deg, #e74c3c, #3498db);
-      padding: 15px;
-      z-index: 2;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .ad-title {
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    
-    .ad-timer {
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      background: rgba(0,0,0,0.7);
-      padding: 5px 15px;
-      border-radius: 20px;
-      min-width: 80px;
-      text-align: center;
-    }
-    
-    /* Ad container - Full size */
-    #ad-display {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #000;
-      position: relative;
-    }
-    
-    /* ΚΕΝΤΡΙΚΟ ΚΟΥΜΠΙ CLOSE AD */
-    .ad-close-center {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #e74c3c;
-      color: white;
-      border: none;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      font-size: 24px;
-      cursor: pointer;
-      z-index: 3;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-      border: 3px solid white;
-    }
-    
-    .ad-close-center:hover {
-      background: #c0392b;
-      transform: translate(-50%, -50%) scale(1.1);
-      box-shadow: 0 6px 25px rgba(0,0,0,0.9);
-    }
-    
-    .ad-close-center:disabled {
-      background: #7f8c8d;
-      cursor: not-allowed;
-      transform: translate(-50%, -50%);
-    }
-    
-    .ad-footer {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(90deg, #2c3e50, #34495e);
-      padding: 12px;
-      z-index: 2;
-      text-align: center;
-    }
-    
-    .ad-message {
-      color: #ecf0f1;
-      font-size: 14px;
-      font-weight: bold;
-    }
-
-    /* OVERLAY ΓΙΑ ΤΟ PLAY BUTTON */
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 15;
-      cursor: pointer;
-      backdrop-filter: blur(5px);
-    }
-    
-    .video-overlay.hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .play-button {
-      width: 80px;
-      height: 80px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 3px solid white;
-      box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
-      transition: all 0.3s ease;
-    }
-
-    .play-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 30px rgba(52, 152, 219, 0.9);
-    }
-
-    .play-button::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: 25px solid white;
-      border-top: 15px solid transparent;
-      border-bottom: 15px solid transparent;
-      margin-left: 5px;
-    }
-    
-    .story-header {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      align-items: center;
-      padding: 15px;
-      z-index: 100;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);
-    }
-
-    .story-header img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      margin-right: 12px;
-      border: 2px solid #1877f2;
-    }
-
-    .story-header span {
-      font-size: 16px;
-      font-weight: bold;
-    }
-
-    /* NEXT BUTTON */
-    .next-video-btn {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 60;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      opacity: 0.7;
-    }
-
-    .next-video-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-50%) scale(1.1);
-      opacity: 1;
-    }
-
-    .next-video-btn::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: 12px solid white;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      margin-left: 2px;
-    }
-
-    /* PREVIOUS BUTTON */
-    .prev-video-btn {
-      position: absolute;
-      left: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 60;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-      opacity: 0.7;
-    }
-
-    .prev-video-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-50%) scale(1.1);
-      opacity: 1;
-    }
-
-    .prev-video-btn::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-right: 12px solid white;
-      border-top: 8px solid transparent;
-      border-bottom: 8px solid transparent;
-      margin-right: 2px;
-    }
-
-    .video-counter {
-      position: absolute;
-      top: 70px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.8);
-      z-index: 100;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 100%);
-      padding: 5px;
-    }
-
-    .video-preview {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: 1;
-    }
-
-    .reaction-bar {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 8px 12px;
-      gap: 8px;
-      z-index: 100;
-      background: rgba(0,0,0,0.7);
-      border-radius: 25px;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-      max-width: 95vw;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-    }
-
-    /* Hide scrollbar for reaction bar */
-    .reaction-bar::-webkit-scrollbar {
-      display: none;
-    }
-
-    .reaction-emoji {
-      font-size: 32px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 0;
-      position: relative;
-      flex-shrink: 0;
-      min-width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: none; 
-      border-radius: 50%;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); 
-    }
-
-    .reaction-emoji.red-like, .reaction-emoji.blue-like {
-        font-size: 48px;
-    }
-    
-    .reaction-emoji:nth-child(4), 
-    .reaction-emoji:nth-child(5), 
-    .reaction-emoji:nth-child(6), 
-    .reaction-emoji:nth-child(7), 
-    .reaction-emoji:nth-child(8) 
-    {
-        font-size: 36px;
-    }
-
-    .reaction-emoji:hover {
-      transform: scale(1.1);
-      background: none;
-    }
-    
-    .reaction-emoji.clicked {
-      animation: emojiPop 0.6s ease;
-    }
-
-    @keyframes emojiPop {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.8);
-      }
-      100% {
-        transform: scale(1.1);
-      }
-    }
-
-    .reaction-label {
-      position: absolute;
-      bottom: -25px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 10px;
-      font-size: 12px;
-      white-space: nowrap;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      pointer-events: none;
-    }
-
-    .reaction-emoji:hover .reaction-label {
-      opacity: 1;
-    }
-
-    .share-btn {
-      font-size: 20px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 8px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.9);
-      background: rgba(120, 120, 120, 0.9);
-      color: white;
-      border-radius: 50%;
-      width: 48px;
-      height: 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid rgba(255,255,255,0.3);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      flex-shrink: 0;
-      font-weight: bold;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='white' d='M11 11V7h2v4h4v2h-4v4h-2v-4H7v-2h4zm1 11C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z'/%3E%3C/svg%3E");
-      background-size: 60%;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-    
-    .share-btn span {
-        display: none;
-    }
-
-    .share-btn:hover {
-      transform: scale(1.1);
-      background: rgba(150, 150, 150, 1);
-    }
-    
-    .share-modal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,0.95);
-      padding: 20px;
-      border-radius: 20px;
-      z-index: 1000;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255,255,255,0.1);
-      min-width: 280px;
-      max-width: 90vw;
-    }
-
-    .share-modal.active {
-      display: flex;
-    }
-
-    .share-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .share-title {
-      font-size: 18px;
-      font-weight: bold;
-      color: white;
-    }
-
-    .close-share {
-      background: #ff4444;
-      color: white;
-      border: none;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .share-options {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .share-option {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 10px;
-      transition: background 0.3s ease;
-    }
-
-    .share-option:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .share-icon {
-      font-size: 28px;
-      width: 45px;
-      height: 45px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255,255,255,0.1);
-      border-radius: 50%;
-    }
-
-    .share-label {
-      font-size: 11px;
-      color: rgba(255,255,255,0.8);
-    }
-
-    ::-webkit-scrollbar {
-      display: none;
-    }
-    
-    body {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
-
-    /* Mobile optimizations */
-    @media (max-width: 480px) {
-      .play-button {
-        width: 70px;
-        height: 70px;
-      }
-      
-      .play-button::after {
-        border-left-width: 16px;
-        border-top-width: 10px;
-        border-bottom-width: 10px;
-      }
-      
-      .next-video-btn, .prev-video-btn {
-        width: 40px;
-        height: 40px;
-        right: 10px;
-      }
-      
-      .next-video-btn::after {
-        border-left-width: 10px;
-        border-top-width: 6px;
-        border-bottom-width: 6px;
-      }
-      
-      .prev-video-btn::after {
-        border-right-width: 10px;
-        border-top-width: 6px;
-        border-bottom-width: 6px;
-      }
-      
-      .video-counter {
-        font-size: 12px;
-        top: 60px;
-      }
-      
-      .reaction-bar {
-        bottom: 10px;
-        padding: 6px 10px;
-        gap: 6px;
-      }
-      
-      .reaction-emoji {
-        font-size: 28px;
-        min-width: 40px;
-        height: 40px;
-      }
-
-      .reaction-emoji.red-like, .reaction-emoji.blue-like {
-          font-size: 40px;
-      }
-
-      .share-btn {
-        width: 40px;
-        height: 40px;
-      }
-      
-      .story-header {
-        padding: 10px;
-      }
-      
-      .story-header img {
-        width: 35px;
-        height: 35px;
-      }
-      
-      .story-header span {
-        font-size: 14px;
-      }
-
-      .ad-close-center {
-        width: 70px;
-        height: 70px;
-        font-size: 20px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .play-button {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .play-button::after {
-        border-left-width: 14px;
-        border-top-width: 8px;
-        border-bottom-width: 8px;
-      }
-      
-      .next-video-btn, .prev-video-btn {
-        width: 35px;
-        height: 35px;
-      }
-      
-      .reaction-bar {
-        gap: 4px;
-      }
-      
-      .reaction-emoji {
-        font-size: 26px;
-        min-width: 36px;
-        height: 36px;
-      }
-
-      .reaction-emoji.red-like, .reaction-emoji.blue-like {
-          font-size: 36px;
-      }
-
-      .share-btn {
-        width: 36px;
-        height: 36px;
-      }
-
-      .ad-close-center {
-        width: 60px;
-        height: 60px;
-        font-size: 18px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Κατηγορίες Ταινιών - Τρόμου, Ρομαντικές, Κωμωδίες</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #ff6b6b, #ffa36c, #ffde7d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a5b1c2;
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .category {
+            width: 350px;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.5s, box-shadow 0.5s;
+            cursor: pointer;
+        }
+        
+        .category:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .category-image {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.8s;
+        }
+        
+        .category:hover .category-image {
+            transform: scale(1.1);
+        }
+        
+        .category-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            padding: 30px 20px 20px;
+            transform: translateY(10px);
+            transition: transform 0.5s;
+        }
+        
+        .category:hover .category-overlay {
+            transform: translateY(0);
+        }
+        
+        .category-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .category-description {
+            font-size: 1rem;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        
+        /* Scary Category */
+        .scary {
+            border: 2px solid #ff4757;
+        }
+        
+        .scary .category-image {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        }
+        
+        .scary .category-title {
+            color: #ff4757;
+            text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+        }
+        
+        /* Sensual Category */
+        .sensual {
+            border: 2px solid #ff6b81;
+        }
+        
+        .sensual .category-image {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://images.unsplash.com/photo-1516487106395-f2d269d6a13c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        }
+        
+        .sensual .category-title {
+            color: #ff6b81;
+            text-shadow: 0 0 10px rgba(255, 107, 129, 0.5);
+        }
+        
+        /* Comedy Category */
+        .comedy {
+            border: 2px solid #ffa502;
+        }
+        
+        .comedy .category-image {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://images.unsplash.com/photo-1541336032412-2048a678540d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        }
+        
+        .comedy .category-title {
+            color: #ffa502;
+            text-shadow: 0 0 10px rgba(255, 165, 2, 0.5);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #a5b1c2;
+            font-size: 0.9rem;
+        }
+        
+        /* Animation for page load */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .category {
+            animation: fadeIn 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .scary { animation-delay: 0.2s; }
+        .sensual { animation-delay: 0.4s; }
+        .comedy { animation-delay: 0.6s; }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category {
+                width: 90%;
+                max-width: 350px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Background Container -->
-  <div class="background-container">
-    <div class="animated-bg"></div>
-    <div class="floating-elements">
-      <div class="floating-element"></div>
-      <div class="floating-element"></div>
-      <div class="floating-element"></div>
-      <div class="floating-element"></div>
-    </div>
-  </div>
-
-  <!-- Ad Overlay - Full Video Size -->
-  <div id="ad-overlay">
-    <div class="ad-content">
-      <div class="ad-header">
-        <div class="ad-title">📢 ADVERTISEMENT</div>
-        <div class="ad-timer">Time: <span id="countdown">5</span>s</div>
-      </div>
-      
-      <!-- ΚΕΝΤΡΙΚΟ ΚΟΥΜΠΙ CLOSE -->
-      <button class="ad-close-center" id="close-ad" disabled>✕</button>
-      
-      <!-- Ad Display - Full Size -->
-      <div id="ad-display">
-        <!-- ΝΕΟ AD SCRIPT -->
-        <script>(function(s){s.dataset.zone='10113668',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    <div class="container">
+        <header>
+            <h1>Κατηγορίες Ταινιών</h1>
+            <p class="subtitle">Επιλέξτε μια κατηγορία για να εξερευνήσετε</p>
+        </header>
         
-        <!-- Fallback content -->
-        <div id="fallback-ad" style="display: none; color: white; text-align: center;">
-          <h3>Advertisement</h3>
-          <p>Please wait while the ad loads...</p>
-          <p>Video will play in <span id="fallback-countdown">5</span> seconds</p>
+        <div class="categories">
+            <div class="category scary">
+                <div class="category-image"></div>
+                <div class="category-overlay">
+                    <h2 class="category-title">Τρόμου</h2>
+                    <p class="category-description">
+                        Ταινίες τρόμου που θα σας κάνουν να βλέπετε κάθε σκιά με διαφορετικό μάτι. 
+                        Από ψυχολογικά θρίλερ έως υπερφυσικές εμπειρίες, ετοιμαστείτε για αγωνία.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="category sensual">
+                <div class="category-image"></div>
+                <div class="category-overlay">
+                    <h2 class="category-title">Ρομαντικές</h2>
+                    <p class="category-description">
+                        Ταινίες γεμάτες πάθος, ρομαντισμό και συναίσθημα. 
+                        Εξερευνήστε τις πιο ευαίσθητες πτυχές των ανθρώπινων σχέσεων 
+                        και συναισθημάτων.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="category comedy">
+                <div class="category-image"></div>
+                <div class="category-overlay">
+                    <h2 class="category-title">Κωμωδίες</h2>
+                    <p class="category-description">
+                        Γέλια και διασκέδαση με τις πιο αστείες ταινίες. 
+                        Από κωμωδίες καταστάσεων έως σατιρικές κωμωδίες, 
+                        εδώ θα βρείτε αυτό που χρειάζεστε για να ξεχάσετε τις ανησυχίες σας.
+                    </p>
+                </div>
+            </div>
         </div>
-      </div>
-      
-      <div class="ad-footer">
-        <div class="ad-message">Video will start automatically after advertisement</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="video-container" id="videoContainer">
-    <!-- Video Glow Effect -->
-    <div class="video-glow"></div>
-    
-    <video id="mainVideo" playsinline webkit-playsinline muted preload="auto">
-      <source id="videoSource" src="" type="video/mp4">
-      Το βίντεο δεν υποστηρίζεται.
-    </video>
-    
-    <!-- Video Preview Image -->
-    <img id="videoPreview" class="video-preview" src="" alt="Video preview" style="display: none;">
-    
-    <div class="video-overlay" id="videoOverlay">
-        <div class="play-button"></div>
-    </div>
-
-    <!-- Previous Video Button -->
-    <button class="prev-video-btn" id="prevVideoBtn" title="Προηγούμενο βίντεο"></button>
-
-    <!-- Next Video Button -->
-    <button class="next-video-btn" id="nextVideoBtn" title="Επόμενο βίντεο"></button>
-
-    <!-- Video Counter -->
-    <div class="video-counter" id="videoCounter"></div>
-  </div> 
-
-  <div class="story-header">
-    <img src="https://blog.franklymadear.com/facebook/stories/thumbnail1.png" alt="profile">
-    <span>Άλλα λέει η Θεία μ και ά...</span>
-  </div>
-
-  <div class="reaction-bar">
-    <div class="share-btn" onclick="openShareModal()" title="Κοινοποίηση βίντεο">
-        <span>+</span>
-    </div>
-    
-    <div class="reaction-emoji red-like" onclick="reactToEmoji('❤️', 'Αγάπη')">
-      ❤️
-      <div class="reaction-label">Αγάπη</div>
-    </div>
-    
-    <div class="reaction-emoji blue-like" onclick="reactToEmoji('👍', 'Μου αρέσει')">
-      👍
-      <div class="reaction-label">Μου αρέσει</div>
-    </div>
-    
-    <div class="reaction-emoji" onclick="reactToEmoji('😂', 'Χαχα')">
-      😂
-      <div class="reaction-label">Χαχα</div>
-    </div>
-    
-    <div class="reaction-emoji" onclick="reactToEmoji('😋', 'Υπέροχο')">
-      😋
-      <div class="reaction-label">Υπέροχο</div>
-    </div>
-    
-    <div class="reaction-emoji" onclick="reactToEmoji('😮', 'Ουάου')">
-      😮
-      <div class="reaction-label">Ουάου</div>
-    </div>
-    
-    <div class="reaction-emoji" onclick="reactToEmoji('😢', 'Λυπημένο')">
-      😢
-      <div class="reaction-label">Λυπημένο</div>
-    </div>
-    
-    <div class="reaction-emoji" onclick="reactToEmoji('😠', 'Θυμωμένο')">
-      😠
-      <div class="reaction-label">Θυμωμένο</div>
-    </div>
-  </div>
-
-  <div class="share-modal" id="shareModal">
-    <div class="share-header">
-      <div class="share-title">Κοινοποίηση Βίντεο</div>
-      <button class="close-share" onclick="closeShareModal()">×</button>
-    </div>
-    
-    <div class="video-share-info" id="videoShareInfo" style="text-align: center; margin-bottom: 15px; font-size: 14px; color: rgba(255,255,255,0.8);">
-      Βίντεο: <span id="currentVideoName">1</span>
-    </div>
-    
-    <div class="share-options">
-      <div class="share-option" onclick="shareToFacebook()">
-        <div class="share-icon">📘</div>
-        <div class="share-label">Facebook</div>
-      </div>
-      
-      <div class="share-option" onclick="shareToTwitter()">
-        <div class="share-icon">🐦</div>
-        <div class="share-label">Twitter/X</div>
-      </div>
-      
-      <div class="share-option" onclick="shareToInstagram()">
-        <div class="share-icon">📷</div>
-        <div class="share-label">Instagram</div>
-      </div>
-      
-      <div class="share-option" onclick="copyLink()">
-        <div class="share-icon">🔗</div>
-        <div class="share-label">Αντιγραφή</div>
-      </div>
-      
-      <div class="share-option" onclick="shareToWhatsApp()">
-        <div class="share-icon">💬</div>
-        <div class="share-label">WhatsApp</div>
-      </div>
-    </div>
-    
-    <div style="font-size: 11px; color: rgba(255,255,255,0.6); text-align: center; margin-top: 10px;">
-      Θα κοινοποιηθεί το τρέχον βίντεο
-    </div>
-  </div>
-
-  <script>
-    const video = document.getElementById('mainVideo');
-    const videoOverlay = document.getElementById('videoOverlay');
-    const shareModal = document.getElementById('shareModal');
-    const videoSource = document.getElementById('videoSource');
-    const nextVideoBtn = document.getElementById('nextVideoBtn');
-    const prevVideoBtn = document.getElementById('prevVideoBtn');
-    const videoCounter = document.getElementById('videoCounter');
-    const videoShareInfo = document.getElementById('videoShareInfo');
-    const currentVideoName = document.getElementById('currentVideoName');
-    const videoPreview = document.getElementById('videoPreview');
-    const adOverlay = document.getElementById('ad-overlay');
-    const closeAdBtn = document.getElementById('close-ad');
-    const countdownElement = document.getElementById('countdown');
-    const fallbackCountdown = document.getElementById('fallback-countdown');
-    const fallbackAd = document.getElementById('fallback-ad');
-
-    // ΕΝΗΜΕΡΩΜΕΝΗ ΛΙΣΤΑ ΒΙΝΤΕΟ ΜΕ 9 ΒΙΝΤΕΟ
-    const videoList = [
-        "https://blog.franklymadear.com/facebook/stories/video1.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video2.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video3.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video4.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video5.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video6.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video7.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video8.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video9.mp4"
-    ];
-    
-    const videoPreviews = [
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png"
-    ];
-    
-    const videoTitles = [
-        "Βίντεο 1",
-        "Βίντεο 2", 
-        "Βίντεο 3",
-        "Βίντεο 4",
-        "Βίντεο 5",
-        "Βίντεο 6",
-        "Εκπληκτικό Βίντεο",
-        "Απίστευτο Βίντεο",
-        "Τελική Σκηνή"
-    ];
-
-    let currentVideoIndex = 0;
-    let hasPlayedAd = false;
-    let countdownInterval;
-
-    // Function για να πάρουμε το video index από το URL
-    function getVideoIndexFromURL() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const videoParam = urlParams.get('video');
-      
-      if (videoParam) {
-        const index = parseInt(videoParam) - 1;
-        if (index >= 0 && index < videoList.length) {
-          return index;
-        }
-      }
-      return 0;
-    }
-
-    // Function για να αλλάξουμε το URL χωρίς reload
-    function updateURL() {
-      const newURL = `${window.location.pathname}?video=${currentVideoIndex + 1}`;
-      window.history.replaceState({}, '', newURL);
-    }
-
-    // Initialize video
-    function initVideo() {
-        currentVideoIndex = getVideoIndexFromURL();
         
-        // Check if we need to show the ad
-        if (!hasPlayedAd) {
-            showAd();
-            hasPlayedAd = true;
-        } else {
-            loadVideo(currentVideoIndex);
-        }
-    }
-
-    // Show ad function
-    function showAd() {
-        adOverlay.classList.add('active');
-        
-        // Start countdown
-        let countdown = 5;
-        countdownElement.textContent = countdown;
-        fallbackCountdown.textContent = countdown;
-        
-        // Disable close button initially
-        closeAdBtn.disabled = true;
-        closeAdBtn.style.background = '#7f8c8d';
-        
-        countdownInterval = setInterval(() => {
-            countdown--;
-            countdownElement.textContent = countdown;
-            fallbackCountdown.textContent = countdown;
-            
-            if (countdown <= 3) {
-                // Show fallback if no ad loaded
-                if (document.querySelectorAll('iframe, [id*="ad"], [class*="ad"]').length === 0) {
-                    fallbackAd.style.display = 'block';
-                }
-            }
-            
-            if (countdown <= 0) {
-                clearInterval(countdownInterval);
-                closeAdBtn.disabled = false;
-                closeAdBtn.style.background = '#e74c3c';
-            }
-        }, 1000);
-    }
-
-    // Close ad function
-    function closeAd() {
-        clearInterval(countdownInterval);
-        adOverlay.classList.remove('active');
-        loadVideo(currentVideoIndex);
-    }
-
-    // Load video function - ΔΙΟΡΘΩΜΕΝΗ
-    function loadVideo(index) {
-        if (index >= 0 && index < videoList.length) {
-            currentVideoIndex = index;
-            
-            // Show preview image while video loads
-            videoPreview.src = videoPreviews[index];
-            videoPreview.style.display = 'block';
-            video.style.display = 'none';
-            
-            // Set video source and load
-            videoSource.src = videoList[index];
-            
-            // Clear any previous error state
-            video.error = null;
-            
-            // Load the video
-            video.load();
-            
-            updateURL();
-            updateVideoCounter();
-            updateNavigationButtons();
-            
-            // Show play overlay
-            videoOverlay.classList.remove('hidden');
-            
-            console.log('Loading video:', videoList[index]);
-        }
-    }
-
-    function updateVideoCounter() {
-      videoCounter.textContent = `${currentVideoIndex + 1} / ${videoList.length}`;
-      currentVideoName.textContent = videoTitles[currentVideoIndex];
-    }
-
-    function updateNavigationButtons() {
-      // Εμφάνιση/απόκρυψη previous button
-      if (currentVideoIndex > 0) {
-        prevVideoBtn.style.display = 'flex';
-      } else {
-        prevVideoBtn.style.display = 'none';
-      }
-      
-      // Εμφάνιση/απόκρυψη next button
-      if (currentVideoIndex < videoList.length - 1) {
-        nextVideoBtn.style.display = 'flex';
-      } else {
-        nextVideoBtn.style.display = 'none';
-      }
-    }
-
-    // Play video function - ΔΙΟΡΘΩΜΕΝΗ
-    function playVideo() {
-        videoOverlay.classList.add('hidden');
-        videoPreview.style.display = 'none';
-        video.style.display = 'block';
-        
-        video.play().then(() => {
-            console.log('Video started playing successfully');
-            // Unmute the video when user interacts
-            video.muted = false;
-        }).catch(e => {
-            console.log('Auto-play prevented:', e);
-            videoOverlay.classList.remove('hidden');
-            // If autoplay is blocked, show instructions
-            if (e.name === 'NotAllowedError') {
-                alert('Παρακαλώ πατήστε το play button για να ξεκινήσει το βίντεο με ήχο.');
-            }
-        });
-    }
-
-    // Next video function
-    function nextVideo() {
-        if (currentVideoIndex < videoList.length - 1) {
-            currentVideoIndex++;
-            loadVideo(currentVideoIndex);
-        }
-    }
-
-    // Previous video function
-    function prevVideo() {
-        if (currentVideoIndex > 0) {
-            currentVideoIndex--;
-            loadVideo(currentVideoIndex);
-        }
-    }
-
-    // React to emoji function
-    function reactToEmoji(emoji, label) {
-        const emojiElement = event.currentTarget;
-        emojiElement.classList.add('clicked');
-        
-        // Show reaction message
-        showReactionMessage(emoji, label);
-        
-        setTimeout(() => {
-            emojiElement.classList.remove('clicked');
-        }, 600);
-    }
-
-    function showReactionMessage(emoji, label) {
-      const message = document.createElement('div');
-      message.textContent = `${emoji} ${label}`;
-      message.style.position = 'fixed';
-      message.style.top = '50%';
-      message.style.left = '50%';
-      message.style.transform = 'translate(-50%, -50%)';
-      message.style.background = 'rgba(0,0,0,0.8)';
-      message.style.color = 'white';
-      message.style.padding = '10px 20px';
-      message.style.borderRadius = '20px';
-      message.style.fontSize = '18px';
-      message.style.zIndex = '1000';
-      message.style.backdropFilter = 'blur(10px)';
-      message.style.border = '1px solid rgba(255,255,255,0.2)';
-      
-      document.body.appendChild(message);
-      
-      setTimeout(() => {
-        message.style.opacity = '0';
-        message.style.transition = 'opacity 0.5s ease';
-        setTimeout(() => {
-          document.body.removeChild(message);
-        }, 500);
-      }, 2000);
-    }
-
-    // Share modal functions
-    function openShareModal() {
-        shareModal.classList.add('active');
-    }
-
-    function closeShareModal() {
-        shareModal.classList.remove('active');
-    }
-
-    // Function για να πάρουμε το share URL για το τρέχον βίντεο
-    function getCurrentVideoShareURL() {
-      return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
-    }
-
-    // ΒΕΛΤΙΩΜΕΝΕΣ Share functions για να χρησιμοποιούν το direct video URL
-    function shareToFacebook() {
-      const url = encodeURIComponent("https://blog.franklymadear.com/facebook/stories/video1.mp4");
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
-      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
-      closeShareModal();
-    }
-
-    function shareToTwitter() {
-      const url = encodeURIComponent("https://blog.franklymadear.com/facebook/stories/video1.mp4");
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]}`);
-      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
-      closeShareModal();
-    }
-
-    function shareToInstagram() {
-      const url = "https://blog.franklymadear.com/facebook/stories/video1.mp4";
-      alert(`Ανοίξτε το Instagram και κοινοποιήστε αυτόν τον σύνδεσμο: ${url}`);
-      closeShareModal();
-    }
-
-    function shareToWhatsApp() {
-      const text = encodeURIComponent(`Δες αυτό το βίντεο: ${videoTitles[currentVideoIndex]} https://blog.franklymadear.com/facebook/stories/video1.mp4`);
-      window.open(`https://wa.me/?text=${text}`, '_blank');
-      closeShareModal();
-    }
-
-    function copyLink() {
-      const url = "https://blog.franklymadear.com/facebook/stories/video1.mp4";
-      navigator.clipboard.writeText(url).then(() => {
-        alert(`Το link για το "${videoTitles[currentVideoIndex]}" αντιγράφηκε στο clipboard! 📋`);
-      }).catch(() => {
-        prompt('Αντιγράψτε αυτό το link:', url);
-      });
-      closeShareModal();
-    }
-
-    // Event listeners
-    videoOverlay.addEventListener('click', playVideo);
-    nextVideoBtn.addEventListener('click', nextVideo);
-    prevVideoBtn.addEventListener('click', prevVideo);
-    closeAdBtn.addEventListener('click', closeAd);
-
-    // LISTENER ΓΙΑ ΤΟ ΤΕΛΟΣ ΤΟΥ ΒΙΝΤΕΟ - ΑΥΤΟΜΗ ΕΠΟΜΕΝΗ ΑΝΑΠΑΡΑΓΩΓΗ
-    video.addEventListener('ended', function() {
-      console.log('Το βίντεο τελείωσε, φόρτωση επόμενου...');
-      nextVideo();
-    });
-    
-    // LISTENER ΓΙΑ ΝΑ ΚΡΥΒΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΠΑΙΖΕΙ ΤΟ ΒΙΝΤΕΟ
-    video.addEventListener('play', function() {
-      videoOverlay.classList.add('hidden');
-    });
-    
-    // LISTENER ΓΙΑ ΝΑ ΕΜΦΑΝΙΖΕΙ ΤΟ PLAY BUTTON ΟΤΑΝ ΣΤΑΜΑΤΑ ΤΟ ΒΙΝΤΕΟ
-    video.addEventListener('pause', function() {
-      videoOverlay.classList.remove('hidden');
-    });
-    
-    // LISTENER ΓΙΑ ΑΠΟΤΥΧΙΑ ΦΟΡΤΩΣΗΣ ΒΙΝΤΕΟ - ΒΕΛΤΙΩΜΕΝΟ
-    video.addEventListener('error', function() {
-      console.error('Σφάλμα φόρτωσης βίντεο:', video.error);
-      console.error('Video source:', videoSource.src);
-      
-      // Try to show preview image if video fails
-      videoPreview.style.display = 'block';
-      video.style.display = 'none';
-      videoOverlay.classList.remove('hidden');
-      
-      alert(`Σφάλμα φόρτωσης βίντεο: ${videoList[currentVideoIndex]}. Παρακαλώ ελέγξτε αν το αρχείο υπάρχει και είναι προσβάσιμο.`);
-    });
-
-    // LISTENER για successful video load
-    video.addEventListener('loadeddata', function() {
-      console.log('Video loaded successfully:', videoSource.src);
-      videoPreview.style.display = 'none';
-      video.style.display = 'block';
-    });
-
-    // Swipe functionality for mobile
-    let touchStartX = 0;
-    let touchEndX = 0;
-    
-    document.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
-    }, false);
-    
-    document.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    }, false);
-    
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        
-        if (touchEndX < touchStartX - swipeThreshold) {
-            // Swipe left - next video
-            nextVideo();
-        }
-        
-        if (touchEndX > touchStartX + swipeThreshold) {
-            // Swipe right - previous video
-            prevVideo();
-        }
-    }
-
-    // KEYBOARD SHORTCUTS
-    document.addEventListener('keydown', function(event) {
-      if (event.key === 'ArrowRight') {
-        nextVideo();
-      } else if (event.key === 'ArrowLeft') {
-        prevVideo();
-      } else if (event.key === ' ') {
-        event.preventDefault();
-        if (video.paused) {
-          playVideo();
-        } else {
-          video.pause();
-        }
-      } else if (event.key === 'Escape') {
-        closeShareModal();
-      }
-    });
-    
-    // CLICK OUTSIDE SHARE MODAL TO CLOSE
-    document.addEventListener('click', function(event) {
-      if (shareModal.classList.contains('active') && !event.target.closest('.share-modal') && !event.target.closest('.share-btn')) {
-        closeShareModal();
-      }
-    });
-
-    // Initialize when page loads
-    window.addEventListener('load', initVideo);
-  </script>
+        <footer>
+            <p>Δημιουργήθηκε με HTML, CSS και αγάπη για τον κινηματογράφο</p>
+        </footer>
+    </div>
 </body>
 </html>
