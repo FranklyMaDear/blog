@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Καφεμαντεία - Μάθε το μέλλον σου!</title>
+    <title>Καφεμαντεία - Πλήρες Σύστημα Διαχείρισης</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -15,6 +15,7 @@
             --success-color: #4CAF50;
             --admin-color: #9C27B0;
             --danger-color: #f44336;
+            --warning-color: #ff9800;
             --chat-user: #E8F5E8;
             --chat-admin: #E3F2FD;
         }
@@ -58,17 +59,43 @@
             gap: 0.5rem;
         }
         
-        .user-info {
+        .auth-buttons {
             display: flex;
-            align-items: center;
             gap: 0.5rem;
         }
         
-        .points-badge {
-            background: var(--accent-color);
-            padding: 0.3rem 0.7rem;
-            border-radius: 20px;
-            font-weight: bold;
+        /* Login Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
         }
         
         /* Navigation */
@@ -79,10 +106,12 @@
             position: sticky;
             top: 60px;
             z-index: 99;
+            overflow-x: auto;
         }
         
         .nav-tab {
             flex: 1;
+            min-width: 120px;
             text-align: center;
             padding: 1rem;
             background: var(--light-color);
@@ -90,6 +119,7 @@
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s;
+            white-space: nowrap;
         }
         
         .nav-tab.active {
@@ -131,6 +161,9 @@
             color: var(--primary-color);
             margin-bottom: 1rem;
             font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         /* Forms */
@@ -160,6 +193,7 @@
             text-align: center;
             margin-bottom: 1rem;
             background: rgba(205, 133, 63, 0.1);
+            cursor: pointer;
         }
         
         .file-upload-icon {
@@ -220,11 +254,14 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            width: 100%;
         }
         
         .btn:hover {
             background-color: var(--secondary-color);
+        }
+        
+        .btn-block {
+            width: 100%;
         }
         
         .btn-success {
@@ -237,6 +274,10 @@
         
         .btn-danger {
             background-color: var(--danger-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
         }
         
         /* Photos Grid */
@@ -253,6 +294,7 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
             position: relative;
             aspect-ratio: 1;
+            cursor: pointer;
         }
         
         .photo-item img {
@@ -275,6 +317,74 @@
             color: white;
             padding: 0.5rem;
             font-size: 0.8rem;
+        }
+        
+        /* Admin Panel */
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-panel {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* User List */
+        .user-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        
+        .user-details h4 {
+            margin-bottom: 0.3rem;
+        }
+        
+        .user-points {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 0.5rem;
         }
         
         /* Chat System */
@@ -337,11 +447,6 @@
             flex: 1;
         }
         
-        .chat-input button {
-            width: auto;
-            padding: 0.8rem;
-        }
-        
         .audio-message {
             display: flex;
             align-items: center;
@@ -353,115 +458,10 @@
             flex: 1;
         }
         
-        /* Stats */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-        
-        /* Admin Panel */
-        .admin-section {
-            display: none;
-        }
-        
-        .admin-panel {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        
-        .user-list {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .user-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .user-item:last-child {
-            border-bottom: none;
-        }
-        
-        .user-details h4 {
-            margin-bottom: 0.3rem;
-        }
-        
-        .user-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .modal-content {
-            background: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 1.5rem;
-            position: relative;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #666;
-        }
-        
         /* Responsive */
         @media (min-width: 768px) {
             .photos-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            
-            .btn {
-                width: auto;
-            }
-            
-            .chat-input button {
-                width: auto;
             }
         }
         
@@ -471,13 +471,25 @@
                 gap: 0.5rem;
             }
             
-            .user-info {
-                flex-direction: column;
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
             }
             
             .file-preview-item {
                 width: 80px;
                 height: 80px;
+            }
+            
+            .user-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: space-between;
             }
         }
     </style>
@@ -490,19 +502,43 @@
                 <i class="fas fa-coffee"></i>
                 <span>Καφεμαντεία</span>
             </div>
-            <div class="user-info">
-                <span id="user-name">Επισκέπτης</span>
-                <div class="points-badge" id="user-points">0 πόντοι</div>
+            <div class="auth-buttons">
+                <button class="btn btn-admin" id="admin-login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Σύνδεση Διαχειριστή
+                </button>
             </div>
         </div>
     </header>
+    
+    <!-- Admin Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <button class="close-modal" id="close-login-modal">&times;</button>
+            <h2><i class="fas fa-lock"></i> Σύνδεση Διαχειριστή</h2>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-username">Όνομα Χρήστη:</label>
+                    <input type="text" id="admin-username" required placeholder="Π.χ. admin">
+                </div>
+                
+                <div class="form-group">
+                    <label for="admin-password">Κωδικός Πρόσβασης:</label>
+                    <input type="password" id="admin-password" required placeholder="Εισάγετε κωδικό">
+                </div>
+                
+                <button type="submit" class="btn btn-admin btn-block">
+                    <i class="fas fa-unlock"></i> Σύνδεση
+                </button>
+            </form>
+        </div>
+    </div>
     
     <!-- Navigation Tabs -->
     <div class="nav-tabs">
         <button class="nav-tab active" data-tab="register">Εγγραφή</button>
         <button class="nav-tab" data-tab="upload">Φωτογραφίες</button>
         <button class="nav-tab" data-tab="messages">Μηνύματα</button>
-        <button class="nav-tab" data-tab="admin" id="admin-tab">Διαχείριση</button>
+        <button class="nav-tab admin-section" data-tab="admin" id="admin-tab">Διαχείριση</button>
     </div>
     
     <!-- Main Content -->
@@ -527,7 +563,7 @@
                         <input type="tel" id="phone" placeholder="Π.χ. 6912345678">
                     </div>
                     
-                    <button type="submit" class="btn">
+                    <button type="submit" class="btn btn-block">
                         <i class="fas fa-check"></i> Ολοκλήρωση Εγγραφής
                     </button>
                 </form>
@@ -555,7 +591,7 @@
                 
                 <div class="file-preview" id="file-preview"></div>
                 
-                <button class="btn" id="upload-btn" disabled>
+                <button class="btn btn-block" id="upload-btn" disabled>
                     <i class="fas fa-upload"></i> Αποστολή Φωτογραφιών
                 </button>
             </div>
@@ -596,7 +632,7 @@
                 <div style="margin-top: 1rem;">
                     <p><strong>Απάντηση με ήχο:</strong></p>
                     <input type="file" id="audio-input" accept="audio/*" style="margin-bottom: 0.5rem;">
-                    <button class="btn btn-admin" id="send-audio-btn">
+                    <button class="btn btn-admin btn-block" id="send-audio-btn">
                         <i class="fas fa-microphone"></i> Αποστολή Ηχητικού Μηνύματος
                     </button>
                 </div>
@@ -619,41 +655,64 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="total-points">0</div>
-                        <div>Πόντοι</div>
+                        <div>Συνολικοί Πόντοι</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="pending-messages">0</div>
                         <div>Εκκρεμή Μηνύματα</div>
                     </div>
                 </div>
-                
-                <div class="admin-panel">
-                    <h3>Διαχείριση Χρηστών</h3>
-                    <div class="user-list" id="user-list">
-                        <!-- Users will be loaded here -->
-                    </div>
+            </div>
+            
+            <div class="admin-panel">
+                <h3><i class="fas fa-users"></i> Διαχείριση Χρηστών</h3>
+                <div class="user-list" id="user-list">
+                    <!-- Users will be loaded here -->
                 </div>
-                
-                <div class="admin-panel">
-                    <h3>Πρόσφατες Φωτογραφίες</h3>
-                    <div class="photos-grid" id="admin-photos">
-                        <!-- Recent photos will be loaded here -->
-                    </div>
+            </div>
+            
+            <div class="admin-panel">
+                <h3><i class="fas fa-images"></i> Πρόσφατες Φωτογραφίες</h3>
+                <div class="photos-grid" id="admin-photos">
+                    <!-- Recent photos will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="admin-panel">
+                <h3><i class="fas fa-comment-dots"></i> Εκκρεμή Μηνύματα</h3>
+                <div id="pending-messages-list">
+                    <!-- Pending messages will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Photo Modal -->
-    <div class="modal" id="photo-modal">
+    <!-- User Chat Modal -->
+    <div class="modal" id="user-chat-modal">
         <div class="modal-content">
-            <button class="close-modal" id="close-modal">&times;</button>
-            <h2>Προβολή Φωτογραφίας</h2>
-            <img id="modal-image" src="" style="width: 100%; border-radius: 5px; margin: 1rem 0;">
-            <div id="modal-info"></div>
-            <button class="btn btn-danger" id="delete-photo-btn">
-                <i class="fas fa-trash"></i> Διαγραφή Φωτογραφίας
-            </button>
+            <button class="close-modal" id="close-chat-modal">&times;</button>
+            <h2 id="chat-modal-title"><i class="fas fa-comments"></i> Συζήτηση με Χρήστη</h2>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="admin-chat-messages" style="height: 300px;">
+                    <!-- Chat messages will be loaded here -->
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="admin-message-input" placeholder="Γράψτε το μήνυμά σας...">
+                    <button class="btn" id="admin-send-message-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+                <p><strong>Απάντηση με ήχο:</strong></p>
+                <input type="file" id="admin-audio-input" accept="audio/*" style="margin-bottom: 0.5rem;">
+                <button class="btn btn-admin btn-block" id="admin-send-audio-btn">
+                    <i class="fas fa-microphone"></i> Αποστολή Ηχητικού Μηνύματος
+                </button>
+            </div>
         </div>
     </div>
 
@@ -665,6 +724,14 @@
         let messages = JSON.parse(localStorage.getItem('coffeeMessages')) || [];
         let selectedFiles = [];
         let currentPhotoId = null;
+        let isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+        let currentChatUserId = null;
+        
+        // Admin credentials (in a real app, this would be on the server)
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'password123'
+        };
         
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
@@ -672,7 +739,11 @@
             setupEventListeners();
             updateUI();
             loadUserPhotos();
-            loadAdminData();
+            
+            if (isAdminLoggedIn) {
+                showAdminPanel();
+                loadAdminData();
+            }
         });
         
         function initializeApp() {
@@ -706,14 +777,24 @@
                         userId: 1,
                         filename: "φλιτζάνι_1.jpg",
                         uploadDate: new Date().toISOString(),
-                        type: "φλιτζάνι"
+                        type: "φλιτζάνι",
+                        dataUrl: "https://via.placeholder.com/300/8B4513/FFFFFF?text=Φλιτζάνι+1"
                     },
                     {
                         id: 2,
                         userId: 1,
                         filename: "φλιτζάνι_2.jpg",
                         uploadDate: new Date().toISOString(),
-                        type: "φλιτζάνι"
+                        type: "φλιτζάνι",
+                        dataUrl: "https://via.placeholder.com/300/D2691E/FFFFFF?text=Φλιτζάνι+2"
+                    },
+                    {
+                        id: 3,
+                        userId: 2,
+                        filename: "πιατάκι.jpg",
+                        uploadDate: new Date().toISOString(),
+                        type: "πιατάκι",
+                        dataUrl: "https://via.placeholder.com/300/CD853F/FFFFFF?text=Πιατάκι"
                     }
                 ];
                 localStorage.setItem('coffeePhotos', JSON.stringify(photos));
@@ -743,9 +824,19 @@
         }
         
         function setupEventListeners() {
+            // Admin login
+            document.getElementById('admin-login-btn').addEventListener('click', openLoginModal);
+            document.getElementById('close-login-modal').addEventListener('click', closeLoginModal);
+            document.getElementById('admin-login-form').addEventListener('submit', adminLogin);
+            
             // Tab navigation
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.addEventListener('click', function() {
+                    if (this.dataset.tab === 'admin' && !isAdminLoggedIn) {
+                        openLoginModal();
+                        return;
+                    }
+                    
                     document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     
@@ -769,26 +860,57 @@
             document.getElementById('send-message-btn').addEventListener('click', sendMessage);
             document.getElementById('send-audio-btn').addEventListener('click', sendAudioMessage);
             
-            // Modal
-            document.getElementById('close-modal').addEventListener('click', closeModal);
-            document.getElementById('delete-photo-btn').addEventListener('click', deletePhoto);
-            
-            // Admin tab visibility
-            document.getElementById('admin-tab').addEventListener('click', function() {
-                document.querySelectorAll('.admin-section').forEach(el => {
-                    el.style.display = 'block';
-                });
-            });
+            // Admin chat
+            document.getElementById('close-chat-modal').addEventListener('click', closeChatModal);
+            document.getElementById('admin-send-message-btn').addEventListener('click', sendAdminMessage);
+            document.getElementById('admin-send-audio-btn').addEventListener('click', sendAdminAudioMessage);
         }
         
         function updateUI() {
             if (currentUser) {
                 document.getElementById('user-name').textContent = currentUser.name;
                 document.getElementById('user-points').textContent = currentUser.points + ' πόντοι';
-            } else {
-                document.getElementById('user-name').textContent = 'Επισκέπτης';
-                document.getElementById('user-points').textContent = '0 πόντοι';
             }
+        }
+        
+        function openLoginModal() {
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('admin-login-form').reset();
+        }
+        
+        function adminLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                isAdminLoggedIn = true;
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                
+                closeLoginModal();
+                showAdminPanel();
+                loadAdminData();
+                
+                // Switch to admin tab
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                document.getElementById('admin-tab').classList.add('active');
+                document.getElementById('admin-tab-content').classList.add('active');
+            } else {
+                alert('Λάθος όνομα χρήστη ή κωδικός πρόσβασης!');
+            }
+        }
+        
+        function showAdminPanel() {
+            document.querySelectorAll('.admin-section').forEach(el => {
+                el.style.display = 'block';
+            });
         }
         
         function registerUser(e) {
@@ -924,7 +1046,10 @@
                 
                 updateUI();
                 loadUserPhotos();
-                loadAdminData();
+                
+                if (isAdminLoggedIn) {
+                    loadAdminData();
+                }
                 
                 alert('Οι φωτογραφίες σας ανέβηκαν επιτυχώς! Κερδίσατε ' + (selectedFiles.length * 10) + ' πόντους!');
             }, 1500);
@@ -954,45 +1079,8 @@
                     </div>
                 `;
                 
-                photoItem.addEventListener('click', () => openPhotoModal(photo));
                 container.appendChild(photoItem);
             });
-        }
-        
-        function openPhotoModal(photo) {
-            const modal = document.getElementById('photo-modal');
-            const modalImage = document.getElementById('modal-image');
-            const modalInfo = document.getElementById('modal-info');
-            
-            modalImage.src = photo.dataUrl || 'https://via.placeholder.com/500?text=Φωτογραφία';
-            modalInfo.innerHTML = `
-                <p><strong>Όνομα:</strong> ${photo.filename}</p>
-                <p><strong>Ημερομηνία:</strong> ${new Date(photo.uploadDate).toLocaleDateString('el-GR')}</p>
-                <p><strong>Τύπος:</strong> ${photo.type}</p>
-            `;
-            
-            currentPhotoId = photo.id;
-            modal.style.display = 'flex';
-        }
-        
-        function closeModal() {
-            document.getElementById('photo-modal').style.display = 'none';
-            currentPhotoId = null;
-        }
-        
-        function deletePhoto() {
-            if (!currentPhotoId) return;
-            
-            if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη φωτογραφία;')) {
-                photos = photos.filter(photo => photo.id !== currentPhotoId);
-                localStorage.setItem('coffeePhotos', JSON.stringify(photos));
-                
-                closeModal();
-                loadUserPhotos();
-                loadAdminData();
-                
-                alert('Η φωτογραφία διαγράφηκε επιτυχώς!');
-            }
         }
         
         function sendMessage() {
@@ -1020,7 +1108,7 @@
             localStorage.setItem('coffeeMessages', JSON.stringify(messages));
             
             // Add to chat
-            addMessageToChat(newMessage);
+            addMessageToChat(newMessage, 'chat-messages');
             
             // Clear input
             messageInput.value = '';
@@ -1048,7 +1136,7 @@
                 messages.push(adminMessage);
                 localStorage.setItem('coffeeMessages', JSON.stringify(messages));
                 
-                addMessageToChat(adminMessage);
+                addMessageToChat(adminMessage, 'chat-messages');
             }, 2000);
         }
         
@@ -1081,14 +1169,14 @@
             localStorage.setItem('coffeeMessages', JSON.stringify(messages));
             
             // Add to chat
-            addMessageToChat(newMessage);
+            addMessageToChat(newMessage, 'chat-messages');
             
             // Clear input
             audioInput.value = '';
         }
         
-        function addMessageToChat(message) {
-            const chatMessages = document.getElementById('chat-messages');
+        function addMessageToChat(message, containerId) {
+            const chatMessages = document.getElementById(containerId);
             
             const messageElement = document.createElement('div');
             messageElement.className = `message ${message.sender}`;
@@ -1120,68 +1208,136 @@
             document.getElementById('total-users').textContent = users.length;
             document.getElementById('total-photos').textContent = photos.length;
             document.getElementById('total-points').textContent = users.reduce((sum, user) => sum + user.points, 0);
-            document.getElementById('pending-messages').textContent = messages.filter(m => m.sender === 'user').length;
+            
+            const pendingMessages = messages.filter(m => m.sender === 'user' && 
+                !messages.some(reply => reply.sender === 'admin' && 
+                new Date(reply.timestamp) > new Date(m.timestamp)));
+            document.getElementById('pending-messages').textContent = pendingMessages.length;
             
             // Load users
             const userList = document.getElementById('user-list');
             userList.innerHTML = '';
             
-            users.forEach(user => {
-                const userItem = document.createElement('div');
-                userItem.className = 'user-item';
-                userItem.innerHTML = `
-                    <div class="user-details">
-                        <h4>${user.name}</h4>
-                        <p>${user.email} | ${user.phone}</p>
-                        <p>Πόντοι: ${user.points}</p>
-                    </div>
-                    <div class="user-actions">
-                        <button class="btn btn-admin" onclick="sendMessageToUser(${user.id})">
-                            <i class="fas fa-envelope"></i>
-                        </button>
-                        <button class="btn btn-danger" onclick="deleteUser(${user.id})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                `;
-                userList.appendChild(userItem);
-            });
+            if (users.length === 0) {
+                userList.innerHTML = '<p>Δεν υπάρχουν εγγεγραμμένοι χρήστες.</p>';
+            } else {
+                users.forEach(user => {
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div class="user-details">
+                            <h4>${user.name}</h4>
+                            <p>${user.email} | ${user.phone}</p>
+                            <p>Ημερομηνία εγγραφής: ${new Date(user.registrationDate).toLocaleDateString('el-GR')}</p>
+                        </div>
+                        <div class="user-points">
+                            ${user.points} πόντοι
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-admin" onclick="openUserChat(${user.id})">
+                                <i class="fas fa-comment"></i> Μήνυμα
+                            </button>
+                            <button class="btn btn-warning" onclick="adjustUserPoints(${user.id})">
+                                <i class="fas fa-coins"></i> Πόντοι
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteUser(${user.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    userList.appendChild(userItem);
+                });
+            }
             
             // Load recent photos
             const adminPhotos = document.getElementById('admin-photos');
             adminPhotos.innerHTML = '';
             
-            const recentPhotos = photos.slice(-6); // Last 6 photos
+            const recentPhotos = photos.slice(-9); // Last 9 photos
             
-            recentPhotos.forEach(photo => {
-                const user = users.find(u => u.id === photo.userId);
-                const photoItem = document.createElement('div');
-                photoItem.className = 'photo-item';
-                photoItem.innerHTML = `
-                    <img src="${photo.dataUrl || 'https://via.placeholder.com/150?text=Φωτογραφία'}" alt="${photo.filename}">
-                    <div class="photo-info">
-                        <div>${user ? user.name : 'Άγνωστος'}</div>
-                        <div>${new Date(photo.uploadDate).toLocaleDateString('el-GR')}</div>
-                    </div>
-                `;
-                
-                photoItem.addEventListener('click', () => openPhotoModal(photo));
-                adminPhotos.appendChild(photoItem);
-            });
+            if (recentPhotos.length === 0) {
+                adminPhotos.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες.</p>';
+            } else {
+                recentPhotos.forEach(photo => {
+                    const user = users.find(u => u.id === photo.userId);
+                    const photoItem = document.createElement('div');
+                    photoItem.className = 'photo-item';
+                    photoItem.innerHTML = `
+                        <img src="${photo.dataUrl || 'https://via.placeholder.com/150?text=Φωτογραφία'}" alt="${photo.filename}">
+                        <div class="photo-info">
+                            <div>${user ? user.name : 'Άγνωστος'}</div>
+                            <div>${new Date(photo.uploadDate).toLocaleDateString('el-GR')}</div>
+                        </div>
+                    `;
+                    
+                    adminPhotos.appendChild(photoItem);
+                });
+            }
+            
+            // Load pending messages
+            const pendingMessagesList = document.getElementById('pending-messages-list');
+            pendingMessagesList.innerHTML = '';
+            
+            if (pendingMessages.length === 0) {
+                pendingMessagesList.innerHTML = '<p>Δεν υπάρχουν εκκρεμή μηνύματα.</p>';
+            } else {
+                pendingMessages.forEach(message => {
+                    const user = users.find(u => u.id === message.userId);
+                    const messageItem = document.createElement('div');
+                    messageItem.className = 'user-item';
+                    messageItem.innerHTML = `
+                        <div class="user-details">
+                            <h4>${user ? user.name : 'Άγνωστος'}</h4>
+                            <p>${message.message}</p>
+                            <p>${new Date(message.timestamp).toLocaleString('el-GR')}</p>
+                        </div>
+                        <div class="user-actions">
+                            <button class="btn btn-admin" onclick="openUserChat(${message.userId})">
+                                <i class="fas fa-reply"></i> Απάντηση
+                            </button>
+                        </div>
+                    `;
+                    pendingMessagesList.appendChild(messageItem);
+                });
+            }
         }
         
-        // Admin functions
-        function sendMessageToUser(userId) {
+        function openUserChat(userId) {
+            currentChatUserId = userId;
             const user = users.find(u => u.id === userId);
-            if (!user) return;
             
-            const message = prompt(`Γράψτε μήνυμα για τον χρήστη ${user.name}:`);
-            if (!message) return;
+            document.getElementById('chat-modal-title').innerHTML = `<i class="fas fa-comments"></i> Συζήτηση με ${user.name}`;
+            
+            // Load chat messages
+            const chatMessages = document.getElementById('admin-chat-messages');
+            chatMessages.innerHTML = '';
+            
+            const userMessages = messages.filter(m => m.userId === userId)
+                .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+            
+            userMessages.forEach(message => {
+                addMessageToChat(message, 'admin-chat-messages');
+            });
+            
+            // Show modal
+            document.getElementById('user-chat-modal').style.display = 'flex';
+        }
+        
+        function closeChatModal() {
+            document.getElementById('user-chat-modal').style.display = 'none';
+            currentChatUserId = null;
+        }
+        
+        function sendAdminMessage() {
+            const messageInput = document.getElementById('admin-message-input');
+            const message = messageInput.value.trim();
+            
+            if (!message || !currentChatUserId) return;
             
             // Add message to storage
             const newMessage = {
                 id: Date.now(),
-                userId: userId,
+                userId: currentChatUserId,
                 message: message,
                 timestamp: new Date().toISOString(),
                 type: "text",
@@ -1191,7 +1347,61 @@
             messages.push(newMessage);
             localStorage.setItem('coffeeMessages', JSON.stringify(messages));
             
-            alert(`Το μήνυμα στάλθηκε στον χρήστη ${user.name}!`);
+            // Add to chat
+            addMessageToChat(newMessage, 'admin-chat-messages');
+            
+            // Clear input
+            messageInput.value = '';
+            
+            // Reload admin data to update pending messages
+            loadAdminData();
+        }
+        
+        function sendAdminAudioMessage() {
+            const audioInput = document.getElementById('admin-audio-input');
+            const file = audioInput.files[0];
+            
+            if (!file || !currentChatUserId) {
+                alert('Παρακαλώ επιλέξτε ένα αρχείο ήχου!');
+                return;
+            }
+            
+            // Add message to storage
+            const newMessage = {
+                id: Date.now(),
+                userId: currentChatUserId,
+                message: "Ηχητικό μήνυμα",
+                timestamp: new Date().toISOString(),
+                type: "audio",
+                sender: "admin",
+                audioUrl: URL.createObjectURL(file)
+            };
+            
+            messages.push(newMessage);
+            localStorage.setItem('coffeeMessages', JSON.stringify(messages));
+            
+            // Add to chat
+            addMessageToChat(newMessage, 'admin-chat-messages');
+            
+            // Clear input
+            audioInput.value = '';
+            
+            // Reload admin data to update pending messages
+            loadAdminData();
+        }
+        
+        function adjustUserPoints(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+            
+            const newPoints = prompt(`Τροποποίηση πόντων για ${user.name} (Τρέχοντες πόντοι: ${user.points}):`, user.points);
+            
+            if (newPoints !== null && !isNaN(newPoints)) {
+                user.points = parseInt(newPoints);
+                localStorage.setItem('coffeeUsers', JSON.stringify(users));
+                loadAdminData();
+                alert(`Οι πόντοι του χρήστη ${user.name} ενημερώθηκαν σε ${user.points}!`);
+            }
         }
         
         function deleteUser(userId) {
@@ -1207,6 +1417,13 @@
                 localStorage.setItem('coffeePhotos', JSON.stringify(photos));
                 localStorage.setItem('coffeeMessages', JSON.stringify(messages));
                 
+                // If current user is deleted, log them out
+                if (currentUser && currentUser.id === userId) {
+                    currentUser = null;
+                    localStorage.removeItem('currentUser');
+                    updateUI();
+                }
+                
                 loadAdminData();
                 
                 alert(`Ο χρήστης ${user.name} διαγράφηκε επιτυχώς!`);
@@ -1219,8 +1436,9 @@
             chatMessages.innerHTML = '';
             
             if (currentUser) {
-                const userMessages = messages.filter(m => m.userId === currentUser.id);
-                userMessages.forEach(message => addMessageToChat(message));
+                const userMessages = messages.filter(m => m.userId === currentUser.id)
+                    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+                userMessages.forEach(message => addMessageToChat(message, 'chat-messages'));
             } else {
                 chatMessages.innerHTML = `
                     <div class="message admin">
