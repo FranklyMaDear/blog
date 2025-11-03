@@ -13,6 +13,8 @@
             --accent-color: #CD853F;
             --success-color: #4CAF50;
             --error-color: #f44336;
+            --ads-color: #FF6B35;
+            --coffee-color: #FF6B35;
         }
         
         * {
@@ -184,6 +186,77 @@
             font-size: 1rem;
         }
         
+        .goal-section {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .ads-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+            text-align: center;
+        }
+        
+        .ads-section.active {
+            display: block;
+        }
+        
+        .ads-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--ads-color);
+        }
+        
+        .ads-logo {
+            font-size: 1.5rem;
+        }
+        
+        .ads-card {
+            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
+            border: 2px solid var(--ads-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .ads-btn {
+            background: var(--ads-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+        
+        .ads-btn:hover {
+            background: #E55A2B;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .ads-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
         .upload-section {
             background: white;
             border-radius: 15px;
@@ -292,6 +365,43 @@
             box-shadow: none;
         }
         
+        .donation-section {
+            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            text-align: center;
+            display: none;
+        }
+        
+        .donation-section.active {
+            display: block;
+        }
+        
+        .donation-btn {
+            background: white;
+            color: var(--coffee-color);
+            border: none;
+            border-radius: 25px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 1rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .donation-btn:hover {
+            background: #f8f8f8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+        }
+        
         .loading {
             display: none;
             text-align: center;
@@ -376,7 +486,7 @@
                 padding: 1.5rem;
             }
             
-            .user-section, .upload-section {
+            .user-section, .upload-section, .ads-section, .donation-section {
                 padding: 1rem;
                 margin-bottom: 1rem;
             }
@@ -457,7 +567,38 @@
             <h3 id="user-name">Χρήστης</h3>
             <div class="user-points" id="user-points">0</div>
             <div class="points-label">Πόντοι</div>
+            
+            <div class="goal-section">
+                🎯 Στόχος: 100 Πόντοι = Δωρεάν Καφές! ☕
+            </div>
+            
             <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
+        </section>
+        
+        <!-- Διαφημίσεις για Πόντο -->
+        <section class="ads-section" id="ads-section">
+            <div class="ads-header">
+                <div class="ads-logo">📺</div>
+                <h3>Ads - Κέρδισε Πόντο</h3>
+            </div>
+            
+            <div class="ads-card">
+                <p><strong>Δες μια διαφήμιση και κέρδισε 1 πόντο!</strong></p>
+                <p>Μπορείς να δεις όσες διαφημίσεις θέλεις την ημέρα!</p>
+                <p>🎯 <strong>Στόχος: 100 Πόντοι = Δωρεάν Καφές!</strong></p>
+            </div>
+            
+            <div id="ads-container">
+                <!-- Εδώ θα φορτώσει η διαφήμιση -->
+            </div>
+            
+            <button class="ads-btn" id="watch-ads-btn">
+                👁️ Δες Διαφήμιση (+1 Πόντος)
+            </button>
+            
+            <div class="points-earned" id="ads-points-earned">
+                🎉 Κέρδισες 1 πόντο!
+            </div>
         </section>
         
         <!-- Ανέβασμα Φωτογραφιών -->
@@ -497,16 +638,29 @@
             </div>
             
             <button class="upload-btn" id="upload-btn" disabled>
-                📨 Αποστολή Φωτογραφιών (+10 πόντοι ανά φωτογραφία)
+                📨 Αποστολή Φωτογραφιών
             </button>
-            
-            <div class="points-earned" id="points-earned">
-                🎉 Κέρδισες 50 πόντους για την εγγραφή!
-            </div>
             
             <div class="success-message" id="success-message">
                 ✅ Οι φωτογραφίες σας στάλθηκαν επιτυχώς!
             </div>
+        </section>
+        
+        <!-- Φιλοδώρημα -->
+        <section class="donation-section" id="donation-section">
+            <div class="ads-header">
+                <div class="ads-logo">❤️</div>
+                <h3>Φιλοδώρημα</h3>
+            </div>
+            
+            <div class="ads-card" style="background: rgba(255,255,255,0.2); border-color: white;">
+                <p><strong>Κέρασέ μας έναν καφέ! ☕</strong></p>
+                <p>Αν σου αρέσει η εφαρμογή μας, μπορείς να μας υποστηρίξεις με ένα φιλοδώρημα.</p>
+            </div>
+            
+            <a href="https://buymeacoffee.com/franklymadear" target="_blank" class="donation-btn">
+                ☕ Κέρασέ μας έναν καφέ!
+            </a>
         </section>
         
         <footer>
@@ -521,14 +675,17 @@
             const authContainer = document.getElementById('auth-container');
             const userSection = document.getElementById('user-section');
             const uploadSection = document.getElementById('upload-section');
+            const adsSection = document.getElementById('ads-section');
+            const donationSection = document.getElementById('donation-section');
             const userName = document.getElementById('user-name');
             const userAvatar = document.getElementById('user-avatar');
             const userPoints = document.getElementById('user-points');
             const logoutBtn = document.getElementById('logout-btn');
             const uploadBtn = document.getElementById('upload-btn');
+            const watchAdsBtn = document.getElementById('watch-ads-btn');
             const loading = document.getElementById('loading');
             const successMessage = document.getElementById('success-message');
-            const pointsEarned = document.getElementById('points-earned');
+            const adsPointsEarned = document.getElementById('ads-points-earned');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -596,26 +753,35 @@
                     authContainer.style.display = 'none';
                     userSection.classList.add('active');
                     uploadSection.classList.add('active');
+                    adsSection.classList.add('active');
+                    donationSection.classList.add('active');
                     
                     // Έλεγχος αν ο χρήστης έχει ήδη κερδίσει τους πόντους εγγραφής
                     if (!currentUser.hasReceivedWelcomePoints) {
                         awardWelcomePoints();
                     }
+                    
+                    // Έλεγχος αν έχει φτάσει τους 100 πόντους
+                    checkFreeCoffee();
                 }
             }
             
             // Βραβεύση πόντων εγγραφής
             function awardWelcomePoints() {
-                currentUser.points += 50;
+                currentUser.points += 25; // 25 πόντοι για εγγραφή
                 currentUser.hasReceivedWelcomePoints = true;
                 updateUserData();
                 userPoints.textContent = currentUser.points;
                 
-                // Εμφάνιση μηνύματος πόντων
-                pointsEarned.style.display = 'block';
-                setTimeout(() => {
-                    pointsEarned.style.display = 'none';
-                }, 5000);
+                // Έλεγχος αν έχει φτάσει τους 100 πόντους
+                checkFreeCoffee();
+            }
+            
+            // Έλεγχος για δωρεάν καφέ
+            function checkFreeCoffee() {
+                if (currentUser.points >= 100) {
+                    alert('🎉 ΣΥΓΧΑΡΗΤΗΡΙΑ! Έχεις συλλέξει 100 πόντους! Σου αξίζει ένας δωρεάν καφές! ☕');
+                }
             }
             
             // Ενημέρωση δεδομένων χρήστη
@@ -713,6 +879,8 @@
                 authContainer.style.display = 'block';
                 userSection.classList.remove('active');
                 uploadSection.classList.remove('active');
+                adsSection.classList.remove('active');
+                donationSection.classList.remove('active');
                 
                 // Επαναφορά φόρμας
                 fileInputs.forEach(input => input.value = '');
@@ -764,13 +932,7 @@
                 
                 // Προσομοίωση αποστολής
                 setTimeout(function() {
-                    // Προσθήκη πόντων για ανέβασμα φωτογραφιών
-                    const photoCount = fileInputs.filter(input => input.files.length > 0).length;
-                    const pointsToAdd = photoCount * 10; // 10 πόντοι ανά φωτογραφία
-                    
-                    currentUser.points += pointsToAdd;
-                    updateUserData();
-                    userPoints.textContent = currentUser.points;
+                    // ΔΕΝ προστίθενται πόντοι για φωτογραφίες
                     
                     // Εμφάνιση μηνύματος επιτυχίας
                     loading.style.display = 'none';
@@ -792,6 +954,55 @@
                     
                 }, 2000);
             });
+            
+            // Παρακολούθηση διαφήμισης
+            watchAdsBtn.addEventListener('click', function() {
+                if (!currentUser) return;
+                
+                // Φόρτωση διαφήμισης
+                loadAdvertisement();
+                
+                // Προσομοίωση παρακολούθησης διαφήμισης
+                watchAdsBtn.disabled = true;
+                watchAdsBtn.textContent = '⏳ Φόρτωση διαφήμισης...';
+                
+                setTimeout(function() {
+                    // Προσθήκη 1 πόντου
+                    currentUser.points += 1;
+                    updateUserData();
+                    userPoints.textContent = currentUser.points;
+                    
+                    // Εμφάνιση μηνύματος επιτυχίας
+                    adsPointsEarned.style.display = 'block';
+                    watchAdsBtn.textContent = '👁️ Δες Διαφήμιση (+1 Πόντος)';
+                    
+                    // Έλεγχος αν έχει φτάσει τους 100 πόντους
+                    checkFreeCoffee();
+                    
+                    setTimeout(function() {
+                        watchAdsBtn.disabled = false;
+                        adsPointsEarned.style.display = 'none';
+                    }, 2000);
+                    
+                }, 3000); // 3 δευτερόλεπτα προσομοίωση παρακολούθησης
+            });
+            
+            // Φόρτωση διαφήμισης
+            function loadAdvertisement() {
+                const adsContainer = document.getElementById('ads-container');
+                adsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; background: #f0f0f0; border-radius: 8px; margin: 1rem 0;">📺 Διαφήμιση σε φόρτωση...</div>';
+                
+                // Προσθήκη του script της διαφήμισης
+                try {
+                    (function(s){
+                        s.dataset.zone='9974380',
+                        s.src='https://al5sm.com/tag.min.js'
+                    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+                } catch (error) {
+                    console.log('Διαφήμιση φορτώθηκε');
+                    adsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; background: #e8f5e8; border-radius: 8px; margin: 1rem 0; border: 2px solid #4CAF50;">✅ Η διαφήμιση φορτώθηκε επιτυχώς! Σε 3 δευτερόλεπτα θα λάβεις τον πόντο σου.</div>';
+                }
+            }
             
             // Αρχικοποίηση
             checkLoginStatus();
