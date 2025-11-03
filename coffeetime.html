@@ -12,8 +12,7 @@
             --dark-color: #3E2723;
             --accent-color: #CD853F;
             --success-color: #4CAF50;
-            --google-blue: #4285F4;
-            --google-red: #EA4335;
+            --error-color: #f44336;
         }
         
         * {
@@ -51,6 +50,101 @@
             margin-bottom: 0.5rem;
         }
         
+        .auth-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .auth-tab.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+        
+        .auth-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            font-weight: bold;
+        }
+        
+        .auth-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .error-message {
+            background: var(--error-color);
+            color: white;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-align: center;
+            display: none;
+        }
+        
         .user-section {
             background: white;
             border-radius: 15px;
@@ -58,13 +152,10 @@
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
-        }
-        
-        .user-info {
             display: none;
         }
         
-        .user-info.active {
+        .user-section.active {
             display: block;
         }
         
@@ -93,43 +184,17 @@
             font-size: 1rem;
         }
         
-        .login-section {
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-        
-        .google-btn {
-            background: white;
-            border: 2px solid #ddd;
-            border-radius: 25px;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin: 0.5rem 0;
-            width: 100%;
-            max-width: 300px;
-            justify-content: center;
-        }
-        
-        .google-btn:hover {
-            border-color: var(--google-blue);
-            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
-        }
-        
-        .google-icon {
-            font-size: 1.2rem;
-        }
-        
         .upload-section {
             background: white;
             border-radius: 15px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .upload-section.active {
+            display: block;
         }
         
         .section-title {
@@ -270,8 +335,8 @@
         
         .logout-btn {
             background: transparent;
-            border: 2px solid var(--google-red);
-            color: var(--google-red);
+            border: 2px solid var(--error-color);
+            color: var(--error-color);
             border-radius: 20px;
             padding: 0.5rem 1rem;
             cursor: pointer;
@@ -281,7 +346,7 @@
         }
         
         .logout-btn:hover {
-            background: var(--google-red);
+            background: var(--error-color);
             color: white;
         }
         
@@ -307,6 +372,10 @@
                 font-size: 2.5rem;
             }
             
+            .auth-container {
+                padding: 1.5rem;
+            }
+            
             .user-section, .upload-section {
                 padding: 1rem;
                 margin-bottom: 1rem;
@@ -330,26 +399,69 @@
             <p>Μάθε το μέλλον σου από το φλιτζάνι του καφέ σου!</p>
         </header>
         
-        <section class="user-section">
-            <div class="user-info" id="user-info">
-                <div class="user-avatar" id="user-avatar">👤</div>
-                <h3 id="user-name">Χρήστης</h3>
-                <div class="user-points" id="user-points">0</div>
-                <div class="points-label">Πόντοι</div>
-                <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
+        <!-- Σύνδεση/Εγγραφή -->
+        <div class="auth-container" id="auth-container">
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="login">Σύνδεση</button>
+                <button class="auth-tab" data-tab="register">Εγγραφή</button>
             </div>
             
-            <div class="login-section" id="login-section">
-                <h3>Σύνδεση με Google</h3>
-                <p>Συνδέσου για να δεις τους πόντους σου και να ανεβάσεις φωτογραφίες</p>
-                <button class="google-btn" id="google-login-btn">
-                    <span class="google-icon">🔐</span>
-                    Σύνδεση με Gmail
-                </button>
-            </div>
+            <!-- Φόρμα Σύνδεσης -->
+            <form class="auth-form active" id="login-form">
+                <div class="error-message" id="login-error"></div>
+                
+                <div class="form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" required placeholder="π.χ. onoma@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Κωδικός:</label>
+                    <input type="password" id="login-password" required placeholder="Εισάγετε τον κωδικό σας">
+                </div>
+                
+                <button type="submit" class="auth-btn">Σύνδεση</button>
+            </form>
+            
+            <!-- Φόρμα Εγγραφής -->
+            <form class="auth-form" id="register-form">
+                <div class="error-message" id="register-error"></div>
+                
+                <div class="form-group">
+                    <label for="register-username">Ψευδώνυμο:</label>
+                    <input type="text" id="register-username" required placeholder="Π.χ. CoffeeLover">
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" required placeholder="π.χ. onoma@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-password">Κωδικός:</label>
+                    <input type="password" id="register-password" required placeholder="Επιλέξτε κωδικό">
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-confirm-password">Επιβεβαίωση Κωδικού:</label>
+                    <input type="password" id="register-confirm-password" required placeholder="Εισάγετε ξανά τον κωδικό">
+                </div>
+                
+                <button type="submit" class="auth-btn">Εγγραφή</button>
+            </form>
+        </div>
+        
+        <!-- Προφίλ Χρήστη -->
+        <section class="user-section" id="user-section">
+            <div class="user-avatar" id="user-avatar">👤</div>
+            <h3 id="user-name">Χρήστης</h3>
+            <div class="user-points" id="user-points">0</div>
+            <div class="points-label">Πόντοι</div>
+            <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
         </section>
         
-        <section class="upload-section" id="upload-section" style="display: none;">
+        <!-- Ανέβασμα Φωτογραφιών -->
+        <section class="upload-section" id="upload-section">
             <h2 class="section-title">Ανέβασε Φωτογραφίες</h2>
             <p class="upload-subtitle">Ανέβασε φωτογραφίες από το φλιτζάνι και το πιατάκι</p>
             
@@ -385,11 +497,11 @@
             </div>
             
             <button class="upload-btn" id="upload-btn" disabled>
-                📨 Αποστολή Φωτογραφιών
+                📨 Αποστολή Φωτογραφιών (+10 πόντοι ανά φωτογραφία)
             </button>
             
             <div class="points-earned" id="points-earned">
-                🎉 Κέρδισες 50 πόντους!
+                🎉 Κέρδισες 50 πόντους για την εγγραφή!
             </div>
             
             <div class="success-message" id="success-message">
@@ -406,18 +518,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Στοιχεία DOM
-            const userInfo = document.getElementById('user-info');
-            const loginSection = document.getElementById('login-section');
+            const authContainer = document.getElementById('auth-container');
+            const userSection = document.getElementById('user-section');
             const uploadSection = document.getElementById('upload-section');
             const userName = document.getElementById('user-name');
             const userAvatar = document.getElementById('user-avatar');
             const userPoints = document.getElementById('user-points');
-            const googleLoginBtn = document.getElementById('google-login-btn');
             const logoutBtn = document.getElementById('logout-btn');
             const uploadBtn = document.getElementById('upload-btn');
             const loading = document.getElementById('loading');
             const successMessage = document.getElementById('success-message');
             const pointsEarned = document.getElementById('points-earned');
+            
+            // Φόρμες
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginError = document.getElementById('login-error');
+            const registerError = document.getElementById('register-error');
             
             // Στοιχεία αρχείων
             const fileInputs = [
@@ -431,8 +548,35 @@
                 document.getElementById('file-name3')
             ];
             
+            // Tabs
+            const authTabs = document.querySelectorAll('.auth-tab');
+            const authForms = document.querySelectorAll('.auth-form');
+            
             // Τρέχων χρήστης
             let currentUser = null;
+            
+            // Εναλλαγή tabs
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Ενημέρωση tabs
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Ενημέρωση φορμών
+                    authForms.forEach(form => {
+                        form.classList.remove('active');
+                        if (form.id === `${targetTab}-form`) {
+                            form.classList.add('active');
+                        }
+                    });
+                    
+                    // Καθαρισμός σφαλμάτων
+                    loginError.style.display = 'none';
+                    registerError.style.display = 'none';
+                });
+            });
             
             // Έλεγχος αν ο χρήστης είναι συνδεδεμένος
             function checkLoginStatus() {
@@ -446,11 +590,12 @@
             // Εμφάνιση προφίλ χρήστη
             function showUserProfile() {
                 if (currentUser) {
-                    userName.textContent = currentUser.name;
+                    userName.textContent = currentUser.username;
                     userPoints.textContent = currentUser.points;
-                    userInfo.classList.add('active');
-                    loginSection.style.display = 'none';
-                    uploadSection.style.display = 'block';
+                    
+                    authContainer.style.display = 'none';
+                    userSection.classList.add('active');
+                    uploadSection.classList.add('active');
                     
                     // Έλεγχος αν ο χρήστης έχει ήδη κερδίσει τους πόντους εγγραφής
                     if (!currentUser.hasReceivedWelcomePoints) {
@@ -488,35 +633,95 @@
                 localStorage.setItem('coffeeUsers', JSON.stringify(allUsers));
             }
             
-            // Σύνδεση με Google (προσομοίωση)
-            googleLoginBtn.addEventListener('click', function() {
-                // Προσομοίωση σύνδεσης Google
-                const mockUser = {
+            // Σύνδεση
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                // Έλεγχος στο localStorage
+                const allUsers = JSON.parse(localStorage.getItem('coffeeUsers')) || [];
+                const user = allUsers.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    localStorage.setItem('currentCoffeeUser', JSON.stringify(currentUser));
+                    showUserProfile();
+                    loginError.style.display = 'none';
+                } else {
+                    loginError.textContent = 'Λάθος email ή κωδικός!';
+                    loginError.style.display = 'block';
+                }
+            });
+            
+            // Εγγραφή
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('register-username').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+                
+                // Έλεγχοι
+                if (password !== confirmPassword) {
+                    registerError.textContent = 'Οι κωδικοί δεν ταιριάζουν!';
+                    registerError.style.display = 'block';
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    registerError.textContent = 'Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες!';
+                    registerError.style.display = 'block';
+                    return;
+                }
+                
+                // Έλεγχος αν υπάρχει ήδη χρήστης
+                const allUsers = JSON.parse(localStorage.getItem('coffeeUsers')) || [];
+                const existingUser = allUsers.find(u => u.email === email);
+                
+                if (existingUser) {
+                    registerError.textContent = 'Υπάρχει ήδη χρήστης με αυτό το email!';
+                    registerError.style.display = 'block';
+                    return;
+                }
+                
+                // Δημιουργία νέου χρήστη
+                const newUser = {
                     id: Date.now(),
-                    name: 'Χρήστης Google',
-                    email: 'user@gmail.com',
+                    username: username,
+                    email: email,
+                    password: password,
                     points: 0,
                     hasReceivedWelcomePoints: false,
                     registrationDate: new Date().toLocaleDateString('el-GR')
                 };
                 
-                currentUser = mockUser;
+                currentUser = newUser;
+                updateUserData();
                 localStorage.setItem('currentCoffeeUser', JSON.stringify(currentUser));
                 showUserProfile();
+                registerError.style.display = 'none';
             });
             
             // Αποσύνδεση
             logoutBtn.addEventListener('click', function() {
                 localStorage.removeItem('currentCoffeeUser');
                 currentUser = null;
-                userInfo.classList.remove('active');
-                loginSection.style.display = 'block';
-                uploadSection.style.display = 'none';
+                
+                authContainer.style.display = 'block';
+                userSection.classList.remove('active');
+                uploadSection.classList.remove('active');
                 
                 // Επαναφορά φόρμας
                 fileInputs.forEach(input => input.value = '');
                 fileNames.forEach(name => name.textContent = 'Δεν έχει επιλεγεί αρχείο');
                 uploadBtn.disabled = true;
+                
+                // Καθαρισμός φορμών
+                loginForm.reset();
+                registerForm.reset();
             });
             
             // Ενημέρωση ονομάτων αρχείων
@@ -582,7 +787,7 @@
                     }, 3000);
                     
                     console.log('Αποστολή φωτογραφιών στο email: info.franklydear@gmail.com');
-                    console.log('Χρήστης:', currentUser.name);
+                    console.log('Χρήστης:', currentUser.username, currentUser.email);
                     console.log('Φωτογραφίες:', fileInputs.filter(input => input.files.length > 0).map(input => input.files[0].name));
                     
                 }, 2000);
