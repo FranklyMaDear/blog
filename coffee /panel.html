@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Καφεμαντεία - Πλήρες Σύστημα</title>
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2691E;
+            --light-color: #F5DEB3;
+            --dark-color: #3E2723;
+            --accent-color: #CD853F;
+            --success-color: #4CAF50;
+            --admin-color: #9C27B0;
+            --danger-color: #f44336;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            background: var(--light-color);
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .file-upload {
+            border: 2px dashed var(--accent-color);
+            padding: 1rem;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .file-name {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .admin-btn {
+            background-color: var(--admin-color);
+        }
+        
+        .admin-btn:hover {
+            background-color: #7B1FA2;
+        }
+        
+        .danger-btn {
+            background-color: var(--danger-color);
+        }
+        
+        .danger-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--light-color);
+        }
+        
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .email-preview {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .user-details {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">☕ Καφεμαντεία</div>
+        <h1>Σύστημα Διαχείρισης</h1>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="users">Χρήστες</div>
+            <div class="tab" data-tab="photos">Φωτογραφίες</div>
+            <div class="tab" data-tab="email">Αποστολή Email</div>
+            <div class="tab" data-tab="stats">Στατιστικά</div>
+        </div>
+        
+        <!-- Κατάστημα Χρηστών -->
+        <div class="tab-content active" id="users-tab">
+            <h2>Διαχείριση Χρηστών</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-users">0</div>
+                    <div>Σύνολο Χρηστών</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-users">0</div>
+                    <div>Ενεργοί Χρήστες</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-points">0</div>
+                    <div>Συνολικοί Πόντοι</div>
+                </div>
+            </div>
+            
+            <div class="user-actions">
+                <button class="admin-btn" id="refresh-users">Ανανέωση Λίστας</button>
+            </div>
+            
+            <div class="users-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ονοματεπώνυμο</th>
+                            <th>Email</th>
+                            <th>Πόντοι</th>
+                            <th>Ημερομηνία</th>
+                            <th>Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <!-- Users will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Κατάστημα Φωτογραφιών -->
+        <div class="tab-content" id="photos-tab">
+            <h2>Διαχείριση Φωτογραφιών</h2>
+            
+            <div class="photo-filters">
+                <div class="form-group">
+                    <label for="user-filter">Φίλτρο ανά Χρήστη:</label>
+                    <select id="user-filter">
+                        <option value="">Όλοι οι Χρήστες</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="photos-grid" id="photos-container">
+                <!-- Photos will be loaded here -->
+            </div>
+        </div>
+        
+        <!-- Κατάστημα Αποστολής Email -->
+        <div class="tab-content" id="email-tab">
+            <h2>Αποστολή Email</h2>
+            
+            <div class="email-form">
+                <div class="form-group">
+                    <label for="email-recipients">Παραλήπτες:</label>
+                    <select id="email-recipients" multiple>
+                        <option value="all">Όλοι οι Χρήστες</option>
+                    </select>
+                    <small>Κρατήστε πατημένο το Ctrl για πολλαπλές επιλογές</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email-subject">Θέμα:</label>
+                    <input type="text" id="email-subject" placeholder="Θέμα email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email-message">Μήνυμα:</label>
+                    <textarea id="email-message" rows="6" placeholder="Γράψτε το μήνυμα σας..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email-attachments">Συνημμένα (Φωτογραφίες):</label>
+                    <select id="email-attachments" multiple>
+                        <!-- Photos will be loaded here -->
+                    </select>
+                </div>
+                
+                <button class="admin-btn" id="send-email">Αποστολή Email</button>
+                
+                <div class="email-preview" id="email-preview">
+                    <h4>Προεπισκόπηση Email:</h4>
+                    <div id="preview-content"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Κατάστημα Στατιστικών -->
+        <div class="tab-content" id="stats-tab">
+            <h2>Στατιστικά</h2>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="stats-total-users">0</div>
+                    <div>Σύνολο Χρηστών</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stats-total-photos">0</div>
+                    <div>Σύνολο Φωτογραφιών</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stats-total-points">0</div>
+                    <div>Συνολικοί Πόντοι</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stats-emails-sent">0</div>
+                    <div>Email Απεσταλμένα</div>
+                </div>
+            </div>
+            
+            <div class="charts">
+                <div class="form-group">
+                    <label for="chart-type">Τύπος Γραφήματος:</label>
+                    <select id="chart-type">
+                        <option value="users">Εγγραφές Χρηστών</option>
+                        <option value="photos">Φωτογραφίες ανά Ημέρα</option>
+                        <option value="points">Κατανομή Πόντων</option>
+                    </select>
+                </div>
+                
+                <div id="chart-container">
+                    <canvas id="stats-chart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Δεδομένα εφαρμογής
+        let users = JSON.parse(localStorage.getItem('coffeeUsers')) || [];
+        let photos = JSON.parse(localStorage.getItem('coffeePhotos')) || [];
+        let emails = JSON.parse(localStorage.getItem('coffeeEmails')) || [];
+        
+        // Αρχικοποίηση εφαρμογής
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            loadUsers();
+            loadPhotos();
+            updateStats();
+            setupEventListeners();
+        });
+        
+        function initializeApp() {
+            // Προσθήκη δοκιμαστικών δεδομένων αν δεν υπάρχουν
+            if (users.length === 0) {
+                users = [
+                    {
+                        id: 1,
+                        name: "Μαρία Παπαδοπούλου",
+                        email: "maria@example.com",
+                        points: 150,
+                        registrationDate: "2023-10-15",
+                        status: "active"
+                    },
+                    {
+                        id: 2,
+                        name: "Γιάννης Κωνσταντίνου",
+                        email: "giannis@example.com",
+                        points: 80,
+                        registrationDate: "2023-10-20",
+                        status: "active"
+                    }
+                ];
+                localStorage.setItem('coffeeUsers', JSON.stringify(users));
+            }
+            
+            if (photos.length === 0) {
+                photos = [
+                    {
+                        id: 1,
+                        userId: 1,
+                        filename: "φλιτζάνι_1.jpg",
+                        uploadDate: "2023-10-16",
+                        type: "φλιτζάνι"
+                    },
+                    {
+                        id: 2,
+                        userId: 1,
+                        filename: "φλιτζάνι_2.jpg",
+                        uploadDate: "2023-10-17",
+                        type: "φλιτζάνι"
+                    },
+                    {
+                        id: 3,
+                        userId: 2,
+                        filename: "πιατάκι_1.jpg",
+                        uploadDate: "2023-10-21",
+                        type: "πιατάκι"
+                    }
+                ];
+                localStorage.setItem('coffeePhotos', JSON.stringify(photos));
+            }
+        }
+        
+        function setupEventListeners() {
+            // Tab navigation
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+                });
+            });
+            
+            // Refresh users
+            document.getElementById('refresh-users').addEventListener('click', loadUsers);
+            
+            // Send email
+            document.getElementById('send-email').addEventListener('click', sendEmail);
+            
+            // Email preview
+            document.getElementById('email-message').addEventListener('input', updateEmailPreview);
+            document.getElementById('email-subject').addEventListener('input', updateEmailPreview);
+        }
+        
+        function loadUsers() {
+            const tbody = document.getElementById('users-table-body');
+            const userFilter = document.getElementById('user-filter');
+            const emailRecipients = document.getElementById('email-recipients');
+            
+            tbody.innerHTML = '';
+            userFilter.innerHTML = '<option value="">Όλοι οι Χρήστες</option>';
+            emailRecipients.innerHTML = '<option value="all">Όλοι οι Χρήστες</option>';
+            
+            users.forEach(user => {
+                // Προσθήκη στη λίστα χρηστών
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.points}</td>
+                    <td>${user.registrationDate}</td>
+                    <td>
+                        <button class="danger-btn" onclick="deleteUser(${user.id})">Διαγραφή</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                
+                // Προσθήκη στα φίλτρα
+                const userOption = document.createElement('option');
+                userOption.value = user.id;
+                userOption.textContent = user.name;
+                userFilter.appendChild(userOption.cloneNode(true));
+                
+                const emailOption = document.createElement('option');
+                emailOption.value = user.email;
+                emailOption.textContent = user.name;
+                emailRecipients.appendChild(emailOption);
+            });
+            
+            updateStats();
+        }
+        
+        function loadPhotos() {
+            const container = document.getElementById('photos-container');
+            const attachments = document.getElementById('email-attachments');
+            
+            container.innerHTML = '';
+            attachments.innerHTML = '';
+            
+            photos.forEach(photo => {
+                const user = users.find(u => u.id === photo.userId);
+                
+                // Προσθήκη στη λίστα φωτογραφιών
+                const photoCard = document.createElement('div');
+                photoCard.className = 'user-details';
+                photoCard.innerHTML = `
+                    <h4>${photo.filename}</h4>
+                    <p><strong>Χρήστης:</strong> ${user ? user.name : 'Άγνωστος'}</p>
+                    <p><strong>Ημερομηνία:</strong> ${photo.uploadDate}</p>
+                    <p><strong>Τύπος:</strong> ${photo.type}</p>
+                    <button class="danger-btn" onclick="deletePhoto(${photo.id})">Διαγραφή</button>
+                `;
+                container.appendChild(photoCard);
+                
+                // Προσθήκη στα συνημμένα email
+                const option = document.createElement('option');
+                option.value = photo.id;
+                option.textContent = `${photo.filename} (${user ? user.name : 'Άγνωστος'})`;
+                attachments.appendChild(option);
+            });
+        }
+        
+        function updateStats() {
+            const totalUsers = users.length;
+            const activeUsers = users.filter(u => u.status === 'active').length;
+            const totalPoints = users.reduce((sum, user) => sum + user.points, 0);
+            const totalPhotos = photos.length;
+            const emailsSent = emails.length;
+            
+            document.getElementById('total-users').textContent = totalUsers;
+            document.getElementById('active-users').textContent = activeUsers;
+            document.getElementById('total-points').textContent = totalPoints;
+            
+            document.getElementById('stats-total-users').textContent = totalUsers;
+            document.getElementById('stats-total-photos').textContent = totalPhotos;
+            document.getElementById('stats-total-points').textContent = totalPoints;
+            document.getElementById('stats-emails-sent').textContent = emailsSent;
+        }
+        
+        function deleteUser(userId) {
+            if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
+                users = users.filter(user => user.id !== userId);
+                photos = photos.filter(photo => photo.userId !== userId);
+                
+                localStorage.setItem('coffeeUsers', JSON.stringify(users));
+                localStorage.setItem('coffeePhotos', JSON.stringify(photos));
+                
+                loadUsers();
+                loadPhotos();
+                showAlert('Ο χρήστης διαγράφηκε επιτυχώς!', 'success');
+            }
+        }
+        
+        function deletePhoto(photoId) {
+            if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη φωτογραφία;')) {
+                photos = photos.filter(photo => photo.id !== photoId);
+                localStorage.setItem('coffeePhotos', JSON.stringify(photos));
+                loadPhotos();
+                showAlert('Η φωτογραφία διαγράφηκε επιτυχώς!', 'success');
+            }
+        }
+        
+        function sendEmail() {
+            const recipients = Array.from(document.getElementById('email-recipients').selectedOptions)
+                .map(option => option.value);
+            const subject = document.getElementById('email-subject').value;
+            const message = document.getElementById('email-message').value;
+            const attachments = Array.from(document.getElementById('email-attachments').selectedOptions)
+                .map(option => parseInt(option.value));
+            
+            if (!subject || !message) {
+                showAlert('Παρακαλώ συμπληρώστε θέμα και μήνυμα!', 'error');
+                return;
+            }
+            
+            // Προσομοίωση αποστολής email
+            const emailData = {
+                id: Date.now(),
+                recipients: recipients.includes('all') ? 'Όλοι οι χρήστες' : recipients.join(', '),
+                subject: subject,
+                message: message,
+                attachments: attachments.length,
+                sentDate: new Date().toLocaleString('el-GR')
+            };
+            
+            emails.push(emailData);
+            localStorage.setItem('coffeeEmails', JSON.stringify(emails));
+            
+            // Προσομοίωση αποστολής
+            document.getElementById('send-email').disabled = true;
+            document.getElementById('send-email').innerHTML = '<div class="spinner"></div> Αποστολή...';
+            
+            setTimeout(() => {
+                // Στην πραγματικότητα, εδώ θα καλούσατε το EmailJS ή το backend σας
+                console.log('Αποστολή email στο: info.franklydear@gmail.com');
+                console.log('Παραλήπτες:', recipients);
+                console.log('Θέμα:', subject);
+                console.log('Μήνυμα:', message);
+                console.log('Συνημμένα:', attachments);
+                
+                showAlert('Το email στάλθηκε επιτυχώς!', 'success');
+                
+                document.getElementById('send-email').disabled = false;
+                document.getElementById('send-email').textContent = 'Αποστολή Email';
+                
+                // Εκκαθάριση φόρμας
+                document.getElementById('email-subject').value = '';
+                document.getElementById('email-message').value = '';
+                updateEmailPreview();
+                
+                updateStats();
+            }, 2000);
+        }
+        
+        function updateEmailPreview() {
+            const subject = document.getElementById('email-subject').value;
+            const message = document.getElementById('email-message').value;
+            
+            const preview = document.getElementById('preview-content');
+            preview.innerHTML = `
+                <p><strong>Θέμα:</strong> ${subject || '(χωρίς θέμα)'}</p>
+                <p><strong>Μήνυμα:</strong></p>
+                <div style="background: white; padding: 1rem; border-radius: 5px;">
+                    ${message.replace(/\n/g, '<br>') || '(χωρίς μήνυμα)'}
+                </div>
+            `;
+        }
+        
+        function showAlert(message, type) {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            document.querySelector('.container').insertBefore(alert, document.querySelector('.tabs').nextSibling);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        // Συναρτήσεις για εξαγωγή δεδομένων
+        function exportUsers() {
+            const dataStr = JSON.stringify(users, null, 2);
+            downloadFile(dataStr, 'users.json', 'application/json');
+        }
+        
+        function exportPhotos() {
+            const dataStr = JSON.stringify(photos, null, 2);
+            downloadFile(dataStr, 'photos.json', 'application/json');
+        }
+        
+        function downloadFile(content, fileName, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
