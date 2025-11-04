@@ -16,6 +16,7 @@
             --ads-color: #FF6B35;
             --coffee-color: #FF6B35;
             --admin-color: #9C27B0;
+            --message-color: #2196F3;
         }
         
         * {
@@ -573,6 +574,115 @@
             font-size: 0.9rem;
         }
         
+        /* Νέες Διατάξεις για Μηνύματα και Διαφημίσεις */
+        .messages-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .messages-section.active {
+            display: block;
+        }
+        
+        .message-form {
+            margin-bottom: 1.5rem;
+        }
+        
+        .message-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .message-input:focus {
+            border-color: var(--message-color);
+            outline: none;
+        }
+        
+        .send-message-btn {
+            background: var(--message-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .send-message-btn:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+        }
+        
+        .messages-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .message-item {
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--message-color);
+            background: #f5f9ff;
+        }
+        
+        .message-item.admin {
+            border-left-color: var(--admin-color);
+            background: #f9f5ff;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .message-sender {
+            font-weight: bold;
+        }
+        
+        .message-date {
+            color: #666;
+        }
+        
+        .message-content {
+            color: var(--dark-color);
+        }
+        
+        .ads-frame {
+            width: 100%;
+            height: 250px;
+            border: 2px solid var(--ads-color);
+            border-radius: 10px;
+            margin: 1rem 0;
+            overflow: hidden;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ads-placeholder {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+        }
+        
         /* Mobile optimizations */
         @media (max-width: 480px) {
             .app-container {
@@ -592,7 +702,7 @@
                 padding: 1.5rem;
             }
             
-            .user-section, .upload-section, .ads-section, .donation-section, .admin-panel {
+            .user-section, .upload-section, .ads-section, .donation-section, .admin-panel, .messages-section {
                 padding: 1rem;
                 margin-bottom: 1rem;
             }
@@ -607,6 +717,10 @@
             
             .photos-gallery {
                 grid-template-columns: 1fr;
+            }
+            
+            .ads-frame {
+                height: 200px;
             }
         }
     </style>
@@ -629,6 +743,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="notifications">Ειδοποιήσεις</button>
                 <button class="admin-tab" data-tab="photos">Φωτογραφίες</button>
+                <button class="admin-tab" data-tab="messages">Μηνύματα</button>
             </div>
             
             <!-- Ειδοποιήσεις -->
@@ -644,6 +759,14 @@
                 <h3>📷 Φωτογραφίες Χρηστών</h3>
                 <div class="photos-gallery" id="photos-gallery">
                     <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
+                </div>
+            </div>
+            
+            <!-- Μηνύματα Χρηστών -->
+            <div class="admin-content" id="messages-content">
+                <h3>💬 Μηνύματα Χρηστών</h3>
+                <div id="admin-messages-list">
+                    <!-- Εδώ θα εμφανίζονται τα μηνύματα -->
                 </div>
             </div>
         </section>
@@ -714,6 +837,21 @@
             <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
         </section>
         
+        <!-- Μηνύματα Χρήστη προς Διαχείριση -->
+        <section class="messages-section" id="messages-section">
+            <h2 class="section-title">Επικοινωνία με τη Διαχείριση</h2>
+            
+            <div class="message-form">
+                <textarea class="message-input" id="message-input" placeholder="Γράψτε το μήνυμά σας εδώ..."></textarea>
+                <button class="send-message-btn" id="send-message-btn">📨 Αποστολή Μηνύματος</button>
+            </div>
+            
+            <h3>Ιστορικό Μηνυμάτων</h3>
+            <div class="messages-list" id="messages-list">
+                <!-- Εδώ θα εμφανίζονται τα μηνύματα -->
+            </div>
+        </section>
+        
         <!-- Διαφημίσεις για Πόντο -->
         <section class="ads-section" id="ads-section">
             <div class="ads-header">
@@ -727,8 +865,12 @@
                 <p>🎯 <strong>Στόχος: 100 Πόντοι = Δωρεάν Καφές!</strong></p>
             </div>
             
-            <div id="ads-container">
-                <!-- Εδώ θα φορτώσει η διαφήμιση -->
+            <!-- Πλαίσιο για την ενσωμάτωση της διαφήμισης -->
+            <div class="ads-frame" id="ads-frame">
+                <div class="ads-placeholder" id="ads-placeholder">
+                    <p>📺 Η διαφήμιση θα εμφανιστεί εδώ</p>
+                    <p>Πατήστε το κουμπί "Δες Διαφήμιση" για να ξεκινήσει</p>
+                </div>
             </div>
             
             <button class="ads-btn" id="watch-ads-btn">
@@ -816,6 +958,7 @@
             const uploadSection = document.getElementById('upload-section');
             const adsSection = document.getElementById('ads-section');
             const donationSection = document.getElementById('donation-section');
+            const messagesSection = document.getElementById('messages-section');
             const adminPanel = document.getElementById('admin-panel');
             const adminToggle = document.getElementById('admin-toggle');
             const userName = document.getElementById('user-name');
@@ -829,6 +972,16 @@
             const adsPointsEarned = document.getElementById('ads-points-earned');
             const freeCoffeeNotifications = document.getElementById('free-coffee-notifications');
             const photosGallery = document.getElementById('photos-gallery');
+            const adminMessagesList = document.getElementById('admin-messages-list');
+            
+            // Νέα στοιχεία για τα μηνύματα
+            const messageInput = document.getElementById('message-input');
+            const sendMessageBtn = document.getElementById('send-message-btn');
+            const messagesList = document.getElementById('messages-list');
+            
+            // Στοιχεία για διαφήμιση
+            const adsFrame = document.getElementById('ads-frame');
+            const adsPlaceholder = document.getElementById('ads-placeholder');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -901,184 +1054,10 @@
             
             // Εναλλαγή πάνελ διαχείρισης
             adminToggle.addEventListener('click', function() {
-                if (adminPanel.classList.contains('active')) {
-                    adminPanel.classList.remove('active');
-                } else {
-                    adminPanel.classList.add('active');
-                    updateAdminPanel();
-                }
+                adminPanel.classList.toggle('active');
             });
             
-            // Έλεγχος αν ο χρήστης είναι συνδεδεμένος
-            function checkLoginStatus() {
-                const savedUser = localStorage.getItem('currentCoffeeUser');
-                if (savedUser) {
-                    currentUser = JSON.parse(savedUser);
-                    showUserProfile();
-                }
-            }
-            
-            // Εμφάνιση προφίλ χρήστη
-            function showUserProfile() {
-                if (currentUser) {
-                    userName.textContent = currentUser.username;
-                    userPoints.textContent = currentUser.points;
-                    
-                    authContainer.style.display = 'none';
-                    userSection.classList.add('active');
-                    uploadSection.classList.add('active');
-                    adsSection.classList.add('active');
-                    donationSection.classList.add('active');
-                    
-                    // Έλεγχος αν ο χρήστης έχει ήδη κερδίσει τους πόντους εγγραφής
-                    if (!currentUser.hasReceivedWelcomePoints) {
-                        awardWelcomePoints();
-                    }
-                    
-                    // Έλεγχος αν έχει φτάσει τους 100 πόντους
-                    checkFreeCoffee();
-                }
-            }
-            
-            // Βραβεύση πόντων εγγραφής
-            function awardWelcomePoints() {
-                currentUser.points += 25; // 25 πόντοι για εγγραφή
-                currentUser.hasReceivedWelcomePoints = true;
-                updateUserData();
-                userPoints.textContent = currentUser.points;
-                
-                // Έλεγχος αν έχει φτάσει τους 100 πόντους
-                checkFreeCoffee();
-            }
-            
-            // Έλεγχος για δωρεάν καφέ
-            function checkFreeCoffee() {
-                if (currentUser.points >= 100 && !currentUser.hasClaimedFreeCoffee) {
-                    // Δημιουργία ειδοποίησης για τον διαχειριστή
-                    createFreeCoffeeNotification();
-                    
-                    // Σημείωση ότι ο χρήστης διεκδίκησε δωρεάν καφέ
-                    currentUser.hasClaimedFreeCoffee = true;
-                    updateUserData();
-                    
-                    alert('🎉 ΣΥΓΧΑΡΗΤΗΡΙΑ! Έχεις συλλέξει 100 πόντους! Σου αξίζει ένας δωρεάν καφές! ☕\n\nΟ διαχειριστής έχει ειδοποιηθεί και θα σε επικοινωνήσει σύντομα!');
-                }
-            }
-            
-            // Δημιουργία ειδοποίησης δωρεάν καφέ
-            function createFreeCoffeeNotification() {
-                const notifications = JSON.parse(localStorage.getItem('coffeeNotifications')) || [];
-                
-                const notification = {
-                    id: Date.now(),
-                    userId: currentUser.id,
-                    username: currentUser.username,
-                    email: currentUser.email,
-                    points: currentUser.points,
-                    date: new Date().toLocaleString('el-GR'),
-                    message: `Ο χρήστης ${currentUser.username} (${currentUser.email}) έχει συλλέξει ${currentUser.points} πόντους! Πείτε του τον καφέ δωρεάν! ☕`
-                };
-                
-                notifications.unshift(notification);
-                localStorage.setItem('coffeeNotifications', JSON.stringify(notifications));
-            }
-            
-            // Ενημέρωση πάνελ διαχείρισης
-            function updateAdminPanel() {
-                updateNotifications();
-                updatePhotosGallery();
-            }
-            
-            // Ενημέρωση ειδοποιήσεων
-            function updateNotifications() {
-                const notifications = JSON.parse(localStorage.getItem('coffeeNotifications')) || [];
-                freeCoffeeNotifications.innerHTML = '';
-                
-                if (notifications.length === 0) {
-                    freeCoffeeNotifications.innerHTML = '<p>Δεν υπάρχουν νέες ειδοποιήσεις.</p>';
-                    return;
-                }
-                
-                notifications.forEach(notification => {
-                    const alertDiv = document.createElement('div');
-                    alertDiv.className = 'free-coffee-alert';
-                    alertDiv.innerHTML = `
-                        <strong>🎉 Αίτημα Δωρεάν Καφέ!</strong>
-                        <p>${notification.message}</p>
-                        <small>Ημερομηνία: ${notification.date}</small>
-                    `;
-                    freeCoffeeNotifications.appendChild(alertDiv);
-                });
-            }
-            
-            // Ενημέρωση gallery φωτογραφιών
-            function updatePhotosGallery() {
-                const allPhotos = JSON.parse(localStorage.getItem('coffeePhotos')) || [];
-                photosGallery.innerHTML = '';
-                
-                if (allPhotos.length === 0) {
-                    photosGallery.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες ακόμα.</p>';
-                    return;
-                }
-                
-                allPhotos.forEach(photo => {
-                    const photoItem = document.createElement('div');
-                    photoItem.className = 'photo-item';
-                    photoItem.innerHTML = `
-                        <div class="user-info">
-                            <strong>${photo.username}</strong><br>
-                            <small>${photo.email}</small><br>
-                            <small>${photo.date}</small>
-                        </div>
-                        <div class="photo-preview-container">
-                            <img src="${photo.preview}" alt="Φωτογραφία" class="photo-preview">
-                        </div>
-                        <div class="photo-info">
-                            <small>${photo.filename}</small>
-                        </div>
-                    `;
-                    photosGallery.appendChild(photoItem);
-                });
-            }
-            
-            // Ενημέρωση δεδομένων χρήστη
-            function updateUserData() {
-                localStorage.setItem('currentCoffeeUser', JSON.stringify(currentUser));
-                
-                // Ενημέρωση στη λίστα χρηστών
-                let allUsers = JSON.parse(localStorage.getItem('coffeeUsers')) || [];
-                const userIndex = allUsers.findIndex(user => user.email === currentUser.email);
-                if (userIndex !== -1) {
-                    allUsers[userIndex] = currentUser;
-                } else {
-                    allUsers.push(currentUser);
-                }
-                localStorage.setItem('coffeeUsers', JSON.stringify(allUsers));
-            }
-            
-            // Σύνδεση
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
-                
-                // Έλεγχος στο localStorage
-                const allUsers = JSON.parse(localStorage.getItem('coffeeUsers')) || [];
-                const user = allUsers.find(u => u.email === email && u.password === password);
-                
-                if (user) {
-                    currentUser = user;
-                    localStorage.setItem('currentCoffeeUser', JSON.stringify(currentUser));
-                    showUserProfile();
-                    loginError.style.display = 'none';
-                } else {
-                    loginError.textContent = 'Λάθος email ή κωδικός!';
-                    loginError.style.display = 'block';
-                }
-            });
-            
-            // Εγγραφή
+            // Εγγραφή χρήστη
             registerForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -1087,7 +1066,7 @@
                 const password = document.getElementById('register-password').value;
                 const confirmPassword = document.getElementById('register-confirm-password').value;
                 
-                // Έλεγχοι
+                // Βασικός έλεγχος
                 if (password !== confirmPassword) {
                     registerError.textContent = 'Οι κωδικοί δεν ταιριάζουν!';
                     registerError.style.display = 'block';
@@ -1100,12 +1079,12 @@
                     return;
                 }
                 
-                // Έλεγχος αν υπάρχει ήδη χρήστης
-                const allUsers = JSON.parse(localStorage.getItem('coffeeUsers')) || [];
-                const existingUser = allUsers.find(u => u.email === email);
+                // Προσομοίωση εγγραφής
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
                 
-                if (existingUser) {
-                    registerError.textContent = 'Υπάρχει ήδη χρήστης με αυτό το email!';
+                // Έλεγχος αν υπάρχει ήδη ο χρήστης
+                if (users.find(user => user.email === email)) {
+                    registerError.textContent = 'Υπάρχει ήδη λογαριασμός με αυτό το email!';
                     registerError.style.display = 'block';
                     return;
                 }
@@ -1113,45 +1092,340 @@
                 // Δημιουργία νέου χρήστη
                 const newUser = {
                     id: Date.now(),
-                    username: username,
-                    email: email,
-                    password: password,
+                    username,
+                    email,
+                    password, // Σημείωση: Σε πραγματική εφαρμογή, ο κωδικός πρέπει να κρυπτογραφείται
                     points: 0,
-                    hasReceivedWelcomePoints: false,
-                    hasClaimedFreeCoffee: false,
-                    registrationDate: new Date().toLocaleDateString('el-GR')
+                    photos: [],
+                    messages: [],
+                    createdAt: new Date().toISOString()
                 };
                 
+                users.push(newUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Αποθήκευση στο session
                 currentUser = newUser;
-                updateUserData();
-                localStorage.setItem('currentCoffeeUser', JSON.stringify(currentUser));
-                showUserProfile();
-                registerError.style.display = 'none';
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                registerError.textContent = 'Εγγραφή επιτυχής!';
+                registerError.style.backgroundColor = '#4CAF50';
+                registerError.style.display = 'block';
+                
+                // Ενημέρωση UI
+                updateUI();
+            });
+            
+            // Σύνδεση χρήστη
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                // Προσομοίωση σύνδεσης
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.email === email && u.password === password);
+                
+                if (user) {
+                    // Αποθήκευση στο session
+                    currentUser = user;
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Ενημέρωση UI
+                    updateUI();
+                } else {
+                    loginError.textContent = 'Λάθος email ή κωδικός!';
+                    loginError.style.display = 'block';
+                }
             });
             
             // Αποσύνδεση
             logoutBtn.addEventListener('click', function() {
-                localStorage.removeItem('currentCoffeeUser');
                 currentUser = null;
-                
-                authContainer.style.display = 'block';
-                userSection.classList.remove('active');
-                uploadSection.classList.remove('active');
-                adsSection.classList.remove('active');
-                donationSection.classList.remove('active');
-                adminPanel.classList.remove('active');
-                
-                // Επαναφορά φόρμας
-                fileInputs.forEach(input => input.value = '');
-                fileNames.forEach(name => name.textContent = 'Δεν έχει επιλεγεί αρχείο');
-                uploadBtn.disabled = true;
-                
-                // Καθαρισμός φορμών
-                loginForm.reset();
-                registerForm.reset();
+                localStorage.removeItem('currentUser');
+                updateUI();
             });
             
-            // Ενημέρωση ονομάτων αρχείων
+            // Ενημέρωση UI με βάση την κατάσταση σύνδεσης
+            function updateUI() {
+                if (currentUser) {
+                    // Εμφάνιση πάνελ χρήστη
+                    authContainer.style.display = 'none';
+                    userSection.classList.add('active');
+                    uploadSection.classList.add('active');
+                    adsSection.classList.add('active');
+                    donationSection.classList.add('active');
+                    messagesSection.classList.add('active');
+                    
+                    // Ενημέρωση στοιχείων χρήστη
+                    userName.textContent = currentUser.username;
+                    userPoints.textContent = currentUser.points;
+                    
+                    // Ενημέρωση μηνυμάτων
+                    updateMessagesUI();
+                    
+                    // Ενημέρωση admin panel
+                    updateAdminPanel();
+                } else {
+                    // Εμφάνιση φόρμας σύνδεσης
+                    authContainer.style.display = 'block';
+                    userSection.classList.remove('active');
+                    uploadSection.classList.remove('active');
+                    adsSection.classList.remove('active');
+                    donationSection.classList.remove('active');
+                    messagesSection.classList.remove('active');
+                    adminPanel.classList.remove('active');
+                }
+            }
+            
+            // Ενημέρωση UI μηνυμάτων
+            function updateMessagesUI() {
+                if (!currentUser) return;
+                
+                // Καθαρισμός λίστας μηνυμάτων
+                messagesList.innerHTML = '';
+                
+                // Προσθήκη μηνυμάτων χρήστη
+                if (currentUser.messages && currentUser.messages.length > 0) {
+                    currentUser.messages.forEach(msg => {
+                        const messageItem = document.createElement('div');
+                        messageItem.className = `message-item ${msg.sender === 'admin' ? 'admin' : ''}`;
+                        
+                        const messageHeader = document.createElement('div');
+                        messageHeader.className = 'message-header';
+                        
+                        const messageSender = document.createElement('div');
+                        messageSender.className = 'message-sender';
+                        messageSender.textContent = msg.sender === 'admin' ? 'Διαχείριση' : currentUser.username;
+                        
+                        const messageDate = document.createElement('div');
+                        messageDate.className = 'message-date';
+                        messageDate.textContent = new Date(msg.timestamp).toLocaleString('el-GR');
+                        
+                        messageHeader.appendChild(messageSender);
+                        messageHeader.appendChild(messageDate);
+                        
+                        const messageContent = document.createElement('div');
+                        messageContent.className = 'message-content';
+                        messageContent.textContent = msg.content;
+                        
+                        messageItem.appendChild(messageHeader);
+                        messageItem.appendChild(messageContent);
+                        
+                        messagesList.appendChild(messageItem);
+                    });
+                } else {
+                    messagesList.innerHTML = '<p>Δεν υπάρχουν μηνύματα ακόμα.</p>';
+                }
+                
+                // Κάντε κύλιση στο κάτω μέρος της λίστας μηνυμάτων
+                messagesList.scrollTop = messagesList.scrollHeight;
+            }
+            
+            // Αποστολή μηνύματος
+            sendMessageBtn.addEventListener('click', function() {
+                if (!currentUser) return;
+                
+                const messageContent = messageInput.value.trim();
+                
+                if (messageContent === '') {
+                    alert('Παρακαλώ εισάγετε ένα μήνυμα.');
+                    return;
+                }
+                
+                // Δημιουργία νέου μηνύματος
+                const newMessage = {
+                    id: Date.now(),
+                    content: messageContent,
+                    sender: 'user',
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+                
+                // Προσθήκη μηνύματος στον χρήστη
+                if (!currentUser.messages) {
+                    currentUser.messages = [];
+                }
+                
+                currentUser.messages.push(newMessage);
+                
+                // Ενημέρωση χρήστη στο localStorage
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex !== -1) {
+                    users[userIndex] = currentUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+                
+                // Ενημέρωση UI
+                updateMessagesUI();
+                
+                // Καθαρισμός πεδίου εισαγωγής
+                messageInput.value = '';
+                
+                alert('Το μήνυμά σας στάλθηκε επιτυχώς!');
+            });
+            
+            // Ενημέρωση admin panel
+            function updateAdminPanel() {
+                if (!currentUser || currentUser.email !== 'admin@example.com') {
+                    return; // Μόνο για διαχειριστή
+                }
+                
+                // Ενημέρωση ειδοποιήσεων δωρεάν καφέ
+                updateFreeCoffeeNotifications();
+                
+                // Ενημέρωση φωτογραφιών
+                updatePhotosGallery();
+                
+                // Ενημέρωση μηνυμάτων διαχείρισης
+                updateAdminMessages();
+            }
+            
+            // Ενημέρωση ειδοποιήσεων δωρεάν καφέ
+            function updateFreeCoffeeNotifications() {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const usersWithFreeCoffee = users.filter(user => user.points >= 100);
+                
+                freeCoffeeNotifications.innerHTML = '';
+                
+                if (usersWithFreeCoffee.length > 0) {
+                    usersWithFreeCoffee.forEach(user => {
+                        const notification = document.createElement('div');
+                        notification.className = 'free-coffee-alert';
+                        notification.innerHTML = `
+                            <p><strong>${user.username}</strong> έχει συγκεντρώσει ${user.points} πόντους και δικαιούται δωρεάν καφέ!</p>
+                            <p>Email: ${user.email}</p>
+                        `;
+                        freeCoffeeNotifications.appendChild(notification);
+                    });
+                } else {
+                    freeCoffeeNotifications.innerHTML = '<p>Δεν υπάρχουν χρήστες που να έχουν συγκεντρώσει 100+ πόντους ακόμα.</p>';
+                }
+            }
+            
+            // Ενημέρωση φωτογραφιών
+            function updatePhotosGallery() {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const usersWithPhotos = users.filter(user => user.photos && user.photos.length > 0);
+                
+                photosGallery.innerHTML = '';
+                
+                if (usersWithPhotos.length > 0) {
+                    usersWithPhotos.forEach(user => {
+                        user.photos.forEach(photo => {
+                            const photoItem = document.createElement('div');
+                            photoItem.className = 'photo-item';
+                            
+                            const userInfo = document.createElement('div');
+                            userInfo.className = 'user-info';
+                            userInfo.textContent = `Από: ${user.username}`;
+                            
+                            const photoPreview = document.createElement('img');
+                            photoPreview.className = 'photo-preview';
+                            photoPreview.src = photo.url;
+                            photoPreview.alt = `Φωτογραφία από ${user.username}`;
+                            
+                            const uploadDate = document.createElement('div');
+                            uploadDate.className = 'user-info';
+                            uploadDate.textContent = `Ημερομηνία: ${new Date(photo.timestamp).toLocaleDateString('el-GR')}`;
+                            
+                            photoItem.appendChild(userInfo);
+                            photoItem.appendChild(photoPreview);
+                            photoItem.appendChild(uploadDate);
+                            
+                            photosGallery.appendChild(photoItem);
+                        });
+                    });
+                } else {
+                    photosGallery.innerHTML = '<p>Δεν υπάρχουν υποβληθείσες φωτογραφίες ακόμα.</p>';
+                }
+            }
+            
+            // Ενημέρωση μηνυμάτων διαχείρισης
+            function updateAdminMessages() {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const usersWithMessages = users.filter(user => user.messages && user.messages.length > 0);
+                
+                adminMessagesList.innerHTML = '';
+                
+                if (usersWithMessages.length > 0) {
+                    usersWithMessages.forEach(user => {
+                        user.messages.forEach(msg => {
+                            if (msg.sender === 'user') { // Εμφάνιση μόνο μηνυμάτων από χρήστες
+                                const messageItem = document.createElement('div');
+                                messageItem.className = 'message-item';
+                                
+                                const messageHeader = document.createElement('div');
+                                messageHeader.className = 'message-header';
+                                
+                                const messageSender = document.createElement('div');
+                                messageSender.className = 'message-sender';
+                                messageSender.textContent = `Από: ${user.username} (${user.email})`;
+                                
+                                const messageDate = document.createElement('div');
+                                messageDate.className = 'message-date';
+                                messageDate.textContent = new Date(msg.timestamp).toLocaleString('el-GR');
+                                
+                                messageHeader.appendChild(messageSender);
+                                messageHeader.appendChild(messageDate);
+                                
+                                const messageContent = document.createElement('div');
+                                messageContent.className = 'message-content';
+                                messageContent.textContent = msg.content;
+                                
+                                const replyButton = document.createElement('button');
+                                replyButton.className = 'send-message-btn';
+                                replyButton.textContent = 'Απάντηση';
+                                replyButton.style.marginTop = '0.5rem';
+                                replyButton.addEventListener('click', function() {
+                                    const reply = prompt(`Απάντηση στο ${user.username}:`);
+                                    if (reply && reply.trim() !== '') {
+                                        // Προσθήκη απάντησης διαχείρισης
+                                        const adminMessage = {
+                                            id: Date.now(),
+                                            content: reply,
+                                            sender: 'admin',
+                                            timestamp: new Date().toISOString(),
+                                            read: false
+                                        };
+                                        
+                                        if (!user.messages) {
+                                            user.messages = [];
+                                        }
+                                        
+                                        user.messages.push(adminMessage);
+                                        
+                                        // Ενημέρωση χρήστη στο localStorage
+                                        const userIndex = users.findIndex(u => u.id === user.id);
+                                        if (userIndex !== -1) {
+                                            users[userIndex] = user;
+                                            localStorage.setItem('users', JSON.stringify(users));
+                                        }
+                                        
+                                        alert('Η απάντηση στάλθηκε επιτυχώς!');
+                                        updateAdminMessages();
+                                    }
+                                });
+                                
+                                messageItem.appendChild(messageHeader);
+                                messageItem.appendChild(messageContent);
+                                messageItem.appendChild(replyButton);
+                                
+                                adminMessagesList.appendChild(messageItem);
+                            }
+                        });
+                    });
+                } else {
+                    adminMessagesList.innerHTML = '<p>Δεν υπάρχουν μηνύματα από χρήστες ακόμα.</p>';
+                }
+            }
+            
+            // Ενημέρωση κουμπιού αποστολής φωτογραφιών
             fileInputs.forEach((input, index) => {
                 input.addEventListener('change', function() {
                     if (this.files.length > 0) {
@@ -1159,144 +1433,149 @@
                     } else {
                         fileNames[index].textContent = 'Δεν έχει επιλεγεί αρχείο';
                     }
-                    checkUploadButton();
+                    
+                    // Ενεργοποίηση κουμπιού αν έχουν επιλεγεί αρχεία
+                    const allFilesSelected = fileInputs.every(input => input.files.length > 0);
+                    uploadBtn.disabled = !allFilesSelected;
                 });
             });
-            
-            // Έλεγχος κουμπιού αποστολής
-            function checkUploadButton() {
-                const hasPhotos = fileInputs.some(input => input.files.length > 0);
-                uploadBtn.disabled = !hasPhotos;
-            }
             
             // Αποστολή φωτογραφιών
             uploadBtn.addEventListener('click', function() {
                 if (!currentUser) return;
                 
-                // Έλεγχος τύπου αρχείων
-                for (let i = 0; i < fileInputs.length; i++) {
-                    if (fileInputs[i].files.length > 0) {
-                        const fileType = fileInputs[i].files[0].type;
-                        if (fileType !== 'image/jpeg' && fileType !== 'image/png') {
-                            alert('Παρακαλώ ανεβάστε μόνο αρχεία JPG ή PNG!');
-                            return;
-                        }
-                    }
-                }
-                
-                // Απενεργοποίηση κουμπιού και εμφάνιση φόρτωσης
-                uploadBtn.disabled = true;
-                loading.style.display = 'block';
-                successMessage.style.display = 'none';
-                
                 // Προσομοίωση αποστολής
+                loading.style.display = 'block';
+                uploadBtn.disabled = true;
+                
                 setTimeout(function() {
-                    // Αποθήκευση φωτογραφιών για τον διαχειριστή
-                    savePhotosForAdmin();
-                    
-                    // Εμφάνιση μηνύματος επιτυχίας
                     loading.style.display = 'none';
                     successMessage.style.display = 'block';
+                    uploadBtn.disabled = false;
                     
-                    // Επαναφορά φόρμας
-                    fileInputs.forEach(input => input.value = '');
-                    fileNames.forEach(name => name.textContent = 'Δεν έχει επιλεγεί αρχείο');
+                    // Προσθήκη πόντων
+                    currentUser.points += 10;
                     
-                    // Ενεργοποίηση κουμπιού μετά από 3 δευτερόλεπτα
-                    setTimeout(function() {
-                        uploadBtn.disabled = false;
-                        successMessage.style.display = 'none';
-                    }, 3000);
-                    
-                    console.log('Αποστολή φωτογραφιών στο email: info.franklydear@gmail.com');
-                    console.log('Χρήστης:', currentUser.username, currentUser.email);
-                    console.log('Φωτογραφίες:', fileInputs.filter(input => input.files.length > 0).map(input => input.files[0].name));
-                    
-                }, 2000);
-            });
-            
-            // Αποθήκευση φωτογραφιών για τον διαχειριστή
-            function savePhotosForAdmin() {
-                const allPhotos = JSON.parse(localStorage.getItem('coffeePhotos')) || [];
-                
-                fileInputs.forEach((input, index) => {
-                    if (input.files.length > 0) {
-                        const file = input.files[0];
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            const photoData = {
+                    // Προσομοίωση αποθήκευσης φωτογραφιών
+                    const newPhotos = [];
+                    fileInputs.forEach((input, index) => {
+                        if (input.files.length > 0) {
+                            newPhotos.push({
                                 id: Date.now() + index,
-                                userId: currentUser.id,
-                                username: currentUser.username,
-                                email: currentUser.email,
-                                filename: file.name,
-                                preview: e.target.result,
-                                date: new Date().toLocaleString('el-GR'),
-                                type: index === 0 ? 'Πλευρά φλιτζανιού' : 
-                                      index === 1 ? 'Αντίθετη πλευρά' : 'Πιατάκι'
-                            };
-                            
-                            allPhotos.unshift(photoData);
-                            localStorage.setItem('coffeePhotos', JSON.stringify(allPhotos));
-                        };
-                        
-                        reader.readAsDataURL(file);
+                                name: input.files[0].name,
+                                url: URL.createObjectURL(input.files[0]),
+                                timestamp: new Date().toISOString()
+                            });
+                        }
+                    });
+                    
+                    if (!currentUser.photos) {
+                        currentUser.photos = [];
                     }
-                });
-            }
-            
-            // Παρακολούθηση διαφήμισης
-            watchAdsBtn.addEventListener('click', function() {
-                if (!currentUser) return;
-                
-                // Φόρτωση διαφήμισης
-                loadAdvertisement();
-                
-                // Προσομοίωση παρακολούθησης διαφήμισης
-                watchAdsBtn.disabled = true;
-                watchAdsBtn.textContent = '⏳ Φόρτωση διαφήμισης...';
-                
-                setTimeout(function() {
-                    // Προσθήκη 1 πόντου
-                    currentUser.points += 1;
-                    updateUserData();
+                    
+                    currentUser.photos.push(...newPhotos);
+                    
+                    // Ενημέρωση χρήστη στο localStorage
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const userIndex = users.findIndex(u => u.id === currentUser.id);
+                    
+                    if (userIndex !== -1) {
+                        users[userIndex] = currentUser;
+                        localStorage.setItem('users', JSON.stringify(users));
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    }
+                    
+                    // Ενημέρωση UI
                     userPoints.textContent = currentUser.points;
                     
                     // Εμφάνιση μηνύματος επιτυχίας
-                    adsPointsEarned.style.display = 'block';
-                    watchAdsBtn.textContent = '👁️ Δες Διαφήμιση (+1 Πόντος)';
-                    
-                    // Έλεγχος αν έχει φτάσει τους 100 πόντους
-                    checkFreeCoffee();
-                    
                     setTimeout(function() {
-                        watchAdsBtn.disabled = false;
-                        adsPointsEarned.style.display = 'none';
-                    }, 2000);
-                    
-                }, 3000); // 3 δευτερόλεπτα προσομοίωση παρακολούθησης
+                        successMessage.style.display = 'none';
+                        
+                        // Επαναφορά φορμών
+                        fileInputs.forEach(input => {
+                            input.value = '';
+                        });
+                        
+                        fileNames.forEach(name => {
+                            name.textContent = 'Δεν έχει επιλεγεί αρχείο';
+                        });
+                        
+                        uploadBtn.disabled = true;
+                    }, 3000);
+                }, 2000);
             });
             
-            // Φόρτωση διαφήμισης
-            function loadAdvertisement() {
-                const adsContainer = document.getElementById('ads-container');
-                adsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; background: #f0f0f0; border-radius: 8px; margin: 1rem 0;">📺 Διαφήμιση σε φόρτωση...</div>';
+            // Διαφήμιση για πόντους
+            watchAdsBtn.addEventListener('click', function() {
+                if (!currentUser) return;
                 
-                // Προσθήκη του script της διαφήμισης
-                try {
-                    (function(s){
-                        s.dataset.zone='9974380',
-                        s.src='https://al5sm.com/tag.min.js'
-                    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-                } catch (error) {
-                    console.log('Διαφήμιση φορτώθηκε');
-                    adsContainer.innerHTML = '<div style="text-align: center; padding: 1rem; background: #e8f5e8; border-radius: 8px; margin: 1rem 0; border: 2px solid #4CAF50;">✅ Η διαφήμιση φορτώθηκε επιτυχώς! Σε 3 δευτερόλεπτα θα λάβεις τον πόντο σου.</div>';
-                }
-            }
+                // Απενεργοποίηση κουμπιού για 30 δευτερόλεπτα
+                watchAdsBtn.disabled = true;
+                watchAdsBtn.textContent = '⏳ Προβολή σε εξέλιξη...';
+                
+                // Αλλαγή του placeholder για προσομοίωση διαφήμισης
+                adsPlaceholder.innerHTML = `
+                    <div>
+                        <h3>📺 Διαφήμιση</h3>
+                        <p>Η διαφήμιση προβάλλεται...</p>
+                        <div class="spinner"></div>
+                        <p>Παρακαλώ περιμένετε 10 δευτερόλεπτα</p>
+                    </div>
+                `;
+                
+                // Προσομοίωση προβολής διαφήμισης
+                let countdown = 10;
+                const countdownInterval = setInterval(function() {
+                    countdown--;
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        
+                        // Προσθήκη πόντου
+                        currentUser.points += 1;
+                        
+                        // Ενημέρωση χρήστη στο localStorage
+                        const users = JSON.parse(localStorage.getItem('users') || '[]');
+                        const userIndex = users.findIndex(u => u.id === currentUser.id);
+                        
+                        if (userIndex !== -1) {
+                            users[userIndex] = currentUser;
+                            localStorage.setItem('users', JSON.stringify(users));
+                            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        }
+                        
+                        // Ενημέρωση UI
+                        userPoints.textContent = currentUser.points;
+                        
+                        // Εμφάνιση μηνύματος επιτυχίας
+                        adsPointsEarned.style.display = 'block';
+                        
+                        // Επαναφορά διαφήμισης
+                        adsPlaceholder.innerHTML = `
+                            <p>📺 Η διαφήμιση θα εμφανιστεί εδώ</p>
+                            <p>Πατήστε το κουμπί "Δες Διαφήμιση" για να ξεκινήσει</p>
+                        `;
+                        
+                        // Επαναφορά κουμπιού με καθυστέρηση 30 δευτερολέπτων
+                        setTimeout(function() {
+                            watchAdsBtn.disabled = false;
+                            watchAdsBtn.textContent = '👁️ Δες Διαφήμιση (+1 Πόντος)';
+                            adsPointsEarned.style.display = 'none';
+                        }, 30000); // 30 δευτερόλεπτα
+                    } else {
+                        adsPlaceholder.querySelector('p:last-child').textContent = 
+                            `Παρακαλώ περιμένετε ${countdown} δευτερόλεπτα`;
+                    }
+                }, 1000);
+            });
             
-            // Αρχικοποίηση
-            checkLoginStatus();
+            // Έλεγχος αν υπάρχει συνδεδεμένος χρήστης
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                updateUI();
+            }
         });
     </script>
 </body>
