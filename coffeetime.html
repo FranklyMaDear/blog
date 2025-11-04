@@ -867,10 +867,7 @@
             
             <!-- Πλαίσιο για την ενσωμάτωση της διαφήμισης -->
             <div class="ads-frame" id="ads-frame">
-                <div class="ads-placeholder" id="ads-placeholder">
-                    <p>📺 Η διαφήμιση θα εμφανιστεί εδώ</p>
-                    <p>Πατήστε το κουμπί "Δες Διαφήμιση" για να ξεκινήσει</p>
-                </div>
+                <!-- Η διαφήμιση θα εμφανιστεί εδώ αφού πατηθεί το κουμπί -->
             </div>
             
             <button class="ads-btn" id="watch-ads-btn">
@@ -981,7 +978,6 @@
             
             // Στοιχεία για διαφήμιση
             const adsFrame = document.getElementById('ads-frame');
-            const adsPlaceholder = document.getElementById('ads-placeholder');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -1514,13 +1510,10 @@
                 watchAdsBtn.disabled = true;
                 watchAdsBtn.textContent = '⏳ Προβολή σε εξέλιξη...';
                 
-                // Αλλαγή του placeholder για προσομοίωση διαφήμισης
-                adsPlaceholder.innerHTML = `
-                    <div>
-                        <h3>📺 Διαφήμιση</h3>
-                        <p>Η διαφήμιση προβάλλεται...</p>
-                        <div class="spinner"></div>
-                        <p>Παρακαλώ περιμένετε 10 δευτερόλεπτα</p>
+                // Προσθήκη της διαφήμισης στο πλαίσιο
+                adsFrame.innerHTML = `
+                    <div style="width: 100%; height: 100%;">
+                        <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
                     </div>
                 `;
                 
@@ -1551,11 +1544,10 @@
                         // Εμφάνιση μηνύματος επιτυχίας
                         adsPointsEarned.style.display = 'block';
                         
-                        // Επαναφορά διαφήμισης
-                        adsPlaceholder.innerHTML = `
-                            <p>📺 Η διαφήμιση θα εμφανιστεί εδώ</p>
-                            <p>Πατήστε το κουμπί "Δες Διαφήμιση" για να ξεκινήσει</p>
-                        `;
+                        // Καθαρισμός του πλαισίου διαφήμισης
+                        setTimeout(function() {
+                            adsFrame.innerHTML = '';
+                        }, 5000);
                         
                         // Επαναφορά κουμπιού με καθυστέρηση 30 δευτερολέπτων
                         setTimeout(function() {
@@ -1564,8 +1556,11 @@
                             adsPointsEarned.style.display = 'none';
                         }, 30000); // 30 δευτερόλεπτα
                     } else {
-                        adsPlaceholder.querySelector('p:last-child').textContent = 
-                            `Παρακαλώ περιμένετε ${countdown} δευτερόλεπτα`;
+                        // Ενημέρωση του countdown αν χρειάζεται
+                        const countdownElement = adsFrame.querySelector('.countdown');
+                        if (countdownElement) {
+                            countdownElement.textContent = `Παρακαλώ περιμένετε ${countdown} δευτερόλεπτα`;
+                        }
                     }
                 }, 1000);
             });
