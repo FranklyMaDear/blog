@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Categories - Scary, Sensual, Comedy</title>
+    <title>Reel Βίντεο 20-35</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -27,12 +27,12 @@
         
         header {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 30px;
             padding: 20px;
         }
         
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 10px;
             background: linear-gradient(to right, #ff6b6b, #ffa36c, #ffde7d);
             -webkit-background-clip: text;
@@ -46,111 +46,103 @@
             color: #a5b1c2;
         }
         
-        .categories {
+        .reel-container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
         }
         
-        .category {
-            width: 350px;
-            height: 400px;
+        .video-item {
+            width: 100%;
+            max-width: 600px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 15px;
             overflow: hidden;
-            position: relative;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.5s, box-shadow 0.5s;
-            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         
-        .category:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
         
-        .category-image {
+        .video-player {
+            width: 100%;
+            height: 340px;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        
+        .video-player iframe {
             width: 100%;
             height: 100%;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.8s;
+            border: none;
         }
         
-        .category:hover .category-image {
-            transform: scale(1.1);
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(45deg, #2c3e50, #4a6491);
+            color: white;
+            font-size: 1.2rem;
         }
         
-        .category-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-            padding: 30px 20px 20px;
-            transform: translateY(10px);
-            transition: transform 0.5s;
+        .video-info {
+            padding: 20px;
         }
         
-        .category:hover .category-overlay {
-            transform: translateY(0);
-        }
-        
-        .category-title {
-            font-size: 2rem;
+        .video-title {
+            font-size: 1.4rem;
             margin-bottom: 10px;
-            font-weight: 700;
+            color: #ffde7d;
         }
         
-        .category-description {
+        .video-description {
             font-size: 1rem;
             line-height: 1.5;
-            opacity: 0.9;
+            color: #a5b1c2;
         }
         
-        /* Scary Category */
-        .scary {
-            border: 2px solid #ff4757;
+        .video-number {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
         }
         
-        .scary .category-image {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        .video-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .scary .category-title {
-            color: #ff4757;
-            text-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+        .video-controls button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
         }
         
-        /* Sensual Category */
-        .sensual {
-            border: 2px solid #ff6b81;
-        }
-        
-        .sensual .category-image {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://images.unsplash.com/photo-1516487106395-f2d269d6a13c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-        }
-        
-        .sensual .category-title {
-            color: #ff6b81;
-            text-shadow: 0 0 10px rgba(255, 107, 129, 0.5);
-        }
-        
-        /* Comedy Category */
-        .comedy {
-            border: 2px solid #ffa502;
-        }
-        
-        .comedy .category-image {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
-                        url('https://images.unsplash.com/photo-1541336032412-2048a678540d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
-        }
-        
-        .comedy .category-title {
-            color: #ffa502;
-            text-shadow: 0 0 10px rgba(255, 165, 2, 0.5);
+        .video-controls button:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         
         footer {
@@ -167,29 +159,29 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .category {
+        .video-item {
             animation: fadeIn 0.8s ease-out forwards;
             opacity: 0;
         }
         
-        .scary { animation-delay: 0.2s; }
-        .sensual { animation-delay: 0.4s; }
-        .comedy { animation-delay: 0.6s; }
-        
         /* Responsive design */
         @media (max-width: 768px) {
-            .categories {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .category {
-                width: 90%;
-                max-width: 350px;
+            .video-player {
+                height: 250px;
             }
             
             h1 {
-                font-size: 2.2rem;
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .video-player {
+                height: 200px;
+            }
+            
+            .video-title {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -197,49 +189,334 @@
 <body>
     <div class="container">
         <header>
-            <h1>Movie Categories</h1>
-            <p class="subtitle">Select a category to explore</p>
+            <h1>Reel Βίντεο</h1>
+            <p class="subtitle">Βίντεο 20 έως 35</p>
         </header>
         
-        <div class="categories">
-            <div class="category scary">
-                <div class="category-image"></div>
-                <div class="category-overlay">
-                    <h2 class="category-title">Scary</h2>
-                    <p class="category-description">
-                        Horror movies that will make you see every shadow in a different light. 
-                        From psychological thrillers to supernatural experiences, prepare for suspense.
-                    </p>
+        <div class="reel-container">
+            <!-- Βίντεο 20 -->
+            <div class="video-item" style="animation-delay: 0.1s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 20</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 20</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 20</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 20. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="category sensual">
-                <div class="category-image"></div>
-                <div class="category-overlay">
-                    <h2 class="category-title">Sensual</h2>
-                    <p class="category-description">
-                        Movies full of passion, romance, and emotion. 
-                        Explore the most sensitive aspects of human relationships 
-                        and feelings.
-                    </p>
+            <!-- Βίντεο 21 -->
+            <div class="video-item" style="animation-delay: 0.2s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 21</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 21</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 21</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 21. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
                 </div>
             </div>
             
-            <div class="category comedy">
-                <div class="category-image"></div>
-                <div class="category-overlay">
-                    <h2 class="category-title">Comedy</h2>
-                    <p class="category-description">
-                        Laughter and fun with the funniest movies. 
-                        From situational comedies to satirical comedies, 
-                        here you'll find what you need to forget your worries.
-                    </p>
+            <!-- Βίντεο 22 -->
+            <div class="video-item" style="animation-delay: 0.3s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 22</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 22</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 22</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 22. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 23 -->
+            <div class="video-item" style="animation-delay: 0.4s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 23</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 23</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 23</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 23. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 24 -->
+            <div class="video-item" style="animation-delay: 0.5s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 24</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 24</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 24</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 24. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 25 -->
+            <div class="video-item" style="animation-delay: 0.6s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 25</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 25</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 25</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 25. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 26 -->
+            <div class="video-item" style="animation-delay: 0.7s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 26</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 26</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 26</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 26. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 27 -->
+            <div class="video-item" style="animation-delay: 0.8s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 27</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 27</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 27</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 27. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 28 -->
+            <div class="video-item" style="animation-delay: 0.9s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 28</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 28</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 28</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 28. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 29 -->
+            <div class="video-item" style="animation-delay: 1.0s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 29</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 29</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 29</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 29. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 30 -->
+            <div class="video-item" style="animation-delay: 1.1s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 30</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 30</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 30</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 30. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 31 -->
+            <div class="video-item" style="animation-delay: 1.2s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 31</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 31</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 31</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 31. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 32 -->
+            <div class="video-item" style="animation-delay: 1.3s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 32</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 32</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 32</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 32. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 33 -->
+            <div class="video-item" style="animation-delay: 1.4s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 33</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 33</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 33</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 33. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 34 -->
+            <div class="video-item" style="animation-delay: 1.5s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 34</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 34</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 34</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 34. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Βίντεο 35 -->
+            <div class="video-item" style="animation-delay: 1.6s;">
+                <div class="video-player">
+                    <div class="video-number">Βίντεο 35</div>
+                    <div class="video-placeholder">
+                        <i class="fas fa-play-circle" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p>Βίντεο 35</p>
+                    </div>
+                </div>
+                <div class="video-info">
+                    <h3 class="video-title">Τίτλος Βίντεο 35</h3>
+                    <p class="video-description">Περιγραφή για το βίντεο 35. Αυτό το βίντεο παρουσιάζει ενδιαφέρον περιεχόμενο που θα σας κρατήσει αμείωτο το ενδιαφέρον.</p>
+                    <div class="video-controls">
+                        <button><i class="fas fa-thumbs-up"></i> Like</button>
+                        <button><i class="fas fa-share"></i> Share</button>
+                        <button><i class="fas fa-save"></i> Save</button>
+                    </div>
                 </div>
             </div>
         </div>
         
         <footer>
-            <p>Created with HTML, CSS and love for cinema</p>
+            <p>Δημιουργήθηκε με HTML, CSS και αγάπη για τα βίντεο</p>
         </footer>
     </div>
 </body>
