@@ -685,32 +685,6 @@
             font-size: 0.85rem;
         }
         
-        /* Βελτιωμένο ads-frame - αφαίρεση του placeholder */
-        .ads-frame {
-            width: 100%;
-            height: 200px;
-            border: 2px solid var(--ads-color);
-            border-radius: 10px;
-            margin: 0.8rem 0;
-            overflow: hidden;
-            background: #f9f9f9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            display: none; /* Αρχικά κρυφό */
-        }
-        
-        .ads-content {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: white;
-        }
-        
         /* Mobile optimizations */
         @media (max-width: 480px) {
             .app-container {
@@ -745,10 +719,6 @@
             
             .photos-gallery {
                 grid-template-columns: 1fr;
-            }
-            
-            .ads-frame {
-                height: 180px;
             }
         }
     </style>
@@ -891,14 +861,6 @@
                 <p><strong>Δες μια διαφήμιση και κέρδισε 1 πόντο!</strong></p>
                 <p>Μπορείς να δεις όσες διαφημίσεις θέλεις την ημέρα!</p>
                 <p>🎯 <strong>Στόχος: 100 Πόντοι = Δωρεάν Καφές!</strong></p>
-            </div>
-            
-            <!-- Πλαίσιο για την ενσωμάτωση της διαφήμισης -->
-            <div class="ads-frame" id="ads-frame">
-                <div class="ads-content">
-                    <h3>🎬 Διαφήμιση</h3>
-                    <p>Η διαφήμιση θα εμφανιστεί εδώ</p>
-                </div>
             </div>
             
             <button class="ads-btn" id="watch-ads-btn">
@@ -1048,9 +1010,6 @@
             const messageInput = document.getElementById('message-input');
             const sendMessageBtn = document.getElementById('send-message-btn');
             const messagesList = document.getElementById('messages-list');
-            
-            // Στοιχεία για διαφήμιση
-            const adsFrame = document.getElementById('ads-frame');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -1242,55 +1201,49 @@
                 }, 2000);
             });
             
-            // Διαφήμιση - άμεση εμφάνιση όταν πατιέται το κουμπί
+            // Διαφήμιση - άμεση φόρτωση όταν πατιέται το κουμπί
             watchAdsBtn.addEventListener('click', function() {
                 // Απενεργοποίηση του κουμπιού για αποφυγή πολλαπλών κλικ
                 watchAdsBtn.disabled = true;
                 
-                // Άμεση εμφάνιση της διαφήμισης
-                adsFrame.style.display = 'flex';
-                
                 // Άμεση φόρτωση της πραγματικής διαφήμισης
                 (function(s){s.dataset.zone='10113668',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
                 
-                // Προσθήκη πόντου στον χρήστη μετά από 10 δευτερόλεπτα
-                setTimeout(() => {
-                    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const userIndex = users.findIndex(u => u.id === currentUser.id);
+                // Προσθήκη πόντου στον χρήστη
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].points += 1;
+                    localStorage.setItem('users', JSON.stringify(users));
                     
-                    if (userIndex !== -1) {
-                        users[userIndex].points += 1;
-                        localStorage.setItem('users', JSON.stringify(users));
+                    // Ενημέρωση του τρέχοντος χρήστη
+                    currentUser.points += 1;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Ενημέρωση εμφάνισης πόντων
+                    userPoints.textContent = currentUser.points;
+                    
+                    // Έλεγχος για δωρεάν καφέ
+                    if (currentUser.points >= 100) {
+                        // Αποστολή ειδοποίησης προς διαχειριστές
+                        const freeCoffeeMessage = `🏆 Ο χρήστης ${currentUser.username} (${currentUser.email}) έφτασε τους 100 πόντους και κέρδισε έναν δωρεάν καφέ!`;
+                        sendMessageToAdmins(freeCoffeeMessage, currentUser);
                         
-                        // Ενημέρωση του τρέχοντος χρήστη
-                        currentUser.points += 1;
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        
-                        // Ενημέρωση εμφάνισης πόντων
-                        userPoints.textContent = currentUser.points;
-                        
-                        // Έλεγχος για δωρεάν καφέ
-                        if (currentUser.points >= 100) {
-                            // Αποστολή ειδοποίησης προς διαχειριστές
-                            const freeCoffeeMessage = `🏆 Ο χρήστης ${currentUser.username} (${currentUser.email}) έφτασε τους 100 πόντους και κέρδισε έναν δωρεάν καφέ!`;
-                            sendMessageToAdmins(freeCoffeeMessage, currentUser);
-                            
-                            // Εμφάνιση ειδοποίησης στον χρήστη
-                            alert('Συγχαρητήρια! Κέρδισες έναν δωρεάν καφέ! ☕');
-                        }
+                        // Εμφάνιση ειδοποίησης στον χρήστη
+                        alert('Συγχαρητήρια! Κέρδισες έναν δωρεάν καφέ! ☕');
                     }
-                    
-                    // Εμφάνιση μηνύματος επιτυχίας
-                    adsPointsEarned.style.display = 'block';
-                    
-                    // Επαναφορά της διαφήμισης
-                    setTimeout(() => {
-                        adsFrame.style.display = 'none';
-                        adsPointsEarned.style.display = 'none';
-                        watchAdsBtn.disabled = false;
-                    }, 3000);
-                }, 10000); // 10 δευτερόλεπτα
+                }
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                adsPointsEarned.style.display = 'block';
+                
+                // Επαναφορά του κουμπιού μετά από 3 δευτερόλεπτα
+                setTimeout(() => {
+                    adsPointsEarned.style.display = 'none';
+                    watchAdsBtn.disabled = false;
+                }, 3000);
             });
             
             // Αποστολή μηνύματος προς διαχειριστές
