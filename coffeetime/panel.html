@@ -967,6 +967,159 @@
                 localStorage.setItem('users', JSON.stringify(users));
             }
             
+            // Ενημερωμένη ενημέρωση μηνυμάτων διαχείρισης
+            function updateAdminMessages() {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const adminUsers = users.filter(user => user.email === 'admin@example.com' || user.role === 'admin');
+                const allAdminMessages = [];
+                
+                // Συλλογή όλων των μηνυμάτων από όλους τους διαχειριστές
+                adminUsers.forEach(admin => {
+                    if (admin.messages && admin.messages.length > 0) {
+                        admin.messages.forEach(msg => {
+                            if (msg.sender === 'user' || msg.type === 'user_message') {
+                                allAdminMessages.push({
+                                    ...msg,
+                                    adminId: admin.id
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                // Ταξινόμηση μηνυμάτων από το πιο πρόσφατο στο πιο παλιό
+                allAdminMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                adminMessagesContainer.innerHTML = '';
+                
+                if (allAdminMessages.length > 0) {
+                    allAdminMessages.forEach(msg => {
+                        const messageItem = document.createElement('div');
+                        messageItem.className = `admin-message-item ${!msg.read ? 'unread' : ''}`;
+                        
+                        const messageHeader = document.createElement('div');
+                        messageHeader.className = 'admin-message-header';
+                        
+                        const messageSender = document.createElement('div');
+                        messageSender.className = 'admin-message-sender';
+                        messageSender.innerHTML = `<strong>${msg.senderName || 'Χρήστης'}</strong> (${msg.senderEmail || 'Άγνωστο email'})`;
+                        
+                        const messageDate = document.createElement('div');
+                        messageDate.className = 'message-date';
+                        messageDate.textContent = new Date(msg.timestamp).toLocaleString('el-GR');
+                        
+                        messageHeader.appendChild(messageSender);
+                        messageHeader.appendChild(messageDate);
+                        
+                        const messageContent = document.createElement('div');
+                        messageContent.className = 'message-content';
+                        messageContent.textContent = msg.content;
+                        
+                        const messageActions = document.createElement('div');
+                        messageActions.className = 'admin-message-actions';
+                        
+                        if (!msg.read) {
+                            const markReadBtn = document.createElement('button');
+                            markReadBtn.className = 'mark-read-btn';
+                            markReadBtn.textContent = '📨 Σημείωση ως αναγνωσμένο';
+                            markReadBtn.addEventListener('click', function() {
+                                markAdminMessageAsRead(msg.adminId, msg.id);
+                            });
+                            messageActions.appendChild(markReadBtn);
+                        }
+                        
+                        const replyBtn = document.createElement('button');
+                        replyBtn.className = 'reply-btn';
+                        replyBtn.textContent = '↩️ Απάντηση';
+                        replyBtn.addEventListener('click', function() {
+                            const reply = prompt(`Απάντηση στο ${msg.senderName || 'χρήστη'}:`);
+                            if (reply && reply.trim() !== '') {
+                                sendReplyToUser(msg.senderEmail, msg.senderName, reply);
+                            }
+                        });
+                        messageActions.appendChild(replyBtn);
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'delete-message-btn';
+                        deleteBtn.textContent = '🗑️ Διαγραφή';
+                        deleteBtn.addEventListener('click', function() {
+                            if (confirm('Θέλετε σίγουρα να διαγράψετε αυτό το μήνυμα;')) {
+                                deleteAdminMessage(msg.adminId, msg.id);
+                            }
+                        });
+                        messageActions.appendChild(deleteBtn);
+                        
+                        messageItem.appendChild(messageHeader);
+                        messageItem.appendChild(messageContent);
+                        messageItem.appendChild(messageActions);
+                        
+                        adminMessagesContainer.appendChild(messageItem);
+                    });
+                } else {
+                    adminMessagesContainer.innerHTML = '<p>Δεν υπάρχουν μηνύματα από χρήστες ακόμα.</p>';
+                }
+            }
+
+            // Σημείωση μηνύματος διαχείρισης ως αναγνωσμένο
+            function markAdminMessageAsRead(adminId, messageId) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const adminIndex = users.findIndex(user => user.id === adminId);
+                
+                if (adminIndex !== -1) {
+                    const admin = users[adminIndex];
+                    const messageIndex = admin.messages.findIndex(msg => msg.id === messageId);
+                    
+                    if (messageIndex !== -1) {
+                        admin.messages[messageIndex].read = true;
+                        localStorage.setItem('users', JSON.stringify(users));
+                        updateAdminMessages();
+                    }
+                }
+            }
+
+            // Διαγραφή μηνύματος διαχείρισης
+            function deleteAdminMessage(adminId, messageId) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const adminIndex = users.findIndex(user => user.id === adminId);
+                
+                if (adminIndex !== -1) {
+                    const admin = users[adminIndex];
+                    admin.messages = admin.messages.filter(msg => msg.id !== messageId);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    updateAdminMessages();
+                    alert('Το μήνυμα διαγράφηκε επιτυχώς!');
+                }
+            }
+
+            // Αποστολή απάντησης προς χρήστη
+            function sendReplyToUser(userEmail, userName, reply) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(user => user.email === userEmail);
+                
+                if (userIndex !== -1) {
+                    const user = users[userIndex];
+                    const replyMessage = {
+                        id: Date.now(),
+                        content: `Απάντηση από διαχείριση: ${reply}`,
+                        sender: 'admin',
+                        timestamp: new Date().toISOString(),
+                        read: false
+                    };
+                    
+                    if (!user.messages) {
+                        user.messages = [];
+                    }
+                    
+                    user.messages.push(replyMessage);
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    alert(`Η απάντηση στάλθηκε επιτυχώς στον χρήστη ${userName}!`);
+                } else {
+                    alert('Δεν βρέθηκε ο χρήστης για αποστολή απάντησης.');
+                }
+            }
+            
             // Εναλλαγή tabs
             authTabs.forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -1316,159 +1469,6 @@
                 
                 // Ενημέρωση ειδοποιήσεων δωρεάν καφέ
                 updateFreeCoffeeNotifications();
-            }
-            
-            // Ενημέρωση μηνυμάτων διαχείρισης
-            function updateAdminMessages() {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const allUserMessages = [];
-                
-                // Συλλογή όλων των μηνυμάτων από όλους τους χρήστες
-                users.forEach(user => {
-                    if (user.messages && user.messages.length > 0) {
-                        user.messages.forEach(msg => {
-                            if (msg.sender === 'user' || msg.type === 'user_message') {
-                                allUserMessages.push({
-                                    ...msg,
-                                    username: user.username,
-                                    email: user.email,
-                                    userId: user.id
-                                });
-                            }
-                        });
-                    }
-                });
-                
-                // Ταξινόμηση μηνυμάτων από το πιο πρόσφατο στο πιο παλιό
-                allUserMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                
-                adminMessagesContainer.innerHTML = '';
-                
-                if (allUserMessages.length > 0) {
-                    allUserMessages.forEach(msg => {
-                        const messageItem = document.createElement('div');
-                        messageItem.className = `admin-message-item ${!msg.read ? 'unread' : ''}`;
-                        
-                        const messageHeader = document.createElement('div');
-                        messageHeader.className = 'admin-message-header';
-                        
-                        const messageSender = document.createElement('div');
-                        messageSender.className = 'admin-message-sender';
-                        messageSender.innerHTML = `<strong>${msg.username}</strong> (${msg.email})`;
-                        
-                        const messageDate = document.createElement('div');
-                        messageDate.className = 'message-date';
-                        messageDate.textContent = new Date(msg.timestamp).toLocaleString('el-GR');
-                        
-                        messageHeader.appendChild(messageSender);
-                        messageHeader.appendChild(messageDate);
-                        
-                        const messageContent = document.createElement('div');
-                        messageContent.className = 'message-content';
-                        messageContent.textContent = msg.content;
-                        
-                        const messageActions = document.createElement('div');
-                        messageActions.className = 'admin-message-actions';
-                        
-                        if (!msg.read) {
-                            const markReadBtn = document.createElement('button');
-                            markReadBtn.className = 'mark-read-btn';
-                            markReadBtn.textContent = '📨 Σημείωση ως αναγνωσμένο';
-                            markReadBtn.addEventListener('click', function() {
-                                markMessageAsRead(msg.userId, msg.id);
-                            });
-                            messageActions.appendChild(markReadBtn);
-                        }
-                        
-                        const replyBtn = document.createElement('button');
-                        replyBtn.className = 'reply-btn';
-                        replyBtn.textContent = '↩️ Απάντηση';
-                        replyBtn.addEventListener('click', function() {
-                            const reply = prompt(`Απάντηση στο ${msg.username}:`);
-                            if (reply && reply.trim() !== '') {
-                                sendReplyToUser(msg.userId, msg.username, reply);
-                            }
-                        });
-                        messageActions.appendChild(replyBtn);
-                        
-                        const deleteBtn = document.createElement('button');
-                        deleteBtn.className = 'delete-message-btn';
-                        deleteBtn.textContent = '🗑️ Διαγραφή';
-                        deleteBtn.addEventListener('click', function() {
-                            if (confirm('Θέλετε σίγουρα να διαγράψετε αυτό το μήνυμα;')) {
-                                deleteUserMessage(msg.userId, msg.id);
-                            }
-                        });
-                        messageActions.appendChild(deleteBtn);
-                        
-                        messageItem.appendChild(messageHeader);
-                        messageItem.appendChild(messageContent);
-                        messageItem.appendChild(messageActions);
-                        
-                        adminMessagesContainer.appendChild(messageItem);
-                    });
-                } else {
-                    adminMessagesContainer.innerHTML = '<p>Δεν υπάρχουν μηνύματα από χρήστες ακόμα.</p>';
-                }
-            }
-            
-            // Σημείωση μηνύματος ως αναγνωσμένο
-            function markMessageAsRead(userId, messageId) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(user => user.id === userId);
-                
-                if (userIndex !== -1) {
-                    const user = users[userIndex];
-                    const messageIndex = user.messages.findIndex(msg => msg.id === messageId);
-                    
-                    if (messageIndex !== -1) {
-                        user.messages[messageIndex].read = true;
-                        localStorage.setItem('users', JSON.stringify(users));
-                        updateAdminMessages();
-                    }
-                }
-            }
-            
-            // Αποστολή απάντησης προς χρήστη
-            function sendReplyToUser(userId, username, reply) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(user => user.id === userId);
-                
-                if (userIndex !== -1) {
-                    const user = users[userIndex];
-                    const replyMessage = {
-                        id: Date.now(),
-                        content: `Απάντηση από διαχείριση: ${reply}`,
-                        sender: 'admin',
-                        timestamp: new Date().toISOString(),
-                        read: false
-                    };
-                    
-                    if (!user.messages) {
-                        user.messages = [];
-                    }
-                    
-                    user.messages.push(replyMessage);
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    alert(`Η απάντηση στάλθηκε επιτυχώς στον χρήστη ${username}!`);
-                    updateAdminMessages();
-                }
-            }
-            
-            // Διαγραφή μηνύματος χρήστη
-            function deleteUserMessage(userId, messageId) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(user => user.id === userId);
-                
-                if (userIndex !== -1) {
-                    const user = users[userIndex];
-                    user.messages = user.messages.filter(msg => msg.id !== messageId);
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    updateAdminMessages();
-                    alert('Το μήνυμα διαγράφηκε επιτυχώς!');
-                }
             }
             
             // Ενημέρωση ειδοποιήσεων δωρεάν καφέ
