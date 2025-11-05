@@ -16,7 +16,6 @@
             --ads-color: #FF6B35;
             --coffee-color: #FF6B35;
             --admin-color: #9C27B0;
-            --message-color: #2196F3;
         }
         
         * {
@@ -595,96 +594,6 @@
             font-size: 0.8rem;
         }
         
-        .messages-section {
-            background: white;
-            border-radius: 15px;
-            padding: 1.2rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            display: none;
-        }
-        
-        .messages-section.active {
-            display: block;
-        }
-        
-        .message-form {
-            margin-bottom: 1.2rem;
-        }
-        
-        .message-input {
-            width: 100%;
-            padding: 0.7rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            margin-bottom: 0.8rem;
-            resize: vertical;
-            min-height: 90px;
-        }
-        
-        .message-input:focus {
-            border-color: var(--message-color);
-            outline: none;
-        }
-        
-        .send-message-btn {
-            background: var(--message-color);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.6rem 1.2rem;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .send-message-btn:hover {
-            background: #1976D2;
-            transform: translateY(-2px);
-        }
-        
-        .messages-list {
-            max-height: 250px;
-            overflow-y: auto;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 0.8rem;
-        }
-        
-        .message-item {
-            padding: 0.6rem;
-            margin-bottom: 0.6rem;
-            border-radius: 8px;
-            border-left: 4px solid var(--message-color);
-            background: #f5f9ff;
-        }
-        
-        .message-item.admin {
-            border-left-color: var(--admin-color);
-            background: #f9f5ff;
-        }
-        
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.4rem;
-            font-size: 0.8rem;
-        }
-        
-        .message-sender {
-            font-weight: bold;
-        }
-        
-        .message-date {
-            color: #666;
-        }
-        
-        .message-content {
-            color: var(--dark-color);
-            font-size: 0.85rem;
-        }
-        
         /* Mobile optimizations */
         @media (max-width: 480px) {
             .app-container {
@@ -704,7 +613,7 @@
                 padding: 1rem;
             }
             
-            .user-section, .upload-section, .ads-section, .donation-section, .admin-panel, .messages-section {
+            .user-section, .upload-section, .ads-section, .donation-section, .admin-panel {
                 padding: 1rem;
                 margin-bottom: 1rem;
             }
@@ -741,7 +650,6 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="notifications">Ειδοποιήσεις</button>
                 <button class="admin-tab" data-tab="photos">Φωτογραφίες</button>
-                <button class="admin-tab" data-tab="messages">Μηνύματα</button>
             </div>
             
             <!-- Ειδοποιήσεις -->
@@ -757,14 +665,6 @@
                 <h3>📷 Φωτογραφίες Χρηστών</h3>
                 <div class="photos-gallery" id="photos-gallery">
                     <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
-                </div>
-            </div>
-            
-            <!-- Μηνύματα Χρηστών -->
-            <div class="admin-content" id="messages-content">
-                <h3>💬 Μηνύματα Χρηστών</h3>
-                <div id="admin-messages-list">
-                    <!-- Εδώ θα εμφανίζονται τα μηνύματα -->
                 </div>
             </div>
         </section>
@@ -833,21 +733,6 @@
             </div>
             
             <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
-        </section>
-        
-        <!-- Μηνύματα Χρήστη προς Διαχείριση -->
-        <section class="messages-section" id="messages-section">
-            <h2 class="section-title">Επικοινωνία με τη Διαχείριση</h2>
-            
-            <div class="message-form">
-                <textarea class="message-input" id="message-input" placeholder="Γράψτε το μήνυμά σας εδώ..."></textarea>
-                <button class="send-message-btn" id="send-message-btn">📨 Αποστολή Μηνύματος</button>
-            </div>
-            
-            <h3>Ιστορικό Μηνυμάτων</h3>
-            <div class="messages-list" id="messages-list">
-                <!-- Εδώ θα εμφανίζονται τα μηνύματα -->
-            </div>
         </section>
         
         <!-- Διαφημίσεις για Πόντο -->
@@ -990,7 +875,6 @@
             const uploadSection = document.getElementById('upload-section');
             const adsSection = document.getElementById('ads-section');
             const donationSection = document.getElementById('donation-section');
-            const messagesSection = document.getElementById('messages-section');
             const adminPanel = document.getElementById('admin-panel');
             const adminToggle = document.getElementById('admin-toggle');
             const userName = document.getElementById('user-name');
@@ -1004,12 +888,6 @@
             const adsPointsEarned = document.getElementById('ads-points-earned');
             const freeCoffeeNotifications = document.getElementById('free-coffee-notifications');
             const photosGallery = document.getElementById('photos-gallery');
-            const adminMessagesList = document.getElementById('admin-messages-list');
-            
-            // Νέα στοιχεία για τα μηνύματα
-            const messageInput = document.getElementById('message-input');
-            const sendMessageBtn = document.getElementById('send-message-btn');
-            const messagesList = document.getElementById('messages-list');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -1133,7 +1011,6 @@
                 uploadSection.classList.remove('active');
                 adsSection.classList.remove('active');
                 donationSection.classList.remove('active');
-                messagesSection.classList.remove('active');
                 adminPanel.classList.remove('active');
                 authContainer.style.display = 'block';
             });
@@ -1201,13 +1078,67 @@
                 }, 2000);
             });
             
-            // Διαφήμιση - άμεση φόρτωση όταν πατιέται το κουμπί
+            // Διαφήμιση - άμεση φόρτωση σε νέο παράθυρο όταν πατιέται το κουμπί
             watchAdsBtn.addEventListener('click', function() {
                 // Απενεργοποίηση του κουμπιού για αποφυγή πολλαπλών κλικ
                 watchAdsBtn.disabled = true;
                 
-                // Άμεση φόρτωση της πραγματικής διαφήμισης
-                (function(s){s.dataset.zone='10113668',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+                // Άνοιγμα νέου παραθύρου για την διαφήμιση
+                const adsWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
+                
+                // Δημιουργία HTML για το νέο παράθυρο
+                adsWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Διαφήμιση</title>
+                        <style>
+                            body { 
+                                font-family: Arial, sans-serif; 
+                                display: flex; 
+                                flex-direction: column; 
+                                align-items: center; 
+                                justify-content: center; 
+                                height: 100vh; 
+                                margin: 0; 
+                                background: #f5f5f5;
+                            }
+                            .loading {
+                                text-align: center;
+                                padding: 2rem;
+                            }
+                            .spinner {
+                                border: 4px solid rgba(0, 0, 0, 0.1);
+                                border-left-color: #FF6B35;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                animation: spin 1s linear infinite;
+                                margin: 0 auto 1rem;
+                            }
+                            @keyframes spin {
+                                to { transform: rotate(360deg); }
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Φόρτωση διαφήμισης...</p>
+                        </div>
+                        <script>
+                            (function(s){s.dataset.zone='10113668',s.src='https://groleegni.net/vignette.min.js'})(document.body.appendChild(document.createElement('script')));
+                            
+                            // Κλείσιμο παραθύρου μετά από 30 δευτερόλεπτα
+                            setTimeout(() => {
+                                window.close();
+                            }, 30000);
+                        <\/script>
+                    </body>
+                    </html>
+                `);
+                
+                adsWindow.document.close();
                 
                 // Προσθήκη πόντου στον χρήστη
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -1239,61 +1170,11 @@
                 // Εμφάνιση μηνύματος επιτυχίας
                 adsPointsEarned.style.display = 'block';
                 
-                // Επαναφορά του κουμπιού μετά από 3 δευτερόλεπτα
+                // Επαναφορά του κουμπιού μετά από 30 δευτερόλεπτα
                 setTimeout(() => {
                     adsPointsEarned.style.display = 'none';
                     watchAdsBtn.disabled = false;
-                }, 3000);
-            });
-            
-            // Αποστολή μηνύματος προς διαχειριστές
-            sendMessageBtn.addEventListener('click', function() {
-                const messageContent = messageInput.value.trim();
-                
-                if (!messageContent) {
-                    alert('Παρακαλώ εισάγετε ένα μήνυμα');
-                    return;
-                }
-                
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                
-                // Αποστολή μηνύματος προς διαχειριστές
-                sendMessageToAdmins(messageContent, currentUser);
-                
-                // Προσθήκη μηνύματος στο ιστορικό του χρήστη
-                const userMessage = {
-                    id: Date.now(),
-                    content: messageContent,
-                    sender: 'user',
-                    timestamp: new Date().toISOString(),
-                    read: true
-                };
-                
-                if (!currentUser.messages) {
-                    currentUser.messages = [];
-                }
-                
-                currentUser.messages.push(userMessage);
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                
-                // Ενημέρωση των χρηστών στο localStorage
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                if (userIndex !== -1) {
-                    if (!users[userIndex].messages) {
-                        users[userIndex].messages = [];
-                    }
-                    users[userIndex].messages.push(userMessage);
-                    localStorage.setItem('users', JSON.stringify(users));
-                }
-                
-                // Εμφάνιση μηνύματος στον χρήστη
-                displayUserMessages(currentUser.messages);
-                
-                // Καθαρισμός πεδίου εισαγωγής
-                messageInput.value = '';
-                
-                alert('Το μήνυμά σας στάλθηκε επιτυχώς!');
+                }, 30000);
             });
             
             // Εμφάνιση προφίλ χρήστη
@@ -1303,42 +1184,14 @@
                 uploadSection.classList.add('active');
                 adsSection.classList.add('active');
                 donationSection.classList.add('active');
-                messagesSection.classList.add('active');
                 
                 userName.textContent = user.username;
                 userPoints.textContent = user.points;
-                
-                // Εμφάνιση μηνυμάτων χρήστη
-                if (user.messages && user.messages.length > 0) {
-                    displayUserMessages(user.messages);
-                }
                 
                 // Αν είναι διαχειριστής, φόρτωσε τα δεδομένα διαχείρισης
                 if (user.email === 'admin@example.com' || user.role === 'admin') {
                     loadAdminData();
                 }
-            }
-            
-            // Εμφάνιση μηνυμάτων χρήστη
-            function displayUserMessages(messages) {
-                messagesList.innerHTML = '';
-                
-                messages.forEach(message => {
-                    const messageElement = document.createElement('div');
-                    messageElement.className = 'message-item';
-                    
-                    const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
-                    
-                    messageElement.innerHTML = `
-                        <div class="message-header">
-                            <div class="message-sender">Εσείς</div>
-                            <div class="message-date">${messageDate}</div>
-                        </div>
-                        <div class="message-content">${message.content}</div>
-                    `;
-                    
-                    messagesList.appendChild(messageElement);
-                });
             }
             
             // Φόρτωση δεδομένων διαχείρισης
@@ -1350,9 +1203,6 @@
                 
                 // Φόρτωση φωτογραφιών χρηστών
                 loadUserPhotos(users);
-                
-                // Φόρτωση μηνυμάτων χρηστών
-                loadUserMessages(users);
             }
             
             // Φόρτωση ειδοποιήσεων για δωρεάν καφέ
@@ -1409,43 +1259,6 @@
                 
                 if (!hasPhotos) {
                     photosGallery.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες από χρήστες.</p>';
-                }
-            }
-            
-            // Φόρτωση μηνυμάτων χρηστών
-            function loadUserMessages(users) {
-                adminMessagesList.innerHTML = '';
-                
-                let hasMessages = false;
-                
-                users.forEach(user => {
-                    if (user.messages && user.messages.length > 0) {
-                        user.messages.forEach(message => {
-                            // Εμφάνιση μόνο των μηνυμάτων που στάλθηκαν από χρήστες προς διαχειριστές
-                            if (message.sender === 'user' && message.type === 'user_message') {
-                                hasMessages = true;
-                                
-                                const messageElement = document.createElement('div');
-                                messageElement.className = 'message-item';
-                                
-                                const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
-                                
-                                messageElement.innerHTML = `
-                                    <div class="message-header">
-                                        <div class="message-sender">${message.senderName} (${message.senderEmail})</div>
-                                        <div class="message-date">${messageDate}</div>
-                                    </div>
-                                    <div class="message-content">${message.content}</div>
-                                `;
-                                
-                                adminMessagesList.appendChild(messageElement);
-                            }
-                        });
-                    }
-                });
-                
-                if (!hasMessages) {
-                    adminMessagesList.innerHTML = '<p>Δεν υπάρχουν μηνύματα από χρήστες.</p>';
                 }
             }
             
