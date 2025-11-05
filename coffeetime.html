@@ -952,6 +952,64 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Αρχικοποίηση προκαθορισμένου διαχειριστή
+            function initializeDefaultAdmin() {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Έλεγχος αν υπάρχει ήδη ο διαχειριστής
+                const adminExists = users.find(user => user.email === 'admin@example.com');
+                
+                if (!adminExists) {
+                    // Δημιουργία προκαθορισμένου διαχειριστή
+                    const adminUser = {
+                        id: 1,
+                        username: 'admin',
+                        email: 'admin@example.com',
+                        password: 'admin123',
+                        points: 0,
+                        role: 'admin',
+                        photos: [],
+                        messages: [],
+                        createdAt: new Date().toISOString()
+                    };
+                    users.push(adminUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+            }
+
+            // Αποστολή μηνύματος προς διαχειριστές
+            function sendMessageToAdmins(messageContent, user) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const admins = users.filter(u => u.email === 'admin@example.com' || u.role === 'admin');
+                
+                admins.forEach(admin => {
+                    const adminMessage = {
+                        id: Date.now(),
+                        content: messageContent,
+                        sender: 'user',
+                        senderName: user.username,
+                        senderEmail: user.email,
+                        timestamp: new Date().toISOString(),
+                        read: false,
+                        type: 'user_message'
+                    };
+                    
+                    if (!admin.messages) {
+                        admin.messages = [];
+                    }
+                    
+                    admin.messages.push(adminMessage);
+                });
+                
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            // Αποστολή μηνύματος εγγραφής προς διαχειριστή
+            function sendRegistrationMessageToAdmin(user) {
+                const registrationMessage = `🎉 Νέος χρήστης: ${user.username} (${user.email}) μόλις εγγράφηκε στην εφαρμογή Καφεμαντεία!`;
+                sendMessageToAdmins(registrationMessage, user);
+            }
+
             // Στοιχεία DOM
             const authContainer = document.getElementById('auth-container');
             const userSection = document.getElementById('user-section');
@@ -1009,6 +1067,9 @@
             
             // Τρέχων χρήστης
             let currentUser = null;
+            
+            // Αρχικοποίηση προκαθορισμένου διαχειριστή
+            initializeDefaultAdmin();
             
             // Εναλλαγή tabs
             authTabs.forEach(tab => {
@@ -1103,6 +1164,9 @@
                 
                 users.push(newUser);
                 localStorage.setItem('users', JSON.stringify(users));
+                
+                // Αποστολή μηνύματος εγγραφής προς διαχειριστή
+                sendRegistrationMessageToAdmin(newUser);
                 
                 // Αποθήκευση στο session
                 currentUser = newUser;
@@ -1250,6 +1314,9 @@
                 }
                 
                 currentUser.messages.push(newMessage);
+                
+                // Αποστολή μηνύματος προς διαχειριστές
+                sendMessageToAdmins(messageContent, currentUser);
                 
                 // Ενημέρωση χρήστη στο localStorage
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
