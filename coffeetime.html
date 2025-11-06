@@ -13,8 +13,6 @@
             --accent-color: #CD853F;
             --success-color: #4CAF50;
             --error-color: #f44336;
-            --ads-color: #FF6B35;
-            --coffee-color: #FF6B35;
             --admin-color: #9C27B0;
         }
         
@@ -232,69 +230,6 @@
             font-size: 0.85rem;
         }
         
-        .ads-section {
-            background: white;
-            border-radius: 15px;
-            padding: 1.2rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            display: none;
-            text-align: center;
-        }
-        
-        .ads-section.active {
-            display: block;
-        }
-        
-        .ads-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            margin-bottom: 0.8rem;
-            color: var(--ads-color);
-        }
-        
-        .ads-logo {
-            font-size: 1.3rem;
-        }
-        
-        .ads-card {
-            background: linear-gradient(135deg, #FFF3E0, #FFE0B2);
-            border: 2px solid var(--ads-color);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 0.8rem;
-            font-size: 0.85rem;
-        }
-        
-        .ads-btn {
-            background: var(--ads-color);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 0.8rem 1.5rem;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            width: 100%;
-            font-weight: bold;
-            margin-top: 0.8rem;
-        }
-        
-        .ads-btn:hover {
-            background: #E55A2B;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
-        }
-        
-        .ads-btn:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
         .upload-section {
             background: white;
             border-radius: 15px;
@@ -424,7 +359,7 @@
         
         .donation-btn {
             background: white;
-            color: var(--coffee-color);
+            color: #FF6B35;
             border: none;
             border-radius: 25px;
             padding: 0.8rem 1.5rem;
@@ -613,7 +548,7 @@
                 padding: 1rem;
             }
             
-            .user-section, .upload-section, .ads-section, .donation-section, .admin-panel {
+            .user-section, .upload-section, .donation-section, .admin-panel {
                 padding: 1rem;
                 margin-bottom: 1rem;
             }
@@ -631,7 +566,6 @@
             }
         }
     </style>
-    <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
 </head>
 <body>
     <div class="app-container">
@@ -734,28 +668,6 @@
             </div>
             
             <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
-        </section>
-        
-        <!-- Διαφημίσεις για Πόντο -->
-        <section class="ads-section" id="ads-section">
-            <div class="ads-header">
-                <div class="ads-logo">📺</div>
-                <h3>Κέρδισε Πόντο</h3>
-            </div>
-            
-            <div class="ads-card">
-                <p><strong>Δες μια διαφήμιση και κέρδισε 1 πόντο!</strong></p>
-                <p>Μπορείς να δεις όσες διαφημίσεις θέλεις την ημέρα!</p>
-                <p>🎯 <strong>Στόχος: 100 Πόντοι = Δωρεάν Καφές!</strong></p>
-            </div>
-            
-            <button class="ads-btn" id="watch-ads-btn">
-                👁️ Δες Διαφήμιση & Κέρδισε 1 Πόντο
-            </button>
-            
-            <div class="points-earned" id="ads-points-earned">
-                🎉 Κέρδισες 1 πόντο!
-            </div>
         </section>
         
         <!-- Ανέβασμα Φωτογραφιών -->
@@ -874,7 +786,6 @@
             const authContainer = document.getElementById('auth-container');
             const userSection = document.getElementById('user-section');
             const uploadSection = document.getElementById('upload-section');
-            const adsSection = document.getElementById('ads-section');
             const donationSection = document.getElementById('donation-section');
             const adminPanel = document.getElementById('admin-panel');
             const adminToggle = document.getElementById('admin-toggle');
@@ -883,10 +794,8 @@
             const userPoints = document.getElementById('user-points');
             const logoutBtn = document.getElementById('logout-btn');
             const uploadBtn = document.getElementById('upload-btn');
-            const watchAdsBtn = document.getElementById('watch-ads-btn');
             const loading = document.getElementById('loading');
             const successMessage = document.getElementById('success-message');
-            const adsPointsEarned = document.getElementById('ads-points-earned');
             const freeCoffeeNotifications = document.getElementById('free-coffee-notifications');
             const photosGallery = document.getElementById('photos-gallery');
             
@@ -1010,7 +919,6 @@
                 localStorage.removeItem('currentUser');
                 userSection.classList.remove('active');
                 uploadSection.classList.remove('active');
-                adsSection.classList.remove('active');
                 donationSection.classList.remove('active');
                 adminPanel.classList.remove('active');
                 authContainer.style.display = 'block';
@@ -1079,109 +987,11 @@
                 }, 2000);
             });
             
-            // Διαφήμιση - άμεση φόρτωση σε νέο παράθυρο όταν πατιέται το κουμπί
-            watchAdsBtn.addEventListener('click', function() {
-                // Απενεργοποίηση του κουμπιού για αποφυγή πολλαπλών κλικ
-                watchAdsBtn.disabled = true;
-                
-                // Άνοιγμα νέου παραθύρου για την διαφήμιση
-                const adsWindow = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
-                
-                // Δημιουργία HTML για το νέο παράθυρο
-                adsWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Διαφήμιση</title>
-                        <style>
-                            body { 
-                                font-family: Arial, sans-serif; 
-                                display: flex; 
-                                flex-direction: column; 
-                                align-items: center; 
-                                justify-content: center; 
-                                height: 100vh; 
-                                margin: 0; 
-                                background: #f5f5f5;
-                            }
-                            .loading {
-                                text-align: center;
-                                padding: 2rem;
-                            }
-                            .spinner {
-                                border: 4px solid rgba(0, 0, 0, 0.1);
-                                border-left-color: #FF6B35;
-                                border-radius: 50%;
-                                width: 40px;
-                                height: 40px;
-                                animation: spin 1s linear infinite;
-                                margin: 0 auto 1rem;
-                            }
-                            @keyframes spin {
-                                to { transform: rotate(360deg); }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="loading">
-                            <div class="spinner"></div>
-                            <p>Φόρτωση διαφήμισης...</p>
-                        </div>
-                        
-                        <script>
-                            // Κλείσιμο παραθύρου μετά από 30 δευτερόλεπτα
-                            setTimeout(() => {
-                                window.close();
-                            }, 30000);
-                        <\/script>
-                    </body>
-                    </html>
-                `);
-                adsWindow.document.close();
-                
-                // Προσθήκη πόντου στον χρήστη
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                
-                if (userIndex !== -1) {
-                    users[userIndex].points += 1;
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    // Ενημέρωση του τρέχοντος χρήστη
-                    currentUser.points += 1;
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
-                    // Ενημέρωση εμφάνισης πόντων
-                    userPoints.textContent = currentUser.points;
-                    
-                    // Έλεγχος για δωρεάν καφέ
-                    if (currentUser.points >= 100) {
-                        // Αποστολή ειδοποίησης προς διαχειριστές
-                        const freeCoffeeMessage = `🏆 Ο χρήστης ${currentUser.username} (${currentUser.email}) έφτασε τους 100 πόντους και κέρδισε έναν δωρεάν καφέ!`;
-                        sendMessageToAdmins(freeCoffeeMessage, currentUser);
-                        
-                        // Εμφάνιση ειδοποίησης στον χρήστη
-                        alert('Συγχαρητήρια! Κέρδισες έναν δωρεάν καφέ! ☕');
-                    }
-                }
-                
-                // Εμφάνιση μηνύματος επιτυχίας
-                adsPointsEarned.style.display = 'block';
-                
-                // Επαναφορά του κουμπιού μετά από 30 δευτερόλεπτα
-                setTimeout(() => {
-                    adsPointsEarned.style.display = 'none';
-                    watchAdsBtn.disabled = false;
-                }, 30000);
-            });
-            
             // Εμφάνιση προφίλ χρήστη
             function showUserSection(user) {
                 authContainer.style.display = 'none';
                 userSection.classList.add('active');
                 uploadSection.classList.add('active');
-                adsSection.classList.add('active');
                 donationSection.classList.add('active');
                 
                 userName.textContent = user.username;
@@ -1208,21 +1018,23 @@
             function loadFreeCoffeeNotifications(users) {
                 freeCoffeeNotifications.innerHTML = '';
                 
-                const freeCoffeeUsers = users.filter(user => user.points >= 100);
+                // Βρες όλους τους χρήστες που έχουν 100+ πόντους
+                const eligibleUsers = users.filter(user => user.points >= 100);
                 
-                if (freeCoffeeUsers.length === 0) {
-                    freeCoffeeNotifications.innerHTML = '<p>Δεν υπάρχουν ειδοποιήσεις για δωρεάν καφέ.</p>';
+                if (eligibleUsers.length === 0) {
+                    freeCoffeeNotifications.innerHTML = '<p>Δεν υπάρχουν χρήστες που να έχουν φτάσει τους 100 πόντους ακόμα.</p>';
                     return;
                 }
                 
-                freeCoffeeUsers.forEach(user => {
-                    const notificationElement = document.createElement('div');
-                    notificationElement.className = 'free-coffee-alert';
-                    notificationElement.innerHTML = `
-                        <p><strong>${user.username}</strong> (${user.email})</p>
-                        <p>Έχει συγκεντρώσει ${user.points} πόντους και κέρδισε έναν δωρεάν καφέ! ☕</p>
+                eligibleUsers.forEach(user => {
+                    const notification = document.createElement('div');
+                    notification.className = 'free-coffee-alert';
+                    notification.innerHTML = `
+                        <strong>🎉 ${user.username} (${user.email})</strong>
+                        <p>Έχει συλλέξει ${user.points} πόντους και δικαιούται δωρεάν καφέ!</p>
+                        <small>Εγγραφή: ${new Date(user.createdAt).toLocaleDateString('el-GR')}</small>
                     `;
-                    freeCoffeeNotifications.appendChild(notificationElement);
+                    freeCoffeeNotifications.appendChild(notification);
                 });
             }
             
@@ -1230,53 +1042,36 @@
             function loadUserPhotos(users) {
                 photosGallery.innerHTML = '';
                 
-                let hasPhotos = false;
+                const usersWithPhotos = users.filter(user => user.photos && user.photos.length > 0);
                 
-                users.forEach(user => {
-                    if (user.photos && user.photos.length > 0) {
-                        hasPhotos = true;
-                        
-                        user.photos.forEach(photo => {
-                            const photoElement = document.createElement('div');
-                            photoElement.className = 'photo-item';
-                            
-                            const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
-                            
-                            photoElement.innerHTML = `
-                                <div class="user-info">
-                                    <strong>${user.username}</strong><br>
-                                    ${user.email}<br>
-                                    ${uploadDate}
-                                </div>
-                                <div class="photo-preview">📷 ${photo.filename}</div>
-                            `;
-                            
-                            photosGallery.appendChild(photoElement);
-                        });
-                    }
-                });
-                
-                if (!hasPhotos) {
-                    photosGallery.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες από χρήστες.</p>';
+                if (usersWithPhotos.length === 0) {
+                    photosGallery.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες από χρήστες ακόμα.</p>';
+                    return;
                 }
+                
+                usersWithPhotos.forEach(user => {
+                    user.photos.forEach(photo => {
+                        const photoItem = document.createElement('div');
+                        photoItem.className = 'photo-item';
+                        photoItem.innerHTML = `
+                            <div class="user-info">
+                                <strong>${user.username}</strong><br>
+                                <small>${user.email}</small>
+                            </div>
+                            <div class="photo-preview" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                <span>📷</span>
+                            </div>
+                            <div class="photo-info">
+                                <small>${photo.filename}</small><br>
+                                <small>${new Date(photo.uploadedAt).toLocaleDateString('el-GR')}</small>
+                            </div>
+                        `;
+                        photosGallery.appendChild(photoItem);
+                    });
+                });
             }
             
-            // Εναλλαγή πάνελ διαχείρισης
-            adminToggle.addEventListener('click', function() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                
-                if (currentUser && (currentUser.email === 'admin@example.com' || currentUser.role === 'admin')) {
-                    adminPanel.classList.toggle('active');
-                    
-                    if (adminPanel.classList.contains('active')) {
-                        loadAdminData();
-                    }
-                } else {
-                    alert('Δεν έχετε δικαιώματα διαχειριστή');
-                }
-            });
-            
-            // Εναλλαγή tabs διαχείρισης
+            // Διαχείριση tabs διαχείρισης
             const adminTabs = document.querySelectorAll('.admin-tab');
             adminTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
@@ -1294,7 +1089,23 @@
                 });
             });
             
-            // Ενημέρωση ονόματος αρχείου όταν επιλέγονται πολλαπλά αρχεία
+            // Εναλλαγή πάνελ διαχείρισης
+            adminToggle.addEventListener('click', function() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                
+                if (!currentUser) {
+                    alert('Πρέπει να συνδεθείτε πρώτα');
+                    return;
+                }
+                
+                if (currentUser.email === 'admin@example.com' || currentUser.role === 'admin') {
+                    adminPanel.classList.toggle('active');
+                } else {
+                    alert('Δεν έχετε δικαιώματα διαχειριστή');
+                }
+            });
+            
+            // Εμφάνιση ονόματος αρχείου όταν επιλέγονται αρχεία
             const fileInput = document.getElementById('photo1');
             const fileName = document.getElementById('file-name1');
             
