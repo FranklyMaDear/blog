@@ -5,38 +5,588 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Πάνελ Διαχείρισης - Καφεμαντεία</title>
     <style>
-        /* ... το ίδιο CSS παραμένει ... */
-        
-        /* Προσθήκη νέων στυλ για προβολή φωτογραφιών */
-        .photo-preview-img {
-            max-width: 200px;
-            max-height: 150px;
-            border-radius: 5px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            transition: transform 0.3s;
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2691E;
+            --light-color: #F5DEB3;
+            --dark-color: #3E2723;
+            --accent-color: #CD853F;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+            --admin-color: #9C27B0;
+            --warning-color: #ff9800;
         }
         
-        .photo-preview-img:hover {
-            transform: scale(1.05);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .photo-info {
-            flex: 1;
-            min-width: 300px;
+        body {
+            background-color: #f5f5f5;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 14px; /* Μικρότερη βασική γραμματοσειρά */
         }
         
-        .photo-actions {
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.5rem; /* Μικρότερο padding */
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--admin-color), #7B1FA2);
+            color: white;
+            padding: 1rem; /* Μικρότερο padding */
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(156, 39, 176, 0.3);
+        }
+        
+        .logo {
+            font-size: 2rem; /* Μικρότερο logo */
+            margin-bottom: 0.3rem;
+        }
+        
+        h1 {
+            font-size: 1.5rem; /* Μικρότερος τίτλος */
+            margin-bottom: 0.3rem;
+        }
+        
+        .admin-login {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem auto;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-panel {
+            display: none;
+        }
+        
+        .admin-panel.active {
+            display: block;
+        }
+        
+        .admin-tabs {
             display: flex;
-            gap: 0.5rem;
-            margin-top: 10px;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            flex-wrap: wrap;
+            overflow-x: auto; /* Επιτρέπει κύλιση στα tabs */
+        }
+        
+        .admin-tab {
+            padding: 0.8rem 1rem; /* Μικρότερο padding */
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap; /* Αποτρέπει την αναδίπλωση κειμένου */
+        }
+        
+        .admin-tab.active {
+            color: var(--admin-color);
+            border-bottom: 3px solid var(--admin-color);
+            font-weight: bold;
+        }
+        
+        .admin-content {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 1rem; /* Μικρότερο padding */
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .admin-content.active {
+            display: block;
+        }
+        
+        .section-title {
+            color: var(--admin-color);
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.4rem;
+            border-bottom: 2px solid #eee;
+            font-size: 1.2rem; /* Μικρότερος τίτλος */
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.7rem; /* Μικρότερο padding */
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--admin-color);
+            outline: none;
+        }
+        
+        .admin-btn {
+            background: var(--admin-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.7rem 1.2rem; /* Μικρότερο padding */
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .admin-btn:hover {
+            background: #7B1FA2;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: var(--error-color);
+        }
+        
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-success {
+            background: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background: #388E3C;
+        }
+        
+        .error-message {
+            background: var(--error-color);
+            color: white;
+            padding: 0.7rem;
+            border-radius: 6px;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            display: none;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Μικρότερες κάρτες */
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-left: 5px solid var(--admin-color);
+        }
+        
+        .stat-number {
+            font-size: 1.8rem; /* Μικρότερο νούμερο */
+            font-weight: bold;
+            color: var(--admin-color);
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-label {
+            color: var(--dark-color);
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .user-list, .message-list, .photo-list, .conversation-list {
+            max-height: 400px; /* Μικρότερο ύψος */
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            padding: 0.8rem;
+        }
+        
+        .user-item, .message-item, .photo-item, .conversation-item {
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .user-item:last-child, .message-item:last-child, .photo-item:last-child, .conversation-item:last-child {
+            border-bottom: none;
+        }
+        
+        .user-info, .message-info, .photo-info, .conversation-info {
+            flex: 1;
+        }
+        
+        .user-actions, .message-actions, .photo-actions, .conversation-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+        
+        .message-content {
+            background: #f9f9f9;
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-top: 0.4rem;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .photo-preview {
+            max-width: 80px; /* Μικρότερη προεπισκόπηση */
+            max-height: 80px;
+            border-radius: 4px;
+            margin-right: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .points-control {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .points-input {
+            width: 60px; /* Μικρότερο input */
+            text-align: center;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .message-form {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 0.8rem;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            border: 2px solid var(--error-color);
+            color: var(--error-color);
+            border-radius: 16px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.8rem;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .logout-btn:hover {
+            background: var(--error-color);
+            color: white;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 1.5rem;
+            color: #777;
+            font-size: 0.9rem; /* Μικρότερη γραμματοσειρά */
+        }
+        
+        .unread-badge {
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px; /* Μικρότερο badge */
+            height: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem; /* Μικρότερη γραμματοσειρά */
+            margin-left: 0.4rem;
+        }
+        
+        /* Στυλ για προβολή φωτογραφιών */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .photo-modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+        
+        .modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 8px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+        
+        /* Στυλ για αρχεία */
+        .file-preview {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: #f0f0f0;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        
+        .file-preview audio, .file-preview video {
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .file-upload {
+            margin-top: 0.5rem;
+        }
+        
+        .file-label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: bold;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-tabs {
+                flex-direction: row; /* Διατηρούμε οριζόντια διάταξη */
+                overflow-x: auto; /* Επιτρέπουμε κύλιση */
+            }
+            
+            .admin-tab {
+                text-align: center;
+                border-bottom: 1px solid #eee;
+                flex-shrink: 0; /* Αποτρέπει τη συρρίκνωση */
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr; /* 2 στήλες σε κινητά */
+            }
+            
+            .user-item, .message-item, .photo-item, .conversation-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .user-actions, .message-actions, .photo-actions, .conversation-actions {
+                margin-top: 0.8rem;
+                width: 100%;
+                justify-content: flex-end;
+            }
+            
+            .points-control {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            
+            .points-input {
+                width: 50px; /* Ακόμα μικρότερο input */
+            }
+            
+            .admin-btn {
+                padding: 0.6rem 1rem; /* Ακόμα μικρότερο padding */
+                font-size: 0.8rem; /* Ακόμα μικρότερη γραμματοσειρά */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr; /* 1 στήλη σε πολύ μικρές οθόνες */
+            }
+            
+            .admin-tab {
+                padding: 0.6rem 0.8rem; /* Ακόμα μικρότερο padding */
+                font-size: 0.8rem; /* Ακόμα μικρότερη γραμματοσειρά */
+            }
+            
+            .section-title {
+                font-size: 1.1rem; /* Ακόμα μικρότερος τίτλος */
+            }
         }
     </style>
 </head>
 <body>
     <div class="admin-container">
-        <!-- ... το ίδιο HTML παραμένει ... -->
+        <header>
+            <div class="logo">👑</div>
+            <h1>Πάνελ Διαχείρισης - Καφεμαντεία</h1>
+            <p>Διαχείριση χρηστών, μηνυμάτων και πόντων</p>
+        </header>
+        
+        <!-- Φόρμα Σύνδεσης Διαχειριστή -->
+        <div class="admin-login" id="admin-login">
+            <h2 class="section-title">Σύνδεση Διαχειριστή</h2>
+            <div class="error-message" id="login-error"></div>
+            
+            <div class="form-group">
+                <label for="admin-email">Email:</label>
+                <input type="email" id="admin-email" required placeholder="admin@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin-password">Κωδικός:</label>
+                <input type="password" id="admin-password" required placeholder="Εισάγετε τον κωδικό σας">
+            </div>
+            
+            <button class="admin-btn" id="login-btn">Σύνδεση</button>
+            
+            <div style="margin-top: 1.5rem; padding: 1rem; background: #f0f0f0; border-radius: 8px;">
+                <h3>Πληροφορίες Πρόσβασης:</h3>
+                <p><strong>Email:</strong> admin@example.com</p>
+                <p><strong>Κωδικός:</strong> admin123</p>
+            </div>
+        </div>
+        
+        <!-- Κύριο Πάνελ Διαχείρισης -->
+        <div class="admin-panel" id="admin-panel">
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="dashboard">Πίνακας Ελέγχου</button>
+                <button class="admin-tab" data-tab="users">Διαχείριση Χρηστών</button>
+                <button class="admin-tab" data-tab="conversations">Συνομιλίες <span id="unread-badge" class="unread-badge" style="display: none;">0</span></button>
+                <button class="admin-tab" data-tab="photos">Φωτογραφίες</button>
+                <button class="admin-tab" data-tab="points">Διαχείριση Πόντων</button>
+                <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
+            </div>
+            
+            <!-- Πίνακας Ελέγχου -->
+            <div class="admin-content active" id="dashboard-content">
+                <h2 class="section-title">Πίνακας Ελέγχου</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-users">0</div>
+                        <div class="stat-label">Σύνολο Χρηστών</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-photos">0</div>
+                        <div class="stat-label">Σύνολο Φωτογραφιών</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-messages">0</div>
+                        <div class="stat-label">Σύνολο Μηνυμάτων</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-number" id="free-coffee-users">0</div>
+                        <div class="stat-label">Χρήστες με Δωρεάν Καφέ</div>
+                    </div>
+                </div>
+                
+                <h3 class="section-title">Πρόσφατες Ενέργειες</h3>
+                <div class="user-list" id="recent-activities">
+                    <!-- Εδώ θα εμφανίζονται οι πρόσφατες ενέργειες -->
+                </div>
+            </div>
+            
+            <!-- Διαχείριση Χρηστών -->
+            <div class="admin-content" id="users-content">
+                <h2 class="section-title">Διαχείριση Χρηστών</h2>
+                
+                <div class="user-list" id="users-list">
+                    <!-- Εδώ θα εμφανίζονται οι χρήστες -->
+                </div>
+            </div>
+            
+            <!-- Διαχείριση Συνομιλιών -->
+            <div class="admin-content" id="conversations-content">
+                <h2 class="section-title">Διαχείριση Συνομιλιών</h2>
+                
+                <div class="message-form">
+                    <h3>Αποστολή Μηνύματος σε Χρήστη</h3>
+                    <div class="form-group">
+                        <label for="message-user">Επιλογή Χρήστη:</label>
+                        <select id="message-user">
+                            <option value="">-- Επιλέξτε Χρήστη --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message-content">Περιεχόμενο Μηνύματος:</label>
+                        <textarea id="message-content" rows="4" placeholder="Γράψτε το μήνυμά σας εδώ..."></textarea>
+                    </div>
+                    
+                    <div class="file-upload">
+                        <label class="file-label">Επισύναψη Αρχείου (MP3, MP4):</label>
+                        <input type="file" id="message-file" accept=".mp3,.mp4">
+                    </div>
+                    
+                    <button class="admin-btn" id="send-message-btn">Αποστολή Μηνύματος</button>
+                </div>
+                
+                <h3 class="section-title">Συνομιλίες με Χρήστες</h3>
+                <div class="conversation-list" id="conversations-list">
+                    <!-- Εδώ θα εμφανίζονται οι συνομιλίες -->
+                </div>
+            </div>
+            
+            <!-- Διαχείριση Φωτογραφιών -->
+            <div class="admin-content" id="photos-content">
+                <h2 class="section-title">Διαχείριση Φωτογραφίες</h2>
+                
+                <div class="photo-list" id="photos-list">
+                    <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
+                </div>
+            </div>
+            
+            <!-- Διαχείριση Πόντων -->
+            <div class="admin-content" id="points-content">
+                <h2 class="section-title">Διαχείριση Πόντων Χρηστών</h2>
+                
+                <div class="user-list" id="points-list">
+                    <!-- Εδώ θα εμφανίζονται οι χρήστες για διαχείριση πόντων -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal για προβολή φωτογραφιών -->
+    <div class="photo-modal" id="photo-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <img class="modal-image" id="modal-image" src="" alt="Προβολή φωτογραφίας">
+        </div>
     </div>
 
     <script>
@@ -65,7 +615,13 @@
             // Φόρμες
             const messageUser = document.getElementById('message-user');
             const messageContent = document.getElementById('message-content');
+            const messageFile = document.getElementById('message-file');
             const sendMessageBtn = document.getElementById('send-message-btn');
+            
+            // Modal για φωτογραφίες
+            const photoModal = document.getElementById('photo-modal');
+            const modalImage = document.getElementById('modal-image');
+            const closeModal = document.getElementById('close-modal');
             
             // Προκαθορισμένα διαπιστευτήρια διαχειριστή
             const ADMIN_EMAIL = "admin@example.com";
@@ -125,6 +681,18 @@
                     // Φόρτωση δεδομένων για το επιλεγμένο tab
                     loadTabData(tabId);
                 });
+            });
+            
+            // Κλείσιμο modal φωτογραφίας
+            closeModal.addEventListener('click', function() {
+                photoModal.classList.remove('active');
+            });
+            
+            // Κλείσιμο modal με κλικ έξω από την εικόνα
+            photoModal.addEventListener('click', function(e) {
+                if (e.target === photoModal) {
+                    photoModal.classList.remove('active');
+                }
             });
             
             // Εμφάνιση πάνελ διαχείρισης
@@ -245,11 +813,24 @@
                         '<strong>Διαχειριστής</strong>' : 
                         `<strong>${message.senderName}</strong>`;
                     
+                    let messageContent = `<p>${message.content}</p>`;
+                    
+                    // Προσθήκη προβολής για συνημμένα αρχεία
+                    if (message.file) {
+                        if (message.file.type.startsWith('image/')) {
+                            messageContent += `<div class="file-preview"><img src="${message.file.url}" class="photo-preview" onclick="viewPhoto('${message.file.url}')"></div>`;
+                        } else if (message.file.type === 'audio/mp3') {
+                            messageContent += `<div class="file-preview"><audio controls><source src="${message.file.url}" type="audio/mp3">Ο browser σας δεν υποστηρίζει audio.</audio></div>`;
+                        } else if (message.file.type === 'video/mp4') {
+                            messageContent += `<div class="file-preview"><video controls width="250"><source src="${message.file.url}" type="video/mp4">Ο browser σας δεν υποστηρίζει video.</video></div>`;
+                        }
+                    }
+                    
                     messageElement.innerHTML = `
                         <div class="user-info">
                             ${senderInfo} - ${messageDate}
                             <div class="message-content">
-                                <p>${message.content}</p>
+                                ${messageContent}
                                 <small>Συνομιλία με: ${message.conversationWith || message.senderName}</small>
                             </div>
                         </div>
@@ -340,83 +921,77 @@
                 }
                 
                 Object.values(adminUser.conversations).forEach(conversation => {
-                    const user = users.find(u => u.id === conversation.userId);
-                    if (!user) return;
-                    
                     const conversationElement = document.createElement('div');
                     conversationElement.className = 'conversation-item';
                     
                     const lastMessage = conversation.messages && conversation.messages.length > 0 ? 
                         conversation.messages[conversation.messages.length - 1] : null;
                     
-                    const unreadCount = conversation.messages ? 
-                        conversation.messages.filter(m => !m.read && m.senderId !== adminUser.id).length : 0;
+                    const lastMessageDate = lastMessage ? 
+                        new Date(lastMessage.timestamp).toLocaleString('el-GR') : 'Δεν υπάρχουν μηνύματα';
+                    
+                    const lastMessageContent = lastMessage ? 
+                        (lastMessage.content.length > 50 ? 
+                            lastMessage.content.substring(0, 50) + '...' : lastMessage.content) : '';
                     
                     conversationElement.innerHTML = `
                         <div class="conversation-info">
-                            <strong>${user.username} (${user.email})</strong>
-                            ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ''}
-                            ${lastMessage ? `
-                                <div class="message-content">
-                                    <p><strong>Τελευταίο μήνυμα:</strong> ${lastMessage.content}</p>
-                                    <small>${new Date(lastMessage.timestamp).toLocaleString('el-GR')}</small>
-                                </div>
-                            ` : ''}
+                            <strong>${conversation.username}</strong>
+                            <div>Τελευταίο μήνυμα: ${lastMessageDate}</div>
+                            <div>${lastMessageContent}</div>
                         </div>
                         <div class="conversation-actions">
-                            <button class="admin-btn" onclick="viewConversation(${user.id})">Προβολή</button>
-                            <button class="admin-btn btn-danger" onclick="deleteConversation(${user.id})">Διαγραφή</button>
+                            <button class="admin-btn" onclick="viewConversation(${conversation.userId})">Προβολή</button>
                         </div>
                     `;
                     
                     conversationsList.appendChild(conversationElement);
                 });
-                
-                updateUnreadCount();
             }
             
-            // Φόρτωση δεδομένων φωτογραφιών (διορθωμένο)
+            // Φόρτωση δεδομένων φωτογραφιών
             function loadPhotosData(users) {
                 photosList.innerHTML = '';
                 
-                let hasPhotos = false;
+                let allPhotos = [];
                 
                 users.forEach(user => {
-                    if (user.photos && user.photos.length > 0 && user.email !== ADMIN_EMAIL) {
-                        hasPhotos = true;
-                        
+                    if (user.email !== ADMIN_EMAIL && user.photos) {
                         user.photos.forEach(photo => {
-                            const photoElement = document.createElement('div');
-                            photoElement.className = 'photo-item';
-                            
-                            const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
-                            
-                            // Προβολή πραγματικής φωτογραφίας αν υπάρχει dataUrl
-                            const photoPreview = photo.dataUrl ? 
-                                `<img src="${photo.dataUrl}" alt="${photo.filename}" class="photo-preview-img" onclick="viewPhoto('${photo.dataUrl}', '${photo.filename}')">` :
-                                `<div class="photo-preview">📷 ${photo.filename}</div>`;
-                            
-                            photoElement.innerHTML = `
-                                <div class="photo-info">
-                                    <strong>${user.username}</strong> (${user.email})<br>
-                                    <small>Ανέβηκε: ${uploadDate}</small><br>
-                                    <small>Όνομα αρχείου: ${photo.filename}</small>
-                                    ${photoPreview}
-                                </div>
-                                <div class="photo-actions">
-                                    <button class="admin-btn" onclick="viewPhoto('${photo.dataUrl || ''}', '${photo.filename}')">Προβολή</button>
-                                    <button class="admin-btn btn-danger" onclick="deletePhoto(${user.id}, ${photo.id})">Διαγραφή</button>
-                                </div>
-                            `;
-                            
-                            photosList.appendChild(photoElement);
+                            allPhotos.push({
+                                ...photo,
+                                username: user.username,
+                                userId: user.id
+                            });
                         });
                     }
                 });
                 
-                if (!hasPhotos) {
+                if (allPhotos.length === 0) {
                     photosList.innerHTML = '<div class="empty-state">Δεν υπάρχουν φωτογραφίες</div>';
+                    return;
                 }
+                
+                allPhotos.forEach(photo => {
+                    const photoElement = document.createElement('div');
+                    photoElement.className = 'photo-item';
+                    
+                    const uploadDate = new Date(photo.timestamp).toLocaleString('el-GR');
+                    
+                    photoElement.innerHTML = `
+                        <div class="photo-info">
+                            <strong>${photo.username}</strong> - ${uploadDate}
+                            <div>
+                                <img src="${photo.url}" class="photo-preview" onclick="viewPhoto('${photo.url}')">
+                            </div>
+                        </div>
+                        <div class="photo-actions">
+                            <button class="admin-btn btn-danger" onclick="deletePhoto(${photo.userId}, '${photo.url}')">Διαγραφή</button>
+                        </div>
+                    `;
+                    
+                    photosList.appendChild(photoElement);
+                });
             }
             
             // Φόρτωση δεδομένων πόντων
@@ -436,21 +1011,12 @@
                     
                     userElement.innerHTML = `
                         <div class="user-info">
-                            <strong>${user.username}</strong><br>
-                            <small>${user.email}</small><br>
-                            <div class="points-control">
-                                <span>Τρέχοντες Πόντοι: </span>
-                                <strong id="points-${user.id}">${user.points || 0}</strong>
-                            </div>
+                            <strong>${user.username}</strong> (${user.email})
                         </div>
-                        <div class="user-actions">
-                            <div class="points-control">
-                                <input type="number" id="add-points-${user.id}" class="points-input" min="1" max="100" value="1">
-                                <button class="admin-btn btn-success" onclick="addPoints(${user.id})">+</button>
-                                <input type="number" id="remove-points-${user.id}" class="points-input" min="1" max="100" value="1">
-                                <button class="admin-btn btn-danger" onclick="removePoints(${user.id})">-</button>
-                                <button class="admin-btn" onclick="setPoints(${user.id})">Ορισμός</button>
-                            </div>
+                        <div class="points-control">
+                            <span>Πόντοι: ${user.points || 0}</span>
+                            <input type="number" class="points-input" id="points-${user.id}" value="${user.points || 0}" min="0">
+                            <button class="admin-btn" onclick="updateUserPoints(${user.id})">Ενημέρωση</button>
                         </div>
                     `;
                     
@@ -458,23 +1024,134 @@
                 });
             }
             
-            // Ενημέρωση αριθμού μη αναγνωσμένων μηνυμάτων
-            function updateUnreadCount() {
-                if (!adminUser.conversations) {
-                    unreadBadge.style.display = 'none';
+            // Αποστολή μηνύματος από διαχειριστή
+            sendMessageBtn.addEventListener('click', function() {
+                const selectedUserId = messageUser.value;
+                const content = messageContent.value.trim();
+                const file = messageFile.files[0];
+                
+                if (!selectedUserId) {
+                    alert('Παρακαλώ επιλέξτε χρήστη');
                     return;
                 }
                 
+                if (!content && !file) {
+                    alert('Παρακαλώ εισάγετε μήνυμα ή επισυνάψτε αρχείο');
+                    return;
+                }
+                
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const targetUser = users.find(u => u.id == selectedUserId);
+                
+                if (!targetUser) {
+                    alert('Ο χρήστης δεν βρέθηκε');
+                    return;
+                }
+                
+                // Δημιουργία μηνύματος
+                const message = {
+                    id: Date.now(),
+                    content: content,
+                    senderId: adminUser.id,
+                    senderName: 'Διαχειριστής',
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+                
+                // Επεξεργασία αρχείου αν υπάρχει
+                if (file) {
+                    const fileType = file.type;
+                    const fileName = file.name;
+                    
+                    // Δημιουργία URL για το αρχείο
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        message.file = {
+                            name: fileName,
+                            type: fileType,
+                            url: e.target.result
+                        };
+                        
+                        // Αποθήκευση μηνύματος
+                        saveMessageToConversation(targetUser, message, users);
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    // Αποθήκευση μηνύματος χωρίς αρχείο
+                    saveMessageToConversation(targetUser, message, users);
+                }
+            });
+            
+            // Αποθήκευση μηνύματος στη συνομιλία
+            function saveMessageToConversation(targetUser, message, users) {
+                // Ενημέρωση συνομιλίας στο διαχειριστή
+                if (!adminUser.conversations) {
+                    adminUser.conversations = {};
+                }
+                
+                if (!adminUser.conversations[targetUser.id]) {
+                    adminUser.conversations[targetUser.id] = {
+                        userId: targetUser.id,
+                        username: targetUser.username,
+                        messages: []
+                    };
+                }
+                
+                adminUser.conversations[targetUser.id].messages.push(message);
+                
+                // Ενημέρωση συνομιλίας στο χρήστη
+                if (!targetUser.conversations) {
+                    targetUser.conversations = {};
+                }
+                
+                if (!targetUser.conversations[adminUser.id]) {
+                    targetUser.conversations[adminUser.id] = {
+                        userId: adminUser.id,
+                        username: 'Διαχειριστής',
+                        messages: []
+                    };
+                }
+                
+                targetUser.conversations[adminUser.id].messages.push(message);
+                
+                // Αποθήκευση χρηστών
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                if (adminIndex !== -1) {
+                    users[adminIndex] = adminUser;
+                }
+                
+                const targetIndex = users.findIndex(u => u.id === targetUser.id);
+                if (targetIndex !== -1) {
+                    users[targetIndex] = targetUser;
+                }
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Επαναφόρτωση δεδομένων
+                loadConversationsData(users);
+                
+                // Εκκαθάριση φόρμας
+                messageContent.value = '';
+                messageFile.value = '';
+                
+                alert('Το μήνυμα στάλθηκε επιτυχώς');
+            }
+            
+            // Ενημέρωση αριθμού μη αναγνωσμένων μηνυμάτων
+            function updateUnreadCount() {
                 let unreadCount = 0;
-                Object.values(adminUser.conversations).forEach(conversation => {
-                    if (conversation.messages) {
-                        conversation.messages.forEach(message => {
-                            if (!message.read && message.senderId !== adminUser.id) {
-                                unreadCount++;
-                            }
-                        });
-                    }
-                });
+                
+                if (adminUser.conversations) {
+                    Object.values(adminUser.conversations).forEach(conversation => {
+                        if (conversation.messages) {
+                            conversation.messages.forEach(message => {
+                                if (!message.read && message.senderId !== adminUser.id) {
+                                    unreadCount++;
+                                }
+                            });
+                        }
+                    });
+                }
                 
                 if (unreadCount > 0) {
                     unreadBadge.textContent = unreadCount;
@@ -484,260 +1161,158 @@
                 }
             }
             
-            // Αποστολή μηνύματος από διαχειριστή
-            sendMessageBtn.addEventListener('click', function() {
-                const userId = parseInt(messageUser.value);
-                const content = messageContent.value.trim();
-                
-                if (!userId || !content) {
-                    alert('Παρακαλώ επιλέξτε χρήστη και γράψτε ένα μήνυμα');
-                    return;
-                }
-                
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === userId);
-                const adminIndex = users.findIndex(u => u.id === adminUser.id);
-                
-                if (userIndex === -1 || adminIndex === -1) {
-                    alert('Ο χρήστης δεν βρέθηκε');
-                    return;
-                }
-                
-                // Δημιουργία νέου μηνύματος
-                const newMessage = {
-                    id: Date.now(),
-                    senderId: adminUser.id,
-                    senderName: adminUser.username,
-                    content: content,
-                    timestamp: new Date().toISOString(),
-                    read: false
-                };
-                
-                // Προσθήκη μηνύματος στον χρήστη
-                if (!users[userIndex].conversations) users[userIndex].conversations = {};
-                if (!users[userIndex].conversations[adminUser.id]) {
-                    users[userIndex].conversations[adminUser.id] = {
-                        userId: adminUser.id,
-                        username: adminUser.username,
-                        email: adminUser.email,
-                        messages: []
-                    };
-                }
-                users[userIndex].conversations[adminUser.id].messages.push(newMessage);
-                
-                // Προσθήκη μηνύματος στον διαχειριστή
-                if (!users[adminIndex].conversations) users[adminIndex].conversations = {};
-                if (!users[adminIndex].conversations[userId]) {
-                    users[adminIndex].conversations[userId] = {
-                        userId: userId,
-                        username: users[userIndex].username,
-                        email: users[userIndex].email,
-                        messages: []
-                    };
-                }
-                users[adminIndex].conversations[userId].messages.push(newMessage);
-                
-                localStorage.setItem('users', JSON.stringify(users));
-                
-                // Ενημέρωση του adminUser
-                adminUser = users[adminIndex];
-                localStorage.setItem('currentUser', JSON.stringify(adminUser));
-                
-                // Εμφάνιση μηνύματος επιτυχίας
-                alert('Το μήνυμα στάλθηκε επιτυχώς!');
-                
-                // Εκκαθάριση φόρμας
-                messageContent.value = '';
-                
-                // Επαναφόρτωση δεδομένων
-                loadConversationsData(users);
-            });
-            
-            // Καθολικές συναρτήσεις για χειρισμό δεδομένων
-            window.viewPhoto = function(dataUrl, filename) {
-                if (!dataUrl) {
-                    alert('Δεν υπάρχει διαθέσιμη προεπισκόπηση για αυτή τη φωτογραφία');
-                    return;
-                }
-                
-                // Άνοιγμα νέου παραθύρου για προβολή φωτογραφίας
-                const photoWindow = window.open('', '_blank', 'width=800,height=600');
-                photoWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Προβολή Φωτογραφίας: ${filename}</title>
-                        <style>
-                            body { 
-                                display: flex; 
-                                justify-content: center; 
-                                align-items: center; 
-                                height: 100vh; 
-                                margin: 0; 
-                                background: #f0f0f0; 
-                                font-family: Arial, sans-serif;
-                            }
-                            .container {
-                                text-align: center;
-                                padding: 20px;
-                            }
-                            img { 
-                                max-width: 90%; 
-                                max-height: 80%; 
-                                border-radius: 10px; 
-                                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-                                margin-bottom: 20px;
-                            }
-                            h1 {
-                                color: #333;
-                                margin-bottom: 10px;
-                            }
-                            p {
-                                color: #666;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="container">
-                            <h1>${filename}</h1>
-                            <img src="${dataUrl}" alt="${filename}">
-                            <p>Κλείστε αυτό το παράθυρο για να επιστρέψετε</p>
-                        </div>
-                    </body>
-                    </html>
-                `);
-            };
-            
-            window.deleteUser = function(userId) {
-                if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
-                    return;
-                }
-                
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const updatedUsers = users.filter(user => user.id !== userId);
-                localStorage.setItem('users', JSON.stringify(updatedUsers));
-                
-                // Επαναφόρτωση δεδομένων
-                loadUsersData(updatedUsers);
-                loadDashboardData();
-            };
-            
+            // Προβολή συνομιλίας
             window.viewConversation = function(userId) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
+                const conversation = adminUser.conversations[userId];
                 
-                if (!user || !adminUser.conversations || !adminUser.conversations[userId]) {
-                    alert('Δεν βρέθηκε η συνομιλία');
+                if (!conversation) {
+                    alert('Δεν βρέθηκε συνομιλία');
                     return;
                 }
                 
-                const conversation = adminUser.conversations[userId];
-                let messagesHtml = '<h4>Συνομιλία με ' + user.username + '</h4>';
-                
+                // Σημείωση μηνυμάτων ως αναγνωσμένα
                 conversation.messages.forEach(message => {
-                    const time = new Date(message.timestamp).toLocaleString('el-GR');
-                    messagesHtml += `
-                        <div class="message-item">
-                            <div class="message-info">
-                                <strong>${message.senderName}</strong> - ${time}
-                                <div class="message-content">${message.content}</div>
+                    if (message.senderId !== adminUser.id) {
+                        message.read = true;
+                    }
+                });
+                
+                // Αποθήκευση αλλαγών
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                if (adminIndex !== -1) {
+                    users[adminIndex] = adminUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+                
+                // Ενημέρωση αριθμού μη αναγνωσμένων
+                updateUnreadCount();
+                
+                // Δημιουργία modal για προβολή συνομιλίας
+                const modal = document.createElement('div');
+                modal.className = 'photo-modal active';
+                modal.style.zIndex = '1001';
+                
+                let messagesHTML = '';
+                conversation.messages.forEach(message => {
+                    const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
+                    const isAdmin = message.senderId === adminUser.id;
+                    
+                    let messageContent = `<p>${message.content}</p>`;
+                    
+                    // Προσθήκη προβολής για συνημμένα αρχεία
+                    if (message.file) {
+                        if (message.file.type.startsWith('image/')) {
+                            messageContent += `<div class="file-preview"><img src="${message.file.url}" class="photo-preview" onclick="viewPhoto('${message.file.url}')"></div>`;
+                        } else if (message.file.type === 'audio/mp3') {
+                            messageContent += `<div class="file-preview"><audio controls><source src="${message.file.url}" type="audio/mp3">Ο browser σας δεν υποστηρίζει audio.</audio></div>`;
+                        } else if (message.file.type === 'video/mp4') {
+                            messageContent += `<div class="file-preview"><video controls width="250"><source src="${message.file.url}" type="video/mp4">Ο browser σας δεν υποστηρίζει video.</video></div>`;
+                        }
+                    }
+                    
+                    messagesHTML += `
+                        <div class="user-item" style="background: ${isAdmin ? '#f0f0f0' : 'white'};">
+                            <div class="user-info">
+                                <strong>${message.senderName}</strong> - ${messageDate}
+                                <div class="message-content">
+                                    ${messageContent}
+                                </div>
                             </div>
                         </div>
                     `;
                 });
                 
-                alert('Προβολή συνομιλίας - θα εμφανιστεί σε νέο παράθυρο στην πλήρη έκδοση');
-                console.log('Συνομιλία με ' + user.username + ':', conversation.messages);
+                modal.innerHTML = `
+                    <div class="modal-content" style="background: white; padding: 1rem; border-radius: 8px; max-width: 90%; max-height: 90%; overflow-y: auto;">
+                        <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
+                        <h3>Συνομιλία με ${conversation.username}</h3>
+                        <div class="conversation-list">
+                            ${messagesHTML}
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                
+                // Κλείσιμο modal με κλικ έξω
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        modal.remove();
+                    }
+                });
             };
             
-            window.deleteConversation = function(userId) {
-                if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη συνομιλία;')) {
+            // Προβολή φωτογραφίας
+            window.viewPhoto = function(photoUrl) {
+                modalImage.src = photoUrl;
+                photoModal.classList.add('active');
+            };
+            
+            // Διαγραφή χρήστη
+            window.deleteUser = function(userId) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const updatedUsers = users.filter(user => user.id !== userId);
+                    localStorage.setItem('users', JSON.stringify(updatedUsers));
+                    
+                    // Ενημέρωση adminUser
+                    adminUser = updatedUsers.find(u => u.id === adminUser.id);
+                    
+                    loadUsersData(updatedUsers);
+                    loadDashboardData();
+                    
+                    alert('Ο χρήστης διαγράφηκε επιτυχώς');
+                }
+            };
+            
+            // Διαγραφή φωτογραφίας
+            window.deletePhoto = function(userId, photoUrl) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη φωτογραφία;')) {
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    const userIndex = users.findIndex(user => user.id === userId);
+                    
+                    if (userIndex !== -1) {
+                        users[userIndex].photos = users[userIndex].photos.filter(photo => photo.url !== photoUrl);
+                        localStorage.setItem('users', JSON.stringify(users));
+                        
+                        // Ενημέρωση adminUser
+                        adminUser = users.find(u => u.id === adminUser.id);
+                        
+                        loadPhotosData(users);
+                        loadDashboardData();
+                        
+                        alert('Η φωτογραφία διαγράφηκε επιτυχώς');
+                    }
+                }
+            };
+            
+            // Ενημέρωση πόντων χρήστη
+            window.updateUserPoints = function(userId) {
+                const pointsInput = document.getElementById(`points-${userId}`);
+                const newPoints = parseInt(pointsInput.value);
+                
+                if (isNaN(newPoints) || newPoints < 0) {
+                    alert('Παρακαλώ εισάγετε έγκυρο αριθμό πόντων');
                     return;
                 }
                 
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === userId);
-                const adminIndex = users.findIndex(u => u.id === adminUser.id);
-                
-                if (userIndex !== -1 && users[userIndex].conversations) {
-                    delete users[userIndex].conversations[adminUser.id];
-                }
-                
-                if (adminIndex !== -1 && users[adminIndex].conversations) {
-                    delete users[adminIndex].conversations[userId];
-                }
-                
-                localStorage.setItem('users', JSON.stringify(users));
-                adminUser = users[adminIndex];
-                
-                // Επαναφόρτωση δεδομένων συνομιλιών
-                loadConversationsData(users);
-            };
-            
-            window.deletePhoto = function(userId, photoId) {
-                if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη φωτογραφία;')) {
-                    return;
-                }
-                
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === userId);
-                
-                if (userIndex !== -1 && users[userIndex].photos) {
-                    users[userIndex].photos = users[userIndex].photos.filter(photo => photo.id !== photoId);
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    // Επαναφόρτωση δεδομένων φωτογραφιών
-                    loadPhotosData(users);
-                    loadDashboardData();
-                }
-            };
-            
-            window.addPoints = function(userId) {
-                const pointsToAdd = parseInt(document.getElementById(`add-points-${userId}`).value) || 1;
-                updateUserPoints(userId, pointsToAdd);
-            };
-            
-            window.removePoints = function(userId) {
-                const pointsToRemove = parseInt(document.getElementById(`remove-points-${userId}`).value) || 1;
-                updateUserPoints(userId, -pointsToRemove);
-            };
-            
-            window.setPoints = function(userId) {
-                const pointsToSet = parseInt(document.getElementById(`add-points-${userId}`).value) || 0;
-                setUserPoints(userId, pointsToSet);
-            };
-            
-            function updateUserPoints(userId, pointsChange) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === userId);
+                const userIndex = users.findIndex(user => user.id === userId);
                 
                 if (userIndex !== -1) {
-                    users[userIndex].points = Math.max(0, (users[userIndex].points || 0) + pointsChange);
+                    users[userIndex].points = newPoints;
                     localStorage.setItem('users', JSON.stringify(users));
                     
-                    // Ενημέρωση εμφάνισης
-                    document.getElementById(`points-${userId}`).textContent = users[userIndex].points;
+                    // Ενημέρωση adminUser
+                    adminUser = users.find(u => u.id === adminUser.id);
                     
-                    // Επαναφόρτωση στατιστικών
+                    loadPointsData(users);
                     loadDashboardData();
-                }
-            }
-            
-            function setUserPoints(userId, points) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === userId);
-                
-                if (userIndex !== -1) {
-                    users[userIndex].points = Math.max(0, points);
-                    localStorage.setItem('users', JSON.stringify(users));
                     
-                    // Ενημέρωση εμφάνισης
-                    document.getElementById(`points-${userId}`).textContent = users[userIndex].points;
-                    
-                    // Επαναφόρτωση στατιστικών
-                    loadDashboardData();
+                    alert('Οι πόντοι ενημερώθηκαν επιτυχώς');
                 }
-            }
+            };
         });
     </script>
 </body>
