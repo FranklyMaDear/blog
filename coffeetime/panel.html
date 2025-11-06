@@ -214,7 +214,7 @@
             font-size: 1rem;
         }
         
-        .user-list, .message-list, .photo-list {
+        .user-list, .message-list, .photo-list, .conversation-list {
             max-height: 500px;
             overflow-y: auto;
             border: 1px solid #eee;
@@ -222,7 +222,7 @@
             padding: 1rem;
         }
         
-        .user-item, .message-item, .photo-item {
+        .user-item, .message-item, .photo-item, .conversation-item {
             padding: 1rem;
             border-bottom: 1px solid #eee;
             display: flex;
@@ -230,15 +230,15 @@
             align-items: center;
         }
         
-        .user-item:last-child, .message-item:last-child, .photo-item:last-child {
+        .user-item:last-child, .message-item:last-child, .photo-item:last-child, .conversation-item:last-child {
             border-bottom: none;
         }
         
-        .user-info, .message-info, .photo-info {
+        .user-info, .message-info, .photo-info, .conversation-info {
             flex: 1;
         }
         
-        .user-actions, .message-actions, .photo-actions {
+        .user-actions, .message-actions, .photo-actions, .conversation-actions {
             display: flex;
             gap: 0.5rem;
         }
@@ -297,6 +297,19 @@
             color: #777;
         }
         
+        .unread-badge {
+            background: var(--error-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+        
         @media (max-width: 768px) {
             .admin-tabs {
                 flex-direction: column;
@@ -311,12 +324,12 @@
                 grid-template-columns: 1fr;
             }
             
-            .user-item, .message-item, .photo-item {
+            .user-item, .message-item, .photo-item, .conversation-item {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .user-actions, .message-actions, .photo-actions {
+            .user-actions, .message-actions, .photo-actions, .conversation-actions {
                 margin-top: 1rem;
                 width: 100%;
                 justify-content: flex-end;
@@ -361,7 +374,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="dashboard">Πίνακας Ελέγχου</button>
                 <button class="admin-tab" data-tab="users">Διαχείριση Χρηστών</button>
-                <button class="admin-tab" data-tab="messages">Μηνύματα</button>
+                <button class="admin-tab" data-tab="conversations">Συνομιλίες <span id="unread-badge" class="unread-badge" style="display: none;">0</span></button>
                 <button class="admin-tab" data-tab="photos">Φωτογραφίες</button>
                 <button class="admin-tab" data-tab="points">Διαχείριση Πόντων</button>
                 <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
@@ -408,9 +421,9 @@
                 </div>
             </div>
             
-            <!-- Διαχείριση Μηνυμάτων -->
-            <div class="admin-content" id="messages-content">
-                <h2 class="section-title">Διαχείριση Μηνυμάτων</h2>
+            <!-- Διαχείριση Συνομιλιών -->
+            <div class="admin-content" id="conversations-content">
+                <h2 class="section-title">Διαχείριση Συνομιλιών</h2>
                 
                 <div class="message-form">
                     <h3>Αποστολή Μηνύματος σε Χρήστη</h3>
@@ -429,15 +442,15 @@
                     <button class="admin-btn" id="send-message-btn">Αποστολή Μηνύματος</button>
                 </div>
                 
-                <h3 class="section-title">Ιστορικό Μηνυμάτων</h3>
-                <div class="message-list" id="messages-list">
-                    <!-- Εδώ θα εμφανίζονται τα μηνύματα -->
+                <h3 class="section-title">Συνομιλίες με Χρήστες</h3>
+                <div class="conversation-list" id="conversations-list">
+                    <!-- Εδώ θα εμφανίζονται οι συνομιλίες -->
                 </div>
             </div>
             
             <!-- Διαχείριση Φωτογραφιών -->
             <div class="admin-content" id="photos-content">
-                <h2 class="section-title">Διαχείριση Φωτογραφιών</h2>
+                <h2 class="section-title">Διαχείριση Φωτογραφίες</h2>
                 
                 <div class="photo-list" id="photos-list">
                     <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
@@ -463,6 +476,7 @@
             const loginError = document.getElementById('login-error');
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
+            const unreadBadge = document.getElementById('unread-badge');
             
             // Στοιχεία για στατιστικά
             const totalUsers = document.getElementById('total-users');
@@ -472,7 +486,7 @@
             
             // Λίστες
             const usersList = document.getElementById('users-list');
-            const messagesList = document.getElementById('messages-list');
+            const conversationsList = document.getElementById('conversations-list');
             const photosList = document.getElementById('photos-list');
             const pointsList = document.getElementById('points-list');
             const recentActivities = document.getElementById('recent-activities');
@@ -485,6 +499,10 @@
             // Προκαθορισμένα διαπιστευτήρια διαχειριστή
             const ADMIN_EMAIL = "admin@example.com";
             const ADMIN_PASSWORD = "admin123";
+            
+            // Μεταβλητές
+            let adminUser = null;
+            let selectedUserId = null;
             
             // Έλεγχος αν ο διαχειριστής είναι συνδεδεμένος
             const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -542,7 +560,45 @@
             function showAdminPanel() {
                 adminLogin.style.display = 'none';
                 adminPanel.classList.add('active');
+                
+                // Βρες τον διαχειριστή
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                adminUser = users.find(u => u.email === ADMIN_EMAIL);
+                
+                if (!adminUser) {
+                    // Δημιουργία διαχειριστή αν δεν υπάρχει
+                    initializeDefaultAdmin();
+                    const users = JSON.parse(localStorage.getItem('users') || '[]');
+                    adminUser = users.find(u => u.email === ADMIN_EMAIL);
+                }
+                
                 loadDashboardData();
+                updateUnreadCount();
+            }
+            
+            // Αρχικοποίηση προκαθορισμένου διαχειριστή
+            function initializeDefaultAdmin() {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Έλεγχος αν υπάρχει ήδη ο διαχειριστής
+                const adminExists = users.find(user => user.email === ADMIN_EMAIL);
+                
+                if (!adminExists) {
+                    // Δημιουργία προκαθορισμένου διαχειριστή
+                    const adminUser = {
+                        id: 1,
+                        username: 'admin',
+                        email: ADMIN_EMAIL,
+                        password: ADMIN_PASSWORD,
+                        points: 0,
+                        role: 'admin',
+                        photos: [],
+                        conversations: {},
+                        createdAt: new Date().toISOString()
+                    };
+                    users.push(adminUser);
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
             }
             
             // Φόρτωση δεδομένων πίνακα ελέγχου
@@ -550,9 +606,19 @@
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 
                 // Υπολογισμός στατιστικών
-                const userCount = users.length;
+                const userCount = users.filter(u => u.email !== ADMIN_EMAIL).length;
                 const photoCount = users.reduce((total, user) => total + (user.photos ? user.photos.length : 0), 0);
-                const messageCount = users.reduce((total, user) => total + (user.messages ? user.messages.length : 0), 0);
+                
+                // Υπολογισμός μηνυμάτων από συνομιλίες
+                let messageCount = 0;
+                users.forEach(user => {
+                    if (user.conversations) {
+                        Object.values(user.conversations).forEach(conversation => {
+                            messageCount += conversation.messages ? conversation.messages.length : 0;
+                        });
+                    }
+                });
+                
                 const freeCoffeeCount = users.filter(user => user.points >= 100).length;
                 
                 // Ενημέρωση στατιστικών
@@ -569,21 +635,21 @@
             function loadRecentActivities(users) {
                 recentActivities.innerHTML = '';
                 
-                if (users.length === 0) {
-                    recentActivities.innerHTML = '<div class="empty-state">Δεν υπάρχουν ενέργειες για εμφάνιση</div>';
-                    return;
-                }
-                
-                // Συλλογή όλων των μηνυμάτων από όλους τους χρήστες
+                // Συλλογή όλων των μηνυμάτων από όλες τις συνομιλίες
                 let allMessages = [];
                 users.forEach(user => {
-                    if (user.messages && user.messages.length > 0) {
-                        user.messages.forEach(message => {
-                            allMessages.push({
-                                ...message,
-                                username: user.username,
-                                userEmail: user.email
-                            });
+                    if (user.conversations) {
+                        Object.values(user.conversations).forEach(conversation => {
+                            if (conversation.messages) {
+                                conversation.messages.forEach(message => {
+                                    allMessages.push({
+                                        ...message,
+                                        username: user.username,
+                                        userEmail: user.email,
+                                        conversationWith: conversation.username
+                                    });
+                                });
+                            }
                         });
                     }
                 });
@@ -604,13 +670,16 @@
                     messageElement.className = 'user-item';
                     
                     const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
+                    const senderInfo = message.senderId === adminUser.id ? 
+                        '<strong>Διαχειριστής</strong>' : 
+                        `<strong>${message.senderName}</strong>`;
                     
                     messageElement.innerHTML = `
                         <div class="user-info">
-                            <strong>${message.username} (${message.userEmail})</strong>
+                            ${senderInfo} - ${messageDate}
                             <div class="message-content">
                                 <p>${message.content}</p>
-                                <small>${messageDate}</small>
+                                <small>Συνομιλία με: ${message.conversationWith || message.senderName}</small>
                             </div>
                         </div>
                     `;
@@ -630,8 +699,8 @@
                     case 'users':
                         loadUsersData(users);
                         break;
-                    case 'messages':
-                        loadMessagesData(users);
+                    case 'conversations':
+                        loadConversationsData(users);
                         break;
                     case 'photos':
                         loadPhotosData(users);
@@ -646,27 +715,28 @@
             function loadUsersData(users) {
                 usersList.innerHTML = '';
                 
-                if (users.length === 0) {
+                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
+                
+                if (regularUsers.length === 0) {
                     usersList.innerHTML = '<div class="empty-state">Δεν υπάρχουν χρήστες</div>';
                     return;
                 }
                 
-                users.forEach(user => {
-                    // Παράβλεψη του λογαριασμού διαχειριστή
-                    if (user.email === ADMIN_EMAIL) return;
-                    
+                regularUsers.forEach(user => {
                     const userElement = document.createElement('div');
                     userElement.className = 'user-item';
                     
                     const registerDate = new Date(user.createdAt).toLocaleDateString('el-GR');
                     const photoCount = user.photos ? user.photos.length : 0;
+                    const messageCount = user.conversations && user.conversations[adminUser.id] ? 
+                        user.conversations[adminUser.id].messages.length : 0;
                     
                     userElement.innerHTML = `
                         <div class="user-info">
                             <strong>${user.username}</strong><br>
                             <small>${user.email}</small><br>
                             <small>Εγγραφή: ${registerDate}</small><br>
-                            <small>Πόντοι: ${user.points || 0} | Φωτογραφίες: ${photoCount}</small>
+                            <small>Πόντοι: ${user.points || 0} | Φωτογραφίες: ${photoCount} | Μηνύματα: ${messageCount}</small>
                         </div>
                         <div class="user-actions">
                             <button class="admin-btn btn-danger" onclick="deleteUser(${user.id})">Διαγραφή</button>
@@ -677,9 +747,9 @@
                 });
             }
             
-            // Φόρτωση δεδομένων μηνυμάτων
-            function loadMessagesData(users) {
-                messagesList.innerHTML = '';
+            // Φόρτωση δεδομένων συνομιλιών
+            function loadConversationsData(users) {
+                conversationsList.innerHTML = '';
                 
                 // Συμπλήρωση dropdown επιλογής χρήστη
                 messageUser.innerHTML = '<option value="">-- Επιλέξτε Χρήστη --</option>';
@@ -692,52 +762,46 @@
                     }
                 });
                 
-                // Συλλογή όλων των μηνυμάτων
-                let allMessages = [];
-                users.forEach(user => {
-                    if (user.messages && user.messages.length > 0) {
-                        user.messages.forEach(message => {
-                            allMessages.push({
-                                ...message,
-                                userId: user.id,
-                                username: user.username,
-                                userEmail: user.email
-                            });
-                        });
-                    }
-                });
-                
-                if (allMessages.length === 0) {
-                    messagesList.innerHTML = '<div class="empty-state">Δεν υπάρχουν μηνύματα</div>';
+                // Εμφάνιση συνομιλιών με χρήστες
+                if (!adminUser.conversations || Object.keys(adminUser.conversations).length === 0) {
+                    conversationsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν συνομιλίες</div>';
                     return;
                 }
                 
-                // Ταξινόμηση μηνυμάτων κατά χρονολογική σειρά (νεότερο πρώτο)
-                allMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-                
-                allMessages.forEach(message => {
-                    const messageElement = document.createElement('div');
-                    messageElement.className = 'message-item';
+                Object.values(adminUser.conversations).forEach(conversation => {
+                    const user = users.find(u => u.id === conversation.userId);
+                    if (!user) return;
                     
-                    const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
-                    const senderInfo = message.sender === 'admin' ? 
-                        '<strong>Διαχειριστής</strong>' : 
-                        `<strong>${message.username}</strong> (${message.userEmail})`;
+                    const conversationElement = document.createElement('div');
+                    conversationElement.className = 'conversation-item';
                     
-                    messageElement.innerHTML = `
-                        <div class="message-info">
-                            <div>${senderInfo} - ${messageDate}</div>
-                            <div class="message-content">
-                                <p>${message.content}</p>
-                            </div>
+                    const lastMessage = conversation.messages && conversation.messages.length > 0 ? 
+                        conversation.messages[conversation.messages.length - 1] : null;
+                    
+                    const unreadCount = conversation.messages ? 
+                        conversation.messages.filter(m => !m.read && m.senderId !== adminUser.id).length : 0;
+                    
+                    conversationElement.innerHTML = `
+                        <div class="conversation-info">
+                            <strong>${user.username} (${user.email})</strong>
+                            ${unreadCount > 0 ? `<span class="unread-badge">${unreadCount}</span>` : ''}
+                            ${lastMessage ? `
+                                <div class="message-content">
+                                    <p><strong>Τελευταίο μήνυμα:</strong> ${lastMessage.content}</p>
+                                    <small>${new Date(lastMessage.timestamp).toLocaleString('el-GR')}</small>
+                                </div>
+                            ` : ''}
                         </div>
-                        <div class="message-actions">
-                            <button class="admin-btn btn-danger" onclick="deleteMessage(${message.userId}, ${message.id})">Διαγραφή</button>
+                        <div class="conversation-actions">
+                            <button class="admin-btn" onclick="viewConversation(${user.id})">Προβολή</button>
+                            <button class="admin-btn btn-danger" onclick="deleteConversation(${user.id})">Διαγραφή</button>
                         </div>
                     `;
                     
-                    messagesList.appendChild(messageElement);
+                    conversationsList.appendChild(conversationElement);
                 });
+                
+                updateUnreadCount();
             }
             
             // Φόρτωση δεδομένων φωτογραφιών
@@ -747,7 +811,7 @@
                 let hasPhotos = false;
                 
                 users.forEach(user => {
-                    if (user.photos && user.photos.length > 0) {
+                    if (user.photos && user.photos.length > 0 && user.email !== ADMIN_EMAIL) {
                         hasPhotos = true;
                         
                         user.photos.forEach(photo => {
@@ -781,15 +845,14 @@
             function loadPointsData(users) {
                 pointsList.innerHTML = '';
                 
-                if (users.length === 0) {
+                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
+                
+                if (regularUsers.length === 0) {
                     pointsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν χρήστες</div>';
                     return;
                 }
                 
-                users.forEach(user => {
-                    // Παράβλεψη του λογαριασμού διαχειριστή
-                    if (user.email === ADMIN_EMAIL) return;
-                    
+                regularUsers.forEach(user => {
                     const userElement = document.createElement('div');
                     userElement.className = 'user-item';
                     
@@ -817,6 +880,32 @@
                 });
             }
             
+            // Ενημέρωση αριθμού μη αναγνωσμένων μηνυμάτων
+            function updateUnreadCount() {
+                if (!adminUser.conversations) {
+                    unreadBadge.style.display = 'none';
+                    return;
+                }
+                
+                let unreadCount = 0;
+                Object.values(adminUser.conversations).forEach(conversation => {
+                    if (conversation.messages) {
+                        conversation.messages.forEach(message => {
+                            if (!message.read && message.senderId !== adminUser.id) {
+                                unreadCount++;
+                            }
+                        });
+                    }
+                });
+                
+                if (unreadCount > 0) {
+                    unreadBadge.textContent = unreadCount;
+                    unreadBadge.style.display = 'inline-flex';
+                } else {
+                    unreadBadge.style.display = 'none';
+                }
+            }
+            
             // Αποστολή μηνύματος από διαχειριστή
             sendMessageBtn.addEventListener('click', function() {
                 const userId = parseInt(messageUser.value);
@@ -829,8 +918,9 @@
                 
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 const userIndex = users.findIndex(u => u.id === userId);
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
                 
-                if (userIndex === -1) {
+                if (userIndex === -1 || adminIndex === -1) {
                     alert('Ο χρήστης δεν βρέθηκε');
                     return;
                 }
@@ -838,19 +928,42 @@
                 // Δημιουργία νέου μηνύματος
                 const newMessage = {
                     id: Date.now(),
+                    senderId: adminUser.id,
+                    senderName: adminUser.username,
                     content: content,
-                    sender: 'admin',
                     timestamp: new Date().toISOString(),
                     read: false
                 };
                 
                 // Προσθήκη μηνύματος στον χρήστη
-                if (!users[userIndex].messages) {
-                    users[userIndex].messages = [];
+                if (!users[userIndex].conversations) users[userIndex].conversations = {};
+                if (!users[userIndex].conversations[adminUser.id]) {
+                    users[userIndex].conversations[adminUser.id] = {
+                        userId: adminUser.id,
+                        username: adminUser.username,
+                        email: adminUser.email,
+                        messages: []
+                    };
                 }
+                users[userIndex].conversations[adminUser.id].messages.push(newMessage);
                 
-                users[userIndex].messages.push(newMessage);
+                // Προσθήκη μηνύματος στον διαχειριστή
+                if (!users[adminIndex].conversations) users[adminIndex].conversations = {};
+                if (!users[adminIndex].conversations[userId]) {
+                    users[adminIndex].conversations[userId] = {
+                        userId: userId,
+                        username: users[userIndex].username,
+                        email: users[userIndex].email,
+                        messages: []
+                    };
+                }
+                users[adminIndex].conversations[userId].messages.push(newMessage);
+                
                 localStorage.setItem('users', JSON.stringify(users));
+                
+                // Ενημέρωση του adminUser
+                adminUser = users[adminIndex];
+                localStorage.setItem('currentUser', JSON.stringify(adminUser));
                 
                 // Εμφάνιση μηνύματος επιτυχίας
                 alert('Το μήνυμα στάλθηκε επιτυχώς!');
@@ -858,8 +971,8 @@
                 // Εκκαθάριση φόρμας
                 messageContent.value = '';
                 
-                // Επαναφόρτωση δεδομένων μηνυμάτων
-                loadMessagesData(users);
+                // Επαναφόρτωση δεδομένων
+                loadConversationsData(users);
             });
             
             // Καθολικές συναρτήσεις για χειρισμό δεδομένων
@@ -877,21 +990,56 @@
                 loadDashboardData();
             };
             
-            window.deleteMessage = function(userId, messageId) {
-                if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το μήνυμα;')) {
+            window.viewConversation = function(userId) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = users.find(u => u.id === userId);
+                
+                if (!user || !adminUser.conversations || !adminUser.conversations[userId]) {
+                    alert('Δεν βρέθηκε η συνομιλία');
+                    return;
+                }
+                
+                const conversation = adminUser.conversations[userId];
+                let messagesHtml = '<h4>Συνομιλία με ' + user.username + '</h4>';
+                
+                conversation.messages.forEach(message => {
+                    const time = new Date(message.timestamp).toLocaleString('el-GR');
+                    messagesHtml += `
+                        <div class="message-item">
+                            <div class="message-info">
+                                <strong>${message.senderName}</strong> - ${time}
+                                <div class="message-content">${message.content}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                alert('Προβολή συνομιλίας - θα εμφανιστεί σε νέο παράθυρο στην πλήρη έκδοση');
+                console.log('Συνομιλία με ' + user.username + ':', conversation.messages);
+            };
+            
+            window.deleteConversation = function(userId) {
+                if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη συνομιλία;')) {
                     return;
                 }
                 
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 const userIndex = users.findIndex(u => u.id === userId);
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
                 
-                if (userIndex !== -1 && users[userIndex].messages) {
-                    users[userIndex].messages = users[userIndex].messages.filter(msg => msg.id !== messageId);
-                    localStorage.setItem('users', JSON.stringify(users));
-                    
-                    // Επαναφόρτωση δεδομένων μηνυμάτων
-                    loadMessagesData(users);
+                if (userIndex !== -1 && users[userIndex].conversations) {
+                    delete users[userIndex].conversations[adminUser.id];
                 }
+                
+                if (adminIndex !== -1 && users[adminIndex].conversations) {
+                    delete users[adminIndex].conversations[userId];
+                }
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                adminUser = users[adminIndex];
+                
+                // Επαναφόρτωση δεδομένων συνομιλιών
+                loadConversationsData(users);
             };
             
             window.deletePhoto = function(userId, photoId) {
