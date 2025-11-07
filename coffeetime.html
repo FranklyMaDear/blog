@@ -645,6 +645,19 @@
             font-size: 0.7rem;
             margin-left: 0.5rem;
         }
+
+        .user-unread-badge {
+            background: var(--admin-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
         
         /* Mobile optimizations */
         @media (max-width: 480px) {
@@ -840,7 +853,7 @@
         
         <!-- Μηνύματα προς Διαχειριστή -->
         <section class="messages-section" id="messages-section">
-            <h2 class="section-title">💬 Μηνύματα προς Διαχειριστή</h2>
+            <h2 class="section-title">💬 Μηνύματα προς Διαχειριστή <span id="user-unread-badge" class="user-unread-badge" style="display: none;">0</span></h2>
             
             <div class="messages-container" id="user-messages-container">
                 <!-- Εδώ θα εμφανίζονται τα μηνύματα -->
@@ -929,6 +942,7 @@
             const userList = document.getElementById('user-list');
             const adminUnreadBadge = document.getElementById('admin-unread-badge');
             const selectedUserMessages = document.getElementById('selected-user-messages');
+            const userUnreadBadge = document.getElementById('user-unread-badge');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -1116,22 +1130,6 @@
                     successMessage.style.display = 'block';
                     uploadBtn.disabled = false;
                     
-                    // ΕΚΚΑΘΑΡΙΣΗ ΤΟΥ ΜΗΧΑΝΙΣΜΟΥ ΠΟΝΤΩΝ - ΔΕΝ ΠΡΟΣΤΙΘΕΝΤΑΙ ΠΟΝΤΟΙ
-                    // Ο παρακάτω κώδικας έχει αφαιρεθεί:
-                    // const pointsEarned = files.length * 10;
-                    // currentUser.points += pointsEarned;
-                    // users[userIndex].points = currentUser.points;
-                    // localStorage.setItem('users', JSON.stringify(users));
-                    // localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    // userPoints.textContent = currentUser.points;
-                    
-                    // ΔΕΝ ΕΜΦΑΝΙΖΟΝΤΑΙ ΜΗΝΥΜΑΤΑ ΓΙΑ ΠΟΝΤΟΥΣ
-                    // const pointsMessage = document.createElement('div');
-                    // pointsMessage.className = 'points-earned';
-                    // pointsMessage.style.display = 'block';
-                    // pointsMessage.innerHTML = `🎉 Κέρδισες ${pointsEarned} πόντους! Σύνολο: ${currentUser.points} πόντοι`;
-                    // successMessage.parentNode.insertBefore(pointsMessage, successMessage.nextSibling);
-                    
                     // Απόκρυψη των μηνυμάτων επιτυχίας μετά από 5 δευτερόλεπτα
                     setTimeout(() => {
                         successMessage.style.display = 'none';
@@ -1294,6 +1292,9 @@
                 // Ενημέρωση εμφάνισης
                 displayAdminMessages(selectedUserId);
                 adminMessageInput.value = '';
+                
+                // Ενημέρωση ειδοποίησης για τον χρήστη
+                updateUserUnreadCount();
             }
             
             // Εμφάνιση προφίλ χρήστη
@@ -1309,6 +1310,7 @@
                 
                 // Φόρτωση μηνυμάτων
                 displayUserMessages();
+                updateUserUnreadCount();
                 
                 // Αν είναι διαχειριστής, φόρτωσε τα δεδομένα διαχείρισης
                 if (user.email === 'admin@example.com' || user.role === 'admin') {
@@ -1349,6 +1351,12 @@
                     `;
                     
                     userMessagesContainer.appendChild(messageElement);
+                    
+                    // Σημείωση μηνύματος ως διαβασμένο
+                    if (!message.read && message.senderId !== currentUser.id) {
+                        message.read = true;
+                        updateUserMessageReadStatus(admin.id, message.id);
+                    }
                 });
                 
                 // Κάνε scroll στο τελευταίο μήνυμα
@@ -1393,7 +1401,7 @@
                 adminMessagesContainer.scrollTop = adminMessagesContainer.scrollHeight;
             }
             
-            // Ενημέρωση κατάστασης ανάγνωσης μηνύματος
+            // Ενημέρωση κατάστασης ανάγνωσης μηνύματος (για admin)
             function updateMessageReadStatus(userId, messageId) {
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -1408,6 +1416,25 @@
                         localStorage.setItem('currentUser', JSON.stringify(currentUser));
                         
                         updateAdminUnreadCount();
+                    }
+                }
+            }
+            
+            // Ενημέρωση κατάστασης ανάγνωσης μηνύματος (για χρήστη)
+            function updateUserMessageReadStatus(adminId, messageId) {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                if (userIndex !== -1 && users[userIndex].conversations && users[userIndex].conversations[adminId]) {
+                    const messageIndex = users[userIndex].conversations[adminId].messages.findIndex(m => m.id === messageId);
+                    if (messageIndex !== -1) {
+                        users[userIndex].conversations[adminId].messages[messageIndex].read = true;
+                        localStorage.setItem('users', JSON.stringify(users));
+                        currentUser.conversations[adminId].messages[messageIndex].read = true;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        
+                        updateUserUnreadCount();
                     }
                 }
             }
@@ -1440,6 +1467,35 @@
                     adminUnreadBadge.style.display = 'inline-flex';
                 } else {
                     adminUnreadBadge.style.display = 'none';
+                }
+            }
+            
+            // Ενημέρωση αριθμού μη αναγνωσμένων μηνυμάτων για χρήστη
+            function updateUserUnreadCount() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser || !currentUser.conversations) {
+                    userUnreadBadge.style.display = 'none';
+                    return;
+                }
+                
+                const admin = getAdminUser();
+                if (!admin) return;
+                
+                let unreadCount = 0;
+                const conversation = currentUser.conversations[admin.id];
+                if (conversation && conversation.messages) {
+                    conversation.messages.forEach(message => {
+                        if (!message.read && message.senderId !== currentUser.id) {
+                            unreadCount++;
+                        }
+                    });
+                }
+                
+                if (unreadCount > 0) {
+                    userUnreadBadge.textContent = unreadCount;
+                    userUnreadBadge.style.display = 'inline-flex';
+                } else {
+                    userUnreadBadge.style.display = 'none';
                 }
             }
             
