@@ -264,6 +264,19 @@
             border-radius: 4px;
             margin-right: 0.8rem;
             cursor: pointer;
+            object-fit: cover;
+        }
+        
+        .photo-placeholder {
+            width: 80px;
+            height: 80px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.8rem;
+            font-size: 1.5rem;
         }
         
         .points-control {
@@ -424,7 +437,7 @@
         <header>
             <div class="logo">👑</div>
             <h1>Πάνελ Διαχείρισης - Καφεμαντεία</h1>
-            <p>Διαχείριση χρηστών και φωτογραφιών</p>
+            <p>Διαχείριση χρηστών, μηνυμάτων και πόντων</p>
         </header>
         
         <!-- Φόρμα Σύνδεσης Διαχειριστή -->
@@ -456,7 +469,9 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="dashboard">Πίνακας Ελέγχου</button>
                 <button class="admin-tab" data-tab="users">Διαχείριση Χρηστών</button>
-                <button class="admin-tab" data-tab="photos">Φωτογραφίες Χρηστών</button>
+                <button class="admin-tab" data-tab="conversations">Συνομιλίες <span id="unread-badge" class="unread-badge" style="display: none;">0</span></button>
+                <button class="admin-tab" data-tab="photos">Φωτογραφίες</button>
+                <button class="admin-tab" data-tab="points">Διαχείριση Πόντων</button>
                 <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
             </div>
             
@@ -476,19 +491,19 @@
                     </div>
                     
                     <div class="stat-card">
-                        <div class="stat-number" id="active-today">0</div>
-                        <div class="stat-label">Ενεργοί Σήμερα</div>
+                        <div class="stat-number" id="total-messages">0</div>
+                        <div class="stat-label">Σύνολο Μηνυμάτων</div>
                     </div>
                     
                     <div class="stat-card">
-                        <div class="stat-number" id="new-users">0</div>
-                        <div class="stat-label">Νέοι Χρήστες</div>
+                        <div class="stat-number" id="free-coffee-users">0</div>
+                        <div class="stat-label">Χρήστες με Δωρεάν Καφέ</div>
                     </div>
                 </div>
                 
-                <h3 class="section-title">Πρόσφατες Φωτογραφίες</h3>
-                <div class="photo-list" id="recent-photos">
-                    <!-- Εδώ θα εμφανίζονται οι πρόσφατες φωτογραφίες -->
+                <h3 class="section-title">Πρόσφατες Ενέργειες</h3>
+                <div class="user-list" id="recent-activities">
+                    <!-- Εδώ θα εμφανίζονται οι πρόσφατες ενέργειες -->
                 </div>
             </div>
             
@@ -501,12 +516,48 @@
                 </div>
             </div>
             
+            <!-- Διαχείριση Συνομιλιών -->
+            <div class="admin-content" id="conversations-content">
+                <h2 class="section-title">Διαχείριση Συνομιλιών</h2>
+                
+                <div class="message-form">
+                    <h3>Αποστολή Μηνύματος σε Χρήστη</h3>
+                    <div class="form-group">
+                        <label for="message-user">Επιλογή Χρήστη:</label>
+                        <select id="message-user">
+                            <option value="">-- Επιλέξτε Χρήστη --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message-content">Περιεχόμενο Μηνύματος:</label>
+                        <textarea id="message-content" rows="4" placeholder="Γράψτε το μήνυμά σας εδώ..."></textarea>
+                    </div>
+                    
+                    <button class="admin-btn" id="send-message-btn">Αποστολή Μηνύματος</button>
+                </div>
+                
+                <h3 class="section-title">Συνομιλίες με Χρήστες</h3>
+                <div class="conversation-list" id="conversations-list">
+                    <!-- Εδώ θα εμφανίζονται οι συνομιλίες -->
+                </div>
+            </div>
+            
             <!-- Διαχείριση Φωτογραφιών -->
             <div class="admin-content" id="photos-content">
                 <h2 class="section-title">Διαχείριση Φωτογραφίες</h2>
                 
                 <div class="photo-list" id="photos-list">
                     <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
+                </div>
+            </div>
+            
+            <!-- Διαχείριση Πόντων -->
+            <div class="admin-content" id="points-content">
+                <h2 class="section-title">Διαχείριση Πόντων Χρηστών</h2>
+                
+                <div class="user-list" id="points-list">
+                    <!-- Εδώ θα εμφανίζονται οι χρήστες για διαχείριση πόντων -->
                 </div>
             </div>
         </div>
@@ -517,7 +568,6 @@
         <div class="modal-content">
             <span class="close-modal" id="close-modal">&times;</span>
             <img class="modal-image" id="modal-image" src="" alt="Προβολή φωτογραφίας">
-            <div id="modal-info" style="color: white; text-align: center; margin-top: 10px;"></div>
         </div>
     </div>
 
@@ -529,22 +579,29 @@
             const loginError = document.getElementById('login-error');
             const loginBtn = document.getElementById('login-btn');
             const logoutBtn = document.getElementById('logout-btn');
+            const unreadBadge = document.getElementById('unread-badge');
             
             // Στοιχεία για στατιστικά
             const totalUsers = document.getElementById('total-users');
             const totalPhotos = document.getElementById('total-photos');
-            const activeToday = document.getElementById('active-today');
-            const newUsers = document.getElementById('new-users');
+            const totalMessages = document.getElementById('total-messages');
+            const freeCoffeeUsers = document.getElementById('free-coffee-users');
             
             // Λίστες
             const usersList = document.getElementById('users-list');
+            const conversationsList = document.getElementById('conversations-list');
             const photosList = document.getElementById('photos-list');
-            const recentPhotos = document.getElementById('recent-photos');
+            const pointsList = document.getElementById('points-list');
+            const recentActivities = document.getElementById('recent-activities');
+            
+            // Φόρμες
+            const messageUser = document.getElementById('message-user');
+            const messageContent = document.getElementById('message-content');
+            const sendMessageBtn = document.getElementById('send-message-btn');
             
             // Modal για φωτογραφίες
             const photoModal = document.getElementById('photo-modal');
             const modalImage = document.getElementById('modal-image');
-            const modalInfo = document.getElementById('modal-info');
             const closeModal = document.getElementById('close-modal');
             
             // Προκαθορισμένα διαπιστευτήρια διαχειριστή
@@ -553,6 +610,7 @@
             
             // Μεταβλητές
             let adminUser = null;
+            let selectedUserId = null;
             
             // Έλεγχος αν ο διαχειριστής είναι συνδεδεμένος
             const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -635,6 +693,7 @@
                 }
                 
                 loadDashboardData();
+                updateUnreadCount();
             }
             
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
@@ -651,8 +710,10 @@
                         username: 'admin',
                         email: ADMIN_EMAIL,
                         password: ADMIN_PASSWORD,
+                        points: 0,
                         role: 'admin',
                         photos: [],
+                        conversations: {},
                         createdAt: new Date().toISOString()
                     };
                     users.push(adminUser);
@@ -665,102 +726,109 @@
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
                 
                 // Υπολογισμός στατιστικών
-                const regularUsers = users.filter(u => u.email !== ADMIN_EMAIL);
-                const userCount = regularUsers.length;
-                const photoCount = regularUsers.reduce((total, user) => total + (user.photos ? user.photos.length : 0), 0);
+                const userCount = users.filter(u => u.email !== ADMIN_EMAIL).length;
+                const photoCount = users.reduce((total, user) => total + (user.photos ? user.photos.length : 0), 0);
                 
-                // Χρήστες που ανέβασαν φωτογραφίες σήμερα
-                const today = new Date().toDateString();
-                const activeTodayCount = regularUsers.filter(user => 
-                    user.photos && user.photos.some(photo => 
-                        new Date(photo.uploadedAt).toDateString() === today
-                    )
-                ).length;
-                
-                // Νέοι χρήστες (τις τελευταίες 7 μέρες)
-                const oneWeekAgo = new Date();
-                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-                const newUsersCount = regularUsers.filter(user => 
-                    new Date(user.createdAt) > oneWeekAgo
-                ).length;
-                
-                // Ενημέρωση στατιστικών
-                totalUsers.textContent = userCount;
-                totalPhotos.textContent = photoCount;
-                activeToday.textContent = activeTodayCount;
-                newUsers.textContent = newUsersCount;
-                
-                // Φόρτωση πρόσφατων φωτογραφιών
-                loadRecentPhotos(regularUsers);
-            }
-            
-            // Φόρτωση πρόσφατων φωτογραφιών
-            function loadRecentPhotos(users) {
-                recentPhotos.innerHTML = '';
-                
-                // Συλλογή όλων των φωτογραφιών
-                let allPhotos = [];
+                // Υπολογισμός μηνυμάτων από συνομιλίες
+                let messageCount = 0;
                 users.forEach(user => {
-                    if (user.photos) {
-                        user.photos.forEach(photo => {
-                            allPhotos.push({
-                                ...photo,
-                                username: user.username,
-                                userEmail: user.email,
-                                userId: user.id
-                            });
+                    if (user.conversations) {
+                        Object.values(user.conversations).forEach(conversation => {
+                            messageCount += conversation.messages ? conversation.messages.length : 0;
                         });
                     }
                 });
                 
-                // Ταξινόμηση φωτογραφιών κατά χρονολογική σειρά (νεότερη πρώτη)
-                allPhotos.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+                const freeCoffeeCount = users.filter(user => user.points >= 100).length;
                 
-                // Εμφάνιση των 10 πιο πρόσφατων φωτογραφιών
-                const recentPhotosList = allPhotos.slice(0, 10);
+                // Ενημέρωση στατιστικών
+                totalUsers.textContent = userCount;
+                totalPhotos.textContent = photoCount;
+                totalMessages.textContent = messageCount;
+                freeCoffeeUsers.textContent = freeCoffeeCount;
                 
-                if (recentPhotosList.length === 0) {
-                    recentPhotos.innerHTML = '<div class="empty-state">Δεν υπάρχουν φωτογραφίες</div>';
+                // Φόρτωση πρόσφατων ενεργειών
+                loadRecentActivities(users);
+            }
+            
+            // Φόρτωση πρόσφατων ενεργειών
+            function loadRecentActivities(users) {
+                recentActivities.innerHTML = '';
+                
+                // Συλλογή όλων των μηνυμάτων από όλες τις συνομιλίες
+                let allMessages = [];
+                users.forEach(user => {
+                    if (user.conversations) {
+                        Object.values(user.conversations).forEach(conversation => {
+                            if (conversation.messages) {
+                                conversation.messages.forEach(message => {
+                                    allMessages.push({
+                                        ...message,
+                                        username: user.username,
+                                        userEmail: user.email,
+                                        conversationWith: conversation.username
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+                
+                // Ταξινόμηση μηνυμάτων κατά χρονολογική σειρά (νεότερο πρώτο)
+                allMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
+                // Εμφάνιση των 10 πιο πρόσφατων μηνυμάτων
+                const recentMessages = allMessages.slice(0, 10);
+                
+                if (recentMessages.length === 0) {
+                    recentActivities.innerHTML = '<div class="empty-state">Δεν υπάρχουν πρόσφατες ενέργειες</div>';
                     return;
                 }
                 
-                recentPhotosList.forEach(photo => {
-                    const photoElement = document.createElement('div');
-                    photoElement.className = 'photo-item';
+                recentMessages.forEach(message => {
+                    const messageElement = document.createElement('div');
+                    messageElement.className = 'user-item';
                     
-                    const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
+                    const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
+                    const senderInfo = message.senderId === adminUser.id ? 
+                        '<strong>Διαχειριστής</strong>' : 
+                        `<strong>${message.senderName}</strong>`;
                     
-                    photoElement.innerHTML = `
-                        <div class="photo-info">
-                            <strong>${photo.username}</strong> - ${uploadDate}
-                            <div>
-                                <span>📷 ${photo.filename}</span>
+                    let messageContent = `<p>${message.content}</p>`;
+                    
+                    messageElement.innerHTML = `
+                        <div class="user-info">
+                            ${senderInfo} - ${messageDate}
+                            <div class="message-content">
+                                ${messageContent}
+                                <small>Συνομιλία με: ${message.conversationWith || message.senderName}</small>
                             </div>
-                        </div>
-                        <div class="photo-actions">
-                            <button class="admin-btn" onclick="viewPhotoDetails(${photo.userId}, ${photo.id})">Προβολή</button>
-                            <button class="admin-btn btn-danger" onclick="deletePhoto(${photo.userId}, ${photo.id})">Διαγραφή</button>
                         </div>
                     `;
                     
-                    recentPhotos.appendChild(photoElement);
+                    recentActivities.appendChild(messageElement);
                 });
             }
             
             // Φόρτωση δεδομένων ανάλογα με το tab
             function loadTabData(tabId) {
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
                 
                 switch(tabId) {
                     case 'dashboard':
                         loadDashboardData();
                         break;
                     case 'users':
-                        loadUsersData(regularUsers);
+                        loadUsersData(users);
+                        break;
+                    case 'conversations':
+                        loadConversationsData(users);
                         break;
                     case 'photos':
-                        loadPhotosData(regularUsers);
+                        loadPhotosData(users);
+                        break;
+                    case 'points':
+                        loadPointsData(users);
                         break;
                 }
             }
@@ -769,24 +837,28 @@
             function loadUsersData(users) {
                 usersList.innerHTML = '';
                 
-                if (users.length === 0) {
+                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
+                
+                if (regularUsers.length === 0) {
                     usersList.innerHTML = '<div class="empty-state">Δεν υπάρχουν χρήστες</div>';
                     return;
                 }
                 
-                users.forEach(user => {
+                regularUsers.forEach(user => {
                     const userElement = document.createElement('div');
                     userElement.className = 'user-item';
                     
                     const registerDate = new Date(user.createdAt).toLocaleDateString('el-GR');
                     const photoCount = user.photos ? user.photos.length : 0;
+                    const messageCount = user.conversations && user.conversations[adminUser.id] ? 
+                        user.conversations[adminUser.id].messages.length : 0;
                     
                     userElement.innerHTML = `
                         <div class="user-info">
                             <strong>${user.username}</strong><br>
                             <small>${user.email}</small><br>
                             <small>Εγγραφή: ${registerDate}</small><br>
-                            <small>Φωτογραφίες: ${photoCount}</small>
+                            <small>Πόντοι: ${user.points || 0} | Φωτογραφίες: ${photoCount} | Μηνύματα: ${messageCount}</small>
                         </div>
                         <div class="user-actions">
                             <button class="admin-btn btn-danger" onclick="deleteUser(${user.id})">Διαγραφή</button>
@@ -797,6 +869,56 @@
                 });
             }
             
+            // Φόρτωση δεδομένων συνομιλιών
+            function loadConversationsData(users) {
+                conversationsList.innerHTML = '';
+                
+                // Συμπλήρωση dropdown επιλογής χρήστη
+                messageUser.innerHTML = '<option value="">-- Επιλέξτε Χρήστη --</option>';
+                users.forEach(user => {
+                    if (user.email !== ADMIN_EMAIL) {
+                        const option = document.createElement('option');
+                        option.value = user.id;
+                        option.textContent = `${user.username} (${user.email})`;
+                        messageUser.appendChild(option);
+                    }
+                });
+                
+                // Εμφάνιση συνομιλιών με χρήστες
+                if (!adminUser.conversations || Object.keys(adminUser.conversations).length === 0) {
+                    conversationsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν συνομιλίες</div>';
+                    return;
+                }
+                
+                Object.values(adminUser.conversations).forEach(conversation => {
+                    const conversationElement = document.createElement('div');
+                    conversationElement.className = 'conversation-item';
+                    
+                    const lastMessage = conversation.messages && conversation.messages.length > 0 ? 
+                        conversation.messages[conversation.messages.length - 1] : null;
+                    
+                    const lastMessageDate = lastMessage ? 
+                        new Date(lastMessage.timestamp).toLocaleString('el-GR') : 'Δεν υπάρχουν μηνύματα';
+                    
+                    const lastMessageContent = lastMessage ? 
+                        (lastMessage.content.length > 50 ? 
+                            lastMessage.content.substring(0, 50) + '...' : lastMessage.content) : '';
+                    
+                    conversationElement.innerHTML = `
+                        <div class="conversation-info">
+                            <strong>${conversation.username}</strong>
+                            <div>Τελευταίο μήνυμα: ${lastMessageDate}</div>
+                            <div>${lastMessageContent}</div>
+                        </div>
+                        <div class="conversation-actions">
+                            <button class="admin-btn" onclick="viewConversation(${conversation.userId})">Προβολή</button>
+                        </div>
+                    `;
+                    
+                    conversationsList.appendChild(conversationElement);
+                });
+            }
+            
             // Φόρτωση δεδομένων φωτογραφιών
             function loadPhotosData(users) {
                 photosList.innerHTML = '';
@@ -804,7 +926,7 @@
                 let allPhotos = [];
                 
                 users.forEach(user => {
-                    if (user.photos) {
+                    if (user.email !== ADMIN_EMAIL && user.photos) {
                         user.photos.forEach(photo => {
                             allPhotos.push({
                                 ...photo,
@@ -820,24 +942,37 @@
                     return;
                 }
                 
-                // Ταξινόμηση φωτογραφιών κατά χρονολογική σειρά (νεότερη πρώτη)
-                allPhotos.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
-                
                 allPhotos.forEach(photo => {
                     const photoElement = document.createElement('div');
                     photoElement.className = 'photo-item';
                     
                     const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
                     
+                    // Δημιουργία προεπισκόπησης
+                    let previewHTML = '';
+                    if (photo.url) {
+                        // Αν υπάρχει πραγματική εικόνα
+                        previewHTML = `<img src="${photo.url}" class="photo-preview" onclick="viewPhoto('${photo.url}')">`;
+                    } else {
+                        // Αν είναι μόνο όνομα αρχείου (όπως στο coffeetime.html)
+                        previewHTML = `
+                            <div class="photo-placeholder" onclick="viewPhotoInfo('${photo.filename}', '${photo.username}')">
+                                📷
+                            </div>
+                        `;
+                    }
+                    
                     photoElement.innerHTML = `
-                        <div class="photo-info">
-                            <strong>${photo.username}</strong> - ${uploadDate}
+                        <div class="photo-info" style="display: flex; align-items: center;">
+                            ${previewHTML}
                             <div>
-                                <span>📷 ${photo.filename}</span>
+                                <strong>${photo.username}</strong><br>
+                                <small>${uploadDate}</small><br>
+                                <small>${photo.filename}</small>
                             </div>
                         </div>
                         <div class="photo-actions">
-                            <button class="admin-btn" onclick="viewPhotoDetails(${photo.userId}, ${photo.id})">Προβολή</button>
+                            <button class="admin-btn" onclick="downloadPhoto('${photo.filename}', '${photo.username}')">Λήψη</button>
                             <button class="admin-btn btn-danger" onclick="deletePhoto(${photo.userId}, ${photo.id})">Διαγραφή</button>
                         </div>
                     `;
@@ -846,43 +981,208 @@
                 });
             }
             
-            // Προβολή λεπτομερειών φωτογραφίας
-            window.viewPhotoDetails = function(userId, photoId) {
+            // Φόρτωση δεδομένων πόντων
+            function loadPointsData(users) {
+                pointsList.innerHTML = '';
+                
+                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
+                
+                if (regularUsers.length === 0) {
+                    pointsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν χρήστες</div>';
+                    return;
+                }
+                
+                regularUsers.forEach(user => {
+                    const userElement = document.createElement('div');
+                    userElement.className = 'user-item';
+                    
+                    userElement.innerHTML = `
+                        <div class="user-info">
+                            <strong>${user.username}</strong> (${user.email})
+                        </div>
+                        <div class="points-control">
+                            <span>Πόντοι: ${user.points || 0}</span>
+                            <input type="number" class="points-input" id="points-${user.id}" value="${user.points || 0}" min="0">
+                            <button class="admin-btn" onclick="updateUserPoints(${user.id})">Ενημέρωση</button>
+                        </div>
+                    `;
+                    
+                    pointsList.appendChild(userElement);
+                });
+            }
+            
+            // Αποστολή μηνύματος από διαχειριστή
+            sendMessageBtn.addEventListener('click', function() {
+                const selectedUserId = messageUser.value;
+                const content = messageContent.value.trim();
+                
+                if (!selectedUserId) {
+                    alert('Παρακαλώ επιλέξτε χρήστη');
+                    return;
+                }
+                
+                if (!content) {
+                    alert('Παρακαλώ εισάγετε μήνυμα');
+                    return;
+                }
+                
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const user = users.find(u => u.id === userId);
+                const targetUser = users.find(u => u.id == selectedUserId);
                 
-                if (!user || !user.photos) {
-                    alert('Δεν βρέθηκε η φωτογραφία');
+                if (!targetUser) {
+                    alert('Ο χρήστης δεν βρέθηκε');
                     return;
                 }
                 
-                const photo = user.photos.find(p => p.id === photoId);
+                // Δημιουργία μηνύματος
+                const message = {
+                    id: Date.now(),
+                    content: content,
+                    senderId: adminUser.id,
+                    senderName: 'Διαχειριστής',
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
                 
-                if (!photo) {
-                    alert('Δεν βρέθηκε η φωτογραφία');
+                // Αποθήκευση μηνύματος στη συνομιλία
+                saveMessageToConversation(targetUser, message, users);
+            });
+            
+            // Αποθήκευση μηνύματος στη συνομιλία
+            function saveMessageToConversation(targetUser, message, users) {
+                // Ενημέρωση συνομιλίας στο διαχειριστή
+                if (!adminUser.conversations) {
+                    adminUser.conversations = {};
+                }
+                
+                if (!adminUser.conversations[targetUser.id]) {
+                    adminUser.conversations[targetUser.id] = {
+                        userId: targetUser.id,
+                        username: targetUser.username,
+                        messages: []
+                    };
+                }
+                
+                adminUser.conversations[targetUser.id].messages.push(message);
+                
+                // Ενημέρωση συνομιλίας στο χρήστη
+                if (!targetUser.conversations) {
+                    targetUser.conversations = {};
+                }
+                
+                if (!targetUser.conversations[adminUser.id]) {
+                    targetUser.conversations[adminUser.id] = {
+                        userId: adminUser.id,
+                        username: 'Διαχειριστής',
+                        messages: []
+                    };
+                }
+                
+                targetUser.conversations[adminUser.id].messages.push(message);
+                
+                // Αποθήκευση χρηστών
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                if (adminIndex !== -1) {
+                    users[adminIndex] = adminUser;
+                }
+                
+                const targetIndex = users.findIndex(u => u.id === targetUser.id);
+                if (targetIndex !== -1) {
+                    users[targetIndex] = targetUser;
+                }
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Επαναφόρτωση δεδομένων
+                loadConversationsData(users);
+                
+                // Εκκαθάριση φόρμας
+                messageContent.value = '';
+                
+                alert('Το μήνυμα στάλθηκε επιτυχώς');
+            }
+            
+            // Ενημέρωση αριθμού μη αναγνωσμένων μηνυμάτων
+            function updateUnreadCount() {
+                let unreadCount = 0;
+                
+                if (adminUser.conversations) {
+                    Object.values(adminUser.conversations).forEach(conversation => {
+                        if (conversation.messages) {
+                            conversation.messages.forEach(message => {
+                                if (!message.read && message.senderId !== adminUser.id) {
+                                    unreadCount++;
+                                }
+                            });
+                        }
+                    });
+                }
+                
+                if (unreadCount > 0) {
+                    unreadBadge.textContent = unreadCount;
+                    unreadBadge.style.display = 'inline-flex';
+                } else {
+                    unreadBadge.style.display = 'none';
+                }
+            }
+            
+            // Προβολή συνομιλίας
+            window.viewConversation = function(userId) {
+                const conversation = adminUser.conversations[userId];
+                
+                if (!conversation) {
+                    alert('Δεν βρέθηκε συνομιλία');
                     return;
                 }
                 
-                // Δημιουργία modal για προβολή λεπτομερειών
+                // Σημείωση μηνυμάτων ως αναγνωσμένα
+                conversation.messages.forEach(message => {
+                    if (message.senderId !== adminUser.id) {
+                        message.read = true;
+                    }
+                });
+                
+                // Αποθήκευση αλλαγών
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                if (adminIndex !== -1) {
+                    users[adminIndex] = adminUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+                
+                // Ενημέρωση αριθμού μη αναγνωσμένων
+                updateUnreadCount();
+                
+                // Δημιουργία modal για προβολή συνομιλίας
                 const modal = document.createElement('div');
                 modal.className = 'photo-modal active';
                 modal.style.zIndex = '1001';
                 
-                const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
+                let messagesHTML = '';
+                conversation.messages.forEach(message => {
+                    const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
+                    const isAdmin = message.senderId === adminUser.id;
+                    
+                    let messageContent = `<p>${message.content}</p>`;
+                    
+                    messagesHTML += `
+                        <div class="user-item" style="background: ${isAdmin ? '#f0f0f0' : 'white'};">
+                            <div class="user-info">
+                                <strong>${message.senderName}</strong> - ${messageDate}
+                                <div class="message-content">
+                                    ${messageContent}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
                 
                 modal.innerHTML = `
                     <div class="modal-content" style="background: white; padding: 1rem; border-radius: 8px; max-width: 90%; max-height: 90%; overflow-y: auto;">
                         <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
-                        <h3>Λεπτομέρειες Φωτογραφίας</h3>
-                        <div style="margin-bottom: 1rem;">
-                            <p><strong>Χρήστης:</strong> ${user.username} (${user.email})</p>
-                            <p><strong>Ημερομηνία Ανέβασματος:</strong> ${uploadDate}</p>
-                            <p><strong>Όνομα Αρχείου:</strong> ${photo.filename}</p>
-                            <p><strong>ID Φωτογραφίας:</strong> ${photo.id}</p>
-                        </div>
-                        <div style="text-align: center; padding: 1rem; background: #f9f9f9; border-radius: 6px;">
-                            <p>📷 Προεπισκόπηση Φωτογραφίας</p>
-                            <p><em>Σε πραγματική εφαρμογή, εδώ θα εμφανιζόταν η πραγματική φωτογραφία</em></p>
+                        <h3>Συνομιλία με ${conversation.username}</h3>
+                        <div class="conversation-list">
+                            ${messagesHTML}
                         </div>
                     </div>
                 `;
@@ -897,9 +1197,38 @@
                 });
             };
             
+            // Προβολή φωτογραφίας
+            window.viewPhoto = function(photoUrl) {
+                modalImage.src = photoUrl;
+                photoModal.classList.add('active');
+            };
+            
+            // Προβολή πληροφοριών φωτογραφίας
+            window.viewPhotoInfo = function(filename, username) {
+                alert(`Φωτογραφία από: ${username}\nΌνομα αρχείου: ${filename}\n\nΣημείωση: Αυτή η φωτογραφία δεν έχει πραγματική εικόνα, αλλά μόνο όνομα αρχείου. Στο πραγματικό σύστημα θα υπήρχε πραγματική εικόνα.`);
+            };
+            
+            // Λήψη φωτογραφίας
+            window.downloadPhoto = function(filename, username) {
+                // Δημιουργία ενός dummy αρχείου για λήψη
+                const blob = new Blob([`Πληροφορίες φωτογραφίας:\nΧρήστης: ${username}\nΌνομα αρχείου: ${filename}\nΗμερομηνία: ${new Date().toLocaleString('el-GR')}\n\nΣημείωση: Στο πραγματικό σύστημα, αυτό θα ήταν η πραγματική εικόνα.`], 
+                    { type: 'text/plain' });
+                
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename || `photo_${username}_${Date.now()}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(`Η φωτογραφία από τον χρήστη ${username} κατέβηκε επιτυχώς!`);
+            };
+            
             // Διαγραφή χρήστη
             window.deleteUser = function(userId) {
-                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη και όλες τις φωτογραφίες του;')) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
                     const users = JSON.parse(localStorage.getItem('users') || '[]');
                     const updatedUsers = users.filter(user => user.id !== userId);
                     localStorage.setItem('users', JSON.stringify(updatedUsers));
@@ -907,7 +1236,7 @@
                     // Ενημέρωση adminUser
                     adminUser = updatedUsers.find(u => u.id === adminUser.id);
                     
-                    loadUsersData(updatedUsers.filter(u => u.email !== ADMIN_EMAIL));
+                    loadUsersData(updatedUsers);
                     loadDashboardData();
                     
                     alert('Ο χρήστης διαγράφηκε επιτυχώς');
@@ -927,12 +1256,38 @@
                         // Ενημέρωση adminUser
                         adminUser = users.find(u => u.id === adminUser.id);
                         
-                        const regularUsers = users.filter(u => u.email !== ADMIN_EMAIL);
-                        loadPhotosData(regularUsers);
+                        loadPhotosData(users);
                         loadDashboardData();
                         
                         alert('Η φωτογραφία διαγράφηκε επιτυχώς');
                     }
+                }
+            };
+            
+            // Ενημέρωση πόντων χρήστη
+            window.updateUserPoints = function(userId) {
+                const pointsInput = document.getElementById(`points-${userId}`);
+                const newPoints = parseInt(pointsInput.value);
+                
+                if (isNaN(newPoints) || newPoints < 0) {
+                    alert('Παρακαλώ εισάγετε έγκυρο αριθμό πόντων');
+                    return;
+                }
+                
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(user => user.id === userId);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].points = newPoints;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    
+                    // Ενημέρωση adminUser
+                    adminUser = users.find(u => u.id === adminUser.id);
+                    
+                    loadPointsData(users);
+                    loadDashboardData();
+                    
+                    alert('Οι πόντοι ενημερώθηκαν επιτυχώς');
                 }
             };
         });
