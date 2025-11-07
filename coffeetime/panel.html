@@ -259,24 +259,33 @@
         }
         
         .photo-preview {
-            max-width: 80px;
-            max-height: 80px;
+            width: 80px;
+            height: 80px;
             border-radius: 4px;
             margin-right: 0.8rem;
             cursor: pointer;
             object-fit: cover;
+            border: 2px solid #ddd;
         }
         
         .photo-placeholder {
             width: 80px;
             height: 80px;
-            background: #f0f0f0;
+            background: linear-gradient(135deg, #8B4513, #D2691E);
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 0.8rem;
             font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .photo-placeholder:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         
         .points-control {
@@ -357,21 +366,50 @@
             max-width: 90%;
             max-height: 90%;
             position: relative;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
         }
         
         .modal-image {
             max-width: 100%;
-            max-height: 100%;
+            max-height: 400px;
             border-radius: 8px;
+            margin-bottom: 1rem;
         }
         
         .close-modal {
             position: absolute;
-            top: -40px;
-            right: 0;
-            color: white;
+            top: 10px;
+            right: 15px;
+            color: var(--dark-color);
             font-size: 2rem;
             cursor: pointer;
+            background: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .photo-info-modal {
+            text-align: left;
+            margin-top: 1rem;
+        }
+        
+        .photo-info-modal h3 {
+            color: var(--admin-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .download-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f9f9f9;
+            border-radius: 8px;
         }
         
         @media (max-width: 768px) {
@@ -413,6 +451,11 @@
             .admin-btn {
                 padding: 0.6rem 1rem;
                 font-size: 0.8rem;
+            }
+            
+            .modal-content {
+                padding: 1rem;
+                margin: 1rem;
             }
         }
         
@@ -567,7 +610,9 @@
     <div class="photo-modal" id="photo-modal">
         <div class="modal-content">
             <span class="close-modal" id="close-modal">&times;</span>
-            <img class="modal-image" id="modal-image" src="" alt="Προβολή φωτογραφίας">
+            <div id="modal-content-area">
+                <!-- Εδώ θα εμφανίζεται το περιεχόμενο του modal -->
+            </div>
         </div>
     </div>
 
@@ -601,7 +646,7 @@
             
             // Modal για φωτογραφίες
             const photoModal = document.getElementById('photo-modal');
-            const modalImage = document.getElementById('modal-image');
+            const modalContentArea = document.getElementById('modal-content-area');
             const closeModal = document.getElementById('close-modal');
             
             // Προκαθορισμένα διαπιστευτήρια διαχειριστή
@@ -942,22 +987,33 @@
                     return;
                 }
                 
+                // Ταξινόμηση φωτογραφιών από νεότερη προς παλαιότερη
+                allPhotos.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt));
+                
                 allPhotos.forEach(photo => {
                     const photoElement = document.createElement('div');
                     photoElement.className = 'photo-item';
                     
                     const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
                     
-                    // Δημιουργία προεπισκόπησης
+                    // Δημιουργία προεπισκόπησης με βάση τον τύπο του αρχείου
+                    const fileExtension = photo.filename ? photo.filename.split('.').pop().toLowerCase() : '';
+                    const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension);
+                    
                     let previewHTML = '';
-                    if (photo.url) {
-                        // Αν υπάρχει πραγματική εικόνα
-                        previewHTML = `<img src="${photo.url}" class="photo-preview" onclick="viewPhoto('${photo.url}')">`;
+                    if (photo.url && isImage) {
+                        // Αν υπάρχει πραγματική εικόνα URL
+                        previewHTML = `<img src="${photo.url}" class="photo-preview" onclick="viewPhotoDetails('${photo.filename}', '${photo.username}', '${uploadDate}', '${photo.userId}', ${photo.id})">`;
                     } else {
-                        // Αν είναι μόνο όνομα αρχείου (όπως στο coffeetime.html)
+                        // Δημιουργία placeholder με βάση τον τύπο αρχείου
+                        let icon = '📷';
+                        if (fileExtension === 'pdf') icon = '📄';
+                        else if (['mp4', 'avi', 'mov'].includes(fileExtension)) icon = '🎥';
+                        else if (['doc', 'docx'].includes(fileExtension)) icon = '📝';
+                        
                         previewHTML = `
-                            <div class="photo-placeholder" onclick="viewPhotoInfo('${photo.filename}', '${photo.username}')">
-                                📷
+                            <div class="photo-placeholder" onclick="viewPhotoDetails('${photo.filename}', '${photo.username}', '${uploadDate}', '${photo.userId}', ${photo.id})">
+                                ${icon}
                             </div>
                         `;
                     }
@@ -968,11 +1024,11 @@
                             <div>
                                 <strong>${photo.username}</strong><br>
                                 <small>${uploadDate}</small><br>
-                                <small>${photo.filename}</small>
+                                <small style="color: #666;">${photo.filename}</small>
                             </div>
                         </div>
                         <div class="photo-actions">
-                            <button class="admin-btn" onclick="downloadPhoto('${photo.filename}', '${photo.username}')">Λήψη</button>
+                            <button class="admin-btn btn-success" onclick="downloadPhoto('${photo.filename}', '${photo.username}', '${uploadDate}')">Λήψη</button>
                             <button class="admin-btn btn-danger" onclick="deletePhoto(${photo.userId}, ${photo.id})">Διαγραφή</button>
                         </div>
                     `;
@@ -1197,38 +1253,94 @@
                 });
             };
             
-            // Προβολή φωτογραφίας
-            window.viewPhoto = function(photoUrl) {
-                modalImage.src = photoUrl;
+            // Προβολή λεπτομερειών φωτογραφίας
+            window.viewPhotoDetails = function(filename, username, uploadDate, userId, photoId) {
+                const fileExtension = filename ? filename.split('.').pop().toLowerCase() : '';
+                const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension);
+                
+                let contentHTML = '';
+                
+                if (isImage) {
+                    contentHTML = `
+                        <div style="text-align: center;">
+                            <div class="photo-placeholder" style="width: 200px; height: 200px; margin: 0 auto 1rem; font-size: 4rem;">
+                                📷
+                            </div>
+                            <p><em>Προσομοίωση εικόνας: ${filename}</em></p>
+                        </div>
+                    `;
+                } else {
+                    let icon = '📷';
+                    if (fileExtension === 'pdf') icon = '📄';
+                    else if (['mp4', 'avi', 'mov'].includes(fileExtension)) icon = '🎥';
+                    else if (['doc', 'docx'].includes(fileExtension)) icon = '📝';
+                    
+                    contentHTML = `
+                        <div style="text-align: center;">
+                            <div class="photo-placeholder" style="width: 200px; height: 200px; margin: 0 auto 1rem; font-size: 4rem;">
+                                ${icon}
+                            </div>
+                            <p><strong>Τύπος αρχείου:</strong> ${fileExtension.toUpperCase()}</p>
+                        </div>
+                    `;
+                }
+                
+                modalContentArea.innerHTML = `
+                    ${contentHTML}
+                    <div class="photo-info-modal">
+                        <h3>Πληροφορίες Φωτογραφίας</h3>
+                        <p><strong>Χρήστης:</strong> ${username}</p>
+                        <p><strong>Όνομα αρχείου:</strong> ${filename}</p>
+                        <p><strong>Ημερομηνία:</strong> ${uploadDate}</p>
+                        <p><strong>Τύπος:</strong> ${isImage ? 'Εικόνα' : 'Αρχείο'} (${fileExtension})</p>
+                    </div>
+                    <div class="download-section">
+                        <button class="admin-btn btn-success" style="width: 100%;" onclick="downloadPhoto('${filename}', '${username}', '${uploadDate}')">
+                            📥 Λήψη Αρχείου
+                        </button>
+                    </div>
+                `;
+                
                 photoModal.classList.add('active');
             };
             
-            // Προβολή πληροφοριών φωτογραφίας
-            window.viewPhotoInfo = function(filename, username) {
-                alert(`Φωτογραφία από: ${username}\nΌνομα αρχείου: ${filename}\n\nΣημείωση: Αυτή η φωτογραφία δεν έχει πραγματική εικόνα, αλλά μόνο όνομα αρχείου. Στο πραγματικό σύστημα θα υπήρχε πραγματική εικόνα.`);
-            };
-            
             // Λήψη φωτογραφίας
-            window.downloadPhoto = function(filename, username) {
+            window.downloadPhoto = function(filename, username, uploadDate) {
                 // Δημιουργία ενός dummy αρχείου για λήψη
-                const blob = new Blob([`Πληροφορίες φωτογραφίας:\nΧρήστης: ${username}\nΌνομα αρχείου: ${filename}\nΗμερομηνία: ${new Date().toLocaleString('el-GR')}\n\nΣημείωση: Στο πραγματικό σύστημα, αυτό θα ήταν η πραγματική εικόνα.`], 
-                    { type: 'text/plain' });
+                const content = `Πληροφορίες φωτογραφίας από την Καφεμαντεία:
+
+Χρήστης: ${username}
+Όνομα αρχείου: ${filename}
+Ημερομηνία: ${uploadDate}
+Λήψη: ${new Date().toLocaleString('el-GR')}
+
+Σημείωση: Στο πραγματικό σύστημα, αυτό θα ήταν η πραγματική εικόνα ή βίντεο που ανέβασε ο χρήστης.
+
+-- Καφεμαντεία --`;
                 
+                const blob = new Blob([content], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = filename || `photo_${username}_${Date.now()}.txt`;
+                
+                // Δημιουργία ονόματος αρχείου για λήψη
+                const downloadName = filename || `photo_${username}_${Date.now()}.txt`;
+                a.download = downloadName;
+                
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 
-                alert(`Η φωτογραφία από τον χρήστη ${username} κατέβηκε επιτυχώς!`);
+                // Κλείσιμο modal μετά τη λήψη
+                photoModal.classList.remove('active');
+                
+                alert(`Η φωτογραφία από τον χρήστη ${username} κατέβηκε επιτυχώς!\n\nΑρχείο: ${downloadName}`);
             };
             
             // Διαγραφή χρήστη
             window.deleteUser = function(userId) {
-                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη; Όλες οι φωτογραφίες και μηνύματα του θα διαγραφούν.')) {
                     const users = JSON.parse(localStorage.getItem('users') || '[]');
                     const updatedUsers = users.filter(user => user.id !== userId);
                     localStorage.setItem('users', JSON.stringify(updatedUsers));
