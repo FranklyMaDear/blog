@@ -1073,37 +1073,42 @@
                 loading.style.display = 'block';
                 uploadBtn.disabled = true;
                 
-                setTimeout(() => {
+                // Δημιουργία προεπισκοπήσεων για κάθε αρχείο
+                const processFiles = Array.from(files).map((file, index) => {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const photoData = {
+                                id: Date.now() + index,
+                                filename: file.name,
+                                uploadedAt: new Date().toISOString(),
+                                url: e.target.result, // Αποθήκευση της προεπισκόπησης base64
+                                type: file.type,
+                                size: file.size
+                            };
+                            resolve(photoData);
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    });
+                });
+                
+                // Αναμονή για όλες τις προεπισκοπήσεις
+                Promise.all(processFiles).then((photosData) => {
                     // Αποθήκευση φωτογραφιών
                     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     const users = JSON.parse(localStorage.getItem('users') || '[]');
                     const userIndex = users.findIndex(u => u.id === currentUser.id);
                     
                     if (userIndex !== -1) {
-                        // Προσθήκη όλων των φωτογραφιών
-                        for (let i = 0; i < files.length; i++) {
-                            const photoData = {
-                                id: Date.now() + i,
-                                filename: files[i].name,
-                                uploadedAt: new Date().toISOString()
-                            };
-                            
+                        // Προσθήκη όλων των φωτογραφιών με προεπισκοπήσεις
+                        photosData.forEach(photoData => {
                             users[userIndex].photos.push(photoData);
-                        }
+                            currentUser.photos.push(photoData);
+                        });
                         
                         localStorage.setItem('users', JSON.stringify(users));
-                        
-                        // Ενημέρωση του τρέχοντος χρήστη
-                        for (let i = 0; i < files.length; i++) {
-                            const photoData = {
-                                id: Date.now() + i,
-                                filename: files[i].name,
-                                uploadedAt: new Date().toISOString()
-                            };
-                            
-                            currentUser.photos.push(photoData);
-                        }
-                        
                         localStorage.setItem('currentUser', JSON.stringify(currentUser));
                     }
                     
@@ -1111,11 +1116,41 @@
                     successMessage.style.display = 'block';
                     uploadBtn.disabled = false;
                     
-                    // Απόκρυψη του μηνύματος επιτυχίας μετά από 3 δευτερόλεπτα
+                    // Εμφάνιση πόντων που κερδίζει ο χρήστης
+                    const pointsEarned = files.length * 10; // 10 πόντοι ανά φωτογραφία
+                    currentUser.points += pointsEarned;
+                    users[userIndex].points = currentUser.points;
+                    
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Ενημέρωση της εμφάνισης των πόντων
+                    userPoints.textContent = currentUser.points;
+                    
+                    // Εμφάνιση μηνύματος για τους πόντους που κέρδισε
+                    const pointsMessage = document.createElement('div');
+                    pointsMessage.className = 'points-earned';
+                    pointsMessage.style.display = 'block';
+                    pointsMessage.innerHTML = `🎉 Κέρδισες ${pointsEarned} πόντους! Σύνολο: ${currentUser.points} πόντοι`;
+                    
+                    successMessage.parentNode.insertBefore(pointsMessage, successMessage.nextSibling);
+                    
+                    // Απόκρυψη των μηνυμάτων επιτυχίας μετά από 5 δευτερόλεπτα
                     setTimeout(() => {
                         successMessage.style.display = 'none';
-                    }, 3000);
-                }, 2000);
+                        pointsMessage.style.display = 'none';
+                    }, 5000);
+                    
+                    // Εκκαθάριση του file input
+                    fileInput.value = '';
+                    document.getElementById('file-name1').textContent = 'Δεν έχουν επιλεγεί αρχεία';
+                    
+                }).catch(error => {
+                    console.error('Σφάλμα κατά την επεξεργασία των αρχείων:', error);
+                    loading.style.display = 'none';
+                    uploadBtn.disabled = false;
+                    alert('Προέκυψε σφάλμα κατά την αποστολή των φωτογραφιών. Παρακαλώ δοκιμάστε ξανά.');
+                });
             });
             
             // Αποστολή μηνύματος από χρήστη
@@ -1464,13 +1499,22 @@
                             
                             const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
                             
+                            // Εμφάνιση πραγματικής προεπισκόπησης αν υπάρχει
+                            let previewContent = '';
+                            if (photo.url) {
+                                previewContent = `<img src="${photo.url}" class="photo-preview" alt="${photo.filename}">`;
+                            } else {
+                                previewContent = `<div class="photo-preview" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 2rem;">📷</div>`;
+                            }
+                            
                             photoElement.innerHTML = `
                                 <div class="user-info">
                                     <strong>${user.username}</strong><br>
                                     ${user.email}<br>
                                     ${uploadDate}
                                 </div>
-                                <div class="photo-preview">📷 ${photo.filename}</div>
+                                ${previewContent}
+                                <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">${photo.filename}</div>
                             `;
                             
                             photosGallery.appendChild(photoElement);
