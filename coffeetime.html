@@ -684,19 +684,13 @@
             transition: all 0.3s;
             text-align: center;
             padding: 10px;
-            animation: float 3s ease-in-out infinite;
+            animation: pulse 2s infinite;
         }
         
         .ads-popup:hover {
             transform: translateY(-50%) scale(1.1);
             box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
             animation: none;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(-50%); }
-            50% { transform: translateY(-55%); }
-            100% { transform: translateY(-50%); }
         }
         
         .ads-icon {
@@ -708,6 +702,21 @@
             font-size: 0.65rem;
             font-weight: bold;
             line-height: 1.1;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: translateY(-50%) scale(1);
+                box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+            }
+            50% {
+                transform: translateY(-50%) scale(1.05);
+                box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
+            }
+            100% {
+                transform: translateY(-50%) scale(1);
+                box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+            }
         }
         
         .delete-message-btn {
@@ -790,7 +799,7 @@
         <!-- Ads Popup -->
         <div class="ads-popup" id="ads-popup" style="display: none;">
             <div class="ads-icon">🎁</div>
-            <div class="ads-text">Δες διαφήμιση για πόντο!</div>
+            <div class="ads-text">Δες Διαφήμιση για Πόντο!</div>
         </div>
         
         <header>
@@ -1272,6 +1281,49 @@
                     uploadBtn.disabled = false;
                     alert('Προέκυψε σφάλμα κατά την αποστολή των φωτογραφιών. Παρακαλώ δοκιμάστε ξανά.');
                 });
+            });
+            
+            // Κλικ στο ads popup
+            adsPopup.addEventListener('click', function() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const now = Date.now();
+                if (now - lastAdClickTime < AD_COOLDOWN) {
+                    const remainingSeconds = Math.ceil((AD_COOLDOWN - (now - lastAdClickTime)) / 1000);
+                    alert(`Πρέπει να περιμένετε ${remainingSeconds} δευτερόλεπτα πριν κερδίσετε άλλο πόντο από διαφημίσεις.`);
+                    return;
+                }
+                
+                // Προσομοίωση προβολής διαφήμισης
+                alert('🎉 Συγχαρητήρια! Κερδίσατε 1 πόντο για την προβολή της διαφήμισης!');
+                
+                // Προσθήκη πόντου
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].points += 1;
+                    currentUser.points += 1;
+                    
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Ενημέρωση εμφάνισης πόντων
+                    userPoints.textContent = currentUser.points;
+                    
+                    // Έλεγχος για δωρεάν καφέ
+                    if (currentUser.points >= 100) {
+                        alert('🎉 Συγχαρητήρια! Κερδίσατε έναν δωρεάν καφέ! ☕');
+                    }
+                }
+                
+                lastAdClickTime = now;
+                
+                // Ανανέωση του cooldown
+                setTimeout(() => {
+                    alert('✅ Μπορείτε τώρα να κερδίσετε άλλο πόντο από διαφημίσεις!');
+                }, AD_COOLDOWN);
             });
             
             // Αποστολή μηνύματος από χρήστη
@@ -1886,113 +1938,6 @@
                     }
                 } else {
                     fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
-                }
-            });
-            
-            // Ads popup click handler
-            adsPopup.addEventListener('click', function() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if (!currentUser) return;
-                
-                const now = Date.now();
-                if (now - lastAdClickTime < AD_COOLDOWN) {
-                    const remainingTime = Math.ceil((AD_COOLDOWN - (now - lastAdClickTime)) / 1000);
-                    alert(`Πρέπει να περιμένετε ${remainingTime} δευτερόλεπτα πριν κερδίσετε ξανά πόντους από διαφημίσεις.`);
-                    return;
-                }
-                
-                // Προσομοίωση προβολής διαφήμισης
-                const adWindow = window.open('', '_blank', 'width=600,height=400,scrollbars=yes');
-                if (adWindow) {
-                    adWindow.document.write(`
-                        <html>
-                            <head>
-                                <title>Διαφήμιση</title>
-                                <style>
-                                    body {
-                                        font-family: Arial, sans-serif;
-                                        padding: 20px;
-                                        text-align: center;
-                                        background: linear-gradient(135deg, #FF6B35, #FF8E53);
-                                        color: white;
-                                        height: 100vh;
-                                        display: flex;
-                                        flex-direction: column;
-                                        justify-content: center;
-                                        align-items: center;
-                                    }
-                                    .ad-content {
-                                        background: rgba(255,255,255,0.2);
-                                        padding: 30px;
-                                        border-radius: 15px;
-                                        backdrop-filter: blur(10px);
-                                    }
-                                    .timer {
-                                        font-size: 2rem;
-                                        font-weight: bold;
-                                        margin: 20px 0;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="ad-content">
-                                    <h2>Διαφήμιση</h2>
-                                    <p>Παρακαλώ παρακολουθήστε αυτή τη διαφήμιση για 30 δευτερόλεπτα</p>
-                                    <div class="timer" id="timer">30</div>
-                                    <p>Για να κερδίσετε 1 πόντο!</p>
-                                </div>
-                                <script>
-                                    let timeLeft = 30;
-                                    const timerElement = document.getElementById('timer');
-                                    const timer = setInterval(() => {
-                                        timeLeft--;
-                                        timerElement.textContent = timeLeft;
-                                        
-                                        if (timeLeft <= 0) {
-                                            clearInterval(timer);
-                                            window.opener.postMessage('adCompleted', '*');
-                                            setTimeout(() => window.close(), 1000);
-                                        }
-                                    }, 1000);
-                                </script>
-                            </body>
-                        </html>
-                    `);
-                    
-                    adWindow.focus();
-                    
-                    // Ακούστε για το μήνυμα ολοκλήρωσης
-                    window.addEventListener('message', function(event) {
-                        if (event.data === 'adCompleted') {
-                            // Προσθήκη πόντου στον χρήστη
-                            const users = JSON.parse(localStorage.getItem('users') || '[]');
-                            const userIndex = users.findIndex(u => u.id === currentUser.id);
-                            
-                            if (userIndex !== -1) {
-                                users[userIndex].points += 1;
-                                currentUser.points += 1;
-                                
-                                localStorage.setItem('users', JSON.stringify(users));
-                                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                                
-                                // Ενημέρωση εμφάνισης
-                                userPoints.textContent = currentUser.points;
-                                
-                                // Εμφάνιση μηνύματος επιτυχίας
-                                alert('Συγχαρητήρια! Κερδίσατε 1 πόντο για την προβολή της διαφήμισης!');
-                                
-                                // Ενημέρωση χρόνου τελευταίας κλικ
-                                lastAdClickTime = Date.now();
-                                
-                                // Έλεγχος για δωρεάν καφέ
-                                if (currentUser.points >= 100) {
-                                    alert('Συγχαρητήρια! Έχετε συγκεντρώσει 100 πόντους και κερδίσατε έναν δωρεάν καφέ! ☕');
-                                }
-                            }
-                        }
-                    });
-                } else {
-                    alert('Παρακαλώ απενεργοποιήστε το ad blocker για να κερδίσετε πόντους από διαφημίσεις.');
                 }
             });
         });
