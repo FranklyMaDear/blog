@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Καφεμαντεία - Μάθε το μέλλον σου από το φλιτζάνι!</title>
+    <!-- Favicon συμβατό με iPhone και Android -->
     <link rel="icon" type="image/png" href="coffeetime.png">
+    <link rel="apple-touch-icon" href="coffeetime.png">
     <style>
         :root {
             --primary-color: #8B4513;
@@ -778,10 +780,10 @@
 <body>
     <div class="app-container">
         <!-- Ads Popup -->
-        <div class="ads-popup" id="ads-popup" style="display: none;">
+        <a href="https://otieu.com/4/10000601" target="_blank" class="ads-popup" id="ads-popup" style="display: none;">
             <div class="ads-icon">🎁</div>
             <div class="ads-text">Πόντος Δωρεάν!</div>
-        </div>
+        </a>
         
         <header>
             <div class="logo">☕</div>
@@ -968,8 +970,6 @@
         </footer>
     </div>
 
-    <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
@@ -1069,70 +1069,6 @@
             function showAdsPopup() {
                 adsPopup.style.display = 'flex';
             }
-            
-            // Ads popup click handler
-            adsPopup.addEventListener('click', function() {
-                const now = Date.now();
-                if (now - lastAdClickTime < AD_COOLDOWN) {
-                    const remainingTime = Math.ceil((AD_COOLDOWN - (now - lastAdClickTime)) / 1000);
-                    alert(`Παρακαλώ περιμένετε ${remainingTime} δευτερόλεπτα πριν κερδίσετε ξανά πόντους!`);
-                    return;
-                }
-                
-                lastAdClickTime = now;
-                
-                // Άνοιγμα διαφήμισης
-                try {
-                    // Αυτό θα ανοίξει τη διαφήμιση από το script που παρέχεις
-                    // Η διαφήμιση θα πρέπει να καλεί την addPointFromAd() function όταν ολοκληρωθεί
-                    window.openAd && window.openAd();
-                } catch (e) {
-                    console.log('Ad opening failed, simulating point addition');
-                    // Προσομοίωση για testing
-                    addPointFromAd();
-                }
-            });
-            
-            // Συνάρτηση για προσθήκη πόντου από διαφήμιση
-            window.addPointFromAd = function() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if (!currentUser) return;
-                
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                
-                if (userIndex !== -1) {
-                    users[userIndex].points += 1;
-                    currentUser.points += 1;
-                    
-                    localStorage.setItem('users', JSON.stringify(users));
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
-                    // Ενημέρωση UI
-                    userPoints.textContent = currentUser.points;
-                    
-                    // Εμφάνιση μηνύματος επιτυχίας
-                    const pointsEarned = document.createElement('div');
-                    pointsEarned.className = 'points-earned';
-                    pointsEarned.textContent = `🎉 Κερδίσατε 1 πόντο από τη διαφήμιση!`;
-                    pointsEarned.style.display = 'block';
-                    
-                    // Προσθήκη πριν από το success message
-                    if (successMessage.parentNode) {
-                        successMessage.parentNode.insertBefore(pointsEarned, successMessage);
-                    }
-                    
-                    // Απόκρυψη μετά από 3 δευτερόλεπτα
-                    setTimeout(() => {
-                        pointsEarned.style.display = 'none';
-                    }, 3000);
-                    
-                    // Ανανέωση ειδοποιήσεων αν είναι ανοιχτό το admin panel
-                    if (adminPanel.classList.contains('active')) {
-                        loadFreeCoffeeNotifications(users);
-                    }
-                }
-            };
             
             // Σύνδεση/Εγγραφή
             const authTabs = document.querySelectorAll('.auth-tab');
