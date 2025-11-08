@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Καφεμαντεία - Μάθε το μέλλον σου από το φλιτζάνι!</title>
+    <!-- Favicon συμβατό με iPhone και Android -->
+    <link rel="icon" type="image/png" href="coffeetime.png">
+    <link rel="apple-touch-icon" href="coffeetime.png">
     <style>
         :root {
             --primary-color: #8B4513;
@@ -560,6 +563,7 @@
             padding: 0.8rem;
             border-radius: 10px;
             max-width: 80%;
+            position: relative;
         }
         
         .message.user {
@@ -659,6 +663,68 @@
             margin-left: 0.5rem;
         }
         
+        /* Ads Popup */
+        .ads-popup {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            color: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .ads-popup:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
+        }
+        
+        .ads-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .ads-text {
+            font-size: 0.7rem;
+            font-weight: bold;
+            line-height: 1.1;
+        }
+        
+        .delete-message-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .delete-message-btn:hover {
+            background: var(--error-color);
+            color: white;
+        }
+        
         /* Mobile optimizations */
         @media (max-width: 480px) {
             .app-container {
@@ -684,7 +750,7 @@
             }
             
             .user-points {
-                fontSize: 1.8rem;
+                font-size: 1.8rem;
             }
             
             .photo-upload {
@@ -698,11 +764,27 @@
             .message {
                 max-width: 90%;
             }
+            
+            .ads-popup {
+                width: 70px;
+                height: 70px;
+                right: 10px;
+            }
+            
+            .ads-text {
+                font-size: 0.65rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
+        <!-- Ads Popup -->
+        <a href="https://otieu.com/4/10000601" target="_blank" class="ads-popup" id="ads-popup" style="display: none;">
+            <div class="ads-icon">🎁</div>
+            <div class="ads-text">Πόντος Δωρεάν!</div>
+        </a>
+        
         <header>
             <div class="logo">☕</div>
             <h1>Καφεμαντεία</h1>
@@ -949,6 +1031,7 @@
             const adminUnreadBadge = document.getElementById('admin-unread-badge');
             const selectedUserMessages = document.getElementById('selected-user-messages');
             const userUnreadBadge = document.getElementById('user-unread-badge');
+            const adsPopup = document.getElementById('ads-popup');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -958,6 +1041,8 @@
             
             // Μεταβλητές για την επικοινωνία
             let selectedUserId = null;
+            let lastAdClickTime = 0;
+            const AD_COOLDOWN = 30000; // 30 δευτερόλεπτα cooldown
             
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
             initializeDefaultAdmin();
@@ -972,9 +1057,17 @@
                 if (currentUser.email === 'admin@example.com' || currentUser.role === 'admin') {
                     adminPanel.classList.add('active');
                     updateAdminUnreadCount();
+                } else {
+                    // Εμφάνιση ads popup για κανονικούς χρήστες
+                    showAdsPopup();
                 }
             } else {
                 authContainer.style.display = 'block';
+            }
+            
+            // Εμφάνιση ads popup
+            function showAdsPopup() {
+                adsPopup.style.display = 'flex';
             }
             
             // Σύνδεση/Εγγραφή
@@ -1013,6 +1106,9 @@
                     if (user.email === 'admin@example.com' || user.role === 'admin') {
                         adminPanel.classList.add('active');
                         updateAdminUnreadCount();
+                    } else {
+                        // Εμφάνιση ads popup για κανονικούς χρήστες
+                        showAdsPopup();
                     }
                     
                     loginError.style.display = 'none';
@@ -1065,6 +1161,7 @@
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
                 
                 showUserSection(newUser);
+                showAdsPopup(); // Εμφάνιση ads popup για νέο χρήστη
                 registerError.style.display = 'none';
             });
             
@@ -1076,6 +1173,7 @@
                 donationSection.classList.remove('active');
                 messagesSection.classList.remove('active');
                 adminPanel.classList.remove('active');
+                adsPopup.style.display = 'none';
                 authContainer.style.display = 'block';
             });
             
@@ -1141,17 +1239,6 @@
                         });
                         localStorage.setItem('adminPhotos', JSON.stringify(adminPhotos));
                         
-                        // Προσθήκη πόντων στον χρήστη
-                        const pointsToAdd = files.length * 10; // 10 πόντοι ανά φωτογραφία
-                        users[userIndex].points += pointsToAdd;
-                        currentUser.points += pointsToAdd;
-                        
-                        localStorage.setItem('users', JSON.stringify(users));
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        
-                        // Ενημέρωση του UI
-                        userPoints.textContent = currentUser.points;
-                        
                         // Ενημέρωση του gallery του admin αν είναι ενεργό
                         if (adminPanel.classList.contains('active')) {
                             loadUserPhotos();
@@ -1162,17 +1249,9 @@
                     successMessage.style.display = 'block';
                     uploadBtn.disabled = false;
                     
-                    // Εμφάνιση πόντων που κερδίθηκαν
-                    const pointsEarned = document.createElement('div');
-                    pointsEarned.className = 'points-earned';
-                    pointsEarned.textContent = `🎉 Κερδίσατε ${files.length * 10} πόντους!`;
-                    pointsEarned.style.display = 'block';
-                    successMessage.parentNode.insertBefore(pointsEarned, successMessage);
-                    
                     // Απόκρυψη των μηνυμάτων επιτυχίας μετά από 5 δευτερόλεπτα
                     setTimeout(() => {
                         successMessage.style.display = 'none';
-                        pointsEarned.style.display = 'none';
                     }, 5000);
                     
                     // Εκκαθάριση του file input
@@ -1388,6 +1467,9 @@
                             <span class="message-time">${time}</span>
                         </div>
                         <div class="message-content">${message.content}</div>
+                        ${message.senderId === currentUser.id ? 
+                            `<button class="delete-message-btn" onclick="deleteUserMessage(${message.id})">×</button>` : 
+                            ''}
                     `;
                     
                     userMessagesContainer.appendChild(messageElement);
@@ -1426,6 +1508,9 @@
                             <span class="message-time">${time}</span>
                         </div>
                         <div class="message-content">${message.content}</div>
+                        ${message.senderId === currentUser.id ? 
+                            `<button class="delete-message-btn" onclick="deleteAdminMessage(${userId}, ${message.id})">×</button>` : 
+                            ''}
                     `;
                     
                     adminMessagesContainer.appendChild(messageElement);
@@ -1440,6 +1525,70 @@
                 // Κάνε scroll στο τελευταίο μήνυμα
                 adminMessagesContainer.scrollTop = adminMessagesContainer.scrollHeight;
             }
+            
+            // Διαγραφή μηνύματος χρήστη
+            window.deleteUserMessage = function(messageId) {
+                if (!confirm('Θέλετε να διαγράψετε αυτό το μήνυμα;')) return;
+                
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const admin = getAdminUser();
+                
+                if (!admin) return;
+                
+                // Διαγραφή από τον χρήστη
+                if (currentUser.conversations && currentUser.conversations[admin.id]) {
+                    currentUser.conversations[admin.id].messages = currentUser.conversations[admin.id].messages.filter(m => m.id !== messageId);
+                }
+                
+                // Διαγραφή από τον διαχειριστή
+                const adminIndex = users.findIndex(u => u.id === admin.id);
+                if (adminIndex !== -1 && users[adminIndex].conversations && users[adminIndex].conversations[currentUser.id]) {
+                    users[adminIndex].conversations[currentUser.id].messages = users[adminIndex].conversations[currentUser.id].messages.filter(m => m.id !== messageId);
+                }
+                
+                // Αποθήκευση
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                users[userIndex] = currentUser;
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Ενημέρωση εμφάνισης
+                displayUserMessages();
+            };
+            
+            // Διαγραφή μηνύματος διαχειριστή
+            window.deleteAdminMessage = function(userId, messageId) {
+                if (!confirm('Θέλετε να διαγράψετε αυτό το μήνυμα;')) return;
+                
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const targetUser = users.find(u => u.id === userId);
+                
+                if (!targetUser) return;
+                
+                // Διαγραφή από τον διαχειριστή
+                if (currentUser.conversations && currentUser.conversations[userId]) {
+                    currentUser.conversations[userId].messages = currentUser.conversations[userId].messages.filter(m => m.id !== messageId);
+                }
+                
+                // Διαγραφή από τον χρήστη
+                const userIndex = users.findIndex(u => u.id === userId);
+                if (userIndex !== -1 && users[userIndex].conversations && users[userIndex].conversations[currentUser.id]) {
+                    users[userIndex].conversations[currentUser.id].messages = users[userIndex].conversations[currentUser.id].messages.filter(m => m.id !== messageId);
+                }
+                
+                // Αποθήκευση
+                const adminIndex = users.findIndex(u => u.id === currentUser.id);
+                users[adminIndex] = currentUser;
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                
+                // Ενημέρωση εμφάνισης
+                displayAdminMessages(userId);
+            };
             
             // Ενημέρωση κατάστασης ανάγνωσης μηνύματος (για admin)
             function updateMessageReadStatus(userId, messageId) {
