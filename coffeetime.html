@@ -461,6 +461,14 @@
             margin-bottom: 0.4rem;
         }
         
+        .video-preview {
+            max-width: 100%;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 0.4rem;
+        }
+        
         .user-info {
             font-size: 0.8rem;
             color: #666;
@@ -831,9 +839,9 @@
             
             <!-- Gallery Φωτογραφιών -->
             <div class="admin-content" id="photos-content">
-                <h3>📷 Φωτογραφίες Χρηστών</h3>
+                <h3>📷 Φωτογραφίες & Βίντεο Χρηστών</h3>
                 <div class="photos-gallery" id="photos-gallery">
-                    <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
+                    <!-- Εδώ θα εμφανίζονται οι φωτογραφίες και βίντεο -->
                 </div>
             </div>
             
@@ -921,32 +929,32 @@
             <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
         </section>
         
-        <!-- Ανέβασμα Φωτογραφιών -->
+        <!-- Ανέβασμα Φωτογραφιών & Βίντεο -->
         <section class="upload-section" id="upload-section">
-            <h2 class="section-title">Ανέβασε Φωτογραφίες</h2>
-            <p class="upload-subtitle">Ανέβασε φωτογραφίες από το φλιτζάνι σου (πολλαπλές επιλογή)</p>
+            <h2 class="section-title">Ανέβασε Φωτογραφίες & Βίντεο</h2>
+            <p class="upload-subtitle">Ανέβασε φωτογραφίες ή βίντεο από το φλιτζάνι σου (πολλαπλές επιλογή)</p>
             
             <div class="photo-grid">
-                <div class="photo-upload" onclick="document.getElementById('photo1').click()">
-                    <div class="photo-icon">📷</div>
-                    <span class="photo-label">Φωτογραφίες Φλιτζανιού</span>
-                    <div class="photo-desc">Επιλέξτε μία ή περισσότερες φωτογραφίες</div>
-                    <div class="file-name" id="file-name1">Δεν έχουν επιλεγεί αρχεία</div>
-                    <input type="file" id="photo1" class="file-input" accept=".jpg, .jpeg, .png" multiple>
+                <div class="photo-upload" onclick="document.getElementById('media-upload').click()">
+                    <div class="photo-icon">📷🎥</div>
+                    <span class="photo-label">Φωτογραφίες & Βίντεο Φλιτζανιού</span>
+                    <div class="photo-desc">Επιλέξτε μία ή περισσότερες φωτογραφίες ή βίντεο</div>
+                    <div class="file-name" id="file-name">Δεν έχουν επιλεγεί αρχεία</div>
+                    <input type="file" id="media-upload" class="file-input" accept=".jpg, .jpeg, .png, .mp4, .mov, .avi, .webm" multiple>
                 </div>
             </div>
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>Αποστολή φωτογραφιών...</p>
+                <p>Αποστολή αρχείων...</p>
             </div>
             
             <button class="upload-btn" id="upload-btn">
-                📨 Αποστολή Φωτογραφιών
+                📨 Αποστολή Αρχείων
             </button>
             
             <div class="success-message" id="success-message">
-                ✅ Οι φωτογραφίες σας στάλθηκαν επιτυχώς!
+                ✅ Τα αρχεία σας στάλθηκαν επιτυχώς!
             </div>
         </section>
         
@@ -1049,12 +1057,8 @@
             const selectedUserMessages = document.getElementById('selected-user-messages');
             const userUnreadBadge = document.getElementById('user-unread-badge');
             const adsPopup = document.getElementById('ads-popup');
-            
-            // Φόρμες
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const loginError = document.getElementById('login-error');
-            const registerError = document.getElementById('register-error');
+            const mediaUpload = document.getElementById('media-upload');
+            const fileName = document.getElementById('file-name');
             
             // Μεταβλητές για την επικοινωνία
             let selectedUserId = null;
@@ -1194,13 +1198,25 @@
                 authContainer.style.display = 'block';
             });
             
-            // Ανέβασμα φωτογραφιών (πολλαπλών αρχείων)
+            // Ενημέρωση ονόματος αρχείου όταν επιλέγονται αρχεία
+            mediaUpload.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    if (this.files.length === 1) {
+                        fileName.textContent = this.files[0].name;
+                    } else {
+                        fileName.textContent = `${this.files.length} αρχεία επιλέχθηκαν`;
+                    }
+                } else {
+                    fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
+                }
+            });
+            
+            // Ανέβασμα αρχείων (φωτογραφίες & βίντεο)
             uploadBtn.addEventListener('click', function() {
-                const fileInput = document.getElementById('photo1');
-                const files = fileInput.files;
+                const files = mediaUpload.files;
                 
                 if (files.length === 0) {
-                    alert('Παρακαλώ επιλέξτε τουλάχιστον μία φωτογραφία');
+                    alert('Παρακαλώ επιλέξτε τουλάχιστον ένα αρχείο');
                     return;
                 }
                 
@@ -1214,18 +1230,20 @@
                         const reader = new FileReader();
                         
                         reader.onload = function(e) {
-                            const photoData = {
+                            const isVideo = file.type.startsWith('video/');
+                            const mediaData = {
                                 id: Date.now() + index,
                                 filename: file.name,
                                 uploadedAt: new Date().toISOString(),
                                 url: e.target.result, // Αποθήκευση της προεπισκόπησης base64
                                 type: file.type,
                                 size: file.size,
+                                isVideo: isVideo,
                                 userId: currentUser.id,
                                 username: currentUser.username,
                                 userEmail: currentUser.email
                             };
-                            resolve(photoData);
+                            resolve(mediaData);
                         };
                         
                         reader.readAsDataURL(file);
@@ -1233,26 +1251,26 @@
                 });
                 
                 // Αναμονή για όλες τις προεπισκοπήσεις
-                Promise.all(processFiles).then((photosData) => {
-                    // Αποθήκευση φωτογραφιών στον χρήστη
+                Promise.all(processFiles).then((mediaDataArray) => {
+                    // Αποθήκευση αρχείων στον χρήστη
                     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     const users = JSON.parse(localStorage.getItem('users') || '[]');
                     const userIndex = users.findIndex(u => u.id === currentUser.id);
                     
                     if (userIndex !== -1) {
-                        // Προσθήκη όλων των φωτογραφιών με προεπισκοπήσεις
-                        photosData.forEach(photoData => {
-                            users[userIndex].photos.push(photoData);
-                            currentUser.photos.push(photoData);
+                        // Προσθήκη όλων των αρχείων με προεπισκοπήσεις
+                        mediaDataArray.forEach(mediaData => {
+                            users[userIndex].photos.push(mediaData);
+                            currentUser.photos.push(mediaData);
                         });
                         
                         localStorage.setItem('users', JSON.stringify(users));
                         localStorage.setItem('currentUser', JSON.stringify(currentUser));
                         
-                        // Αποθήκευση φωτογραφιών στον διαχειριστή
+                        // Αποθήκευση αρχείων στον διαχειριστή
                         const adminPhotos = JSON.parse(localStorage.getItem('adminPhotos') || '[]');
-                        photosData.forEach(photoData => {
-                            adminPhotos.push(photoData);
+                        mediaDataArray.forEach(mediaData => {
+                            adminPhotos.push(mediaData);
                         });
                         localStorage.setItem('adminPhotos', JSON.stringify(adminPhotos));
                         
@@ -1272,14 +1290,14 @@
                     }, 5000);
                     
                     // Εκκαθάριση του file input
-                    fileInput.value = '';
-                    document.getElementById('file-name1').textContent = 'Δεν έχουν επιλεγεί αρχεία';
+                    mediaUpload.value = '';
+                    fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
                     
                 }).catch(error => {
                     console.error('Σφάλμα κατά την επεξεργασία των αρχείων:', error);
                     loading.style.display = 'none';
                     uploadBtn.disabled = false;
-                    alert('Προέκυψε σφάλμα κατά την αποστολή των φωτογραφιών. Παρακαλώ δοκιμάστε ξανά.');
+                    alert('Προέκυψε σφάλμα κατά την αποστολή των αρχείων. Παρακαλώ δοκιμάστε ξανά.');
                 });
             });
             
@@ -1755,7 +1773,7 @@
                 // Φόρτωση ειδοποιήσεων για δωρεάν καφέ
                 loadFreeCoffeeNotifications(users);
                 
-                // Φόρτωση φωτογραφιών χρηστών
+                // Φόρτωση φωτογραφιών και βίντεο χρηστών
                 loadUserPhotos();
                 
                 // Φόρτωση λίστας χρηστών με μηνύματα
@@ -1784,42 +1802,49 @@
                 });
             }
             
-            // Φόρτωση φωτογραφιών χρηστών
+            // Φόρτωση φωτογραφιών και βίντεο χρηστών
             function loadUserPhotos() {
                 photosGallery.innerHTML = '';
                 
                 const adminPhotos = JSON.parse(localStorage.getItem('adminPhotos') || '[]');
                 
                 if (adminPhotos.length === 0) {
-                    photosGallery.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες από χρήστες.</p>';
+                    photosGallery.innerHTML = '<p>Δεν υπάρχουν αρχεία από χρήστες.</p>';
                     return;
                 }
                 
-                adminPhotos.forEach(photo => {
-                    const photoElement = document.createElement('div');
-                    photoElement.className = 'photo-item';
+                adminPhotos.forEach(media => {
+                    const mediaElement = document.createElement('div');
+                    mediaElement.className = 'photo-item';
                     
-                    const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
+                    const uploadDate = new Date(media.uploadedAt).toLocaleString('el-GR');
                     
-                    // Εμφάνιση πραγματικής προεπισκόπησης αν υπάρχει
+                    // Εμφάνιση προεπισκόπησης ανάλογα με τον τύπο αρχείου
                     let previewContent = '';
-                    if (photo.url) {
-                        previewContent = `<img src="${photo.url}" class="photo-preview" alt="${photo.filename}">`;
+                    if (media.isVideo) {
+                        previewContent = `
+                            <video class="video-preview" controls>
+                                <source src="${media.url}" type="${media.type}">
+                                Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
+                            </video>
+                        `;
                     } else {
-                        previewContent = `<div class="photo-preview" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 2rem;">📷</div>`;
+                        previewContent = `<img src="${media.url}" class="photo-preview" alt="${media.filename}">`;
                     }
                     
-                    photoElement.innerHTML = `
+                    mediaElement.innerHTML = `
                         <div class="user-info">
-                            <strong>${photo.username}</strong><br>
-                            ${photo.userEmail}<br>
+                            <strong>${media.username}</strong><br>
+                            ${media.userEmail}<br>
                             ${uploadDate}
                         </div>
                         ${previewContent}
-                        <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">${photo.filename}</div>
+                        <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">
+                            ${media.filename} ${media.isVideo ? '🎥' : '📷'}
+                        </div>
                     `;
                     
-                    photosGallery.appendChild(photoElement);
+                    photosGallery.appendChild(mediaElement);
                 });
             }
             
@@ -1923,22 +1948,6 @@
                         loadUserList(users);
                     }
                 });
-            });
-            
-            // Ενημέρωση ονόματος αρχείου όταν επιλέγονται πολλαπλά αρχεία
-            const fileInput = document.getElementById('photo1');
-            const fileName = document.getElementById('file-name1');
-            
-            fileInput.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    if (this.files.length === 1) {
-                        fileName.textContent = this.files[0].name;
-                    } else {
-                        fileName.textContent = `${this.files.length} αρχεία επιλέχθηκαν`;
-                    }
-                } else {
-                    fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
-                }
             });
         });
     </script>
