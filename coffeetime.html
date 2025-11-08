@@ -684,7 +684,7 @@
             }
             
             .user-points {
-                font-size: 1.8rem;
+                fontSize: 1.8rem;
             }
             
             .photo-upload {
@@ -893,6 +893,7 @@
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
             function initializeDefaultAdmin() {
                 const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const adminPhotos = JSON.parse(localStorage.getItem('adminPhotos') || '[]');
                 
                 // Έλεγχος αν υπάρχει ήδη ο διαχειριστής
                 const adminExists = users.find(user => user.email === 'admin@example.com');
@@ -913,6 +914,11 @@
                     };
                     users.push(adminUser);
                     localStorage.setItem('users', JSON.stringify(users));
+                }
+                
+                // Αρχικοποίηση του adminPhotos αν δεν υπάρχει
+                if (adminPhotos.length === 0) {
+                    localStorage.setItem('adminPhotos', JSON.stringify([]));
                 }
             }
 
@@ -1099,7 +1105,10 @@
                                 uploadedAt: new Date().toISOString(),
                                 url: e.target.result, // Αποθήκευση της προεπισκόπησης base64
                                 type: file.type,
-                                size: file.size
+                                size: file.size,
+                                userId: currentUser.id,
+                                username: currentUser.username,
+                                userEmail: currentUser.email
                             };
                             resolve(photoData);
                         };
@@ -1110,7 +1119,7 @@
                 
                 // Αναμονή για όλες τις προεπισκοπήσεις
                 Promise.all(processFiles).then((photosData) => {
-                    // Αποθήκευση φωτογραφιών
+                    // Αποθήκευση φωτογραφιών στον χρήστη
                     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     const users = JSON.parse(localStorage.getItem('users') || '[]');
                     const userIndex = users.findIndex(u => u.id === currentUser.id);
@@ -1125,9 +1134,27 @@
                         localStorage.setItem('users', JSON.stringify(users));
                         localStorage.setItem('currentUser', JSON.stringify(currentUser));
                         
+                        // Αποθήκευση φωτογραφιών στον διαχειριστή
+                        const adminPhotos = JSON.parse(localStorage.getItem('adminPhotos') || '[]');
+                        photosData.forEach(photoData => {
+                            adminPhotos.push(photoData);
+                        });
+                        localStorage.setItem('adminPhotos', JSON.stringify(adminPhotos));
+                        
+                        // Προσθήκη πόντων στον χρήστη
+                        const pointsToAdd = files.length * 10; // 10 πόντοι ανά φωτογραφία
+                        users[userIndex].points += pointsToAdd;
+                        currentUser.points += pointsToAdd;
+                        
+                        localStorage.setItem('users', JSON.stringify(users));
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        
+                        // Ενημέρωση του UI
+                        userPoints.textContent = currentUser.points;
+                        
                         // Ενημέρωση του gallery του admin αν είναι ενεργό
                         if (adminPanel.classList.contains('active')) {
-                            loadUserPhotos(users);
+                            loadUserPhotos();
                         }
                     }
                     
@@ -1135,9 +1162,17 @@
                     successMessage.style.display = 'block';
                     uploadBtn.disabled = false;
                     
+                    // Εμφάνιση πόντων που κερδίθηκαν
+                    const pointsEarned = document.createElement('div');
+                    pointsEarned.className = 'points-earned';
+                    pointsEarned.textContent = `🎉 Κερδίσατε ${files.length * 10} πόντους!`;
+                    pointsEarned.style.display = 'block';
+                    successMessage.parentNode.insertBefore(pointsEarned, successMessage);
+                    
                     // Απόκρυψη των μηνυμάτων επιτυχίας μετά από 5 δευτερόλεπτα
                     setTimeout(() => {
                         successMessage.style.display = 'none';
+                        pointsEarned.style.display = 'none';
                     }, 5000);
                     
                     // Εκκαθάριση του file input
@@ -1512,7 +1547,7 @@
                 loadFreeCoffeeNotifications(users);
                 
                 // Φόρτωση φωτογραφιών χρηστών
-                loadUserPhotos(users);
+                loadUserPhotos();
                 
                 // Φόρτωση λίστας χρηστών με μηνύματα
                 loadUserList(users);
@@ -1541,47 +1576,42 @@
             }
             
             // Φόρτωση φωτογραφιών χρηστών
-            function loadUserPhotos(users) {
+            function loadUserPhotos() {
                 photosGallery.innerHTML = '';
                 
-                let hasPhotos = false;
+                const adminPhotos = JSON.parse(localStorage.getItem('adminPhotos') || '[]');
                 
-                users.forEach(user => {
-                    if (user.photos && user.photos.length > 0) {
-                        hasPhotos = true;
-                        
-                        user.photos.forEach(photo => {
-                            const photoElement = document.createElement('div');
-                            photoElement.className = 'photo-item';
-                            
-                            const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
-                            
-                            // Εμφάνιση πραγματικής προεπισκόπησης αν υπάρχει
-                            let previewContent = '';
-                            if (photo.url) {
-                                previewContent = `<img src="${photo.url}" class="photo-preview" alt="${photo.filename}">`;
-                            } else {
-                                previewContent = `<div class="photo-preview" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 2rem;">📷</div>`;
-                            }
-                            
-                            photoElement.innerHTML = `
-                                <div class="user-info">
-                                    <strong>${user.username}</strong><br>
-                                    ${user.email}<br>
-                                    ${uploadDate}
-                                </div>
-                                ${previewContent}
-                                <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">${photo.filename}</div>
-                            `;
-                            
-                            photosGallery.appendChild(photoElement);
-                        });
-                    }
-                });
-                
-                if (!hasPhotos) {
+                if (adminPhotos.length === 0) {
                     photosGallery.innerHTML = '<p>Δεν υπάρχουν φωτογραφίες από χρήστες.</p>';
+                    return;
                 }
+                
+                adminPhotos.forEach(photo => {
+                    const photoElement = document.createElement('div');
+                    photoElement.className = 'photo-item';
+                    
+                    const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
+                    
+                    // Εμφάνιση πραγματικής προεπισκόπησης αν υπάρχει
+                    let previewContent = '';
+                    if (photo.url) {
+                        previewContent = `<img src="${photo.url}" class="photo-preview" alt="${photo.filename}">`;
+                    } else {
+                        previewContent = `<div class="photo-preview" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 2rem;">📷</div>`;
+                    }
+                    
+                    photoElement.innerHTML = `
+                        <div class="user-info">
+                            <strong>${photo.username}</strong><br>
+                            ${photo.userEmail}<br>
+                            ${uploadDate}
+                        </div>
+                        ${previewContent}
+                        <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">${photo.filename}</div>
+                    `;
+                    
+                    photosGallery.appendChild(photoElement);
+                });
             }
             
             // Φόρτωση λίστας χρηστών με μηνύματα
