@@ -81,6 +81,34 @@
             margin: 0 auto;
         }
         
+        .user-info {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
         .tabs {
             display: flex;
             margin-bottom: 20px;
@@ -156,7 +184,7 @@
             color: var(--dark);
         }
         
-        input[type="email"], input[type="text"], textarea {
+        input[type="email"], input[type="text"], input[type="password"], textarea {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0d6c9;
@@ -471,6 +499,60 @@
             display: block;
         }
         
+        /* Στυλ για φόρμες εγγραφής/σύνδεσης */
+        .auth-form {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #f8f4e9;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .auth-tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .auth-content {
+            display: none;
+        }
+        
+        .auth-content.active {
+            display: block;
+        }
+        
+        .login-required {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .login-required i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -508,6 +590,14 @@
             
             .logo {
                 font-size: 2.2rem;
+            }
+            
+            .user-info {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 15px;
+                justify-content: center;
             }
             
             .tabs {
@@ -555,172 +645,245 @@
             <i class="fas fa-mug-hot logo"></i>
             <h1>Καφεμαντεία</h1>
             <p class="subtitle">Στείλτε μας φωτογραφίες από τον καφέ σας και θα σας αποκαλύψουμε το μέλλον σας!</p>
+            
+            <div class="user-info" id="userInfo" style="display: none;">
+                <i class="fas fa-user"></i>
+                <span id="userEmail"></span>
+                <button class="logout-btn" id="logoutBtn">Αποσύνδεση</button>
+            </div>
         </header>
         
-        <div class="tabs">
-            <button class="tab active" data-tab="photos-tab">
-                <i class="fas fa-camera"></i> Αποστολή Φωτογραφιών
-            </button>
-            <button class="tab" data-tab="contact-tab">
-                <i class="fas fa-envelope"></i> Επικοινωνία
-            </button>
-            <button class="tab" data-tab="responses-tab">
-                <i class="fas fa-reply"></i> Οι Απαντήσεις Μου
-            </button>
-        </div>
-        
-        <main>
-            <!-- Καρτέλα Αποστολής Φωτογραφιών -->
-            <section id="photos-tab" class="tab-content active">
-                <div class="form-section">
-                    <h2><i class="fas fa-user"></i> Στοιχεία Επισκέπτη</h2>
-                    
-                    <div class="info-box">
-                        <p><strong>Οδηγίες:</strong></p>
-                        <ul>
-                            <li>Βεβαιωθείτε ότι η φωτογραφία του καφέ σας είναι σε καλό φωτισμό</li>
-                            <li>Προσπαθήστε να τραβήξετε την φωτογραφία από πάνω για καλύτερη εμφάνιση των σχημάτων</li>
-                            <li>Μπορείτε να επιλέξετε έως 5 φωτογραφίες</li>
-                        </ul>
-                    </div>
-                    
-                    <form id="visitorForm">
-                        <div class="form-group">
-                            <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
-                            <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><i class="fas fa-camera"></i> Επιλογή Φωτογραφιών Καφέ:</label>
-                            <div class="file-input-container">
-                                <input type="file" id="photos" class="file-input" multiple accept="image/*">
-                                <label for="photos" class="file-input-label">
-                                    <i class="fas fa-cloud-upload-alt"></i> Επιλέξτε φωτογραφίες καφέ (μέχρι 5)
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div class="preview-container">
-                            <div class="preview-title">
-                                <i class="fas fa-images"></i> Προεπισκόπηση φωτογραφιών:
-                            </div>
-                            <div class="preview-grid" id="previewGrid">
-                                <!-- Εδώ θα προστεθούν οι προεπισκοπήσεις των φωτογραφιών -->
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn" id="submitBtn">
-                            <i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών
-                        </button>
-                        
-                        <div class="message" id="message"></div>
-                    </form>
+        <div id="authSection">
+            <div class="form-section">
+                <h2><i class="fas fa-user-circle"></i> Εγγραφή / Σύνδεση</h2>
+                
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-auth-tab="login-tab">
+                        <i class="fas fa-sign-in-alt"></i> Σύνδεση
+                    </button>
+                    <button class="auth-tab" data-auth-tab="register-tab">
+                        <i class="fas fa-user-plus"></i> Εγγραφή
+                    </button>
                 </div>
-            </section>
-            
-            <!-- Καρτέλα Επικοινωνίας -->
-            <section id="contact-tab" class="tab-content">
-                <div class="form-section">
-                    <h2><i class="fas fa-comments"></i> Επικοινωνία με τον Διαχειριστή</h2>
-                    
-                    <div class="info-box">
-                        <p><strong>Στείλτε μήνυμα στον διαχειριστή:</strong></p>
-                        <p>Εάν έχετε οποιαδήποτε ερώτηση, πρόβλημα ή σχόλιο, μπορείτε να επικοινωνήσετε απευθείας μαζί μας συμπληρώνοντας την παρακάτω φόρμα.</p>
-                    </div>
-                    
-                    <form id="contactForm">
+                
+                <div id="login-tab" class="auth-content active">
+                    <form id="loginForm" class="auth-form">
                         <div class="form-group">
-                            <label for="contact-name"><i class="fas fa-user"></i> Ονοματεπώνυμο:</label>
-                            <input type="text" id="contact-name" name="name" placeholder="Το ονοματεπώνυμό σας" required>
+                            <label for="login-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                            <input type="email" id="login-email" name="email" placeholder="π.χ. onoma@example.com" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="contact-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
-                            <input type="email" id="contact-email" name="email" placeholder="π.χ. onoma@example.com" required>
+                            <label for="login-password"><i class="fas fa-lock"></i> Κωδικός Πρόσβασης:</label>
+                            <input type="password" id="login-password" name="password" placeholder="Ο κωδικός πρόσβασής σας" required>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="contact-subject"><i class="fas fa-tag"></i> Θέμα:</label>
-                            <input type="text" id="contact-subject" name="subject" placeholder="Το θέμα του μηνύματός σας" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="contact-message"><i class="fas fa-comment"></i> Μήνυμα:</label>
-                            <textarea id="contact-message" name="message" placeholder="Γράψτε το μήνυμά σας εδώ..." required></textarea>
-                        </div>
-                        
-                        <button type="submit" class="submit-btn" id="contactSubmitBtn">
-                            <i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-sign-in-alt"></i> Σύνδεση
                         </button>
                         
-                        <div class="message" id="contactMessage"></div>
+                        <div class="message" id="loginMessage"></div>
                     </form>
                 </div>
                 
-                <div class="form-section">
-                    <h2><i class="fas fa-address-book"></i> Άλλοι Τρόποι Επικοινωνίας</h2>
+                <div id="register-tab" class="auth-content">
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="register-name"><i class="fas fa-user"></i> Ονοματεπώνυμο:</label>
+                            <input type="text" id="register-name" name="name" placeholder="Το ονοματεπώνυμό σας" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                            <input type="email" id="register-email" name="email" placeholder="π.χ. onoma@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-password"><i class="fas fa-lock"></i> Κωδικός Πρόσβασης:</label>
+                            <input type="password" id="register-password" name="password" placeholder="Δημιουργήστε έναν κωδικό πρόσβασης" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="register-confirm-password"><i class="fas fa-lock"></i> Επιβεβαίωση Κωδικού:</label>
+                            <input type="password" id="register-confirm-password" name="confirmPassword" placeholder="Εισάγετε ξανά τον κωδικό πρόσβασης" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-user-plus"></i> Εγγραφή
+                        </button>
+                        
+                        <div class="message" id="registerMessage"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div id="mainApp" style="display: none;">
+            <div class="tabs">
+                <button class="tab active" data-tab="photos-tab">
+                    <i class="fas fa-camera"></i> Αποστολή Φωτογραφιών
+                </button>
+                <button class="tab" data-tab="contact-tab">
+                    <i class="fas fa-envelope"></i> Επικοινωνία
+                </button>
+                <button class="tab" data-tab="responses-tab">
+                    <i class="fas fa-reply"></i> Οι Απαντήσεις Μου
+                </button>
+            </div>
+            
+            <main>
+                <!-- Καρτέλα Αποστολής Φωτογραφιών -->
+                <section id="photos-tab" class="tab-content active">
+                    <div class="form-section">
+                        <h2><i class="fas fa-user"></i> Στοιχεία Επισκέπτη</h2>
+                        
+                        <div class="info-box">
+                            <p><strong>Οδηγίες:</strong></p>
+                            <ul>
+                                <li>Βεβαιωθείτε ότι η φωτογραφία του καφέ σας είναι σε καλό φωτισμό</li>
+                                <li>Προσπαθήστε να τραβήξετε την φωτογραφία από πάνω για καλύτερη εμφάνιση των σχημάτων</li>
+                                <li>Μπορείτε να επιλέξετε έως 5 φωτογραφίες</li>
+                            </ul>
+                        </div>
+                        
+                        <form id="visitorForm">
+                            <div class="form-group">
+                                <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                                <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><i class="fas fa-camera"></i> Επιλογή Φωτογραφιών Καφέ:</label>
+                                <div class="file-input-container">
+                                    <input type="file" id="photos" class="file-input" multiple accept="image/*">
+                                    <label for="photos" class="file-input-label">
+                                        <i class="fas fa-cloud-upload-alt"></i> Επιλέξτε φωτογραφίες καφέ (μέχρι 5)
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="preview-container">
+                                <div class="preview-title">
+                                    <i class="fas fa-images"></i> Προεπισκόπηση φωτογραφιών:
+                                </div>
+                                <div class="preview-grid" id="previewGrid">
+                                    <!-- Εδώ θα προστεθούν οι προεπισκοπήσεις των φωτογραφιών -->
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                <i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών
+                            </button>
+                            
+                            <div class="message" id="message"></div>
+                        </form>
+                    </div>
+                </section>
+                
+                <!-- Καρτέλα Επικοινωνίας -->
+                <section id="contact-tab" class="tab-content">
+                    <div class="form-section">
+                        <h2><i class="fas fa-comments"></i> Επικοινωνία με τον Διαχειριστή</h2>
+                        
+                        <div class="info-box">
+                            <p><strong>Στείλτε μήνυμα στον διαχειριστή:</strong></p>
+                            <p>Εάν έχετε οποιαδήποτε ερώτηση, πρόβλημα ή σχόλιο, μπορείτε να επικοινωνήσετε απευθείας μαζί μας συμπληρώνοντας την παρακάτω φόρμα.</p>
+                        </div>
+                        
+                        <form id="contactForm">
+                            <div class="form-group">
+                                <label for="contact-name"><i class="fas fa-user"></i> Ονοματεπώνυμο:</label>
+                                <input type="text" id="contact-name" name="name" placeholder="Το ονοματεπώνυμό σας" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                                <input type="email" id="contact-email" name="email" placeholder="π.χ. onoma@example.com" required readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-subject"><i class="fas fa-tag"></i> Θέμα:</label>
+                                <input type="text" id="contact-subject" name="subject" placeholder="Το θέμα του μηνύματός σας" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-message"><i class="fas fa-comment"></i> Μήνυμα:</label>
+                                <textarea id="contact-message" name="message" placeholder="Γράψτε το μήνυμά σας εδώ..." required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn" id="contactSubmitBtn">
+                                <i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος
+                            </button>
+                            
+                            <div class="message" id="contactMessage"></div>
+                        </form>
+                    </div>
                     
-                    <div class="contact-methods">
-                        <div class="contact-card">
-                            <div class="contact-icon">
-                                <i class="fas fa-phone"></i>
-                            </div>
-                            <div class="contact-title">Τηλέφωνο</div>
-                            <div class="contact-details">+30 210 123 4567</div>
-                            <a href="tel:+302101234567" class="contact-btn">
-                                <i class="fas fa-phone"></i> Κλήση
-                            </a>
-                        </div>
+                    <div class="form-section">
+                        <h2><i class="fas fa-address-book"></i> Άλλοι Τρόποι Επικοινωνίας</h2>
                         
-                        <div class="contact-card">
-                            <div class="contact-icon">
-                                <i class="fas fa-envelope"></i>
+                        <div class="contact-methods">
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="contact-title">Τηλέφωνο</div>
+                                <div class="contact-details">+30 210 123 4567</div>
+                                <a href="tel:+302101234567" class="contact-btn">
+                                    <i class="fas fa-phone"></i> Κλήση
+                                </a>
                             </div>
-                            <div class="contact-title">Email</div>
-                            <div class="contact-details">admin@kafemanteia.gr</div>
-                            <a href="mailto:admin@kafemanteia.gr" class="contact-btn">
-                                <i class="fas fa-envelope"></i> Αποστολή Email
-                            </a>
-                        </div>
-                        
-                        <div class="contact-card">
-                            <div class="contact-icon">
-                                <i class="fas fa-clock"></i>
+                            
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="contact-title">Email</div>
+                                <div class="contact-details">admin@kafemanteia.gr</div>
+                                <a href="mailto:admin@kafemanteia.gr" class="contact-btn">
+                                    <i class="fas fa-envelope"></i> Αποστολή Email
+                                </a>
                             </div>
-                            <div class="contact-title">Ώρες Λειτουργίας</div>
-                            <div class="contact-details">Δευ-Παρ: 9:00-17:00<br>Σαβ: 10:00-14:00</div>
-                            <div class="contact-btn" style="background: var(--secondary);">
-                                <i class="fas fa-info-circle"></i> Πληροφορίες
+                            
+                            <div class="contact-card">
+                                <div class="contact-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="contact-title">Ώρες Λειτουργίας</div>
+                                <div class="contact-details">Δευ-Παρ: 9:00-17:00<br>Σαβ: 10:00-14:00</div>
+                                <div class="contact-btn" style="background: var(--secondary);">
+                                    <i class="fas fa-info-circle"></i> Πληροφορίες
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Καρτέλα Απαντήσεων -->
-            <section id="responses-tab" class="tab-content">
-                <div class="form-section">
-                    <h2><i class="fas fa-reply"></i> Απαντήσεις από τον Διαχειριστή</h2>
-                    
-                    <div class="info-box">
-                        <p><strong>Εδώ μπορείτε να δείτε τις απαντήσεις στις υποβολές σας:</strong></p>
-                        <p>Οι απαντήσεις εμφανίζονται αυτόματα μόλις ο διαχειριστής απαντήσει στις υποβολές σας.</p>
-                    </div>
-                    
-                    <div class="responses-list" id="responses-list">
-                        <!-- Εδώ θα προστεθούν οι απαντήσεις -->
-                    </div>
-                    
-                    <div class="empty-state" id="no-responses" style="display: none;">
-                        <div class="empty-icon">
-                            <i class="fas fa-inbox"></i>
+                <!-- Καρτέλα Απαντήσεων -->
+                <section id="responses-tab" class="tab-content">
+                    <div class="form-section">
+                        <h2><i class="fas fa-reply"></i> Απαντήσεις από τον Διαχειριστή</h2>
+                        
+                        <div class="info-box">
+                            <p><strong>Εδώ μπορείτε να δείτε τις απαντήσεις στις υποβολές σας:</strong></p>
+                            <p>Οι απαντήσεις εμφανίζονται αυτόματα μόλις ο διαχειριστής απαντήσει στις υποβολές σας.</p>
                         </div>
-                        <h3>Δεν υπάρχουν απαντήσεις ακόμα</h3>
-                        <p>Οι απαντήσεις από τον διαχειριστή θα εμφανιστούν εδώ μόλις απαντηθούν οι υποβολές σας.</p>
+                        
+                        <div class="responses-list" id="responses-list">
+                            <!-- Εδώ θα προστεθούν οι απαντήσεις -->
+                        </div>
+                        
+                        <div class="empty-state" id="no-responses" style="display: none;">
+                            <div class="login-required">
+                                <i class="fas fa-inbox"></i>
+                                <h3>Δεν υπάρχουν απαντήσεις ακόμα</h3>
+                                <p>Οι απαντήσεις από τον διαχειριστή θα εμφανιστούν εδώ μόλις απαντηθούν οι υποβολές σας.</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </main>
+                </section>
+            </main>
+        </div>
         
         <footer>
             <p>
@@ -733,7 +896,152 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Σύστημα καρτελών
+            // Έλεγχος αν ο χρήστης είναι συνδεδεμένος
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const authSection = document.getElementById('authSection');
+            const mainApp = document.getElementById('mainApp');
+            const userInfo = document.getElementById('userInfo');
+            const userEmailSpan = document.getElementById('userEmail');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (currentUser) {
+                // Ο χρήστης είναι συνδεδεμένος
+                authSection.style.display = 'none';
+                mainApp.style.display = 'block';
+                userInfo.style.display = 'flex';
+                userEmailSpan.textContent = currentUser.email;
+                
+                // Συμπλήρωση του email στις φόρμες
+                document.getElementById('email').value = currentUser.email;
+                document.getElementById('contact-email').value = currentUser.email;
+                document.getElementById('contact-name').value = currentUser.name || '';
+            } else {
+                // Ο χρήστης δεν είναι συνδεδεμένος
+                authSection.style.display = 'block';
+                mainApp.style.display = 'none';
+                userInfo.style.display = 'none';
+            }
+            
+            // Σύστημα καρτελών εγγραφής/σύνδεσης
+            const authTabs = document.querySelectorAll('.auth-tab');
+            const authContents = document.querySelectorAll('.auth-content');
+            
+            authTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const authTabId = tab.getAttribute('data-auth-tab');
+                    
+                    // Απενεργοποίηση όλων των καρτελών
+                    authTabs.forEach(t => t.classList.remove('active'));
+                    authContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    // Ενεργοποίηση της επιλεγμένης καρτέλας
+                    tab.classList.add('active');
+                    document.getElementById(authTabId).classList.add('active');
+                });
+            });
+            
+            // Φόρμα εγγραφής
+            const registerForm = document.getElementById('registerForm');
+            const registerMessage = document.getElementById('registerMessage');
+            
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('register-name').value;
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+                
+                if (!name || !email || !password || !confirmPassword) {
+                    showMessage(registerMessage, 'Παρακαλώ συμπληρώστε όλα τα πεδία.', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showMessage(registerMessage, 'Οι κωδικοί πρόσβασης δεν ταιριάζουν.', 'error');
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showMessage(registerMessage, 'Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.', 'error');
+                    return;
+                }
+                
+                // Έλεγχος αν υπάρχει ήδη χρήστης με αυτό το email
+                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                const userExists = existingUsers.some(user => user.email === email);
+                
+                if (userExists) {
+                    showMessage(registerMessage, 'Υπάρχει ήδη λογαριασμός με αυτό το email.', 'error');
+                    return;
+                }
+                
+                // Δημιουργία νέου χρήστη
+                const newUser = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    password: password, // Σε πραγματική εφαρμογή θα πρέπει να κρυπτογραφηθεί
+                    registrationDate: new Date().toISOString()
+                };
+                
+                // Αποθήκευση χρήστη
+                existingUsers.push(newUser);
+                localStorage.setItem('users', JSON.stringify(existingUsers));
+                
+                // Αυτόματη σύνδεση μετά την εγγραφή
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                
+                showMessage(registerMessage, 'Η εγγραφή ολοκληρώθηκε επιτυχώς! Ανακατεύθυνση...', 'success');
+                
+                // Ανακατεύθυνση στην κύρια εφαρμογή
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            });
+            
+            // Φόρμα σύνδεσης
+            const loginForm = document.getElementById('loginForm');
+            const loginMessage = document.getElementById('loginMessage');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                
+                if (!email || !password) {
+                    showMessage(loginMessage, 'Παρακαλώ συμπληρώστε όλα τα πεδία.', 'error');
+                    return;
+                }
+                
+                // Έλεγχος διαπιστευτηρίων
+                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = existingUsers.find(user => user.email === email && user.password === password);
+                
+                if (!user) {
+                    showMessage(loginMessage, 'Λάθος email ή κωδικός πρόσβασης.', 'error');
+                    return;
+                }
+                
+                // Σύνδεση χρήστη
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                showMessage(loginMessage, 'Σύνδεση επιτυχής! Ανακατεύθυνση...', 'success');
+                
+                // Ανακατεύθυνση στην κύρια εφαρμογή
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            });
+            
+            // Αποσύνδεση
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('currentUser');
+                location.reload();
+            });
+            
+            // Σύστημα καρτελών κύριας εφαρμογής
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
             
@@ -930,6 +1238,8 @@
                 
                 // Επαναφορά φόρμας
                 contactForm.reset();
+                document.getElementById('contact-name').value = name;
+                document.getElementById('contact-email').value = email;
                 
                 contactSubmitBtn.disabled = false;
                 contactSubmitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος';
@@ -951,7 +1261,10 @@
 
             // Φόρτωση απαντήσεων για τον επισκέπτη
             function loadUserResponses() {
-                const userEmail = document.getElementById('email').value; // Το email του τρέχοντος χρήστη
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const userEmail = currentUser.email;
                 const responses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
                 const userResponses = responses.filter(response => response.userEmail === userEmail);
                 const responsesList = document.getElementById('responses-list');
@@ -1006,9 +1319,10 @@
 
             // Έλεγχος για νέες απαντήσεις
             function checkForNewResponses() {
-                const userEmail = document.getElementById('email').value;
-                if (!userEmail) return;
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
                 
+                const userEmail = currentUser.email;
                 const responses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
                 const userResponses = responses.filter(response => response.userEmail === userEmail);
                 const newResponses = userResponses.filter(response => !response.viewed);
