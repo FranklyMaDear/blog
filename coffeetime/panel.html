@@ -427,6 +427,40 @@
             margin-bottom: 1rem;
         }
         
+        .points-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .points-btn {
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .points-add {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .points-remove {
+            background: var(--error-color);
+            color: white;
+        }
+        
+        .visitor-message {
+            background: #e8f5e9;
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .admin-message {
+            background: #f3e5f5;
+            border-left: 4px solid var(--admin-color);
+        }
+        
         @media (max-width: 768px) {
             .admin-tabs {
                 flex-direction: row;
@@ -495,7 +529,7 @@
         <header>
             <div class="logo">👑</div>
             <h1>Πάνελ Διαχείρισης - Καφεμαντεία</h1>
-            <p>Διαχείριση χρηστών, μηνυμάτων και πόντων</p>
+            <p>Διαχείριση επισκεπτών, μηνυμάτων και πόντων</p>
         </header>
         
         <!-- Φόρμα Σύνδεσης Διαχειριστή -->
@@ -526,9 +560,9 @@
         <div class="admin-panel" id="admin-panel">
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="dashboard">Πίνακας Ελέγχου</button>
-                <button class="admin-tab" data-tab="users">Διαχείριση Χρηστών</button>
+                <button class="admin-tab" data-tab="visitors">Διαχείριση Επισκεπτών</button>
                 <button class="admin-tab" data-tab="conversations">Συνομιλίες <span id="unread-badge" class="unread-badge" style="display: none;">0</span></button>
-                <button class="admin-tab" data-tab="photos">Φωτογραφίες</button>
+                <button class="admin-tab" data-tab="photos">Φωτογραφίες Επισκεπτών</button>
                 <button class="admin-tab" data-tab="points">Διαχείριση Πόντων</button>
                 <button class="logout-btn" id="logout-btn">Αποσύνδεση</button>
             </div>
@@ -539,8 +573,8 @@
                 
                 <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-number" id="total-users">0</div>
-                        <div class="stat-label">Σύνολο Χρηστών</div>
+                        <div class="stat-number" id="total-visitors">0</div>
+                        <div class="stat-label">Σύνολο Επισκεπτών</div>
                     </div>
                     
                     <div class="stat-card">
@@ -554,8 +588,8 @@
                     </div>
                     
                     <div class="stat-card">
-                        <div class="stat-number" id="free-coffee-users">0</div>
-                        <div class="stat-label">Χρήστες με Δωρεάν Καφέ</div>
+                        <div class="stat-number" id="free-coffee-visitors">0</div>
+                        <div class="stat-label">Επισκέπτες με Δωρεάν Καφέ</div>
                     </div>
                 </div>
                 
@@ -565,12 +599,12 @@
                 </div>
             </div>
             
-            <!-- Διαχείριση Χρηστών -->
-            <div class="admin-content" id="users-content">
-                <h2 class="section-title">Διαχείριση Χρηστών</h2>
+            <!-- Διαχείριση Επισκεπτών -->
+            <div class="admin-content" id="visitors-content">
+                <h2 class="section-title">Διαχείριση Επισκεπτών</h2>
                 
-                <div class="user-list" id="users-list">
-                    <!-- Εδώ θα εμφανίζονται οι χρήστες -->
+                <div class="user-list" id="visitors-list">
+                    <!-- Εδώ θα εμφανίζονται οι επισκέπτες -->
                 </div>
             </div>
             
@@ -579,11 +613,11 @@
                 <h2 class="section-title">Διαχείριση Συνομιλιών</h2>
                 
                 <div class="message-form">
-                    <h3>Αποστολή Μηνύματος σε Χρήστη</h3>
+                    <h3>Αποστολή Μηνύματος σε Επισκέπτη</h3>
                     <div class="form-group">
-                        <label for="message-user">Επιλογή Χρήστη:</label>
-                        <select id="message-user">
-                            <option value="">-- Επιλέξτε Χρήστη --</option>
+                        <label for="message-visitor">Επιλογή Επισκέπτη:</label>
+                        <select id="message-visitor">
+                            <option value="">-- Επιλέξτε Επισκέπτη --</option>
                         </select>
                     </div>
                     
@@ -595,7 +629,7 @@
                     <button class="admin-btn" id="send-message-btn">Αποστολή Μηνύματος</button>
                 </div>
                 
-                <h3 class="section-title">Συνομιλίες με Χρήστες</h3>
+                <h3 class="section-title">Συνομιλίες με Επισκέπτες</h3>
                 <div class="conversation-list" id="conversations-list">
                     <!-- Εδώ θα εμφανίζονται οι συνομιλίες -->
                 </div>
@@ -603,7 +637,7 @@
             
             <!-- Διαχείριση Φωτογραφιών -->
             <div class="admin-content" id="photos-content">
-                <h2 class="section-title">Διαχείριση Φωτογραφίες</h2>
+                <h2 class="section-title">Φωτογραφίες Επισκεπτών</h2>
                 
                 <div class="photo-list" id="photos-list">
                     <!-- Εδώ θα εμφανίζονται οι φωτογραφίες -->
@@ -612,28 +646,29 @@
             
             <!-- Διαχείριση Πόντων -->
             <div class="admin-content" id="points-content">
-                <h2 class="section-title">Διαχείριση Πόντων Χρηστών</h2>
+                <h2 class="section-title">Διαχείριση Πόντων Επισκεπτών</h2>
                 
                 <div class="add-points-form">
-                    <h3>Προσθήκη Πόντων σε Χρήστη</h3>
+                    <h3>Προσθήκη/Αφαίρεση Πόντων</h3>
                     <div class="form-group">
-                        <label for="points-user">Επιλογή Χρήστη:</label>
-                        <select id="points-user">
-                            <option value="">-- Επιλέξτε Χρήστη --</option>
+                        <label for="points-visitor">Επιλογή Επισκέπτη:</label>
+                        <select id="points-visitor">
+                            <option value="">-- Επιλέξτε Επισκέπτη --</option>
                         </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="points-to-add">Πόντοι για Προσθήκη:</label>
-                        <input type="number" id="points-to-add" min="1" max="1000" value="10">
+                        <label for="points-to-add">Πόντοι:</label>
+                        <input type="number" id="points-to-add" min="-1000" max="1000" value="10">
+                        <small style="color: #666;">Για αφαίρεση πόντων εισάγετε αρνητικό αριθμό</small>
                     </div>
                     
-                    <button class="admin-btn btn-success" id="add-points-btn">Προσθήκη Πόντων</button>
+                    <button class="admin-btn btn-success" id="add-points-btn">Εφαρμογή Πόντων</button>
                 </div>
                 
-                <h3 class="section-title">Χρήστες</h3>
+                <h3 class="section-title">Επισκέπτες</h3>
                 <div class="user-list" id="points-list">
-                    <!-- Εδώ θα εμφανίζονται οι χρήστες για διαχείριση πόντων -->
+                    <!-- Εδώ θα εμφανίζονται οι επισκέπτες για διαχείριση πόντων -->
                 </div>
             </div>
         </div>
@@ -660,25 +695,25 @@
             const unreadBadge = document.getElementById('unread-badge');
             
             // Στοιχεία για στατιστικά
-            const totalUsers = document.getElementById('total-users');
+            const totalVisitors = document.getElementById('total-visitors');
             const totalPhotos = document.getElementById('total-photos');
             const totalMessages = document.getElementById('total-messages');
-            const freeCoffeeUsers = document.getElementById('free-coffee-users');
+            const freeCoffeeVisitors = document.getElementById('free-coffee-visitors');
             
             // Λίστες
-            const usersList = document.getElementById('users-list');
+            const visitorsList = document.getElementById('visitors-list');
             const conversationsList = document.getElementById('conversations-list');
             const photosList = document.getElementById('photos-list');
             const pointsList = document.getElementById('points-list');
             const recentActivities = document.getElementById('recent-activities');
             
             // Φόρμες
-            const messageUser = document.getElementById('message-user');
+            const messageVisitor = document.getElementById('message-visitor');
             const messageContent = document.getElementById('message-content');
             const sendMessageBtn = document.getElementById('send-message-btn');
             
             // Νέα φόρμα πόντων
-            const pointsUser = document.getElementById('points-user');
+            const pointsVisitor = document.getElementById('points-visitor');
             const pointsToAdd = document.getElementById('points-to-add');
             const addPointsBtn = document.getElementById('add-points-btn');
             
@@ -693,7 +728,7 @@
             
             // Μεταβλητές
             let adminUser = null;
-            let selectedUserId = null;
+            let selectedVisitorId = null;
             
             // Έλεγχος αν ο διαχειριστής είναι συνδεδεμένος
             const isAdminLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
@@ -759,41 +794,47 @@
                 }
             });
             
-            // Προσθήκη πόντων σε χρήστη
+            // Προσθήκη/Αφαίρεση πόντων σε επισκέπτη
             addPointsBtn.addEventListener('click', function() {
-                const selectedUserId = pointsUser.value;
+                const selectedVisitorId = pointsVisitor.value;
                 const points = parseInt(pointsToAdd.value);
                 
-                if (!selectedUserId) {
-                    alert('Παρακαλώ επιλέξτε χρήστη');
+                if (!selectedVisitorId) {
+                    alert('Παρακαλώ επιλέξτε επισκέπτη');
                     return;
                 }
                 
-                if (isNaN(points) || points <= 0) {
+                if (isNaN(points)) {
                     alert('Παρακαλώ εισάγετε έγκυρο αριθμό πόντων');
                     return;
                 }
                 
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id == selectedUserId);
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                const visitorIndex = visitors.findIndex(v => v.id == selectedVisitorId);
                 
-                if (userIndex === -1) {
-                    alert('Ο χρήστης δεν βρέθηκε');
+                if (visitorIndex === -1) {
+                    alert('Ο επισκέπτης δεν βρέθηκε');
                     return;
                 }
                 
-                // Προσθήκη πόντων
-                users[userIndex].points = (users[userIndex].points || 0) + points;
-                localStorage.setItem('users', JSON.stringify(users));
+                // Προσθήκη/Αφαίρεση πόντων
+                visitors[visitorIndex].points = (visitors[visitorIndex].points || 0) + points;
                 
-                // Ενημέρωση adminUser
-                adminUser = users.find(u => u.id === adminUser.id);
+                // Εξασφαλίζουμε ότι οι πόντοι δεν πάνε κάτω από το 0
+                if (visitors[visitorIndex].points < 0) {
+                    visitors[visitorIndex].points = 0;
+                }
+                
+                localStorage.setItem('visitors', JSON.stringify(visitors));
                 
                 // Επαναφόρτωση δεδομένων
-                loadPointsData(users);
+                loadPointsData(visitors);
                 loadDashboardData();
                 
-                alert(`Προστέθηκαν ${points} πόντοι στον χρήστη ${users[userIndex].username}`);
+                const action = points >= 0 ? 'προστέθηκαν' : 'αφαιρέθηκαν';
+                const pointsAbs = Math.abs(points);
+                
+                alert(`${pointsAbs} πόντοι ${action} στον επισκέπτη ${visitors[visitorIndex].username}`);
                 
                 // Επαναφορά φόρμας
                 pointsToAdd.value = "10";
@@ -804,31 +845,90 @@
                 adminLogin.style.display = 'none';
                 adminPanel.classList.add('active');
                 
+                // Αρχικοποίηση δεδομένων αν δεν υπάρχουν
+                initializeDefaultData();
+                
                 // Βρες τον διαχειριστή
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                adminUser = users.find(u => u.email === ADMIN_EMAIL);
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                adminUser = visitors.find(v => v.email === ADMIN_EMAIL);
                 
                 if (!adminUser) {
                     // Δημιουργία διαχειριστή αν δεν υπάρχει
                     initializeDefaultAdmin();
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    adminUser = users.find(u => u.email === ADMIN_EMAIL);
+                    const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                    adminUser = visitors.find(v => v.email === ADMIN_EMAIL);
                 }
                 
                 loadDashboardData();
                 updateUnreadCount();
             }
             
+            // Αρχικοποίηση προκαθορισμένων δεδομένων
+            function initializeDefaultData() {
+                let visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                
+                // Προσθήκη μερικών δοκιμαστικών επισκεπτών αν δεν υπάρχουν
+                if (visitors.length === 0 || visitors.every(v => v.email === ADMIN_EMAIL)) {
+                    const sampleVisitors = [
+                        {
+                            id: 2,
+                            username: 'episkepths1',
+                            email: 'visitor1@example.com',
+                            password: 'pass123',
+                            points: 25,
+                            role: 'visitor',
+                            photos: [
+                                {
+                                    id: 1,
+                                    filename: 'coffee_photo1.jpg',
+                                    url: '',
+                                    uploadedAt: new Date().toISOString()
+                                }
+                            ],
+                            conversations: {},
+                            createdAt: new Date().toISOString()
+                        },
+                        {
+                            id: 3,
+                            username: 'episkepths2',
+                            email: 'visitor2@example.com',
+                            password: 'pass123',
+                            points: 75,
+                            role: 'visitor',
+                            photos: [
+                                {
+                                    id: 2,
+                                    filename: 'coffee_cup.png',
+                                    url: '',
+                                    uploadedAt: new Date(Date.now() - 86400000).toISOString()
+                                },
+                                {
+                                    id: 3,
+                                    filename: 'morning_coffee.jpg',
+                                    url: '',
+                                    uploadedAt: new Date(Date.now() - 172800000).toISOString()
+                                }
+                            ],
+                            conversations: {},
+                            createdAt: new Date(Date.now() - 86400000).toISOString()
+                        }
+                    ];
+                    
+                    visitors = visitors.concat(sampleVisitors);
+                    localStorage.setItem('visitors', JSON.stringify(visitors));
+                }
+            }
+            
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
             function initializeDefaultAdmin() {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
                 
                 // Έλεγχος αν υπάρχει ήδη ο διαχειριστής
-                const adminExists = users.find(user => user.email === ADMIN_EMAIL);
+                const adminExists = visitors.find(visitor => visitor.email === ADMIN_EMAIL);
                 
                 if (!adminExists) {
                     // Δημιουργία προκαθορισμένου διαχειριστή
-                    const adminUser = {
+                    const adminVisitor = {
                         id: 1,
                         username: 'admin',
                         email: ADMIN_EMAIL,
@@ -839,58 +939,58 @@
                         conversations: {},
                         createdAt: new Date().toISOString()
                     };
-                    users.push(adminUser);
-                    localStorage.setItem('users', JSON.stringify(users));
+                    visitors.push(adminVisitor);
+                    localStorage.setItem('visitors', JSON.stringify(visitors));
                 }
             }
             
             // Φόρτωση δεδομένων πίνακα ελέγχου
             function loadDashboardData() {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
                 
                 // Υπολογισμός στατιστικών
-                const userCount = users.filter(u => u.email !== ADMIN_EMAIL).length;
-                const photoCount = users.reduce((total, user) => total + (user.photos ? user.photos.length : 0), 0);
+                const visitorCount = visitors.filter(v => v.email !== ADMIN_EMAIL).length;
+                const photoCount = visitors.reduce((total, visitor) => total + (visitor.photos ? visitor.photos.length : 0), 0);
                 
                 // Υπολογισμός μηνυμάτων από συνομιλίες
                 let messageCount = 0;
-                users.forEach(user => {
-                    if (user.conversations) {
-                        Object.values(user.conversations).forEach(conversation => {
+                visitors.forEach(visitor => {
+                    if (visitor.conversations) {
+                        Object.values(visitor.conversations).forEach(conversation => {
                             messageCount += conversation.messages ? conversation.messages.length : 0;
                         });
                     }
                 });
                 
-                const freeCoffeeCount = users.filter(user => user.points >= 100).length;
+                const freeCoffeeCount = visitors.filter(visitor => visitor.points >= 100).length;
                 
                 // Ενημέρωση στατιστικών
-                totalUsers.textContent = userCount;
+                totalVisitors.textContent = visitorCount;
                 totalPhotos.textContent = photoCount;
                 totalMessages.textContent = messageCount;
-                freeCoffeeUsers.textContent = freeCoffeeCount;
+                freeCoffeeVisitors.textContent = freeCoffeeCount;
                 
                 // Φόρτωση πρόσφατων ενεργειών
-                loadRecentActivities(users);
+                loadRecentActivities(visitors);
             }
             
             // Φόρτωση πρόσφατων ενεργειών
-            function loadRecentActivities(users) {
+            function loadRecentActivities(visitors) {
                 recentActivities.innerHTML = '';
                 
                 // Συλλογή όλων των μηνυμάτων από όλες τις συνομιλίες
                 let allMessages = [];
-                users.forEach(user => {
-                    if (user.conversations) {
-                        Object.values(user.conversations).forEach(conversation => {
+                visitors.forEach(visitor => {
+                    if (visitor.conversations) {
+                        Object.values(visitor.conversations).forEach(conversation => {
                             if (conversation.messages) {
                                 conversation.messages.forEach(message => {
                                     allMessages.push({
                                         ...message,
-                                        username: user.username,
-                                        userEmail: user.email,
+                                        username: visitor.username,
+                                        visitorEmail: visitor.email,
                                         conversationWith: conversation.username,
-                                        conversationId: conversation.userId,
+                                        conversationId: conversation.visitorId,
                                         messageId: message.id
                                     });
                                 });
@@ -940,86 +1040,86 @@
             
             // Φόρτωση δεδομένων ανάλογα με το tab
             function loadTabData(tabId) {
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
                 
                 switch(tabId) {
                     case 'dashboard':
                         loadDashboardData();
                         break;
-                    case 'users':
-                        loadUsersData(users);
+                    case 'visitors':
+                        loadVisitorsData(visitors);
                         break;
                     case 'conversations':
-                        loadConversationsData(users);
+                        loadConversationsData(visitors);
                         break;
                     case 'photos':
-                        loadPhotosData(users);
+                        loadPhotosData(visitors);
                         break;
                     case 'points':
-                        loadPointsData(users);
+                        loadPointsData(visitors);
                         break;
                 }
             }
             
-            // Φόρτωση δεδομένων χρηστών
-            function loadUsersData(users) {
-                usersList.innerHTML = '';
+            // Φόρτωση δεδομένων επισκεπτών
+            function loadVisitorsData(visitors) {
+                visitorsList.innerHTML = '';
                 
-                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
+                const regularVisitors = visitors.filter(visitor => visitor.email !== ADMIN_EMAIL);
                 
-                if (regularUsers.length === 0) {
-                    usersList.innerHTML = '<div class="empty-state">Δεν υπάρχουν χρήστες</div>';
+                if (regularVisitors.length === 0) {
+                    visitorsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν επισκέπτες</div>';
                     return;
                 }
                 
-                regularUsers.forEach(user => {
-                    const userElement = document.createElement('div');
-                    userElement.className = 'user-item';
+                regularVisitors.forEach(visitor => {
+                    const visitorElement = document.createElement('div');
+                    visitorElement.className = 'user-item';
                     
-                    const registerDate = new Date(user.createdAt).toLocaleDateString('el-GR');
-                    const photoCount = user.photos ? user.photos.length : 0;
-                    const messageCount = user.conversations && user.conversations[adminUser.id] ? 
-                        user.conversations[adminUser.id].messages.length : 0;
+                    const registerDate = new Date(visitor.createdAt).toLocaleDateString('el-GR');
+                    const photoCount = visitor.photos ? visitor.photos.length : 0;
+                    const messageCount = visitor.conversations && visitor.conversations[adminUser.id] ? 
+                        visitor.conversations[adminUser.id].messages.length : 0;
                     
-                    userElement.innerHTML = `
+                    visitorElement.innerHTML = `
                         <div class="user-info">
-                            <strong>${user.username}</strong><br>
-                            <small>${user.email}</small><br>
+                            <strong>${visitor.username}</strong><br>
+                            <small>${visitor.email}</small><br>
                             <small>Εγγραφή: ${registerDate}</small><br>
-                            <small>Πόντοι: ${user.points || 0} | Φωτογραφίες: ${photoCount} | Μηνύματα: ${messageCount}</small>
+                            <small>Πόντοι: ${visitor.points || 0} | Φωτογραφίες: ${photoCount} | Μηνύματα: ${messageCount}</small>
                         </div>
                         <div class="user-actions">
-                            <button class="admin-btn btn-danger" onclick="deleteUser(${user.id})">Διαγραφή</button>
+                            <button class="admin-btn btn-danger" onclick="deleteVisitor(${visitor.id})">Διαγραφή</button>
                         </div>
                     `;
                     
-                    usersList.appendChild(userElement);
+                    visitorsList.appendChild(visitorElement);
                 });
             }
             
             // Φόρτωση δεδομένων συνομιλιών
-            function loadConversationsData(users) {
+            function loadConversationsData(visitors) {
                 conversationsList.innerHTML = '';
                 
-                // Συμπλήρωση dropdown επιλογής χρήστη
-                messageUser.innerHTML = '<option value="">-- Επιλέξτε Χρήστη --</option>';
-                pointsUser.innerHTML = '<option value="">-- Επιλέξτε Χρήστη --</option>';
+                // Συμπλήρωση dropdown επιλογής επισκέπτη
+                messageVisitor.innerHTML = '<option value="">-- Επιλέξτε Επισκέπτη --</option>';
+                pointsVisitor.innerHTML = '<option value="">-- Επιλέξτε Επισκέπτη --</option>';
                 
-                users.forEach(user => {
-                    if (user.email !== ADMIN_EMAIL) {
+                visitors.forEach(visitor => {
+                    if (visitor.email !== ADMIN_EMAIL) {
                         const option = document.createElement('option');
-                        option.value = user.id;
-                        option.textContent = `${user.username} (${user.email})`;
-                        messageUser.appendChild(option);
+                        option.value = visitor.id;
+                        option.textContent = `${visitor.username} (${visitor.email})`;
+                        messageVisitor.appendChild(option);
                         
                         const option2 = document.createElement('option');
-                        option2.value = user.id;
-                        option2.textContent = `${user.username} (${user.email})`;
-                        pointsUser.appendChild(option2);
+                        option2.value = visitor.id;
+                        option2.textContent = `${visitor.username} (${visitor.email})`;
+                        pointsVisitor.appendChild(option2);
                     }
                 });
                 
-                // Εμφάνιση συνομιλιών με χρήστες
+                // Εμφάνιση συνομιλιών με επισκέπτες
                 if (!adminUser.conversations || Object.keys(adminUser.conversations).length === 0) {
                     conversationsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν συνομιλίες</div>';
                     return;
@@ -1046,7 +1146,7 @@
                             <div>${lastMessageContent}</div>
                         </div>
                         <div class="conversation-actions">
-                            <button class="admin-btn" onclick="viewConversation(${conversation.userId})">Προβολή</button>
+                            <button class="admin-btn" onclick="viewConversation(${conversation.visitorId})">Προβολή</button>
                         </div>
                     `;
                     
@@ -1055,18 +1155,18 @@
             }
             
             // Φόρτωση δεδομένων φωτογραφιών
-            function loadPhotosData(users) {
+            function loadPhotosData(visitors) {
                 photosList.innerHTML = '';
                 
                 let allPhotos = [];
                 
-                users.forEach(user => {
-                    if (user.email !== ADMIN_EMAIL && user.photos) {
-                        user.photos.forEach(photo => {
+                visitors.forEach(visitor => {
+                    if (visitor.email !== ADMIN_EMAIL && visitor.photos) {
+                        visitor.photos.forEach(photo => {
                             allPhotos.push({
                                 ...photo,
-                                username: user.username,
-                                userId: user.id
+                                username: visitor.username,
+                                visitorId: visitor.id
                             });
                         });
                     }
@@ -1093,7 +1193,7 @@
                     let previewHTML = '';
                     if (photo.url && isImage) {
                         // Αν υπάρχει πραγματική εικόνα URL
-                        previewHTML = `<img src="${photo.url}" class="photo-preview" onclick="viewPhotoDetails('${photo.filename}', '${photo.username}', '${uploadDate}', '${photo.userId}', ${photo.id})">`;
+                        previewHTML = `<img src="${photo.url}" class="photo-preview" onclick="viewPhotoDetails('${photo.filename}', '${photo.username}', '${uploadDate}', '${photo.visitorId}', ${photo.id})">`;
                     } else {
                         // Δημιουργία placeholder με βάση τον τύπο αρχείου
                         let icon = '📷';
@@ -1102,7 +1202,7 @@
                         else if (['doc', 'docx'].includes(fileExtension)) icon = '📝';
                         
                         previewHTML = `
-                            <div class="photo-placeholder" onclick="viewPhotoDetails('${photo.filename}', '${photo.username}', '${uploadDate}', '${photo.userId}', ${photo.id})">
+                            <div class="photo-placeholder" onclick="viewPhotoDetails('${photo.filename}', '${photo.username}', '${uploadDate}', '${photo.visitorId}', ${photo.id})">
                                 ${icon}
                             </div>
                         `;
@@ -1119,7 +1219,7 @@
                         </div>
                         <div class="photo-actions">
                             <button class="admin-btn btn-success" onclick="downloadPhoto('${photo.filename}', '${photo.username}', '${uploadDate}')">Λήψη</button>
-                            <button class="admin-btn btn-danger" onclick="deletePhoto(${photo.userId}, ${photo.id})">Διαγραφή</button>
+                            <button class="admin-btn btn-danger" onclick="deletePhoto(${photo.visitorId}, ${photo.id})">Διαγραφή</button>
                         </div>
                     `;
                     
@@ -1128,42 +1228,42 @@
             }
             
             // Φόρτωση δεδομένων πόντων
-            function loadPointsData(users) {
+            function loadPointsData(visitors) {
                 pointsList.innerHTML = '';
                 
-                const regularUsers = users.filter(user => user.email !== ADMIN_EMAIL);
+                const regularVisitors = visitors.filter(visitor => visitor.email !== ADMIN_EMAIL);
                 
-                if (regularUsers.length === 0) {
-                    pointsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν χρήστες</div>';
+                if (regularVisitors.length === 0) {
+                    pointsList.innerHTML = '<div class="empty-state">Δεν υπάρχουν επισκέπτες</div>';
                     return;
                 }
                 
-                regularUsers.forEach(user => {
-                    const userElement = document.createElement('div');
-                    userElement.className = 'user-item';
+                regularVisitors.forEach(visitor => {
+                    const visitorElement = document.createElement('div');
+                    visitorElement.className = 'user-item';
                     
-                    userElement.innerHTML = `
+                    visitorElement.innerHTML = `
                         <div class="user-info">
-                            <strong>${user.username}</strong> (${user.email})
+                            <strong>${visitor.username}</strong> (${visitor.email})
                         </div>
                         <div class="points-control">
-                            <span>Πόντοι: ${user.points || 0}</span>
-                            <input type="number" class="points-input" id="points-${user.id}" value="${user.points || 0}" min="0">
-                            <button class="admin-btn" onclick="updateUserPoints(${user.id})">Ενημέρωση</button>
+                            <span>Πόντοι: ${visitor.points || 0}</span>
+                            <input type="number" class="points-input" id="points-${visitor.id}" value="${visitor.points || 0}" min="0">
+                            <button class="admin-btn" onclick="updateVisitorPoints(${visitor.id})">Ενημέρωση</button>
                         </div>
                     `;
                     
-                    pointsList.appendChild(userElement);
+                    pointsList.appendChild(visitorElement);
                 });
             }
             
             // Αποστολή μηνύματος από διαχειριστή
             sendMessageBtn.addEventListener('click', function() {
-                const selectedUserId = messageUser.value;
+                const selectedVisitorId = messageVisitor.value;
                 const content = messageContent.value.trim();
                 
-                if (!selectedUserId) {
-                    alert('Παρακαλώ επιλέξτε χρήστη');
+                if (!selectedVisitorId) {
+                    alert('Παρακαλώ επιλέξτε επισκέπτη');
                     return;
                 }
                 
@@ -1172,11 +1272,11 @@
                     return;
                 }
                 
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const targetUser = users.find(u => u.id == selectedUserId);
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                const targetVisitor = visitors.find(v => v.id == selectedVisitorId);
                 
-                if (!targetUser) {
-                    alert('Ο χρήστης δεν βρέθηκε');
+                if (!targetVisitor) {
+                    alert('Ο επισκέπτης δεν βρέθηκε');
                     return;
                 }
                 
@@ -1191,56 +1291,56 @@
                 };
                 
                 // Αποθήκευση μηνύματος στη συνομιλία
-                saveMessageToConversation(targetUser, message, users);
+                saveMessageToConversation(targetVisitor, message, visitors);
             });
             
             // Αποθήκευση μηνύματος στη συνομιλία
-            function saveMessageToConversation(targetUser, message, users) {
+            function saveMessageToConversation(targetVisitor, message, visitors) {
                 // Ενημέρωση συνομιλίας στο διαχειριστή
                 if (!adminUser.conversations) {
                     adminUser.conversations = {};
                 }
                 
-                if (!adminUser.conversations[targetUser.id]) {
-                    adminUser.conversations[targetUser.id] = {
-                        userId: targetUser.id,
-                        username: targetUser.username,
+                if (!adminUser.conversations[targetVisitor.id]) {
+                    adminUser.conversations[targetVisitor.id] = {
+                        visitorId: targetVisitor.id,
+                        username: targetVisitor.username,
                         messages: []
                     };
                 }
                 
-                adminUser.conversations[targetUser.id].messages.push(message);
+                adminUser.conversations[targetVisitor.id].messages.push(message);
                 
-                // Ενημέρωση συνομιλίας στο χρήστη
-                if (!targetUser.conversations) {
-                    targetUser.conversations = {};
+                // Ενημέρωση συνομιλίας στον επισκέπτη
+                if (!targetVisitor.conversations) {
+                    targetVisitor.conversations = {};
                 }
                 
-                if (!targetUser.conversations[adminUser.id]) {
-                    targetUser.conversations[adminUser.id] = {
-                        userId: adminUser.id,
+                if (!targetVisitor.conversations[adminUser.id]) {
+                    targetVisitor.conversations[adminUser.id] = {
+                        visitorId: adminUser.id,
                         username: 'Διαχειριστής',
                         messages: []
                     };
                 }
                 
-                targetUser.conversations[adminUser.id].messages.push(message);
+                targetVisitor.conversations[adminUser.id].messages.push(message);
                 
-                // Αποθήκευση χρηστών
-                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                // Αποθήκευση επισκεπτών
+                const adminIndex = visitors.findIndex(v => v.id === adminUser.id);
                 if (adminIndex !== -1) {
-                    users[adminIndex] = adminUser;
+                    visitors[adminIndex] = adminUser;
                 }
                 
-                const targetIndex = users.findIndex(u => u.id === targetUser.id);
+                const targetIndex = visitors.findIndex(v => v.id === targetVisitor.id);
                 if (targetIndex !== -1) {
-                    users[targetIndex] = targetUser;
+                    visitors[targetIndex] = targetVisitor;
                 }
                 
-                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('visitors', JSON.stringify(visitors));
                 
                 // Επαναφόρτωση δεδομένων
-                loadConversationsData(users);
+                loadConversationsData(visitors);
                 
                 // Εκκαθάριση φόρμας
                 messageContent.value = '';
@@ -1273,8 +1373,8 @@
             }
             
             // Προβολή συνομιλίας
-            window.viewConversation = function(userId) {
-                const conversation = adminUser.conversations[userId];
+            window.viewConversation = function(visitorId) {
+                const conversation = adminUser.conversations[visitorId];
                 
                 if (!conversation) {
                     alert('Δεν βρέθηκε συνομιλία');
@@ -1289,11 +1389,11 @@
                 });
                 
                 // Αποθήκευση αλλαγών
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                const adminIndex = visitors.findIndex(v => v.id === adminUser.id);
                 if (adminIndex !== -1) {
-                    users[adminIndex] = adminUser;
-                    localStorage.setItem('users', JSON.stringify(users));
+                    visitors[adminIndex] = adminUser;
+                    localStorage.setItem('visitors', JSON.stringify(visitors));
                 }
                 
                 // Ενημέρωση αριθμού μη αναγνωσμένων
@@ -1312,7 +1412,7 @@
                     let messageContent = `<p>${message.content}</p>`;
                     
                     messagesHTML += `
-                        <div class="user-item" style="background: ${isAdmin ? '#f0f0f0' : 'white'};">
+                        <div class="user-item ${isAdmin ? 'admin-message' : 'visitor-message'}" style="background: ${isAdmin ? '#f3e5f5' : '#e8f5e9'};">
                             <div class="user-info">
                                 <strong>${message.senderName}</strong> - ${messageDate}
                                 <div class="message-content">
@@ -1320,7 +1420,7 @@
                                 </div>
                             </div>
                             <div class="user-actions">
-                                <button class="admin-btn btn-danger" onclick="deleteMessage(${userId}, ${message.id})">Διαγραφή</button>
+                                <button class="admin-btn btn-danger" onclick="deleteMessage(${visitorId}, ${message.id})">Διαγραφή</button>
                             </div>
                         </div>
                     `;
@@ -1332,6 +1432,13 @@
                         <h3>Συνομιλία με ${conversation.username}</h3>
                         <div class="conversation-list">
                             ${messagesHTML}
+                        </div>
+                        <div class="message-form" style="margin-top: 1rem;">
+                            <h4>Απάντηση στον επισκέπτη</h4>
+                            <div class="form-group">
+                                <textarea id="reply-content" rows="3" placeholder="Γράψτε την απάντησή σας εδώ..."></textarea>
+                            </div>
+                            <button class="admin-btn" onclick="sendReply(${visitorId})">Αποστολή Απάντησης</button>
                         </div>
                     </div>
                 `;
@@ -1346,38 +1453,75 @@
                 });
             };
             
+            // Αποστολή απάντησης
+            window.sendReply = function(visitorId) {
+                const replyContent = document.getElementById('reply-content').value.trim();
+                
+                if (!replyContent) {
+                    alert('Παρακαλώ εισάγετε μήνυμα');
+                    return;
+                }
+                
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                const targetVisitor = visitors.find(v => v.id == visitorId);
+                
+                if (!targetVisitor) {
+                    alert('Ο επισκέπτης δεν βρέθηκε');
+                    return;
+                }
+                
+                // Δημιουργία μηνύματος
+                const message = {
+                    id: Date.now(),
+                    content: replyContent,
+                    senderId: adminUser.id,
+                    senderName: 'Διαχειριστής',
+                    timestamp: new Date().toISOString(),
+                    read: false
+                };
+                
+                // Αποθήκευση μηνύματος στη συνομιλία
+                saveMessageToConversation(targetVisitor, message, visitors);
+                
+                // Κλείσιμο modal
+                const modal = document.querySelector('.photo-modal.active');
+                if (modal) {
+                    modal.remove();
+                }
+            };
+            
             // Διαγραφή μηνύματος
-            window.deleteMessage = function(conversationId, messageId) {
+            window.deleteMessage = function(visitorId, messageId) {
                 if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το μήνυμα;')) {
                     return;
                 }
                 
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
                 
                 // Διαγραφή μηνύματος από τον διαχειριστή
-                if (adminUser.conversations && adminUser.conversations[conversationId]) {
-                    adminUser.conversations[conversationId].messages = 
-                        adminUser.conversations[conversationId].messages.filter(msg => msg.id !== messageId);
+                if (adminUser.conversations && adminUser.conversations[visitorId]) {
+                    adminUser.conversations[visitorId].messages = 
+                        adminUser.conversations[visitorId].messages.filter(msg => msg.id !== messageId);
                 }
                 
-                // Διαγραφή μηνύματος από τον χρήστη
-                const userIndex = users.findIndex(u => u.id === conversationId);
-                if (userIndex !== -1 && users[userIndex].conversations && users[userIndex].conversations[adminUser.id]) {
-                    users[userIndex].conversations[adminUser.id].messages = 
-                        users[userIndex].conversations[adminUser.id].messages.filter(msg => msg.id !== messageId);
+                // Διαγραφή μηνύματος από τον επισκέπτη
+                const visitorIndex = visitors.findIndex(v => v.id === visitorId);
+                if (visitorIndex !== -1 && visitors[visitorIndex].conversations && visitors[visitorIndex].conversations[adminUser.id]) {
+                    visitors[visitorIndex].conversations[adminUser.id].messages = 
+                        visitors[visitorIndex].conversations[adminUser.id].messages.filter(msg => msg.id !== messageId);
                 }
                 
                 // Αποθήκευση αλλαγών
-                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                const adminIndex = visitors.findIndex(v => v.id === adminUser.id);
                 if (adminIndex !== -1) {
-                    users[adminIndex] = adminUser;
+                    visitors[adminIndex] = adminUser;
                 }
                 
-                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('visitors', JSON.stringify(visitors));
                 
                 // Επαναφόρτωση δεδομένων
                 loadDashboardData();
-                loadConversationsData(users);
+                loadConversationsData(visitors);
                 
                 alert('Το μήνυμα διαγράφηκε επιτυχώς');
                 
@@ -1389,7 +1533,7 @@
             };
             
             // Προβολή λεπτομερειών φωτογραφίας
-            window.viewPhotoDetails = function(filename, username, uploadDate, userId, photoId) {
+            window.viewPhotoDetails = function(filename, username, uploadDate, visitorId, photoId) {
                 const fileExtension = filename ? filename.split('.').pop().toLowerCase() : '';
                 const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension);
                 
@@ -1424,7 +1568,7 @@
                     ${contentHTML}
                     <div class="photo-info-modal">
                         <h3>Πληροφορίες Φωτογραφίας</h3>
-                        <p><strong>Χρήστης:</strong> ${username}</p>
+                        <p><strong>Επισκέπτης:</strong> ${username}</p>
                         <p><strong>Όνομα αρχείου:</strong> ${filename}</p>
                         <p><strong>Ημερομηνία:</strong> ${uploadDate}</p>
                         <p><strong>Τύπος:</strong> ${isImage ? 'Εικόνα' : 'Αρχείο'} (${fileExtension})</p>
@@ -1444,12 +1588,12 @@
                 // Δημιουργία ενός dummy αρχείου για λήψη
                 const content = `Πληροφορίες φωτογραφίας από την Καφεμαντεία:
 
-Χρήστης: ${username}
+Επισκέπτης: ${username}
 Όνομα αρχείου: ${filename}
 Ημερομηνία: ${uploadDate}
 Λήψη: ${new Date().toLocaleString('el-GR')}
 
-Σημείωση: Στο πραγματικό σύστημα, αυτό θα ήταν η πραγματική εικόνα ή βίντεο που ανέβασε ο χρήστης.
+Σημείωση: Στο πραγματικό σύστημα, αυτό θα ήταν η πραγματική εικόνα ή βίντεο που ανέβασε ο επισκέπτης.
 
 -- Καφεμαντεία --`;
                 
@@ -1470,40 +1614,40 @@
                 // Κλείσιμο modal μετά τη λήψη
                 photoModal.classList.remove('active');
                 
-                alert(`Η φωτογραφία από τον χρήστη ${username} κατέβηκε επιτυχώς!\n\nΑρχείο: ${downloadName}`);
+                alert(`Η φωτογραφία από τον επισκέπτη ${username} κατέβηκε επιτυχώς!\n\nΑρχείο: ${downloadName}`);
             };
             
-            // Διαγραφή χρήστη
-            window.deleteUser = function(userId) {
-                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη; Όλες οι φωτογραφίες και μηνύματα του θα διαγραφούν.')) {
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const updatedUsers = users.filter(user => user.id !== userId);
-                    localStorage.setItem('users', JSON.stringify(updatedUsers));
+            // Διαγραφή επισκέπτη
+            window.deleteVisitor = function(visitorId) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον επισκέπτη; Όλες οι φωτογραφίες και μηνύματα του θα διαγραφούν.')) {
+                    const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                    const updatedVisitors = visitors.filter(visitor => visitor.id !== visitorId);
+                    localStorage.setItem('visitors', JSON.stringify(updatedVisitors));
                     
                     // Ενημέρωση adminUser
-                    adminUser = updatedUsers.find(u => u.id === adminUser.id);
+                    adminUser = updatedVisitors.find(v => v.id === adminUser.id);
                     
-                    loadUsersData(updatedUsers);
+                    loadVisitorsData(updatedVisitors);
                     loadDashboardData();
                     
-                    alert('Ο χρήστης διαγράφηκε επιτυχώς');
+                    alert('Ο επισκέπτης διαγράφηκε επιτυχώς');
                 }
             };
             
             // Διαγραφή φωτογραφίας
-            window.deletePhoto = function(userId, photoId) {
+            window.deletePhoto = function(visitorId, photoId) {
                 if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή τη φωτογραφία;')) {
-                    const users = JSON.parse(localStorage.getItem('users') || '[]');
-                    const userIndex = users.findIndex(user => user.id === userId);
+                    const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                    const visitorIndex = visitors.findIndex(visitor => visitor.id === visitorId);
                     
-                    if (userIndex !== -1) {
-                        users[userIndex].photos = users[userIndex].photos.filter(photo => photo.id !== photoId);
-                        localStorage.setItem('users', JSON.stringify(users));
+                    if (visitorIndex !== -1) {
+                        visitors[visitorIndex].photos = visitors[visitorIndex].photos.filter(photo => photo.id !== photoId);
+                        localStorage.setItem('visitors', JSON.stringify(visitors));
                         
                         // Ενημέρωση adminUser
-                        adminUser = users.find(u => u.id === adminUser.id);
+                        adminUser = visitors.find(v => v.id === adminUser.id);
                         
-                        loadPhotosData(users);
+                        loadPhotosData(visitors);
                         loadDashboardData();
                         
                         alert('Η φωτογραφία διαγράφηκε επιτυχώς');
@@ -1511,9 +1655,9 @@
                 }
             };
             
-            // Ενημέρωση πόντων χρήστη
-            window.updateUserPoints = function(userId) {
-                const pointsInput = document.getElementById(`points-${userId}`);
+            // Ενημέρωση πόντων επισκέπτη
+            window.updateVisitorPoints = function(visitorId) {
+                const pointsInput = document.getElementById(`points-${visitorId}`);
                 const newPoints = parseInt(pointsInput.value);
                 
                 if (isNaN(newPoints) || newPoints < 0) {
@@ -1521,17 +1665,17 @@
                     return;
                 }
                 
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(user => user.id === userId);
+                const visitors = JSON.parse(localStorage.getItem('visitors') || '[]');
+                const visitorIndex = visitors.findIndex(visitor => visitor.id === visitorId);
                 
-                if (userIndex !== -1) {
-                    users[userIndex].points = newPoints;
-                    localStorage.setItem('users', JSON.stringify(users));
+                if (visitorIndex !== -1) {
+                    visitors[visitorIndex].points = newPoints;
+                    localStorage.setItem('visitors', JSON.stringify(visitors));
                     
                     // Ενημέρωση adminUser
-                    adminUser = users.find(u => u.id === adminUser.id);
+                    adminUser = visitors.find(v => v.id === adminUser.id);
                     
-                    loadPointsData(users);
+                    loadPointsData(visitors);
                     loadDashboardData();
                     
                     alert('Οι πόντοι ενημερώθηκαν επιτυχώς');
