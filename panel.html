@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -6,7 +7,6 @@
     <title>Διαχειριστής Καφεμαντείας - Πίνακας Ελέγχου</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Ο ίδιος CSS όπως πριν */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -1142,23 +1142,54 @@
                     return;
                 }
                 
-                // Ενημέρωση της κατάστασης της υποβολής
+                // Βρες την υποβολή
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === submissionId);
+                
+                if (!submission) {
+                    alert('Δεν βρέθηκε η υποβολή!');
+                    return;
+                }
+                
+                // Δημιουργία απάντησης
+                const response = {
+                    id: Date.now(),
+                    submissionId: submissionId,
+                    userEmail: submission.userEmail || submission.email,
+                    adminMessage: replyMessage,
+                    originalMessage: submission.message || submission.subject,
+                    date: new Date().toISOString(),
+                    status: 'sent'
+                };
+                
+                // Αποθήκευση απάντησης
+                saveResponse(response);
+                
+                // Ενημέρωση κατάστασης υποβολής
                 updateSubmissionStatus(submissionId, 'answered');
                 
-                // Προσομοίωση αποστολής απάντησης
+                // Αποστολή
                 this.disabled = true;
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
                 
                 setTimeout(() => {
-                    alert('Η απάντηση στάλθηκε επιτυχώς!');
+                    alert('Η απάντηση στάλθηκε επιτυχώς στον χρήστη!');
                     replyModal.style.display = 'none';
                     this.disabled = false;
                     this.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Απάντησης';
                     
-                    // Ανανέωση των δεδομένων
+                    // Ανανέωση δεδομένων
                     loadAllData();
                 }, 1500);
             });
+            
+            // Αποθήκευση απάντησης στο LocalStorage
+            function saveResponse(response) {
+                const existingResponses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
+                existingResponses.push(response);
+                localStorage.setItem('coffeeResponses', JSON.stringify(existingResponses));
+                console.log('Απάντηση αποθηκεύτηκε:', response);
+            }
             
             // Ενημέρωση κατάστασης υποβολής
             function updateSubmissionStatus(id, newStatus) {
@@ -1243,3 +1274,4 @@
     </script>
 </body>
 </html>
+```
