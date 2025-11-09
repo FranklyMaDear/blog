@@ -6,7 +6,6 @@
     <title>Καφεμαντεία - Αποστολή Φωτογραφιών & Επικοινωνία</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Ο ίδιος CSS όπως πριν */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -419,6 +418,59 @@
             background: var(--primary-light);
         }
         
+        /* Νέο CSS για απαντήσεις */
+        .responses-list {
+            display: grid;
+            gap: 20px;
+        }
+
+        .response-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--success);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .response-subject {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .response-date {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        .response-content {
+            line-height: 1.6;
+        }
+
+        .response-original {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .original-label {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -511,6 +563,9 @@
             </button>
             <button class="tab" data-tab="contact-tab">
                 <i class="fas fa-envelope"></i> Επικοινωνία
+            </button>
+            <button class="tab" data-tab="responses-tab">
+                <i class="fas fa-reply"></i> Οι Απαντήσεις Μου
             </button>
         </div>
         
@@ -641,6 +696,30 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Καρτέλα Απαντήσεων -->
+            <section id="responses-tab" class="tab-content">
+                <div class="form-section">
+                    <h2><i class="fas fa-reply"></i> Απαντήσεις από τον Διαχειριστή</h2>
+                    
+                    <div class="info-box">
+                        <p><strong>Εδώ μπορείτε να δείτε τις απαντήσεις στις υποβολές σας:</strong></p>
+                        <p>Οι απαντήσεις εμφανίζονται αυτόματα μόλις ο διαχειριστής απαντήσει στις υποβολές σας.</p>
+                    </div>
+                    
+                    <div class="responses-list" id="responses-list">
+                        <!-- Εδώ θα προστεθούν οι απαντήσεις -->
+                    </div>
+                    
+                    <div class="empty-state" id="no-responses" style="display: none;">
+                        <div class="empty-icon">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <h3>Δεν υπάρχουν απαντήσεις ακόμα</h3>
+                        <p>Οι απαντήσεις από τον διαχειριστή θα εμφανιστούν εδώ μόλις απαντηθούν οι υποβολές σας.</p>
+                    </div>
+                </div>
+            </section>
         </main>
         
         <footer>
@@ -669,6 +748,11 @@
                     // Ενεργοποίηση της επιλεγμένης καρτέλας
                     tab.classList.add('active');
                     document.getElementById(tabId).classList.add('active');
+
+                    // Αν είναι η καρτέλα απαντήσεων, φόρτωσε τις απαντήσεις
+                    if (tabId === 'responses-tab') {
+                        loadUserResponses();
+                    }
                 });
             });
             
@@ -864,6 +948,100 @@
                 
                 console.log('Υποβολή αποθηκεύτηκε:', submission);
             }
+
+            // Φόρτωση απαντήσεων για τον επισκέπτη
+            function loadUserResponses() {
+                const userEmail = document.getElementById('email').value; // Το email του τρέχοντος χρήστη
+                const responses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
+                const userResponses = responses.filter(response => response.userEmail === userEmail);
+                const responsesList = document.getElementById('responses-list');
+                const noResponses = document.getElementById('no-responses');
+
+                if (userResponses.length === 0) {
+                    responsesList.innerHTML = '';
+                    noResponses.style.display = 'block';
+                    return;
+                }
+
+                noResponses.style.display = 'none';
+                responsesList.innerHTML = '';
+
+                // Ταξινόμηση από νεότερο προς παλαιότερο
+                userResponses.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                userResponses.forEach(response => {
+                    const responseCard = document.createElement('div');
+                    responseCard.className = 'response-card';
+                    responseCard.innerHTML = `
+                        <div class="response-header">
+                            <div class="response-subject">Απάντηση στην υποβολή σας</div>
+                            <div class="response-date">${formatDate(response.date)}</div>
+                        </div>
+                        <div class="response-content">
+                            <strong>Απάντηση διαχειριστή:</strong><br>
+                            ${response.adminMessage}
+                        </div>
+                        ${response.originalMessage ? `
+                        <div class="response-original">
+                            <span class="original-label">Το αρχικό σας μήνυμα:</span>
+                            ${response.originalMessage}
+                        </div>
+                        ` : ''}
+                    `;
+                    responsesList.appendChild(responseCard);
+                });
+            }
+
+            // Μορφοποίηση ημερομηνίας
+            function formatDate(dateString) {
+                const options = { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+                return new Date(dateString).toLocaleDateString('el-GR', options);
+            }
+
+            // Έλεγχος για νέες απαντήσεις
+            function checkForNewResponses() {
+                const userEmail = document.getElementById('email').value;
+                if (!userEmail) return;
+                
+                const responses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
+                const userResponses = responses.filter(response => response.userEmail === userEmail);
+                const newResponses = userResponses.filter(response => !response.viewed);
+                
+                if (newResponses.length > 0) {
+                    // Εμφάνιση ειδοποίησης
+                    showNotification(`Έχετε ${newResponses.length} νέες απαντήσεις!`, 'info');
+                    
+                    // Σήμανση ως προβεβλημένες
+                    newResponses.forEach(response => {
+                        response.viewed = true;
+                    });
+                    localStorage.setItem('coffeeResponses', JSON.stringify(responses));
+                }
+            }
+
+            // Εμφάνιση ειδοποίησης
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `message ${type}`;
+                notification.textContent = message;
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '1000';
+                notification.style.maxWidth = '300px';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+            }
             
             // Εμφάνιση μηνύματος
             function showMessage(element, text, type) {
@@ -876,6 +1054,15 @@
                     element.style.display = 'none';
                 }, 5000);
             }
+
+            // Αυτόματη ανανέωση απαντήσεων κάθε 10 δευτερόλεπτα
+            setInterval(() => {
+                checkForNewResponses();
+                // Αν η καρτέλα απαντήσεων είναι ανοιχτή, ανανέωσε τα δεδομένα
+                if (document.getElementById('responses-tab').classList.contains('active')) {
+                    loadUserResponses();
+                }
+            }, 10000);
         });
     </script>
 </body>
