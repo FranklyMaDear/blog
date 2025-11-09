@@ -1682,6 +1682,331 @@
                 }
             };
         });
+        // Βρες αυτή τη γραμμή στο panel.html:
+});
+
+// ΚΑΙ ΠΡΟΣΘΕΣΕ ΑΚΡΙΒΩΣ ΜΕΤΑ ΑΠΟ ΑΥΤΗ ΤΟΝ ΚΩΔΙΚΑ:
+
+// Προσθήκη συναρτήσεων για επικοινωνία με Coffee Time
+// Συνάρτηση για αποστολή μηνύματος στο Coffee Time
+function sendToCoffeeTime(message, type = 'notification') {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    
+    if (!coffeeTimeData.messages) {
+        coffeeTimeData.messages = [];
+    }
+    
+    const coffeeMessage = {
+        id: Date.now(),
+        type: type,
+        content: message,
+        timestamp: new Date().toISOString(),
+        from: 'admin',
+        read: false
+    };
+    
+    coffeeTimeData.messages.push(coffeeMessage);
+    localStorage.setItem('coffeeTimeData', JSON.stringify(coffeeTimeData));
+    
+    // Ενημέρωση του Coffee Time αν είναι ανοιχτό
+    if (window.coffeeTimeUpdate) {
+        window.coffeeTimeUpdate();
+    }
+    
+    return true;
+}
+
+// Συνάρτηση για ανάγνωση μηνυμάτων από το Coffee Time
+function getCoffeeTimeMessages() {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    return coffeeTimeData.messages || [];
+}
+
+// Συνάρτηση για ανάγνωση φωτογραφιών από το Coffee Time
+function getCoffeeTimePhotos() {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    return coffeeTimeData.photos || [];
+}
+
+// Συνάρτηση για σήμανση μηνυμάτων ως αναγνωσμένα
+function markCoffeeTimeMessagesAsRead() {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    
+    if (coffeeTimeData.messages) {
+        coffeeTimeData.messages.forEach(message => {
+            if (message.from !== 'admin') {
+                message.read = true;
+            }
+        });
+        
+        localStorage.setItem('coffeeTimeData', JSON.stringify(coffeeTimeData));
+    }
+}
+
+// Συνάρτηση για αποστολή φωτογραφίας στο Coffee Time
+function sendPhotoToCoffeeTime(photoData, caption = '') {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    
+    if (!coffeeTimeData.photos) {
+        coffeeTimeData.photos = [];
+    }
+    
+    const coffeePhoto = {
+        id: Date.now(),
+        url: photoData.url,
+        filename: photoData.filename,
+        caption: caption,
+        timestamp: new Date().toISOString(),
+        from: 'admin'
+    };
+    
+    coffeeTimeData.photos.push(coffeePhoto);
+    localStorage.setItem('coffeeTimeData', JSON.stringify(coffeeTimeData));
+    
+    // Ενημέρωση του Coffee Time αν είναι ανοιχτό
+    if (window.coffeeTimeUpdate) {
+        window.coffeeTimeUpdate();
+    }
+    
+    return true;
+}
+
+// Ενημέρωση της loadDashboardData για να εμφανίζει και Coffee Time data
+function loadDashboardData() {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    // Υπολογισμός στατιστικών
+    const userCount = users.filter(u => u.email !== ADMIN_EMAIL).length;
+    const photoCount = users.reduce((total, user) => total + (user.photos ? user.photos.length : 0), 0);
+    
+    // Υπολογισμός μηνυμάτων από συνομιλίες
+    let messageCount = 0;
+    users.forEach(user => {
+        if (user.conversations) {
+            Object.values(user.conversations).forEach(conversation => {
+                messageCount += conversation.messages ? conversation.messages.length : 0;
+            });
+        }
+    });
+    
+    const freeCoffeeCount = users.filter(user => user.points >= 100).length;
+    
+    // Coffee Time στατιστικά
+    const coffeeTimeMessages = getCoffeeTimeMessages();
+    const coffeeTimePhotos = getCoffeeTimePhotos();
+    const unreadCoffeeTimeMessages = coffeeTimeMessages.filter(m => !m.read && m.from !== 'admin').length;
+
+    // Ενημέρωση στατιστικών
+    totalUsers.textContent = userCount;
+    totalPhotos.textContent = photoCount + coffeeTimePhotos.length;
+    totalMessages.textContent = messageCount + coffeeTimeMessages.length;
+    freeCoffeeUsers.textContent = freeCoffeeCount;
+    
+    // Προσθήκη Coffee Time badge αν υπάρχουν μη αναγνωσμένα μηνύματα
+    if (unreadCoffeeTimeMessages > 0) {
+        const conversationsTab = document.querySelector('.admin-tab[data-tab="conversations"]');
+        if (conversationsTab) {
+            let badge = conversationsTab.querySelector('.coffee-time-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'unread-badge coffee-time-badge';
+                conversationsTab.appendChild(badge);
+            }
+            badge.textContent = unreadCoffeeTimeMessages;
+            badge.style.display = 'inline-flex';
+        }
+    }
+    
+    // Φόρτωση πρόσφατων ενεργειών
+    loadRecentActivities(users);
+}
+
+// Ενημέρωση της loadRecentActivities για να περιλαμβάνει Coffee Time μηνύματα
+function loadRecentActivities(users) {
+    recentActivities.innerHTML = '';
+    
+    // Συλλογή όλων των μηνυμάτων από όλες τις συνομιλίες
+    let allMessages = [];
+    users.forEach(user => {
+        if (user.conversations) {
+            Object.values(user.conversations).forEach(conversation => {
+                if (conversation.messages) {
+                    conversation.messages.forEach(message => {
+                        allMessages.push({
+                            ...message,
+                            username: user.username,
+                            userEmail: user.email,
+                            conversationWith: conversation.username,
+                            conversationId: conversation.userId,
+                            messageId: message.id,
+                            source: 'user'
+                        });
+                    });
+                }
+            });
+        }
+    });
+    
+    // Προσθήκη Coffee Time μηνυμάτων
+    const coffeeTimeMessages = getCoffeeTimeMessages();
+    coffeeTimeMessages.forEach(message => {
+        allMessages.push({
+            ...message,
+            username: 'Coffee Time',
+            userEmail: 'coffeetime@system',
+            conversationWith: 'Coffee Time System',
+            conversationId: 'coffeetime',
+            messageId: message.id,
+            source: 'coffeetime',
+            content: `[Coffee Time] ${message.content}`
+        });
+    });
+    
+    // Ταξινόμηση μηνυμάτων κατά χρονολογική σειρά (νεότερο πρώτο)
+    allMessages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    // Εμφάνιση των 10 πιο πρόσφατων μηνυμάτων
+    const recentMessages = allMessages.slice(0, 10);
+    
+    if (recentMessages.length === 0) {
+        recentActivities.innerHTML = '<div class="empty-state">Δεν υπάρχουν πρόσφατες ενέργειες</div>';
+        return;
+    }
+    
+    recentMessages.forEach(message => {
+        const messageElement = document.createElement('div');
+        messageElement.className = 'user-item';
+        
+        const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
+        const senderInfo = message.senderId === adminUser.id ? 
+            '<strong>Διαχειριστής</strong>' : 
+            `<strong>${message.senderName || message.from}</strong>`;
+        
+        let messageContent = `<p>${message.content}</p>`;
+        
+        messageElement.innerHTML = `
+            <div class="user-info">
+                ${senderInfo} - ${messageDate}
+                <div class="message-content">
+                    ${messageContent}
+                    <small>Πηγή: ${message.source === 'coffeetime' ? 'Coffee Time System' : (message.conversationWith || message.senderName)}</small>
+                </div>
+            </div>
+            <div class="user-actions">
+                ${message.source === 'coffeetime' ? 
+                    `<button class="admin-btn btn-danger" onclick="deleteCoffeeTimeMessage(${message.messageId})">Διαγραφή</button>` :
+                    `<button class="admin-btn btn-danger" onclick="deleteMessage(${message.conversationId}, ${message.messageId})">Διαγραφή</button>`
+                }
+            </div>
+        `;
+        
+        recentActivities.appendChild(messageElement);
+    });
+}
+
+// Συνάρτηση διαγραφής Coffee Time μηνύματος
+window.deleteCoffeeTimeMessage = function(messageId) {
+    if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το μήνυμα από το Coffee Time;')) {
+        return;
+    }
+    
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    
+    if (coffeeTimeData.messages) {
+        coffeeTimeData.messages = coffeeTimeData.messages.filter(msg => msg.id !== messageId);
+        localStorage.setItem('coffeeTimeData', JSON.stringify(coffeeTimeData));
+        
+        // Επαναφόρτωση δεδομένων
+        loadDashboardData();
+        
+        alert('Το μήνυμα διαγράφηκε επιτυχώς');
+    }
+};
+
+// Προσθήκη φόρμας για αποστολή μηνύματος στο Coffee Time
+function addCoffeeTimeMessageForm() {
+    const conversationsContent = document.getElementById('conversations-content');
+    
+    const coffeeTimeForm = document.createElement('div');
+    coffeeTimeForm.className = 'message-form';
+    coffeeTimeForm.style.marginTop = '2rem';
+    coffeeTimeForm.style.borderTop = '2px solid #eee';
+    coffeeTimeForm.style.paddingTop = '1rem';
+    
+    coffeeTimeForm.innerHTML = `
+        <h3>Αποστολή Μηνύματος στο Coffee Time</h3>
+        <div class="form-group">
+            <label for="coffee-time-message">Περιεχόμενο Μηνύματος:</label>
+            <textarea id="coffee-time-message" rows="3" placeholder="Γράψτε το μήνυμα για το Coffee Time..."></textarea>
+        </div>
+        <button class="admin-btn btn-success" id="send-coffee-time-message-btn">Αποστολή στο Coffee Time</button>
+    `;
+    
+    conversationsContent.appendChild(coffeeTimeForm);
+    
+    // Προσθήκη event listener για αποστολή μηνύματος
+    document.getElementById('send-coffee-time-message-btn').addEventListener('click', function() {
+        const messageContent = document.getElementById('coffee-time-message').value.trim();
+        
+        if (!messageContent) {
+            alert('Παρακαλώ εισάγετε μήνυμα');
+            return;
+        }
+        
+        if (sendToCoffeeTime(messageContent, 'admin_message')) {
+            alert('Το μήνυμα στάλθηκε επιτυχώς στο Coffee Time');
+            document.getElementById('coffee-time-message').value = '';
+        } else {
+            alert('Σφάλμα κατά την αποστολή του μηνύματος');
+        }
+    });
+}
+
+// Προσθήκη φόρμας για αποστολή φωτογραφίας στο Coffee Time
+function addCoffeeTimePhotoForm() {
+    const photosContent = document.getElementById('photos-content');
+    
+    const photoForm = document.createElement('div');
+    photoForm.className = 'message-form';
+    photoForm.style.marginTop = '2rem';
+    photoForm.style.borderTop = '2px solid #eee';
+    photoForm.style.paddingTop = '1rem';
+    
+    photoForm.innerHTML = `
+        <h3>Αποστολή Φωτογραφίας στο Coffee Time</h3>
+        <div class="form-group">
+            <label for="photo-caption">Περιγραφή Φωτογραφίας:</label>
+            <input type="text" id="photo-caption" placeholder="Προσθέστε μια περιγραφή...">
+        </div>
+        <button class="admin-btn btn-success" id="send-coffee-time-photo-btn">📷 Αποστολή Δείγματος Φωτογραφίας</button>
+    `;
+    
+    photosContent.appendChild(photoForm);
+    
+    // Προσθήκη event listener για αποστολή φωτογραφίας
+    document.getElementById('send-coffee-time-photo-btn').addEventListener('click', function() {
+        const caption = document.getElementById('photo-caption').value.trim();
+        
+        const photoData = {
+            url: 'sample_photo_from_admin.jpg',
+            filename: `admin_photo_${Date.now()}.jpg`
+        };
+        
+        if (sendPhotoToCoffeeTime(photoData, caption)) {
+            alert('Η φωτογραφία στάλθηκε επιτυχώς στο Coffee Time');
+            document.getElementById('photo-caption').value = '';
+        } else {
+            alert('Σφάλμα κατά την αποστολή της φωτογραφίας');
+        }
+    });
+}
+
+// Κλήση των συναρτήσεων κατά την φόρτωση της σελίδας
+setTimeout(() => {
+    addCoffeeTimeMessageForm();
+    addCoffeeTimePhotoForm();
+    loadDashboardData();
+}, 1000);
     </script>
 </body>
 </html>
