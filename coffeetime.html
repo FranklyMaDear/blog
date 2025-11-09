@@ -1807,7 +1807,349 @@
                     fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
                 }
             });
+        });// Βρες αυτή τη γραμμή στο coffeetime.html:
+});
+
+// ΚΑΙ ΠΡΟΣΘΕΣΕ ΑΚΡΙΒΩΣ ΜΕΤΑ ΑΠΟ ΑΥΤΗ ΤΟΝ ΚΩΔΙΚΑ:
+
+// Προσθήκη συναρτήσεων για επικοινωνία με Πάνελ Διαχείρισης
+// Συνάρτηση για αποστολή μηνύματος στο Πάνελ Διαχείρισης
+function sendToAdminPanel(message, type = 'notification') {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    
+    if (!coffeeTimeData.messages) {
+        coffeeTimeData.messages = [];
+    }
+    
+    const adminMessage = {
+        id: Date.now(),
+        type: type,
+        content: message,
+        timestamp: new Date().toISOString(),
+        from: 'coffeetime',
+        read: false
+    };
+    
+    coffeeTimeData.messages.push(adminMessage);
+    localStorage.setItem('coffeeTimeData', JSON.stringify(coffeeTimeData));
+    
+    // Ενημέρωση του Admin Panel αν είναι ανοιχτό
+    if (window.adminPanelUpdate) {
+        window.adminPanelUpdate();
+    }
+    
+    return true;
+}
+
+// Συνάρτηση για ανάγνωση μηνυμάτων από το Πάνελ Διαχείρισης
+function getAdminPanelMessages() {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    const messages = coffeeTimeData.messages || [];
+    return messages.filter(msg => msg.from === 'admin');
+}
+
+// Συνάρτηση για ανάγνωση φωτογραφιών από το Πάνελ Διαχείρισης
+function getAdminPanelPhotos() {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    const photos = coffeeTimeData.photos || [];
+    return photos.filter(photo => photo.from === 'admin');
+}
+
+// Συνάρτηση για σήμανση μηνυμάτων ως αναγνωσμένα
+function markAdminMessagesAsRead() {
+    const coffeeTimeData = JSON.parse(localStorage.getItem('coffeeTimeData') || '{}');
+    
+    if (coffeeTimeData.messages) {
+        coffeeTimeData.messages.forEach(message => {
+            if (message.from === 'admin') {
+                message.read = true;
+            }
         });
+        
+        localStorage.setItem('coffeeTimeData', JSON.stringify(coffeeTimeData));
+    }
+}
+
+// Συνάρτηση για εμφάνιση ειδοποιήσεων από το Πάνελ Διαχείρισης
+function displayAdminNotifications() {
+    const adminMessages = getAdminPanelMessages();
+    const unreadMessages = adminMessages.filter(msg => !msg.read);
+    
+    if (unreadMessages.length > 0) {
+        // Δημιουργία ειδοποίησης
+        let notificationSection = document.getElementById('admin-notifications');
+        if (!notificationSection) {
+            notificationSection = document.createElement('div');
+            notificationSection.id = 'admin-notifications';
+            notificationSection.style.background = 'linear-gradient(135deg, #9C27B0, #7B1FA2)';
+            notificationSection.style.color = 'white';
+            notificationSection.style.padding = '1rem';
+            notificationSection.style.borderRadius = '10px';
+            notificationSection.style.marginBottom = '1rem';
+            notificationSection.style.textAlign = 'center';
+            
+            const appContainer = document.querySelector('.app-container');
+            const userSection = document.getElementById('user-section');
+            appContainer.insertBefore(notificationSection, userSection);
+        }
+        
+        notificationSection.innerHTML = `
+            <h3>📢 Μηνύματα από Διαχειριστή</h3>
+            <p>Έχετε ${unreadMessages.length} νέα μηνύματα</p>
+            <button class="auth-btn" onclick="showAdminMessages()" style="background: white; color: #9C27B0; margin-top: 0.5rem;">
+                Προβολή Μηνυμάτων
+            </button>
+        `;
+        notificationSection.style.display = 'block';
+    } else {
+        const notificationSection = document.getElementById('admin-notifications');
+        if (notificationSection) {
+            notificationSection.style.display = 'none';
+        }
+    }
+}
+
+// Συνάρτηση για εμφάνιση μηνυμάτων από το Πάνελ Διαχείρισης
+window.showAdminMessages = function() {
+    const adminMessages = getAdminPanelMessages();
+    
+    const modal = document.createElement('div');
+    modal.className = 'photo-modal active';
+    modal.style.zIndex = '1001';
+    
+    let messagesHTML = '';
+    if (adminMessages.length > 0) {
+        adminMessages.forEach(message => {
+            const messageDate = new Date(message.timestamp).toLocaleString('el-GR');
+            
+            messagesHTML += `
+                <div class="user-item" style="background: #f0f0f0; margin-bottom: 0.8rem; padding: 0.8rem; border-radius: 8px;">
+                    <div class="user-info">
+                        <strong>Διαχειριστής</strong> - ${messageDate}
+                        <div class="message-content" style="background: white; padding: 0.8rem; border-radius: 6px; margin-top: 0.4rem;">
+                            <p>${message.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    } else {
+        messagesHTML = '<p>Δεν υπάρχουν μηνύματα από τον διαχειριστή.</p>';
+    }
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="background: white; padding: 1rem; border-radius: 8px; max-width: 90%; max-height: 90%; overflow-y: auto;">
+            <span class="close-modal" onclick="this.parentElement.parentElement.remove(); markAdminMessagesAsRead(); displayAdminNotifications();">&times;</span>
+            <h3>Μηνύματα από Διαχειριστή</h3>
+            <div class="conversation-list">
+                ${messagesHTML}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Κλείσιμο modal με κλικ έξω
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+            markAdminMessagesAsRead();
+            displayAdminNotifications();
+        }
+    });
+    
+    // Σήμανση μηνυμάτων ως αναγνωσμένα
+    markAdminMessagesAsRead();
+    displayAdminNotifications();
+};
+
+// Συνάρτηση για εμφάνιση φωτογραφιών από το Πάνελ Διαχείρισης
+function displayAdminPhotos() {
+    const adminPhotos = getAdminPanelPhotos();
+    
+    if (adminPhotos.length > 0) {
+        let photosSection = document.getElementById('admin-photos-section');
+        if (!photosSection) {
+            photosSection = document.createElement('div');
+            photosSection.id = 'admin-photos-section';
+            photosSection.className = 'upload-section';
+            
+            photosSection.innerHTML = `
+                <h2 class="section-title">📷 Φωτογραφίες από Διαχειριστή</h2>
+                <div class="photos-gallery" id="admin-photos-gallery"></div>
+            `;
+            
+            const uploadSection = document.getElementById('upload-section');
+            uploadSection.parentNode.insertBefore(photosSection, uploadSection.nextSibling);
+        }
+        
+        const photosGallery = document.getElementById('admin-photos-gallery');
+        photosGallery.innerHTML = '';
+        
+        adminPhotos.forEach(photo => {
+            const photoElement = document.createElement('div');
+            photoElement.className = 'photo-item';
+            
+            const uploadDate = new Date(photo.timestamp).toLocaleString('el-GR');
+            
+            photoElement.innerHTML = `
+                <div class="user-info">
+                    <strong>Διαχειριστής</strong><br>
+                    ${uploadDate}
+                </div>
+                <div class="photo-preview" style="background: #f0f0f0; display: flex; align-items: center; justify-content: center; font-size: 2rem; cursor: pointer;" onclick="viewAdminPhoto('${photo.url}', '${photo.caption || ''}')">
+                    📷
+                </div>
+                <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">${photo.filename}</div>
+                ${photo.caption ? `<div style="font-size: 0.8rem; margin-top: 0.4rem;">${photo.caption}</div>` : ''}
+            `;
+            
+            photosGallery.appendChild(photoElement);
+        });
+        
+        photosSection.style.display = 'block';
+    } else {
+        const photosSection = document.getElementById('admin-photos-section');
+        if (photosSection) {
+            photosSection.style.display = 'none';
+        }
+    }
+}
+
+// Συνάρτηση για προβολή φωτογραφίας από διαχειριστή
+window.viewAdminPhoto = function(url, caption) {
+    const modal = document.createElement('div');
+    modal.className = 'photo-modal active';
+    modal.style.zIndex = '1001';
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="background: white; padding: 1rem; border-radius: 8px; max-width: 90%; max-height: 90%; overflow-y: auto; text-align: center;">
+            <span class="close-modal" onclick="this.parentElement.parentElement.remove()">&times;</span>
+            <h3>Φωτογραφία από Διαχειριστή</h3>
+            <div style="margin: 1rem 0;">
+                <div class="photo-placeholder" style="width: 200px; height: 200px; margin: 0 auto 1rem; font-size: 4rem;">
+                    📷
+                </div>
+                <p><em>Προσομοίωση εικόνας από διαχειριστή</em></p>
+            </div>
+            ${caption ? `<p><strong>Περιγραφή:</strong> ${caption}</p>` : ''}
+            <button class="auth-btn" onclick="downloadAdminPhoto('${url}')" style="margin-top: 1rem;">
+                📥 Λήψη Φωτογραφίας
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Κλείσιμο modal με κλικ έξω
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+};
+
+// Συνάρτηση για λήψη φωτογραφίας από διαχειριστή
+window.downloadAdminPhoto = function(url) {
+    // Δημιουργία dummy αρχείου για λήψη
+    const content = `Φωτογραφία από διαχειριστή Καφεμαντείας
+
+Περιγραφή: Φωτογραφία που μοιράστηκε ο διαχειριστής
+Ημερομηνία λήψης: ${new Date().toLocaleString('el-GR')}
+
+-- Καφεμαντεία --`;
+    
+    const blob = new Blob([content], { type: 'text/plain' });
+    const downloadUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `admin_photo_${Date.now()}.txt`;
+    
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(downloadUrl);
+    
+    alert('Η φωτογραφία από τον διαχειριστή κατέβηκε επιτυχώς!');
+};
+
+// Ενημέρωση της showUserSection για να εμφανίζει ειδοποιήσεις
+const originalShowUserSection = showUserSection;
+showUserSection = function(user) {
+    originalShowUserSection(user);
+    
+    // Εμφάνιση ειδοποιήσεων και φωτογραφιών από διαχειριστή
+    displayAdminNotifications();
+    displayAdminPhotos();
+};
+
+// Καθολική συνάρτηση για ενημέρωση από το Πάνελ Διαχείρισης
+window.coffeeTimeUpdate = function() {
+    displayAdminNotifications();
+    displayAdminPhotos();
+};
+
+// Προσθήκη κουμπιού για αποστολή μηνύματος στο Πάνελ Διαχείρισης
+function addAdminMessageButton() {
+    const messagesSection = document.getElementById('messages-section');
+    
+    // Έλεγχος αν το κουμπί υπάρχει ήδη
+    if (document.getElementById('admin-message-btn')) {
+        return;
+    }
+    
+    const adminMessageButton = document.createElement('button');
+    adminMessageButton.id = 'admin-message-btn';
+    adminMessageButton.className = 'auth-btn';
+    adminMessageButton.style.background = 'var(--admin-color)';
+    adminMessageButton.style.marginTop = '1rem';
+    adminMessageButton.innerHTML = '✉️ Αποστολή Μηνύματος σε Διαχειριστή';
+    
+    adminMessageButton.addEventListener('click', function() {
+        const message = prompt('Γράψτε το μήνυμά σας προς τον διαχειριστή:');
+        if (message && message.trim()) {
+            if (sendToAdminPanel(message.trim(), 'user_message')) {
+                alert('Το μήνυμα στάλθηκε επιτυχώς στον διαχειριστή!');
+            } else {
+                alert('Σφάλμα κατά την αποστολή του μηνύματος');
+            }
+        }
+    });
+    
+    messagesSection.appendChild(adminMessageButton);
+}
+
+// Αυτόματη αποστολή ειδοποιήσεων όταν ανεβαίνουν φωτογραφίες
+const originalUploadBtnClick = uploadBtn.onclick;
+uploadBtn.onclick = function() {
+    const result = originalUploadBtnClick();
+    
+    // Αποστολή ειδοποίησης στο admin panel
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+        const fileInput = document.getElementById('photo1');
+        const files = fileInput.files;
+        
+        if (files.length > 0) {
+            const message = `Ο χρήστης ${currentUser.username} ανέβασε ${files.length} φωτογραφία(ες)`;
+            sendToAdminPanel(message, 'photo_upload');
+        }
+    }
+    
+    return result;
+};
+
+// Κλήση κατά την φόρτωση της σελίδας
+setTimeout(() => {
+    addAdminMessageButton();
+    
+    // Εμφάνιση ειδοποιήσεων αν ο χρήστης είναι συνδεδεμένος
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (currentUser) {
+        displayAdminNotifications();
+        displayAdminPhotos();
+    }
+}, 1000);
     </script>
 </body>
 </html>
