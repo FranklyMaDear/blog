@@ -181,6 +181,14 @@
             background: #388E3C;
         }
         
+        .btn-warning {
+            background: var(--warning-color);
+        }
+        
+        .btn-warning:hover {
+            background: #F57C00;
+        }
+        
         .error-message {
             background: var(--error-color);
             color: white;
@@ -194,22 +202,22 @@
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.8rem;
             margin-bottom: 1rem;
         }
         
         .stat-card {
             background: white;
             border-radius: 8px;
-            padding: 1rem;
+            padding: 0.8rem;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             text-align: center;
             border-left: 5px solid var(--admin-color);
         }
         
         .stat-number {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: var(--admin-color);
             margin-bottom: 0.3rem;
@@ -217,7 +225,7 @@
         
         .stat-label {
             color: var(--dark-color);
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
         
         .user-list, .message-list, .photo-list, .conversation-list {
@@ -412,6 +420,13 @@
             border-radius: 8px;
         }
         
+        .add-points-form {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        
         @media (max-width: 768px) {
             .admin-tabs {
                 flex-direction: row;
@@ -599,6 +614,24 @@
             <div class="admin-content" id="points-content">
                 <h2 class="section-title">Διαχείριση Πόντων Χρηστών</h2>
                 
+                <div class="add-points-form">
+                    <h3>Προσθήκη Πόντων σε Χρήστη</h3>
+                    <div class="form-group">
+                        <label for="points-user">Επιλογή Χρήστη:</label>
+                        <select id="points-user">
+                            <option value="">-- Επιλέξτε Χρήστη --</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="points-to-add">Πόντοι για Προσθήκη:</label>
+                        <input type="number" id="points-to-add" min="1" max="1000" value="10">
+                    </div>
+                    
+                    <button class="admin-btn btn-success" id="add-points-btn">Προσθήκη Πόντων</button>
+                </div>
+                
+                <h3 class="section-title">Χρήστες</h3>
                 <div class="user-list" id="points-list">
                     <!-- Εδώ θα εμφανίζονται οι χρήστες για διαχείριση πόντων -->
                 </div>
@@ -643,6 +676,11 @@
             const messageUser = document.getElementById('message-user');
             const messageContent = document.getElementById('message-content');
             const sendMessageBtn = document.getElementById('send-message-btn');
+            
+            // Νέα φόρμα πόντων
+            const pointsUser = document.getElementById('points-user');
+            const pointsToAdd = document.getElementById('points-to-add');
+            const addPointsBtn = document.getElementById('add-points-btn');
             
             // Modal για φωτογραφίες
             const photoModal = document.getElementById('photo-modal');
@@ -719,6 +757,46 @@
                 if (e.target === photoModal) {
                     photoModal.classList.remove('active');
                 }
+            });
+            
+            // Προσθήκη πόντων σε χρήστη
+            addPointsBtn.addEventListener('click', function() {
+                const selectedUserId = pointsUser.value;
+                const points = parseInt(pointsToAdd.value);
+                
+                if (!selectedUserId) {
+                    alert('Παρακαλώ επιλέξτε χρήστη');
+                    return;
+                }
+                
+                if (isNaN(points) || points <= 0) {
+                    alert('Παρακαλώ εισάγετε έγκυρο αριθμό πόντων');
+                    return;
+                }
+                
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id == selectedUserId);
+                
+                if (userIndex === -1) {
+                    alert('Ο χρήστης δεν βρέθηκε');
+                    return;
+                }
+                
+                // Προσθήκη πόντων
+                users[userIndex].points = (users[userIndex].points || 0) + points;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Ενημέρωση adminUser
+                adminUser = users.find(u => u.id === adminUser.id);
+                
+                // Επαναφόρτωση δεδομένων
+                loadPointsData(users);
+                loadDashboardData();
+                
+                alert(`Προστέθηκαν ${points} πόντοι στον χρήστη ${users[userIndex].username}`);
+                
+                // Επαναφορά φόρμας
+                pointsToAdd.value = "10";
             });
             
             // Εμφάνιση πάνελ διαχείρισης
@@ -811,7 +889,9 @@
                                         ...message,
                                         username: user.username,
                                         userEmail: user.email,
-                                        conversationWith: conversation.username
+                                        conversationWith: conversation.username,
+                                        conversationId: conversation.userId,
+                                        messageId: message.id
                                     });
                                 });
                             }
@@ -848,6 +928,9 @@
                                 ${messageContent}
                                 <small>Συνομιλία με: ${message.conversationWith || message.senderName}</small>
                             </div>
+                        </div>
+                        <div class="user-actions">
+                            <button class="admin-btn btn-danger" onclick="deleteMessage(${message.conversationId}, ${message.messageId})">Διαγραφή</button>
                         </div>
                     `;
                     
@@ -920,12 +1003,19 @@
                 
                 // Συμπλήρωση dropdown επιλογής χρήστη
                 messageUser.innerHTML = '<option value="">-- Επιλέξτε Χρήστη --</option>';
+                pointsUser.innerHTML = '<option value="">-- Επιλέξτε Χρήστη --</option>';
+                
                 users.forEach(user => {
                     if (user.email !== ADMIN_EMAIL) {
                         const option = document.createElement('option');
                         option.value = user.id;
                         option.textContent = `${user.username} (${user.email})`;
                         messageUser.appendChild(option);
+                        
+                        const option2 = document.createElement('option');
+                        option2.value = user.id;
+                        option2.textContent = `${user.username} (${user.email})`;
+                        pointsUser.appendChild(option2);
                     }
                 });
                 
@@ -1229,6 +1319,9 @@
                                     ${messageContent}
                                 </div>
                             </div>
+                            <div class="user-actions">
+                                <button class="admin-btn btn-danger" onclick="deleteMessage(${userId}, ${message.id})">Διαγραφή</button>
+                            </div>
                         </div>
                     `;
                 });
@@ -1251,6 +1344,48 @@
                         modal.remove();
                     }
                 });
+            };
+            
+            // Διαγραφή μηνύματος
+            window.deleteMessage = function(conversationId, messageId) {
+                if (!confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το μήνυμα;')) {
+                    return;
+                }
+                
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                
+                // Διαγραφή μηνύματος από τον διαχειριστή
+                if (adminUser.conversations && adminUser.conversations[conversationId]) {
+                    adminUser.conversations[conversationId].messages = 
+                        adminUser.conversations[conversationId].messages.filter(msg => msg.id !== messageId);
+                }
+                
+                // Διαγραφή μηνύματος από τον χρήστη
+                const userIndex = users.findIndex(u => u.id === conversationId);
+                if (userIndex !== -1 && users[userIndex].conversations && users[userIndex].conversations[adminUser.id]) {
+                    users[userIndex].conversations[adminUser.id].messages = 
+                        users[userIndex].conversations[adminUser.id].messages.filter(msg => msg.id !== messageId);
+                }
+                
+                // Αποθήκευση αλλαγών
+                const adminIndex = users.findIndex(u => u.id === adminUser.id);
+                if (adminIndex !== -1) {
+                    users[adminIndex] = adminUser;
+                }
+                
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Επαναφόρτωση δεδομένων
+                loadDashboardData();
+                loadConversationsData(users);
+                
+                alert('Το μήνυμα διαγράφηκε επιτυχώς');
+                
+                // Κλείσιμο modal αν είναι ανοιχτό
+                const openModal = document.querySelector('.photo-modal.active');
+                if (openModal) {
+                    openModal.remove();
+                }
             };
             
             // Προβολή λεπτομερειών φωτογραφίας
