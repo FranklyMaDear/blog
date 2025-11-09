@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Καφεμαντεία - Μάθε το μέλλον σου από το φλιτζάνι!</title>
-    <!-- Favicon συμβατό με iPhone και Android -->
     <link rel="icon" type="image/png" href="coffeetime.png">
-    <link rel="apple-touch-icon" href="coffeetime.png">
     <style>
         :root {
             --primary-color: #8B4513;
@@ -684,13 +682,11 @@
             transition: all 0.3s;
             text-align: center;
             padding: 10px;
-            animation: pulse 2s infinite;
         }
         
         .ads-popup:hover {
             transform: translateY(-50%) scale(1.1);
             box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
-            animation: none;
         }
         
         .ads-icon {
@@ -699,24 +695,9 @@
         }
         
         .ads-text {
-            font-size: 0.6rem; /* Μικρότερα γράμματα */
+            font-size: 0.7rem;
             font-weight: bold;
             line-height: 1.1;
-        }
-        
-        @keyframes pulse {
-            0% {
-                transform: translateY(-50%) scale(1);
-                box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
-            }
-            50% {
-                transform: translateY(-50%) scale(1.05);
-                box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
-            }
-            100% {
-                transform: translateY(-50%) scale(1);
-                box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
-            }
         }
         
         .delete-message-btn {
@@ -789,7 +770,7 @@
             }
             
             .ads-text {
-                font-size: 0.55rem; /* Ακόμα μικρότερα για κινητά */
+                font-size: 0.65rem;
             }
         }
     </style>
@@ -799,7 +780,7 @@
         <!-- Ads Popup -->
         <div class="ads-popup" id="ads-popup" style="display: none;">
             <div class="ads-icon">🎁</div>
-            <div class="ads-text">Δες Διαφήμιση για Πόντο!</div>
+            <div class="ads-text">Πόντος Δωρεάν!</div>
         </div>
         
         <header>
@@ -927,18 +908,18 @@
             <p class="upload-subtitle">Ανέβασε φωτογραφίες από το φλιτζάνι σου (πολλαπλές επιλογή)</p>
             
             <div class="photo-grid">
-                <div class="photo-upload" onclick="document.getElementById('photos-upload').click()">
+                <div class="photo-upload" onclick="document.getElementById('photo1').click()">
                     <div class="photo-icon">📷</div>
                     <span class="photo-label">Φωτογραφίες Φλιτζανιού</span>
                     <div class="photo-desc">Επιλέξτε μία ή περισσότερες φωτογραφίες</div>
-                    <div class="file-name" id="file-name">Δεν έχουν επιλεγεί αρχεία</div>
-                    <input type="file" id="photos-upload" class="file-input" accept=".jpg, .jpeg, .png" multiple>
+                    <div class="file-name" id="file-name1">Δεν έχουν επιλεγεί αρχεία</div>
+                    <input type="file" id="photo1" class="file-input" accept=".jpg, .jpeg, .png" multiple>
                 </div>
             </div>
             
             <div class="loading" id="loading">
                 <div class="spinner"></div>
-                <p>Αποστολή αρχείων...</p>
+                <p>Αποστολή φωτογραφιών...</p>
             </div>
             
             <button class="upload-btn" id="upload-btn">
@@ -987,6 +968,8 @@
         </footer>
     </div>
 
+    <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
@@ -1049,8 +1032,12 @@
             const selectedUserMessages = document.getElementById('selected-user-messages');
             const userUnreadBadge = document.getElementById('user-unread-badge');
             const adsPopup = document.getElementById('ads-popup');
-            const photosUpload = document.getElementById('photos-upload');
-            const fileName = document.getElementById('file-name');
+            
+            // Φόρμες
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const loginError = document.getElementById('login-error');
+            const registerError = document.getElementById('register-error');
             
             // Μεταβλητές για την επικοινωνία
             let selectedUserId = null;
@@ -1082,6 +1069,70 @@
             function showAdsPopup() {
                 adsPopup.style.display = 'flex';
             }
+            
+            // Ads popup click handler
+            adsPopup.addEventListener('click', function() {
+                const now = Date.now();
+                if (now - lastAdClickTime < AD_COOLDOWN) {
+                    const remainingTime = Math.ceil((AD_COOLDOWN - (now - lastAdClickTime)) / 1000);
+                    alert(`Παρακαλώ περιμένετε ${remainingTime} δευτερόλεπτα πριν κερδίσετε ξανά πόντους!`);
+                    return;
+                }
+                
+                lastAdClickTime = now;
+                
+                // Άνοιγμα διαφήμισης
+                try {
+                    // Αυτό θα ανοίξει τη διαφήμιση από το script που παρέχεις
+                    // Η διαφήμιση θα πρέπει να καλεί την addPointFromAd() function όταν ολοκληρωθεί
+                    window.openAd && window.openAd();
+                } catch (e) {
+                    console.log('Ad opening failed, simulating point addition');
+                    // Προσομοίωση για testing
+                    addPointFromAd();
+                }
+            });
+            
+            // Συνάρτηση για προσθήκη πόντου από διαφήμιση
+            window.addPointFromAd = function() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = users.findIndex(u => u.id === currentUser.id);
+                
+                if (userIndex !== -1) {
+                    users[userIndex].points += 1;
+                    currentUser.points += 1;
+                    
+                    localStorage.setItem('users', JSON.stringify(users));
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    
+                    // Ενημέρωση UI
+                    userPoints.textContent = currentUser.points;
+                    
+                    // Εμφάνιση μηνύματος επιτυχίας
+                    const pointsEarned = document.createElement('div');
+                    pointsEarned.className = 'points-earned';
+                    pointsEarned.textContent = `🎉 Κερδίσατε 1 πόντο από τη διαφήμιση!`;
+                    pointsEarned.style.display = 'block';
+                    
+                    // Προσθήκη πριν από το success message
+                    if (successMessage.parentNode) {
+                        successMessage.parentNode.insertBefore(pointsEarned, successMessage);
+                    }
+                    
+                    // Απόκρυψη μετά από 3 δευτερόλεπτα
+                    setTimeout(() => {
+                        pointsEarned.style.display = 'none';
+                    }, 3000);
+                    
+                    // Ανανέωση ειδοποιήσεων αν είναι ανοιχτό το admin panel
+                    if (adminPanel.classList.contains('active')) {
+                        loadFreeCoffeeNotifications(users);
+                    }
+                }
+            };
             
             // Σύνδεση/Εγγραφή
             const authTabs = document.querySelectorAll('.auth-tab');
@@ -1190,22 +1241,10 @@
                 authContainer.style.display = 'block';
             });
             
-            // Ενημέρωση ονόματος αρχείου όταν επιλέγονται αρχεία
-            photosUpload.addEventListener('change', function() {
-                if (this.files.length > 0) {
-                    if (this.files.length === 1) {
-                        fileName.textContent = this.files[0].name;
-                    } else {
-                        fileName.textContent = `${this.files.length} φωτογραφίες επιλέχθηκαν`;
-                    }
-                } else {
-                    fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
-                }
-            });
-            
-            // Ανέβασμα φωτογραφιών
+            // Ανέβασμα φωτογραφιών (πολλαπλών αρχείων)
             uploadBtn.addEventListener('click', function() {
-                const files = photosUpload.files;
+                const fileInput = document.getElementById('photo1');
+                const files = fileInput.files;
                 
                 if (files.length === 0) {
                     alert('Παρακαλώ επιλέξτε τουλάχιστον μία φωτογραφία');
@@ -1216,25 +1255,24 @@
                 loading.style.display = 'block';
                 uploadBtn.disabled = true;
                 
-                // Δημιουργία προεπισκοπήσεων για κάθε φωτογραφία
+                // Δημιουργία προεπισκοπήσεων για κάθε αρχείο
                 const processFiles = Array.from(files).map((file, index) => {
                     return new Promise((resolve) => {
                         const reader = new FileReader();
                         
                         reader.onload = function(e) {
-                            const mediaData = {
+                            const photoData = {
                                 id: Date.now() + index,
                                 filename: file.name,
                                 uploadedAt: new Date().toISOString(),
                                 url: e.target.result, // Αποθήκευση της προεπισκόπησης base64
                                 type: file.type,
                                 size: file.size,
-                                isVideo: false, // Πλέον μόνο φωτογραφίες
                                 userId: currentUser.id,
                                 username: currentUser.username,
                                 userEmail: currentUser.email
                             };
-                            resolve(mediaData);
+                            resolve(photoData);
                         };
                         
                         reader.readAsDataURL(file);
@@ -1242,7 +1280,7 @@
                 });
                 
                 // Αναμονή για όλες τις προεπισκοπήσεις
-                Promise.all(processFiles).then((mediaDataArray) => {
+                Promise.all(processFiles).then((photosData) => {
                     // Αποθήκευση φωτογραφιών στον χρήστη
                     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -1250,9 +1288,9 @@
                     
                     if (userIndex !== -1) {
                         // Προσθήκη όλων των φωτογραφιών με προεπισκοπήσεις
-                        mediaDataArray.forEach(mediaData => {
-                            users[userIndex].photos.push(mediaData);
-                            currentUser.photos.push(mediaData);
+                        photosData.forEach(photoData => {
+                            users[userIndex].photos.push(photoData);
+                            currentUser.photos.push(photoData);
                         });
                         
                         localStorage.setItem('users', JSON.stringify(users));
@@ -1260,8 +1298,8 @@
                         
                         // Αποθήκευση φωτογραφιών στον διαχειριστή
                         const adminPhotos = JSON.parse(localStorage.getItem('adminPhotos') || '[]');
-                        mediaDataArray.forEach(mediaData => {
-                            adminPhotos.push(mediaData);
+                        photosData.forEach(photoData => {
+                            adminPhotos.push(photoData);
                         });
                         localStorage.setItem('adminPhotos', JSON.stringify(adminPhotos));
                         
@@ -1281,58 +1319,15 @@
                     }, 5000);
                     
                     // Εκκαθάριση του file input
-                    photosUpload.value = '';
-                    fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
+                    fileInput.value = '';
+                    document.getElementById('file-name1').textContent = 'Δεν έχουν επιλεγεί αρχεία';
                     
                 }).catch(error => {
-                    console.error('Σφάλμα κατά την επεξεργασία των φωτογραφιών:', error);
+                    console.error('Σφάλμα κατά την επεξεργασία των αρχείων:', error);
                     loading.style.display = 'none';
                     uploadBtn.disabled = false;
                     alert('Προέκυψε σφάλμα κατά την αποστολή των φωτογραφιών. Παρακαλώ δοκιμάστε ξανά.');
                 });
-            });
-            
-            // Κλικ στο ads popup
-            adsPopup.addEventListener('click', function() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if (!currentUser) return;
-                
-                const now = Date.now();
-                if (now - lastAdClickTime < AD_COOLDOWN) {
-                    const remainingSeconds = Math.ceil((AD_COOLDOWN - (now - lastAdClickTime)) / 1000);
-                    alert(`Πρέπει να περιμένετε ${remainingSeconds} δευτερόλεπτα πριν κερδίσετε άλλο πόντο από διαφημίσεις.`);
-                    return;
-                }
-                
-                // Άνοιγμα διαφήμισης σε νέο παράθυρο
-                window.open('https://otieu.com/4/10000601', '_blank');
-                
-                // Προσθήκη πόντου
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                
-                if (userIndex !== -1) {
-                    users[userIndex].points += 1;
-                    currentUser.points += 1;
-                    
-                    localStorage.setItem('users', JSON.stringify(users));
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
-                    // Ενημέρωση εμφάνισης πόντων
-                    userPoints.textContent = currentUser.points;
-                    
-                    // Έλεγχος για δωρεάν καφέ
-                    if (currentUser.points >= 100) {
-                        alert('🎉 Συγχαρητήρια! Κερδίσατε έναν δωρεάν καφέ! ☕');
-                    }
-                }
-                
-                lastAdClickTime = now;
-                
-                // Ανανέωση του cooldown
-                setTimeout(() => {
-                    alert('✅ Μπορείτε τώρα να κερδίσετε άλλο πόντο από διαφημίσεις!');
-                }, AD_COOLDOWN);
             });
             
             // Αποστολή μηνύματος από χρήστη
@@ -1804,25 +1799,31 @@
                     return;
                 }
                 
-                adminPhotos.forEach(media => {
-                    const mediaElement = document.createElement('div');
-                    mediaElement.className = 'photo-item';
+                adminPhotos.forEach(photo => {
+                    const photoElement = document.createElement('div');
+                    photoElement.className = 'photo-item';
                     
-                    const uploadDate = new Date(media.uploadedAt).toLocaleString('el-GR');
+                    const uploadDate = new Date(photo.uploadedAt).toLocaleString('el-GR');
                     
-                    mediaElement.innerHTML = `
+                    // Εμφάνιση πραγματικής προεπισκόπησης αν υπάρχει
+                    let previewContent = '';
+                    if (photo.url) {
+                        previewContent = `<img src="${photo.url}" class="photo-preview" alt="${photo.filename}">`;
+                    } else {
+                        previewContent = `<div class="photo-preview" style="display: flex; align-items: center; justify-content: center; background: #f0f0f0; font-size: 2rem;">📷</div>`;
+                    }
+                    
+                    photoElement.innerHTML = `
                         <div class="user-info">
-                            <strong>${media.username}</strong><br>
-                            ${media.userEmail}<br>
+                            <strong>${photo.username}</strong><br>
+                            ${photo.userEmail}<br>
                             ${uploadDate}
                         </div>
-                        <img src="${media.url}" class="photo-preview" alt="${media.filename}">
-                        <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">
-                            ${media.filename} 📷
-                        </div>
+                        ${previewContent}
+                        <div style="font-size: 0.7rem; color: #666; margin-top: 0.4rem;">${photo.filename}</div>
                     `;
                     
-                    photosGallery.appendChild(mediaElement);
+                    photosGallery.appendChild(photoElement);
                 });
             }
             
@@ -1926,6 +1927,22 @@
                         loadUserList(users);
                     }
                 });
+            });
+            
+            // Ενημέρωση ονόματος αρχείου όταν επιλέγονται πολλαπλά αρχεία
+            const fileInput = document.getElementById('photo1');
+            const fileName = document.getElementById('file-name1');
+            
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    if (this.files.length === 1) {
+                        fileName.textContent = this.files[0].name;
+                    } else {
+                        fileName.textContent = `${this.files.length} αρχεία επιλέχθηκαν`;
+                    }
+                } else {
+                    fileName.textContent = 'Δεν έχουν επιλεγεί αρχεία';
+                }
             });
         });
     </script>
