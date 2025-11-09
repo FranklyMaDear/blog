@@ -6,6 +6,7 @@
     <title>Διαχειριστής Καφεμαντείας - Πίνακας Ελέγχου</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Ο ίδιος CSS όπως πριν */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -615,8 +616,8 @@
             <div class="admin-welcome">
                 <i class="fas fa-user-shield"></i> Καλώς ήρθες, Διαχειριστή!
             </div>
-            <button class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i> Αποσύνδεση
+            <button class="logout-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Ανανέωση
             </button>
         </div>
         
@@ -625,7 +626,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-images"></i>
                 </div>
-                <div class="stat-number" id="total-submissions">24</div>
+                <div class="stat-number" id="total-submissions">0</div>
                 <div class="stat-label">Συνολικές Υποβολές</div>
             </div>
             
@@ -633,7 +634,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-clock"></i>
                 </div>
-                <div class="stat-number" id="pending-submissions">8</div>
+                <div class="stat-number" id="pending-submissions">0</div>
                 <div class="stat-label">Υποβολές σε Εκκρεμότητα</div>
             </div>
             
@@ -641,7 +642,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-check-circle"></i>
                 </div>
-                <div class="stat-number" id="answered-submissions">12</div>
+                <div class="stat-number" id="answered-submissions">0</div>
                 <div class="stat-label">Απαντημένες Υποβολές</div>
             </div>
             
@@ -649,7 +650,7 @@
                 <div class="stat-icon">
                     <i class="fas fa-envelope"></i>
                 </div>
-                <div class="stat-number" id="contact-messages">4</div>
+                <div class="stat-number" id="contact-messages">0</div>
                 <div class="stat-label">Μηνύματα Επικοινωνίας</div>
             </div>
         </div>
@@ -690,10 +691,6 @@
                     <div class="submissions-list" id="photo-submissions-list">
                         <!-- Θα προστεθούν δυναμικά οι υποβολές -->
                     </div>
-                    
-                    <div class="pagination" id="photo-pagination">
-                        <!-- Θα προστεθεί δυναμικά η pagination -->
-                    </div>
                 </div>
             </section>
             
@@ -714,10 +711,6 @@
                     
                     <div class="submissions-list" id="message-submissions-list">
                         <!-- Θα προστεθούν δυναμικά τα μηνύματα -->
-                    </div>
-                    
-                    <div class="pagination" id="message-pagination">
-                        <!-- Θα προστεθεί δυναμικά η pagination -->
                     </div>
                 </div>
             </section>
@@ -778,60 +771,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Δεδομένα δοκιμής - Στην πραγματικότητα θα τα λάβετε από το backend
-            const sampleSubmissions = [
-                {
-                    id: 1,
-                    type: 'photo',
-                    userEmail: 'maria@example.com',
-                    date: '2023-10-15 14:30',
-                    status: 'pending',
-                    message: 'Παρακαλώ μπορείτε να μου πείτε τι βλέπετε στον καφέ μου; Έχω ένα περίεργο σχήμα που μοιάζει με πουλί.',
-                    photos: ['https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80']
-                },
-                {
-                    id: 2,
-                    type: 'photo',
-                    userEmail: 'nikos@example.com',
-                    date: '2023-10-14 11:20',
-                    status: 'reviewed',
-                    message: 'Αυτός ο καφές φαίνεται να έχει ένα σχήμα καρδιάς. Τι σημαίνει αυτό;',
-                    photos: ['https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80']
-                },
-                {
-                    id: 3,
-                    type: 'photo',
-                    userEmail: 'eleni@example.com',
-                    date: '2023-10-13 09:45',
-                    status: 'answered',
-                    message: 'Βλέπω πολλά μικρά σημεία στον καφέ μου. Μήπως αυτό σημαίνει κάτι;',
-                    photos: [
-                        'https://images.unsplash.com/photo-1561047029-3000c68339ca?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
-                        'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'
-                    ]
-                },
-                {
-                    id: 4,
-                    type: 'message',
-                    userName: 'Γιώργος Παπαδόπουλος',
-                    userEmail: 'giorgos@example.com',
-                    date: '2023-10-15 16:20',
-                    status: 'pending',
-                    subject: 'Ερώτηση σχετικά με την ερμηνεία',
-                    message: 'Γεια σας, θα ήθελα να μάθω πόσο ακριβής είναι η ερμηνεία της καφεμαντείας. Έχω λάβει διαφορετικές ερμηνείες από διαφορετικές πηγές.'
-                },
-                {
-                    id: 5,
-                    type: 'message',
-                    userName: 'Δήμητρα Αλεξίου',
-                    userEmail: 'dimitra@example.com',
-                    date: '2023-10-14 13:15',
-                    status: 'answered',
-                    subject: 'Πρόβλημα με αποστολή φωτογραφιών',
-                    message: 'Προσπάθησα να στείλω φωτογραφίες αλλά το σύστημα μου έδειξε σφάλμα. Υπάρχει κάποιο μέγεθος αρχείου που πρέπει να ακολουθώ;'
-                }
-            ];
-
             // Σύστημα καρτελών
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -850,9 +789,23 @@
                 });
             });
             
+            // Ανανέωση δεδομένων
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadAllData();
+                showNotification('Τα δεδομένα ανανεώθηκαν!', 'success');
+            });
+            
+            // Φόρτωση όλων των δεδομένων
+            function loadAllData() {
+                loadPhotoSubmissions();
+                loadMessageSubmissions();
+                updateStats();
+            }
+            
             // Φόρτωση υποβολών φωτογραφιών
             function loadPhotoSubmissions() {
-                const photoSubmissions = sampleSubmissions.filter(sub => sub.type === 'photo');
+                const allSubmissions = getAllSubmissions();
+                const photoSubmissions = allSubmissions.filter(sub => sub.type === 'photo');
                 const listContainer = document.getElementById('photo-submissions-list');
                 
                 if (photoSubmissions.length === 0) {
@@ -870,13 +823,16 @@
                 
                 listContainer.innerHTML = '';
                 
+                // Ταξινόμηση από νεότερο προς παλαιότερο
+                photoSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
                 photoSubmissions.forEach(submission => {
                     const statusClass = `status-${submission.status}`;
                     const statusText = getStatusText(submission.status);
                     
                     const photosHTML = submission.photos.map(photo => `
                         <div class="photo-item">
-                            <img src="${photo}" alt="Φωτογραφία καφέ" class="photo-image">
+                            <img src="${photo.data}" alt="Φωτογραφία καφέ" class="photo-image">
                         </div>
                     `).join('');
                     
@@ -922,7 +878,8 @@
             
             // Φόρτωση μηνυμάτων επικοινωνίας
             function loadMessageSubmissions() {
-                const messageSubmissions = sampleSubmissions.filter(sub => sub.type === 'message');
+                const allSubmissions = getAllSubmissions();
+                const messageSubmissions = allSubmissions.filter(sub => sub.type === 'message');
                 const listContainer = document.getElementById('message-submissions-list');
                 
                 if (messageSubmissions.length === 0) {
@@ -939,6 +896,9 @@
                 }
                 
                 listContainer.innerHTML = '';
+                
+                // Ταξινόμηση από νεότερο προς παλαιότερο
+                messageSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
                 messageSubmissions.forEach(submission => {
                     const statusClass = `status-${submission.status}`;
@@ -981,6 +941,11 @@
                 addActionEventListeners();
             }
             
+            // Λήψη όλων των υποβολών από το LocalStorage
+            function getAllSubmissions() {
+                return JSON.parse(localStorage.getItem('coffeeSubmissions') || '[]');
+            }
+            
             // Βοηθητικές συναρτήσεις
             function getStatusText(status) {
                 const statusMap = {
@@ -1007,7 +972,7 @@
                 // Προβολή υποβολής
                 document.querySelectorAll('.btn-view').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const submissionId = this.getAttribute('data-id');
+                        const submissionId = parseInt(this.getAttribute('data-id'));
                         viewSubmission(submissionId);
                     });
                 });
@@ -1015,7 +980,7 @@
                 // Απάντηση
                 document.querySelectorAll('.btn-reply').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const submissionId = this.getAttribute('data-id');
+                        const submissionId = parseInt(this.getAttribute('data-id'));
                         openReplyModal(submissionId);
                     });
                 });
@@ -1023,7 +988,7 @@
                 // Λήψη φωτογραφιών
                 document.querySelectorAll('.btn-download').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const submissionId = this.getAttribute('data-id');
+                        const submissionId = parseInt(this.getAttribute('data-id'));
                         downloadSubmission(submissionId);
                     });
                 });
@@ -1031,7 +996,7 @@
                 // Διαγραφή
                 document.querySelectorAll('.btn-delete').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const submissionId = this.getAttribute('data-id');
+                        const submissionId = parseInt(this.getAttribute('data-id'));
                         deleteSubmission(submissionId);
                     });
                 });
@@ -1062,7 +1027,8 @@
             
             // Προβολή υποβολής
             function viewSubmission(id) {
-                const submission = sampleSubmissions.find(sub => sub.id == id);
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === id);
                 if (!submission) return;
                 
                 const modalBody = document.getElementById('modal-body');
@@ -1070,7 +1036,7 @@
                 if (submission.type === 'photo') {
                     const photosHTML = submission.photos.map(photo => `
                         <div class="photo-item">
-                            <img src="${photo}" alt="Φωτογραφία καφέ" class="photo-image">
+                            <img src="${photo.data}" alt="Φωτογραφία καφέ" class="photo-image">
                         </div>
                     `).join('');
                     
@@ -1119,7 +1085,8 @@
             
             // Άνοιγμα modal απάντησης
             function openReplyModal(id) {
-                const submission = sampleSubmissions.find(sub => sub.id == id);
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === id);
                 if (!submission) return;
                 
                 const userInfo = document.getElementById('reply-user-info');
@@ -1160,16 +1127,23 @@
                 
                 document.getElementById('reply-message').value = '';
                 replyModal.style.display = 'flex';
+                
+                // Αποθήκευση του ID για χρήση στην αποστολή
+                document.getElementById('send-reply').setAttribute('data-id', id);
             }
             
             // Αποστολή απάντησης
             document.getElementById('send-reply').addEventListener('click', function() {
                 const replyMessage = document.getElementById('reply-message').value;
+                const submissionId = parseInt(this.getAttribute('data-id'));
                 
                 if (!replyMessage.trim()) {
                     alert('Παρακαλώ εισάγετε μήνυμα απάντησης.');
                     return;
                 }
+                
+                // Ενημέρωση της κατάστασης της υποβολής
+                updateSubmissionStatus(submissionId, 'answered');
                 
                 // Προσομοίωση αποστολής απάντησης
                 this.disabled = true;
@@ -1180,8 +1154,22 @@
                     replyModal.style.display = 'none';
                     this.disabled = false;
                     this.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Απάντησης';
+                    
+                    // Ανανέωση των δεδομένων
+                    loadAllData();
                 }, 1500);
             });
+            
+            // Ενημέρωση κατάστασης υποβολής
+            function updateSubmissionStatus(id, newStatus) {
+                const allSubmissions = getAllSubmissions();
+                const submissionIndex = allSubmissions.findIndex(sub => sub.id === id);
+                
+                if (submissionIndex !== -1) {
+                    allSubmissions[submissionIndex].status = newStatus;
+                    localStorage.setItem('coffeeSubmissions', JSON.stringify(allSubmissions));
+                }
+            }
             
             // Ακύρωση απάντησης
             document.getElementById('cancel-reply').addEventListener('click', function() {
@@ -1190,26 +1178,36 @@
             
             // Λήψη υποβολής
             function downloadSubmission(id) {
-                alert(`Λήψη υποβολής με ID: ${id}\n(Στην πραγματική εφαρμογή, θα γινόταν λήψη των φωτογραφιών)`);
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === id);
+                
+                if (submission && submission.type === 'photo') {
+                    // Δημιουργία ZIP με τις φωτογραφίες (θα γινόταν στην πραγματικότητα)
+                    alert(`Λήψη ${submission.photos.length} φωτογραφιών από τον χρήστη ${submission.userEmail}`);
+                } else {
+                    alert('Δεν βρέθηκαν φωτογραφίες για λήψη');
+                }
             }
             
             // Διαγραφή υποβολής
             function deleteSubmission(id) {
                 if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή την υποβολή;')) {
-                    alert(`Διαγραφή υποβολής με ID: ${id}\n(Στην πραγματική εφαρμογή, η υποβολή θα διαγραφόταν από τη βάση δεδομένων)`);
+                    const allSubmissions = getAllSubmissions();
+                    const updatedSubmissions = allSubmissions.filter(sub => sub.id !== id);
+                    localStorage.setItem('coffeeSubmissions', JSON.stringify(updatedSubmissions));
+                    
+                    showNotification('Η υποβολή διαγράφηκε επιτυχώς!', 'success');
+                    loadAllData();
                 }
             }
             
-            // Αρχική φόρτωση δεδομένων
-            loadPhotoSubmissions();
-            loadMessageSubmissions();
-            
             // Ενημέρωση στατιστικών
             function updateStats() {
-                const totalSubmissions = sampleSubmissions.length;
-                const pendingSubmissions = sampleSubmissions.filter(sub => sub.status === 'pending').length;
-                const answeredSubmissions = sampleSubmissions.filter(sub => sub.status === 'answered').length;
-                const contactMessages = sampleSubmissions.filter(sub => sub.type === 'message').length;
+                const allSubmissions = getAllSubmissions();
+                const totalSubmissions = allSubmissions.length;
+                const pendingSubmissions = allSubmissions.filter(sub => sub.status === 'pending').length;
+                const answeredSubmissions = allSubmissions.filter(sub => sub.status === 'answered').length;
+                const contactMessages = allSubmissions.filter(sub => sub.type === 'message').length;
                 
                 document.getElementById('total-submissions').textContent = totalSubmissions;
                 document.getElementById('pending-submissions').textContent = pendingSubmissions;
@@ -1217,7 +1215,30 @@
                 document.getElementById('contact-messages').textContent = contactMessages;
             }
             
-            updateStats();
+            // Εμφάνιση ειδοποίησης
+            function showNotification(message, type) {
+                // Δημιουργία temporary notification
+                const notification = document.createElement('div');
+                notification.className = `message ${type}`;
+                notification.textContent = message;
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '1000';
+                notification.style.maxWidth = '300px';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // Αυτόματη ανανέωση κάθε 30 δευτερόλεπτα
+            setInterval(loadAllData, 30000);
+            
+            // Αρχική φόρτωση δεδομένων
+            loadAllData();
         });
     </script>
 </body>
