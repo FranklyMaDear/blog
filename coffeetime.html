@@ -6,6 +6,7 @@
     <title>Καφεμαντεία - Αποστολή Φωτογραφιών & Επικοινωνία</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* Ο ίδιος CSS όπως πριν */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -763,12 +764,34 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
                 
-                // Προσομοίωση καθυστέρησης δικτύου
-                setTimeout(function() {
-                    // Εδώ θα γινόταν η πραγματική αποστολή των δεδομένων
-                    console.log('Αποστολή δεδομένων:');
-                    console.log('E-mail:', email);
-                    console.log('Αρχεία:', selectedFiles);
+                // Μετατροπή φωτογραφιών σε base64 για αποθήκευση
+                const photoPromises = selectedFiles.map(file => {
+                    return new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            resolve({
+                                name: file.name,
+                                data: e.target.result
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                });
+                
+                Promise.all(photoPromises).then(photosBase64 => {
+                    // Δημιουργία αντικειμένου υποβολής
+                    const submission = {
+                        id: Date.now(), // ID βάσει χρονικής σήμανσης
+                        type: 'photo',
+                        userEmail: email,
+                        date: new Date().toISOString(),
+                        status: 'pending',
+                        message: 'Υποβολή φωτογραφιών καφέ για ερμηνεία',
+                        photos: photosBase64
+                    };
+                    
+                    // Αποθήκευση στο LocalStorage
+                    saveSubmission(submission);
                     
                     showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας στο ${email} εντός 24 ωρών.`, 'success');
                     
@@ -779,7 +802,7 @@
                     
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών';
-                }, 3000);
+                });
             });
             
             // Λειτουργικότητα φόρμας επικοινωνίας
@@ -804,24 +827,43 @@
                 contactSubmitBtn.disabled = true;
                 contactSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
                 
-                // Προσομοίωση καθυστέρησης δικτύου
-                setTimeout(function() {
-                    // Εδώ θα γινόταν η πραγματική αποστολή των δεδομένων
-                    console.log('Αποστολή μηνύματος:');
-                    console.log('Όνομα:', name);
-                    console.log('E-mail:', email);
-                    console.log('Θέμα:', subject);
-                    console.log('Μήνυμα:', message);
-                    
-                    showMessage(contactMessageDiv, `Το μήνυμά σας στάλθηκε επιτυχώς! Θα λάβετε απάντηση στο ${email} το συντομότερο δυνατό.`, 'success');
-                    
-                    // Επαναφορά φόρμας
-                    contactForm.reset();
-                    
-                    contactSubmitBtn.disabled = false;
-                    contactSubmitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος';
-                }, 2000);
+                // Δημιουργία αντικειμένου μηνύματος
+                const contactMessage = {
+                    id: Date.now(), // ID βάσει χρονικής σήμανσης
+                    type: 'message',
+                    userName: name,
+                    userEmail: email,
+                    date: new Date().toISOString(),
+                    status: 'pending',
+                    subject: subject,
+                    message: message
+                };
+                
+                // Αποθήκευση στο LocalStorage
+                saveSubmission(contactMessage);
+                
+                showMessage(contactMessageDiv, `Το μήνυμά σας στάλθηκε επιτυχώς! Θα λάβετε απάντηση στο ${email} το συντομότερο δυνατό.`, 'success');
+                
+                // Επαναφορά φόρμας
+                contactForm.reset();
+                
+                contactSubmitBtn.disabled = false;
+                contactSubmitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος';
             });
+            
+            // Αποθήκευση υποβολής στο LocalStorage
+            function saveSubmission(submission) {
+                // Λήψη υπαρχουσών υποβολών από το LocalStorage
+                const existingSubmissions = JSON.parse(localStorage.getItem('coffeeSubmissions') || '[]');
+                
+                // Προσθήκη νέας υποβολής
+                existingSubmissions.push(submission);
+                
+                // Αποθήκευση πίσω στο LocalStorage
+                localStorage.setItem('coffeeSubmissions', JSON.stringify(existingSubmissions));
+                
+                console.log('Υποβολή αποθηκεύτηκε:', submission);
+            }
             
             // Εμφάνιση μηνύματος
             function showMessage(element, text, type) {
