@@ -661,45 +661,6 @@
             margin-left: 0.5rem;
         }
         
-        /* Ads Popup */
-        .ads-popup {
-            position: fixed;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            background: linear-gradient(135deg, #FF6B35, #FF8E53);
-            color: white;
-            border-radius: 50%;
-            width: 80px;
-            height: 80px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s;
-            text-align: center;
-            padding: 10px;
-        }
-        
-        .ads-popup:hover {
-            transform: translateY(-50%) scale(1.1);
-            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.7);
-        }
-        
-        .ads-icon {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-        }
-        
-        .ads-text {
-            font-size: 0.7rem;
-            font-weight: bold;
-            line-height: 1.1;
-        }
-        
         .delete-message-btn {
             position: absolute;
             top: 5px;
@@ -762,27 +723,11 @@
             .message {
                 max-width: 90%;
             }
-            
-            .ads-popup {
-                width: 70px;
-                height: 70px;
-                right: 10px;
-            }
-            
-            .ads-text {
-                font-size: 0.65rem;
-            }
         }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <!-- Ads Popup -->
-        <div class="ads-popup" id="ads-popup" style="display: none;">
-            <div class="ads-icon">🎁</div>
-            <div class="ads-text">Πόντος Δωρεάν!</div>
-        </div>
-        
         <header>
             <div class="logo">☕</div>
             <h1>Καφεμαντεία</h1>
@@ -968,8 +913,6 @@
         </footer>
     </div>
 
-    <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
@@ -1031,7 +974,6 @@
             const adminUnreadBadge = document.getElementById('admin-unread-badge');
             const selectedUserMessages = document.getElementById('selected-user-messages');
             const userUnreadBadge = document.getElementById('user-unread-badge');
-            const adsPopup = document.getElementById('ads-popup');
             
             // Φόρμες
             const loginForm = document.getElementById('login-form');
@@ -1041,8 +983,6 @@
             
             // Μεταβλητές για την επικοινωνία
             let selectedUserId = null;
-            let lastAdClickTime = 0;
-            const AD_COOLDOWN = 30000; // 30 δευτερόλεπτα cooldown
             
             // Αρχικοποίηση προκαθορισμένου διαχειριστή
             initializeDefaultAdmin();
@@ -1057,82 +997,10 @@
                 if (currentUser.email === 'admin@example.com' || currentUser.role === 'admin') {
                     adminPanel.classList.add('active');
                     updateAdminUnreadCount();
-                } else {
-                    // Εμφάνιση ads popup για κανονικούς χρήστες
-                    showAdsPopup();
                 }
             } else {
                 authContainer.style.display = 'block';
             }
-            
-            // Εμφάνιση ads popup
-            function showAdsPopup() {
-                adsPopup.style.display = 'flex';
-            }
-            
-            // Ads popup click handler
-            adsPopup.addEventListener('click', function() {
-                const now = Date.now();
-                if (now - lastAdClickTime < AD_COOLDOWN) {
-                    const remainingTime = Math.ceil((AD_COOLDOWN - (now - lastAdClickTime)) / 1000);
-                    alert(`Παρακαλώ περιμένετε ${remainingTime} δευτερόλεπτα πριν κερδίσετε ξανά πόντους!`);
-                    return;
-                }
-                
-                lastAdClickTime = now;
-                
-                // Άνοιγμα διαφήμισης
-                try {
-                    // Αυτό θα ανοίξει τη διαφήμιση από το script που παρέχεις
-                    // Η διαφήμιση θα πρέπει να καλεί την addPointFromAd() function όταν ολοκληρωθεί
-                    window.openAd && window.openAd();
-                } catch (e) {
-                    console.log('Ad opening failed, simulating point addition');
-                    // Προσομοίωση για testing
-                    addPointFromAd();
-                }
-            });
-            
-            // Συνάρτηση για προσθήκη πόντου από διαφήμιση
-            window.addPointFromAd = function() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if (!currentUser) return;
-                
-                const users = JSON.parse(localStorage.getItem('users') || '[]');
-                const userIndex = users.findIndex(u => u.id === currentUser.id);
-                
-                if (userIndex !== -1) {
-                    users[userIndex].points += 1;
-                    currentUser.points += 1;
-                    
-                    localStorage.setItem('users', JSON.stringify(users));
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                    
-                    // Ενημέρωση UI
-                    userPoints.textContent = currentUser.points;
-                    
-                    // Εμφάνιση μηνύματος επιτυχίας
-                    const pointsEarned = document.createElement('div');
-                    pointsEarned.className = 'points-earned';
-                    pointsEarned.textContent = `🎉 Κερδίσατε 1 πόντο από τη διαφήμιση!`;
-                    pointsEarned.style.display = 'block';
-                    
-                    // Προσθήκη πριν από το success message
-                    if (successMessage.parentNode) {
-                        successMessage.parentNode.insertBefore(pointsEarned, successMessage);
-                    }
-                    
-                    // Απόκρυψη μετά από 3 δευτερόλεπτα
-                    setTimeout(() => {
-                        pointsEarned.style.display = 'none';
-                    }, 3000);
-                    
-                    // Ανανέωση ειδοποιήσεων αν είναι ανοιχτό το admin panel
-                    if (adminPanel.classList.contains('active')) {
-                        loadFreeCoffeeNotifications(users);
-                    }
-                }
-            };
             
             // Σύνδεση/Εγγραφή
             const authTabs = document.querySelectorAll('.auth-tab');
@@ -1170,9 +1038,6 @@
                     if (user.email === 'admin@example.com' || user.role === 'admin') {
                         adminPanel.classList.add('active');
                         updateAdminUnreadCount();
-                    } else {
-                        // Εμφάνιση ads popup για κανονικούς χρήστες
-                        showAdsPopup();
                     }
                     
                     loginError.style.display = 'none';
@@ -1225,7 +1090,6 @@
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
                 
                 showUserSection(newUser);
-                showAdsPopup(); // Εμφάνιση ads popup για νέο χρήστη
                 registerError.style.display = 'none';
             });
             
@@ -1237,7 +1101,6 @@
                 donationSection.classList.remove('active');
                 messagesSection.classList.remove('active');
                 adminPanel.classList.remove('active');
-                adsPopup.style.display = 'none';
                 authContainer.style.display = 'block';
             });
             
