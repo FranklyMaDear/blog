@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Καφεμαντεία - Αποστολή Φωτογραφιών</title>
+    <title>Καφεμαντεία - Αποστολή Φωτογραφιών & Επικοινωνία</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -23,6 +23,7 @@
             --text: #5D4037;
             --success: #4CAF50;
             --error: #f44336;
+            --info: #2196F3;
         }
         
         body {
@@ -80,6 +81,47 @@
             margin: 0 auto;
         }
         
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #f8f4e9;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab:hover:not(.active) {
+            background: #f0e6d3;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
         .form-section {
             background-color: white;
             padding: 25px;
@@ -114,7 +156,7 @@
             color: var(--dark);
         }
         
-        input[type="email"] {
+        input[type="email"], input[type="text"], textarea {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0d6c9;
@@ -124,11 +166,17 @@
             background-color: #fcfaf7;
         }
         
-        input[type="email"]:focus {
+        input:focus, textarea:focus {
             border-color: var(--secondary);
             outline: none;
             box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2);
             background-color: white;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
         }
         
         .file-input-container {
@@ -293,6 +341,12 @@
             border: 1px solid #ffcdd2;
         }
         
+        .info {
+            background-color: #e3f2fd;
+            color: var(--info);
+            border: 1px solid #bbdefb;
+        }
+        
         .info-box {
             background: linear-gradient(to right, #f9f3ec, #f5e9d8);
             border-left: 4px solid var(--accent);
@@ -309,6 +363,59 @@
         
         .info-box li {
             margin-bottom: 8px;
+        }
+        
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .contact-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+            border: 1px solid #e0d6c9;
+        }
+        
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .contact-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .contact-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .contact-details {
+            color: var(--text);
+            margin-bottom: 15px;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .contact-btn:hover {
+            background: var(--primary-light);
         }
         
         footer {
@@ -350,6 +457,10 @@
                 font-size: 2.2rem;
             }
             
+            .tabs {
+                flex-direction: column;
+            }
+            
             .form-section {
                 padding: 20px 15px;
             }
@@ -372,6 +483,10 @@
                 padding: 14px 20px;
                 font-size: 1rem;
             }
+            
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media (max-width: 400px) {
@@ -389,50 +504,141 @@
             <p class="subtitle">Στείλτε μας φωτογραφίες από τον καφέ σας και θα σας αποκαλύψουμε το μέλλον σας!</p>
         </header>
         
+        <div class="tabs">
+            <button class="tab active" data-tab="photos-tab">
+                <i class="fas fa-camera"></i> Αποστολή Φωτογραφιών
+            </button>
+            <button class="tab" data-tab="contact-tab">
+                <i class="fas fa-envelope"></i> Επικοινωνία
+            </button>
+        </div>
+        
         <main>
-            <section class="form-section">
-                <h2><i class="fas fa-user"></i> Στοιχεία Επισκέπτη</h2>
-                
-                <div class="info-box">
-                    <p><strong>Οδηγίες:</strong></p>
-                    <ul>
-                        <li>Βεβαιωθείτε ότι η φωτογραφία του καφέ σας είναι σε καλό φωτισμό</li>
-                        <li>Προσπαθήστε να τραβήξετε την φωτογραφία από πάνω για καλύτερη εμφάνιση των σχημάτων</li>
-                        <li>Μπορείτε να επιλέξετε έως 5 φωτογραφίες</li>
-                    </ul>
+            <!-- Καρτέλα Αποστολής Φωτογραφιών -->
+            <section id="photos-tab" class="tab-content active">
+                <div class="form-section">
+                    <h2><i class="fas fa-user"></i> Στοιχεία Επισκέπτη</h2>
+                    
+                    <div class="info-box">
+                        <p><strong>Οδηγίες:</strong></p>
+                        <ul>
+                            <li>Βεβαιωθείτε ότι η φωτογραφία του καφέ σας είναι σε καλό φωτισμό</li>
+                            <li>Προσπαθήστε να τραβήξετε την φωτογραφία από πάνω για καλύτερη εμφάνιση των σχημάτων</li>
+                            <li>Μπορείτε να επιλέξετε έως 5 φωτογραφίες</li>
+                        </ul>
+                    </div>
+                    
+                    <form id="visitorForm">
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                            <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><i class="fas fa-camera"></i> Επιλογή Φωτογραφιών Καφέ:</label>
+                            <div class="file-input-container">
+                                <input type="file" id="photos" class="file-input" multiple accept="image/*">
+                                <label for="photos" class="file-input-label">
+                                    <i class="fas fa-cloud-upload-alt"></i> Επιλέξτε φωτογραφίες καφέ (μέχρι 5)
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="preview-container">
+                            <div class="preview-title">
+                                <i class="fas fa-images"></i> Προεπισκόπηση φωτογραφιών:
+                            </div>
+                            <div class="preview-grid" id="previewGrid">
+                                <!-- Εδώ θα προστεθούν οι προεπισκοπήσεις των φωτογραφιών -->
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών
+                        </button>
+                        
+                        <div class="message" id="message"></div>
+                    </form>
+                </div>
+            </section>
+            
+            <!-- Καρτέλα Επικοινωνίας -->
+            <section id="contact-tab" class="tab-content">
+                <div class="form-section">
+                    <h2><i class="fas fa-comments"></i> Επικοινωνία με τον Διαχειριστή</h2>
+                    
+                    <div class="info-box">
+                        <p><strong>Στείλτε μήνυμα στον διαχειριστή:</strong></p>
+                        <p>Εάν έχετε οποιαδήποτε ερώτηση, πρόβλημα ή σχόλιο, μπορείτε να επικοινωνήσετε απευθείας μαζί μας συμπληρώνοντας την παρακάτω φόρμα.</p>
+                    </div>
+                    
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="contact-name"><i class="fas fa-user"></i> Ονοματεπώνυμο:</label>
+                            <input type="text" id="contact-name" name="name" placeholder="Το ονοματεπώνυμό σας" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                            <input type="email" id="contact-email" name="email" placeholder="π.χ. onoma@example.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-subject"><i class="fas fa-tag"></i> Θέμα:</label>
+                            <input type="text" id="contact-subject" name="subject" placeholder="Το θέμα του μηνύματός σας" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact-message"><i class="fas fa-comment"></i> Μήνυμα:</label>
+                            <textarea id="contact-message" name="message" placeholder="Γράψτε το μήνυμά σας εδώ..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn" id="contactSubmitBtn">
+                            <i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος
+                        </button>
+                        
+                        <div class="message" id="contactMessage"></div>
+                    </form>
                 </div>
                 
-                <form id="visitorForm">
-                    <div class="form-group">
-                        <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
-                        <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required>
-                    </div>
+                <div class="form-section">
+                    <h2><i class="fas fa-address-book"></i> Άλλοι Τρόποι Επικοινωνίας</h2>
                     
-                    <div class="form-group">
-                        <label><i class="fas fa-camera"></i> Επιλογή Φωτογραφιών Καφέ:</label>
-                        <div class="file-input-container">
-                            <input type="file" id="photos" class="file-input" multiple accept="image/*">
-                            <label for="photos" class="file-input-label">
-                                <i class="fas fa-cloud-upload-alt"></i> Επιλέξτε φωτογραφίες καφέ (μέχρι 5)
-                            </label>
+                    <div class="contact-methods">
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="contact-title">Τηλέφωνο</div>
+                            <div class="contact-details">+30 210 123 4567</div>
+                            <a href="tel:+302101234567" class="contact-btn">
+                                <i class="fas fa-phone"></i> Κλήση
+                            </a>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="contact-title">Email</div>
+                            <div class="contact-details">admin@kafemanteia.gr</div>
+                            <a href="mailto:admin@kafemanteia.gr" class="contact-btn">
+                                <i class="fas fa-envelope"></i> Αποστολή Email
+                            </a>
+                        </div>
+                        
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-title">Ώρες Λειτουργίας</div>
+                            <div class="contact-details">Δευ-Παρ: 9:00-17:00<br>Σαβ: 10:00-14:00</div>
+                            <div class="contact-btn" style="background: var(--secondary);">
+                                <i class="fas fa-info-circle"></i> Πληροφορίες
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="preview-container">
-                        <div class="preview-title">
-                            <i class="fas fa-images"></i> Προεπισκόπηση φωτογραφιών:
-                        </div>
-                        <div class="preview-grid" id="previewGrid">
-                            <!-- Εδώ θα προστεθούν οι προεπισκοπήσεις των φωτογραφιών -->
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="submit-btn" id="submitBtn">
-                        <i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών
-                    </button>
-                    
-                    <div class="message" id="message"></div>
-                </form>
+                </div>
             </section>
         </main>
         
@@ -447,6 +653,25 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Σύστημα καρτελών
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Απενεργοποίηση όλων των καρτελών
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    // Ενεργοποίηση της επιλεγμένης καρτέλας
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Λειτουργικότητα αποστολής φωτογραφιών
             const fileInput = document.getElementById('photos');
             const previewGrid = document.getElementById('previewGrid');
             const visitorForm = document.getElementById('visitorForm');
@@ -462,7 +687,7 @@
                 
                 // Έλεγχος αν υπάρχουν ήδη αρχεία
                 if (selectedFiles.length + files.length > MAX_FILES) {
-                    showMessage(`Μπορείτε να επιλέξετε μέχρι ${MAX_FILES} φωτογραφίες συνολικά.`, 'error');
+                    showMessage(messageDiv, `Μπορείτε να επιλέξετε μέχρι ${MAX_FILES} φωτογραφίες συνολικά.`, 'error');
                     return;
                 }
                 
@@ -474,7 +699,7 @@
                 
                 // Εμφάνιση μηνύματος επιβεβαίωσης
                 if (files.length > 0) {
-                    showMessage(`Προστέθηκαν ${files.length} φωτογραφίες. Συνολικές: ${selectedFiles.length}/${MAX_FILES}`, 'success');
+                    showMessage(messageDiv, `Προστέθηκαν ${files.length} φωτογραφίες. Συνολικές: ${selectedFiles.length}/${MAX_FILES}`, 'success');
                 }
             });
             
@@ -503,7 +728,7 @@
                         removeBtn.addEventListener('click', function() {
                             selectedFiles.splice(index, 1);
                             updatePreview();
-                            showMessage('Η φωτογραφία αφαιρέθηκε.', 'success');
+                            showMessage(messageDiv, 'Η φωτογραφία αφαιρέθηκε.', 'success');
                         });
                         
                         previewItem.appendChild(img);
@@ -518,19 +743,19 @@
                 submitBtn.disabled = selectedFiles.length === 0;
             }
             
-            // Αποστολή φόρμας
+            // Αποστολή φόρμας φωτογραφιών
             visitorForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
                 const email = document.getElementById('email').value;
                 
                 if (!email) {
-                    showMessage('Παρακαλώ εισάγετε το e-mail σας.', 'error');
+                    showMessage(messageDiv, 'Παρακαλώ εισάγετε το e-mail σας.', 'error');
                     return;
                 }
                 
                 if (selectedFiles.length === 0) {
-                    showMessage('Παρακαλώ επιλέξτε τουλάχιστον μία φωτογραφία.', 'error');
+                    showMessage(messageDiv, 'Παρακαλώ επιλέξτε τουλάχιστον μία φωτογραφία.', 'error');
                     return;
                 }
                 
@@ -545,7 +770,7 @@
                     console.log('E-mail:', email);
                     console.log('Αρχεία:', selectedFiles);
                     
-                    showMessage(`Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας στο ${email} εντός 24 ωρών.`, 'success');
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -557,15 +782,56 @@
                 }, 3000);
             });
             
+            // Λειτουργικότητα φόρμας επικοινωνίας
+            const contactForm = document.getElementById('contactForm');
+            const contactSubmitBtn = document.getElementById('contactSubmitBtn');
+            const contactMessageDiv = document.getElementById('contactMessage');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const subject = document.getElementById('contact-subject').value;
+                const message = document.getElementById('contact-message').value;
+                
+                if (!name || !email || !subject || !message) {
+                    showMessage(contactMessageDiv, 'Παρακαλώ συμπληρώστε όλα τα απαιτούμενα πεδία.', 'error');
+                    return;
+                }
+                
+                // Προσομοίωση αποστολής
+                contactSubmitBtn.disabled = true;
+                contactSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
+                
+                // Προσομοίωση καθυστέρησης δικτύου
+                setTimeout(function() {
+                    // Εδώ θα γινόταν η πραγματική αποστολή των δεδομένων
+                    console.log('Αποστολή μηνύματος:');
+                    console.log('Όνομα:', name);
+                    console.log('E-mail:', email);
+                    console.log('Θέμα:', subject);
+                    console.log('Μήνυμα:', message);
+                    
+                    showMessage(contactMessageDiv, `Το μήνυμά σας στάλθηκε επιτυχώς! Θα λάβετε απάντηση στο ${email} το συντομότερο δυνατό.`, 'success');
+                    
+                    // Επαναφορά φόρμας
+                    contactForm.reset();
+                    
+                    contactSubmitBtn.disabled = false;
+                    contactSubmitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Μηνύματος';
+                }, 2000);
+            });
+            
             // Εμφάνιση μηνύματος
-            function showMessage(text, type) {
-                messageDiv.textContent = text;
-                messageDiv.className = `message ${type}`;
-                messageDiv.style.display = 'block';
+            function showMessage(element, text, type) {
+                element.textContent = text;
+                element.className = `message ${type}`;
+                element.style.display = 'block';
                 
                 // Απόκρυψη μηνύματος μετά από 5 δευτερόλεπτα
                 setTimeout(function() {
-                    messageDiv.style.display = 'none';
+                    element.style.display = 'none';
                 }, 5000);
             }
         });
