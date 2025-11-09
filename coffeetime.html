@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Αποστολή Φωτογραφιών</title>
+    <title>Καφεμαντεία - Αποστολή Φωτογραφιών</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             box-sizing: border-box;
@@ -12,51 +13,94 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
+        :root {
+            --primary: #8B4513;
+            --primary-light: #A0522D;
+            --secondary: #D2691E;
+            --accent: #F4A460;
+            --light: #F5F5DC;
+            --dark: #3E2723;
+            --text: #5D4037;
+            --success: #4CAF50;
+            --error: #f44336;
+        }
+        
         body {
-            background-color: #f5f7fa;
-            color: #333;
+            background: linear-gradient(135deg, var(--light) 0%, #f8f4e9 100%);
+            color: var(--text);
             line-height: 1.6;
+            min-height: 100vh;
+            padding: 10px;
         }
         
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
         }
         
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background-color: #4a6fa5;
+            margin-bottom: 25px;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(139, 69, 19, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
+        }
+        
+        .logo {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            display: block;
         }
         
         h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
         
         .subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
         .form-section {
             background-color: white;
             padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
             margin-bottom: 25px;
+            border: 1px solid rgba(210, 105, 30, 0.2);
         }
         
         h2 {
-            color: #4a6fa5;
+            color: var(--primary);
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: var(--secondary);
         }
         
         .form-group {
@@ -67,22 +111,24 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: #555;
+            color: var(--dark);
         }
         
         input[type="email"] {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 15px;
+            border: 2px solid #e0d6c9;
+            border-radius: 10px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background-color: #fcfaf7;
         }
         
         input[type="email"]:focus {
-            border-color: #4a6fa5;
+            border-color: var(--secondary);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+            box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2);
+            background-color: white;
         }
         
         .file-input-container {
@@ -104,47 +150,60 @@
         
         .file-input-label {
             display: block;
-            padding: 12px 15px;
-            background-color: #f8f9fa;
-            border: 2px dashed #ced4da;
-            border-radius: 4px;
+            padding: 20px 15px;
+            background: linear-gradient(to right, #f9f3ec, #f5e9d8);
+            border: 2px dashed var(--accent);
+            border-radius: 10px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
+            color: var(--primary-light);
+            font-weight: 600;
         }
         
         .file-input-label:hover {
-            background-color: #e9ecef;
-            border-color: #4a6fa5;
+            background: linear-gradient(to right, #f5e9d8, #f0dfc8);
+            border-color: var(--secondary);
+            transform: translateY(-2px);
         }
         
         .file-input-label i {
             margin-right: 8px;
-            color: #4a6fa5;
+            font-size: 1.2rem;
         }
         
         .preview-container {
-            margin-top: 20px;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
         }
         
         .preview-title {
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #555;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .preview-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
+            gap: 12px;
             margin-top: 10px;
         }
         
         .preview-item {
             position: relative;
-            border-radius: 4px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .preview-item:hover {
+            transform: scale(1.05);
         }
         
         .preview-image {
@@ -158,80 +217,166 @@
             position: absolute;
             top: 5px;
             right: 5px;
-            background-color: rgba(255, 0, 0, 0.7);
+            background-color: rgba(244, 67, 54, 0.8);
             color: white;
             border: none;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            font-size: 12px;
+            width: 26px;
+            height: 26px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .remove-btn:hover {
+            background-color: rgba(244, 67, 54, 1);
+            transform: scale(1.1);
         }
         
         .submit-btn {
-            background-color: #4a6fa5;
+            background: linear-gradient(to right, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 1rem;
-            border-radius: 4px;
+            padding: 16px 25px;
+            font-size: 1.1rem;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             width: 100%;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
         .submit-btn:hover {
-            background-color: #3a5a80;
+            background: linear-gradient(to right, var(--primary-light), var(--secondary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
         }
         
         .submit-btn:disabled {
-            background-color: #a0aec0;
+            background: linear-gradient(to right, #cccccc, #aaaaaa);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .message {
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 10px;
             margin-top: 20px;
             text-align: center;
             display: none;
+            font-weight: 500;
         }
         
         .success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: #e8f5e9;
+            color: var(--success);
+            border: 1px solid #c8e6c9;
         }
         
         .error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background-color: #ffebee;
+            color: var(--error);
+            border: 1px solid #ffcdd2;
+        }
+        
+        .info-box {
+            background: linear-gradient(to right, #f9f3ec, #f5e9d8);
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+        }
+        
+        .info-box ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .info-box li {
+            margin-bottom: 8px;
         }
         
         footer {
             text-align: center;
             margin-top: 30px;
             padding: 20px;
-            color: #6c757d;
+            color: var(--primary-light);
             font-size: 0.9rem;
         }
         
+        .coffee-icon {
+            display: inline-block;
+            margin: 0 5px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Responsive Design */
         @media (max-width: 600px) {
             .container {
-                padding: 15px;
+                padding: 5px;
+            }
+            
+            header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
             }
             
             h1 {
                 font-size: 1.8rem;
             }
             
+            .logo {
+                font-size: 2.2rem;
+            }
+            
             .form-section {
-                padding: 20px;
+                padding: 20px 15px;
+            }
+            
+            .preview-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 10px;
+            }
+            
+            .preview-image {
+                height: 90px;
+            }
+            
+            .file-input-label {
+                padding: 15px 10px;
+                font-size: 0.95rem;
+            }
+            
+            .submit-btn {
+                padding: 14px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            .preview-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -239,37 +384,52 @@
 <body>
     <div class="container">
         <header>
-            <h1>Αποστολή Φωτογραφιών</h1>
-            <p class="subtitle">Εγγραφή και αποστολή πολλαπλών φωτογραφιών</p>
+            <i class="fas fa-mug-hot logo"></i>
+            <h1>Καφεμαντεία</h1>
+            <p class="subtitle">Στείλτε μας φωτογραφίες από τον καφέ σας και θα σας αποκαλύψουμε το μέλλον σας!</p>
         </header>
         
         <main>
             <section class="form-section">
-                <h2>Στοιχεία Επισκέπτη</h2>
+                <h2><i class="fas fa-user"></i> Στοιχεία Επισκέπτη</h2>
+                
+                <div class="info-box">
+                    <p><strong>Οδηγίες:</strong></p>
+                    <ul>
+                        <li>Βεβαιωθείτε ότι η φωτογραφία του καφέ σας είναι σε καλό φωτισμό</li>
+                        <li>Προσπαθήστε να τραβήξετε την φωτογραφία από πάνω για καλύτερη εμφάνιση των σχημάτων</li>
+                        <li>Μπορείτε να επιλέξετε έως 5 φωτογραφίες</li>
+                    </ul>
+                </div>
+                
                 <form id="visitorForm">
                     <div class="form-group">
-                        <label for="email">Διεύθυνση E-mail:</label>
+                        <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
                         <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required>
                     </div>
                     
                     <div class="form-group">
-                        <label>Επιλογή Φωτογραφιών:</label>
+                        <label><i class="fas fa-camera"></i> Επιλογή Φωτογραφιών Καφέ:</label>
                         <div class="file-input-container">
                             <input type="file" id="photos" class="file-input" multiple accept="image/*">
                             <label for="photos" class="file-input-label">
-                                <i>📷</i> Επιλέξτε φωτογραφίες (πολλαπλές επιλογή)
+                                <i class="fas fa-cloud-upload-alt"></i> Επιλέξτε φωτογραφίες καφέ (μέχρι 5)
                             </label>
                         </div>
                     </div>
                     
                     <div class="preview-container">
-                        <div class="preview-title">Προεπισκόπηση φωτογραφιών:</div>
+                        <div class="preview-title">
+                            <i class="fas fa-images"></i> Προεπισκόπηση φωτογραφιών:
+                        </div>
                         <div class="preview-grid" id="previewGrid">
                             <!-- Εδώ θα προστεθούν οι προεπισκοπήσεις των φωτογραφιών -->
                         </div>
                     </div>
                     
-                    <button type="submit" class="submit-btn" id="submitBtn">Αποστολή Φωτογραφιών</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών
+                    </button>
                     
                     <div class="message" id="message"></div>
                 </form>
@@ -277,6 +437,10 @@
         </main>
         
         <footer>
+            <p>
+                Καφεμαντεία <span class="coffee-icon">☕</span> 
+                Ανακαλύψτε το μέλλον σας μέσα από τον καφέ σας
+            </p>
             <p>© 2023 - Όλα τα δικαιώματα διατηρούνται</p>
         </footer>
     </div>
@@ -290,14 +454,15 @@
             const messageDiv = document.getElementById('message');
             
             let selectedFiles = [];
+            const MAX_FILES = 5;
             
             // Επεξεργασία επιλογής αρχείων
             fileInput.addEventListener('change', function(e) {
                 const files = Array.from(e.target.files);
                 
                 // Έλεγχος αν υπάρχουν ήδη αρχεία
-                if (selectedFiles.length + files.length > 10) {
-                    showMessage('Μπορείτε να επιλέξετε μέχρι 10 φωτογραφίες συνολικά.', 'error');
+                if (selectedFiles.length + files.length > MAX_FILES) {
+                    showMessage(`Μπορείτε να επιλέξετε μέχρι ${MAX_FILES} φωτογραφίες συνολικά.`, 'error');
                     return;
                 }
                 
@@ -309,7 +474,7 @@
                 
                 // Εμφάνιση μηνύματος επιβεβαίωσης
                 if (files.length > 0) {
-                    showMessage(`Προστέθηκαν ${files.length} φωτογραφίες. Συνολικές: ${selectedFiles.length}`, 'success');
+                    showMessage(`Προστέθηκαν ${files.length} φωτογραφίες. Συνολικές: ${selectedFiles.length}/${MAX_FILES}`, 'success');
                 }
             });
             
@@ -327,7 +492,7 @@
                         const img = document.createElement('img');
                         img.src = e.target.result;
                         img.className = 'preview-image';
-                        img.alt = 'Προεπισκόπηση φωτογραφίας';
+                        img.alt = 'Προεπισκόπηση φωτογραφίας καφέ';
                         
                         const removeBtn = document.createElement('button');
                         removeBtn.className = 'remove-btn';
@@ -371,7 +536,7 @@
                 
                 // Προσομοίωση αποστολής
                 submitBtn.disabled = true;
-                submitBtn.textContent = 'Αποστολή...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
                 
                 // Προσομοίωση καθυστέρησης δικτύου
                 setTimeout(function() {
@@ -380,7 +545,7 @@
                     console.log('E-mail:', email);
                     console.log('Αρχεία:', selectedFiles);
                     
-                    showMessage(`Οι ${selectedFiles.length} φωτογραφίες σας στάλθηκαν επιτυχώς! Θα ενημερωθείτε στο ${email} για την εξέλιξή τους.`, 'success');
+                    showMessage(`Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -388,8 +553,8 @@
                     updatePreview();
                     
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Αποστολή Φωτογραφιών';
-                }, 2000);
+                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών';
+                }, 3000);
             });
             
             // Εμφάνιση μηνύματος
