@@ -658,6 +658,129 @@
             white-space: nowrap;
         }
         
+        /* Στυλ για σύστημα πόντων */
+        .points-section {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff0cc 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #ffd700;
+        }
+        
+        .points-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .points-count {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .points-count i {
+            color: #ffd700;
+        }
+        
+        .points-level {
+            font-weight: 600;
+            color: var(--dark);
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #ffd700;
+        }
+        
+        .points-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .points-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .points-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .offers-list {
+            display: grid;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .offer-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e0d6c9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .offer-details {
+            flex: 1;
+        }
+        
+        .offer-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .offer-description {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .offer-cost {
+            font-weight: 700;
+            color: var(--primary);
+            margin-left: 15px;
+        }
+        
+        .redeem-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .redeem-btn:hover:not(:disabled) {
+            background: #388e3c;
+        }
+        
+        .redeem-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        
         /* Responsive Design */
         @media (max-width: 600px) {
             .container {
@@ -750,6 +873,26 @@
             .option-price {
                 margin-left: 0;
                 margin-top: 8px;
+            }
+            
+            .points-display {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .points-actions {
+                flex-direction: column;
+            }
+            
+            .offer-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .offer-cost {
+                margin-left: 0;
             }
         }
         
@@ -849,6 +992,27 @@
         </div>
         
         <div id="mainApp" style="display: none;">
+            <!-- Πληροφορίες Πόντων -->
+            <div class="points-section" id="pointsSection">
+                <div class="points-display">
+                    <div class="points-count">
+                        <i class="fas fa-coins"></i>
+                        <span id="currentPoints">0</span> Πόντοι
+                    </div>
+                    <div class="points-level">
+                        Επίπεδο: <span id="userLevel">Αρχάριος</span>
+                    </div>
+                </div>
+                <div class="points-actions">
+                    <button class="points-btn" id="pointsInfoBtn">
+                        <i class="fas fa-info-circle"></i> Πληροφορίες
+                    </button>
+                    <button class="points-btn" id="offersBtn">
+                        <i class="fas fa-gift"></i> Προσφορές
+                    </button>
+                </div>
+            </div>
+            
             <div class="tabs">
                 <button class="tab active" data-tab="photos-tab">
                     <i class="fas fa-camera"></i> Αποστολή Φωτογραφιών
@@ -1076,6 +1240,44 @@
             </div>
         </div>
         
+        <!-- Modal για σύστημα πόντων -->
+        <div id="pointsModal" class="modal">
+            <div class="modal-content">
+                <button class="close-modal" id="closePointsModal">×</button>
+                <h2><i class="fas fa-trophy"></i> Σύστημα Πόντων & Προσφορών</h2>
+                
+                <div class="info-box">
+                    <p><strong>Πώς λειτουργεί το σύστημα πόντων:</strong></p>
+                    <ul>
+                        <li>Κερδίζετε <strong>10 πόντους</strong> για κάθε υποβολή καφέ</li>
+                        <li>Κερδίζετε <strong>5 πόντους</strong> για κάθε σχόλιο/επικοινωνία</li>
+                        <li>Οι πόντοι μπορούν να ανταλλαχθούν με προσφορές</li>
+                        <li>Ο διαχειριστής μπορεί να σας αναθέσει επιπλέον πόντους</li>
+                    </ul>
+                </div>
+                
+                <div class="user-points-section">
+                    <div class="points-display">
+                        <div class="points-count">
+                            <i class="fas fa-coins"></i>
+                            <span id="modalPoints">0</span> Πόντοι
+                        </div>
+                        <div class="points-level">
+                            <i class="fas fa-star"></i>
+                            Επίπεδο: <span id="modalLevel">Αρχάριος</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="offers-section">
+                    <h3><i class="fas fa-gift"></i> Διαθέσιμες Προσφορές</h3>
+                    <div class="offers-list" id="offersList">
+                        <!-- Θα προστεθούν δυναμικά οι προσφορές -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <footer>
             <p>
                 Καφεμαντεία <span class="coffee-icon">☕</span> 
@@ -1106,6 +1308,9 @@
                 document.getElementById('email').value = currentUser.email;
                 document.getElementById('contact-email').value = currentUser.email;
                 document.getElementById('contact-name').value = currentUser.name || '';
+                
+                // Φόρτωση πόντων χρήστη
+                loadUserPoints();
             } else {
                 // Ο χρήστης δεν είναι συνδεδεμένος
                 authSection.style.display = 'block';
@@ -1176,9 +1381,22 @@
                     registrationDate: new Date().toISOString()
                 };
                 
-                // Αποθήκευση χρήστη
+                // Δημιουργία αρχικών πόντων για τον νέο χρήστη
+                const userPoints = {
+                    userId: newUser.id,
+                    email: email,
+                    points: 0,
+                    level: 'Αρχάριος',
+                    registrationDate: new Date().toISOString()
+                };
+                
+                // Αποθήκευση χρήστη και πόντων
                 existingUsers.push(newUser);
                 localStorage.setItem('users', JSON.stringify(existingUsers));
+                
+                const existingPoints = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                existingPoints.push(userPoints);
+                localStorage.setItem('userPoints', JSON.stringify(existingPoints));
                 
                 // Αυτόματη σύνδεση μετά την εγγραφή
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
@@ -1565,7 +1783,10 @@
                     // Αποθήκευση στο LocalStorage
                     saveSubmission(submission);
                     
-                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
+                    // Προσθήκη πόντων στον χρήστη
+                    addUserPoints(email, 10);
+                    
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Κερδίσατε 10 πόντους! Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -1614,7 +1835,10 @@
                 // Αποθήκευση στο LocalStorage
                 saveSubmission(contactMessage);
                 
-                showMessage(contactMessageDiv, `Το μήνυμά σας στάλθηκε επιτυχώς! Θα λάβετε απάντηση στο ${email} το συντομότερο δυνατό.`, 'success');
+                // Προσθήκη πόντων στον χρήστη
+                addUserPoints(email, 5);
+                
+                showMessage(contactMessageDiv, `Το μήνυμά σας στάλθηκε επιτυχώς! Κερδίσατε 5 πόντους! Θα λάβετε απάντηση στο ${email} το συντομότερο δυνατό.`, 'success');
                 
                 // Επαναφορά φόρμας
                 contactForm.reset();
@@ -1747,6 +1971,189 @@
                 setTimeout(function() {
                     element.style.display = 'none';
                 }, 5000);
+            }
+
+            // Σύστημα Πόντων
+            function loadUserPoints() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                const userPoints = userPointsData.find(p => p.email === currentUser.email) || {
+                    userId: currentUser.id,
+                    email: currentUser.email,
+                    points: 0,
+                    level: 'Αρχάριος',
+                    registrationDate: new Date().toISOString()
+                };
+                
+                // Ενημέρωση επιπέδου βάσει πόντων
+                let level = 'Αρχάριος';
+                if (userPoints.points >= 100) level = 'Ειδικός';
+                if (userPoints.points >= 300) level = 'Μάστερ';
+                if (userPoints.points >= 500) level = 'Grand Master';
+                
+                userPoints.level = level;
+                
+                // Αποθήκευση ενημερωμένων δεδομένων
+                const userIndex = userPointsData.findIndex(p => p.email === currentUser.email);
+                if (userIndex !== -1) {
+                    userPointsData[userIndex] = userPoints;
+                } else {
+                    userPointsData.push(userPoints);
+                }
+                localStorage.setItem('userPoints', JSON.stringify(userPointsData));
+                
+                // Εμφάνιση στο UI
+                document.getElementById('currentPoints').textContent = userPoints.points;
+                document.getElementById('userLevel').textContent = userPoints.level;
+                document.getElementById('modalPoints').textContent = userPoints.points;
+                document.getElementById('modalLevel').textContent = userPoints.level;
+            }
+            
+            function addUserPoints(email, points) {
+                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                const userPoints = userPointsData.find(p => p.email === email);
+                
+                if (userPoints) {
+                    userPoints.points += points;
+                    localStorage.setItem('userPoints', JSON.stringify(userPointsData));
+                    loadUserPoints(); // Ανανέωση UI
+                }
+            }
+            
+            // Modal για σύστημα πόντων
+            const pointsModal = document.getElementById('pointsModal');
+            const pointsInfoBtn = document.getElementById('pointsInfoBtn');
+            const offersBtn = document.getElementById('offersBtn');
+            const closePointsModal = document.getElementById('closePointsModal');
+            
+            pointsInfoBtn.addEventListener('click', function() {
+                loadOffers();
+                pointsModal.style.display = 'flex';
+            });
+            
+            offersBtn.addEventListener('click', function() {
+                loadOffers();
+                pointsModal.style.display = 'flex';
+            });
+            
+            closePointsModal.addEventListener('click', function() {
+                pointsModal.style.display = 'none';
+            });
+            
+            pointsModal.addEventListener('click', function(e) {
+                if (e.target === pointsModal) {
+                    pointsModal.style.display = 'none';
+                }
+            });
+            
+            function loadOffers() {
+                const offersList = document.getElementById('offersList');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                const userPoints = userPointsData.find(p => p.email === currentUser.email) || { points: 0 };
+                
+                const offers = [
+                    {
+                        id: 1,
+                        title: 'Εκπτωτική Κάρτα 10%',
+                        description: '10% έκπτωση στην επόμενη αγορά σας',
+                        cost: 50,
+                        type: 'discount'
+                    },
+                    {
+                        id: 2,
+                        title: 'Δωρεάν Καφές',
+                        description: 'Ένας δωρεάν καφές από το κατάστημά μας',
+                        cost: 100,
+                        type: 'free_coffee'
+                    },
+                    {
+                        id: 3,
+                        title: 'Ειδική Προσφορά VIP',
+                        description: 'Πρόσβαση σε αποκλειστικές προσφορές',
+                        cost: 200,
+                        type: 'vip'
+                    },
+                    {
+                        id: 4,
+                        title: 'Βιβλίο Καφεμαντείας',
+                        description: 'Ψηφιακό βιβλίο με τεχνικές καφεμαντείας',
+                        cost: 300,
+                        type: 'ebook'
+                    }
+                ];
+                
+                offersList.innerHTML = '';
+                
+                offers.forEach(offer => {
+                    const canRedeem = userPoints.points >= offer.cost;
+                    const offerItem = document.createElement('div');
+                    offerItem.className = 'offer-item';
+                    offerItem.innerHTML = `
+                        <div class="offer-details">
+                            <div class="offer-title">${offer.title}</div>
+                            <div class="offer-description">${offer.description}</div>
+                        </div>
+                        <div class="offer-cost">${offer.cost} Πόντοι</div>
+                        <button class="redeem-btn" ${!canRedeem ? 'disabled' : ''} data-id="${offer.id}">
+                            ${canRedeem ? 'Ανταλλαγή' : 'Ανεπαρκείς Πόντοι'}
+                        </button>
+                    `;
+                    offersList.appendChild(offerItem);
+                });
+                
+                // Προσθήκη event listeners για τα κουμπιά ανταλλαγής
+                document.querySelectorAll('.redeem-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (!this.disabled) {
+                            const offerId = parseInt(this.getAttribute('data-id'));
+                            redeemOffer(offerId);
+                        }
+                    });
+                });
+            }
+            
+            function redeemOffer(offerId) {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const offers = [
+                    { id: 1, cost: 50 },
+                    { id: 2, cost: 100 },
+                    { id: 3, cost: 200 },
+                    { id: 4, cost: 300 }
+                ];
+                
+                const offer = offers.find(o => o.id === offerId);
+                if (!offer) return;
+                
+                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                const userPoints = userPointsData.find(p => p.email === currentUser.email);
+                
+                if (userPoints && userPoints.points >= offer.cost) {
+                    userPoints.points -= offer.cost;
+                    localStorage.setItem('userPoints', JSON.stringify(userPointsData));
+                    
+                    // Αποθήκευση της ανταλλαγής
+                    const redemptions = JSON.parse(localStorage.getItem('offerRedemptions') || '[]');
+                    redemptions.push({
+                        userId: currentUser.id,
+                        email: currentUser.email,
+                        offerId: offerId,
+                        date: new Date().toISOString(),
+                        pointsSpent: offer.cost
+                    });
+                    localStorage.setItem('offerRedemptions', JSON.stringify(redemptions));
+                    
+                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά! Αφαιρέθηκαν ${offer.cost} πόντοι.`, 'success');
+                    loadUserPoints();
+                    loadOffers();
+                    pointsModal.style.display = 'none';
+                }
             }
 
             // Αυτόματη ανανέωση απαντήσεων κάθε 10 δευτερόλεπτα
