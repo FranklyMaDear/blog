@@ -1056,7 +1056,7 @@
                                             <div class="option-title">Γραπτή Ερμηνεία</div>
                                             <div class="option-description">Επιθυμώ γραπτώς να μου πείτε τον καφέ</div>
                                         </div>
-                                        <div class="option-price">Φιλοδώρημα: 1 καφές</div>
+                                        <div class="option-price">10 Πόντοι</div>
                                     </label>
                                     
                                     <label class="coffee-option">
@@ -1065,7 +1065,7 @@
                                             <div class="option-title">Προφορική Ερμηνεία</div>
                                             <div class="option-description">Επιθυμώ προφορικά να μου πείτε τον καφέ</div>
                                         </div>
-                                        <div class="option-price">Φιλοδώρημα: 3 καφέδες</div>
+                                        <div class="option-price">20 Πόντοι</div>
                                     </label>
                                 </div>
                             </div>
@@ -1249,9 +1249,10 @@
                 <div class="info-box">
                     <p><strong>Πώς λειτουργεί το σύστημα πόντων:</strong></p>
                     <ul>
-                        <li>Κερδίζετε <strong>10 πόντους</strong> για κάθε υποβολή καφέ</li>
+                        <li>Κερδίζετε <strong>10 πόντους</strong> για κάθε γραπτή ερμηνεία καφέ</li>
+                        <li>Κερδίζετε <strong>20 πόντους</strong> για κάθε προφορική ερμηνεία καφέ</li>
                         <li>Κερδίζετε <strong>5 πόντους</strong> για κάθε σχόλιο/επικοινωνία</li>
-                        <li>Οι πόντοι μπορούν να ανταλλαχθούν με προσφορές</li>
+                        <li>Όταν φτάσετε <strong>100 πόντους</strong>, κερδίζετε έναν δωρεάν καφέ της επιλογής σας</li>
                         <li>Ο διαχειριστής μπορεί να σας αναθέσει επιπλέον πόντους</li>
                     </ul>
                 </div>
@@ -1767,13 +1768,16 @@
                 });
                 
                 Promise.all(photoPromises).then(photosBase64 => {
+                    // Προσδιορισμός πόντων βάσει τύπου καφεμαντείας
+                    const points = coffeeType.value === 'written' ? 10 : 20;
+                    
                     // Δημιουργία αντικειμένου υποβολής
                     const submission = {
                         id: Date.now(), // ID βάσει χρονικής σήμανσης
                         type: 'photo',
                         userEmail: email,
                         coffeeType: coffeeType.value,
-                        coffeeTypeText: coffeeType.value === 'written' ? 'Γραπτή Ερμηνεία (1 καφές)' : 'Προφορική Ερμηνεία (3 καφέδες)',
+                        coffeeTypeText: coffeeType.value === 'written' ? 'Γραπτή Ερμηνεία (10 πόντοι)' : 'Προφορική Ερμηνεία (20 πόντοι)',
                         date: new Date().toISOString(),
                         status: 'pending',
                         message: 'Υποβολή φωτογραφιών καφέ για ερμηνεία',
@@ -1784,9 +1788,18 @@
                     saveSubmission(submission);
                     
                     // Προσθήκη πόντων στον χρήστη
-                    addUserPoints(email, 10);
+                    addUserPoints(email, points);
                     
-                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Κερδίσατε 10 πόντους! Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
+                    // Έλεγχος αν ο χρήστης έφτασε τους 100 πόντους
+                    const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                    const userPoints = userPointsData.find(p => p.email === email);
+                    
+                    let bonusMessage = '';
+                    if (userPoints && userPoints.points >= 100 && userPoints.points - points < 100) {
+                        bonusMessage = ' Συγχαρητήρια! Έφτασες τους 100 πόντους και κέρδισες έναν δωρεάν καφέ της επιλογής σας!';
+                    }
+                    
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Κερδίσατε ${points} πόντους!${bonusMessage} Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -2059,17 +2072,17 @@
                 const offers = [
                     {
                         id: 1,
+                        title: 'Δωρεάν Καφές',
+                        description: 'Ένας δωρεάν καφές της επιλογής σας',
+                        cost: 100,
+                        type: 'free_coffee'
+                    },
+                    {
+                        id: 2,
                         title: 'Εκπτωτική Κάρτα 10%',
                         description: '10% έκπτωση στην επόμενη αγορά σας',
                         cost: 50,
                         type: 'discount'
-                    },
-                    {
-                        id: 2,
-                        title: 'Δωρεάν Καφές',
-                        description: 'Ένας δωρεάν καφές από το κατάστημά μας',
-                        cost: 100,
-                        type: 'free_coffee'
                     },
                     {
                         id: 3,
@@ -2122,10 +2135,10 @@
                 if (!currentUser) return;
                 
                 const offers = [
-                    { id: 1, cost: 50 },
-                    { id: 2, cost: 100 },
-                    { id: 3, cost: 200 },
-                    { id: 4, cost: 300 }
+                    { id: 1, cost: 100, title: 'Δωρεάν Καφές' },
+                    { id: 2, cost: 50, title: 'Εκπτωτική Κάρτα 10%' },
+                    { id: 3, cost: 200, title: 'Ειδική Προσφορά VIP' },
+                    { id: 4, cost: 300, title: 'Βιβλίο Καφεμαντείας' }
                 ];
                 
                 const offer = offers.find(o => o.id === offerId);
@@ -2144,12 +2157,13 @@
                         userId: currentUser.id,
                         email: currentUser.email,
                         offerId: offerId,
+                        offerTitle: offer.title,
                         date: new Date().toISOString(),
                         pointsSpent: offer.cost
                     });
                     localStorage.setItem('offerRedemptions', JSON.stringify(redemptions));
                     
-                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά! Αφαιρέθηκαν ${offer.cost} πόντοι.`, 'success');
+                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "${offer.title}"! Αφαιρέθηκαν ${offer.cost} πόντοι.`, 'success');
                     loadUserPoints();
                     loadOffers();
                     pointsModal.style.display = 'none';
