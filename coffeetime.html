@@ -590,6 +590,62 @@
             50% { transform: translateY(-5px); }
             100% { transform: translateY(0px); }
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .close-modal:hover {
+            background: #f0f0f0;
+        }
+
+        .reset-steps {
+            display: none;
+        }
+
+        .reset-steps.active {
+            display: block;
+        }
         
         /* Responsive Design */
         @media (max-width: 600px) {
@@ -647,6 +703,11 @@
             
             .contact-methods {
                 grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 20px 15px;
+                width: 95%;
             }
         }
         
@@ -908,28 +969,78 @@
         </div>
         
         <!-- Modal για επαναφορά κωδικού -->
-        <div id="forgotPasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
-            <div class="form-section" style="max-width: 500px; margin: 20px; position: relative;">
-                <button id="closeForgotPasswordModal" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer;">×</button>
+        <div id="forgotPasswordModal" class="modal">
+            <div class="modal-content">
+                <button class="close-modal" id="closeForgotPasswordModal">×</button>
                 <h2><i class="fas fa-key"></i> Επαναφορά Κωδικού</h2>
                 
-                <div class="info-box">
-                    <p><strong>Οδηγίες:</strong></p>
-                    <p>Εισάγετε το email σας και θα σας αποσταλεί ο κωδικός πρόσβασής σας.</p>
-                </div>
-                
-                <form id="forgotPasswordForm">
-                    <div class="form-group">
-                        <label for="forgot-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
-                        <input type="email" id="forgot-email" name="email" placeholder="π.χ. onoma@example.com" required>
+                <!-- Βήμα 1: Εισαγωγή email -->
+                <div id="resetStep1" class="reset-steps active">
+                    <div class="info-box">
+                        <p><strong>Οδηγίες:</strong></p>
+                        <p>Εισάγετε το email σας για να λάβετε κωδικό επαναφοράς.</p>
                     </div>
                     
-                    <button type="submit" class="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Αποστολή Κωδικού
-                    </button>
+                    <form id="forgotPasswordForm">
+                        <div class="form-group">
+                            <label for="forgot-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                            <input type="email" id="forgot-email" name="email" placeholder="π.χ. onoma@example.com" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Αποστολή Κωδικού Επαναφοράς
+                        </button>
+                        
+                        <div class="message" id="forgotPasswordMessage"></div>
+                    </form>
+                </div>
+                
+                <!-- Βήμα 2: Εισαγωγή κωδικού επαναφοράς -->
+                <div id="resetStep2" class="reset-steps">
+                    <div class="info-box">
+                        <p><strong>Οδηγίες:</strong></p>
+                        <p>Εισάγετε τον κωδικό επαναφοράς που σας στάλθηκε στο email σας.</p>
+                    </div>
                     
-                    <div class="message" id="forgotPasswordMessage"></div>
-                </form>
+                    <form id="resetCodeForm">
+                        <div class="form-group">
+                            <label for="reset-code"><i class="fas fa-shield-alt"></i> Κωδικός Επαναφοράς:</label>
+                            <input type="text" id="reset-code" name="code" placeholder="Εισάγετε τον 6ψήφιο κωδικό" required maxlength="6">
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-check"></i> Επαλήθευση Κωδικού
+                        </button>
+                        
+                        <div class="message" id="resetCodeMessage"></div>
+                    </form>
+                </div>
+                
+                <!-- Βήμα 3: Δημιουργία νέου κωδικού -->
+                <div id="resetStep3" class="reset-steps">
+                    <div class="info-box">
+                        <p><strong>Οδηγίες:</strong></p>
+                        <p>Δημιουργήστε έναν νέο κωδικό πρόσβασης.</p>
+                    </div>
+                    
+                    <form id="newPasswordForm">
+                        <div class="form-group">
+                            <label for="new-password"><i class="fas fa-lock"></i> Νέος Κωδικός Πρόσβασης:</label>
+                            <input type="password" id="new-password" name="password" placeholder="Δημιουργήστε έναν νέο κωδικό" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirm-new-password"><i class="fas fa-lock"></i> Επιβεβαίωση Νέου Κωδικού:</label>
+                            <input type="password" id="confirm-new-password" name="confirmPassword" placeholder="Εισάγετε ξανά τον νέο κωδικό" required>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-save"></i> Αλλαγή Κωδικού
+                        </button>
+                        
+                        <div class="message" id="newPasswordMessage"></div>
+                    </form>
+                </div>
             </div>
         </div>
         
@@ -1029,7 +1140,7 @@
                     id: Date.now(),
                     name: name,
                     email: email,
-                    password: password, // Σε πραγματική εφαρμογή θα πρέπει να κρυπτογραφηθεί
+                    password: password,
                     registrationDate: new Date().toISOString()
                 };
                 
@@ -1094,27 +1205,58 @@
             const forgotPasswordModal = document.getElementById('forgotPasswordModal');
             const closeForgotPasswordModal = document.getElementById('closeForgotPasswordModal');
             const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+            const resetCodeForm = document.getElementById('resetCodeForm');
+            const newPasswordForm = document.getElementById('newPasswordForm');
             const forgotPasswordMessage = document.getElementById('forgotPasswordMessage');
+            const resetCodeMessage = document.getElementById('resetCodeMessage');
+            const newPasswordMessage = document.getElementById('newPasswordMessage');
+            
+            let resetEmail = '';
+            let resetCode = '';
             
             // Άνοιγμα modal επαναφοράς κωδικού
             forgotPasswordLink.addEventListener('click', function(e) {
                 e.preventDefault();
+                resetEmail = '';
+                resetCode = '';
+                showResetStep(1);
                 forgotPasswordModal.style.display = 'flex';
             });
             
             // Κλείσιμο modal επαναφοράς κωδικού
             closeForgotPasswordModal.addEventListener('click', function() {
                 forgotPasswordModal.style.display = 'none';
+                resetForms();
             });
             
             // Κλείσιμο modal με κλικ έξω από το περιεχόμενο
             forgotPasswordModal.addEventListener('click', function(e) {
                 if (e.target === forgotPasswordModal) {
                     forgotPasswordModal.style.display = 'none';
+                    resetForms();
                 }
             });
             
-            // Υποβολή φόρμας επαναφοράς κωδικού
+            // Εμφάνιση συγκεκριμένου βήματος επαναφοράς
+            function showResetStep(step) {
+                // Απόκρυψη όλων των βημάτων
+                document.querySelectorAll('.reset-steps').forEach(step => {
+                    step.classList.remove('active');
+                });
+                
+                // Εμφάνιση του επιλεγμένου βήματος
+                document.getElementById(`resetStep${step}`).classList.add('active');
+            }
+            
+            // Επαναφορά φορμών
+            function resetForms() {
+                forgotPasswordForm.reset();
+                resetCodeForm.reset();
+                newPasswordForm.reset();
+                showResetStep(1);
+            }
+            
+            // Βήμα 1: Αποστολή κωδικού επαναφοράς
             forgotPasswordForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 
@@ -1134,17 +1276,109 @@
                     return;
                 }
                 
+                // Δημιουργία 6ψήφιου κωδικού επαναφοράς
+                resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+                resetEmail = email;
+                
+                // Αποθήκευση του κωδικού επαναφοράς (σε πραγματική εφαρμογή θα αποστέλλονταν στο email)
+                const resetCodes = JSON.parse(localStorage.getItem('resetCodes') || '{}');
+                resetCodes[email] = {
+                    code: resetCode,
+                    expires: Date.now() + 15 * 60 * 1000 // 15 λεπτά
+                };
+                localStorage.setItem('resetCodes', JSON.stringify(resetCodes));
+                
                 // Προσομοίωση αποστολής email
-                showMessage(forgotPasswordMessage, `Ο κωδικός πρόσβασής σας έχει σταλεί στο ${email}.`, 'success');
+                showMessage(forgotPasswordMessage, `Ο κωδικός επαναφοράς σας έχει σταλεί στο ${email}. Ο κωδικός είναι: ${resetCode}`, 'success');
                 
-                // Σε πραγματική εφαρμογή, εδώ θα γινόταν αποστολή email με τον κωδικό
-                console.log(`Αποστολή κωδικού στο ${email}: ${user.password}`);
-                
-                // Κλείσιμο του modal μετά από 3 δευτερόλεπτα
+                // Μετάβαση στο επόμενο βήμα
                 setTimeout(() => {
-                    forgotPasswordModal.style.display = 'none';
-                    forgotPasswordForm.reset();
-                }, 3000);
+                    showResetStep(2);
+                }, 2000);
+            });
+            
+            // Βήμα 2: Επαλήθευση κωδικού επαναφοράς
+            resetCodeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const enteredCode = document.getElementById('reset-code').value;
+                
+                if (!enteredCode) {
+                    showMessage(resetCodeMessage, 'Παρακαλώ εισάγετε τον κωδικό επαναφοράς.', 'error');
+                    return;
+                }
+                
+                // Έλεγχος του κωδικού επαναφοράς
+                const resetCodes = JSON.parse(localStorage.getItem('resetCodes') || '{}');
+                const userResetCode = resetCodes[resetEmail];
+                
+                if (!userResetCode || userResetCode.code !== enteredCode) {
+                    showMessage(resetCodeMessage, 'Λάθος κωδικός επαναφοράς.', 'error');
+                    return;
+                }
+                
+                // Έλεγχος αν ο κωδικός έχει λήξει
+                if (Date.now() > userResetCode.expires) {
+                    showMessage(resetCodeMessage, 'Ο κωδικός επαναφοράς έχει λήξει. Ζητήστε νέο κωδικό.', 'error');
+                    return;
+                }
+                
+                showMessage(resetCodeMessage, 'Ο κωδικός επαναφοράς είναι σωστός!', 'success');
+                
+                // Μετάβαση στο επόμενο βήμα
+                setTimeout(() => {
+                    showResetStep(3);
+                }, 1500);
+            });
+            
+            // Βήμα 3: Δημιουργία νέου κωδικού
+            newPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newPassword = document.getElementById('new-password').value;
+                const confirmNewPassword = document.getElementById('confirm-new-password').value;
+                
+                if (!newPassword || !confirmNewPassword) {
+                    showMessage(newPasswordMessage, 'Παρακαλώ συμπληρώστε όλα τα πεδία.', 'error');
+                    return;
+                }
+                
+                if (newPassword !== confirmNewPassword) {
+                    showMessage(newPasswordMessage, 'Οι κωδικοί πρόσβασης δεν ταιριάζουν.', 'error');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    showMessage(newPasswordMessage, 'Ο κωδικός πρέπει να έχει τουλάχιστον 6 χαρακτήρες.', 'error');
+                    return;
+                }
+                
+                // Ενημέρωση του κωδικού του χρήστη
+                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                const userIndex = existingUsers.findIndex(user => user.email === resetEmail);
+                
+                if (userIndex !== -1) {
+                    existingUsers[userIndex].password = newPassword;
+                    localStorage.setItem('users', JSON.stringify(existingUsers));
+                    
+                    // Διαγραφή του κωδικού επαναφοράς
+                    const resetCodes = JSON.parse(localStorage.getItem('resetCodes') || '{}');
+                    delete resetCodes[resetEmail];
+                    localStorage.setItem('resetCodes', JSON.stringify(resetCodes));
+                    
+                    showMessage(newPasswordMessage, 'Ο κωδικός πρόσβασης άλλαξε επιτυχώς! Μπορείτε τώρα να συνδεθείτε.', 'success');
+                    
+                    // Κλείσιμο του modal και επαναφορά φορμών
+                    setTimeout(() => {
+                        forgotPasswordModal.style.display = 'none';
+                        resetForms();
+                        
+                        // Αυτόματη συμπλήρωση του email στη φόρμα σύνδεσης
+                        document.getElementById('login-email').value = resetEmail;
+                    }, 2000);
+                } else {
+                    showMessage(newPasswordMessage, 'Προέκυψε σφάλμα. Παρακαλώ δοκιμάστε ξανά.', 'error');
+                }
             });
             
             // Σύστημα καρτελών κύριας εφαρμογής
