@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Πίνακας Ελέγχου - Καφεμαντεία</title>
+    <title>Διαχειριστής Καφεμαντείας - Πίνακας Ελέγχου</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -42,170 +42,250 @@
         
         header {
             text-align: center;
-            margin-bottom: 20px;
-            padding: 20px 15px;
+            margin-bottom: 25px;
+            padding: 25px 20px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
+            box-shadow: 0 10px 20px rgba(139, 69, 19, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: rotate(30deg);
         }
         
         .logo {
-            font-size: 2.2rem;
+            font-size: 2.8rem;
             margin-bottom: 10px;
             display: block;
         }
         
         h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
         }
         
         .subtitle {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        /* Horizontal Categories */
-        .categories {
+        .admin-info {
             display: flex;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            overflow-x: auto;
-            padding: 5px 0 15px 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        
-        .categories::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .category {
-            flex: 0 0 auto;
-            min-width: 140px;
             background: white;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            cursor: pointer;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
-        .category.active {
-            border-color: var(--primary);
-            background: linear-gradient(135deg, #f8f4e9 0%, white 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
-        }
-        
-        .category-icon {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+        .admin-welcome {
+            font-weight: 600;
             color: var(--primary);
         }
         
-        .category-title {
-            font-weight: 600;
-            font-size: 0.9rem;
+        .logout-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: #d32f2f;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
             margin-bottom: 5px;
             color: var(--dark);
         }
         
-        .category-count {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary);
+        .stat-label {
+            color: var(--text);
+            font-weight: 500;
         }
         
-        /* Content Sections */
-        .content-section {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
+        .tabs {
+            display: flex;
             margin-bottom: 20px;
-            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.1);
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: #f8f4e9;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+        
+        .tab:hover:not(.active) {
+            background: #f0e6d3;
+        }
+        
+        .tab-content {
             display: none;
         }
         
-        .content-section.active {
+        .tab-content.active {
             display: block;
         }
         
-        .section-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
+        .content-section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.15);
+            margin-bottom: 25px;
+            border: 1px solid rgba(210, 105, 30, 0.2);
+        }
+        
+        h2 {
+            color: var(--primary);
             margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h2 i {
+            color: var(--secondary);
+        }
+        
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            border: 2px solid #e0d6c9;
+            border-radius: 8px;
+            background: #fcfaf7;
+            font-size: 1rem;
+            color: var(--text);
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .search-input {
+            padding: 10px 15px;
+            border: 2px solid #e0d6c9;
+            border-radius: 8px;
+            background: #fcfaf7;
+            font-size: 1rem;
+            color: var(--text);
+            flex: 2;
+            min-width: 200px;
+        }
+        
+        .submissions-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .submission-card {
+            background: #fcfaf7;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s;
+        }
+        
+        .submission-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
             flex-wrap: wrap;
             gap: 10px;
         }
         
-        .section-title {
-            color: var(--primary);
-            font-size: 1.3rem;
-            font-weight: 600;
-        }
-        
-        .add-btn {
-            background: var(--success);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background 0.3s;
-        }
-        
-        .add-btn:hover {
-            background: #388e3c;
-        }
-        
-        /* Items Grid */
-        .items-grid {
-            display: grid;
-            gap: 15px;
-        }
-        
-        .item-card {
-            background: #fcfaf7;
-            border-radius: 10px;
-            padding: 15px;
-            border-left: 4px solid var(--accent);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-        
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .item-user {
+        .submission-user {
             font-weight: 600;
             color: var(--dark);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         
-        .item-date {
+        .submission-date {
             color: var(--text);
-            font-size: 0.8rem;
-            opacity: 0.8;
+            font-size: 0.9rem;
         }
         
-        .item-status {
-            padding: 4px 8px;
-            border-radius: 15px;
-            font-size: 0.75rem;
+        .submission-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
         
@@ -214,48 +294,54 @@
             color: #856404;
         }
         
+        .status-reviewed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
         .status-answered {
             background: #d4edda;
             color: #155724;
         }
         
-        .item-content {
-            margin-bottom: 12px;
+        .submission-content {
+            margin-bottom: 15px;
         }
         
-        .item-message {
-            line-height: 1.4;
-            font-size: 0.9rem;
+        .submission-message {
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
         
         .photos-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 8px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
             margin-top: 10px;
         }
         
         .photo-item {
-            border-radius: 6px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
         
         .photo-image {
             width: 100%;
-            height: 70px;
+            height: 120px;
             object-fit: cover;
             display: block;
         }
         
-        .item-actions {
+        .submission-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
             flex-wrap: wrap;
         }
         
         .action-btn {
-            padding: 6px 12px;
+            padding: 8px 15px;
             border: none;
             border-radius: 5px;
             font-weight: 500;
@@ -263,8 +349,7 @@
             transition: all 0.3s;
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-size: 0.8rem;
+            gap: 5px;
         }
         
         .btn-view {
@@ -272,9 +357,17 @@
             color: white;
         }
         
+        .btn-view:hover {
+            background: #0b7dda;
+        }
+        
         .btn-reply {
             background: var(--success);
             color: white;
+        }
+        
+        .btn-reply:hover {
+            background: #388e3c;
         }
         
         .btn-delete {
@@ -282,9 +375,76 @@
             color: white;
         }
         
+        .btn-delete:hover {
+            background: #d32f2f;
+        }
+        
         .btn-download {
             background: var(--primary);
             color: white;
+        }
+        
+        .btn-download:hover {
+            background: var(--primary-light);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text);
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #e0d6c9;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 5px;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid #e0d6c9;
+            background: white;
+            color: var(--text);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .page-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .page-btn:hover:not(.active) {
+            background: #f0e6d3;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--primary-light);
+            font-size: 0.9rem;
+        }
+        
+        .coffee-icon {
+            display: inline-block;
+            margin: 0 5px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
         }
         
         /* Modal */
@@ -299,21 +459,20 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
-            padding: 15px;
         }
         
         .modal-content {
             background: white;
             border-radius: 15px;
-            width: 100%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
         .modal-header {
-            padding: 15px 20px;
+            padding: 20px;
             border-bottom: 1px solid #e0d6c9;
             display: flex;
             justify-content: space-between;
@@ -321,7 +480,7 @@
         }
         
         .modal-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: var(--primary);
         }
@@ -329,13 +488,17 @@
         .close-modal {
             background: none;
             border: none;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             cursor: pointer;
             color: var(--text);
         }
         
         .modal-body {
             padding: 20px;
+        }
+        
+        .reply-form {
+            margin-top: 20px;
         }
         
         .form-group {
@@ -347,28 +510,23 @@
             margin-bottom: 5px;
             font-weight: 600;
             color: var(--dark);
-            font-size: 0.9rem;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 2px solid #e0d6c9;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-family: inherit;
-            background: #fcfaf7;
         }
         
         textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0d6c9;
+            border-radius: 8px;
+            font-size: 1rem;
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
+            font-family: inherit;
         }
         
-        input:focus, textarea:focus, select:focus {
+        textarea:focus {
             border-color: var(--secondary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
+            box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2);
         }
         
         .modal-actions {
@@ -377,88 +535,156 @@
             justify-content: flex-end;
             margin-top: 20px;
         }
-        
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text);
+
+        /* Νέα στυλ για URL preview και links */
+        .url-preview {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
         }
-        
-        .empty-icon {
-            font-size: 2.5rem;
+
+        .url-preview h4 {
             margin-bottom: 10px;
-            color: #e0d6c9;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .url-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .url-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .url-item i {
+            color: var(--primary);
+        }
+
+        .preview-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .preview-link:hover {
+            text-decoration: underline;
+        }
+
+        .url-note {
+            font-size: 0.75rem;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+
+        /* Στυλ για προβολή μηνυμάτων με links */
+        .message-link {
+            color: var(--primary);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .message-link:hover {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        .submission-message a {
+            color: var(--primary);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .submission-message a:hover {
+            color: var(--primary-light);
+            text-decoration: none;
         }
         
-        /* Responsive */
-        @media (max-width: 480px) {
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .container {
                 padding: 5px;
             }
             
             header {
-                padding: 15px 10px;
-                margin-bottom: 15px;
-            }
-            
-            .logo {
-                font-size: 1.8rem;
+                padding: 20px 15px;
+                margin-bottom: 20px;
             }
             
             h1 {
-                font-size: 1.3rem;
+                font-size: 1.8rem;
             }
             
-            .category {
-                min-width: 120px;
-                padding: 12px;
+            .logo {
+                font-size: 2.2rem;
             }
             
-            .category-icon {
-                font-size: 1.5rem;
+            .admin-info {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .stats-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
             }
             
             .content-section {
-                padding: 15px;
+                padding: 20px 15px;
             }
             
-            .section-header {
+            .filters {
+                flex-direction: column;
+            }
+            
+            .submission-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .add-btn {
+            .submission-actions {
                 width: 100%;
                 justify-content: center;
-            }
-            
-            .item-actions {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .action-btn {
-                flex: 1;
-                justify-content: center;
-                min-width: 80px;
             }
             
             .photos-grid {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+            
+            .photo-image {
+                height: 100px;
+            }
+
+            .url-preview {
+                padding: 10px;
+            }
+
+            .url-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .url-note {
+                white-space: normal;
             }
         }
         
-        @media (max-width: 360px) {
-            .category {
-                min-width: 110px;
-                padding: 10px;
-            }
-            
-            .category-title {
-                font-size: 0.8rem;
-            }
-            
+        @media (max-width: 480px) {
             .photos-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -469,433 +695,714 @@
     <div class="container">
         <header>
             <i class="fas fa-mug-hot logo"></i>
-            <h1>Πίνακας Ελέγχου</h1>
-            <p class="subtitle">Διαχείριση Καφεμαντείας</p>
+            <h1>Πίνακας Διαχειριστή - Καφεμαντεία</h1>
+            <p class="subtitle">Διαχείριση υποβολών και μηνυμάτων από επισκέπτες</p>
         </header>
         
-        <!-- Οριζόντιες Κατηγορίες -->
-        <div class="categories">
-            <div class="category active" data-category="users">
-                <div class="category-icon">
-                    <i class="fas fa-users"></i>
+        <div class="admin-info">
+            <div class="admin-welcome">
+                <i class="fas fa-user-shield"></i> Καλώς ήρθες, Διαχειριστή!
+            </div>
+            <button class="logout-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Ανανέωση
+            </button>
+        </div>
+        
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-images"></i>
                 </div>
-                <div class="category-title">Χρήστες</div>
-                <div class="category-count" id="users-count">0</div>
+                <div class="stat-number" id="total-submissions">0</div>
+                <div class="stat-label">Συνολικές Υποβολές</div>
             </div>
             
-            <div class="category" data-category="messages">
-                <div class="category-icon">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="pending-submissions">0</div>
+                <div class="stat-label">Υποβολές σε Εκκρεμότητα</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="answered-submissions">0</div>
+                <div class="stat-label">Απαντημένες Υποβολές</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
                     <i class="fas fa-envelope"></i>
                 </div>
-                <div class="category-title">Μηνύματα</div>
-                <div class="category-count" id="messages-count">0</div>
-            </div>
-            
-            <div class="category" data-category="photos">
-                <div class="category-icon">
-                    <i class="fas fa-camera"></i>
-                </div>
-                <div class="category-title">Φωτογραφίες</div>
-                <div class="category-count" id="photos-count">0</div>
-            </div>
-            
-            <div class="category" data-category="points">
-                <div class="category-icon">
-                    <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="category-title">Σημεία</div>
-                <div class="category-count" id="points-count">0</div>
+                <div class="stat-number" id="contact-messages">0</div>
+                <div class="stat-label">Μηνύματα Επικοινωνίας</div>
             </div>
         </div>
         
-        <!-- Περιεχόμενο Χρηστών -->
-        <section id="users-section" class="content-section active">
-            <div class="section-header">
-                <h2 class="section-title">Διαχείριση Χρηστών</h2>
-                <button class="add-btn" id="add-user-btn">
-                    <i class="fas fa-plus"></i> Νέος Χρήστης
-                </button>
-            </div>
-            
-            <div class="items-grid" id="users-list">
-                <!-- Θα προστεθούν δυναμικά οι χρήστες -->
-            </div>
-        </section>
+        <div class="tabs">
+            <button class="tab active" data-tab="photos-tab">
+                <i class="fas fa-camera"></i> Υποβολές Φωτογραφιών
+            </button>
+            <button class="tab" data-tab="messages-tab">
+                <i class="fas fa-envelope"></i> Μηνύματα Επικοινωνίας
+            </button>
+        </div>
         
-        <!-- Περιεχόμενο Μηνυμάτων -->
-        <section id="messages-section" class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">Μηνύματα Επισκεπτών</h2>
-                <button class="add-btn" id="add-message-btn">
-                    <i class="fas fa-plus"></i> Νέο Μήνυμα
-                </button>
-            </div>
+        <main>
+            <!-- Καρτέλα Υποβολών Φωτογραφιών -->
+            <section id="photos-tab" class="tab-content active">
+                <div class="content-section">
+                    <h2><i class="fas fa-images"></i> Υποβολές Φωτογραφιών Καφέ</h2>
+                    
+                    <div class="filters">
+                        <select class="filter-select" id="status-filter">
+                            <option value="all">Όλες οι Καταστάσεις</option>
+                            <option value="pending">Σε Εκκρεμότητα</option>
+                            <option value="reviewed">Εξετασμένες</option>
+                            <option value="answered">Απαντημένες</option>
+                        </select>
+                        
+                        <select class="filter-select" id="date-filter">
+                            <option value="all">Όλες οι Ημερομηνίες</option>
+                            <option value="today">Σήμερα</option>
+                            <option value="week">Τελευταία 7 Ημέρες</option>
+                            <option value="month">Τελευταίος Μήνας</option>
+                        </select>
+                        
+                        <input type="text" class="search-input" id="search-input" placeholder="Αναζήτηση με email...">
+                    </div>
+                    
+                    <div class="submissions-list" id="photo-submissions-list">
+                        <!-- Θα προστεθούν δυναμικά οι υποβολές -->
+                    </div>
+                </div>
+            </section>
             
-            <div class="items-grid" id="messages-list">
-                <!-- Θα προστεθούν δυναμικά τα μηνύματα -->
-            </div>
-        </section>
+            <!-- Καρτέλα Μηνυμάτων Επικοινωνίας -->
+            <section id="messages-tab" class="tab-content">
+                <div class="content-section">
+                    <h2><i class="fas fa-comments"></i> Μηνύματα Επικοινωνίας</h2>
+                    
+                    <div class="filters">
+                        <select class="filter-select" id="message-status-filter">
+                            <option value="all">Όλα τα Μηνύματα</option>
+                            <option value="pending">Σε Εκκρεμότητα</option>
+                            <option value="answered">Απαντημένα</option>
+                        </select>
+                        
+                        <input type="text" class="search-input" id="message-search-input" placeholder="Αναζήτηση με όνομα ή email...">
+                    </div>
+                    
+                    <div class="submissions-list" id="message-submissions-list">
+                        <!-- Θα προστεθούν δυναμικά τα μηνύματα -->
+                    </div>
+                </div>
+            </section>
+        </main>
         
-        <!-- Περιεχόμενο Φωτογραφιών -->
-        <section id="photos-section" class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">Υποβολές Φωτογραφιών</h2>
-                <button class="add-btn" id="add-photo-btn">
-                    <i class="fas fa-plus"></i> Νέα Υποβολή
-                </button>
-            </div>
-            
-            <div class="items-grid" id="photos-list">
-                <!-- Θα προστεθούν δυναμικά οι φωτογραφίες -->
-            </div>
-        </section>
-        
-        <!-- Περιεχόμενο Σημείων -->
-        <section id="points-section" class="content-section">
-            <div class="section-header">
-                <h2 class="section-title">Διαχείριση Σημείων</h2>
-                <button class="add-btn" id="add-point-btn">
-                    <i class="fas fa-plus"></i> Νέο Σημείο
-                </button>
-            </div>
-            
-            <div class="items-grid" id="points-list">
-                <!-- Θα προστεθούν δυναμικά τα σημεία -->
-            </div>
-        </section>
+        <footer>
+            <p>
+                Καφεμαντεία <span class="coffee-icon">☕</span> 
+                Πίνακας Διαχειριστή
+            </p>
+            <p>© 2023 - Όλα τα δικαιώματα διατηρούνται</p>
+        </footer>
     </div>
 
-    <!-- Modal για Προσθήκη/Επεξεργασία -->
-    <div class="modal" id="item-modal">
+    <!-- Modal για προβολή υποβολής -->
+    <div class="modal" id="submission-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="modal-title">Προσθήκη Νέου</h3>
+                <h3 class="modal-title">Προβολή Υποβολής</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body">
+                <!-- Θα προστεθεί δυναμικά το περιεχόμενο -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal για απάντηση -->
+    <div class="modal" id="reply-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Απάντηση στον Χρήστη</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="item-form">
+                <div id="reply-user-info">
+                    <!-- Θα προστεθούν δυναμικά τα στοιχεία του χρήστη -->
+                </div>
+                
+                <div class="reply-form">
                     <div class="form-group">
-                        <label for="item-name">Όνομα:</label>
-                        <input type="text" id="item-name" required>
+                        <label for="reply-message">Μήνυμα Απάντησης:</label>
+                        <textarea id="reply-message" placeholder="Γράψτε το μήνυμα απάντησής σας εδώ...&#10;&#10;Μπορείτε να επικολλήσετε URLs που θα μετατραπούν αυτόματα σε clickable links για τον χρήστη."></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="item-email">Email:</label>
-                        <input type="email" id="item-email">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="item-message">Μήνυμα:</label>
-                        <textarea id="item-message"></textarea>
-                    </div>
-                    
-                    <div class="form-group" id="photo-upload-group" style="display: none;">
-                        <label for="item-photos">Φωτογραφίες:</label>
-                        <input type="file" id="item-photos" multiple accept="image/*">
-                    </div>
-                    
-                    <div class="form-group" id="point-location-group" style="display: none;">
-                        <label for="item-location">Τοποθεσία:</label>
-                        <input type="text" id="item-location" placeholder="Π.χ. Αθήνα, Κέντρο">
+                    <div class="url-preview" id="url-preview" style="display: none;">
+                        <h4>Προεπισκόπηση URLs:</h4>
+                        <div id="url-preview-content"></div>
                     </div>
                     
                     <div class="modal-actions">
-                        <button type="button" class="action-btn btn-view" id="cancel-btn">
-                            Ακύρωση
+                        <button class="action-btn btn-view" id="cancel-reply">
+                            <i class="fas fa-times"></i> Ακύρωση
                         </button>
-                        <button type="submit" class="action-btn btn-reply">
-                            Αποθήκευση
+                        <button class="action-btn btn-reply" id="send-reply">
+                            <i class="fas fa-paper-plane"></i> Αποστολή Απάντησης
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Δεδομένα
-            let data = {
-                users: JSON.parse(localStorage.getItem('adminUsers')) || [],
-                messages: JSON.parse(localStorage.getItem('adminMessages')) || [],
-                photos: JSON.parse(localStorage.getItem('adminPhotos')) || [],
-                points: JSON.parse(localStorage.getItem('adminPoints')) || []
-            };
+            // Σύστημα καρτελών
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
             
-            // Σύστημα κατηγοριών
-            const categories = document.querySelectorAll('.category');
-            const contentSections = document.querySelectorAll('.content-section');
-            
-            categories.forEach(category => {
-                category.addEventListener('click', () => {
-                    const categoryId = category.getAttribute('data-category');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
                     
-                    // Απενεργοποίηση όλων των κατηγοριών
-                    categories.forEach(cat => cat.classList.remove('active'));
-                    contentSections.forEach(section => section.classList.remove('active'));
+                    // Απενεργοποίηση όλων των καρτελών
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
                     
-                    // Ενεργοποίηση επιλεγμένης κατηγορίας
-                    category.classList.add('active');
-                    document.getElementById(`${categoryId}-section`).classList.add('active');
+                    // Ενεργοποίηση της επιλεγμένης καρτέλας
+                    tab.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
                 });
             });
             
-            // Modal λειτουργίες
-            const modal = document.getElementById('item-modal');
-            const closeModalBtn = document.querySelector('.close-modal');
-            const cancelBtn = document.getElementById('cancel-btn');
-            const itemForm = document.getElementById('item-form');
-            
-            function openModal(category) {
-                document.getElementById('modal-title').textContent = `Προσθήκη ${getCategoryTitle(category)}`;
-                document.getElementById('photo-upload-group').style.display = category === 'photos' ? 'block' : 'none';
-                document.getElementById('point-location-group').style.display = category === 'points' ? 'block' : 'none';
-                modal.style.display = 'flex';
-                currentCategory = category;
-            }
-            
-            function closeModal() {
-                modal.style.display = 'none';
-                itemForm.reset();
-            }
-            
-            closeModalBtn.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
-            
-            // Κουμπιά προσθήκης
-            document.getElementById('add-user-btn').addEventListener('click', () => openModal('users'));
-            document.getElementById('add-message-btn').addEventListener('click', () => openModal('messages'));
-            document.getElementById('add-photo-btn').addEventListener('click', () => openModal('photos'));
-            document.getElementById('add-point-btn').addEventListener('click', () => openModal('points'));
-            
-            // Υποβολή φόρμας
-            let currentCategory = '';
-            
-            itemForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const newItem = {
-                    id: Date.now(),
-                    name: document.getElementById('item-name').value,
-                    email: document.getElementById('item-email').value,
-                    message: document.getElementById('item-message').value,
-                    date: new Date().toISOString(),
-                    status: 'pending'
-                };
-                
-                if (currentCategory === 'points') {
-                    newItem.location = document.getElementById('item-location').value;
-                }
-                
-                data[currentCategory].push(newItem);
-                saveData();
-                loadCategoryData(currentCategory);
-                updateCounts();
-                closeModal();
-                
-                alert(`${getCategoryTitle(currentCategory)} προστέθηκε επιτυχώς!`);
+            // Ανανέωση δεδομένων
+            document.getElementById('refreshBtn').addEventListener('click', function() {
+                loadAllData();
+                showNotification('Τα δεδομένα ανανεώθηκαν!', 'success');
             });
             
-            // Φόρτωση δεδομένων
+            // Φόρτωση όλων των δεδομένων
             function loadAllData() {
-                loadCategoryData('users');
-                loadCategoryData('messages');
-                loadCategoryData('photos');
-                loadCategoryData('points');
-                updateCounts();
+                loadPhotoSubmissions();
+                loadMessageSubmissions();
+                updateStats();
             }
             
-            function loadCategoryData(category) {
-                const container = document.getElementById(`${category}-list`);
-                const items = data[category];
+            // Φόρτωση υποβολών φωτογραφιών
+            function loadPhotoSubmissions() {
+                const allSubmissions = getAllSubmissions();
+                const photoSubmissions = allSubmissions.filter(sub => sub.type === 'photo');
+                const listContainer = document.getElementById('photo-submissions-list');
                 
-                if (items.length === 0) {
-                    container.innerHTML = `
+                if (photoSubmissions.length === 0) {
+                    listContainer.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">
-                                <i class="fas fa-${getCategoryIcon(category)}"></i>
+                                <i class="fas fa-images"></i>
                             </div>
-                            <h3>Δεν βρέθηκαν ${getCategoryTitle(category).toLowerCase()}</h3>
-                            <p>Προσθέστε νέα ${getCategoryTitle(category).toLowerCase()} πατώντας το κουμπί "Προσθήκη"</p>
+                            <h3>Δεν βρέθηκαν υποβολές φωτογραφιών</h3>
+                            <p>Δεν υπάρχουν διαθέσιμες υποβολές προς το παρόν.</p>
                         </div>
                     `;
                     return;
                 }
                 
-                container.innerHTML = '';
+                listContainer.innerHTML = '';
                 
-                items.forEach(item => {
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'item-card';
+                // Ταξινόμηση από νεότερο προς παλαιότερο
+                photoSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                photoSubmissions.forEach(submission => {
+                    const statusClass = `status-${submission.status}`;
+                    const statusText = getStatusText(submission.status);
                     
-                    let contentHTML = '';
-                    let actionsHTML = '';
-                    
-                    switch(category) {
-                        case 'users':
-                            contentHTML = `
-                                <div class="item-message">Email: ${item.email || 'Δεν υπάρχει'}</div>
-                            `;
-                            actionsHTML = `
-                                <button class="action-btn btn-view" onclick="viewItem('${category}', ${item.id})">
-                                    <i class="fas fa-eye"></i> Προβολή
-                                </button>
-                                <button class="action-btn btn-delete" onclick="deleteItem('${category}', ${item.id})">
-                                    <i class="fas fa-trash"></i> Διαγραφή
-                                </button>
-                            `;
-                            break;
-                            
-                        case 'messages':
-                            contentHTML = `
-                                <div class="item-message">${item.message || 'Δεν υπάρχει μήνυμα'}</div>
-                            `;
-                            actionsHTML = `
-                                <button class="action-btn btn-reply" onclick="replyToItem('${category}', ${item.id})">
-                                    <i class="fas fa-reply"></i> Απάντηση
-                                </button>
-                                <button class="action-btn btn-delete" onclick="deleteItem('${category}', ${item.id})">
-                                    <i class="fas fa-trash"></i> Διαγραφή
-                                </button>
-                            `;
-                            break;
-                            
-                        case 'photos':
-                            contentHTML = `
-                                <div class="item-message">${item.message || 'Δεν υπάρχει περιγραφή'}</div>
-                                <div class="photos-grid">
-                                    <div class="photo-item">
-                                        <div class="photo-image" style="background: #e0d6c9; display: flex; align-items: center; justify-content: center; color: var(--text); font-size: 0.8rem;">
-                                            <i class="fas fa-image"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            actionsHTML = `
-                                <button class="action-btn btn-view" onclick="viewItem('${category}', ${item.id})">
-                                    <i class="fas fa-eye"></i> Προβολή
-                                </button>
-                                <button class="action-btn btn-download" onclick="downloadItem('${category}', ${item.id})">
-                                    <i class="fas fa-download"></i> Λήψη
-                                </button>
-                                <button class="action-btn btn-delete" onclick="deleteItem('${category}', ${item.id})">
-                                    <i class="fas fa-trash"></i> Διαγραφή
-                                </button>
-                            `;
-                            break;
-                            
-                        case 'points':
-                            contentHTML = `
-                                <div class="item-message">Τοποθεσία: ${item.location || 'Δεν ορίστηκε'}</div>
-                                ${item.message ? `<div class="item-message">${item.message}</div>` : ''}
-                            `;
-                            actionsHTML = `
-                                <button class="action-btn btn-view" onclick="viewItem('${category}', ${item.id})">
-                                    <i class="fas fa-eye"></i> Προβολή
-                                </button>
-                                <button class="action-btn btn-delete" onclick="deleteItem('${category}', ${item.id})">
-                                    <i class="fas fa-trash"></i> Διαγραφή
-                                </button>
-                            `;
-                            break;
-                    }
-                    
-                    itemElement.innerHTML = `
-                        <div class="item-header">
-                            <div class="item-user">${item.name}</div>
-                            <div class="item-date">${formatDate(item.date)}</div>
-                            <div class="item-status status-${item.status}">${getStatusText(item.status)}</div>
+                    const photosHTML = submission.photos.map(photo => `
+                        <div class="photo-item">
+                            <img src="${photo.data}" alt="Φωτογραφία καφέ" class="photo-image">
                         </div>
-                        <div class="item-content">
-                            ${contentHTML}
+                    `).join('');
+                    
+                    const submissionCard = document.createElement('div');
+                    submissionCard.className = 'submission-card';
+                    submissionCard.innerHTML = `
+                        <div class="submission-header">
+                            <div class="submission-user">${submission.userEmail}</div>
+                            <div class="submission-date">${formatDate(submission.date)}</div>
+                            <div class="submission-status ${statusClass}">${statusText}</div>
                         </div>
-                        <div class="item-actions">
-                            ${actionsHTML}
+                        
+                        <div class="submission-content">
+                            <div class="submission-message">${submission.message}</div>
+                            
+                            <div class="photos-grid">
+                                ${photosHTML}
+                            </div>
+                        </div>
+                        
+                        <div class="submission-actions">
+                            <button class="action-btn btn-view" data-id="${submission.id}">
+                                <i class="fas fa-eye"></i> Προβολή
+                            </button>
+                            <button class="action-btn btn-reply" data-id="${submission.id}">
+                                <i class="fas fa-reply"></i> Απάντηση
+                            </button>
+                            <button class="action-btn btn-download" data-id="${submission.id}">
+                                <i class="fas fa-download"></i> Λήψη
+                            </button>
+                            <button class="action-btn btn-delete" data-id="${submission.id}">
+                                <i class="fas fa-trash"></i> Διαγραφή
+                            </button>
                         </div>
                     `;
                     
-                    container.appendChild(itemElement);
+                    listContainer.appendChild(submissionCard);
                 });
+                
+                // Προσθήκη event listeners για τα κουμπιά
+                addActionEventListeners();
+            }
+            
+            // Φόρτωση μηνυμάτων επικοινωνίας
+            function loadMessageSubmissions() {
+                const allSubmissions = getAllSubmissions();
+                const messageSubmissions = allSubmissions.filter(sub => sub.type === 'message');
+                const listContainer = document.getElementById('message-submissions-list');
+                
+                if (messageSubmissions.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h3>Δεν βρέθηκαν μηνύματα</h3>
+                            <p>Δεν υπάρχουν διαθέσιμα μηνύματα προς το παρόν.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                listContainer.innerHTML = '';
+                
+                // Ταξινόμηση από νεότερο προς παλαιότερο
+                messageSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                messageSubmissions.forEach(submission => {
+                    const statusClass = `status-${submission.status}`;
+                    const statusText = getStatusText(submission.status);
+                    
+                    const submissionCard = document.createElement('div');
+                    submissionCard.className = 'submission-card';
+                    submissionCard.innerHTML = `
+                        <div class="submission-header">
+                            <div>
+                                <div class="submission-user">${submission.userName}</div>
+                                <div class="submission-date">${submission.userEmail}</div>
+                            </div>
+                            <div class="submission-date">${formatDate(submission.date)}</div>
+                            <div class="submission-status ${statusClass}">${statusText}</div>
+                        </div>
+                        
+                        <div class="submission-content">
+                            <div><strong>Θέμα:</strong> ${submission.subject}</div>
+                            <div class="submission-message">${submission.message}</div>
+                        </div>
+                        
+                        <div class="submission-actions">
+                            <button class="action-btn btn-view" data-id="${submission.id}">
+                                <i class="fas fa-eye"></i> Προβολή
+                            </button>
+                            <button class="action-btn btn-reply" data-id="${submission.id}">
+                                <i class="fas fa-reply"></i> Απάντηση
+                            </button>
+                            <button class="action-btn btn-delete" data-id="${submission.id}">
+                                <i class="fas fa-trash"></i> Διαγραφή
+                            </button>
+                        </div>
+                    `;
+                    
+                    listContainer.appendChild(submissionCard);
+                });
+                
+                // Προσθήκη event listeners για τα κουμπιά
+                addActionEventListeners();
+            }
+            
+            // Λήψη όλων των υποβολών από το LocalStorage
+            function getAllSubmissions() {
+                return JSON.parse(localStorage.getItem('coffeeSubmissions') || '[]');
             }
             
             // Βοηθητικές συναρτήσεις
-            function getCategoryTitle(category) {
-                const titles = {
-                    'users': 'Χρήστης',
-                    'messages': 'Μήνυμα',
-                    'photos': 'Φωτογραφία',
-                    'points': 'Σημείο'
-                };
-                return titles[category] || 'Στοιχείο';
-            }
-            
-            function getCategoryIcon(category) {
-                const icons = {
-                    'users': 'users',
-                    'messages': 'envelope',
-                    'photos': 'camera',
-                    'points': 'map-marker-alt'
-                };
-                return icons[category] || 'circle';
-            }
-            
             function getStatusText(status) {
                 const statusMap = {
-                    'pending': 'Εκκρεμεί',
-                    'answered': 'Απαντήθηκε'
+                    'pending': 'Σε Εκκρεμότητα',
+                    'reviewed': 'Εξετασμένη',
+                    'answered': 'Απαντημένη'
                 };
                 return statusMap[status] || status;
             }
             
             function formatDate(dateString) {
                 const options = { 
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit'
                 };
                 return new Date(dateString).toLocaleDateString('el-GR', options);
             }
             
-            function saveData() {
-                localStorage.setItem('adminUsers', JSON.stringify(data.users));
-                localStorage.setItem('adminMessages', JSON.stringify(data.messages));
-                localStorage.setItem('adminPhotos', JSON.stringify(data.photos));
-                localStorage.setItem('adminPoints', JSON.stringify(data.points));
+            // Προσθήκη event listeners για ενέργειες
+            function addActionEventListeners() {
+                // Προβολή υποβολής
+                document.querySelectorAll('.btn-view').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const submissionId = parseInt(this.getAttribute('data-id'));
+                        viewSubmission(submissionId);
+                    });
+                });
+                
+                // Απάντηση
+                document.querySelectorAll('.btn-reply').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const submissionId = parseInt(this.getAttribute('data-id'));
+                        openReplyModal(submissionId);
+                    });
+                });
+                
+                // Λήψη φωτογραφιών
+                document.querySelectorAll('.btn-download').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const submissionId = parseInt(this.getAttribute('data-id'));
+                        downloadSubmission(submissionId);
+                    });
+                });
+                
+                // Διαγραφή
+                document.querySelectorAll('.btn-delete').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const submissionId = parseInt(this.getAttribute('data-id'));
+                        deleteSubmission(submissionId);
+                    });
+                });
             }
             
-            function updateCounts() {
-                document.getElementById('users-count').textContent = data.users.length;
-                document.getElementById('messages-count').textContent = data.messages.length;
-                document.getElementById('photos-count').textContent = data.photos.length;
-                document.getElementById('points-count').textContent = data.points.length;
-            }
+            // Λειτουργίες modal
+            const submissionModal = document.getElementById('submission-modal');
+            const replyModal = document.getElementById('reply-modal');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
             
-            // Global functions για τα buttons
-            window.viewItem = function(category, id) {
-                alert(`Προβολή ${getCategoryTitle(category)} με ID: ${id}`);
-            };
+            // Κλείσιμο modal
+            closeModalButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    submissionModal.style.display = 'none';
+                    replyModal.style.display = 'none';
+                });
+            });
             
-            window.replyToItem = function(category, id) {
-                alert(`Απάντηση στο ${getCategoryTitle(category)} με ID: ${id}`);
-            };
-            
-            window.downloadItem = function(category, id) {
-                alert(`Λήψη ${getCategoryTitle(category)} με ID: ${id}`);
-            };
-            
-            window.deleteItem = function(category, id) {
-                if (confirm(`Είστε σίγουρος ότι θέλετε να διαγράψετε αυτό το ${getCategoryTitle(category).toLowerCase()};`)) {
-                    data[category] = data[category].filter(item => item.id !== id);
-                    saveData();
-                    loadCategoryData(category);
-                    updateCounts();
-                    alert(`${getCategoryTitle(category)} διαγράφηκε επιτυχώς!`);
+            // Κλείσιμο modal με κλικ έξω από το περιεχόμενο
+            window.addEventListener('click', function(event) {
+                if (event.target === submissionModal) {
+                    submissionModal.style.display = 'none';
                 }
-            };
+                if (event.target === replyModal) {
+                    replyModal.style.display = 'none';
+                }
+            });
             
-            // Αρχική φόρτωση
+            // Προβολή υποβολής
+            function viewSubmission(id) {
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === id);
+                if (!submission) return;
+                
+                const modalBody = document.getElementById('modal-body');
+                
+                if (submission.type === 'photo') {
+                    const photosHTML = submission.photos.map(photo => `
+                        <div class="photo-item">
+                            <img src="${photo.data}" alt="Φωτογραφία καφέ" class="photo-image">
+                        </div>
+                    `).join('');
+                    
+                    modalBody.innerHTML = `
+                        <div class="submission-header">
+                            <div class="submission-user">${submission.userEmail}</div>
+                            <div class="submission-date">${formatDate(submission.date)}</div>
+                        </div>
+                        
+                        <div class="submission-content">
+                            <div class="submission-message">
+                                <strong>Μήνυμα:</strong><br>
+                                ${submission.message}
+                            </div>
+                            
+                            <div class="preview-title">
+                                <i class="fas fa-images"></i> Φωτογραφίες:
+                            </div>
+                            <div class="photos-grid">
+                                ${photosHTML}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    modalBody.innerHTML = `
+                        <div class="submission-header">
+                            <div>
+                                <div class="submission-user">${submission.userName}</div>
+                                <div class="submission-date">${submission.userEmail}</div>
+                            </div>
+                            <div class="submission-date">${formatDate(submission.date)}</div>
+                        </div>
+                        
+                        <div class="submission-content">
+                            <div><strong>Θέμα:</strong> ${submission.subject}</div>
+                            <div class="submission-message">
+                                <strong>Μήνυμα:</strong><br>
+                                ${submission.message}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                submissionModal.style.display = 'flex';
+            }
+            
+            // Νέα λειτουργία για URL detection και preview
+            const replyMessageTextarea = document.getElementById('reply-message');
+            const urlPreview = document.getElementById('url-preview');
+            const urlPreviewContent = document.getElementById('url-preview-content');
+            
+            // Λειτουργία για ανίχνευση URLs και προεπισκόπηση
+            replyMessageTextarea.addEventListener('input', function() {
+                const text = this.value;
+                const urls = extractUrls(text);
+                
+                if (urls.length > 0) {
+                    urlPreviewContent.innerHTML = urls.map(url => `
+                        <div class="url-item">
+                            <i class="fas fa-link"></i>
+                            <a href="${url}" target="_blank" class="preview-link">${url}</a>
+                            <span class="url-note">(θα ανοίξει σε νέα καρτέλα)</span>
+                        </div>
+                    `).join('');
+                    urlPreview.style.display = 'block';
+                } else {
+                    urlPreview.style.display = 'none';
+                }
+            });
+            
+            // Συνάρτηση εξαγωγής URLs από κείμενο
+            function extractUrls(text) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                return text.match(urlRegex) || [];
+            }
+            
+            // Συνάρτηση μετατροπής URLs σε clickable links
+            function convertUrlsToLinks(text) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                return text.replace(urlRegex, function(url) {
+                    return `<a href="${url}" target="_blank" class="message-link">${url}</a>`;
+                });
+            }
+            
+            // Άνοιγμα modal απάντησης
+            function openReplyModal(id) {
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === id);
+                if (!submission) return;
+                
+                const userInfo = document.getElementById('reply-user-info');
+                
+                if (submission.type === 'photo') {
+                    userInfo.innerHTML = `
+                        <div class="submission-header">
+                            <div class="submission-user">Απάντηση σε: ${submission.userEmail}</div>
+                            <div class="submission-date">${formatDate(submission.date)}</div>
+                        </div>
+                        
+                        <div class="submission-content">
+                            <div class="submission-message">
+                                <strong>Αρχικό Μήνυμα:</strong><br>
+                                ${submission.message}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    userInfo.innerHTML = `
+                        <div class="submission-header">
+                            <div>
+                                <div class="submission-user">Απάντηση σε: ${submission.userName}</div>
+                                <div class="submission-date">${submission.userEmail}</div>
+                            </div>
+                            <div class="submission-date">${formatDate(submission.date)}</div>
+                        </div>
+                        
+                        <div class="submission-content">
+                            <div><strong>Θέμα:</strong> ${submission.subject}</div>
+                            <div class="submission-message">
+                                <strong>Αρχικό Μήνυμα:</strong><br>
+                                ${submission.message}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('reply-message').value = '';
+                urlPreview.style.display = 'none';
+                replyModal.style.display = 'flex';
+                
+                // Αποθήκευση του ID για χρήση στην αποστολή
+                document.getElementById('send-reply').setAttribute('data-id', id);
+            }
+            
+            // Αποστολή απάντησης
+            document.getElementById('send-reply').addEventListener('click', function() {
+                const replyMessage = document.getElementById('reply-message').value;
+                const submissionId = parseInt(this.getAttribute('data-id'));
+                
+                if (!replyMessage.trim()) {
+                    alert('Παρακαλώ εισάγετε μήνυμα απάντησης.');
+                    return;
+                }
+                
+                // Μετατροπή URLs σε links
+                const formattedMessage = convertUrlsToLinks(replyMessage);
+                
+                // Βρες την υποβολή
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === submissionId);
+                
+                if (!submission) {
+                    alert('Δεν βρέθηκε η υποβολή!');
+                    return;
+                }
+                
+                // Δημιουργία απάντησης
+                const response = {
+                    id: Date.now(),
+                    submissionId: submissionId,
+                    userEmail: submission.userEmail || submission.email,
+                    adminMessage: formattedMessage, // Αποθηκεύουμε το μήνυμα με links
+                    originalMessage: submission.message || submission.subject,
+                    date: new Date().toISOString(),
+                    status: 'sent'
+                };
+                
+                // Αποθήκευση απάντησης
+                saveResponse(response);
+                
+                // Ενημέρωση κατάστασης υποβολής
+                updateSubmissionStatus(submissionId, 'answered');
+                
+                // Αποστολή
+                this.disabled = true;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
+                
+                setTimeout(() => {
+                    alert('Η απάντηση στάλθηκε επιτυχώς στον χρήστη!');
+                    replyModal.style.display = 'none';
+                    this.disabled = false;
+                    this.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Απάντησης';
+                    
+                    // Ανανέωση δεδομένων
+                    loadAllData();
+                }, 1500);
+            });
+            
+            // Αποθήκευση απάντησης στο LocalStorage
+            function saveResponse(response) {
+                const existingResponses = JSON.parse(localStorage.getItem('coffeeResponses') || '[]');
+                existingResponses.push(response);
+                localStorage.setItem('coffeeResponses', JSON.stringify(existingResponses));
+                console.log('Απάντηση αποθηκεύτηκε:', response);
+            }
+            
+            // Ενημέρωση κατάστασης υποβολής
+            function updateSubmissionStatus(id, newStatus) {
+                const allSubmissions = getAllSubmissions();
+                const submissionIndex = allSubmissions.findIndex(sub => sub.id === id);
+                
+                if (submissionIndex !== -1) {
+                    allSubmissions[submissionIndex].status = newStatus;
+                    localStorage.setItem('coffeeSubmissions', JSON.stringify(allSubmissions));
+                }
+            }
+            
+            // Ακύρωση απάντησης
+            document.getElementById('cancel-reply').addEventListener('click', function() {
+                replyModal.style.display = 'none';
+            });
+            
+            // Λήψη υποβολής
+            function downloadSubmission(id) {
+                const allSubmissions = getAllSubmissions();
+                const submission = allSubmissions.find(sub => sub.id === id);
+                
+                if (submission && submission.type === 'photo') {
+                    // Δημιουργία ZIP με τις φωτογραφίες (θα γινόταν στην πραγματικότητα)
+                    alert(`Λήψη ${submission.photos.length} φωτογραφιών από τον χρήστη ${submission.userEmail}`);
+                } else {
+                    alert('Δεν βρέθηκαν φωτογραφίες για λήψη');
+                }
+            }
+            
+            // Διαγραφή υποβολής
+            function deleteSubmission(id) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή την υποβολή;')) {
+                    const allSubmissions = getAllSubmissions();
+                    const updatedSubmissions = allSubmissions.filter(sub => sub.id !== id);
+                    localStorage.setItem('coffeeSubmissions', JSON.stringify(updatedSubmissions));
+                    
+                    showNotification('Η υποβολή διαγράφηκε επιτυχώς!', 'success');
+                    loadAllData();
+                }
+            }
+            
+            // Ενημέρωση στατιστικών
+            function updateStats() {
+                const allSubmissions = getAllSubmissions();
+                const totalSubmissions = allSubmissions.length;
+                const pendingSubmissions = allSubmissions.filter(sub => sub.status === 'pending').length;
+                const answeredSubmissions = allSubmissions.filter(sub => sub.status === 'answered').length;
+                const contactMessages = allSubmissions.filter(sub => sub.type === 'message').length;
+                
+                document.getElementById('total-submissions').textContent = totalSubmissions;
+                document.getElementById('pending-submissions').textContent = pendingSubmissions;
+                document.getElementById('answered-submissions').textContent = answeredSubmissions;
+                document.getElementById('contact-messages').textContent = contactMessages;
+            }
+            
+            // Εμφάνιση ειδοποίησης
+            function showNotification(message, type) {
+                // Δημιουργία temporary notification
+                const notification = document.createElement('div');
+                notification.className = `message ${type}`;
+                notification.textContent = message;
+                notification.style.position = 'fixed';
+                notification.style.top = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '1000';
+                notification.style.maxWidth = '300px';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+            
+            // Αυτόματη ανανέωση κάθε 30 δευτερόλεπτα
+            setInterval(loadAllData, 30000);
+            
+            // Αρχική φόρτωση δεδομένων
             loadAllData();
         });
     </script>
