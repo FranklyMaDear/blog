@@ -611,91 +611,36 @@
         }
         
         /* Στυλ για τη νέα καρτέλα χρηστών */
-        .users-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
         
-        .user-card {
-            background: #fcfaf7;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--info);
-            transition: transform 0.3s;
-        }
-        
-        .user-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        .user-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 15px;
-        }
-        
-        .user-name {
-            font-weight: 600;
-            color: var(--dark);
-            font-size: 1.1rem;
-        }
-        
-        .user-email {
-            color: var(--text);
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        .user-details {
-            margin-bottom: 15px;
-        }
-        
-        .user-detail {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
+        .users-table th, .users-table td {
+            padding: 12px 15px;
+            text-align: left;
             border-bottom: 1px solid #e0d6c9;
         }
         
-        .user-detail:last-child {
-            margin-bottom: 0;
-            border-bottom: none;
-        }
-        
-        .detail-label {
+        .users-table th {
+            background-color: #f8f4e9;
+            color: var(--primary);
             font-weight: 600;
-            color: var(--dark);
         }
         
-        .detail-value {
-            color: var(--text);
+        .users-table tr:hover {
+            background-color: #fcfaf7;
         }
         
         .user-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
         
-        .btn-edit {
-            background: var(--info);
-            color: white;
-        }
-        
-        .btn-edit:hover {
-            background: #0b7dda;
-        }
-        
-        .btn-block {
-            background: var(--warning);
-            color: white;
-        }
-        
-        .btn-block:hover {
-            background: #f57c00;
+        .user-actions .action-btn {
+            padding: 5px 10px;
+            font-size: 0.85rem;
         }
         
         /* Responsive Design */
@@ -771,19 +716,13 @@
                 white-space: normal;
             }
             
-            .users-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .user-header {
-                flex-direction: column;
-                align-items: flex-start;
+            .users-table {
+                display: block;
+                overflow-x: auto;
             }
             
             .user-actions {
-                width: 100%;
-                justify-content: center;
-                margin-top: 15px;
+                flex-direction: column;
             }
         }
         
@@ -853,7 +792,7 @@
                 <i class="fas fa-envelope"></i> Μηνύματα Επικοινωνίας
             </button>
             <button class="tab" data-tab="users-tab">
-                <i class="fas fa-users"></i> Εγγεγραμμένοι Χρήστες
+                <i class="fas fa-users"></i> Διαχείριση Χρηστών
             </button>
         </div>
         
@@ -908,23 +847,17 @@
                 </div>
             </section>
             
-            <!-- Νέα Καρτέλα Εγγεγραμμένων Χρηστών -->
+            <!-- Νέα Καρτέλα Διαχείρισης Χρηστών -->
             <section id="users-tab" class="tab-content">
                 <div class="content-section">
-                    <h2><i class="fas fa-users"></i> Εγγεγραμμένοι Χρήστες</h2>
+                    <h2><i class="fas fa-users"></i> Διαχείριση Εγγεγραμμένων Χρηστών</h2>
                     
                     <div class="filters">
-                        <select class="filter-select" id="users-filter">
-                            <option value="all">Όλοι οι Χρήστες</option>
-                            <option value="active">Ενεργοί Χρήστες</option>
-                            <option value="blocked">Απενεργοποιημένοι Χρήστες</option>
-                        </select>
-                        
-                        <input type="text" class="search-input" id="users-search-input" placeholder="Αναζήτηση με όνομα ή email...">
+                        <input type="text" class="search-input" id="user-search-input" placeholder="Αναζήτηση με όνομα ή email...">
                     </div>
                     
-                    <div class="users-grid" id="users-list">
-                        <!-- Θα προστεθούν δυναμικά οι χρήστες -->
+                    <div class="users-list" id="users-list">
+                        <!-- Θα προστεθεί δυναμικά ο πίνακας χρηστών -->
                     </div>
                 </div>
             </section>
@@ -1018,7 +951,7 @@
             function loadAllData() {
                 loadPhotoSubmissions();
                 loadMessageSubmissions();
-                loadRegisteredUsers();
+                loadUsers();
                 updateStats();
             }
             
@@ -1161,13 +1094,13 @@
                 addActionEventListeners();
             }
             
-            // Φόρτωση εγγεγραμμένων χρηστών
-            function loadRegisteredUsers() {
-                const users = getRegisteredUsers();
-                const usersContainer = document.getElementById('users-list');
+            // Φόρτωση χρηστών
+            function loadUsers() {
+                const users = getAllUsers();
+                const listContainer = document.getElementById('users-list');
                 
                 if (users.length === 0) {
-                    usersContainer.innerHTML = `
+                    listContainer.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">
                                 <i class="fas fa-users"></i>
@@ -1179,164 +1112,73 @@
                     return;
                 }
                 
-                usersContainer.innerHTML = '';
-                
                 // Ταξινόμηση από νεότερο προς παλαιότερο
                 users.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate));
                 
+                let usersHTML = `
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>Όνομα</th>
+                                <th>Email</th>
+                                <th>Ημερομηνία Εγγραφής</th>
+                                <th>Ενέργειες</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
                 users.forEach(user => {
-                    const userCard = document.createElement('div');
-                    userCard.className = 'user-card';
-                    userCard.innerHTML = `
-                        <div class="user-header">
-                            <div>
-                                <div class="user-name">${user.name}</div>
-                                <div class="user-email">${user.email}</div>
-                            </div>
-                            <div class="submission-status ${user.isActive ? 'status-answered' : 'status-pending'}">
-                                ${user.isActive ? 'Ενεργός' : 'Απενεργοποιημένος'}
-                            </div>
-                        </div>
-                        
-                        <div class="user-details">
-                            <div class="user-detail">
-                                <span class="detail-label">Ημερομηνία Εγγραφής:</span>
-                                <span class="detail-value">${formatDate(user.registrationDate)}</span>
-                            </div>
-                            <div class="user-detail">
-                                <span class="detail-label">Υποβολές:</span>
-                                <span class="detail-value">${user.submissionsCount || 0}</span>
-                            </div>
-                            <div class="user-detail">
-                                <span class="detail-label">Τελευταία Είσοδος:</span>
-                                <span class="detail-value">${user.lastLogin ? formatDate(user.lastLogin) : 'Ποτέ'}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="user-actions">
-                            <button class="action-btn btn-edit" data-id="${user.id}">
-                                <i class="fas fa-edit"></i> Επεξεργασία
-                            </button>
-                            <button class="action-btn ${user.isActive ? 'btn-block' : 'btn-reply'}" data-id="${user.id}">
-                                <i class="fas ${user.isActive ? 'fa-ban' : 'fa-check'}"></i> ${user.isActive ? 'Απενεργοποίηση' : 'Ενεργοποίηση'}
-                            </button>
-                            <button class="action-btn btn-delete" data-id="${user.id}">
-                                <i class="fas fa-trash"></i> Διαγραφή
-                            </button>
-                        </div>
+                    usersHTML += `
+                        <tr>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${formatDate(user.registrationDate)}</td>
+                            <td>
+                                <div class="user-actions">
+                                    <button class="action-btn btn-view view-user" data-id="${user.id}">
+                                        <i class="fas fa-eye"></i> Προβολή
+                                    </button>
+                                    <button class="action-btn btn-delete delete-user" data-id="${user.id}">
+                                        <i class="fas fa-trash"></i> Διαγραφή
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
                     `;
-                    
-                    usersContainer.appendChild(userCard);
                 });
+                
+                usersHTML += `
+                        </tbody>
+                    </table>
+                `;
+                
+                listContainer.innerHTML = usersHTML;
                 
                 // Προσθήκη event listeners για τα κουμπιά χρηστών
-                addUserActionEventListeners();
-            }
-            
-            // Προσθήκη event listeners για ενέργειες χρηστών
-            function addUserActionEventListeners() {
-                // Επεξεργασία χρήστη
-                document.querySelectorAll('.btn-edit').forEach(btn => {
+                document.querySelectorAll('.view-user').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-id');
-                        editUser(userId);
+                        const userId = parseInt(this.getAttribute('data-id'));
+                        viewUser(userId);
                     });
                 });
                 
-                // Απενεργοποίηση/Ενεργοποίηση χρήστη
-                document.querySelectorAll('.btn-block, .btn-reply').forEach(btn => {
+                document.querySelectorAll('.delete-user').forEach(btn => {
                     btn.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-id');
-                        toggleUserStatus(userId);
-                    });
-                });
-                
-                // Διαγραφή χρήστη
-                document.querySelectorAll('.btn-delete').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const userId = this.getAttribute('data-id');
+                        const userId = parseInt(this.getAttribute('data-id'));
                         deleteUser(userId);
                     });
                 });
             }
             
-            // Επεξεργασία χρήστη
-            function editUser(id) {
-                alert(`Επεξεργασία χρήστη με ID: ${id} - Αυτή η λειτουργία θα υλοποιηθεί στο μέλλον.`);
-            }
-            
-            // Αλλαγή κατάστασης χρήστη
-            function toggleUserStatus(id) {
-                const users = getRegisteredUsers();
-                const userIndex = users.findIndex(user => user.id == id);
-                
-                if (userIndex !== -1) {
-                    users[userIndex].isActive = !users[userIndex].isActive;
-                    localStorage.setItem('registeredUsers', JSON.stringify(users));
-                    
-                    showNotification(`Ο χρήστης ${users[userIndex].isActive ? 'ενεργοποιήθηκε' : 'απενεργοποιήθηκε'} επιτυχώς!`, 'success');
-                    loadRegisteredUsers();
-                    updateStats();
-                }
-            }
-            
-            // Διαγραφή χρήστη
-            function deleteUser(id) {
-                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.')) {
-                    const users = getRegisteredUsers();
-                    const updatedUsers = users.filter(user => user.id != id);
-                    localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
-                    
-                    showNotification('Ο χρήστης διαγράφηκε επιτυχώς!', 'success');
-                    loadRegisteredUsers();
-                    updateStats();
-                }
-            }
-            
-            // Λήψη όλων των εγγεγραμμένων χρηστών
-            function getRegisteredUsers() {
-                let users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-                
-                // Αν δεν υπάρχουν χρήστες, δημιουργούμε μερικούς δείγματα για επίδειξη
-                if (users.length === 0) {
-                    users = [
-                        {
-                            id: 1,
-                            name: 'Μαρία Παπαδοπούλου',
-                            email: 'maria@example.com',
-                            registrationDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-                            lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-                            submissionsCount: 3,
-                            isActive: true
-                        },
-                        {
-                            id: 2,
-                            name: 'Γιάννης Κωνσταντίνου',
-                            email: 'giannis@example.com',
-                            registrationDate: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
-                            lastLogin: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-                            submissionsCount: 5,
-                            isActive: true
-                        },
-                        {
-                            id: 3,
-                            name: 'Ελένη Αντωνίου',
-                            email: 'eleni@example.com',
-                            registrationDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-                            lastLogin: null,
-                            submissionsCount: 0,
-                            isActive: false
-                        }
-                    ];
-                    localStorage.setItem('registeredUsers', JSON.stringify(users));
-                }
-                
-                return users;
-            }
-            
             // Λήψη όλων των υποβολών από το LocalStorage
             function getAllSubmissions() {
                 return JSON.parse(localStorage.getItem('coffeeSubmissions') || '[]');
+            }
+            
+            // Λήψη όλων των χρηστών από το LocalStorage
+            function getAllUsers() {
+                return JSON.parse(localStorage.getItem('coffeeUsers') || '[]');
             }
             
             // Βοηθητικές συναρτήσεις
@@ -1472,6 +1314,30 @@
                         </div>
                     `;
                 }
+                
+                submissionModal.style.display = 'flex';
+            }
+            
+            // Προβολή χρήστη
+            function viewUser(id) {
+                const users = getAllUsers();
+                const user = users.find(u => u.id === id);
+                if (!user) return;
+                
+                const modalBody = document.getElementById('modal-body');
+                
+                modalBody.innerHTML = `
+                    <div class="submission-header">
+                        <div class="submission-user">${user.name}</div>
+                        <div class="submission-date">${formatDate(user.registrationDate)}</div>
+                    </div>
+                    
+                    <div class="submission-content">
+                        <div><strong>Email:</strong> ${user.email}</div>
+                        <div><strong>Ημερομηνία Εγγραφής:</strong> ${formatDate(user.registrationDate)}</div>
+                        <div><strong>ID Χρήστη:</strong> ${user.id}</div>
+                    </div>
+                `;
                 
                 submissionModal.style.display = 'flex';
             }
@@ -1667,14 +1533,26 @@
                 }
             }
             
+            // Διαγραφή χρήστη
+            function deleteUser(id) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
+                    const allUsers = getAllUsers();
+                    const updatedUsers = allUsers.filter(user => user.id !== id);
+                    localStorage.setItem('coffeeUsers', JSON.stringify(updatedUsers));
+                    
+                    showNotification('Ο χρήστης διαγράφηκε επιτυχώς!', 'success');
+                    loadAllData();
+                }
+            }
+            
             // Ενημέρωση στατιστικών
             function updateStats() {
                 const allSubmissions = getAllSubmissions();
-                const users = getRegisteredUsers();
+                const allUsers = getAllUsers();
                 const totalSubmissions = allSubmissions.length;
                 const pendingSubmissions = allSubmissions.filter(sub => sub.status === 'pending').length;
                 const answeredSubmissions = allSubmissions.filter(sub => sub.status === 'answered').length;
-                const registeredUsers = users.length;
+                const registeredUsers = allUsers.length;
                 
                 document.getElementById('total-submissions').textContent = totalSubmissions;
                 document.getElementById('pending-submissions').textContent = pendingSubmissions;
