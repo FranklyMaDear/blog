@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -536,6 +535,80 @@
             justify-content: flex-end;
             margin-top: 20px;
         }
+
+        /* Νέα στυλ για URL preview και links */
+        .url-preview {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .url-preview h4 {
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+
+        .url-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .url-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .url-item i {
+            color: var(--primary);
+        }
+
+        .preview-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            flex: 1;
+            word-break: break-all;
+        }
+
+        .preview-link:hover {
+            text-decoration: underline;
+        }
+
+        .url-note {
+            font-size: 0.75rem;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+
+        /* Στυλ για προβολή μηνυμάτων με links */
+        .message-link {
+            color: var(--primary);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .message-link:hover {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
+
+        .submission-message a {
+            color: var(--primary);
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .submission-message a:hover {
+            color: var(--primary-light);
+            text-decoration: none;
+        }
         
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -594,6 +667,20 @@
             
             .photo-image {
                 height: 100px;
+            }
+
+            .url-preview {
+                padding: 10px;
+            }
+
+            .url-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .url-note {
+                white-space: normal;
             }
         }
         
@@ -753,7 +840,12 @@
                 <div class="reply-form">
                     <div class="form-group">
                         <label for="reply-message">Μήνυμα Απάντησης:</label>
-                        <textarea id="reply-message" placeholder="Γράψτε το μήνυμα απάντησής σας εδώ..."></textarea>
+                        <textarea id="reply-message" placeholder="Γράψτε το μήνυμα απάντησής σας εδώ...&#10;&#10;Μπορείτε να επικολλήσετε URLs που θα μετατραπούν αυτόματα σε clickable links για τον χρήστη."></textarea>
+                    </div>
+                    
+                    <div class="url-preview" id="url-preview" style="display: none;">
+                        <h4>Προεπισκόπηση URLs:</h4>
+                        <div id="url-preview-content"></div>
                     </div>
                     
                     <div class="modal-actions">
@@ -1083,6 +1175,44 @@
                 submissionModal.style.display = 'flex';
             }
             
+            // Νέα λειτουργία για URL detection και preview
+            const replyMessageTextarea = document.getElementById('reply-message');
+            const urlPreview = document.getElementById('url-preview');
+            const urlPreviewContent = document.getElementById('url-preview-content');
+            
+            // Λειτουργία για ανίχνευση URLs και προεπισκόπηση
+            replyMessageTextarea.addEventListener('input', function() {
+                const text = this.value;
+                const urls = extractUrls(text);
+                
+                if (urls.length > 0) {
+                    urlPreviewContent.innerHTML = urls.map(url => `
+                        <div class="url-item">
+                            <i class="fas fa-link"></i>
+                            <a href="${url}" target="_blank" class="preview-link">${url}</a>
+                            <span class="url-note">(θα ανοίξει σε νέα καρτέλα)</span>
+                        </div>
+                    `).join('');
+                    urlPreview.style.display = 'block';
+                } else {
+                    urlPreview.style.display = 'none';
+                }
+            });
+            
+            // Συνάρτηση εξαγωγής URLs από κείμενο
+            function extractUrls(text) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                return text.match(urlRegex) || [];
+            }
+            
+            // Συνάρτηση μετατροπής URLs σε clickable links
+            function convertUrlsToLinks(text) {
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                return text.replace(urlRegex, function(url) {
+                    return `<a href="${url}" target="_blank" class="message-link">${url}</a>`;
+                });
+            }
+            
             // Άνοιγμα modal απάντησης
             function openReplyModal(id) {
                 const allSubmissions = getAllSubmissions();
@@ -1126,6 +1256,7 @@
                 }
                 
                 document.getElementById('reply-message').value = '';
+                urlPreview.style.display = 'none';
                 replyModal.style.display = 'flex';
                 
                 // Αποθήκευση του ID για χρήση στην αποστολή
@@ -1142,6 +1273,9 @@
                     return;
                 }
                 
+                // Μετατροπή URLs σε links
+                const formattedMessage = convertUrlsToLinks(replyMessage);
+                
                 // Βρες την υποβολή
                 const allSubmissions = getAllSubmissions();
                 const submission = allSubmissions.find(sub => sub.id === submissionId);
@@ -1156,7 +1290,7 @@
                     id: Date.now(),
                     submissionId: submissionId,
                     userEmail: submission.userEmail || submission.email,
-                    adminMessage: replyMessage,
+                    adminMessage: formattedMessage, // Αποθηκεύουμε το μήνυμα με links
                     originalMessage: submission.message || submission.subject,
                     date: new Date().toISOString(),
                     status: 'sent'
@@ -1274,4 +1408,3 @@
     </script>
 </body>
 </html>
-```
