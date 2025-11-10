@@ -552,6 +552,24 @@
             color: var(--primary);
             margin-bottom: 20px;
         }
+
+        /* Στυλ για επαναφορά κωδικού */
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .forgot-password a:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
         
         footer {
             text-align: center;
@@ -681,6 +699,10 @@
                         <button type="submit" class="submit-btn">
                             <i class="fas fa-sign-in-alt"></i> Σύνδεση
                         </button>
+                        
+                        <div class="forgot-password">
+                            <a href="#" id="forgotPasswordLink">Ξεχάσατε τον κωδικό σας;</a>
+                        </div>
                         
                         <div class="message" id="loginMessage"></div>
                     </form>
@@ -885,6 +907,32 @@
             </main>
         </div>
         
+        <!-- Modal για επαναφορά κωδικού -->
+        <div id="forgotPasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+            <div class="form-section" style="max-width: 500px; margin: 20px; position: relative;">
+                <button id="closeForgotPasswordModal" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer;">×</button>
+                <h2><i class="fas fa-key"></i> Επαναφορά Κωδικού</h2>
+                
+                <div class="info-box">
+                    <p><strong>Οδηγίες:</strong></p>
+                    <p>Εισάγετε το email σας και θα σας αποσταλεί ο κωδικός πρόσβασής σας.</p>
+                </div>
+                
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="forgot-email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
+                        <input type="email" id="forgot-email" name="email" placeholder="π.χ. onoma@example.com" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Αποστολή Κωδικού
+                    </button>
+                    
+                    <div class="message" id="forgotPasswordMessage"></div>
+                </form>
+            </div>
+        </div>
+        
         <footer>
             <p>
                 Καφεμαντεία <span class="coffee-icon">☕</span> 
@@ -1039,6 +1087,64 @@
             logoutBtn.addEventListener('click', function() {
                 localStorage.removeItem('currentUser');
                 location.reload();
+            });
+            
+            // Λειτουργικότητα επαναφοράς κωδικού
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const forgotPasswordModal = document.getElementById('forgotPasswordModal');
+            const closeForgotPasswordModal = document.getElementById('closeForgotPasswordModal');
+            const forgotPasswordForm = document.getElementById('forgotPasswordForm');
+            const forgotPasswordMessage = document.getElementById('forgotPasswordMessage');
+            
+            // Άνοιγμα modal επαναφοράς κωδικού
+            forgotPasswordLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                forgotPasswordModal.style.display = 'flex';
+            });
+            
+            // Κλείσιμο modal επαναφοράς κωδικού
+            closeForgotPasswordModal.addEventListener('click', function() {
+                forgotPasswordModal.style.display = 'none';
+            });
+            
+            // Κλείσιμο modal με κλικ έξω από το περιεχόμενο
+            forgotPasswordModal.addEventListener('click', function(e) {
+                if (e.target === forgotPasswordModal) {
+                    forgotPasswordModal.style.display = 'none';
+                }
+            });
+            
+            // Υποβολή φόρμας επαναφοράς κωδικού
+            forgotPasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('forgot-email').value;
+                
+                if (!email) {
+                    showMessage(forgotPasswordMessage, 'Παρακαλώ εισάγετε το email σας.', 'error');
+                    return;
+                }
+                
+                // Έλεγχος αν υπάρχει χρήστης με αυτό το email
+                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                const user = existingUsers.find(user => user.email === email);
+                
+                if (!user) {
+                    showMessage(forgotPasswordMessage, 'Δεν βρέθηκε χρήστης με αυτό το email.', 'error');
+                    return;
+                }
+                
+                // Προσομοίωση αποστολής email
+                showMessage(forgotPasswordMessage, `Ο κωδικός πρόσβασής σας έχει σταλεί στο ${email}.`, 'success');
+                
+                // Σε πραγματική εφαρμογή, εδώ θα γινόταν αποστολή email με τον κωδικό
+                console.log(`Αποστολή κωδικού στο ${email}: ${user.password}`);
+                
+                // Κλείσιμο του modal μετά από 3 δευτερόλεπτα
+                setTimeout(() => {
+                    forgotPasswordModal.style.display = 'none';
+                    forgotPasswordForm.reset();
+                }, 3000);
             });
             
             // Σύστημα καρτελών κύριας εφαρμογής
