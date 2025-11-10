@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -535,27 +536,6 @@
             justify-content: flex-end;
             margin-top: 20px;
         }
-
-        /* Ειδοποιήσεις */
-        .message {
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 500;
-            max-width: 300px;
-        }
-        
-        .message.success {
-            background: #e8f5e9;
-            color: var(--success);
-            border: 1px solid #c8e6c9;
-        }
-        
-        .message.error {
-            background: #ffebee;
-            color: var(--error);
-            border: 1px solid #ffcdd2;
-        }
         
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -625,28 +605,6 @@
     </style>
 </head>
 <body>
-    <!-- Έλεγχος σύνδεσης -->
-    <script>
-        const currentAdmin = localStorage.getItem('currentAdmin');
-        if (!currentAdmin) {
-            window.location.href = 'admin-auth.html';
-        }
-        
-        function logout() {
-            localStorage.removeItem('currentAdmin');
-            window.location.href = 'admin-auth.html';
-        }
-        
-        // Εμφάνιση ονόματος διαχειριστή
-        function displayAdminName() {
-            const adminData = JSON.parse(currentAdmin || '{}');
-            const adminNameElement = document.getElementById('admin-name');
-            if (adminNameElement && adminData.name) {
-                adminNameElement.textContent = adminData.name;
-            }
-        }
-    </script>
-
     <div class="container">
         <header>
             <i class="fas fa-mug-hot logo"></i>
@@ -656,16 +614,11 @@
         
         <div class="admin-info">
             <div class="admin-welcome">
-                <i class="fas fa-user-shield"></i> Καλώς ήρθες, <span id="admin-name">Διαχειριστή</span>!
+                <i class="fas fa-user-shield"></i> Καλώς ήρθες, Διαχειριστή!
             </div>
-            <div>
-                <button class="logout-btn" id="refreshBtn" style="margin-right: 10px;">
-                    <i class="fas fa-sync-alt"></i> Ανανέωση
-                </button>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i> Αποσύνδεση
-                </button>
-            </div>
+            <button class="logout-btn" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Ανανέωση
+            </button>
         </div>
         
         <div class="stats-cards">
@@ -803,12 +756,6 @@
                         <textarea id="reply-message" placeholder="Γράψτε το μήνυμα απάντησής σας εδώ..."></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="reply-link">Προσθήκη Link (προαιρετικά):</label>
-                        <input type="url" id="reply-link" placeholder="https://example.com" class="filter-select">
-                        <small style="color: #666; font-size: 0.85rem;">Ο χρήστης θα μπορεί να πατήσει απευθείας στο link</small>
-                    </div>
-                    
                     <div class="modal-actions">
                         <button class="action-btn btn-view" id="cancel-reply">
                             <i class="fas fa-times"></i> Ακύρωση
@@ -824,9 +771,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Εμφάνιση ονόματος διαχειριστή
-            displayAdminName();
-            
             // Σύστημα καρτελών
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
@@ -1182,17 +1126,15 @@
                 }
                 
                 document.getElementById('reply-message').value = '';
-                document.getElementById('reply-link').value = '';
                 replyModal.style.display = 'flex';
                 
                 // Αποθήκευση του ID για χρήση στην αποστολή
                 document.getElementById('send-reply').setAttribute('data-id', id);
             }
             
-            // Αποστολή απάντησης με link
+            // Αποστολή απάντησης
             document.getElementById('send-reply').addEventListener('click', function() {
                 const replyMessage = document.getElementById('reply-message').value;
-                const replyLink = document.getElementById('reply-link').value;
                 const submissionId = parseInt(this.getAttribute('data-id'));
                 
                 if (!replyMessage.trim()) {
@@ -1209,22 +1151,15 @@
                     return;
                 }
                 
-                // Δημιουργία μηνύματος με link αν υπάρχει
-                let finalMessage = replyMessage;
-                if (replyLink.trim()) {
-                    finalMessage += `\n\n🔗 Σύνδεσμος: ${replyLink}`;
-                }
-                
                 // Δημιουργία απάντησης
                 const response = {
                     id: Date.now(),
                     submissionId: submissionId,
                     userEmail: submission.userEmail || submission.email,
-                    adminMessage: finalMessage,
+                    adminMessage: replyMessage,
                     originalMessage: submission.message || submission.subject,
                     date: new Date().toISOString(),
-                    status: 'sent',
-                    link: replyLink || null
+                    status: 'sent'
                 };
                 
                 // Αποθήκευση απάντησης
@@ -1233,7 +1168,7 @@
                 // Ενημέρωση κατάστασης υποβολής
                 updateSubmissionStatus(submissionId, 'answered');
                 
-                // Προσομοίωση αποστολής
+                // Αποστολή
                 this.disabled = true;
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
                 
@@ -1339,3 +1274,4 @@
     </script>
 </body>
 </html>
+```
