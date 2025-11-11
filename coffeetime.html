@@ -650,6 +650,26 @@
             white-space: nowrap;
         }
         
+        .special-offer {
+            border: 2px solid var(--success);
+            background: linear-gradient(to right, #f0f9f0, #e8f5e8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .special-offer::before {
+            content: "ΠΡΟΣΦΟΡΑ";
+            position: absolute;
+            top: 10px;
+            right: -30px;
+            background: var(--success);
+            color: white;
+            padding: 5px 30px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transform: rotate(45deg);
+        }
+        
         /* Στυλ για σύστημα πόντων */
         .points-section {
             background: linear-gradient(135deg, #fff9e6 0%, #fff0cc 100%);
@@ -1029,6 +1049,15 @@
                                         </div>
                                         <div class="option-price">Χωρίς Πόντο</div>
                                     </label>
+                                    
+                                    <label class="coffee-option special-offer" id="offer-1plus1">
+                                        <input type="radio" name="coffeeType" value="1plus1" required>
+                                        <div class="option-content">
+                                            <div class="option-title">Προσφορά 1+1 Δώρο</div>
+                                            <div class="option-description">Δώρο: 2η ερμηνεία δωρεάν!</div>
+                                        </div>
+                                        <div class="option-price" id="1plus1-price">Χωρίς Πόντο</div>
+                                    </label>
                                 </div>
                             </div>
                             
@@ -1272,11 +1301,40 @@
                 
                 // Φόρτωση πόντων χρήστη
                 loadUserPoints();
+                
+                // Έλεγχος κατάστασης προσφορών
+                checkOffersStatus();
             } else {
                 // Ο χρήστης δεν είναι συνδεδεμένος
                 authSection.style.display = 'block';
                 mainApp.style.display = 'none';
                 userInfo.style.display = 'none';
+            }
+            
+            // Έλεγχος κατάστασης προσφορών
+            function checkOffersStatus() {
+                const offersStatus = JSON.parse(localStorage.getItem('offersStatus') || '{"1plus1": false}');
+                const offerExpiry = JSON.parse(localStorage.getItem('offerExpiry') || '{}');
+                
+                const offer1plus1 = document.querySelector('input[value="1plus1"]');
+                const priceElement = document.getElementById('1plus1-price');
+                
+                // Έλεγχος αν η προσφορά έχει λήξει
+                if (offerExpiry['1plus1'] && new Date() > new Date(offerExpiry['1plus1'])) {
+                    offersStatus['1plus1'] = false;
+                    localStorage.setItem('offersStatus', JSON.stringify(offersStatus));
+                }
+                
+                if (offer1plus1) {
+                    if (offersStatus['1plus1']) {
+                        offer1plus1.parentElement.style.display = 'flex';
+                        priceElement.textContent = 'Ενεργή Προσφορά!';
+                        priceElement.style.color = 'var(--success)';
+                        priceElement.style.fontWeight = 'bold';
+                    } else {
+                        offer1plus1.parentElement.style.display = 'none';
+                    }
+                }
             }
             
             // Σύστημα καρτελών εγγραφής/σύνδεσης
@@ -1734,7 +1792,7 @@
                         type: 'photo',
                         userEmail: email,
                         coffeeType: coffeeType.value,
-                        coffeeTypeText: coffeeType.value === 'written' ? 'Γραπτή Ερμηνεία' : 'Προφορική Ερμηνεία',
+                        coffeeTypeText: getCoffeeTypeText(coffeeType.value),
                         date: new Date().toISOString(),
                         status: 'pending',
                         message: 'Υποβολή φωτογραφιών καφέ για ερμηνεία',
@@ -1744,7 +1802,19 @@
                     // Αποθήκευση στο LocalStorage
                     saveSubmission(submission);
                     
-                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
+                    // Προσθήκη ειδοποίησης για τον διαχειριστή
+                    const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                    adminNotifications.push({
+                        type: 'coffee_reading',
+                        userEmail: submission.userEmail,
+                        coffeeType: submission.coffeeType,
+                        coffeeTypeText: submission.coffeeTypeText,
+                        date: new Date().toISOString(),
+                        status: 'pending'
+                    });
+                    localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
+                    
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας (${submission.coffeeTypeText}) στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -1755,6 +1825,16 @@
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών';
                 });
             });
+            
+            // Βοηθητική συνάρτηση για τύπους καφεμαντείας
+            function getCoffeeTypeText(type) {
+                const typeMap = {
+                    'written': 'Γραπτή Ερμηνεία',
+                    'verbal': 'Προφορική Ερμηνεία',
+                    '1plus1': 'Προσφορά 1+1 Δώρο'
+                };
+                return typeMap[type] || type;
+            }
             
             // Λειτουργικότητα φόρμας επικοινωνίας
             const contactForm = document.getElementById('contactForm');
@@ -2098,6 +2178,11 @@
                     loadUserResponses();
                 }
             }, 10000);
+            
+            // Αυτόματος έλεγχος κατάστασης προσφορών κάθε 30 δευτερόλεπτα
+            setInterval(() => {
+                checkOffersStatus();
+            }, 30000);
         });
     </script>
 </body>
