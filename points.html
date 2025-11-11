@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Σύστημα Πόντων Καφεμαντείας - Buy Me a Coffee</title>
+    <title>Σύστημα Πόνων - Προβολή Διαφημίσεων</title>
     <style>
         * {
             margin: 0;
@@ -13,8 +13,8 @@
         }
         
         body {
-            background: linear-gradient(135deg, #6f4e37 0%, #3e2723 100%);
-            color: #fff;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
             min-height: 100vh;
             padding: 20px;
         }
@@ -22,214 +22,237 @@
         .container {
             max-width: 800px;
             margin: 0 auto;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
         }
         
         header {
+            background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
+            color: white;
+            padding: 25px;
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
-            color: #ffd54f;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        h2 {
+            color: #2575fc;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        input[type="email"]:focus {
+            border-color: #2575fc;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 117, 252, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(90deg, #2575fc 0%, #6a11cb 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .points-display {
-            background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%);
-            color: #3e2723;
-            padding: 20px;
-            border-radius: 10px;
             text-align: center;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .points-display h2 {
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            padding: 15px;
+            background: linear-gradient(90deg, #20bf6b 0%, #01baef 100%);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
         
         .points-value {
             font-size: 3rem;
-            font-weight: bold;
+            font-weight: 700;
+            margin: 10px 0;
         }
         
-        .donation-section {
-            background-color: rgba(255, 255, 255, 0.15);
+        .ad-container {
+            background-color: #e9ecef;
             border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .donation-section h2 {
-            color: #ffd54f;
-            margin-bottom: 20px;
+            padding: 20px;
             text-align: center;
+            margin: 20px 0;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
         
-        .donation-options {
+        .ad-placeholder {
+            width: 100%;
+            height: 150px;
+            background-color: #ced4da;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #6c757d;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2575fc;
+            margin: 15px 0;
+        }
+        
+        .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .donation-option {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-        }
-        
-        .donation-option:hover {
-            border-color: #ffd54f;
-            transform: translateY(-5px);
-        }
-        
-        .donation-amount {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #ffd54f;
-            margin-bottom: 5px;
-        }
-        
-        .donation-points {
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-        }
-        
-        .bmc-btn {
-            display: inline-block;
-            background-color: #FFDD00;
-            color: #000000;
-            padding: 10px 20px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .bmc-btn:hover {
-            background-color: #FFEE80;
-            transform: scale(1.05);
-        }
-        
-        .verification-section {
-            background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            padding: 25px;
-            margin-top: 30px;
-        }
-        
-        .verification-section h2 {
-            color: #ffd54f;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .verification-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        label {
-            font-weight: bold;
-        }
-        
-        input, textarea {
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.9);
-        }
-        
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        
-        .submit-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        .submit-btn:hover {
-            background-color: #45a049;
-        }
-        
-        .instructions {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
             margin-top: 20px;
         }
         
-        .instructions h3 {
-            color: #ffd54f;
-            margin-bottom: 10px;
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
         }
         
-        .instructions ol {
-            margin-left: 20px;
-            line-height: 1.6;
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2575fc;
+            margin: 5px 0;
         }
         
-        .instructions li {
-            margin-bottom: 10px;
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #e7f3ff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            padding: 8px 15px;
+            font-size: 0.9rem;
         }
         
         footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            color: #6c757d;
             font-size: 0.9rem;
-            opacity: 0.7;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
         }
         
         @media (max-width: 600px) {
             .container {
-                padding: 15px;
+                border-radius: 10px;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
             }
             
             .points-value {
                 font-size: 2.5rem;
-            }
-            
-            .donation-options {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -237,135 +260,259 @@
 <body>
     <div class="container">
         <header>
-            <h1>Καφεμαντεία</h1>
-            <p class="subtitle">Υποστηρίξτε μας & Αποκτήστε Πόντος</p>
+            <h1>Σύστημα Πόνων</h1>
+            <p class="subtitle">Κερδίστε πόντους παρακολουθώντας διαφημίσεις</p>
         </header>
         
-        <div class="points-display">
-            <h2>Διαθέσιμοι Πόντοι</h2>
-            <div class="points-value" id="points-balance">0</div>
-        </div>
-        
-        <div class="donation-section">
-            <h2>Επιλογές Υποστήριξης</h2>
-            <div class="donation-options">
-                <div class="donation-option">
-                    <div class="donation-amount">1€</div>
-                    <div class="donation-points">10 Πόντοι</div>
-                    <a href="https://buymeacoffee.com/franklymadear" target="_blank" class="bmc-btn">Buy Me a Coffee</a>
+        <div class="content">
+            <!-- Εγγραφή -->
+            <div id="registration-section" class="section">
+                <h2>Εγγραφή Χρήστη</h2>
+                <p>Εισάγετε το email σας για να ξεκινήσετε να κερδίζετε πόντους.</p>
+                
+                <div class="form-group">
+                    <label for="email">Διεύθυνση Email:</label>
+                    <input type="email" id="email" placeholder="π.χ. onoma@example.com" required>
                 </div>
-                <div class="donation-option">
-                    <div class="donation-amount">5€</div>
-                    <div class="donation-points">50 Πόντοι</div>
-                    <a href="https://buymeacoffee.com/franklymadear" target="_blank" class="bmc-btn">Buy Me a Coffee</a>
+                
+                <button id="register-btn">Εγγραφή</button>
+            </div>
+            
+            <!-- Κύρια εφαρμογή -->
+            <div id="app-section" class="section hidden">
+                <div class="user-info">
+                    <div>
+                        <strong>Χρήστης:</strong> <span id="user-email"></span>
+                    </div>
+                    <button id="logout-btn" class="logout-btn">Αποσύνδεση</button>
                 </div>
-                <div class="donation-option">
-                    <div class="donation-amount">10€</div>
-                    <div class="donation-points">120 Πόντοι</div>
-                    <a href="https://buymeacoffee.com/franklymadear" target="_blank" class="bmc-btn">Buy Me a Coffee</a>
+                
+                <div class="points-display">
+                    <div>Οι πόντοι σας:</div>
+                    <div class="points-value" id="points-value">0</div>
+                    <div>Κερδίστε 1 πόντο για κάθε διαφήμιση που παρακολουθείτε!</div>
+                </div>
+                
+                <h2>Προβολή Διαφημίσεων</h2>
+                <p>Παρακολουθήστε την παρακάτω διαφήμιση για 60 δευτερόλεπτα για να κερδίσετε 1 πόντο.</p>
+                
+                <div class="ad-container">
+                    <div class="ad-placeholder">
+                        [ΔΙΑΦΗΜΙΣΗ - 60 ΔΕΥΤΕΡΟΛΕΠΤΑ]
+                    </div>
+                    <div class="timer" id="timer">60</div>
+                    <button id="start-ad-btn">Έναρξη Διαφήμισης</button>
+                </div>
+                
+                <h2>Στατιστικά</h2>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-points">0</div>
+                        <div class="stat-label">Συνολικοί Πόντοι</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="ads-watched">0</div>
+                        <div class="stat-label">Διαφημίσεις Παρακολουθήθηκαν</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="clicks-made">0</div>
+                        <div class="stat-label">Κλικ σε Διαφημίσεις</div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="verification-section">
-            <h2>Επαλήθευση Πληρωμής</h2>
-            <div class="verification-form">
-                <div class="form-group">
-                    <label for="username">Όνομα Χρήστη:</label>
-                    <input type="text" id="username" placeholder="Το username σας στην εφαρμογή">
-                </div>
-                <div class="form-group">
-                    <label for="donation-amount">Ποσό Δωρεάς:</label>
-                    <select id="donation-amount">
-                        <option value="1">1€ (10 Πόντοι)</option>
-                        <option value="5">5€ (50 Πόντοι)</option>
-                        <option value="10">10€ (120 Πόντοι)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="screenshot">Σύνδεσμος Screenshot (Imgur/Google Drive):</label>
-                    <input type="text" id="screenshot" placeholder="Προσαρτήστε το screenshot της πληρωμής">
-                </div>
-                <div class="form-group">
-                    <label for="notes">Σημειώσεις (προαιρετικά):</label>
-                    <textarea id="notes" placeholder="Οποιαδήποτε επιπλέον πληροφορία..."></textarea>
-                </div>
-                <button class="submit-btn" id="submit-verification">Υποβολή Επαλήθευσης</button>
-            </div>
-        </div>
-        
-        <div class="instructions">
-            <h3>Οδηγίες:</h3>
-            <ol>
-                <li>Κάντε κλικ στο "Buy Me a Coffee" για την επιλογή που θέλετε</li>
-                <li>Ολοκληρώστε την πληρωμή στο Buy Me a Coffee</li>
-                <li>Τραβήξτε ένα screenshot της επιβεβαίωσης πληρωμής</li>
-                <li>Ανεβάστε το screenshot σε Imgur, Google Drive ή άλλη πλατφόρμα</li>
-                <li>Συμπληρώστε τη φόρμα επαλήθευσης με τα στοιχεία σας</li>
-                <li>Θα λάβετε τους πόντους σας εντός 24 ωρών (συνήθως πιο γρήγορα)</li>
-            </ol>
         </div>
         
         <footer>
-            <p>Σύστημα Πόντων Καφεμαντείας &copy; 2023 | Buy Me a Coffee Integration</p>
+            <p>Σύστημα Πόνων &copy; 2023 - Όλα τα δικαιώματα διατηρούνται</p>
         </footer>
     </div>
 
     <script>
-        // Αρχικοποίηση μεταβλητών
-        let pointsBalance = 0;
+        // Μεταβλητές εφαρμογής
+        let user = null;
+        let points = 0;
+        let adsWatched = 0;
+        let clicksMade = 0;
+        let timerInterval = null;
+        let secondsRemaining = 60;
         
         // Στοιχεία DOM
-        const pointsBalanceElement = document.getElementById('points-balance');
-        const submitVerificationBtn = document.getElementById('submit-verification');
+        const registrationSection = document.getElementById('registration-section');
+        const appSection = document.getElementById('app-section');
+        const emailInput = document.getElementById('email');
+        const registerBtn = document.getElementById('register-btn');
+        const userEmailSpan = document.getElementById('user-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        const pointsValue = document.getElementById('points-value');
+        const totalPoints = document.getElementById('total-points');
+        const adsWatchedSpan = document.getElementById('ads-watched');
+        const clicksMadeSpan = document.getElementById('clicks-made');
+        const startAdBtn = document.getElementById('start-ad-btn');
+        const timerDisplay = document.getElementById('timer');
         
-        // Ενημέρωση του υπολοίπου πόντων
-        function updatePointsBalance() {
-            pointsBalanceElement.textContent = pointsBalance;
-            localStorage.setItem('pointsBalance', pointsBalance);
-        }
-        
-        // Φόρτωση από localStorage
-        function loadFromLocalStorage() {
-            const savedBalance = localStorage.getItem('pointsBalance');
-            if (savedBalance) {
-                pointsBalance = parseInt(savedBalance);
-                updatePointsBalance();
+        // Έλεγχος αν υπάρχει ήδη συνδεδεμένος χρήστης
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('adPointsUser');
+            if (savedUser) {
+                user = savedUser;
+                loadUserData();
+                showApp();
             }
-        }
+        });
         
-        // Υποβολή επαλήθευσης
-        submitVerificationBtn.addEventListener('click', function() {
-            const username = document.getElementById('username').value;
-            const amount = document.getElementById('donation-amount').value;
-            const screenshot = document.getElementById('screenshot').value;
+        // Εγγραφή χρήστη
+        registerBtn.addEventListener('click', () => {
+            const email = emailInput.value.trim();
             
-            if (!username || !screenshot) {
-                alert('Παρακαλώ συμπληρώστε όλα τα απαραίτητα πεδία');
+            if (!validateEmail(email)) {
+                showMessage('Παρακαλώ εισάγετε μια έγκυρη διεύθυνση email.', 'error');
                 return;
             }
             
-            // Προσομοίωση υποβολής
-            const donationAmounts = {
-                '1': 10,
-                '5': 50,
-                '10': 120
-            };
+            // Εδώ θα γινόταν η επικοινωνία με τον server για εγγραφή
+            // Προσομοίωση επιτυχούς εγγραφής
+            user = email;
+            localStorage.setItem('adPointsUser', user);
             
-            const pointsToAdd = donationAmounts[amount];
+            // Αρχικοποίηση δεδομένων χρήστη
+            initializeUserData();
             
-            // Στην πραγματικότητα εδώ θα στέλνονταν email/notification στον admin
-            alert(`Η αίτησή σας υποβλήθηκε! Θα λάβετε ${pointsToAdd} πόντους μόλις επαληθευτεί η πληρωμή. Συνήθως αυτό γίνεται εντός 24 ωρών.`);
-            
-            // Εκκαθάριση φόρμας
-            document.getElementById('username').value = '';
-            document.getElementById('screenshot').value = '';
-            document.getElementById('notes').value = '';
+            showApp();
+            showMessage('Εγγραφή ολοκληρώθηκε με επιτυχία!', 'success');
         });
         
-        // Αρχικοποίηση
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFromLocalStorage();
+        // Αποσύνδεση
+        logoutBtn.addEventListener('click', () => {
+            user = null;
+            localStorage.removeItem('adPointsUser');
+            showRegistration();
+        });
+        
+        // Έναρξη προβολής διαφήμισης
+        startAdBtn.addEventListener('click', () => {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+            }
+            
+            secondsRemaining = 60;
+            timerDisplay.textContent = secondsRemaining;
+            startAdBtn.disabled = true;
+            startAdBtn.textContent = 'Διαφήμιση σε εξέλιξη...';
+            
+            // Προσομοίωση προβολής διαφήμισης
+            timerInterval = setInterval(() => {
+                secondsRemaining--;
+                timerDisplay.textContent = secondsRemaining;
+                
+                if (secondsRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    completeAdViewing();
+                }
+            }, 1000);
+        });
+        
+        // Συναρτήσεις βοηθητικές
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        function showMessage(message, type) {
+            // Αφαίρεση προηγούμενων μηνυμάτων
+            const existingMessages = document.querySelectorAll('.success-message, .error-message');
+            existingMessages.forEach(msg => msg.remove());
+            
+            // Δημιουργία νέου μηνύματος
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            messageDiv.textContent = message;
+            
+            // Προσθήκη μηνύματος πριν από την εγγραφή
+            registrationSection.insertBefore(messageDiv, registrationSection.firstChild);
+            
+            // Αυτόματη αφαίρεση μετά από 5 δευτερόλεπτα
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+        
+        function showApp() {
+            registrationSection.classList.add('hidden');
+            appSection.classList.remove('hidden');
+            userEmailSpan.textContent = user;
+            updateDisplay();
+        }
+        
+        function showRegistration() {
+            appSection.classList.add('hidden');
+            registrationSection.classList.remove('hidden');
+            emailInput.value = '';
+        }
+        
+        function initializeUserData() {
+            const userData = {
+                points: 0,
+                adsWatched: 0,
+                clicksMade: 0
+            };
+            localStorage.setItem(`adPointsData_${user}`, JSON.stringify(userData));
+        }
+        
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem(`adPointsData_${user}`));
+            if (userData) {
+                points = userData.points;
+                adsWatched = userData.adsWatched;
+                clicksMade = userData.clicksMade;
+            }
+        }
+        
+        function saveUserData() {
+            const userData = {
+                points: points,
+                adsWatched: adsWatched,
+                clicksMade: clicksMade
+            };
+            localStorage.setItem(`adPointsData_${user}`, JSON.stringify(userData));
+            
+            // Εδώ θα γινόταν η αποστολή των δεδομένων στον διαχειριστή
+            console.log('Αποστολή δεδομένων στον διαχειριστή:', userData);
+        }
+        
+        function updateDisplay() {
+            pointsValue.textContent = points;
+            totalPoints.textContent = points;
+            adsWatchedSpan.textContent = adsWatched;
+            clicksMadeSpan.textContent = clicksMade;
+        }
+        
+        function completeAdViewing() {
+            // Προσθήκη πόντων
+            points++;
+            adsWatched++;
+            
+            // Αποθήκευση δεδομένων
+            saveUserData();
+            
+            // Ενημέρωση οθόνης
+            updateDisplay();
+            
+            // Επαναφορά κουμπιού
+            startAdBtn.disabled = false;
+            startAdBtn.textContent = 'Έναρξη Διαφήμισης';
+            
+            // Εμφάνιση μηνύματος επιτυχίας
+            showMessage('Συγχαρητήρια! Κερδίσατε 1 πόντο!', 'success');
+        }
+        
+        // Προσομοίωση κλικ σε διαφημίσεις
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('ad-placeholder') && user) {
+                clicksMade++;
+                saveUserData();
+                updateDisplay();
+                showMessage('Κλικ καταγράφηκε!', 'success');
+            }
         });
     </script>
 </body>
