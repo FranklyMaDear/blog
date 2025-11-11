@@ -659,6 +659,55 @@
             right: -5px;
         }
         
+        /* Στυλ για διαχείριση προσφορών */
+        .offer-management {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .offer-item {
+            background: #fcfaf7;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e0d6c9;
+        }
+        
+        .offer-item h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .offer-controls {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0d6c9;
+        }
+        
+        .offer-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .offer-expiry {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-top: 5px;
+        }
+        
         /* Responsive Design */
         @media (max-width: 768px) {
             .container {
@@ -810,6 +859,9 @@
             <button class="tab" data-tab="users-tab">
                 <i class="fas fa-users"></i> Διαχείριση Χρηστών
             </button>
+            <button class="tab" data-tab="offers-tab">
+                <i class="fas fa-gift"></i> Διαχείριση Προσφορών
+            </button>
             <button class="tab" data-tab="notifications-tab" id="notificationsTab">
                 <i class="fas fa-bell"></i> Ειδοποιήσεις
                 <span class="notifications-badge" id="notificationsBadge" style="display: none;">0</span>
@@ -878,6 +930,39 @@
                     
                     <div class="users-list" id="users-list">
                         <!-- Θα προστεθεί δυναμικά ο πίνακας χρηστών -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Νέα Καρτέλα Διαχείρισης Προσφορών -->
+            <section id="offers-tab" class="tab-content">
+                <div class="content-section">
+                    <h2><i class="fas fa-gift"></i> Διαχείριση Προσφορών</h2>
+                    
+                    <div class="offer-management">
+                        <div class="offer-item">
+                            <h3>Προσφορά 1+1 Δώρο</h3>
+                            <p>Ενεργοποίηση της προσφοράς 1+1 δώρο για όλους τους χρήστες.</p>
+                            
+                            <div class="offer-controls">
+                                <div class="form-group">
+                                    <label for="offer-1plus1-status">Κατάσταση:</label>
+                                    <select class="filter-select" id="offer-1plus1-status">
+                                        <option value="active">Ενεργή</option>
+                                        <option value="inactive">Ανενεργή</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="offer-1plus1-duration">Διάρκεια (ώρες):</label>
+                                    <input type="number" id="offer-1plus1-duration" class="filter-select" min="1" max="168" value="24">
+                                </div>
+                                
+                                <button class="action-btn btn-reply" id="save-offer-1plus1">
+                                    <i class="fas fa-save"></i> Αποθήκευση Ρυθμίσεων
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -1024,6 +1109,11 @@
                     if (tabId === 'notifications-tab') {
                         loadNotifications();
                     }
+                    
+                    // Αν είναι η καρτέλα προσφορών, φόρτωσε τη διαχείριση προσφορών
+                    if (tabId === 'offers-tab') {
+                        loadOffersManagement();
+                    }
                 });
             });
             
@@ -1038,6 +1128,7 @@
                 loadPhotoSubmissions();
                 loadMessageSubmissions();
                 loadUsers();
+                loadOffersManagement();
                 loadNotifications();
                 updateStats();
             }
@@ -1086,7 +1177,10 @@
                         </div>
                         
                         <div class="submission-content">
-                            <div class="submission-message">${submission.message}</div>
+                            <div class="submission-message">
+                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
+                                ${submission.message}
+                            </div>
                             
                             <div class="photos-grid">
                                 ${photosHTML}
@@ -1276,6 +1370,45 @@
                 });
             }
 
+            // Φόρτωση διαχείρισης προσφορών
+            function loadOffersManagement() {
+                const offersStatus = JSON.parse(localStorage.getItem('offersStatus') || '{"1plus1": false}');
+                const offerExpiry = JSON.parse(localStorage.getItem('offerExpiry') || '{}');
+                
+                document.getElementById('offer-1plus1-status').value = offersStatus['1plus1'] ? 'active' : 'inactive';
+                
+                // Έλεγχος αν η προσφορά έχει λήξει
+                if (offerExpiry['1plus1'] && new Date() > new Date(offerExpiry['1plus1'])) {
+                    offersStatus['1plus1'] = false;
+                    localStorage.setItem('offersStatus', JSON.stringify(offersStatus));
+                    document.getElementById('offer-1plus1-status').value = 'inactive';
+                }
+            }
+
+            // Αποθήκευση ρυθμίσεων προσφοράς
+            document.getElementById('save-offer-1plus1').addEventListener('click', function() {
+                const status = document.getElementById('offer-1plus1-status').value;
+                const duration = parseInt(document.getElementById('offer-1plus1-duration').value);
+                
+                const offersStatus = JSON.parse(localStorage.getItem('offersStatus') || '{}');
+                const offerExpiry = JSON.parse(localStorage.getItem('offerExpiry') || '{}');
+                
+                offersStatus['1plus1'] = status === 'active';
+                
+                if (status === 'active') {
+                    const expiryDate = new Date();
+                    expiryDate.setHours(expiryDate.getHours() + duration);
+                    offerExpiry['1plus1'] = expiryDate.toISOString();
+                } else {
+                    delete offerExpiry['1plus1'];
+                }
+                
+                localStorage.setItem('offersStatus', JSON.stringify(offersStatus));
+                localStorage.setItem('offerExpiry', JSON.stringify(offerExpiry));
+                
+                showNotification(`Η προσφορά 1+1 ${status === 'active' ? 'ενεργοποιήθηκε' : 'απενεργοποιήθηκε'}!`, 'success');
+            });
+
             // Φόρτωση ειδοποιήσεων
             function loadNotifications() {
                 const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
@@ -1325,7 +1458,8 @@
                         <div class="submission-content">
                             <div class="submission-message">
                                 <strong>Τύπος:</strong> ${getNotificationTypeText(notification.type)}<br>
-                                <strong>Προσφορά:</strong> ${notification.offerTitle}<br>
+                                ${notification.coffeeTypeText ? `<strong>Τύπος Καφεμαντείας:</strong> ${notification.coffeeTypeText}<br>` : ''}
+                                ${notification.offerTitle ? `<strong>Προσφορά:</strong> ${notification.offerTitle}<br>` : ''}
                                 <strong>Χρήστης:</strong> ${notification.userEmail}
                             </div>
                         </div>
@@ -1406,7 +1540,8 @@
 
             function getNotificationTypeText(type) {
                 const typeMap = {
-                    'offer_redemption': 'Ανταλλαγή Προσφοράς'
+                    'offer_redemption': 'Ανταλλαγή Προσφοράς',
+                    'coffee_reading': 'Υποβολή Καφεμαντείας'
                 };
                 return typeMap[type] || type;
             }
@@ -1508,6 +1643,7 @@
                         
                         <div class="submission-content">
                             <div class="submission-message">
+                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
                                 <strong>Μήνυμα:</strong><br>
                                 ${submission.message}
                             </div>
@@ -1583,7 +1719,8 @@
                     
                     <div class="submission-content">
                         <div><strong>Τύπος:</strong> ${getNotificationTypeText(notification.type)}</div>
-                        <div><strong>Προσφορά:</strong> ${notification.offerTitle}</div>
+                        ${notification.coffeeTypeText ? `<div><strong>Τύπος Καφεμαντείας:</strong> ${notification.coffeeTypeText}</div>` : ''}
+                        ${notification.offerTitle ? `<div><strong>Προσφορά:</strong> ${notification.offerTitle}</div>` : ''}
                         <div><strong>Χρήστης:</strong> ${notification.userEmail}</div>
                         <div><strong>Ημερομηνία:</strong> ${formatDate(notification.date)}</div>
                         <div><strong>Κατάσταση:</strong> ${getNotificationStatusText(notification.status)}</div>
@@ -1776,6 +1913,7 @@
                         
                         <div class="submission-content">
                             <div class="submission-message">
+                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
                                 <strong>Αρχικό Μήνυμα:</strong><br>
                                 ${submission.message}
                             </div>
