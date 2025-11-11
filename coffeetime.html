@@ -594,6 +594,62 @@
             display: block;
         }
         
+        /* Στυλ για επιλογές καφεμαντείας */
+        .coffee-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .coffee-option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #e0d6c9;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #fcfaf7;
+        }
+        
+        .coffee-option:hover {
+            border-color: var(--accent);
+            background-color: #f9f3ec;
+        }
+        
+        .coffee-option.selected {
+            border-color: var(--primary);
+            background-color: #f5e9d8;
+        }
+        
+        .coffee-option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        
+        .option-content {
+            flex: 1;
+        }
+        
+        .option-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+        
+        .option-description {
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .option-price {
+            font-weight: 600;
+            color: var(--primary);
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        
         /* Στυλ για σύστημα πόντων */
         .points-section {
             background: linear-gradient(135deg, #fff9e6 0%, #fff0cc 100%);
@@ -776,6 +832,16 @@
                 width: 95%;
             }
             
+            .coffee-option {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .option-price {
+                margin-left: 0;
+                margin-top: 8px;
+            }
+            
             .points-display {
                 flex-direction: column;
                 gap: 15px;
@@ -940,6 +1006,30 @@
                             <div class="form-group">
                                 <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
                                 <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required readonly>
+                            </div>
+                            
+                            <!-- Επιλογές καφεμαντείας -->
+                            <div class="form-group">
+                                <label><i class="fas fa-coffee"></i> Τύπος Καφεμαντείας:</label>
+                                <div class="coffee-options">
+                                    <label class="coffee-option">
+                                        <input type="radio" name="coffeeType" value="written" required>
+                                        <div class="option-content">
+                                            <div class="option-title">Γραπτή Ερμηνεία</div>
+                                            <div class="option-description">Επιθυμώ γραπτώς να μου πείτε τον καφέ</div>
+                                        </div>
+                                        <div class="option-price">Χωρίς Πόντο</div>
+                                    </label>
+                                    
+                                    <label class="coffee-option">
+                                        <input type="radio" name="coffeeType" value="verbal" required>
+                                        <div class="option-content">
+                                            <div class="option-title">Προφορική Ερμηνεία</div>
+                                            <div class="option-description">Επιθυμώ προφορικά να μου πείτε τον καφέ</div>
+                                        </div>
+                                        <div class="option-price">Χωρίς Πόντο</div>
+                                    </label>
+                                </div>
                             </div>
                             
                             <div class="form-group">
@@ -1602,9 +1692,15 @@
                 e.preventDefault();
                 
                 const email = document.getElementById('email').value;
+                const coffeeType = document.querySelector('input[name="coffeeType"]:checked');
                 
                 if (!email) {
                     showMessage(messageDiv, 'Παρακαλώ εισάγετε το e-mail σας.', 'error');
+                    return;
+                }
+                
+                if (!coffeeType) {
+                    showMessage(messageDiv, 'Παρακαλώ επιλέξτε τύπο καφεμαντείας.', 'error');
                     return;
                 }
                 
@@ -1637,6 +1733,8 @@
                         id: Date.now(), // ID βάσει χρονικής σήμανσης
                         type: 'photo',
                         userEmail: email,
+                        coffeeType: coffeeType.value,
+                        coffeeTypeText: coffeeType.value === 'written' ? 'Γραπτή Ερμηνεία' : 'Προφορική Ερμηνεία',
                         date: new Date().toISOString(),
                         status: 'pending',
                         message: 'Υποβολή φωτογραφιών καφέ για ερμηνεία',
@@ -1646,7 +1744,7 @@
                     // Αποθήκευση στο LocalStorage
                     saveSubmission(submission);
                     
-                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας στο ${email} εντός 24 ωρών.`, 'success');
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
