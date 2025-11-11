@@ -921,6 +921,56 @@
         </div>
     </div>
 
+    <!-- Modal για διαχείριση πόντων -->
+    <div class="modal" id="points-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Διαχείριση Πόντων Χρήστη</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="points-user-info">
+                    <!-- Θα προστεθούν δυναμικά τα στοιχεία του χρήστη -->
+                </div>
+                
+                <div class="points-management">
+                    <div class="form-group">
+                        <label for="current-points">Τρέχοντες Πόντοι:</label>
+                        <input type="number" id="current-points" class="filter-select" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="points-action">Ενέργεια:</label>
+                        <select class="filter-select" id="points-action">
+                            <option value="add">Προσθήκη Πόντων</option>
+                            <option value="remove">Αφαίρεση Πόντων</option>
+                            <option value="set">Ορισμός Πόντων</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="points-amount">Ποσότητα Πόντων:</label>
+                        <input type="number" id="points-amount" class="filter-select" min="0" value="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="points-reason">Αιτιολογία (προαιρετικά):</label>
+                        <textarea id="points-reason" placeholder="Προσθέστε μια σύντομη αιτιολογία για την αλλαγή των πόντων..."></textarea>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="action-btn btn-view" id="cancel-points">
+                            <i class="fas fa-times"></i> Ακύρωση
+                        </button>
+                        <button class="action-btn btn-reply" id="save-points">
+                            <i class="fas fa-save"></i> Αποθήκευση Αλλαγών
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Σύστημα καρτελών
@@ -999,7 +1049,10 @@
                         </div>
                         
                         <div class="submission-content">
-                            <div class="submission-message">${submission.message}</div>
+                            <div class="submission-message">
+                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
+                                <strong>Μήνυμα:</strong> ${submission.message}
+                            </div>
                             
                             <div class="photos-grid">
                                 ${photosHTML}
@@ -1097,6 +1150,7 @@
             // Φόρτωση χρηστών
             function loadUsers() {
                 const users = getAllUsers();
+                const userPoints = getAllUserPoints();
                 const listContainer = document.getElementById('users-list');
                 
                 if (users.length === 0) {
@@ -1121,6 +1175,8 @@
                             <tr>
                                 <th>Όνομα</th>
                                 <th>Email</th>
+                                <th>Πόντοι</th>
+                                <th>Επίπεδο</th>
                                 <th>Ημερομηνία Εγγραφής</th>
                                 <th>Ενέργειες</th>
                             </tr>
@@ -1129,15 +1185,22 @@
                 `;
                 
                 users.forEach(user => {
+                    const userPointData = userPoints.find(p => p.email === user.email) || { points: 0, level: 'Αρχάριος' };
+                    
                     usersHTML += `
                         <tr>
                             <td>${user.name}</td>
                             <td>${user.email}</td>
+                            <td>${userPointData.points}</td>
+                            <td>${userPointData.level}</td>
                             <td>${formatDate(user.registrationDate)}</td>
                             <td>
                                 <div class="user-actions">
                                     <button class="action-btn btn-view view-user" data-id="${user.id}">
                                         <i class="fas fa-eye"></i> Προβολή
+                                    </button>
+                                    <button class="action-btn btn-reply manage-points" data-id="${user.id}" data-email="${user.email}">
+                                        <i class="fas fa-coins"></i> Πόντοι
                                     </button>
                                     <button class="action-btn btn-delete delete-user" data-id="${user.id}">
                                         <i class="fas fa-trash"></i> Διαγραφή
@@ -1163,6 +1226,14 @@
                     });
                 });
                 
+                document.querySelectorAll('.manage-points').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const userId = parseInt(this.getAttribute('data-id'));
+                        const userEmail = this.getAttribute('data-email');
+                        manageUserPoints(userId, userEmail);
+                    });
+                });
+                
                 document.querySelectorAll('.delete-user').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const userId = parseInt(this.getAttribute('data-id'));
@@ -1178,7 +1249,12 @@
             
             // Λήψη όλων των χρηστών από το LocalStorage
             function getAllUsers() {
-                return JSON.parse(localStorage.getItem('coffeeUsers') || '[]');
+                return JSON.parse(localStorage.getItem('users') || '[]');
+            }
+            
+            // Λήψη όλων των πόντων χρηστών από το LocalStorage
+            function getAllUserPoints() {
+                return JSON.parse(localStorage.getItem('userPoints') || '[]');
             }
             
             // Βοηθητικές συναρτήσεις
@@ -1240,6 +1316,7 @@
             // Λειτουργίες modal
             const submissionModal = document.getElementById('submission-modal');
             const replyModal = document.getElementById('reply-modal');
+            const pointsModal = document.getElementById('points-modal');
             const closeModalButtons = document.querySelectorAll('.close-modal');
             
             // Κλείσιμο modal
@@ -1247,6 +1324,7 @@
                 btn.addEventListener('click', function() {
                     submissionModal.style.display = 'none';
                     replyModal.style.display = 'none';
+                    pointsModal.style.display = 'none';
                 });
             });
             
@@ -1257,6 +1335,9 @@
                 }
                 if (event.target === replyModal) {
                     replyModal.style.display = 'none';
+                }
+                if (event.target === pointsModal) {
+                    pointsModal.style.display = 'none';
                 }
             });
             
@@ -1283,6 +1364,7 @@
                         
                         <div class="submission-content">
                             <div class="submission-message">
+                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
                                 <strong>Μήνυμα:</strong><br>
                                 ${submission.message}
                             </div>
@@ -1342,6 +1424,109 @@
                 submissionModal.style.display = 'flex';
             }
             
+            // Διαχείριση πόντων χρήστη
+            function manageUserPoints(userId, userEmail) {
+                const users = getAllUsers();
+                const user = users.find(u => u.id === userId);
+                const userPoints = getAllUserPoints();
+                const userPointData = userPoints.find(p => p.email === userEmail) || { points: 0, level: 'Αρχάριος' };
+                
+                if (!user) return;
+                
+                const pointsUserInfo = document.getElementById('points-user-info');
+                pointsUserInfo.innerHTML = `
+                    <div class="submission-header">
+                        <div class="submission-user">${user.name}</div>
+                        <div class="submission-date">${user.email}</div>
+                    </div>
+                    
+                    <div class="submission-content">
+                        <div><strong>Τρέχοντες Πόντοι:</strong> ${userPointData.points}</div>
+                        <div><strong>Τρέχον Επίπεδο:</strong> ${userPointData.level}</div>
+                    </div>
+                `;
+                
+                document.getElementById('current-points').value = userPointData.points;
+                document.getElementById('points-amount').value = 0;
+                document.getElementById('points-reason').value = '';
+                
+                pointsModal.style.display = 'flex';
+                
+                // Αποθήκευση του userEmail για χρήση στην αποθήκευση
+                document.getElementById('save-points').setAttribute('data-email', userEmail);
+            }
+            
+            // Αποθήκευση αλλαγών πόντων
+            document.getElementById('save-points').addEventListener('click', function() {
+                const userEmail = this.getAttribute('data-email');
+                const currentPoints = parseInt(document.getElementById('current-points').value);
+                const action = document.getElementById('points-action').value;
+                const amount = parseInt(document.getElementById('points-amount').value);
+                const reason = document.getElementById('points-reason').value;
+                
+                if (isNaN(amount) || amount < 0) {
+                    alert('Παρακαλώ εισάγετε έγκυρη ποσότητα πόντων.');
+                    return;
+                }
+                
+                let newPoints = currentPoints;
+                
+                switch(action) {
+                    case 'add':
+                        newPoints += amount;
+                        break;
+                    case 'remove':
+                        newPoints = Math.max(0, currentPoints - amount);
+                        break;
+                    case 'set':
+                        newPoints = amount;
+                        break;
+                }
+                
+                // Ενημέρωση των πόντων του χρήστη
+                const userPoints = getAllUserPoints();
+                const userPointIndex = userPoints.findIndex(p => p.email === userEmail);
+                
+                if (userPointIndex !== -1) {
+                    userPoints[userPointIndex].points = newPoints;
+                    
+                    // Ενημέρωση επιπέδου
+                    let level = 'Αρχάριος';
+                    if (newPoints >= 100) level = 'Ειδικός';
+                    if (newPoints >= 300) level = 'Μάστερ';
+                    if (newPoints >= 500) level = 'Grand Master';
+                    
+                    userPoints[userPointIndex].level = level;
+                    
+                    localStorage.setItem('userPoints', JSON.stringify(userPoints));
+                    
+                    // Καταγραφή της αλλαγής
+                    const pointsHistory = JSON.parse(localStorage.getItem('pointsHistory') || '[]');
+                    pointsHistory.push({
+                        userEmail: userEmail,
+                        action: action,
+                        amount: amount,
+                        previousPoints: currentPoints,
+                        newPoints: newPoints,
+                        reason: reason,
+                        date: new Date().toISOString(),
+                        admin: 'Διαχειριστής'
+                    });
+                    localStorage.setItem('pointsHistory', JSON.stringify(pointsHistory));
+                    
+                    showNotification(`Οι πόντοι του χρήστη ενημερώθηκαν επιτυχώς! Νέοι πόντοι: ${newPoints}`, 'success');
+                    pointsModal.style.display = 'none';
+                    loadUsers();
+                } else {
+                    alert('Προέκυψε σφάλμα. Ο χρήστης δεν βρέθηκε.');
+                }
+            });
+            
+            // Ακύρωση διαχείρισης πόντων
+            document.getElementById('cancel-points').addEventListener('click', function() {
+                pointsModal.style.display = 'none';
+            });
+            
             // Νέα λειτουργία για URL detection και preview
             const replyMessageTextarea = document.getElementById('reply-message');
             const urlPreview = document.getElementById('url-preview');
@@ -1397,6 +1582,7 @@
                         
                         <div class="submission-content">
                             <div class="submission-message">
+                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
                                 <strong>Αρχικό Μήνυμα:</strong><br>
                                 ${submission.message}
                             </div>
@@ -1538,7 +1724,7 @@
                 if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτόν τον χρήστη;')) {
                     const allUsers = getAllUsers();
                     const updatedUsers = allUsers.filter(user => user.id !== id);
-                    localStorage.setItem('coffeeUsers', JSON.stringify(updatedUsers));
+                    localStorage.setItem('users', JSON.stringify(updatedUsers));
                     
                     showNotification('Ο χρήστης διαγράφηκε επιτυχώς!', 'success');
                     loadAllData();
