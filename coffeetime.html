@@ -594,62 +594,6 @@
             display: block;
         }
         
-        /* Στυλ για επιλογές καφεμαντείας */
-        .coffee-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .coffee-option {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border: 2px solid #e0d6c9;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: #fcfaf7;
-        }
-        
-        .coffee-option:hover {
-            border-color: var(--accent);
-            background-color: #f9f3ec;
-        }
-        
-        .coffee-option.selected {
-            border-color: var(--primary);
-            background-color: #f5e9d8;
-        }
-        
-        .coffee-option input[type="radio"] {
-            margin-right: 12px;
-            transform: scale(1.2);
-        }
-        
-        .option-content {
-            flex: 1;
-        }
-        
-        .option-title {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 5px;
-        }
-        
-        .option-description {
-            color: var(--text);
-            font-size: 0.9rem;
-        }
-        
-        .option-price {
-            font-weight: 600;
-            color: var(--primary);
-            margin-left: 10px;
-            white-space: nowrap;
-        }
-        
         /* Στυλ για σύστημα πόντων */
         .points-section {
             background: linear-gradient(135deg, #fff9e6 0%, #fff0cc 100%);
@@ -832,16 +776,6 @@
                 width: 95%;
             }
             
-            .coffee-option {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .option-price {
-                margin-left: 0;
-                margin-top: 8px;
-            }
-            
             .points-display {
                 flex-direction: column;
                 gap: 15px;
@@ -1006,30 +940,6 @@
                             <div class="form-group">
                                 <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
                                 <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required readonly>
-                            </div>
-                            
-                            <!-- Νέες επιλογές καφεμαντείας -->
-                            <div class="form-group">
-                                <label><i class="fas fa-coffee"></i> Τύπος Καφεμαντείας:</label>
-                                <div class="coffee-options">
-                                    <label class="coffee-option">
-                                        <input type="radio" name="coffeeType" value="written" required>
-                                        <div class="option-content">
-                                            <div class="option-title">Γραπτή Ερμηνεία</div>
-                                            <div class="option-description">Επιθυμώ γραπτώς να μου πείτε τον καφέ</div>
-                                        </div>
-                                        <div class="option-price">10 Πόντοι</div>
-                                    </label>
-                                    
-                                    <label class="coffee-option">
-                                        <input type="radio" name="coffeeType" value="verbal" required>
-                                        <div class="option-content">
-                                            <div class="option-title">Προφορική Ερμηνεία</div>
-                                            <div class="option-description">Επιθυμώ προφορικά να μου πείτε τον καφέ</div>
-                                        </div>
-                                        <div class="option-price">20 Πόντοι</div>
-                                    </label>
-                                </div>
                             </div>
                             
                             <div class="form-group">
@@ -1211,10 +1121,9 @@
                 <div class="info-box">
                     <p><strong>Πώς λειτουργεί το σύστημα πόντων:</strong></p>
                     <ul>
-                        <li>Κερδίζετε <strong>10 πόντους</strong> για κάθε γραπτή ερμηνεία καφέ</li>
-                        <li>Κερδίζετε <strong>20 πόντους</strong> για κάθε προφορική ερμηνεία καφέ</li>
+                        <li>Ο διαχειριστής σας αναθέτει πόντους για την συμμετοχή σας</li>
                         <li>Όταν φτάσετε <strong>100 πόντους</strong>, κερδίζετε έναν δωρεάν καφέ της επιλογής σας</li>
-                        <li>Ο διαχειριστής μπορεί να σας αναθέσει επιπλέον πόντους</li>
+                        <li>Οι πόντοι δεν προστίθενται αυτόματα - μόνο ο διαχειριστής μπορεί να σας αναθέσει πόντους</li>
                     </ul>
                 </div>
                 
@@ -1693,15 +1602,9 @@
                 e.preventDefault();
                 
                 const email = document.getElementById('email').value;
-                const coffeeType = document.querySelector('input[name="coffeeType"]:checked');
                 
                 if (!email) {
                     showMessage(messageDiv, 'Παρακαλώ εισάγετε το e-mail σας.', 'error');
-                    return;
-                }
-                
-                if (!coffeeType) {
-                    showMessage(messageDiv, 'Παρακαλώ επιλέξτε τύπο καφεμαντείας.', 'error');
                     return;
                 }
                 
@@ -1729,16 +1632,11 @@
                 });
                 
                 Promise.all(photoPromises).then(photosBase64 => {
-                    // Προσδιορισμός πόντων βάσει τύπου καφεμαντείας
-                    const points = coffeeType.value === 'written' ? 10 : 20;
-                    
                     // Δημιουργία αντικειμένου υποβολής
                     const submission = {
                         id: Date.now(), // ID βάσει χρονικής σήμανσης
                         type: 'photo',
                         userEmail: email,
-                        coffeeType: coffeeType.value,
-                        coffeeTypeText: coffeeType.value === 'written' ? 'Γραπτή Ερμηνεία (10 πόντοι)' : 'Προφορική Ερμηνεία (20 πόντοι)',
                         date: new Date().toISOString(),
                         status: 'pending',
                         message: 'Υποβολή φωτογραφιών καφέ για ερμηνεία',
@@ -1748,19 +1646,7 @@
                     // Αποθήκευση στο LocalStorage
                     saveSubmission(submission);
                     
-                    // Προσθήκη πόντων στον χρήστη
-                    addUserPoints(email, points);
-                    
-                    // Έλεγχος αν ο χρήστης έφτασε τους 100 πόντους
-                    const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
-                    const userPoints = userPointsData.find(p => p.email === email);
-                    
-                    let bonusMessage = '';
-                    if (userPoints && userPoints.points >= 100 && userPoints.points - points < 100) {
-                        bonusMessage = ' Συγχαρητήρια! Έφτασες τους 100 πόντους και κέρδισες έναν δωρεάν καφέ της επιλογής σας!';
-                    }
-                    
-                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Κερδίσατε ${points} πόντους!${bonusMessage} Θα λάβετε την ερμηνεία της καφεμαντείας (${coffeeType.value === 'written' ? 'γραπτώς' : 'προφορικά'}) στο ${email} εντός 24 ωρών.`, 'success');
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -1982,17 +1868,6 @@
                 document.getElementById('modalLevel').textContent = userPoints.level;
             }
             
-            function addUserPoints(email, points) {
-                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
-                const userPoints = userPointsData.find(p => p.email === email);
-                
-                if (userPoints) {
-                    userPoints.points += points;
-                    localStorage.setItem('userPoints', JSON.stringify(userPointsData));
-                    loadUserPoints(); // Ανανέωση UI
-                }
-            }
-            
             // Modal για σύστημα πόντων
             const pointsModal = document.getElementById('pointsModal');
             const pointsInfoBtn = document.getElementById('pointsInfoBtn');
@@ -2027,6 +1902,7 @@
                 const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
                 const userPoints = userPointsData.find(p => p.email === currentUser.email) || { points: 0 };
                 
+                // ΜΟΝΟ η προσφορά των 100 πόντων
                 const offers = [
                     {
                         id: 1,
@@ -2034,27 +1910,6 @@
                         description: 'Ένας δωρεάν καφές της επιλογής σας',
                         cost: 100,
                         type: 'free_coffee'
-                    },
-                    {
-                        id: 2,
-                        title: 'Εκπτωτική Κάρτα 10%',
-                        description: '10% έκπτωση στην επόμενη αγορά σας',
-                        cost: 50,
-                        type: 'discount'
-                    },
-                    {
-                        id: 3,
-                        title: 'Ειδική Προσφορά VIP',
-                        description: 'Πρόσβαση σε αποκλειστικές προσφορές',
-                        cost: 200,
-                        type: 'vip'
-                    },
-                    {
-                        id: 4,
-                        title: 'Βιβλίο Καφεμαντείας',
-                        description: 'Ψηφιακό βιβλίο με τεχνικές καφεμαντείας',
-                        cost: 300,
-                        type: 'ebook'
                     }
                 ];
                 
@@ -2093,10 +1948,7 @@
                 if (!currentUser) return;
                 
                 const offers = [
-                    { id: 1, cost: 100, title: 'Δωρεάν Καφές' },
-                    { id: 2, cost: 50, title: 'Εκπτωτική Κάρτα 10%' },
-                    { id: 3, cost: 200, title: 'Ειδική Προσφορά VIP' },
-                    { id: 4, cost: 300, title: 'Βιβλίο Καφεμαντείας' }
+                    { id: 1, cost: 100, title: 'Δωρεάν Καφές' }
                 ];
                 
                 const offer = offers.find(o => o.id === offerId);
@@ -2121,7 +1973,19 @@
                     });
                     localStorage.setItem('offerRedemptions', JSON.stringify(redemptions));
                     
-                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "${offer.title}"! Αφαιρέθηκαν ${offer.cost} πόντοι.`, 'success');
+                    // Δημιουργία ειδοποίησης για τον διαχειριστή
+                    const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                    adminNotifications.push({
+                        type: 'offer_redemption',
+                        userEmail: currentUser.email,
+                        userName: currentUser.name,
+                        offerTitle: offer.title,
+                        date: new Date().toISOString(),
+                        status: 'pending'
+                    });
+                    localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
+                    
+                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "${offer.title}"! Αφαιρέθηκαν ${offer.cost} πόντοι. Ο διαχειριστής έχει ειδοποιηθεί για την ανταλλαγή σας.`, 'success');
                     loadUserPoints();
                     loadOffers();
                     pointsModal.style.display = 'none';
