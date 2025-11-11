@@ -642,6 +642,22 @@
             padding: 5px 10px;
             font-size: 0.85rem;
         }
+
+        /* Στυλ για ειδοποιήσεις */
+        .notifications-badge {
+            background: var(--error);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
         
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -794,6 +810,10 @@
             <button class="tab" data-tab="users-tab">
                 <i class="fas fa-users"></i> Διαχείριση Χρηστών
             </button>
+            <button class="tab" data-tab="notifications-tab" id="notificationsTab">
+                <i class="fas fa-bell"></i> Ειδοποιήσεις
+                <span class="notifications-badge" id="notificationsBadge" style="display: none;">0</span>
+            </button>
         </div>
         
         <main>
@@ -858,6 +878,17 @@
                     
                     <div class="users-list" id="users-list">
                         <!-- Θα προστεθεί δυναμικά ο πίνακας χρηστών -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Νέα Καρτέλα Ειδοποιήσεων -->
+            <section id="notifications-tab" class="tab-content">
+                <div class="content-section">
+                    <h2><i class="fas fa-bell"></i> Ειδοποιήσεις Ανταλλαγών</h2>
+                    
+                    <div class="submissions-list" id="notifications-list">
+                        <!-- Θα προστεθούν δυναμικά οι ειδοποιήσεις -->
                     </div>
                 </div>
             </section>
@@ -988,6 +1019,11 @@
                     // Ενεργοποίηση της επιλεγμένης καρτέλας
                     tab.classList.add('active');
                     document.getElementById(tabId).classList.add('active');
+
+                    // Αν είναι η καρτέλα ειδοποιήσεων, φόρτωσε τις ειδοποιήσεις
+                    if (tabId === 'notifications-tab') {
+                        loadNotifications();
+                    }
                 });
             });
             
@@ -1002,6 +1038,7 @@
                 loadPhotoSubmissions();
                 loadMessageSubmissions();
                 loadUsers();
+                loadNotifications();
                 updateStats();
             }
             
@@ -1049,10 +1086,7 @@
                         </div>
                         
                         <div class="submission-content">
-                            <div class="submission-message">
-                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
-                                <strong>Μήνυμα:</strong> ${submission.message}
-                            </div>
+                            <div class="submission-message">${submission.message}</div>
                             
                             <div class="photos-grid">
                                 ${photosHTML}
@@ -1241,6 +1275,101 @@
                     });
                 });
             }
+
+            // Φόρτωση ειδοποιήσεων
+            function loadNotifications() {
+                const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                const listContainer = document.getElementById('notifications-list');
+                const badge = document.getElementById('notificationsBadge');
+                
+                // Ενημέρωση badge
+                const pendingNotifications = notifications.filter(n => n.status === 'pending');
+                if (pendingNotifications.length > 0) {
+                    badge.textContent = pendingNotifications.length;
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+                
+                if (notifications.length === 0) {
+                    listContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-bell-slash"></i>
+                            </div>
+                            <h3>Δεν υπάρχουν ειδοποιήσεις</h3>
+                            <p>Όλες οι ειδοποιήσεις έχουν επεξεργαστεί.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                listContainer.innerHTML = '';
+                
+                // Ταξινόμηση από νεότερο προς παλαιότερο
+                notifications.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                notifications.forEach(notification => {
+                    const statusClass = `status-${notification.status}`;
+                    const statusText = getNotificationStatusText(notification.status);
+                    
+                    const notificationCard = document.createElement('div');
+                    notificationCard.className = 'submission-card';
+                    notificationCard.innerHTML = `
+                        <div class="submission-header">
+                            <div class="submission-user">${notification.userName || notification.userEmail}</div>
+                            <div class="submission-date">${formatDate(notification.date)}</div>
+                            <div class="submission-status ${statusClass}">${statusText}</div>
+                        </div>
+                        
+                        <div class="submission-content">
+                            <div class="submission-message">
+                                <strong>Τύπος:</strong> ${getNotificationTypeText(notification.type)}<br>
+                                <strong>Προσφορά:</strong> ${notification.offerTitle}<br>
+                                <strong>Χρήστης:</strong> ${notification.userEmail}
+                            </div>
+                        </div>
+                        
+                        <div class="submission-actions">
+                            <button class="action-btn btn-view view-notification" data-id="${notification.date}">
+                                <i class="fas fa-eye"></i> Προβολή
+                            </button>
+                            ${notification.status === 'pending' ? `
+                            <button class="action-btn btn-reply mark-processed" data-id="${notification.date}">
+                                <i class="fas fa-check"></i> Επεξεργασμένη
+                            </button>
+                            ` : ''}
+                            <button class="action-btn btn-delete delete-notification" data-id="${notification.date}">
+                                <i class="fas fa-trash"></i> Διαγραφή
+                            </button>
+                        </div>
+                    `;
+                    
+                    listContainer.appendChild(notificationCard);
+                });
+                
+                // Προσθήκη event listeners για ειδοποιήσεις
+                document.querySelectorAll('.view-notification').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const notificationId = this.getAttribute('data-id');
+                        viewNotification(notificationId);
+                    });
+                });
+                
+                document.querySelectorAll('.mark-processed').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const notificationId = this.getAttribute('data-id');
+                        markNotificationProcessed(notificationId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-notification').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const notificationId = this.getAttribute('data-id');
+                        deleteNotification(notificationId);
+                    });
+                });
+            }
             
             // Λήψη όλων των υποβολών από το LocalStorage
             function getAllSubmissions() {
@@ -1265,6 +1394,21 @@
                     'answered': 'Απαντημένη'
                 };
                 return statusMap[status] || status;
+            }
+
+            function getNotificationStatusText(status) {
+                const statusMap = {
+                    'pending': 'Σε Εκκρεμότητα',
+                    'processed': 'Επεξεργασμένη'
+                };
+                return statusMap[status] || status;
+            }
+
+            function getNotificationTypeText(type) {
+                const typeMap = {
+                    'offer_redemption': 'Ανταλλαγή Προσφοράς'
+                };
+                return typeMap[type] || type;
             }
             
             function formatDate(dateString) {
@@ -1364,7 +1508,6 @@
                         
                         <div class="submission-content">
                             <div class="submission-message">
-                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
                                 <strong>Μήνυμα:</strong><br>
                                 ${submission.message}
                             </div>
@@ -1422,6 +1565,57 @@
                 `;
                 
                 submissionModal.style.display = 'flex';
+            }
+
+            // Προβολή ειδοποίησης
+            function viewNotification(id) {
+                const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                const notification = notifications.find(n => n.date === id);
+                if (!notification) return;
+                
+                const modalBody = document.getElementById('modal-body');
+                
+                modalBody.innerHTML = `
+                    <div class="submission-header">
+                        <div class="submission-user">${notification.userName || notification.userEmail}</div>
+                        <div class="submission-date">${formatDate(notification.date)}</div>
+                    </div>
+                    
+                    <div class="submission-content">
+                        <div><strong>Τύπος:</strong> ${getNotificationTypeText(notification.type)}</div>
+                        <div><strong>Προσφορά:</strong> ${notification.offerTitle}</div>
+                        <div><strong>Χρήστης:</strong> ${notification.userEmail}</div>
+                        <div><strong>Ημερομηνία:</strong> ${formatDate(notification.date)}</div>
+                        <div><strong>Κατάσταση:</strong> ${getNotificationStatusText(notification.status)}</div>
+                    </div>
+                `;
+                
+                submissionModal.style.display = 'flex';
+            }
+
+            // Σήμανση ειδοποίησης ως επεξεργασμένης
+            function markNotificationProcessed(id) {
+                const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                const notificationIndex = notifications.findIndex(n => n.date === id);
+                
+                if (notificationIndex !== -1) {
+                    notifications[notificationIndex].status = 'processed';
+                    localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+                    showNotification('Η ειδοποίηση σημάνθηκε ως επεξεργασμένη!', 'success');
+                    loadNotifications();
+                }
+            }
+
+            // Διαγραφή ειδοποίησης
+            function deleteNotification(id) {
+                if (confirm('Είστε σίγουρος ότι θέλετε να διαγράψετε αυτή την ειδοποίηση;')) {
+                    const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                    const updatedNotifications = notifications.filter(n => n.date !== id);
+                    localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
+                    
+                    showNotification('Η ειδοποίηση διαγράφηκε επιτυχώς!', 'success');
+                    loadNotifications();
+                }
             }
             
             // Διαχείριση πόντων χρήστη
@@ -1582,7 +1776,6 @@
                         
                         <div class="submission-content">
                             <div class="submission-message">
-                                <strong>Τύπος Καφεμαντείας:</strong> ${submission.coffeeTypeText || 'Γραπτή Ερμηνεία'}<br>
                                 <strong>Αρχικό Μήνυμα:</strong><br>
                                 ${submission.message}
                             </div>
