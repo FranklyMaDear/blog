@@ -2617,6 +2617,14 @@
                     if (tabId === 'responses-tab') {
                         loadUserResponses();
                     }
+                    
+                    // Αν είναι η καρτέλα ραντεβού, φόρτωσε τα ραντεβού
+                    if (tabId === 'appointment-tab') {
+                        // Βεβαιώνουμε ότι το σύστημα ραντεβού είναι αρχικοποιημένο
+                        if (typeof window.appointmentSystem !== 'undefined') {
+                            window.appointmentSystem.loadUserAppointments();
+                        }
+                    }
                 });
             });
             
@@ -3115,6 +3123,16 @@
             setInterval(() => {
                 checkOffersStatus();
             }, 30000);
+            
+            // Αρχικοποίηση συστήματος ραντεβού
+            function initializeAppointmentSystem() {
+                if (document.getElementById('mainApp') && document.getElementById('mainApp').style.display !== 'none') {
+                    window.appointmentSystem = new AppointmentSystem();
+                }
+            }
+            
+            // Καλέστε την αρχικοποίηση του συστήματος ραντεβού
+            initializeAppointmentSystem();
         });
     </script>
                        
