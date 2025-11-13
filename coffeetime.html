@@ -736,6 +736,78 @@
             transform: translateY(-2px);
         }
         
+        /* ΝΕΟ ΣΤΥΛ ΓΙΑ ΤΗΝ ΠΡΟΣΦΟΡΑ ΣΤΗΝ ΚΥΡΙΑ ΟΘΟΝΗ */
+        .main-offer-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d0e9d0 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid var(--success);
+        }
+        
+        .main-offer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .main-offer-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .main-offer-title i {
+            color: var(--success);
+        }
+        
+        .main-offer-cost {
+            font-weight: 600;
+            color: var(--primary);
+            background: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid var(--success);
+        }
+        
+        .main-offer-description {
+            color: var(--text);
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .main-redeem-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .main-redeem-btn:hover:not(:disabled) {
+            background: #388e3c;
+            transform: translateY(-2px);
+        }
+        
+        .main-redeem-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .offers-list {
             display: grid;
             gap: 15px;
@@ -872,6 +944,12 @@
                 flex-direction: column;
             }
             
+            .main-offer-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
             .offer-item {
                 flex-direction: column;
                 align-items: flex-start;
@@ -990,6 +1068,25 @@
                         <i class="fas fa-info-circle"></i> Πληροφορίες & Προσφορές
                     </button>
                 </div>
+            </div>
+            
+            <!-- ΝΕΟ ΤΜΗΜΑ: ΠΡΟΣΦΟΡΑ ΣΤΗΝ ΚΥΡΙΑ ΟΘΟΝΗ -->
+            <div class="main-offer-section" id="mainOfferSection">
+                <div class="main-offer-header">
+                    <div class="main-offer-title">
+                        <i class="fas fa-gift"></i>
+                        Εξαργύρωσε την Καφεμαντεία
+                    </div>
+                    <div class="main-offer-cost">
+                        50 Πόντοι
+                    </div>
+                </div>
+                <div class="main-offer-description">
+                    Αποκτήστε μια δωρεάν καφεμαντεία ανταλλάσσοντας 50 πόντους.
+                </div>
+                <button class="main-redeem-btn" id="mainRedeemBtn" disabled>
+                    <i class="fas fa-shopping-cart"></i> Ανταλλαγή
+                </button>
             </div>
             
             <div class="tabs">
@@ -2054,6 +2151,23 @@
                 document.getElementById('userLevel').textContent = userPoints.level;
                 document.getElementById('modalPoints').textContent = userPoints.points;
                 document.getElementById('modalLevel').textContent = userPoints.level;
+                
+                // Ενημέρωση του κουμπιού ανταλλαγής στην κύρια οθόνη
+                updateMainOfferButton(userPoints.points);
+            }
+            
+            // Ενημέρωση του κουμπιού ανταλλαγής στην κύρια οθόνη
+            function updateMainOfferButton(points) {
+                const mainRedeemBtn = document.getElementById('mainRedeemBtn');
+                const canRedeem = points >= 50;
+                
+                if (canRedeem) {
+                    mainRedeemBtn.disabled = false;
+                    mainRedeemBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Ανταλλαγή';
+                } else {
+                    mainRedeemBtn.disabled = true;
+                    mainRedeemBtn.innerHTML = 'Ανεπαρκείς Πόντοι';
+                }
             }
             
             // Modal για σύστημα πόντων
@@ -2076,71 +2190,23 @@
                 }
             });
             
-            function loadOffers() {
-                const offersList = document.getElementById('offersList');
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                if (!currentUser) return;
-                
-                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
-                const userPoints = userPointsData.find(p => p.email === currentUser.email) || { points: 0 };
-                
-                // ΜΟΝΟ η προσφορά των 100 πόντων
-                const offers = [
-                    {
-                        id: 1,
-                        title: 'Εξαργύρωσε την Καφεμαντεία',
-                        description: 'Καφεμαντεία',
-                        cost: 50,
-                        type: 'free_coffee'
-                    }
-                ];
-                
-                offersList.innerHTML = '';
-                
-                offers.forEach(offer => {
-                    const canRedeem = userPoints.points >= offer.cost;
-                    const offerItem = document.createElement('div');
-                    offerItem.className = 'offer-item';
-                    offerItem.innerHTML = `
-                        <div class="offer-details">
-                            <div class="offer-title">${offer.title}</div>
-                            <div class="offer-description">${offer.description}</div>
-                        </div>
-                        <div class="offer-cost">${offer.cost} Πόντοι</div>
-                        <button class="redeem-btn" ${!canRedeem ? 'disabled' : ''} data-id="${offer.id}">
-                            ${canRedeem ? 'Ανταλλαγή' : 'Ανεπαρκείς Πόντοι'}
-                        </button>
-                    `;
-                    offersList.appendChild(offerItem);
-                });
-                
-                // Προσθήκη event listeners για τα κουμπιά ανταλλαγής
-                document.querySelectorAll('.redeem-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        if (!this.disabled) {
-                            const offerId = parseInt(this.getAttribute('data-id'));
-                            redeemOffer(offerId);
-                        }
-                    });
-                });
-            }
+            // Ανταλλαγή προσφοράς από την κύρια οθόνη
+            const mainRedeemBtn = document.getElementById('mainRedeemBtn');
+            mainRedeemBtn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    redeemMainOffer();
+                }
+            });
             
-            function redeemOffer(offerId) {
+            function redeemMainOffer() {
                 const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                 if (!currentUser) return;
-                
-                const offers = [
-                    { id: 1, cost: 100, title: 'Δωρεάν Καφές' }
-                ];
-                
-                const offer = offers.find(o => o.id === offerId);
-                if (!offer) return;
                 
                 const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
                 const userPoints = userPointsData.find(p => p.email === currentUser.email);
                 
-                if (userPoints && userPoints.points >= offer.cost) {
-                    userPoints.points -= offer.cost;
+                if (userPoints && userPoints.points >= 50) {
+                    userPoints.points -= 50;
                     localStorage.setItem('userPoints', JSON.stringify(userPointsData));
                     
                     // Αποθήκευση της ανταλλαγής
@@ -2148,10 +2214,10 @@
                     redemptions.push({
                         userId: currentUser.id,
                         email: currentUser.email,
-                        offerId: offerId,
-                        offerTitle: offer.title,
+                        offerId: 1,
+                        offerTitle: 'Εξαργύρωσε την Καφεμαντεία',
                         date: new Date().toISOString(),
-                        pointsSpent: offer.cost
+                        pointsSpent: 50
                     });
                     localStorage.setItem('offerRedemptions', JSON.stringify(redemptions));
                     
@@ -2161,16 +2227,35 @@
                         type: 'offer_redemption',
                         userEmail: currentUser.email,
                         userName: currentUser.name,
-                        offerTitle: offer.title,
+                        offerTitle: 'Εξαργύρωσε την Καφεμαντεία',
                         date: new Date().toISOString(),
                         status: 'pending'
                     });
                     localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
                     
-                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "${offer.title}"! Αφαιρέθηκαν ${offer.cost} πόντοι. Ο διαχειριστής έχει ειδοποιηθεί για την ανταλλαγή σας.`, 'success');
+                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "Εξαργύρωσε την Καφεμαντεία"! Αφαιρέθηκαν 50 πόντοι. Ο διαχειριστής έχει ειδοποιηθεί για την ανταλλαγή σας.`, 'success');
                     loadUserPoints();
-                    loadOffers();
-                    pointsModal.style.display = 'none';
+                }
+            }
+            
+            function loadOffers() {
+                const offersList = document.getElementById('offersList');
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+                
+                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                const userPoints = userPointsData.find(p => p.email === currentUser.email) || { points: 0 };
+                
+                // Τώρα το modal εμφανίζει μόνο πληροφορίες, όχι προσφορές
+                const offers = []; // Κενή λίστα προσφορών
+                
+                offersList.innerHTML = '';
+                
+                if (offers.length === 0) {
+                    const noOffersMessage = document.createElement('div');
+                    noOffersMessage.className = 'info-box';
+                    noOffersMessage.innerHTML = '<p>Οι προσφορές εμφανίζονται στην κύρια οθόνη για πιο εύκολη πρόσβαση.</p>';
+                    offersList.appendChild(noOffersMessage);
                 }
             }
 
