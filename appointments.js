@@ -1,5 +1,5 @@
 // appointments.js - Σύστημα Ημερολογίου Ραντεβού για Καφεμαντεία
-
+console.log("appointments.js loaded successfully!");
 class AppointmentSystem {
     constructor() {
         this.currentDate = new Date();
