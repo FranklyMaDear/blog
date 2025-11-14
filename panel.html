@@ -805,6 +805,127 @@
         .notification-close:hover {
             opacity: 1;
         }
+
+        /* Νέο Popup Ειδοποιήσεων */
+        .notification-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 10001;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            border-top: 6px solid var(--info);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .notification-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        
+        .notification-popup.success {
+            border-top-color: var(--success);
+        }
+        
+        .notification-popup.error {
+            border-top-color: var(--error);
+        }
+        
+        .notification-popup.warning {
+            border-top-color: var(--warning);
+        }
+        
+        .notification-popup-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        
+        .notification-popup-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification-popup-close {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text);
+            opacity: 0.7;
+            padding: 4px;
+            border-radius: 4px;
+        }
+        
+        .notification-popup-close:hover {
+            opacity: 1;
+            background: #f0f0f0;
+        }
+        
+        .notification-popup-content {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 20px;
+        }
+        
+        .notification-popup-time {
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            text-align: right;
+        }
+        
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .popup-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Ετικέτες επαλήθευσης χρηστών */
+        .user-verified-badge {
+            display: inline-block;
+            background: var(--success);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+        
+        .user-unverified-badge {
+            display: inline-block;
+            background: var(--error);
+            color: white;
+            border-radius: 10px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            margin-left: 6px;
+            font-weight: 600;
+        }
         
         /* Responsive Design */
         @media (max-width: 768px) {
@@ -896,6 +1017,11 @@
                 right: 10px;
                 left: 10px;
                 max-width: none;
+            }
+            
+            .notification-popup {
+                padding: 20px;
+                max-width: 90%;
             }
         }
         
@@ -1221,6 +1347,25 @@
         </button>
     </div>
 
+    <!-- Νέο Popup Ειδοποιήσεων -->
+    <div class="popup-overlay" id="popup-overlay"></div>
+    <div class="notification-popup" id="notification-popup">
+        <div class="notification-popup-header">
+            <div class="notification-popup-title" id="notification-popup-title">
+                <i class="fas fa-bell"></i> Νέα Ειδοποίηση
+            </div>
+            <button class="notification-popup-close" id="notification-popup-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="notification-popup-content" id="notification-popup-content">
+            Έχετε νέα μηνύματα που χρειάζονται προσοχή.
+        </div>
+        <div class="notification-popup-time" id="notification-popup-time">
+            τώρα
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Σύστημα καρτελών
@@ -1254,7 +1399,7 @@
             // Ανανέωση δεδομένων
             document.getElementById('refreshBtn').addEventListener('click', function() {
                 loadAllData();
-                showToast('Τα δεδομένα ανανεώθηκαν!', 'success');
+                showPopup('Τα δεδομένα ανανεώθηκαν!', 'success');
             });
             
             // Φόρτωση όλων των δεδομένων
@@ -1273,14 +1418,17 @@
                 const photoSubmissions = allSubmissions.filter(sub => sub.type === 'photo');
                 const listContainer = document.getElementById('photo-submissions-list');
                 
-                if (photoSubmissions.length === 0) {
+                // Φιλτράρισμα μόνο από πιστοποιημένους χρήστες
+                const verifiedPhotoSubmissions = photoSubmissions.filter(sub => isUserVerified(sub.userEmail));
+                
+                if (verifiedPhotoSubmissions.length === 0) {
                     listContainer.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">
                                 <i class="fas fa-images"></i>
                             </div>
                             <h3>Δεν βρέθηκαν υποβολές φωτογραφιών</h3>
-                            <p>Δεν υπάρχουν διαθέσιμες υποβολές προς το παρόν.</p>
+                            <p>Δεν υπάρχουν διαθέσιμες υποβολές από πιστοποιημένους χρήστες προς το παρόν.</p>
                         </div>
                     `;
                     return;
@@ -1289,9 +1437,9 @@
                 listContainer.innerHTML = '';
                 
                 // Ταξινόμηση από νεότερο προς παλαιότερο
-                photoSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                verifiedPhotoSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
-                photoSubmissions.forEach(submission => {
+                verifiedPhotoSubmissions.forEach(submission => {
                     const statusClass = `status-${submission.status}`;
                     const statusText = getStatusText(submission.status);
                     
@@ -1305,7 +1453,10 @@
                     submissionCard.className = 'submission-card';
                     submissionCard.innerHTML = `
                         <div class="submission-header">
-                            <div class="submission-user">${submission.userEmail}</div>
+                            <div class="submission-user">
+                                ${submission.userEmail}
+                                <span class="user-verified-badge">Επαληθευμένος</span>
+                            </div>
                             <div class="submission-date">${formatDate(submission.date)}</div>
                             <div class="submission-status ${statusClass}">${statusText}</div>
                         </div>
@@ -1351,14 +1502,17 @@
                 const messageSubmissions = allSubmissions.filter(sub => sub.type === 'message');
                 const listContainer = document.getElementById('message-submissions-list');
                 
-                if (messageSubmissions.length === 0) {
+                // Φιλτράρισμα μόνο από πιστοποιημένους χρήστες
+                const verifiedMessageSubmissions = messageSubmissions.filter(sub => isUserVerified(sub.userEmail));
+                
+                if (verifiedMessageSubmissions.length === 0) {
                     listContainer.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-icon">
                                 <i class="fas fa-envelope"></i>
                             </div>
                             <h3>Δεν βρέθηκαν μηνύματα</h3>
-                            <p>Δεν υπάρχουν διαθέσιμα μηνύματα προς το παρόν.</p>
+                            <p>Δεν υπάρχουν διαθέσιμα μηνύματα από πιστοποιημένους χρήστες προς το παρόν.</p>
                         </div>
                     `;
                     return;
@@ -1367,9 +1521,9 @@
                 listContainer.innerHTML = '';
                 
                 // Ταξινόμηση από νεότερο προς παλαιότερο
-                messageSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                verifiedMessageSubmissions.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
-                messageSubmissions.forEach(submission => {
+                verifiedMessageSubmissions.forEach(submission => {
                     const statusClass = `status-${submission.status}`;
                     const statusText = getStatusText(submission.status);
                     
@@ -1378,7 +1532,10 @@
                     submissionCard.innerHTML = `
                         <div class="submission-header">
                             <div>
-                                <div class="submission-user">${submission.userName}</div>
+                                <div class="submission-user">
+                                    ${submission.userName}
+                                    <span class="user-verified-badge">Επαληθευμένος</span>
+                                </div>
                                 <div class="submission-date">${submission.userEmail}</div>
                             </div>
                             <div class="submission-date">${formatDate(submission.date)}</div>
@@ -1438,6 +1595,7 @@
                             <tr>
                                 <th>Όνομα</th>
                                 <th>Email</th>
+                                <th>Κατάσταση</th>
                                 <th>Πόντοι</th>
                                 <th>Επίπεδο</th>
                                 <th>Ημερομηνία Εγγραφής</th>
@@ -1450,11 +1608,18 @@
                 users.forEach(user => {
                     const userPointData = userPoints.find(p => p.email === user.email) || { points: 0, level: 'Αρχάριος' };
                     const userCategory = getUserCategory(userPointData.points);
+                    const isVerified = isUserVerified(user.email);
                     
                     usersHTML += `
                         <tr>
                             <td>${user.name}</td>
                             <td>${user.email}</td>
+                            <td>
+                                ${isVerified ? 
+                                    '<span class="user-verified-badge">Επαληθευμένος</span>' : 
+                                    '<span class="user-unverified-badge">Μη Επαληθευμένος</span>'
+                                }
+                            </td>
                             <td>${userPointData.points}</td>
                             <td>${userPointData.level} <span class="user-category ${userCategory.class}">${userCategory.name}</span></td>
                             <td>${formatDate(user.registrationDate)}</td>
@@ -1466,6 +1631,11 @@
                                     <button class="action-btn btn-reply manage-points" data-id="${user.id}" data-email="${user.email}">
                                         <i class="fas fa-coins"></i> Πόντοι
                                     </button>
+                                    ${!isVerified ? `
+                                    <button class="action-btn btn-download verify-user" data-id="${user.id}" data-email="${user.email}">
+                                        <i class="fas fa-check-circle"></i> Επαλήθευση
+                                    </button>
+                                    ` : ''}
                                     <button class="action-btn btn-delete delete-user" data-id="${user.id}">
                                         <i class="fas fa-trash"></i> Διαγραφή
                                     </button>
@@ -1498,12 +1668,43 @@
                     });
                 });
                 
+                document.querySelectorAll('.verify-user').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const userId = parseInt(this.getAttribute('data-id'));
+                        const userEmail = this.getAttribute('data-email');
+                        verifyUser(userId, userEmail);
+                    });
+                });
+                
                 document.querySelectorAll('.delete-user').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const userId = parseInt(this.getAttribute('data-id'));
                         deleteUser(userId);
                     });
                 });
+            }
+
+            // Επαλήθευση χρήστη
+            function verifyUser(userId, userEmail) {
+                if (confirm(`Είστε σίγουρος ότι θέλετε να επαληθεύσετε τον χρήστη ${userEmail};`)) {
+                    const verifiedUsers = JSON.parse(localStorage.getItem('verifiedUsers') || '[]');
+                    
+                    if (!verifiedUsers.includes(userEmail)) {
+                        verifiedUsers.push(userEmail);
+                        localStorage.setItem('verifiedUsers', JSON.stringify(verifiedUsers));
+                        
+                        showPopup(`Ο χρήστης ${userEmail} επαληθεύτηκε επιτυχώς!`, 'success');
+                        loadUsers();
+                        loadPhotoSubmissions();
+                        loadMessageSubmissions();
+                    }
+                }
+            }
+
+            // Έλεγχος αν ο χρήστης είναι επαληθευμένος
+            function isUserVerified(email) {
+                const verifiedUsers = JSON.parse(localStorage.getItem('verifiedUsers') || '[]');
+                return verifiedUsers.includes(email);
             }
 
             // Κατηγοριοποίηση χρηστών βάσει πόντων
@@ -1555,7 +1756,7 @@
                 localStorage.setItem('offersStatus', JSON.stringify(offersStatus));
                 localStorage.setItem('offerExpiry', JSON.stringify(offerExpiry));
                 
-                showToast(`Η προσφορά 1+1 ${status === 'active' ? 'ενεργοποιήθηκε' : 'απενεργοποιήθηκε'}!`, 'success');
+                showPopup(`Η προσφορά 1+1 ${status === 'active' ? 'ενεργοποιήθηκε' : 'απενεργοποιήθηκε'}!`, 'success');
             });
 
             // Φόρτωση ειδοποιήσεων
@@ -1787,7 +1988,10 @@
                     
                     modalBody.innerHTML = `
                         <div class="submission-header">
-                            <div class="submission-user">${submission.userEmail}</div>
+                            <div class="submission-user">
+                                ${submission.userEmail}
+                                <span class="user-verified-badge">Επαληθευμένος</span>
+                            </div>
                             <div class="submission-date">${formatDate(submission.date)}</div>
                         </div>
                         
@@ -1811,7 +2015,10 @@
                     modalBody.innerHTML = `
                         <div class="submission-header">
                             <div>
-                                <div class="submission-user">${submission.userName}</div>
+                                <div class="submission-user">
+                                    ${submission.userName}
+                                    <span class="user-verified-badge">Επαληθευμένος</span>
+                                </div>
                                 <div class="submission-date">${submission.userEmail}</div>
                             </div>
                             <div class="submission-date">${formatDate(submission.date)}</div>
@@ -1837,6 +2044,7 @@
                 if (!user) return;
                 
                 const modalBody = document.getElementById('modal-body');
+                const isVerified = isUserVerified(user.email);
                 
                 modalBody.innerHTML = `
                     <div class="submission-header">
@@ -1846,6 +2054,10 @@
                     
                     <div class="submission-content">
                         <div><strong>Email:</strong> ${user.email}</div>
+                        <div><strong>Κατάσταση:</strong> ${isVerified ? 
+                            '<span class="user-verified-badge">Επαληθευμένος</span>' : 
+                            '<span class="user-unverified-badge">Μη Επαληθευμένος</span>'
+                        }</div>
                         <div><strong>Ημερομηνία Εγγραφής:</strong> ${formatDate(user.registrationDate)}</div>
                         <div><strong>ID Χρήστη:</strong> ${user.id}</div>
                     </div>
@@ -1890,7 +2102,7 @@
                 if (notificationIndex !== -1) {
                     notifications[notificationIndex].status = 'processed';
                     localStorage.setItem('adminNotifications', JSON.stringify(notifications));
-                    showToast('Η ειδοποίηση σημάνθηκε ως επεξεργασμένη!', 'success');
+                    showPopup('Η ειδοποίηση σημάνθηκε ως επεξεργασμένη!', 'success');
                     loadNotifications();
                 }
             }
@@ -1902,7 +2114,7 @@
                     const updatedNotifications = notifications.filter(n => n.date !== id);
                     localStorage.setItem('adminNotifications', JSON.stringify(updatedNotifications));
                     
-                    showToast('Η ειδοποίηση διαγράφηκε επιτυχώς!', 'success');
+                    showPopup('Η ειδοποίηση διαγράφηκε επιτυχώς!', 'success');
                     loadNotifications();
                 }
             }
@@ -1997,7 +2209,7 @@
                     });
                     localStorage.setItem('pointsHistory', JSON.stringify(pointsHistory));
                     
-                    showToast(`Οι πόντοι του χρήστη ενημερώθηκαν επιτυχώς! Νέοι πόντοι: ${newPoints}`, 'success');
+                    showPopup(`Οι πόντοι του χρήστη ενημερώθηκαν επιτυχώς! Νέοι πόντοι: ${newPoints}`, 'success');
                     pointsModal.style.display = 'none';
                     loadUsers();
                 } else {
@@ -2059,7 +2271,10 @@
                 if (submission.type === 'photo') {
                     userInfo.innerHTML = `
                         <div class="submission-header">
-                            <div class="submission-user">Απάντηση σε: ${submission.userEmail}</div>
+                            <div class="submission-user">
+                                Απάντηση σε: ${submission.userEmail}
+                                <span class="user-verified-badge">Επαληθευμένος</span>
+                            </div>
                             <div class="submission-date">${formatDate(submission.date)}</div>
                         </div>
                         
@@ -2076,7 +2291,10 @@
                     userInfo.innerHTML = `
                         <div class="submission-header">
                             <div>
-                                <div class="submission-user">Απάντηση σε: ${submission.userName}</div>
+                                <div class="submission-user">
+                                    Απάντηση σε: ${submission.userName}
+                                    <span class="user-verified-badge">Επαληθευμένος</span>
+                                </div>
                                 <div class="submission-date">${submission.userEmail}</div>
                             </div>
                             <div class="submission-date">${formatDate(submission.date)}</div>
@@ -2144,7 +2362,7 @@
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Αποστολή...';
                 
                 setTimeout(() => {
-                    alert('Η απάντηση στάλθηκε επιτυχώς στον χρήστη!');
+                    showPopup('Η απάντηση στάλθηκε επιτυχώς στον χρήστη!', 'success');
                     replyModal.style.display = 'none';
                     this.disabled = false;
                     this.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Απάντησης';
@@ -2198,7 +2416,7 @@
                     const updatedSubmissions = allSubmissions.filter(sub => sub.id !== id);
                     localStorage.setItem('coffeeSubmissions', JSON.stringify(updatedSubmissions));
                     
-                    showToast('Η υποβολή διαγράφηκε επιτυχώς!', 'success');
+                    showPopup('Η υποβολή διαγράφηκε επιτυχώς!', 'success');
                     loadAllData();
                 }
             }
@@ -2210,7 +2428,7 @@
                     const updatedUsers = allUsers.filter(user => user.id !== id);
                     localStorage.setItem('users', JSON.stringify(updatedUsers));
                     
-                    showToast('Ο χρήστης διαγράφηκε επιτυχώς!', 'success');
+                    showPopup('Ο χρήστης διαγράφηκε επιτυχώς!', 'success');
                     loadAllData();
                 }
             }
@@ -2219,9 +2437,13 @@
             function updateStats() {
                 const allSubmissions = getAllSubmissions();
                 const allUsers = getAllUsers();
-                const totalSubmissions = allSubmissions.length;
-                const pendingSubmissions = allSubmissions.filter(sub => sub.status === 'pending').length;
-                const answeredSubmissions = allSubmissions.filter(sub => sub.status === 'answered').length;
+                
+                // Φιλτράρισμα μόνο από πιστοποιημένους χρήστες
+                const verifiedSubmissions = allSubmissions.filter(sub => isUserVerified(sub.userEmail));
+                
+                const totalSubmissions = verifiedSubmissions.length;
+                const pendingSubmissions = verifiedSubmissions.filter(sub => sub.status === 'pending').length;
+                const answeredSubmissions = verifiedSubmissions.filter(sub => sub.status === 'answered').length;
                 const registeredUsers = allUsers.length;
                 
                 document.getElementById('total-submissions').textContent = totalSubmissions;
@@ -2279,23 +2501,81 @@
                 }, 5000);
             }
             
+            // Νέο Popup Ειδοποιήσεων
+            const notificationPopup = document.getElementById('notification-popup');
+            const notificationPopupTitle = document.getElementById('notification-popup-title');
+            const notificationPopupContent = document.getElementById('notification-popup-content');
+            const notificationPopupTime = document.getElementById('notification-popup-time');
+            const notificationPopupClose = document.getElementById('notification-popup-close');
+            const popupOverlay = document.getElementById('popup-overlay');
+            
+            notificationPopupClose.addEventListener('click', function() {
+                notificationPopup.classList.remove('show');
+                popupOverlay.classList.remove('show');
+            });
+            
+            popupOverlay.addEventListener('click', function() {
+                notificationPopup.classList.remove('show');
+                popupOverlay.classList.remove('show');
+            });
+            
+            function showPopup(message, type) {
+                // Ορισμός χρώματος και εικονιδίου ανάλογα με τον τύπο
+                let icon = 'fas fa-bell';
+                let title = 'Ειδοποίηση';
+                
+                switch(type) {
+                    case 'success':
+                        icon = 'fas fa-check-circle';
+                        title = 'Επιτυχία';
+                        break;
+                    case 'error':
+                        icon = 'fas fa-exclamation-circle';
+                        title = 'Σφάλμα';
+                        break;
+                    case 'warning':
+                        icon = 'fas fa-exclamation-triangle';
+                        title = 'Προσοχή';
+                        break;
+                }
+                
+                // Ενημέρωση περιεχομένου
+                notificationPopupTitle.innerHTML = `<i class="${icon}"></i> ${title}`;
+                notificationPopupContent.textContent = message;
+                notificationPopupTime.textContent = 'τώρα';
+                
+                // Ενημέρωση κλάσης για το χρώμα
+                notificationPopup.className = 'notification-popup';
+                notificationPopup.classList.add(type);
+                
+                // Εμφάνιση
+                notificationPopup.classList.add('show');
+                popupOverlay.classList.add('show');
+                
+                // Αυτόματη απόκρυψη μετά από 6 δευτερόλεπτα
+                setTimeout(() => {
+                    notificationPopup.classList.remove('show');
+                    popupOverlay.classList.remove('show');
+                }, 6000);
+            }
+            
             // Προσομοίωση νέων μηνυμάτων για επίδειξη
             function simulateNewMessage() {
                 const messages = [
-                    "Νέα υποβολή καφεμαντείας από τον χρήστη maria@example.com",
-                    "Νέο μήνυμα επικοινωνίας από τον κ. Παπαδόπουλο",
-                    "Ο χρήστης john_doe ανταλλάσσει 50 πόντους για προσφορά"
+                    "Νέα υποβολή καφεμαντείας από πιστοποιημένο χρήστη",
+                    "Νέο μήνυμα επικοινωνίας από επαληθευμένο χρήστη",
+                    "Ο χρήστης ανταλλάσσει πόντους για προσφορά"
                 ];
                 
                 const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-                showToast(randomMessage, 'info');
+                showPopup(randomMessage, 'info');
                 
                 // Προσθήκη νέας ειδοποίησης
                 const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
                 notifications.push({
                     date: new Date().toISOString(),
-                    userEmail: 'example@example.com',
-                    userName: 'Νέος Χρήστης',
+                    userEmail: 'verified@example.com',
+                    userName: 'Επαληθευμένος Χρήστης',
                     type: 'coffee_reading',
                     status: 'pending',
                     coffeeTypeText: 'Γραπτή Ερμηνεία'
@@ -2314,6 +2594,18 @@
             
             // Αρχική φόρτωση δεδομένων
             loadAllData();
+            
+            // Προσθήκη μερικών επαληθευμένων χρηστών για επίδειξη
+            setTimeout(() => {
+                const verifiedUsers = JSON.parse(localStorage.getItem('verifiedUsers') || '[]');
+                if (verifiedUsers.length === 0) {
+                    // Προσθήκη μερικών δοκιμαστικών επαληθευμένων χρηστών
+                    const testVerifiedUsers = ['user@example.com', 'test@example.com', 'demo@example.com'];
+                    localStorage.setItem('verifiedUsers', JSON.stringify(testVerifiedUsers));
+                    showPopup('Προστέθηκαν δοκιμαστικοί επαληθευμένοι χρήστες για επίδειξη', 'info');
+                    loadAllData();
+                }
+            }, 1000);
         });
     </script>
 </body>
