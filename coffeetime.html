@@ -864,6 +864,102 @@
             background: #cccccc;
             cursor: not-allowed;
         }
+
+        /* Στυλ για το consent modal */
+        .terms-container {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e0d6c9;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            background: #fcfaf7;
+        }
+
+        .terms-section, .privacy-section {
+            margin-bottom: 20px;
+        }
+
+        .terms-section h3, .privacy-section h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .terms-container h4 {
+            color: var(--dark);
+            margin: 15px 0 8px 0;
+            font-size: 1rem;
+        }
+
+        .terms-container p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .terms-container ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .terms-container li {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-top: 3px;
+        }
+
+        .consent-version {
+            font-size: 0.8rem;
+            color: var(--primary-light);
+            text-align: right;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* Scrollbar styling for terms container */
+        .terms-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .terms-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .terms-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        .terms-container::-webkit-scrollbar-thumb:hover {
+            background: var(--secondary);
+        }
+
+        /* Στυλ για διαχειριστή */
+        .admin-section {
+            background: #f0f0f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .admin-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
         
         /* Responsive Design */
         @media (max-width: 600px) {
@@ -959,6 +1055,10 @@
             .offer-cost {
                 margin-left: 0;
             }
+
+            .admin-buttons {
+                flex-direction: column;
+            }
         }
         
         @media (max-width: 400px) {
@@ -1040,6 +1140,25 @@
                             <label for="register-confirm-password"><i class="fas fa-lock"></i> Επιβεβαίωση Κωδικού:</label>
                             <input type="password" id="register-confirm-password" name="confirmPassword" placeholder="Εισάγετε ξανά τον κωδικό πρόσβασης" required>
                         </div>
+
+                        <!-- Προσθήκη συγκατάθεσης στην εγγραφή -->
+                        <div class="form-group">
+                            <div class="info-box">
+                                <p><strong>Προϋποθέσεις χρήσης:</strong></p>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="register-age" name="ageConsent" required>
+                                    <span>Δηλώνω ότι είμαι άνω των 18 ετών</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="register-terms" name="termsConsent" required>
+                                    <span>Αποδέχομαι τους <a href="#" id="showTermsLink">Όρους Χρήσης</a></span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="register-privacy" name="privacyConsent" required>
+                                    <span>Αποδέχομαι την <a href="#" id="showPrivacyLink">Πολιτική Απορρήτου</a></span>
+                                </label>
+                            </div>
+                        </div>
                         
                         <button type="submit" class="submit-btn">
                             <i class="fas fa-user-plus"></i> Εγγραφή
@@ -1075,14 +1194,14 @@
                 <div class="main-offer-header">
                     <div class="main-offer-title">
                         <i class="fas fa-gift"></i>
-                        Το Φλιτζάνι σου μιλάει
+                        Το φλιτζάνι σου μιλά
                     </div>
                     <div class="main-offer-cost">
                         50 Πόντοι
                     </div>
                 </div>
                 <div class="main-offer-description">
-                    Αντάλλαξε 50 πόντους και ταξίδεψε σε μια δωρεάν ιστορία που γεννιέται από τον καφέ.
+                    <strong>Απαραίτητη προϋπόθεση:</strong> Πρέπει πρώτα να εξαργυρώσετε αυτή την προσφορά για να μπορέσετε να υποβάλετε φωτογραφίες καφέ στους διαχειριστές.
                 </div>
                 <button class="main-redeem-btn" id="mainRedeemBtn" disabled>
                     <i class="fas fa-shopping-cart"></i> Ανταλλαγή
@@ -1112,15 +1231,26 @@
                         
                         <div class="info-box">
                             <p><strong>Οδηγίες υποβολής:</strong></p>
-                            <p>1. Πρώτα, κλείστε το ραντεβού σας από την καρτέλα "Κλείσιμο Ραντεβού"</p>
-                            <p>2. Μετά, επιστρέψτε στην κεντρική οθονη  και συμπληρώστε τα email σας</p>
-                            <p>3. Επιλέξτε το τύπο την επιθυμία κ ανεβάστε τις φωτογραφίες σας.</p>
-                            <p>4. Βεβαιωθείτε οτι έχετε πόντους για να εξαργυρώσετε την διαδικασία.</p>
-                            <p>4. Πατήστε "Αποστολή Φωτογραφιών" για να ολοκληρώσετε.</p>
+                            <p>1. <strong>Πρώτα, εξαργυρώστε την προσφορά "Το φλιτζάνι σου μιλά" από την κύρια οθόνη</strong></p>
+                            <p>2. Μετά, κλείστε το ραντεβού σας από την καρτέλα "Κλείσιμο Ραντεβού"</p>
+                            <p>3. Επιστρέψτε εδώ και συμπληρώστε τα στοιχεία σας</p>
+                            <p>4. Επιλέξτε το τύπο ερμηνείας και ανεβάστε τις φωτογραφίες σας</p>
                             <p><strong>Βεβαιωθείτε ότι χρησιμοποιείτε το ίδιο email στην σελίδα ραντεβού κ στην Εφαρμογή!</strong></p>
                         </div>
+
+                        <!-- Έλεγχος αν έχει γίνει εξαργύρωση -->
+                        <div id="offerCheckSection" class="info-box" style="display: none;">
+                            <p><i class="fas fa-check-circle" style="color: var(--success);"></i> <strong>Έχετε εξαργυρώσει την προσφορά! Μπορείτε τώρα να υποβάλετε φωτογραφίες.</strong></p>
+                        </div>
+
+                        <div id="offerRequiredSection" class="info-box" style="background: linear-gradient(to right, #ffebee, #ffcdd2); border-left: 4px solid var(--error);">
+                            <p><i class="fas fa-exclamation-circle" style="color: var(--error);"></i> <strong>Πρέπει πρώτα να εξαργυρώσετε την προσφορά "Το φλιτζάνι σου μιλά" από την κύρια οθόνη για να υποβάλετε φωτογραφίες.</strong></p>
+                            <button class="points-btn" id="goToOfferBtn" style="margin-top: 10px;">
+                                <i class="fas fa-arrow-right"></i> Μετάβαση στην Προσφορά
+                            </button>
+                        </div>
                         
-                        <form id="visitorForm">
+                        <form id="visitorForm" style="display: none;">
                             <div class="form-group">
                                 <label for="email"><i class="fas fa-envelope"></i> Διεύθυνση E-mail:</label>
                                 <input type="email" id="email" name="email" placeholder="π.χ. onoma@example.com" required readonly>
@@ -1399,6 +1529,63 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal για συγκατάθεση -->
+        <div id="consentModal" class="modal">
+            <div class="modal-content">
+                <button class="close-modal" id="closeConsentModal">×</button>
+                <h2><i class="fas fa-exclamation-circle"></i> Απαιτούμενη Συγκατάθεση</h2>
+                
+                <div class="info-box">
+                    <p><strong>Πριν συνεχίσετε, παρακαλούμε διαβάστε και αποδεχτείτε τους ακόλουθους όρους:</strong></p>
+                </div>
+
+                <div class="terms-container">
+                    <!-- Όροι Χρήσης -->
+                    <div class="terms-section">
+                        <h3>Όροι Χρήσης</h3>
+                        <div id="termsContent">
+                            <!-- Οι όροι θα φορτώνονται δυναμικά -->
+                        </div>
+                    </div>
+
+                    <!-- Πολιτική Απορρήτου -->
+                    <div class="privacy-section">
+                        <h3>Πολιτική Απορρήτου</h3>
+                        <div id="privacyContent">
+                            <!-- Η πολιτική θα φορτώνεται δυναμικά -->
+                        </div>
+                    </div>
+                </div>
+
+                <form id="consentForm">
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="ageConsent" name="ageConsent" required>
+                            <span>Δηλώνω υπόσχεση ότι είμαι άνω των 18 ετών</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="termsConsent" name="termsConsent" required>
+                            <span>Αποδέχομαι τους <strong>Όρους Χρήσης</strong></span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="privacyConsent" name="privacyConsent" required>
+                            <span>Αποδέχομαι την <strong>Πολιτική Απορρήτου</strong></span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-check"></i> Αποδοχή και Συνέχεια
+                    </button>
+                </form>
+            </div>
+        </div>
         
         <footer>
             <p>
@@ -1436,12 +1623,160 @@
                 
                 // Έλεγχος κατάστασης προσφορών
                 checkOffersStatus();
+
+                // Έλεγχος αν ο χρήστης έχει εξαργυρώσει την προσφορά
+                checkOfferRedemption();
+
+                // Έλεγχος συγκατάθεσης
+                checkUserConsent();
             } else {
                 // Ο χρήστης δεν είναι συνδεδεμένος
                 authSection.style.display = 'block';
                 mainApp.style.display = 'none';
                 userInfo.style.display = 'none';
             }
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Έλεγχος αν ο χρήστης έχει αποδεχτεί τους όρους
+            function checkUserConsent() {
+                if (!currentUser) return;
+                
+                const userConsent = JSON.parse(localStorage.getItem('userConsent') || '{}');
+                const userAccepted = userConsent[currentUser.email];
+                
+                if (!userAccepted || userAccepted.version !== getCurrentTermsVersion()) {
+                    showConsentModal();
+                }
+            }
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Λήψη τρέχουσας έκδοσης όρων
+            function getCurrentTermsVersion() {
+                return "1.0";
+            }
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Εμφάνιση modal συγκατάθεσης
+            function showConsentModal() {
+                loadTermsContent();
+                document.getElementById('consentModal').style.display = 'flex';
+            }
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Φόρτωση περιεχομένου όρων
+            function loadTermsContent() {
+                const terms = getTermsAndPrivacy();
+                document.getElementById('termsContent').innerHTML = terms.terms;
+                document.getElementById('privacyContent').innerHTML = terms.privacy;
+            }
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Λήψη όρων χρήσης και πολιτικής απορρήτου
+            function getTermsAndPrivacy() {
+                const storedTerms = JSON.parse(localStorage.getItem('siteTerms') || '{}');
+                
+                if (Object.keys(storedTerms).length === 0) {
+                    // Προεπιλεγμένοι όροι
+                    return {
+                        version: getCurrentTermsVersion(),
+                        terms: `
+                            <h4>1. Αποδοχή Ορων</h4>
+                            <p>Με την πρόσβαση και χρήση αυτής της ιστοσελίδας, αποδέχεστε τους παρόντες όρους χρήσης.</p>
+                            
+                            <h4>2. Υπηρεσίες Καφεμαντείας</h4>
+                            <p>Οι υπηρεσίες καφεμαντείας παρέχονται για ψυχαγωγικούς σκοπούς. Δεν αποτελούν επαγγελματική συμβουλή ή πρόβλεψη του μέλλοντος.</p>
+                            
+                            <h4>3. Ηλικιακός Περιορισμός</h4>
+                            <p>Η χρήση της υπηρεσίας επιτρέπεται μόνο σε άτομα άνω των 18 ετών.</p>
+                            
+                            <h4>4. Πνευματική Ιδιοκτησία</h4>
+                            <p>Όλο το περιεχόμενο της ιστοσελίδας προστατεύεται από πνευματικά δικαιώματα.</p>
+                        `,
+                        privacy: `
+                            <h4>1. Συλλογή Πληροφοριών</h4>
+                            <p>Συλλέγουμε πληροφορίες όπως όνομα, email και φωτογραφίες καφέ για την παροχή των υπηρεσιών μας.</p>
+                            
+                            <h4>2. Χρήση Πληροφοριών</h4>
+                            <p>Οι πληροφορίες σας χρησιμοποιούνται αποκλειστικά για την παροχή των υπηρεσιών καφεμαντείας.</p>
+                            
+                            <h4>3. Προστασία Δεδομένων</h4>
+                            <p>Εφαρμόζουμε μέτρα ασφαλείας για την προστασία των προσωπικών σας δεδομένων.</p>
+                        `
+                    };
+                }
+                
+                return storedTerms;
+            }
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Χειρισμός υποβολής συγκατάθεσης
+            document.getElementById('consentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const ageConsent = document.getElementById('ageConsent').checked;
+                const termsConsent = document.getElementById('termsConsent').checked;
+                const privacyConsent = document.getElementById('privacyConsent').checked;
+                
+                if (!ageConsent || !termsConsent || !privacyConsent) {
+                    alert('Παρακαλώ αποδεχτείτε όλους τους όρους για να συνεχίσετε.');
+                    return;
+                }
+                
+                // Αποθήκευση συγκατάθεσης χρήστη
+                const userConsent = JSON.parse(localStorage.getItem('userConsent') || '{}');
+                userConsent[currentUser.email] = {
+                    accepted: true,
+                    version: getCurrentTermsVersion(),
+                    date: new Date().toISOString(),
+                    ageVerified: true
+                };
+                localStorage.setItem('userConsent', JSON.stringify(userConsent));
+                
+                document.getElementById('consentModal').style.display = 'none';
+            });
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Κλείσιμο modal
+            document.getElementById('closeConsentModal').addEventListener('click', function() {
+                document.getElementById('consentModal').style.display = 'none';
+            });
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Κλείσιμο modal με κλικ έξω
+            document.getElementById('consentModal').addEventListener('click', function(e) {
+                if (e.target === document.getElementById('consentModal')) {
+                    // Αποτρέπουμε το κλείσιμο χωρίς συγκατάθεση
+                    if (currentUser) {
+                        alert('Πρέπει να αποδεχτείτε τους όρους χρήσης για να συνεχίσετε.');
+                    }
+                }
+            });
+
+            // ΕΛΕΓΧΟΣ ΕΞΑΡΓΥΡΩΣΗΣ ΠΡΟΣΦΟΡΑΣ
+            function checkOfferRedemption() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (!currentUser) return;
+
+                const redemptions = JSON.parse(localStorage.getItem('offerRedemptions') || '[]');
+                const userRedemption = redemptions.find(r => 
+                    r.email === currentUser.email && 
+                    r.offerTitle === 'Εξαργύρωσε την Καφεμαντεία'
+                );
+
+                const offerCheckSection = document.getElementById('offerCheckSection');
+                const offerRequiredSection = document.getElementById('offerRequiredSection');
+                const visitorForm = document.getElementById('visitorForm');
+
+                if (userRedemption) {
+                    // Ο χρήστης έχει εξαργυρώσει την προσφορά
+                    offerCheckSection.style.display = 'block';
+                    offerRequiredSection.style.display = 'none';
+                    visitorForm.style.display = 'block';
+                } else {
+                    // Ο χρήστης ΔΕΝ έχει εξαργυρώσει την προσφορά
+                    offerCheckSection.style.display = 'none';
+                    offerRequiredSection.style.display = 'block';
+                    visitorForm.style.display = 'none';
+                }
+            }
+
+            // Κουμπί μετάβασης στην προσφορά
+            document.getElementById('goToOfferBtn').addEventListener('click', function() {
+                // Μετακίνηση στην κύρια οθόνη (όπου βρίσκεται η προσφορά)
+                window.scrollTo(0, 0);
+            });
             
             // Έλεγχος κατάστασης προσφορών
             function checkOffersStatus() {
@@ -1498,9 +1833,17 @@
                 const email = document.getElementById('register-email').value;
                 const password = document.getElementById('register-password').value;
                 const confirmPassword = document.getElementById('register-confirm-password').value;
+                const ageConsent = document.getElementById('register-age').checked;
+                const termsConsent = document.getElementById('register-terms').checked;
+                const privacyConsent = document.getElementById('register-privacy').checked;
                 
                 if (!name || !email || !password || !confirmPassword) {
                     showMessage(registerMessage, 'Παρακαλώ συμπληρώστε όλα τα πεδία.', 'error');
+                    return;
+                }
+                
+                if (!ageConsent || !termsConsent || !privacyConsent) {
+                    showMessage(registerMessage, 'Παρακαλώ αποδεχτείτε όλους τους όρους χρήσης.', 'error');
                     return;
                 }
                 
@@ -1536,12 +1879,21 @@
                 const userPoints = {
                     userId: newUser.id,
                     email: email,
-                    points: 0,
+                    points: 20, // 20 πόντοι για εγγραφή
                     level: 'Αρχάριος',
                     registrationDate: new Date().toISOString()
                 };
                 
-                // Αποθήκευση χρήστη και πόντων
+                // Αποθήκευση συγκατάθεσης
+                const userConsent = JSON.parse(localStorage.getItem('userConsent') || '{}');
+                userConsent[email] = {
+                    accepted: true,
+                    version: getCurrentTermsVersion(),
+                    date: new Date().toISOString(),
+                    ageVerified: true
+                };
+                
+                // Αποθήκευση χρήστη, πόντων και συγκατάθεσης
                 existingUsers.push(newUser);
                 localStorage.setItem('users', JSON.stringify(existingUsers));
                 
@@ -1549,15 +1901,17 @@
                 existingPoints.push(userPoints);
                 localStorage.setItem('userPoints', JSON.stringify(existingPoints));
                 
+                localStorage.setItem('userConsent', JSON.stringify(userConsent));
+                
                 // Αυτόματη σύνδεση μετά την εγγραφή
                 localStorage.setItem('currentUser', JSON.stringify(newUser));
                 
-                showMessage(registerMessage, 'Η εγγραφή ολοκληρώθηκε επιτυχώς! Ανακατεύθυνση...', 'success');
+                showMessage(registerMessage, 'Η εγγραφή ολοκληρώθηκε επιτυχώς! Κερδίσατε 20 πόντους. Ανακατεύθυνση...', 'success');
                 
                 // Ανακατεύθυνση στην κύρια εφαρμογή
                 setTimeout(() => {
                     location.reload();
-                }, 1500);
+                }, 2000);
             });
             
             // Φόρμα σύνδεσης
@@ -1802,6 +2156,11 @@
                     if (tabId === 'responses-tab') {
                         loadUserResponses();
                     }
+
+                    // Αν είναι η καρτέλα φωτογραφιών, έλεγξε την εξαργύρωση
+                    if (tabId === 'photos-tab') {
+                        checkOfferRedemption();
+                    }
                 });
             });
             
@@ -1936,6 +2295,9 @@
                     // Αποθήκευση στο LocalStorage
                     saveSubmission(submission);
                     
+                    // Προσθήκη πόντων για υποβολή
+                    addPointsForSubmission(email, 10);
+                    
                     // Προσθήκη ειδοποίησης για τον διαχειριστή
                     const adminNotifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
                     adminNotifications.push({
@@ -1949,7 +2311,7 @@
                     });
                     localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
                     
-                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Θα λάβετε την ερμηνεία της καφεμαντείας (${submission.coffeeTypeText}) στο ${email} εντός 24 ωρών.`, 'success');
+                    showMessage(messageDiv, `Οι ${selectedFiles.length} φωτογραφίες του καφέ σας στάλθηκαν επιτυχώς! Κερδίσατε 10 πόντους. Θα λάβετε την ερμηνεία της καφεμαντείας (${submission.coffeeTypeText}) στο ${email} εντός 24 ωρών.`, 'success');
                     
                     // Επαναφορά φόρμας
                     visitorForm.reset();
@@ -1958,6 +2320,9 @@
                     
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Αποστολή Φωτογραφιών';
+
+                    // Επαναφόρτωση πόντων
+                    loadUserPoints();
                 });
             });
             
@@ -1969,6 +2334,17 @@
                     '1plus1': 'Προσφορά 1+1 Δώρο'
                 };
                 return typeMap[type] || type;
+            }
+
+            // Προσθήκη πόντων για υποβολή
+            function addPointsForSubmission(email, points) {
+                const userPointsData = JSON.parse(localStorage.getItem('userPoints') || '[]');
+                const userPoints = userPointsData.find(p => p.email === email);
+                
+                if (userPoints) {
+                    userPoints.points += points;
+                    localStorage.setItem('userPoints', JSON.stringify(userPointsData));
+                }
             }
             
             // Λειτουργικότητα φόρμας επικοινωνίας
@@ -2261,8 +2637,11 @@
                     });
                     localStorage.setItem('adminNotifications', JSON.stringify(adminNotifications));
                     
-                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "Εξαργύρωσε την Καφεμαντεία"! Αφαιρέθηκαν 50 πόντοι. Ο διαχειριστής έχει ειδοποιηθεί για την ανταλλαγή σας.`, 'success');
+                    showNotification(`Ανταλλάξατε επιτυχώς την προσφορά "Εξαργύρωσε την Καφεμαντεία"! Αφαιρέθηκαν 50 πόντοι. Μπορείτε τώρα να υποβάλετε φωτογραφίες.`, 'success');
+                    
+                    // Επαναφόρτωση πόντων και ελέγχου εξαργύρωσης
                     loadUserPoints();
+                    checkOfferRedemption();
                 }
             }
             
@@ -2300,6 +2679,65 @@
             setInterval(() => {
                 checkOffersStatus();
             }, 30000);
+
+            // ΣΥΓΚΑΤΑΘΕΣΗ - Συναρτήσεις για διαχειριστή
+            function adminUpdateTerms() {
+                const currentTerms = JSON.parse(localStorage.getItem('siteTerms') || '{}');
+                
+                const newTerms = prompt("Εισάγετε τους νέους Όρους Χρήσης (HTML):", 
+                    currentTerms.terms || getTermsAndPrivacy().terms);
+                const newPrivacy = prompt("Εισάγετε τη νέα Πολιτική Απορρήτου (HTML):", 
+                    currentTerms.privacy || getTermsAndPrivacy().privacy);
+                
+                if (newTerms && newPrivacy) {
+                    const termsData = {
+                        version: generateNewVersion(),
+                        terms: newTerms,
+                        privacy: newPrivacy,
+                        lastUpdated: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('siteTerms', JSON.stringify(termsData));
+                    
+                    // Επαναφορά συγκατάθεσης όλων των χρηστών
+                    const userConsent = JSON.parse(localStorage.getItem('userConsent') || '{}');
+                    for (let email in userConsent) {
+                        userConsent[email].needsRenewal = true;
+                    }
+                    localStorage.setItem('userConsent', JSON.stringify(userConsent));
+                    
+                    alert("Οι όροι ενημερώθηκαν επιτυχώς! Οι χρήστες θα πρέπει να τους αποδεχτούν ξανά.");
+                }
+            }
+
+            function generateNewVersion() {
+                const now = new Date();
+                return `${now.getFullYear()}.${now.getMonth() + 1}.${now.getDate()}.${now.getHours()}${now.getMinutes()}`;
+            }
+
+            // Προσθήκη κουμπιών διαχειριστή αν ο χρήστης είναι διαχειριστής
+            if (currentUser && currentUser.email === 'admin@kafedium.gr') {
+                addAdminButtons();
+            }
+
+            function addAdminButtons() {
+                const adminSection = document.createElement('div');
+                adminSection.className = 'admin-section';
+                adminSection.innerHTML = `
+                    <h3><i class="fas fa-cog"></i> Διαχείριση Όρων</h3>
+                    <div class="admin-buttons">
+                        <button onclick="adminUpdateTerms()" class="points-btn">
+                            <i class="fas fa-edit"></i> Επεξεργασία Όρων
+                        </button>
+                    </div>
+                `;
+                
+                const container = document.querySelector('.container');
+                container.insertBefore(adminSection, container.firstChild);
+            }
+
+            // Κάνε τις συναρτήσεις διαχειριστή διαθέσιμες globally
+            window.adminUpdateTerms = adminUpdateTerms;
         });
     </script>
 </body>
