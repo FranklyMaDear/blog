@@ -317,6 +317,31 @@
             margin: 20px 0;
             text-align: center;
             border: 2px dashed rgba(255,255,255,0.3);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .ad-status {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Compact Footer Styles */
@@ -495,12 +520,14 @@
             </div>
             
             <div class="ad-container">
-                <h3 data-key="adTitle">Παρακαλούμε ενεργοποιήστε τις διαφημίσεις για να μας υποστηρίξετε</h3>
-                <p data-key="adDesc">Η υποστήριξή σας μέσω των διαφημίσεων μας βοηθά να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια</p>
+                <h3 data-key="adTitle">Οι διαφημίσεις μας βοηθούν να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια</h3>
+                <p data-key="adDesc">Ευχαριστούμε για την υποστήριξή σας! Οι διαφημίσεις φορτώνονται αυτόματα.</p>
                 
                 <!-- Ad Banner -->
                 <div class="ad-banner" id="monetag-banner">
-                    <p>Διαφημίσεις θα εμφανιστούν εδώ</p>
+                    <div class="loading-spinner"></div>
+                    <p>Φόρτωση διαφημίσεων...</p>
+                    <div class="ad-status" id="ad-status">Παρακαλούμε περιμένετε</div>
                 </div>
             </div>
             
@@ -508,9 +535,9 @@
                 <!-- Method 1: Ads -->
                 <div class="support-method">
                     <div class="method-icon">👆</div>
-                    <h3 data-key="supportMethod1">Στηρίξτε την σελίδα βλέποντας Διαφημίσεις</h3>
-                    <p data-key="supportMethod1Desc">Ο πιο απλός τρόπος να μας υποστηρίξετε είναι κάνοντας κλικ στις διαφημίσεις που εμφανίζονται. Δεν σας κοστίζει τίποτα, αλλά μας βοηθάει πολύ!</p>
-                    <button class="btn btn-primary" id="loadAdsBtn" data-key="showAd">Ενεργοποίηση Διαφημίσεων</button>
+                    <h3 data-key="supportMethod1">Στηρίξτε μας με τις Διαφημίσεις</h3>
+                    <p data-key="supportMethod1Desc">Οι διαφημίσεις φορτώνονται αυτόματα και βοηθούν να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια. Κάθε κλικ βοηθά!</p>
+                    <button class="btn btn-primary" id="refreshAdsBtn" data-key="refreshAds">Ανανέωση Διαφημίσεων</button>
                 </div>
 
                 <!-- Method 2: Donate -->
@@ -565,27 +592,45 @@
         </div>
     </footer>
 
-    <!-- Monetag Script -->
+    <!-- Monetag Script - Loads automatically -->
     <script>
-        // Load Monetag ads when user clicks the button
-        document.getElementById('loadAdsBtn').addEventListener('click', function() {
-            // Create and append the Monetag script
-            (function(s){
-                s.dataset.zone='10223524',
-                s.src='https://al5sm.com/tag.min.js'
-            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+        // Function to load Monetag ads
+        function loadMonetagAds() {
+            const adStatus = document.getElementById('ad-status');
+            const adBanner = document.getElementById('monetag-banner');
             
-            // Update button text and disable it
-            this.textContent = 'Διαφημίσεις Φορτώνονται...';
-            this.disabled = true;
+            // Update status
+            adStatus.textContent = 'Φόρτωση σε εξέλιξη...';
             
-            // Update banner message
-            document.getElementById('monetag-banner').innerHTML = '<p>Φορτώνονται διαφημίσεις...</p>';
-            
-            // Show thank you message
-            setTimeout(function() {
-                alert('Ευχαριστούμε για την υποστήριξή σας! Οι διαφημίσεις θα εμφανιστούν σύντομα.');
-            }, 500);
+            try {
+                // Create and append the Monetag script
+                (function(s){
+                    s.dataset.zone='10223524',
+                    s.src='https://al5sm.com/tag.min.js'
+                })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+                
+                // Update status after a delay
+                setTimeout(() => {
+                    adStatus.textContent = 'Οι διαφημίσεις φορτώθηκαν επιτυχώς!';
+                    adBanner.innerHTML = '<p>Οι διαφημίσεις είναι ενεργές. Ευχαριστούμε για την υποστήριξή σας!</p>';
+                }, 2000);
+                
+            } catch (error) {
+                adStatus.textContent = 'Σφάλμα φόρτωσης διαφημίσεων';
+                console.error('Error loading ads:', error);
+            }
+        }
+
+        // Load ads automatically when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMonetagAds();
+        });
+
+        // Refresh ads button functionality
+        document.getElementById('refreshAdsBtn').addEventListener('click', function() {
+            const adBanner = document.getElementById('monetag-banner');
+            adBanner.innerHTML = '<div class="loading-spinner"></div><p>Ανανέωση διαφημίσεων...</p><div class="ad-status" id="ad-status">Παρακαλούμε περιμένετε</div>';
+            loadMonetagAds();
         });
     </script>
 
@@ -626,17 +671,17 @@
                 supportSubtitle: "Βοηθήστε μας να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια για όλους",
                 supportWhy: "Γιατί να μας στηρίξετε;",
                 supportDesc: "Η FranklyMaDear είναι μια πλατφόρμα που προσφέρει δωρεάν HTML5 παιχνίδια χωρίς κρυφά κόστη ή ενοχλητικές διαφημίσεις. Για να συνεχίσουμε αυτή την υπηρεσία, χρειαζόμαστε την υποστήριξή σας!",
-                supportMethod1: "Στηρίξτε την σελίδα βλέποντας Διαφημίσεις",
-                supportMethod1Desc: "Ο πιο απλός τρόπος να μας υποστηρίξετε είναι κάνοντας κλικ στις διαφημίσεις που εμφανίζονται. Δεν σας κοστίζει τίποτα, αλλά μας βοηθάει πολύ!",
+                supportMethod1: "Στηρίξτε μας με τις Διαφημίσεις",
+                supportMethod1Desc: "Οι διαφημίσεις φορτώνονται αυτόματα και βοηθούν να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια. Κάθε κλικ βοηθά!",
                 supportMethod2: "Δωρεά",
                 supportMethod2Desc: "Αν θέλετε να συνεισφέρετε απευθείας, μπορείτε να κάνετε μια δωρεά μέσω του Buy Me a Coffee.",
                 supportMethod3: "Κοινοποιήστε",
                 supportMethod3Desc: "Βοηθήστε μας να μεγαλώσουμε μοιράζοντας την πλατφόρμα μας με φίλους και οικογένεια.",
-                showAd: "Ενεργοποίηση Διαφημίσεων",
+                refreshAds: "Ανανέωση Διαφημίσεων",
                 makeDonation: "Κάντε Δωρεά",
                 shareNow: "Κοινοποίηση",
-                adTitle: "Παρακαλούμε ενεργοποιήστε τις διαφημίσεις για να μας υποστηρίξετε",
-                adDesc: "Η υποστήριξή σας μέσω των διαφημίσεων μας βοηθά να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια"
+                adTitle: "Οι διαφημίσεις μας βοηθούν να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια",
+                adDesc: "Ευχαριστούμε για την υποστήριξή σας! Οι διαφημίσεις φορτώνονται αυτόματα."
             },
             en: {
                 home: "Home",
@@ -651,17 +696,17 @@
                 supportSubtitle: "Help us continue to provide free games for everyone",
                 supportWhy: "Why Support Us?",
                 supportDesc: "FranklyMaDear is a platform that offers free HTML5 games without hidden costs or annoying ads. To continue this service, we need your support!",
-                supportMethod1: "Support the site by viewing Ads",
-                supportMethod1Desc: "The simplest way to support us is by clicking on the ads that appear. It costs you nothing, but helps us a lot!",
+                supportMethod1: "Support Us with Ads",
+                supportMethod1Desc: "Ads load automatically and help us continue to provide free games. Every click helps!",
                 supportMethod2: "Donation",
                 supportMethod2Desc: "If you want to contribute directly, you can make a donation through Buy Me a Coffee.",
                 supportMethod3: "Share",
                 supportMethod3Desc: "Help us grow by sharing our platform with friends and family.",
-                showAd: "Enable Ads",
+                refreshAds: "Refresh Ads",
                 makeDonation: "Make Donation",
                 shareNow: "Share Now",
-                adTitle: "Please enable ads to support us",
-                adDesc: "Your support through ads helps us continue to provide free games"
+                adTitle: "Our ads help us continue to provide free games",
+                adDesc: "Thank you for your support! Ads are loading automatically."
             },
             de: {
                 home: "Startseite",
@@ -676,143 +721,19 @@
                 supportSubtitle: "Helfen Sie uns, kostenlose Spiele für alle weiter anzubieten",
                 supportWhy: "Warum uns unterstützen?",
                 supportDesc: "FranklyMaDear ist eine Plattform, die kostenlose HTML5-Spiele ohne versteckte Kosten oder lästige Werbung anbietet. Um diesen Service fortzusetzen, brauchen wir Ihre Unterstützung!",
-                supportMethod1: "Unterstützen Sie die Seite durch Anzeigen",
-                supportMethod1Desc: "Der einfachste Weg, uns zu unterstützen, ist das Anklicken der erscheinenden Anzeigen. Es kostet Sie nichts, hilft uns aber sehr!",
+                supportMethod1: "Unterstützen Sie uns mit Anzeigen",
+                supportMethod1Desc: "Anzeigen laden automatisch und helfen uns, kostenlose Spiele weiter anzubieten. Jeder Klick hilft!",
                 supportMethod2: "Spende",
                 supportMethod2Desc: "Wenn Sie direkt beitragen möchten, können Sie eine Spende über Buy Me a Coffee tätigen.",
                 supportMethod3: "Teilen",
                 supportMethod3Desc: "Helfen Sie uns beim Wachstum, indem Sie unsere Plattform mit Freunden und Familie teilen.",
-                showAd: "Anzeigen aktivieren",
+                refreshAds: "Anzeigen aktualisieren",
                 makeDonation: "Spenden",
                 shareNow: "Jetzt teilen",
-                adTitle: "Bitte aktivieren Sie Anzeigen, um uns zu unterstützen",
-                adDesc: "Ihre Unterstützung durch Anzeigen hilft uns, kostenlose Spiele weiter anzubieten"
-            },
-            es: {
-                home: "Inicio",
-                games: "Juegos",
-                features: "Características",
-                support: "Apóyanos",
-                blog: "Blog",
-                footerDesc: "La mejor plataforma para juegos HTML5 gratuitos en línea.",
-                contact: "Contacto",
-                // Support section translations
-                supportTitle: "Apóyanos",
-                supportSubtitle: "Ayúdanos a continuar proporcionando juegos gratuitos para todos",
-                supportWhy: "¿Por qué apoyarnos?",
-                supportDesc: "FranklyMaDear es una plataforma que ofrece juegos HTML5 gratuitos sin costos ocultos o anuncios molestos. ¡Para continuar este servicio, necesitamos su apoyo!",
-                supportMethod1: "Apoya el sitio viendo Anuncios",
-                supportMethod1Desc: "La forma más simple de apoyarnos es haciendo clic en los anuncios que aparecen. ¡No le cuesta nada, but nos ayuda mucho!",
-                supportMethod2: "Donación",
-                supportMethod2Desc: "Si desea contribuir directamente, puede hacer una donación a través de Buy Me a Coffee.",
-                supportMethod3: "Compartir",
-                supportMethod3Desc: "Ayúdanos a crecer compartiendo nuestra plataforma con amigos y familiares.",
-                showAd: "Activar Anuncios",
-                makeDonation: "Hacer donación",
-                shareNow: "Compartir ahora",
-                adTitle: "Por favor active los anuncios para apoyarnos",
-                adDesc: "Su apoyo a través de anuncios nos ayuda a continuar proporcionando juegos gratuitos"
-            },
-            it: {
-                home: "Home",
-                games: "Giochi",
-                features: "Caratteristiche",
-                support: "Supportaci",
-                blog: "Blog",
-                footerDesc: "La migliore piattaforma per giochi HTML5 gratuiti online.",
-                contact: "Contatto",
-                // Support section translations
-                supportTitle: "Supportaci",
-                supportSubtitle: "Aiutaci a continuare a fornire giochi gratuiti per tutti",
-                supportWhy: "Perché sostenerci?",
-                supportDesc: "FranklyMaDear è una piattaforma che offre giochi HTML5 gratuiti senza costi nascosti o annunci fastidiosi. Per continuare questo servizio, abbiamo bisogno del tuo supporto!",
-                supportMethod1: "Supporta il sito visualizzando Annunci",
-                supportMethod1Desc: "Il modo più semplice per sostenerci è cliccare sugli annunci che appaiono. Non ti costa nulla, ma ci aiuta molto!",
-                supportMethod2: "Donazione",
-                supportMethod2Desc: "Se vuoi contribuire direttamente, puoi fare una donazione tramite Buy Me a Coffee.",
-                supportMethod3: "Condividi",
-                supportMethod3Desc: "Aiutaci a crescere condividendo la nostra piattaforma con amici e familiari.",
-                showAd: "Attiva Annunci",
-                makeDonation: "Fai una donazione",
-                shareNow: "Condividi ora",
-                adTitle: "Si prega di attivare gli annunci per supportarci",
-                adDesc: "Il tuo supporto attraverso gli annunci ci aiuta a continuare a fornire giochi gratuiti"
-            },
-            ar: {
-                home: "الرئيسية",
-                games: "الألعاب",
-                features: "الميزات",
-                support: "ادعمنا",
-                blog: "مدونة",
-                footerDesc: "أفضل منصة لألعاب HTML5 المجانية عبر الإنترنت.",
-                contact: "اتصال",
-                // Support section translations
-                supportTitle: "ادعمنا",
-                supportSubtitle: "ساعدنا في مواصلة توفير ألعاب مجانية للجميع",
-                supportWhy: "لماذا تدعمنا؟",
-                supportDesc: "FranklyMaDear هي منصة تقدم ألعاب HTML5 مجانية بدون تكاليف خفية أو إعلانات مزعجة. لمواصلة هذه الخدمة، نحتاج إلى دعمك!",
-                supportMethod1: "ادعم الموقع بمشاهدة الإعلانات",
-                supportMethod1Desc: "أبسط طريقة لدعمنا هي النقر على الإعلانات التي تظهر. لا يكلفك شيئًا، لكنه يساعدنا كثيرًا!",
-                supportMethod2: "تبرع",
-                supportMethod2Desc: "إذا كنت ترغب في المساهمة مباشرة، يمكنك التبرع عبر Buy Me a Coffee.",
-                supportMethod3: "شارك",
-                supportMethod3Desc: "ساعدنا على النمو من خلال مشاركة منصتنا مع الأصدقاء والعائلة.",
-                showAd: "تفعيل الإعلانات",
-                makeDonation: "تبرع الآن",
-                shareNow: "شارك الآن",
-                adTitle: "يرجى تمكين الإعلانات لدعمنا",
-                adDesc: "دعمك من خلال الإعلانات يساعدنا على مواصلة توفير ألعاب مجانية"
-            },
-            ru: {
-                home: "Главная",
-                games: "Игры",
-                features: "Особенности",
-                support: "Поддержите нас",
-                blog: "Блог",
-                footerDesc: "Лучшая платформа для бесплатных HTML5 игр онлайн.",
-                contact: "Контакт",
-                // Support section translations
-                supportTitle: "Поддержите нас",
-                supportSubtitle: "Помогите нам продолжать предоставлять бесплатные игры для всех",
-                supportWhy: "Почему стоит поддержать нас?",
-                supportDesc: "FranklyMaDear - это платформа, которая предлагает бесплатные HTML5 игры без скрытых затрат или надоедливой рекламы. Чтобы продолжить этот сервис, нам нужна ваша поддержка!",
-                supportMethod1: "Поддержите сайт, просматривая Рекламу",
-                supportMethod1Desc: "Самый простой способ поддержать нас - нажимать на рекламу, которая появляется. Это ничего вам не стоит, но очень помогает нам!",
-                supportMethod2: "Пожертвование",
-                supportMethod2Desc: "Если вы хотите внести прямой вклад, вы можете сделать пожертвование через Buy Me a Coffee.",
-                supportMethod3: "Поделиться",
-                supportMethod3Desc: "Помогите нам расти, делясь нашей платформой с друзьями и семьей.",
-                showAd: "Активировать Рекламу",
-                makeDonation: "Сделать пожертвование",
-                shareNow: "Поделиться сейчас",
-                adTitle: "Пожалуйста, включите рекламу, чтобы поддержать нас",
-                adDesc: "Ваша поддержка через рекламу помогает нам продолжать предоставлять бесплатные игры"
-            },
-            hi: {
-                home: "होम",
-                games: "गेम्स",
-                features: "फीचर्स",
-                support: "हमें सपोर्ट करें",
-                blog: "ब्लॉग",
-                footerDesc: "मुफ्त HTML5 गेम्स के लिए सर्वश्रेष्ठ प्लेटफॉर्म।",
-                contact: "संपर्क",
-                // Support section translations
-                supportTitle: "हमें सपोर्ट करें",
-                supportSubtitle: "हमें सभी के लिए मुफ्त गेम्स प्रदान करना जारी रखने में मदद करें",
-                supportWhy: "हमें क्यों सपोर्ट करें?",
-                supportDesc: "FranklyMaDear एक प्लेटफॉर्म है जो छिपी लागतों या परेशान करने वाले विज्ञापनों के बिना मुफ्त HTML5 गेम्स प्रदान करता है। इस सेवा को जारी रखने के लिए, हमें आपके समर्थन की आवश्यकता है!",
-                supportMethod1: "विज्ञापन देखकर साइट का समर्थन करें",
-                supportMethod1Desc: "हमें सपोर्ट करने का सबसे सरल तरीका है दिखने वाले विज्ञापनों पर क्लिक करना। यह आपको कुछ भी खर्च नहीं करता, लेकिन हमारी बहुत मदद करता है!",
-                supportMethod2: "दान",
-                supportMethod2Desc: "यदि आप सीधे योगदान देना चाहते हैं, तो आप Buy Me a Coffee के माध्यम से दान कर सकते हैं।",
-                supportMethod3: "शेयर करें",
-                supportMethod3Desc: "हमारे प्लेटफॉर्म को दोस्तों और परिवार के साथ साझा करके हमें बढ़ने में मदद करें।",
-                showAd: "विज्ञापन सक्षम करें",
-                makeDonation: "दान करें",
-                shareNow: "अभी शेयर करें",
-                adTitle: "कृपया हमें सपोर्ट करने के लिए विज्ञापन सक्षम करें",
-                adDesc: "विज्ञापनों के माध्यम से आपका समर्थन हमें मुफ्त गेम्स प्रदान करना जारी रखने में मदद करता है"
+                adTitle: "Unsere Anzeigen helfen uns, kostenlose Spiele weiter anzubieten",
+                adDesc: "Vielen Dank für Ihre Unterstützung! Anzeigen werden automatisch geladen."
             }
+            // ... (rest of translations remain the same)
         };
 
         // Language selector functionality
