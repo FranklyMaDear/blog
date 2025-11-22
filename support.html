@@ -409,6 +409,173 @@
             padding-right: 20px;
         }
 
+        /* Pop-up Video Ad Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-container {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.4s ease;
+            position: relative;
+        }
+
+        .popup-overlay.active .popup-container {
+            transform: scale(1);
+        }
+
+        .popup-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .popup-header h3 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .popup-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .popup-content {
+            padding: 25px;
+            text-align: center;
+        }
+
+        .popup-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .video-placeholder {
+            background: #f0f0f0;
+            border-radius: 8px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .play-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(102, 126, 234, 0.9);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .play-icon:hover {
+            transform: scale(1.1);
+            background: rgba(102, 126, 234, 1);
+        }
+
+        .play-icon:after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 20px solid white;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 5px;
+        }
+
+        .video-placeholder p {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #667eea;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        .popup-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+        }
+
         /* Responsive design for support section */
         @media (max-width: 768px) {
             .nav {
@@ -472,6 +639,15 @@
 
             .compact-support-text p {
                 font-size: 1rem;
+            }
+
+            .popup-container {
+                width: 95%;
+            }
+
+            .popup-footer {
+                flex-direction: column;
+                gap: 10px;
             }
         }
     </style>
@@ -592,6 +768,27 @@
         </div>
     </footer>
 
+    <!-- Pop-up Video Ad -->
+    <div class="popup-overlay" id="videoPopup">
+        <div class="popup-container">
+            <div class="popup-header">
+                <h3 data-key="popupTitle">Στηρίξτε μας παρακολουθώντας μια διαφήμιση</h3>
+                <button class="popup-close" id="closePopup">&times;</button>
+            </div>
+            <div class="popup-content">
+                <p data-key="popupDesc">Η παρακολούθηση αυτής της διαφήμισης μας βοηθά να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια!</p>
+                <div class="video-placeholder">
+                    <div class="play-icon" id="playVideo"></div>
+                    <p data-key="clickToWatch">Κάντε κλικ για να δείτε το βίντεο</p>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="btn-outline" id="skipAd" data-key="skipAd">Παράλειψη</button>
+                <button class="btn-primary" id="watchLater" data-key="watchLater">Δείτε αργότερα</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Monetag Script - Loads automatically -->
     <script>
         // Function to load Monetag ads
@@ -624,6 +821,9 @@
         // Load ads automatically when page loads
         document.addEventListener('DOMContentLoaded', function() {
             loadMonetagAds();
+            
+            // Show popup after 3 seconds
+            setTimeout(showVideoPopup, 3000);
         });
 
         // Refresh ads button functionality
@@ -632,12 +832,44 @@
             adBanner.innerHTML = '<div class="loading-spinner"></div><p>Ανανέωση διαφημίσεων...</p><div class="ad-status" id="ad-status">Παρακαλούμε περιμένετε</div>';
             loadMonetagAds();
         });
-    </script>
 
-    <!-- Buy Me a Coffee Widget -->
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+        // Popup functionality
+        const videoPopup = document.getElementById('videoPopup');
+        const closePopup = document.getElementById('closePopup');
+        const skipAd = document.getElementById('skipAd');
+        const watchLater = document.getElementById('watchLater');
+        const playVideo = document.getElementById('playVideo');
 
-    <script>
+        function showVideoPopup() {
+            videoPopup.classList.add('active');
+        }
+
+        function hideVideoPopup() {
+            videoPopup.classList.remove('active');
+        }
+
+        closePopup.addEventListener('click', hideVideoPopup);
+        skipAd.addEventListener('click', hideVideoPopup);
+        
+        watchLater.addEventListener('click', function() {
+            hideVideoPopup();
+            // Show again after 5 minutes
+            setTimeout(showVideoPopup, 300000);
+        });
+
+        playVideo.addEventListener('click', function() {
+            // In a real scenario, this would play an actual video ad
+            alert('Εδώ θα παιζόταν μια πραγματική διαφήμιση βίντεο. Ευχαριστούμε για την υποστήριξή σας!');
+            hideVideoPopup();
+        });
+
+        // Close popup when clicking outside
+        videoPopup.addEventListener('click', function(e) {
+            if (e.target === videoPopup) {
+                hideVideoPopup();
+            }
+        });
+
         // Share functionality
         document.getElementById('shareBtn').addEventListener('click', function() {
             if (navigator.share) {
@@ -681,7 +913,13 @@
                 makeDonation: "Κάντε Δωρεά",
                 shareNow: "Κοινοποίηση",
                 adTitle: "Οι διαφημίσεις μας βοηθούν να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια",
-                adDesc: "Ευχαριστούμε για την υποστήριξή σας! Οι διαφημίσεις φορτώνονται αυτόματα."
+                adDesc: "Ευχαριστούμε για την υποστήριξή σας! Οι διαφημίσεις φορτώνονται αυτόματα.",
+                // Popup translations
+                popupTitle: "Στηρίξτε μας παρακολουθώντας μια διαφήμιση",
+                popupDesc: "Η παρακολούθηση αυτής της διαφήμισης μας βοηθά να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια!",
+                clickToWatch: "Κάντε κλικ για να δείτε το βίντεο",
+                skipAd: "Παράλειψη",
+                watchLater: "Δείτε αργότερα"
             },
             en: {
                 home: "Home",
@@ -706,7 +944,13 @@
                 makeDonation: "Make Donation",
                 shareNow: "Share Now",
                 adTitle: "Our ads help us continue to provide free games",
-                adDesc: "Thank you for your support! Ads are loading automatically."
+                adDesc: "Thank you for your support! Ads are loading automatically.",
+                // Popup translations
+                popupTitle: "Support us by watching an ad",
+                popupDesc: "Watching this ad helps us continue to provide free games!",
+                clickToWatch: "Click to watch the video",
+                skipAd: "Skip",
+                watchLater: "Watch Later"
             },
             de: {
                 home: "Startseite",
@@ -731,7 +975,13 @@
                 makeDonation: "Spenden",
                 shareNow: "Jetzt teilen",
                 adTitle: "Unsere Anzeigen helfen uns, kostenlose Spiele weiter anzubieten",
-                adDesc: "Vielen Dank für Ihre Unterstützung! Anzeigen werden automatisch geladen."
+                adDesc: "Vielen Dank für Ihre Unterstützung! Anzeigen werden automatisch geladen.",
+                // Popup translations
+                popupTitle: "Unterstützen Sie uns durch Ansehen einer Anzeige",
+                popupDesc: "Das Ansehen dieser Anzeige hilft uns, kostenlose Spiele weiter anzubieten!",
+                clickToWatch: "Klicken Sie, um das Video anzusehen",
+                skipAd: "Überspringen",
+                watchLater: "Später ansehen"
             }
             // ... (rest of translations remain the same)
         };
@@ -755,5 +1005,8 @@
         // Initialize with Greek
         updateLanguage('el');
     </script>
+
+    <!-- Buy Me a Coffee Widget -->
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 </body>
 </html>
