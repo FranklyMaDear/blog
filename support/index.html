@@ -4,12 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Στηρίξτε μας - FranklyMaDear</title>
-    <!-- Favicon & Mobile Icon -->
+    
+    <!-- Enhanced Icons for PWA & Home Screen -->
     <link rel="icon" type="image/png" href="support.png">
-    <link rel="apple-touch-icon" href="support.png">
-    <meta name="theme-color" content="#667eea">
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" sizes="57x57" href="support.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="support.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="support.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="support.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="support.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="support.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="support.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="support.png">
+    <link rel="apple-touch-icon" sizes="167x167" href="support.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="support.png">
+    
+    <!-- Android Icons -->
+    <link rel="icon" sizes="192x192" href="support.png">
+    <link rel="icon" sizes="128x128" href="support.png">
+    
+    <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="FranklyMaDear Support">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="FranklyMaDear Support">
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="msapplication-TileImage" content="support.png">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="manifest.json">
     
     <!-- Open Graph Meta Tags for Social Sharing -->
     <meta property="og:title" content="Στηρίξτε μας - FranklyMaDear">
@@ -576,6 +601,61 @@
             color: white;
         }
 
+        /* Add to Home Screen Prompt */
+        .add-to-homescreen {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1001;
+            max-width: 300px;
+            display: none;
+        }
+
+        .add-to-homescreen.show {
+            display: block;
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .add-to-homescreen p {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .add-to-homescreen button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .add-to-homescreen .close-prompt {
+            background: transparent;
+            color: #666;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px;
+        }
+
         /* Responsive design for support section */
         @media (max-width: 768px) {
             .nav {
@@ -648,6 +728,12 @@
             .popup-footer {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .add-to-homescreen {
+                right: 10px;
+                left: 10px;
+                max-width: none;
             }
         }
     </style>
@@ -768,6 +854,13 @@
         </div>
     </footer>
 
+    <!-- Add to Home Screen Prompt -->
+    <div class="add-to-homescreen" id="addToHomePrompt">
+        <button class="close-prompt" id="closePrompt">&times;</button>
+        <p data-key="addToHomeText">Προσθέστε την εφαρμογή στην αρχική οθόνη για γρηγορότερη πρόσβαση!</p>
+        <button id="installApp" data-key="addToHomeButton">Προσθήκη</button>
+    </div>
+
     <!-- Pop-up Video Ad -->
     <div class="popup-overlay" id="videoPopup">
         <div class="popup-container">
@@ -824,6 +917,44 @@
             
             // Show popup after 3 seconds
             setTimeout(showVideoPopup, 3000);
+            
+            // Show add to home screen prompt for mobile devices
+            setTimeout(showAddToHomePrompt, 10000);
+        });
+
+        // Add to Home Screen functionality
+        let deferredPrompt;
+        const addToHomePrompt = document.getElementById('addToHomePrompt');
+        const closePrompt = document.getElementById('closePrompt');
+        const installApp = document.getElementById('installApp');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+        });
+
+        function showAddToHomePrompt() {
+            // Only show on mobile devices and if PWA is not already installed
+            if (window.matchMedia('(max-width: 768px)').matches && deferredPrompt) {
+                addToHomePrompt.classList.add('show');
+            }
+        }
+
+        installApp.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    addToHomePrompt.classList.remove('show');
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        closePrompt.addEventListener('click', () => {
+            addToHomePrompt.classList.remove('show');
         });
 
         // Refresh ads button functionality
@@ -919,7 +1050,10 @@
                 popupDesc: "Η παρακολούθηση αυτής της διαφήμισης μας βοηθά να συνεχίσουμε να προσφέρουμε δωρεάν παιχνίδια!",
                 clickToWatch: "Κάντε κλικ για να δείτε το βίντεο",
                 skipAd: "Παράλειψη",
-                watchLater: "Δείτε αργότερα"
+                watchLater: "Δείτε αργότερα",
+                // Add to home screen translations
+                addToHomeText: "Προσθέστε την εφαρμογή στην αρχική οθόνη για γρηγορότερη πρόσβαση!",
+                addToHomeButton: "Προσθήκη"
             },
             en: {
                 home: "Home",
@@ -950,7 +1084,10 @@
                 popupDesc: "Watching this ad helps us continue to provide free games!",
                 clickToWatch: "Click to watch the video",
                 skipAd: "Skip",
-                watchLater: "Watch Later"
+                watchLater: "Watch Later",
+                // Add to home screen translations
+                addToHomeText: "Add the app to your home screen for faster access!",
+                addToHomeButton: "Add"
             },
             de: {
                 home: "Startseite",
@@ -981,9 +1118,11 @@
                 popupDesc: "Das Ansehen dieser Anzeige hilft uns, kostenlose Spiele weiter anzubieten!",
                 clickToWatch: "Klicken Sie, um das Video anzusehen",
                 skipAd: "Überspringen",
-                watchLater: "Später ansehen"
+                watchLater: "Später ansehen",
+                // Add to home screen translations
+                addToHomeText: "Fügen Sie die App zum Startbildschirm hinzu für schnelleren Zugriff!",
+                addToHomeButton: "Hinzufügen"
             }
-            // ... (rest of translations remain the same)
         };
 
         // Language selector functionality
