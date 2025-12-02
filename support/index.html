@@ -1,210 +1,582 @@
 <!DOCTYPE html>
-<html>
+<html lang="el">
 <head>
-    <title>🎮 Play Games - MY Ads Only</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- MONETAG SCRIPT -->
-    <script>
-    (function(s){
-        s.dataset.zone = '10266501';
-        s.src = 'https://al5sm.com/tag.min.js';
-    })(document.body.appendChild(document.createElement('script')));
-    </script>
-    
+    <title>FranklyMadEar - Free Credits & Rewards</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial;
-            background: #1a1a1a;
-            color: white;
-            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
             padding: 20px;
         }
-        
-        .game-container {
-            margin: 20px auto;
-            position: relative;
-            display: inline-block;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .ad-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            justify-content: center;
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #00adb5;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #00adb5;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 173, 181, 0.5);
+        }
+
+        .subtitle {
+            color: #8f9ba8;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            flex-direction: column;
-            z-index: 1000;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #00adb5;
         }
-        
-        .ad-message {
-            background: #4CAF50;
-            padding: 30px;
-            border-radius: 10px;
-            font-size: 24px;
+
+        .points-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        
-        .game-options {
-            margin: 20px;
+
+        .points-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
         }
-        
-        .game-btn {
-            background: #2196F3;
+
+        .points-label {
+            color: #8f9ba8;
+            font-size: 1rem;
+        }
+
+        .btn-redeem {
+            background: linear-gradient(90deg, #00adb5, #0097a7);
             color: white;
             border: none;
-            padding: 15px 30px;
-            margin: 10px;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-redeem:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 173, 181, 0.4);
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .cat-btn.active {
+            background: linear-gradient(90deg, #00adb5, #0097a7);
+            color: white;
+            border-color: #00adb5;
+        }
+
+        .cat-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .offer-card {
+            background: rgba(30, 40, 60, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-5px);
+            border-color: #00adb5;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .offer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .offer-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            flex: 1;
+        }
+
+        .offer-points {
+            background: linear-gradient(90deg, #ff9800, #ff5722);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(255, 87, 34, 0.3);
+        }
+
+        .offer-description {
+            color: #8f9ba8;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .offer-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .offer-difficulty {
+            color: #8f9ba8;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-claim {
+            background: linear-gradient(90deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-claim:hover {
+            background: linear-gradient(90deg, #66BB6A, #388E3C);
+            transform: scale(1.05);
+        }
+
+        .btn-claim.completed {
+            background: #607D8B;
+            cursor: default;
+        }
+
+        .btn-claim.completed:hover {
+            transform: none;
+        }
+
+        .offer-badge {
+            position: absolute;
+            top: 15px;
+            right: -30px;
+            background: #ff4081;
+            color: white;
+            padding: 5px 30px;
+            transform: rotate(45deg);
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+
+        .daily-spin-section {
+            background: linear-gradient(135deg, #1a237e, #311b92);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 40px;
+            border: 2px solid #5c6bc0;
+        }
+
+        .spin-title {
+            font-size: 1.8rem;
+            color: #8c9eff;
+            margin-bottom: 15px;
+        }
+
+        .spin-wheel {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #ff5252, #ff4081, #e040fb, #7c4dff,
+                #536dfe, #448aff, #40c4ff, #18ffff,
+                #64ffda, #69f0ae, #b2ff59, #eeff41,
+                #ffff00, #ffd740, #ffab40, #ff6e40
+            );
+            animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-spin {
+            background: linear-gradient(90deg, #ff9800, #ff5722);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.4);
+        }
+
+        .btn-spin:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 87, 34, 0.6);
+        }
+
+        .instructions {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
             border-radius: 10px;
-            font-size: 16px;
+            margin-top: 30px;
+            border-left: 4px solid #00adb5;
+        }
+
+        .instructions h3 {
+            color: #00adb5;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            padding-left: 20px;
+            color: #8f9ba8;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8f9ba8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .categories {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>🎮 PLAY GAMES - ONLY MY ADS</h1>
-    <p>Every 3 minutes: MY ad appears. Game ends: MY ad appears.</p>
-    
-    <div class="game-options">
-        <button class="game-btn" onclick="loadGame('solitaire')">♠️ Solitaire</button>
-        <button class="game-btn" onclick="loadGame('2048')">🔢 2048</button>
-        <button class="game-btn" onclick="loadGame('tetris')">🧱 Tetris</button>
-        <button class="game-btn" onclick="loadGame('snake')">🐍 Snake</button>
-    </div>
-    
-    <div class="game-container">
-        <iframe id="gameFrame" width="800" height="600" style="border: 3px solid #4CAF50; border-radius: 10px;"></iframe>
-        
-        <div class="ad-overlay" id="adOverlay">
-            <div class="ad-message" id="adMessage">
-                📺 MY AD IS PLAYING<br>
-                +3 Points for you!<br>
-                <span id="adTimer">5</span> seconds...
+    <div class="container">
+        <header>
+            <div class="logo">FranklyMadEar</div>
+            <div class="subtitle">Έκλεψε δωρεάν πιστώσεις, κέρδισε ανταμοιβές!</div>
+        </header>
+
+        <div class="user-info">
+            <div class="points-display">
+                <div class="points-value">1,250</div>
+                <div class="points-label">Πόντοι</div>
             </div>
+            <button class="btn-redeem">Εξαργύρωση Ανταμοιβών</button>
         </div>
-    </div>
-    
-    <div style="margin-top: 30px;">
-        <p>Points: <span id="points">0</span> / 50 for coffee</p>
-        <button onclick="redeemCoffee()" style="background: #9C27B0; color: white; padding: 15px 30px; border: none; border-radius: 10px; font-size: 18px;">
-            ☕ Redeem Coffee
-        </button>
+
+        <div class="categories">
+            <button class="cat-btn active" data-category="all">Όλες οι Προσφορές</button>
+            <button class="cat-btn" data-category="games">Παιχνίδια</button>
+            <button class="cat-btn" data-category="surveys">Ερευνες</button>
+            <button class="cat-btn" data-category="apps">Εφαρμογές</button>
+            <button class="cat-btn" data-category="daily">Καθημερινές</button>
+        </div>
+
+        <div class="daily-spin-section">
+            <div class="spin-title">Καθημερινή Ρουλέτα</div>
+            <div class="spin-wheel"></div>
+            <button class="btn-spin">Περιστροφή (1/1)</button>
+            <p style="margin-top: 15px; color: #8c9eff;">Περίστρεψε για να κερδίσεις 1-1000 πόντους!</p>
+        </div>
+
+        <div class="offers-grid" id="offers-container">
+            <!-- Offers will be loaded here by JavaScript -->
+        </div>
+
+        <div class="instructions">
+            <h3>Πώς λειτουργεί:</h3>
+            <ul>
+                <li>Επίλεξε μια προσφορά και κάνε κλικ στο "Απαίτηση"</li>
+                <li>Ολοκλήρωσε τις απαιτήσεις (εγκατάσταση, level up, survey, κλπ)</li>
+                <li>Οι πόντοι θα προστεθούν αυτόματα στον λογαριασμό σου</li>
+                <li>Μετατρέψε τους πόντους σε πραγματικά δώρα ή gift cards</li>
+                <li>Έχεις 1 καθημερινή ρουλέτα δωρεάν</li>
+            </ul>
+        </div>
+
+        <footer>
+            <p>© 2024 FranklyMadEar.com | Όροι Χρήσης | Πολιτική Απορρήτου</p>
+            <p>Οι προσφορές αλλάζουν καθημερινά. Ενημερώσου για νέες ευκαιρίες!</p>
+        </footer>
     </div>
 
     <script>
-        // Simple points system
-        let points = parseInt(localStorage.getItem('myPoints')) || 0;
-        let gameTimer = null;
-        let adTimer = null;
-        let gameActive = false;
-        
-        document.getElementById('points').textContent = points;
-        
-        // Games database
-        const GAMES = {
-            'solitaire': 'https://www.solitr.com/embed',
-            '2048': 'https://play2048.co/',
-            'tetris': 'https://tetris.com/play-tetris',
-            'snake': 'https://playsnake.org/'
-        };
-        
-        function loadGame(gameName) {
-            const url = GAMES[gameName];
-            if (!url) return;
+        // Sample offers data
+        const offers = [
+            {
+                id: 1,
+                title: "MONOPOLY GO! - Φτάσε Level 10",
+                points: "5,054",
+                description: "Εγκατάστησε και φτάσε στο level 10 για μεγάλες ανταμοιβές",
+                category: "games",
+                difficulty: "Μεσαία",
+                badge: "ΠΡΟΤΕΙΝΟΜΕΝΟ"
+            },
+            {
+                id: 2,
+                title: "Ερώτηση γνώμης - 5 λεπτά",
+                points: "250",
+                description: "Απάντησε σε μια σύντομη έρευνα για προϊόντα",
+                category: "surveys",
+                difficulty: "Εύκολη",
+                badge: null
+            },
+            {
+                id: 3,
+                title: "Township - Στήσε την πόλη σου",
+                points: "191",
+                description: "Δημιούργησε μια ακμάζουσα αγροτική πόλη",
+                category: "games",
+                difficulty: "Εύκολη",
+                badge: "ΝΕΟ"
+            },
+            {
+                id: 4,
+                title: "Player Level 75 - BLACK LAGOON",
+                points: "664",
+                description: "Πέρασε το level 75 στο παιχνίδι Black Lagoon",
+                category: "games",
+                difficulty: "Δύσκολη",
+                badge: "ΥΨΗΛΗ ΑΞΙΑ"
+            },
+            {
+                id: 5,
+                title: "Εγκατάσταση Εφαρμογής - Shopping",
+                points: "89",
+                description: "Κάνε λήψη και εγγραφή σε shopping app",
+                category: "apps",
+                difficulty: "Εύκολη",
+                badge: null
+            },
+            {
+                id: 6,
+                title: "Puzzles & Survival - Complete Chapter 3",
+                points: "900",
+                description: "Ολοκλήρωσε το chapter 3 για τεράστια ανταμοιβή",
+                category: "games",
+                difficulty: "Μεσαία",
+                badge: "HOT"
+            },
+            {
+                id: 7,
+                title: "Καθημερινό Login",
+                points: "50",
+                description: "Συνδέσου καθημερινά για μπόνους",
+                category: "daily",
+                difficulty: "Εύκολη",
+                badge: null
+            },
+            {
+                id: 8,
+                title: "Βίντεο Διαφήμιση - 30 δευτερόλεπτα",
+                points: "25",
+                description: "Παρακολούθησε μια σύντομη διαφήμιση",
+                category: "daily",
+                difficulty: "Εύκολη",
+                badge: "ΓΡΗΓΟΡΟ"
+            }
+        ];
+
+        // User's current points
+        let userPoints = 1250;
+        let completedOffers = new Set();
+
+        // DOM elements
+        const pointsElement = document.querySelector('.points-value');
+        const categories = document.querySelectorAll('.cat-btn');
+        const offersContainer = document.getElementById('offers-container');
+        const spinButton = document.querySelector('.btn-spin');
+        const redeemButton = document.querySelector('.btn-redeem');
+
+        // Render offers based on category
+        function renderOffers(category = 'all') {
+            offersContainer.innerHTML = '';
             
-            // Reset any existing timer
-            if (gameTimer) clearInterval(gameTimer);
-            if (adTimer) clearInterval(adTimer);
+            const filteredOffers = category === 'all' 
+                ? offers 
+                : offers.filter(offer => offer.category === category);
             
-            // Load game
-            document.getElementById('gameFrame').src = url;
-            gameActive = true;
-            
-            // Hide ad if shown
-            document.getElementById('adOverlay').style.display = 'none';
-            
-            // Start 3-minute timer for ad
-            gameTimer = setTimeout(showMyAd, 180000); // 3 minutes = 180000 ms
-            
-            alert('Game loaded! My ad will appear in 3 minutes.');
-        }
-        
-        function showMyAd() {
-            if (!gameActive) return;
-            
-            // Show MY ad
-            document.getElementById('adOverlay').style.display = 'flex';
-            
-            // Start 5-second countdown
-            let seconds = 5;
-            document.getElementById('adTimer').textContent = seconds;
-            
-            adTimer = setInterval(() => {
-                seconds--;
-                document.getElementById('adTimer').textContent = seconds;
+            filteredOffers.forEach(offer => {
+                const isCompleted = completedOffers.has(offer.id);
                 
-                if (seconds <= 0) {
-                    clearInterval(adTimer);
-                    closeAd();
-                }
-            }, 1000);
-            
-            // Trigger Monetag ad
-            triggerMonetagAd();
+                const offerCard = document.createElement('div');
+                offerCard.className = 'offer-card';
+                offerCard.dataset.id = offer.id;
+                
+                offerCard.innerHTML = `
+                    ${offer.badge ? `<div class="offer-badge">${offer.badge}</div>` : ''}
+                    <div class="offer-header">
+                        <div class="offer-title">${offer.title}</div>
+                        <div class="offer-points">+${offer.points}</div>
+                    </div>
+                    <div class="offer-description">
+                        ${offer.description}
+                    </div>
+                    <div class="offer-footer">
+                        <div class="offer-difficulty">
+                            Δυσκολία: <span style="color: ${getDifficultyColor(offer.difficulty)}">${offer.difficulty}</span>
+                        </div>
+                        <button class="btn-claim ${isCompleted ? 'completed' : ''}" 
+                                onclick="claimOffer(${offer.id}, ${offer.points.replace(',', '')})"
+                                ${isCompleted ? 'disabled' : ''}>
+                            ${isCompleted ? 'ΟΛΟΚΛΗΡΩΘΗΚΕ' : 'ΑΠΑΙΤΗΣΗ'}
+                        </button>
+                    </div>
+                `;
+                
+                offersContainer.appendChild(offerCard);
+            });
         }
-        
-        function closeAd() {
-            // Hide ad
-            document.getElementById('adOverlay').style.display = 'none';
-            
-            // Award points
-            points += 3;
-            localStorage.setItem('myPoints', points);
-            document.getElementById('points').textContent = points;
-            
-            alert('+3 Points! My ad completed.');
-            
-            // Restart 3-minute timer
-            if (gameActive) {
-                gameTimer = setTimeout(showMyAd, 180000);
+
+        // Get color based on difficulty
+        function getDifficultyColor(difficulty) {
+            switch(difficulty) {
+                case 'Εύκολη': return '#4CAF50';
+                case 'Μεσαία': return '#FF9800';
+                case 'Δύσκολη': return '#F44336';
+                default: return '#8f9ba8';
             }
         }
-        
-        function triggerMonetagAd() {
-            // Monetag will auto-trigger popunder
-            console.log('My Monetag ad triggered');
+
+        // Claim offer function
+        window.claimOffer = function(offerId, points) {
+            if (completedOffers.has(offerId)) return;
             
-            // Force popunder
-            try {
-                const w = window.open('', '_blank');
-                if (w) w.close();
-            } catch(e) {}
-        }
-        
-        function redeemCoffee() {
-            if (points >= 50) {
-                points -= 50;
-                localStorage.setItem('myPoints', points);
-                document.getElementById('points').textContent = points;
-                alert('Coffee redeemed! Show this message in store.');
-            } else {
-                alert(`Need ${50-points} more points!`);
+            // Show confirmation
+            if (confirm(`Ξεκινάς αυτή την προσφορά για ${points} πόντους; Θα ανοίξει νέα καρτέλα.`)) {
+                // Simulate opening offer (in real implementation, this would be the actual offer URL)
+                window.open('https://www.franklymadear.com/offer-redirect', '_blank');
+                
+                // Mark as completed and add points (in real app, this would happen after verification)
+                setTimeout(() => {
+                    completedOffers.add(offerId);
+                    userPoints += points;
+                    pointsElement.textContent = userPoints.toLocaleString();
+                    
+                    // Re-render offers to update button
+                    const activeCategory = document.querySelector('.cat-btn.active').dataset.category;
+                    renderOffers(activeCategory);
+                    
+                    alert(`Συγχαρητήρια! Κέρδισες ${points} πόντους!`);
+                }, 2000);
             }
-        }
-        
-        // Detect when user leaves game (simplified)
-        window.addEventListener('blur', function() {
-            if (gameActive) {
-                // User switched tab/window - show ad
-                setTimeout(showMyAd, 1000);
+        };
+
+        // Spin wheel function
+        spinButton.addEventListener('click', function() {
+            if (spinButton.textContent.includes('(0/1)')) {
+                alert('Έχεις ήδη χρησιμοποιήσει την καθημερινή σου ρουλέτα!');
+                return;
             }
+            
+            const spinResult = Math.floor(Math.random() * 1000) + 1;
+            
+            spinButton.textContent = 'Περιστροφή (0/1)';
+            spinButton.style.background = 'linear-gradient(90deg, #757575, #9e9e9e)';
+            spinButton.disabled = true;
+            
+            setTimeout(() => {
+                userPoints += spinResult;
+                pointsElement.textContent = userPoints.toLocaleString();
+                alert(`🎉 Κέρδισες ${spinResult} πόντους από τη ρουλέτα!`);
+            }, 1500);
         });
-        
-        // Load first game by default
-        loadGame('solitaire');
+
+        // Redeem button
+        redeemButton.addEventListener('click', function() {
+            alert(`Διαθέτεις ${userPoints} πόντους. Σύντομα θα είναι διαθέσιμες επιλογές εξαργύρωσης!`);
+        });
+
+        // Category filtering
+        categories.forEach(category => {
+            category.addEventListener('click', function() {
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                renderOffers(this.dataset.category);
+            });
+        });
+
+        // Initialize
+        renderOffers();
     </script>
 </body>
 </html>
