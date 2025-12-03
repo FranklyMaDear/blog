@@ -2,111 +2,87 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Connect Puzzle - Άνοιγμα σε Πλήρη Οθόνη</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Word Connect Puzzle - Παίξε τώρα!</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
+            overflow-x: hidden;
         }
         
-        .container {
-            max-width: 1200px;
+        .page-container {
+            max-width: 100%;
             margin: 0 auto;
+            padding: 10px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
         
         header {
             text-align: center;
-            padding: 20px 0 30px;
-            border-bottom: 2px solid #0f3460;
-            margin-bottom: 30px;
+            padding: 15px 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            margin: 10px 0 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
         }
         
         h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            color: #4cc9f0;
-            text-shadow: 0 0 10px rgba(76, 201, 240, 0.3);
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 700;
         }
         
         .subtitle {
-            font-size: 1.2rem;
-            color: #a5b1c2;
-            max-width: 800px;
+            font-size: 1rem;
+            color: #718096;
+            line-height: 1.4;
+            max-width: 500px;
             margin: 0 auto;
-            line-height: 1.5;
-        }
-        
-        .fullscreen-notification {
-            background: linear-gradient(135deg, #f72585, #b5179e);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 20px;
-            animation: pulse 2s infinite;
-            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-        
-        .game-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 40px;
         }
         
         .game-container {
             width: 100%;
-            background-color: #0d0d1a;
-            border-radius: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 3px solid #0f3460;
-            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            margin-bottom: 15px;
             position: relative;
+        }
+        
+        .game-wrapper {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 900px;
+            min-height: 70vh;
+            padding: 10px;
         }
         
         .game-frame {
             width: 100%;
             height: 100%;
             border: none;
-            background: #000;
-        }
-        
-        .fullscreen-game-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000;
-            z-index: 1000;
-            display: none;
-        }
-        
-        .fullscreen-game-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
+            background: #f7fafc;
+            border-radius: 12px;
         }
         
         .loading-overlay {
@@ -115,21 +91,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #0d0d1a;
+            background: rgba(247, 250, 252, 0.95);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 10;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
         }
         
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(76, 201, 240, 0.3);
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
             border-radius: 50%;
-            border-top-color: #4cc9f0;
+            border-top-color: #667eea;
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
         }
@@ -138,66 +114,26 @@
             100% { transform: rotate(360deg); }
         }
         
-        .game-info {
-            background-color: rgba(15, 52, 96, 0.3);
-            border-radius: 10px;
-            padding: 25px;
-            max-width: 1000px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .info-title {
-            color: #4cc9f0;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .info-title i {
-            font-size: 1.8rem;
-        }
-        
-        .game-description {
-            line-height: 1.6;
-            margin-bottom: 20px;
-            color: #e0e0e0;
-        }
-        
-        .instructions {
-            background-color: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-        }
-        
-        .instructions h3 {
-            color: #f72585;
-            margin-bottom: 10px;
-        }
-        
-        .instructions ul {
-            padding-left: 20px;
-            line-height: 1.6;
-        }
-        
-        .instructions li {
-            margin-bottom: 8px;
+        .loading-text {
+            color: #4a5568;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
         
         .controls {
             display: flex;
             justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            gap: 12px;
+            padding: 15px 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            margin: 0 0 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
         
         .btn {
-            padding: 12px 25px;
-            background: linear-gradient(to right, #0f3460, #1a5f7a);
+            padding: 14px 20px;
+            background: linear-gradient(to right, #667eea, #764ba2);
             color: white;
             border: none;
             border-radius: 50px;
@@ -207,293 +143,308 @@
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            flex: 1;
+            max-width: 200px;
         }
         
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-            background: linear-gradient(to right, #1a5f7a, #0f3460);
+        .btn:hover, .btn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
         }
         
         .btn:active {
-            transform: translateY(1px);
+            transform: translateY(0);
         }
         
-        .btn-fullscreen {
-            background: linear-gradient(to right, #f72585, #b5179e);
+        .btn-reload {
+            background: linear-gradient(to right, #ed8936, #dd6b20);
+            box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
         }
         
-        .btn-fullscreen:hover {
-            background: linear-gradient(to right, #b5179e, #f72585);
+        .game-info {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
         
-        .btn-enter-fullscreen {
-            background: linear-gradient(to right, #7209b7, #3a0ca3);
-            font-size: 1.2rem;
-            padding: 15px 40px;
-        }
-        
-        .btn-enter-fullscreen:hover {
-            background: linear-gradient(to right, #3a0ca3, #7209b7);
-        }
-        
-        .exit-fullscreen-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1001;
-            background: linear-gradient(to right, #f72585, #b5179e);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
+        .info-title {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            display: none;
+            gap: 10px;
+            font-weight: 700;
+        }
+        
+        .game-description {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: #4a5568;
+            font-size: 1.05rem;
+        }
+        
+        .instructions {
+            background: rgba(237, 242, 247, 0.8);
+            padding: 18px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        
+        .instructions h3 {
+            color: #2d3748;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            line-height: 1.6;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            color: #4a5568;
         }
         
         footer {
             text-align: center;
-            padding: 25px 0 15px;
-            margin-top: 30px;
-            border-top: 1px solid #0f3460;
-            color: #a5b1c2;
+            padding: 20px 10px 10px;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 0.9rem;
         }
         
         .game-link {
-            color: #4cc9f0;
+            color: #fff;
             text-decoration: none;
             font-weight: 600;
+            opacity: 0.9;
         }
         
         .game-link:hover {
+            opacity: 1;
             text-decoration: underline;
         }
         
-        @media (max-width: 768px) {
+        /* Landscape mode optimizations */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .page-container {
+                padding: 5px;
+            }
+            
+            header {
+                padding: 10px 5px;
+                margin: 5px 0 10px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .game-wrapper {
+                min-height: 60vh;
+            }
+            
+            .game-info {
+                padding: 15px;
+            }
+        }
+        
+        /* Tablet optimizations */
+        @media (min-width: 768px) {
+            .page-container {
+                padding: 20px;
+                max-width: 768px;
+            }
+            
+            header {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+            
             h1 {
                 font-size: 2.2rem;
             }
             
-            .game-container {
-                min-height: 700px;
-            }
-            
-            .game-frame {
-                width: 100%;
-                max-width: 600px;
-                height: 700px;
-            }
-            
-            .game-info {
-                padding: 20px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .game-container {
-                min-height: 600px;
-            }
-            
-            .game-frame {
-                height: 600px;
-            }
-            
-            .btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-            
-            .btn-enter-fullscreen {
+            .subtitle {
                 font-size: 1.1rem;
-                padding: 12px 30px;
+            }
+            
+            .game-container {
+                margin-bottom: 20px;
             }
             
             .controls {
-                gap: 10px;
+                padding: 20px 15px;
+                gap: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .btn {
+                padding: 16px 24px;
+                font-size: 1.1rem;
+                max-width: 220px;
+            }
+            
+            .game-info {
+                padding: 25px;
+                margin-bottom: 20px;
+            }
+            
+            .info-title {
+                font-size: 1.6rem;
             }
         }
         
-        @media (max-width: 400px) {
-            .game-container {
-                min-height: 500px;
+        /* Desktop optimizations */
+        @media (min-width: 1024px) {
+            .page-container {
+                max-width: 900px;
+                padding: 25px;
             }
             
-            .game-frame {
-                height: 500px;
+            .game-wrapper {
+                min-height: 75vh;
+            }
+            
+            .btn {
+                max-width: 250px;
+            }
+        }
+        
+        /* Very small screens */
+        @media (max-width: 360px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+            }
+            
+            .btn {
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+            
+            .controls {
+                gap: 8px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .btn:hover {
+                transform: none;
+            }
+            
+            .btn:active {
+                transform: scale(0.98);
             }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎮</text></svg>">
 </head>
 <body>
-    <div class="container">
+    <div class="page-container">
         <header>
-            <h1><i class="fas fa-gamepad"></i> Word Connect Puzzle</h1>
-            <p class="subtitle">Το παιχνίδι θα ανοίξει αυτόματα σε πλήρη οθόνη για την καλύτερη δυνατή εμπειρία!</p>
+            <h1><i class="fas fa-puzzle-piece"></i> Word Connect Puzzle</h1>
+            <p class="subtitle">Σύνδεσε γράμματα, δημιούργησε λέξεις και βελτίωσε το λεξιλόγιό σου! Παίξε τώρα δωρεάν.</p>
         </header>
         
-        <div class="fullscreen-notification">
-            <i class="fas fa-expand-arrows-alt"></i> Το παιχνίδι θα ξεκινήσει σε πλήρη οθόνη σε λίγα δευτερόλεπτα. 
-            Πατήστε το κουμπί "Έξοδος από Πλήρη Οθόνη" για να επιστρέψετε στην κανονική προβολή.
-        </div>
-        
         <main>
-            <section class="game-section">
-                <button class="exit-fullscreen-btn" id="exitFullscreenBtn">
-                    <i class="fas fa-compress"></i> Έξοδος από Πλήρη Οθόνη
-                </button>
-                
-                <div class="fullscreen-game-container" id="fullscreenContainer">
-                    <iframe 
-                        src="https://html5.gamedistribution.com/1b392a6ff2514ce48a70c90b349e5de5/?gd_sdk_referrer_url=https://gamedistribution.com/games/word-connect-puzzle" 
-                        class="fullscreen-game-frame" 
-                        id="fullscreenGameFrame"
-                        scrolling="none"
-                        frameborder="0"
-                        allow="autoplay; fullscreen"
-                        allowfullscreen>
-                    </iframe>
+            <div class="game-container">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Φόρτωση παιχνιδιού...</div>
                 </div>
                 
-                <div class="game-container">
-                    <div class="loading-overlay" id="loadingOverlay">
-                        <div class="loading-spinner"></div>
-                        <p>Προετοιμασία για πλήρη οθόνη...</p>
-                    </div>
+                <div class="game-wrapper">
                     <iframe 
                         src="https://html5.gamedistribution.com/1b392a6ff2514ce48a70c90b349e5de5/?gd_sdk_referrer_url=https://gamedistribution.com/games/word-connect-puzzle" 
                         class="game-frame" 
                         id="gameFrame"
-                        scrolling="none"
+                        scrolling="no"
                         frameborder="0"
-                        allow="autoplay; fullscreen"
+                        allow="autoplay"
                         allowfullscreen>
                     </iframe>
                 </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-reload" id="reloadBtn">
+                    <i class="fas fa-redo-alt"></i> Ανανέωση
+                </button>
+                <button class="btn" id="rotateBtn">
+                    <i class="fas fa-sync-alt"></i> Περιστροφή
+                </button>
+            </div>
+            
+            <div class="game-info">
+                <h2 class="info-title"><i class="fas fa-info-circle"></i> Σχετικά με το παιχνίδι</h2>
+                <p class="game-description">
+                    Το <strong>Word Connect Puzzle</strong> είναι ένα συναρπαστικό παιχνίδι λέξεων που διεγείρει το μυαλό. 
+                    Σε κάθε επίπεδο, θα βρεις ένα σύνολο γραμμάτων που πρέπει να συνδέσεις για να σχηματίσεις λέξεις. 
+                    Εξασκήσε τις γλωσσικές σου δεξιότητες ενώ διασκεδάζεις!
+                </p>
                 
-                <div class="controls">
-                    <button class="btn" id="reloadBtn">
-                        <i class="fas fa-redo"></i> Ανανέωση Παιχνιδιού
-                    </button>
-                    <button class="btn btn-fullscreen" id="fullscreenBtn">
-                        <i class="fas fa-expand"></i> Πλήρης Οθόνη
-                    </button>
-                    <button class="btn btn-enter-fullscreen" id="enterFullscreenBtn">
-                        <i class="fas fa-play-circle"></i> Έναρξη σε Πλήρη Οθόνη
-                    </button>
+                <div class="instructions">
+                    <h3><i class="fas fa-gamepad"></i> Πώς παίζεται:</h3>
+                    <ul>
+                        <li><strong>Σύρετε</strong> το δάχτυλο/πόντερ από γράμμα σε γράμμα για να σχηματίσεις λέξεις</li>
+                        <li><strong>Χρησιμοποίησε</strong> όλα τα διαθέσιμα γράμματα για να ολοκληρώσεις το επίπεδο</li>
+                        <li><strong>Βρες</strong> όλες τις απαιτούμενες λέξεις για να προχωρήσεις στο επόμενο επίπεδο</li>
+                        <li><strong>Χρησιμοποίησε</strong> τις υπόδειξεις αν κολλήσεις</li>
+                        <li><strong>Συλλέγε</strong> πόντους και ξεκλείδωσε νέα επίπεδα</li>
+                    </ul>
                 </div>
-                
-                <div class="game-info">
-                    <h2 class="info-title"><i class="fas fa-info-circle"></i> Πληροφορίες Παιχνιδιού</h2>
-                    <p class="game-description">
-                        Το Word Connect Puzzle είναι ένα εθιστικό παιχνίδι λέξεων όπου πρέπει να συνδέσεις γράμματα 
-                        για να σχηματίσεις λέξεις. Σε κάθε επίπεδο, θα δεις μια σειρά από γράμματα και πρέπει να 
-                        συνδέσεις τα σωστά για να δημιουργήσεις όλες τις λέξεις που ζητούνται. Το παιχνίδι βοηθάει 
-                        στη βελτίωση του λεξιλογίου και της ορθογραφίας ενώ προσφέρει διασκεδαστική πρόκληση.
-                    </p>
-                    
-                    <div class="instructions">
-                        <h3><i class="fas fa-graduation-cap"></i> Οδηγίες Παιχνιδιού</h3>
-                        <ul>
-                            <li>Σύρε το δείκτη του ποντικιού από γράμμα σε γράμμα για να σχηματίσεις λέξεις</li>
-                            <li>Πρέπει να χρησιμοποιήσεις όλα τα γράμματα για να ολοκληρώσεις κάθε επίπεδο</li>
-                            <li>Κάθε επίπεδο έχει συγκεκριμένες λέξεις που πρέπει να βρεις</li>
-                            <li>Μπορείς να χρησιμοποιήσεις τις υπόδειξης αν κολλήσεις</li>
-                            <li>Όσο περισσότερες λέξεις βρεις, τόσο περισσότερους πόντους θα κερδίσεις</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
+            </div>
         </main>
         
         <footer>
-            <p>Το παιχνίδι παρέχεται μέσω της πλατφόρμας <a href="https://gamedistribution.com" class="game-link" target="_blank">GameDistribution.com</a></p>
-            <p style="margin-top: 10px;">Η σελίδα αυτή είναι για εκπαιδευτικούς σκοπούς και ενσωματώνει υλικό τρίτων</p>
+            <p>Παρέχεται μέσω <a href="https://gamedistribution.com" class="game-link" target="_blank">GameDistribution.com</a></p>
+            <p style="margin-top: 8px; opacity: 0.8;">Βελτιστοποιημένο για κινητά & ταμπλέτ | © 2023</p>
         </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const gameFrame = document.getElementById('gameFrame');
-            const fullscreenGameFrame = document.getElementById('fullscreenGameFrame');
             const loadingOverlay = document.getElementById('loadingOverlay');
             const reloadBtn = document.getElementById('reloadBtn');
-            const fullscreenBtn = document.getElementById('fullscreenBtn');
-            const enterFullscreenBtn = document.getElementById('enterFullscreenBtn');
-            const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
-            const gameContainer = document.querySelector('.game-container');
-            const fullscreenContainer = document.getElementById('fullscreenContainer');
+            const rotateBtn = document.getElementById('rotateBtn');
             
-            // Μεταβλητή για παρακολούθηση της κατάστασης πλήρους οθόνης
-            let isFullscreenMode = false;
-            
-            // Αυτόματη έναρξη σε πλήρη οθόνη μετά από λίγα δευτερόλεπτα
-            setTimeout(() => {
-                enterFullscreenMode();
-            }, 2000);
-            
-            // Συνάρτηση εισόδου σε λειτουργία πλήρους οθόνης
-            function enterFullscreenMode() {
-                // Εμφάνιση του container πλήρους οθόνης
-                fullscreenContainer.style.display = 'block';
-                exitFullscreenBtn.style.display = 'flex';
+            // Αυτόματη προσαρμογή μεγέθους του iframe
+            function resizeGameFrame() {
+                const gameWrapper = document.querySelector('.game-wrapper');
+                const containerWidth = gameWrapper.clientWidth;
+                const containerHeight = gameWrapper.clientHeight;
                 
-                // Απόκρυψη του κύριου περιεχομένου
-                document.querySelector('.container').style.display = 'none';
+                // Προσαρμογή αναλογίας για το παιχνίδι (600x900 είναι η αρχική αναλογία)
+                const targetRatio = 600 / 900; // Πλάτος προς ύψος
+                const currentRatio = containerWidth / containerHeight;
                 
-                // Ενημέρωση κατάστασης
-                isFullscreenMode = true;
-                
-                // Προσπάθεια να ενεργοποιηθεί η πλήρης οθόνη API
-                if (fullscreenContainer.requestFullscreen) {
-                    fullscreenContainer.requestFullscreen();
-                } else if (fullscreenContainer.webkitRequestFullscreen) {
-                    fullscreenContainer.webkitRequestFullscreen();
-                } else if (fullscreenContainer.msRequestFullscreen) {
-                    fullscreenContainer.msRequestFullscreen();
+                if (currentRatio > targetRatio) {
+                    // Πολύ φαρδύ container - περιορισμός πλάτους
+                    gameFrame.style.width = (containerHeight * targetRatio) + 'px';
+                    gameFrame.style.height = containerHeight + 'px';
+                } else {
+                    // Πολύ ψηλό container - περιορισμός ύψους
+                    gameFrame.style.width = containerWidth + 'px';
+                    gameFrame.style.height = (containerWidth / targetRatio) + 'px';
                 }
                 
-                // Φόρτωση του παιχνιδιού στο iframe πλήρους οθόνης
-                if (!fullscreenGameFrame.src) {
-                    fullscreenGameFrame.src = gameFrame.src;
-                }
-            }
-            
-            // Συνάρτηση εξόδου από λειτουργία πλήρους οθόνης
-            function exitFullscreenMode() {
-                // Απόκρυψη του container πλήρους οθόνης
-                fullscreenContainer.style.display = 'none';
-                exitFullscreenBtn.style.display = 'none';
-                
-                // Εμφάνιση του κύριου περιεχομένου
-                document.querySelector('.container').style.display = 'block';
-                
-                // Ενημέρωση κατάστασης
-                isFullscreenMode = false;
-                
-                // Έξοδος από πλήρη οθόνη αν είναι ενεργή
-                if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                }
+                // Κεντράρισμα του iframe
+                gameFrame.style.margin = '0 auto';
+                gameFrame.style.display = 'block';
             }
             
             // Απόκρυψη της οθόνης φόρτωσης όταν το παιχνίδι φορτώσει
@@ -502,88 +453,86 @@
                     loadingOverlay.style.opacity = '0';
                     setTimeout(() => {
                         loadingOverlay.style.display = 'none';
-                    }, 500);
+                        resizeGameFrame(); // Αναπαράσταση μετά τη φόρτωση
+                    }, 300);
                 }, 1000);
-            });
-            
-            fullscreenGameFrame.addEventListener('load', function() {
-                // Εμφάνιση μηνύματος ότι το παιχνίδι είναι έτοιμο
-                console.log("Παιχνίδι σε πλήρη οθόνη φορτώθηκε!");
             });
             
             // Ανανέωση παιχνιδιού
             reloadBtn.addEventListener('click', function() {
                 loadingOverlay.style.display = 'flex';
                 loadingOverlay.style.opacity = '1';
-                gameFrame.src = gameFrame.src;
+                setTimeout(() => {
+                    gameFrame.src = gameFrame.src;
+                }, 300);
                 
-                if (isFullscreenMode) {
-                    fullscreenGameFrame.src = fullscreenGameFrame.src;
-                }
+                // Προσωρινό animation για το κουμπί
+                reloadBtn.style.transform = 'rotate(180deg)';
+                setTimeout(() => {
+                    reloadBtn.style.transform = '';
+                }, 300);
             });
             
-            // Χειροκίνητη είσοδος σε πλήρη οθόνη
-            enterFullscreenBtn.addEventListener('click', enterFullscreenMode);
-            
-            // Έξοδος από πλήρη οθόνη
-            exitFullscreenBtn.addEventListener('click', exitFullscreenMode);
-            
-            // Παλιά λειτουργία πλήρους οθόνης (για το κανονικό iframe)
-            fullscreenBtn.addEventListener('click', function() {
-                if (!document.fullscreenElement) {
-                    if (gameContainer.requestFullscreen) {
-                        gameContainer.requestFullscreen();
-                    } else if (gameContainer.webkitRequestFullscreen) {
-                        gameContainer.webkitRequestFullscreen();
-                    } else if (gameContainer.msRequestFullscreen) {
-                        gameContainer.msRequestFullscreen();
+            // Περιστροφή οθόνης (χρήσιμο για κινητά)
+            rotateBtn.addEventListener('click', function() {
+                if (screen.orientation && screen.orientation.lock) {
+                    if (screen.orientation.type.includes('portrait')) {
+                        screen.orientation.lock('landscape').catch(() => {
+                            alert('Η περιστροφή περιορίζεται από το πρόγραμμα περιήγησης');
+                        });
+                    } else {
+                        screen.orientation.lock('portrait').catch(() => {
+                            alert('Η περιστροφή περιορίζεται από το πρόγραμμα περιήγησης');
+                        });
                     }
-                    fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> Έξοδος από Πλήρη Οθόνη';
                 } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> Πλήρης Οθόνη';
+                    alert('Η λειτουργία περιστροφής δεν υποστηρίζεται από αυτό το πρόγραμμα περιήγησης');
                 }
+                
+                // Προσωρινό animation για το κουμπί
+                rotateBtn.style.transform = 'rotate(180deg)';
+                setTimeout(() => {
+                    rotateBtn.style.transform = '';
+                }, 300);
             });
             
-            // Ενημέρωση κουμπιού πλήρους οθόνης κατά την αλλαγή κατάστασης
-            document.addEventListener('fullscreenchange', updateFullscreenButton);
-            document.addEventListener('webkitfullscreenchange', updateFullscreenButton);
-            document.addEventListener('msfullscreenchange', updateFullscreenButton);
+            // Προσαρμογή μεγέθους κατά το resize
+            window.addEventListener('resize', resizeGameFrame);
             
-            function updateFullscreenButton() {
-                if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
-                    fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> Έξοδος από Πλήρη Οθόνη';
-                } else {
-                    fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> Πλήρης Οθόνη';
-                }
-            }
+            // Αποφυγή κύλισης κατά το παιχνίδι (για touch devices)
+            let isScrolling = false;
             
-            // Ανίχνευση πλήκτρου Escape για έξοδο από πλήρη οθόνη
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && isFullscreenMode) {
-                    exitFullscreenMode();
+            gameFrame.addEventListener('touchstart', function(e) {
+                isScrolling = false;
+            });
+            
+            gameFrame.addEventListener('touchmove', function(e) {
+                isScrolling = true;
+            });
+            
+            gameFrame.addEventListener('touchend', function(e) {
+                if (!isScrolling) {
+                    // Εδώ μπορεί να προστεθεί λειτουργία για κλικ στο παιχνίδι
                 }
+                isScrolling = false;
             });
             
             // Ανίχνευση σφάλματος φόρτωσης
             gameFrame.addEventListener('error', function() {
                 loadingOverlay.innerHTML = `
-                    <div style="text-align: center;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f72585; margin-bottom: 15px;"></i>
-                        <h3 style="margin-bottom: 10px;">Σφάλμα φόρτωσης παιχνιδιού</h3>
-                        <p style="margin-bottom: 20px;">Δοκιμάστε να ανανεώσετε τη σελίδα ή ελέγξτε τη σύνδεσή σας στο διαδίκτυο.</p>
-                        <button class="btn" onclick="location.reload()">
-                            <i class="fas fa-redo"></i> Ανανέωση Σελίδας
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2.5rem; color: #e53e3e; margin-bottom: 15px;"></i>
+                        <h3 style="margin-bottom: 10px; color: #4a5568;">Σφάλμα φόρτωσης παιχνιδιού</h3>
+                        <p style="margin-bottom: 20px; color: #718096;">Δοκιμάστε να ανανεώσετε τη σελίδα ή ελέγξτε τη σύνδεσή σας στο διαδίκτυο.</p>
+                        <button class="btn" onclick="location.reload()" style="background: linear-gradient(to right, #e53e3e, #c53030);">
+                            <i class="fas fa-redo-alt"></i> Ανανέωση Σελίδας
                         </button>
                     </div>
                 `;
             });
+            
+            // Αρχική αναπαράσταση
+            setTimeout(resizeGameFrame, 100);
         });
     </script>
 </body>
