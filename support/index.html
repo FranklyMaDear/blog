@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word Connect Puzzle - Ενσωμάτωση Παιχνιδιού</title>
+    <title>Word Connect Puzzle - Άνοιγμα σε Πλήρη Οθόνη</title>
     <style>
         * {
             margin: 0;
@@ -46,6 +46,23 @@
             line-height: 1.5;
         }
         
+        .fullscreen-notification {
+            background: linear-gradient(135deg, #f72585, #b5179e);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            box-shadow: 0 5px 15px rgba(247, 37, 133, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
         .game-section {
             display: flex;
             flex-direction: column;
@@ -69,10 +86,27 @@
         }
         
         .game-frame {
-            width: 600px;
-            height: 900px;
+            width: 100%;
+            height: 100%;
             border: none;
             background: #000;
+        }
+        
+        .fullscreen-game-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .fullscreen-game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
         
         .loading-overlay {
@@ -195,6 +229,36 @@
             background: linear-gradient(to right, #b5179e, #f72585);
         }
         
+        .btn-enter-fullscreen {
+            background: linear-gradient(to right, #7209b7, #3a0ca3);
+            font-size: 1.2rem;
+            padding: 15px 40px;
+        }
+        
+        .btn-enter-fullscreen:hover {
+            background: linear-gradient(to right, #3a0ca3, #7209b7);
+        }
+        
+        .exit-fullscreen-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            background: linear-gradient(to right, #f72585, #b5179e);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        
         footer {
             text-align: center;
             padding: 25px 0 15px;
@@ -252,6 +316,11 @@
                 font-size: 0.9rem;
             }
             
+            .btn-enter-fullscreen {
+                font-size: 1.1rem;
+                padding: 12px 30px;
+            }
+            
             .controls {
                 gap: 10px;
             }
@@ -273,15 +342,36 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-gamepad"></i> Word Connect Puzzle</h1>
-            <p class="subtitle">Παίξε αυτό το συναρπαστικό παιχνίδι λέξεων και συνδέσε γράμματα για να σχηματίσεις όλες τις λέξεις! Δοκίμασε το λεξιλόγιό σου και τις ικανότητες επίλυσης παζλ.</p>
+            <p class="subtitle">Το παιχνίδι θα ανοίξει αυτόματα σε πλήρη οθόνη για την καλύτερη δυνατή εμπειρία!</p>
         </header>
+        
+        <div class="fullscreen-notification">
+            <i class="fas fa-expand-arrows-alt"></i> Το παιχνίδι θα ξεκινήσει σε πλήρη οθόνη σε λίγα δευτερόλεπτα. 
+            Πατήστε το κουμπί "Έξοδος από Πλήρη Οθόνη" για να επιστρέψετε στην κανονική προβολή.
+        </div>
         
         <main>
             <section class="game-section">
+                <button class="exit-fullscreen-btn" id="exitFullscreenBtn">
+                    <i class="fas fa-compress"></i> Έξοδος από Πλήρη Οθόνη
+                </button>
+                
+                <div class="fullscreen-game-container" id="fullscreenContainer">
+                    <iframe 
+                        src="https://html5.gamedistribution.com/1b392a6ff2514ce48a70c90b349e5de5/?gd_sdk_referrer_url=https://gamedistribution.com/games/word-connect-puzzle" 
+                        class="fullscreen-game-frame" 
+                        id="fullscreenGameFrame"
+                        scrolling="none"
+                        frameborder="0"
+                        allow="autoplay; fullscreen"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                
                 <div class="game-container">
                     <div class="loading-overlay" id="loadingOverlay">
                         <div class="loading-spinner"></div>
-                        <p>Φόρτωση παιχνιδιού...</p>
+                        <p>Προετοιμασία για πλήρη οθόνη...</p>
                     </div>
                     <iframe 
                         src="https://html5.gamedistribution.com/1b392a6ff2514ce48a70c90b349e5de5/?gd_sdk_referrer_url=https://gamedistribution.com/games/word-connect-puzzle" 
@@ -301,6 +391,9 @@
                     <button class="btn btn-fullscreen" id="fullscreenBtn">
                         <i class="fas fa-expand"></i> Πλήρης Οθόνη
                     </button>
+                    <button class="btn btn-enter-fullscreen" id="enterFullscreenBtn">
+                        <i class="fas fa-play-circle"></i> Έναρξη σε Πλήρη Οθόνη
+                    </button>
                 </div>
                 
                 <div class="game-info">
@@ -318,7 +411,7 @@
                             <li>Σύρε το δείκτη του ποντικιού από γράμμα σε γράμμα για να σχηματίσεις λέξεις</li>
                             <li>Πρέπει να χρησιμοποιήσεις όλα τα γράμματα για να ολοκληρώσεις κάθε επίπεδο</li>
                             <li>Κάθε επίπεδο έχει συγκεκριμένες λέξεις που πρέπει να βρεις</li>
-                            <li>Μπορείς να χρησιμοποιήσεις τις υπόδειξεις αν κολλήσεις</li>
+                            <li>Μπορείς να χρησιμοποιήσεις τις υπόδειξης αν κολλήσεις</li>
                             <li>Όσο περισσότερες λέξεις βρεις, τόσο περισσότερους πόντους θα κερδίσεις</li>
                         </ul>
                     </div>
@@ -335,10 +428,73 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const gameFrame = document.getElementById('gameFrame');
+            const fullscreenGameFrame = document.getElementById('fullscreenGameFrame');
             const loadingOverlay = document.getElementById('loadingOverlay');
             const reloadBtn = document.getElementById('reloadBtn');
             const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const enterFullscreenBtn = document.getElementById('enterFullscreenBtn');
+            const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
             const gameContainer = document.querySelector('.game-container');
+            const fullscreenContainer = document.getElementById('fullscreenContainer');
+            
+            // Μεταβλητή για παρακολούθηση της κατάστασης πλήρους οθόνης
+            let isFullscreenMode = false;
+            
+            // Αυτόματη έναρξη σε πλήρη οθόνη μετά από λίγα δευτερόλεπτα
+            setTimeout(() => {
+                enterFullscreenMode();
+            }, 2000);
+            
+            // Συνάρτηση εισόδου σε λειτουργία πλήρους οθόνης
+            function enterFullscreenMode() {
+                // Εμφάνιση του container πλήρους οθόνης
+                fullscreenContainer.style.display = 'block';
+                exitFullscreenBtn.style.display = 'flex';
+                
+                // Απόκρυψη του κύριου περιεχομένου
+                document.querySelector('.container').style.display = 'none';
+                
+                // Ενημέρωση κατάστασης
+                isFullscreenMode = true;
+                
+                // Προσπάθεια να ενεργοποιηθεί η πλήρης οθόνη API
+                if (fullscreenContainer.requestFullscreen) {
+                    fullscreenContainer.requestFullscreen();
+                } else if (fullscreenContainer.webkitRequestFullscreen) {
+                    fullscreenContainer.webkitRequestFullscreen();
+                } else if (fullscreenContainer.msRequestFullscreen) {
+                    fullscreenContainer.msRequestFullscreen();
+                }
+                
+                // Φόρτωση του παιχνιδιού στο iframe πλήρους οθόνης
+                if (!fullscreenGameFrame.src) {
+                    fullscreenGameFrame.src = gameFrame.src;
+                }
+            }
+            
+            // Συνάρτηση εξόδου από λειτουργία πλήρους οθόνης
+            function exitFullscreenMode() {
+                // Απόκρυψη του container πλήρους οθόνης
+                fullscreenContainer.style.display = 'none';
+                exitFullscreenBtn.style.display = 'none';
+                
+                // Εμφάνιση του κύριου περιεχομένου
+                document.querySelector('.container').style.display = 'block';
+                
+                // Ενημέρωση κατάστασης
+                isFullscreenMode = false;
+                
+                // Έξοδος από πλήρη οθόνη αν είναι ενεργή
+                if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+            }
             
             // Απόκρυψη της οθόνης φόρτωσης όταν το παιχνίδι φορτώσει
             gameFrame.addEventListener('load', function() {
@@ -347,7 +503,12 @@
                     setTimeout(() => {
                         loadingOverlay.style.display = 'none';
                     }, 500);
-                }, 1500);
+                }, 1000);
+            });
+            
+            fullscreenGameFrame.addEventListener('load', function() {
+                // Εμφάνιση μηνύματος ότι το παιχνίδι είναι έτοιμο
+                console.log("Παιχνίδι σε πλήρη οθόνη φορτώθηκε!");
             });
             
             // Ανανέωση παιχνιδιού
@@ -355,9 +516,19 @@
                 loadingOverlay.style.display = 'flex';
                 loadingOverlay.style.opacity = '1';
                 gameFrame.src = gameFrame.src;
+                
+                if (isFullscreenMode) {
+                    fullscreenGameFrame.src = fullscreenGameFrame.src;
+                }
             });
             
-            // Λειτουργία πλήρους οθόνης
+            // Χειροκίνητη είσοδος σε πλήρη οθόνη
+            enterFullscreenBtn.addEventListener('click', enterFullscreenMode);
+            
+            // Έξοδος από πλήρη οθόνη
+            exitFullscreenBtn.addEventListener('click', exitFullscreenMode);
+            
+            // Παλιά λειτουργία πλήρους οθόνης (για το κανονικό iframe)
             fullscreenBtn.addEventListener('click', function() {
                 if (!document.fullscreenElement) {
                     if (gameContainer.requestFullscreen) {
@@ -392,6 +563,13 @@
                     fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> Πλήρης Οθόνη';
                 }
             }
+            
+            // Ανίχνευση πλήκτρου Escape για έξοδο από πλήρη οθόνη
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && isFullscreenMode) {
+                    exitFullscreenMode();
+                }
+            });
             
             // Ανίχνευση σφάλματος φόρτωσης
             gameFrame.addEventListener('error', function() {
