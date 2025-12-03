@@ -1,62 +1,374 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8">
-  <title>Παιχνίδι με Διαφημίσεις</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f0f0f0;
-    }
-    .container {
-      display: grid;
-      grid-template-areas: 
-        "top top top"
-        "left game right"
-        "bottom bottom bottom";
-      grid-template-columns: 200px auto 200px;
-      grid-template-rows: 100px auto 100px;
-      gap: 10px;
-      width: 100%;
-      max-width: 1200px;
-    }
-    .ad {
-      background-color: #ddd;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      color: #333;
-    }
-    .top { grid-area: top; }
-    .left { grid-area: left; }
-    .right { grid-area: right; }
-    .bottom { grid-area: bottom; }
-    .game {
-      grid-area: game;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #fff;
-      padding: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Παιχνίδι σε Μεγάλο Παράθυρο</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #3a7bd5);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            line-height: 1.6;
+        }
+        
+        .play-button {
+            background: linear-gradient(to right, #FF416C, #FF4B2B);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            font-size: 1.4rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 8px 20px rgba(255, 65, 108, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .play-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(255, 65, 108, 0.6);
+        }
+        
+        .play-button:active {
+            transform: translateY(0);
+        }
+        
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 50px 0;
+        }
+        
+        .feature {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            width: 280px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #4dabf7;
+        }
+        
+        .feature h3 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: #1e1e2e;
+            border-radius: 15px;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            animation: modalAppear 0.4s ease-out;
+        }
+        
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #2d2d44;
+            border-bottom: 2px solid #3a3a5d;
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        
+        .close-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .game-container {
+            width: 100%;
+            height: calc(90vh - 80px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            background-color: #000;
+        }
+        
+        .instructions {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+        
+        .instructions h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4dabf7;
+        }
+        
+        .instructions ul {
+            padding-left: 20px;
+            line-height: 1.8;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .play-button {
+                padding: 15px 35px;
+                font-size: 1.2rem;
+            }
+            
+            .modal-content {
+                width: 98%;
+                max-height: 95vh;
+            }
+            
+            .game-container {
+                height: calc(95vh - 80px);
+            }
+            
+            .feature {
+                width: 100%;
+                max-width: 350px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="ad top">Διαφήμιση Πάνω</div>
-    <div class="ad left">Διαφήμιση Αριστερά</div>
-    <div class="game">
-      <iframe src="https://html5.gamedistribution.com/5aac1802c4a5449cb57aa14c55731faf/?gd_sdk_referrer_url=https://www.example.com/games/{game-path}" 
-              width="800" height="600" scrolling="no" frameborder="0"></iframe>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-gamepad"></i> Παιχνίδι σε Μεγάλο Παράθυρο</h1>
+            <p class="subtitle">Απόλαυσε το παιχνίδι απευθείας στον περιηγητή σου! Πάτησε το κουμπί "Άνοιγμα Παιχνιδιού" για να ανοίξει ένα μεγάλο παράθυρο με το παιχνίδι μέσα στη σελίδα μας.</p>
+            
+            <button id="openGameBtn" class="play-button">
+                <i class="fas fa-play-circle"></i> Άνοιγμα Παιχνιδιού
+            </button>
+        </header>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-expand-alt"></i>
+                <h3>Μεγάλο Παράθυρο</h3>
+                <p>Το παιχνίδι ανοίγει σε ένα μεγάλο modal παράθυρο που καλύπτει το μεγαλύτερο μέρος της οθόνης σας.</p>
+            </div>
+            
+            <div class="feature">
+                <i class="fas fa-gamepad"></i>
+                <h3>Άμεση Πρόσβαση</h3>
+                <p>Χωρίς ανακατευθύνσεις ή νέες καρτέλες. Το παιχνίδι τρέχει απευθείας στην τρέχουσα σελίδα.</p>
+            </div>
+            
+            <div class="feature">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3>Γρήγορη Λειτουργία</h3>
+                <p>Βελτιστοποιημένη απόδοση για ομαλή εμπειρία παιχνιδιού χωρίς καθυστερήσεις.</p>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h2><i class="fas fa-info-circle"></i> Οδηγίες Χρήσης</h2>
+            <ul>
+                <li>Πατήστε το κουμπί <strong>"Άνοιγμα Παιχνιδιού"</strong> για να ανοίξετε το παιχνίδι σε μεγάλο παράθυρο.</li>
+                <li>Μπορείτε να παίξετε το παιχνίδι απευθείας στο παράθυρο που εμφανίζεται.</li>
+                <li>Για να κλείσετε το παράθυρο, πατήστε το κουμπί <strong>"X"</strong> στην επάνω δεξιά γωνία ή πατήστε <strong>ESC</strong> στο πληκτρολόγιο.</li>
+                <li>Το παιχνίδι είναι πλήρως responsive και προσαρμόζεται στο μέγεθος της οθόνης σας.</li>
+                <li>Για καλύτερη εμπειρία, χρησιμοποιήστε πλήρης οθόνη (F11) όταν το παιχνίδι είναι ανοιχτό.</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>Το παιχνίδι παρέχεται μέσω HTML5 Game Distribution. Όλα τα δικαιώματα ανήκουν στους αντίστοιχους δημιουργούς.</p>
+            <p>© 2023 - Μεγάλο Παράθυρο Παιχνιδιού | Δημιουργήθηκε για εμφάνιση παιχνιδιών σε iframe</p>
+        </footer>
     </div>
-    <div class="ad right">Διαφήμιση Δεξιά</div>
-    <div class="ad bottom">Διαφήμιση Κάτω</div>
-  </div>
+    
+    <!-- Modal για το παιχνίδι -->
+    <div id="gameModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title"><i class="fas fa-gamepad"></i> Παίζοντας Τώρα</div>
+                <button id="closeModalBtn" class="close-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="game-container">
+                <!-- Το iframe του παιχνιδιού θα εισαχθεί εδώ -->
+                <iframe id="gameFrame" class="game-frame" 
+                        src="https://html5.gamedistribution.com/5aac1802c4a5449cb57aa14c55731faf/?gd_sdk_referrer_url=https://www.example.com/games/{game-path}" 
+                        scrolling="none" 
+                        frameborder="0"
+                        allow="gamepad; fullscreen">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Στοιχεία DOM
+        const openGameBtn = document.getElementById('openGameBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const gameModal = document.getElementById('gameModal');
+        const gameFrame = document.getElementById('gameFrame');
+        
+        // Άνοιγμα modal με το παιχνίδι
+        openGameBtn.addEventListener('click', () => {
+            gameModal.style.display = 'flex';
+            // Εστίαση στο iframe για να λειτουργούν τα πλήκτρα αμέσως
+            setTimeout(() => {
+                gameFrame.focus();
+            }, 100);
+            
+            // Προσθήκη κλήσης για ανανέωση του παιχνιδιού (προαιρετικό)
+            // gameFrame.src = gameFrame.src;
+        });
+        
+        // Κλείσιμο modal με το κουμπί
+        closeModalBtn.addEventListener('click', () => {
+            gameModal.style.display = 'none';
+        });
+        
+        // Κλείσιμο modal με πλήκτρο ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && gameModal.style.display === 'flex') {
+                gameModal.style.display = 'none';
+            }
+        });
+        
+        // Κλείσιμο modal με κλικ έξω από το περιεχόμενο
+        gameModal.addEventListener('click', (e) => {
+            if (e.target === gameModal) {
+                gameModal.style.display = 'none';
+            }
+        });
+        
+        // Ενημέρωση για πλήρη οθόνη (προαιρετικό)
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                // Επιστροφή από πλήρη οθόνη
+                console.log("Επιστροφή από πλήρη οθόνη");
+            }
+        });
+    </script>
 </body>
 </html>
