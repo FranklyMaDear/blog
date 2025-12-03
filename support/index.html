@@ -1,224 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kids & Puzzle Games — Demo for GitHub Pages</title>
-
-  <!-- ========== Ad scripts you provided ========== -->
-  <!-- Put these exactly as you gave them (kept data-cfasync attribute) -->
-  <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"></script>
-  <meta name="admaven-placement" content="BqjwFpjU5">
-  <!-- ============================================ -->
-
+  <meta charset="UTF-8">
+  <title>Παιχνίδι με Διαφημίσεις</title>
   <style>
-    /* simple, clean responsive layout */
-    :root{--card-gap:16px}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;background:#f6f8fb;color:#111}
-    header{background:#2b6cb0;color:white;padding:18px 16px;text-align:center}
-    .container{max-width:1100px;margin:24px auto;padding:0 16px}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--card-gap)}
-    .card{background:white;border-radius:10px;box-shadow:0 6px 18px rgba(20,20,40,0.06);overflow:hidden;display:flex;flex-direction:column}
-    .thumb{height:180px;background:linear-gradient(135deg,#e0f2ff,#f8f9ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#6b7280}
-    .meta{padding:12px 14px;flex:0 0 auto}
-    .title{font-size:1.05rem;margin:0 0 6px}
-    .subtitle{margin:0;color:#666;font-size:.9rem}
-    .actions{padding:12px 14px 18px;margin-top:auto;display:flex;gap:10px;align-items:center}
-    .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
-    .btn-play{background:#10b981;color:white}
-    .btn-info{background:transparent;border:1px solid #e6e9ef;color:#333}
-    /* game container hidden until ad finishes */
-    #gameArea{display:none;margin-top:22px}
-    #gameFrame{width:100%;height:640px;border:0;border-radius:8px;background:#000}
-    footer{padding:28px 0;color:#666;text-align:center}
-
-    /* overlay for ad + countdown */
-    .ad-overlay{position:fixed;inset:0;background:rgba(10,10,20,0.75);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;color:white;padding:20px}
-    .ad-box{background:#0b1220;padding:18px;border-radius:12px;max-width:820px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
-    .countdown{font-size:2.4rem;font-weight:700;margin-top:10px;text-align:center}
-    .ad-video{width:100%;height:360px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#9aa7c7}
-    .skip-note{font-size:.9rem;color:#b6c3d6;text-align:center;margin-top:10px}
-    @media (max-width:640px){ .ad-video{height:220px} #gameFrame{height:520px} }
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
+    .container {
+      display: grid;
+      grid-template-areas: 
+        "top top top"
+        "left game right"
+        "bottom bottom bottom";
+      grid-template-columns: 200px auto 200px;
+      grid-template-rows: 100px auto 100px;
+      gap: 10px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .ad {
+      background-color: #ddd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      color: #333;
+    }
+    .top { grid-area: top; }
+    .left { grid-area: left; }
+    .right { grid-area: right; }
+    .bottom { grid-area: bottom; }
+    .game {
+      grid-area: game;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1 style="margin:0">Παιδικά & Puzzle Games — Demo</h1>
-    <div style="font-size:.95rem;margin-top:6px;opacity:.95">Embed-ready για GitHub Pages — ενσωματώστε τα δικά σας παιχνίδια & το ad script</div>
-  </header>
-
-  <main class="container">
-    <section>
-      <h2 style="margin:0 0 12px">Επιλογή παιχνιδιού</h2>
-
-      <!-- Grid of game cards. Για κάθε παιχνίδι: replace data-src με το πραγματικό embed URL -->
-      <div class="grid" id="gamesGrid">
-
-        <!-- Example card 1 (Παιδικό) -->
-        <article class="card" data-game-id="game1" data-src="https://example.com/your-child-game-1/index.html">
-          <div class="thumb">🎨 Παιδικό — Χρώματα & Ήχοι</div>
-          <div class="meta">
-            <p class="title">Χρώματα & Φίλοι</p>
-            <p class="subtitle">Κατάλληλο για μικρά παιδιά — απλά controls</p>
-          </div>
-          <div class="actions">
-            <button class="btn btn-play" onclick="startWithAd(this)">Play  ▶</button>
-            <button class="btn btn-info" onclick="showInfo('game1')">Πληροφορίες</button>
-          </div>
-        </article>
-
-        <!-- Example card 2 (Puzzle) -->
-        <article class="card" data-game-id="game2" data-src="https://example.com/your-puzzle-game-1/index.html">
-          <div class="thumb">🧩 Puzzle — Λογική</div>
-          <div class="meta">
-            <p class="title">Μικρά Παζλ</p>
-            <p class="subtitle">Απλά levels, ιδανικό για παιδιά 6+</p>
-          </div>
-          <div class="actions">
-            <button class="btn btn-play" onclick="startWithAd(this)">Play  ▶</button>
-            <button class="btn btn-info" onclick="showInfo('game2')">Πληροφορίες</button>
-          </div>
-        </article>
-
-        <!-- Example card 3 (Παιδικό) -->
-        <article class="card" data-game-id="game3" data-src="https://example.com/your-child-game-2/index.html">
-          <div class="thumb">🚂 Παιδικό — Περιπέτεια</div>
-          <div class="meta">
-            <p class="title">Μικρή Περιπέτεια</p>
-            <p class="subtitle">Εξερεύνηση, συλλογή αντικειμένων</p>
-          </div>
-          <div class="actions">
-            <button class="btn btn-play" onclick="startWithAd(this)">Play  ▶</button>
-            <button class="btn btn-info" onclick="showInfo('game3')">Πληροφορίες</button>
-          </div>
-        </article>
-
-        <!-- προσθέστε κι άλλες κάρτες με το ίδιο pattern -->
-      </div> <!-- .grid -->
-    </section>
-
-    <!-- Game area (εδώ θα φορτωθεί το iframe μετά το ad) -->
-    <div id="gameArea" class="container">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <h3 id="gameTitle" style="margin:0">Παίζει: —</h3>
-        <button class="btn btn-info" onclick="closeGame()">Κλείσιμο παιχνιδιού</button>
-      </div>
-      <iframe id="gameFrame" src="about:blank" title="Game frame" allowfullscreen allow="autoplay; fullscreen"></iframe>
+  <div class="container">
+    <div class="ad top">Διαφήμιση Πάνω</div>
+    <div class="ad left">Διαφήμιση Αριστερά</div>
+    <div class="game">
+      <iframe src="https://html5.gamedistribution.com/5aac1802c4a5449cb57aa14c55731faf/?gd_sdk_referrer_url=https://www.example.com/games/{game-path}" 
+              width="800" height="600" scrolling="no" frameborder="0"></iframe>
     </div>
-
-  </main>
-
-  <!-- Ad overlay (hidden by default) -->
-  <div id="adOverlay" class="ad-overlay" style="display:none">
-    <div class="ad-box">
-      <!--
-        ΣΗΜΕΙΩΣΗ:
-        Εδώ μπορείς να βάλεις ένα video element (π.χ. hosted ad), ή να αφήσεις το third-party ad script
-        να εμφανίσει interstitial/popunder. Το demo δείχνει ένα placeholder video + countdown.
-      -->
-      <div id="adVideo" class="ad-video">Video ad placeholder — η διαφήμιση παίζει...</div>
-      <div class="countdown" id="countdown">30</div>
-      <div class="skip-note">Το παιχνίδι θα ξεκινήσει μόλις τελειώσει η διαφήμιση (30 δευτ.).</div>
-    </div>
+    <div class="ad right">Διαφήμιση Δεξιά</div>
+    <div class="ad bottom">Διαφήμιση Κάτω</div>
   </div>
-
-  <footer>
-    <small>Αντικατάστησε τα <code>data-src</code> στις κάρτες με τα πραγματικά embed URLs των παιχνιδιών. Έλεγξε τις πολιτικές του ad provider πριν δημοσιεύσεις.</small>
-  </footer>
-
-  <script>
-    /* ========== Utility functions ========== */
-
-    // Εμφανίζει απλό alert με πληροφορίες παιχνιδιού (μπορείς να το αντικαταστήσεις)
-    function showInfo(id){
-      const card = document.querySelector(`[data-game-id="${id}"]`);
-      if(!card){ alert("Δεν βρέθηκε το παιχνίδι"); return; }
-      const title = card.querySelector('.title').innerText;
-      const subtitle = card.querySelector('.subtitle').innerText;
-      alert(title + "\\n" + subtitle);
-    }
-
-    // Κλείνει το παιχνίδι και καθαρίζει το iframe
-    function closeGame(){
-      document.getElementById('gameArea').style.display = 'none';
-      const frame = document.getElementById('gameFrame');
-      frame.src = 'about:blank';
-      document.getElementById('gameTitle').innerText = 'Παίζει: —';
-    }
-
-    /* ========== Ad + Play flow ========== */
-
-    // main entry when user πατάει Play
-    function startWithAd(buttonElem){
-      // find the card and the target game URL
-      const card = buttonElem.closest('.card');
-      const gameUrl = card.getAttribute('data-src');
-      const gameName = card.querySelector('.title').innerText || 'Game';
-
-      // Show ad overlay and attempt to trigger network ad (if their script exposes API)
-      showAdOverlay(30, function onAdFinished(){
-        // after ad ends -> load game iframe
-        openGame(gameUrl, gameName);
-      });
-
-      // Try to call some common ad provider functions if available (best-effort)
-      try {
-        // example: Monetag / pop-like variable
-        if (typeof _pop !== 'undefined' && _pop.push) {
-          try { _pop.push(function(){ if(_pop.showInterstitial) _pop.showInterstitial(); }); } catch(e){}
-        }
-        // example: AdMaven/ADM placeholder - try common global names
-        if (typeof ADM !== 'undefined' && ADM.tag) {
-          try { ADM.tag(); } catch(e) {}
-        }
-        if (typeof adm !== 'undefined' && adm.requestAd) {
-          try { adm.requestAd(); } catch(e) {}
-        }
-        // note: the cloudfront script you included may self-initialize; we only attempt safe calls
-      } catch(e){
-        console.warn('Ad API call failed', e);
-      }
-    }
-
-    // shows the overlay with countdown (seconds). callback runs when countdown reaches 0
-    function showAdOverlay(seconds, callback){
-      const overlay = document.getElementById('adOverlay');
-      const countdownEl = document.getElementById('countdown');
-      const adVideo = document.getElementById('adVideo');
-
-      // If you want to show an actual video hosted by you, replace adVideo.innerHTML with a <video> element
-      // e.g. adVideo.innerHTML = '<video autoplay playsinline src="path/to/your-ad.mp4"></video>';
-
-      overlay.style.display = 'flex';
-      countdownEl.textContent = seconds.toString();
-
-      let remaining = seconds;
-      const tick = setInterval(() => {
-        remaining--;
-        countdownEl.textContent = remaining.toString();
-        if (remaining <= 0) {
-          clearInterval(tick);
-          overlay.style.display = 'none';
-          if (typeof callback === 'function') callback();
-        }
-      }, 1000);
-    }
-
-    // open game: sets iframe src and shows game area
-    function openGame(url, title){
-      const frame = document.getElementById('gameFrame');
-      document.getElementById('gameTitle').innerText = 'Παίζει: ' + title;
-      // set src — use a short delay to ensure overlay hidden
-      setTimeout(() => {
-        frame.src = url;
-        document.getElementById('gameArea').style.display = 'block';
-        // scroll into view (mobile-friendly)
-        frame.scrollIntoView({behavior:'smooth'});
-      }, 150);
-    }
-
-    // Optional: if you want to lazy-load real iframe src only when user pressed Play,
-    // keep data-src attributes (we used that). That helps with initial page load and ad viewability.
-  </script>
 </body>
 </html>
