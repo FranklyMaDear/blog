@@ -3,450 +3,723 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3 Δωρεάν Παιχνίδια - Κέρδισε Πόντοι</title>
+    <title>GameHub - Play & Earn Rewards</title>
     <style>
         :root {
-            --primary: #FF6B8B;
-            --secondary: #4A6FFF;
-            --dark: #1A1A2E;
-            --light: #FFFFFF;
-            --gold: #FFD700;
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --dark-bg: #0a0a1a;
+            --card-bg: rgba(16, 18, 40, 0.9);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --glow: 0 0 20px rgba(0, 243, 255, 0.5);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, var(--dark) 0%, #0F3460 100%);
+            background: var(--dark-bg);
             color: white;
             min-height: 100vh;
-            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
         }
         
         /* Header */
         .header {
-            text-align: center;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .points-display {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: inline-block;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 24px;
-            font-weight: bold;
-            margin-top: 15px;
-            box-shadow: 0 5px 20px rgba(255, 107, 139, 0.4);
-        }
-        
-        .gold {
-            color: var(--gold);
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-        
-        /* Game Tabs */
-        .game-tabs {
+            padding: 25px 40px;
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 26, 0.8);
+            border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
-        .game-tab {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 12px 25px;
-            border-radius: 10px;
-            cursor: pointer;
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--glow);
+        }
+        
+        .logo-icon {
+            font-size: 36px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* Points Display */
+        .points-card {
+            background: var(--card-bg);
+            padding: 18px 35px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid rgba(0, 243, 255, 0.3);
+            box-shadow: var(--glow);
             transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .points-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.7);
+        }
+        
+        .points-value {
+            font-size: 32px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ffaa00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .coin-icon {
+            font-size: 28px;
+            animation: spin 3s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(360deg); }
+        }
+        
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 30px;
+        }
+        
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .game-card {
+            background: var(--card-bg);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--neon-blue);
+            box-shadow: 0 15px 35px rgba(0, 243, 255, 0.3);
+        }
+        
+        .game-thumbnail {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--neon-pink);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .game-info {
+            padding: 25px;
+        }
+        
+        .game-title {
+            font-size: 22px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
-            border: 2px solid transparent;
         }
         
-        .game-tab:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .play-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--gradient);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .play-btn:hover {
             transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
         }
         
-        .game-tab.active {
-            background: var(--primary);
-            border-color: white;
-            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
         }
         
-        .game-icon {
-            font-size: 20px;
+        .stats-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+        
+        .stats-title {
+            color: var(--neon-blue);
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         /* Ad Container */
         .ad-container {
-            background: rgba(0, 0, 0, 0.9);
-            border-radius: 15px;
-            padding: 30px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
             text-align: center;
-            margin: 20px auto;
-            max-width: 800px;
             display: none;
-            border: 3px solid var(--gold);
-            animation: fadeIn 0.5s ease;
+            border: 3px solid var(--neon-pink);
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.3);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            z-index: 1000;
+            animation: modalAppear 0.5s ease;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        @keyframes modalAppear {
+            from { 
+                opacity: 0; 
+                transform: translate(-50%, -60%) scale(0.9); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translate(-50%, -50%) scale(1); 
+            }
         }
         
         .countdown {
-            font-size: 60px;
-            color: var(--gold);
-            margin: 20px 0;
+            font-size: 72px;
             font-weight: bold;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+            background: linear-gradient(45deg, #ff0080, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 25px 0;
+            text-shadow: 0 0 30px rgba(255, 0, 128, 0.5);
         }
         
-        .ad-message {
-            font-size: 18px;
-            margin: 15px 0;
-            color: #FFCC00;
+        .reward-msg {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #ffd700;
         }
         
         .skip-btn {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--neon-blue);
             color: white;
-            border: 2px solid var(--primary);
-            padding: 10px 30px;
+            padding: 12px 40px;
             border-radius: 25px;
             cursor: pointer;
-            margin-top: 20px;
             font-size: 16px;
+            margin-top: 20px;
             transition: all 0.3s ease;
             opacity: 0;
         }
         
         .skip-btn:hover {
-            background: var(--primary);
-            transform: scale(1.05);
+            background: var(--neon-blue);
+            color: black;
         }
         
         /* Game Container */
         .game-container {
             width: 100%;
-            max-width: 900px;
-            margin: 20px auto;
             height: 600px;
-            border-radius: 15px;
+            border-radius: 25px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             display: none;
-            background: #000;
+            border: 3px solid var(--neon-blue);
+            position: relative;
         }
         
-        .game-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        /* Game Info */
-        .game-info {
-            text-align: center;
-            margin: 15px 0;
-            color: #AAA;
-        }
-        
-        /* Timer */
-        .game-timer {
+        .game-header {
             background: rgba(0, 0, 0, 0.7);
+            padding: 15px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
             color: white;
             padding: 10px 20px;
             border-radius: 10px;
-            display: inline-block;
-            margin: 10px;
-            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
+            width: 0%;
+            transition: width 1s ease;
+            border-radius: 5px;
         }
         
         /* Notification */
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #00C896, #00A878);
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #00b09b, #96c93d);
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
+            padding: 20px 30px;
+            border-radius: 15px;
             display: none;
-            z-index: 1000;
-            animation: slideIn 0.5s ease;
-            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.4);
+            z-index: 1001;
+            box-shadow: 0 10px 25px rgba(0, 176, 155, 0.3);
+            animation: slideInRight 0.5s ease;
         }
         
-        @keyframes slideIn {
+        @keyframes slideInRight {
             from { transform: translateX(100px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
         
-        /* Instructions */
-        .instructions {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
-            border-radius: 15px;
-            margin: 30px auto;
-            max-width: 800px;
-            text-align: center;
-            border-left: 5px solid var(--primary);
-        }
-        
-        .instructions h3 {
-            color: var(--primary);
-            margin-bottom: 15px;
-        }
-        
-        .step {
-            display: inline-block;
-            margin: 0 15px;
-            text-align: center;
-        }
-        
-        .step-number {
-            background: var(--primary);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-        
         /* Responsive */
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+        
         @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+            
             .game-container {
                 height: 400px;
             }
-            
-            .game-tabs {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .game-tab {
-                width: 90%;
-                justify-content: center;
-            }
         }
         
-        /* Flying Coin Animation */
-        .coin {
-            position: absolute;
-            font-size: 30px;
-            animation: fly 1s linear forwards;
-            pointer-events: none;
-            z-index: 999;
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(0, 243, 255, 0.8); }
         }
         
-        @keyframes fly {
-            0% {
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100px) scale(0);
-                opacity: 0;
-            }
+        .pulse {
+            animation: pulse-glow 2s infinite;
         }
     </style>
 </head>
 <body>
-
+    
+    <!-- Animated Background -->
+    <div class="bg-elements" id="bgElements"></div>
+    
     <!-- Header -->
     <div class="header">
-        <h1>🎮 3 Δωρεάν Παιχνίδια</h1>
-        <p>Παίξε & Κέρδισε Πόντοι!</p>
-        <div class="points-display">
-            Πόντοι: <span class="gold" id="points">0</span> 🪙
+        <div class="logo">
+            <span class="logo-icon">🎮</span>
+            <span>GameHub Rewards</span>
+        </div>
+        
+        <div class="points-card" onclick="showStats()">
+            <span>My Points:</span>
+            <span class="points-value" id="points">0</span>
+            <span class="coin-icon">🪙</span>
         </div>
     </div>
-
-    <!-- Game Tabs -->
-    <div class="game-tabs">
-        <div class="game-tab active" onclick="selectGame(1, this)">
-            <span class="game-icon">🎱</span>
-            <span>Παιχνίδι 1</span>
+    
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="left-column">
+            <h2 style="margin-bottom: 25px; color: var(--neon-blue);">🎯 Select Your Game</h2>
+            
+            <div class="games-grid">
+                <!-- Game 1 -->
+                <div class="game-card" onclick="selectGame(1)">
+                    <div class="game-thumbnail" style="background: linear-gradient(45deg, #1a237e, #311b92);">
+                        🎱
+                        <span class="game-badge">POPULAR</span>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                            <span>Billiard Game</span>
+                            <span style="font-size: 24px;">🎯</span>
+                        </h3>
+                        <p>Classic billiards game. Show your skills in this exciting pool challenge!</p>
+                        <button class="play-btn" onclick="selectGame(1)">
+                            <span>PLAY NOW</span>
+                            <span>➜</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Game 2 -->
+                <div class="game-card" onclick="selectGame(2)">
+                    <div class="game-thumbnail" style="background: linear-gradient(45deg, #1b5e20, #33691e);">
+                        🎮
+                        <span class="game-badge">HD GRAPHICS</span>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                            <span>Action Game</span>
+                            <span style="font-size: 24px;">⚡</span>
+                        </h3>
+                        <p>High-definition action game with stunning visuals and exciting gameplay!</p>
+                        <button class="play-btn" onclick="selectGame(2)">
+                            <span>PLAY NOW</span>
+                            <span>➜</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Game 3 -->
+                <div class="game-card" onclick="selectGame(3)">
+                    <div class="game-thumbnail" style="background: linear-gradient(45deg, #880e4f, #ad1457);">
+                        📱
+                        <span class="game-badge">MOBILE FRIENDLY</span>
+                    </div>
+                    <div class="game-info">
+                        <h3 class="game-title">
+                            <span>Mobile Game</span>
+                            <span style="font-size: 24px;">📲</span>
+                        </h3>
+                        <p>Vertical game optimized for mobile devices. Perfect for on-the-go gaming!</p>
+                        <button class="play-btn" onclick="selectGame(3)">
+                            <span>PLAY NOW</span>
+                            <span>➜</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Game Container (Hidden by default) -->
+            <div class="game-container" id="gameContainer">
+                <div class="game-header">
+                    <button class="back-btn" onclick="backToMenu()">
+                        ← Back to Games
+                    </button>
+                    <div class="game-timer">
+                        Time: <span id="gameTimer">02:00</span>
+                    </div>
+                </div>
+                <iframe class="game-frame" id="gameFrame" frameborder="0" width="100%" height="100%"></iframe>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
         </div>
-        <div class="game-tab" onclick="selectGame(2, this)">
-            <span class="game-icon">🚗</span>
-            <span>Παιχνίδι 2</span>
-        </div>
-        <div class="game-tab" onclick="selectGame(3, this)">
-            <span class="game-icon">📱</span>
-            <span>Παιχνίδι 3</span>
+        
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="stats-card">
+                <h3 class="stats-title">📊 Your Statistics</h3>
+                <div class="stat-item">
+                    <span>Games Played</span>
+                    <span id="gamesPlayed">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Ads Watched</span>
+                    <span id="adsWatched">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Total Play Time</span>
+                    <span id="totalTime">0 min</span>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <h3 class="stats-title">🎯 How to Earn</h3>
+                <div class="stat-item">
+                    <span>Watch Ad (30s)</span>
+                    <span>+1 Point</span>
+                </div>
+                <div class="stat-item">
+                    <span>Play Game (2min)</span>
+                    <span>+1 Point</span>
+                </div>
+                <div class="stat-item">
+                    <span>Daily Bonus</span>
+                    <span>+5 Points</span>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <h3 class="stats-title">🏆 Leaderboard</h3>
+                <div class="stat-item">
+                    <span>👑 You</span>
+                    <span id="myRank">#1</span>
+                </div>
+                <div class="stat-item">
+                    <span>🥈 Player2</span>
+                    <span>850</span>
+                </div>
+                <div class="stat-item">
+                    <span>🥉 Player3</span>
+                    <span>720</span>
+                </div>
+                <button style="width: 100%; margin-top: 15px; padding: 12px; background: var(--gradient); border: none; border-radius: 10px; color: white; cursor: pointer;">
+                    View Full Leaderboard →
+                </button>
+            </div>
+            
+            <!-- Quick Actions -->
+            <button onclick="showAd()" style="width: 100%; padding: 16px; background: linear-gradient(45deg, #ff0080, #ff8c00); border: none; border-radius: 15px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 20px;">
+                ⚡ Quick Earn: Watch Ad
+            </button>
         </div>
     </div>
-
-    <!-- Instructions -->
-    <div class="instructions">
-        <h3>📋 Οδηγίες Παιχνιδιού</h3>
-        <div class="step">
-            <span class="step-number">1</span>
-            Δες διαφήμιση 30 δευτερολέπτων
-        </div>
-        <div class="step">
-            <span class="step-number">2</span>
-            Κέρδισε <span class="gold">1 Πόντο</span>
-        </div>
-        <div class="step">
-            <span class="step-number">3</span>
-            Παίξε 2 λεπτά
-        </div>
-        <div class="step">
-            <span class="step-number">4</span>
-            Επανάλαβε για περισσότερους πόντους!
-        </div>
-    </div>
-
+    
     <!-- Ad Container -->
     <div class="ad-container" id="adContainer">
-        <h2>✨ ΚΕΡΔΙΣΕ ΠΟΝΤΟ! ✨</h2>
-        <p class="ad-message">Δες τη διαφήμιση για <span id="adSeconds">30</span> δευτερόλεπτα</p>
+        <h2>🎁 EARN REWARDS!</h2>
+        <p>Watch this ad to earn <span style="color: #ffd700;">+1 Point</span></p>
         
         <div class="countdown" id="countdown">30</div>
         
-        <!-- AdMaven Ads -->
-        <div id="adSpace">
-            <!-- Οι διαφημίσεις θα φορτωθούν εδώ -->
+        <div class="reward-msg">
+            ⏳ <span id="adSeconds">30</span> seconds remaining
+        </div>
+        
+        <!-- Ad Space -->
+        <div id="adSpace" style="min-height: 250px; background: rgba(0,0,0,0.3); border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 20px;">
+            <div style="text-align: center;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🎬</div>
+                <p>Ad will play here for 30 seconds</p>
+                <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 10px;">
+                    <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"></script>
+                    <meta name='admaven-placement' content='BqjwFpjU5'>
+                </div>
+            </div>
         </div>
         
         <button class="skip-btn" id="skipBtn" onclick="skipAd()">
-            Παράλειψη σε <span id="skipTimer">10</span> δευτ.
+            Skip in <span id="skipTimer">10</span>s
         </button>
-        
-        <p style="margin-top: 15px; color: #AAA; font-size: 14px;">
-            Μόλις ο χρόνος τελειώσει, θα κερδίσεις αυτόματα 1 πόντο! 🎉
-        </p>
     </div>
-
-    <!-- Game Container -->
-    <div class="game-container" id="gameContainer">
-        <div class="game-info">
-            Χρόνος Παιχνιδιού: <span class="game-timer" id="gameTimer">02:00</span>
-        </div>
-        <iframe class="game-frame" id="gameFrame" frameborder="0"></iframe>
-    </div>
-
+    
     <!-- Notification -->
     <div class="notification" id="notification">
-        🎉 Κέρδισες 1 Πόντο! (+1)
+        🎉 +1 Point Earned! Total: <span id="notificationPoints">0</span>
     </div>
 
     <script>
-        // ============================
-        // ΚΟΙΝΑ ΣΤΟΙΧΕΙΑ
-        // ============================
-        
-        // Τα 3 παιχνίδια από το αρχείο σου
+        // ======================
+        // GAME DATA - ΜΟΝΟ ΤΑ 3 ΠΑΙΧΝΙΔΙΑ ΣΟΥ
+        // ======================
         const GAMES = [
             {
                 id: 1,
-                name: "Παιχνίδι 1",
-                url: "https://html5.gamedistribution.com/34b3dd35505444f282a9e35a7ceb4a93/",
+                name: "Billiard Game",
+                url: "https://html5.gamedistribution.com/34b3dd35505444f282a9e35a7ceb4a93/?gd_sdk_referrer_url=https://www.example.com/games/game1",
                 width: "800",
                 height: "600",
                 icon: "🎱"
             },
             {
                 id: 2,
-                name: "Παιχνίδι 2",
-                url: "https://html5.gamedistribution.com/a1c1c4b21be6456ca467dcb109fbd524/",
+                name: "Action Game",
+                url: "https://html5.gamedistribution.com/a1c1c4b21be6456ca467dcb109fbd524/?gd_sdk_referrer_url=https://www.example.com/games/game2",
                 width: "1920",
                 height: "1080",
-                icon: "🚗"
+                icon: "🎮"
             },
             {
                 id: 3,
-                name: "Παιχνίδι 3",
-                url: "https://html5.gamedistribution.com/e7cb93267da745e596429a4735ab5457/",
+                name: "Mobile Game",
+                url: "https://html5.gamedistribution.com/e7cb93267da745e596429a4735ab5457/?gd_sdk_referrer_url=https://www.example.com/games/game3",
                 width: "1080",
                 height: "1920",
                 icon: "📱"
             }
         ];
-        
-        // Μεταβλητές
+
+        // ======================
+        // STATE MANAGEMENT
+        // ======================
         let userPoints = parseInt(localStorage.getItem('gamePoints')) || 0;
-        let currentGameId = 1;
+        let gamesPlayed = parseInt(localStorage.getItem('gamesPlayed')) || 0;
+        let adsWatched = parseInt(localStorage.getItem('adsWatched')) || 0;
+        let totalTime = parseInt(localStorage.getItem('totalTime')) || 0;
+        
+        let currentGameId = null;
         let adTimer, skipTimer, gameTimer;
         let adSeconds = 30;
         let skipSeconds = 10;
-        let gameSeconds = 120; // 2 λεπτά
-        let isGamePlaying = false;
+        let gameSeconds = 120;
         
-        // ============================
-        // 1. ΑΡΧΙΚΟΠΟΙΗΣΗ
-        // ============================
+        // ======================
+        // INITIALIZATION
+        // ======================
         document.addEventListener('DOMContentLoaded', function() {
-            // Εμφάνιση πόντων
-            document.getElementById('points').textContent = userPoints;
+            createParticles();
+            updateStats();
             
-            // Επιλογή πρώτου παιχνιδιού
-            selectGame(1, document.querySelector('.game-tab'));
+            // Check for daily bonus
+            checkDailyBonus();
         });
         
-        // ============================
-        // 2. ΕΠΙΛΟΓΗ ΠΑΙΧΝΙΔΙΟΥ
-        // ============================
-        function selectGame(gameId, element) {
-            // Ενημέρωση ενεργού tab
-            document.querySelectorAll('.game-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            element.classList.add('active');
-            
-            currentGameId = gameId;
-            
-            // Αν το παιχνίδι τρέχει, σταμάτα το
-            if (isGamePlaying) {
-                stopGame();
+        function createParticles() {
+            const container = document.getElementById('bgElements');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 15) + 's';
+                container.appendChild(particle);
             }
-            
-            // Εμφάνιση διαφήμισης πριν το παιχνίδι
+        }
+        
+        // ======================
+        // GAME SELECTION
+        // ======================
+        function selectGame(gameId) {
+            currentGameId = gameId;
             showAd();
         }
         
-        // ============================
-        // 3. ΔΙΑΦΗΜΙΣΕΙΣ
-        // ============================
+        // ======================
+        // AD SYSTEM
+        // ======================
         function showAd() {
-            // Κρύψε το παιχνίδι
-            hideGame();
+            document.getElementById('adContainer').style.display = 'block';
+            document.getElementById('gameContainer').style.display = 'none';
+            document.querySelector('.games-grid').style.opacity = '0.3';
+            document.querySelector('.games-grid').style.pointerEvents = 'none';
             
-            // Εμφάνιση διαφήμισης
-            const adContainer = document.getElementById('adContainer');
-            adContainer.style.display = 'block';
-            
-            // Επαναφορά χρόνων
             adSeconds = 30;
             skipSeconds = 10;
             
-            // Ενημέρωση display
             document.getElementById('countdown').textContent = adSeconds;
             document.getElementById('adSeconds').textContent = adSeconds;
-            document.getElementById('skipTimer').textContent = skipSeconds;
             document.getElementById('skipBtn').style.opacity = '0';
             
-            // Φόρτωση διαφημίσεων
-            loadAdMavenAds();
-            
-            // Έναρξη countdown
             clearInterval(adTimer);
             adTimer = setInterval(updateAdCountdown, 1000);
         }
@@ -456,14 +729,12 @@
             document.getElementById('countdown').textContent = adSeconds;
             document.getElementById('adSeconds').textContent = adSeconds;
             
-            // Εμφάνιση κουμπιού skip μετά από 20 δευτερόλεπτα
             if (adSeconds <= 10) {
                 document.getElementById('skipBtn').style.opacity = '1';
                 skipSeconds--;
                 document.getElementById('skipTimer').textContent = skipSeconds;
             }
             
-            // Τέλος διαφήμισης
             if (adSeconds <= 0) {
                 finishAd();
             }
@@ -477,63 +748,210 @@
         function finishAd() {
             clearInterval(adTimer);
             document.getElementById('adContainer').style.display = 'none';
+            document.querySelector('.games-grid').style.opacity = '1';
+            document.querySelector('.games-grid').style.pointerEvents = 'all';
+            
+            adsWatched++;
+            localStorage.setItem('adsWatched', adsWatched);
+            updateStats();
+            
             givePoint();
         }
         
-        // ============================
-        // 4. ΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
-        // ============================
-        function loadAdMavenAds() {
-            const adSpace = document.getElementById('adSpace');
+        // ======================
+        // REWARD SYSTEM
+        // ======================
+        function givePoint() {
+            userPoints++;
+            localStorage.setItem('gamePoints', userPoints);
             
-            // Καθαρισμός προηγούμενων
-            adSpace.innerHTML = '';
+            document.getElementById('points').textContent = userPoints;
+            document.getElementById('notificationPoints').textContent = userPoints;
             
-            // AdMaven Code από εσένα
-            adSpace.innerHTML = `
-                <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"><\/script>
-                <meta name='admaven-placement' content='BqjwFpjU5'>
-            `;
+            // Show notification
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
             
-            // Προσθήκη μερικών επιπλέον ads για καλύτερα έσοδα
+            // Add point animation
+            createPointAnimation();
+            
+            // Start game
+            startGame();
+            
             setTimeout(() => {
-                if (adSpace.children.length < 3) {
-                    const extraAd = document.createElement('div');
-                    extraAd.innerHTML = `
-                        <!-- Επιπλέον διαφήμιση για περισσότερα έσοδα -->
-                        <div style="margin: 20px 0;">
-                            <iframe src="//ads.example.com/ads/123" 
-                                    width="728" height="90" 
-                                    frameborder="0" scrolling="no"></iframe>
-                        </div>
-                    `;
-                    adSpace.appendChild(extraAd);
-                }
-            }, 500);
+                notification.style.display = 'none';
+            }, 3000);
         }
         
-        // ============================
-        // 5. ΚΕΡΔΙΣΜΑ ΠΟΝΤΩΝ
-        // ============================
-        function givePoint() {
-            // Αύξηση πόντων
+        function createPointAnimation() {
+            const coin = document.createElement('div');
+            coin.textContent = '🪙';
+            coin.style.position = 'fixed';
+            coin.style.fontSize = '30px';
+            coin.style.zIndex = '1002';
+            coin.style.top = '50%';
+            coin.style.left = '50%';
+            coin.style.animation = 'coinFly 1s ease forwards';
+            
+            document.body.appendChild(coin);
+            
+            setTimeout(() => coin.remove(), 1000);
+        }
+        
+        // ======================
+        // GAME PLAY
+        // ======================
+        function startGame() {
+            const game = GAMES.find(g => g.id === currentGameId);
+            if (!game) return;
+            
+            document.querySelector('.games-grid').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'block';
+            
+            const frame = document.getElementById('gameFrame');
+            frame.src = game.url;
+            
+            // Adjust container size for different games
+            if (game.id === 2) { // HD Game
+                document.getElementById('gameContainer').style.height = '700px';
+            } else if (game.id === 3) { // Mobile Game
+                document.getElementById('gameContainer').style.height = '500px';
+            }
+            
+            startGameTimer();
+            setupGameCompletion();
+            
+            gamesPlayed++;
+            localStorage.setItem('gamesPlayed', gamesPlayed);
+            updateStats();
+        }
+        
+        function startGameTimer() {
+            gameSeconds = 120;
+            updateTimerDisplay();
+            
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            
+            gameTimer = setInterval(() => {
+                gameSeconds--;
+                updateTimerDisplay();
+                
+                progress = ((120 - gameSeconds) / 120) * 100;
+                progressBar.style.width = progress + '%';
+                
+                if (gameSeconds <= 0) {
+                    gameCompleted();
+                }
+                
+                totalTime++;
+                if (totalTime % 60 === 0) {
+                    localStorage.setItem('totalTime', totalTime);
+                    updateStats();
+                }
+            }, 1000);
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameSeconds / 60);
+            const seconds = gameSeconds % 60;
+            document.getElementById('gameTimer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function gameCompleted() {
+            clearInterval(gameTimer);
+            
+            // Give extra point for completing game
             userPoints++;
             localStorage.setItem('gamePoints', userPoints);
             document.getElementById('points').textContent = userPoints;
             
-            // Εμφάνιση notification
-            showNotification("🎉 Κέρδισες 1 Πόντο! (+1)");
+            showNotification("✅ Game Completed! +1 Point!");
             
-            // Animation νομίσματος
-            createCoinAnimation();
-            
-            // Έναρξη παιχνιδιού
-            startGame();
+            setTimeout(() => {
+                backToMenu();
+                // Show ad again after 2 seconds
+                setTimeout(showAd, 2000);
+            }, 2000);
         }
         
+        function backToMenu() {
+            clearInterval(gameTimer);
+            
+            document.getElementById('gameContainer').style.display = 'none';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.querySelector('.games-grid').style.display = 'grid';
+            
+            const frame = document.getElementById('gameFrame');
+            frame.src = '';
+            
+            currentGameId = null;
+        }
+        
+        // ======================
+        // GAME COMPLETION DETECTION
+        // ======================
+        function setupGameCompletion() {
+            // PostMessage listener
+            window.addEventListener('message', function(event) {
+                if (event.origin.includes('gamedistribution.com')) {
+                    if (event.data && (event.data.type === 'gameOver' || event.data.gameState === 'ended')) {
+                        gameCompleted();
+                    }
+                }
+            });
+            
+            // Auto-complete after max time
+            setTimeout(() => {
+                if (currentGameId) {
+                    gameCompleted();
+                }
+            }, 180000); // 3 minutes max
+        }
+        
+        // ======================
+        // STATISTICS
+        // ======================
+        function updateStats() {
+            document.getElementById('points').textContent = userPoints;
+            document.getElementById('gamesPlayed').textContent = gamesPlayed;
+            document.getElementById('adsWatched').textContent = adsWatched;
+            document.getElementById('totalTime').textContent = Math.floor(totalTime / 60) + ' min';
+            
+            // Update rank based on points
+            const rank = Math.max(1, Math.floor(1000 / (userPoints + 1)));
+            document.getElementById('myRank').textContent = '#' + rank;
+        }
+        
+        function showStats() {
+            alert(`📊 Your Stats:\n\nPoints: ${userPoints}\nGames Played: ${gamesPlayed}\nAds Watched: ${adsWatched}\nPlay Time: ${Math.floor(totalTime / 60)} minutes`);
+        }
+        
+        // ======================
+        // BONUS SYSTEM
+        // ======================
+        function checkDailyBonus() {
+            const lastBonus = localStorage.getItem('lastBonusDate');
+            const today = new Date().toDateString();
+            
+            if (lastBonus !== today) {
+                userPoints += 5;
+                localStorage.setItem('gamePoints', userPoints);
+                localStorage.setItem('lastBonusDate', today);
+                
+                showNotification("🎁 Daily Bonus! +5 Points!");
+                updateStats();
+            }
+        }
+        
+        // ======================
+        // UTILITIES
+        // ======================
         function showNotification(message) {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
+            notification.innerHTML = message;
             notification.style.display = 'block';
             
             setTimeout(() => {
@@ -541,255 +959,26 @@
             }, 3000);
         }
         
-        function createCoinAnimation() {
-            const coin = document.createElement('div');
-            coin.className = 'coin';
-            coin.textContent = '🪙';
-            coin.style.left = Math.random() * 80 + 10 + '%';
-            coin.style.top = '80%';
-            document.body.appendChild(coin);
-            
-            setTimeout(() => {
-                coin.remove();
-            }, 1000);
-        }
-        
-        // ============================
-        // 6. ΠΑΙΧΝΙΔΙ
-        // ============================
-        function startGame() {
-            isGamePlaying = true;
-            
-            // Εύρεση επιλεγμένου παιχνιδιού
-            const game = GAMES.find(g => g.id === currentGameId);
-            
-            // Ρύθμιση iframe
-            const frame = document.getElementById('gameFrame');
-            frame.src = game.url;
-            
-            // Προσαρμογή μεγέθους
-            const container = document.getElementById('gameContainer');
-            if (game.width > 1000) {
-                container.style.maxWidth = '95%';
-                container.style.height = '700px';
-            } else {
-                container.style.maxWidth = '900px';
-                container.style.height = '600px';
+        // Add CSS for coin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes coinFly {
+                0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+                100% { transform: translate(-50%, -150px) scale(0); opacity: 0; }
             }
-            
-            // Εμφάνιση παιχνιδιού
-            container.style.display = 'block';
-            
-            // Έναρξη timer
-            startGameTimer();
-            
-            // Παρακολούθηση για τέλος παιχνιδιού
-            setupGameCompletionDetection();
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize with some points for demo
+        if (userPoints === 0) {
+            userPoints = 25;
+            localStorage.setItem('gamePoints', userPoints);
+            updateStats();
         }
         
-        function startGameTimer() {
-            gameSeconds = 120; // 2 λεπτά
-            
-            const timerElement = document.getElementById('gameTimer');
-            
-            // Ενημέρωση αρχικού χρόνου
-            updateGameTimerDisplay(timerElement);
-            
-            // Έναρξη countdown
-            clearInterval(gameTimer);
-            gameTimer = setInterval(() => {
-                gameSeconds--;
-                updateGameTimerDisplay(timerElement);
-                
-                if (gameSeconds <= 0) {
-                    gameCompleted();
-                }
-            }, 1000);
-        }
-        
-        function updateGameTimerDisplay(element) {
-            const minutes = Math.floor(gameSeconds / 60);
-            const seconds = gameSeconds % 60;
-            element.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            // Αλλαγή χρώματος στα τελευταία 30 δευτερόλεπτα
-            if (gameSeconds <= 30) {
-                element.style.color = '#FF6B8B';
-                element.style.animation = 'pulse 1s infinite';
-            }
-        }
-        
-        function hideGame() {
-            document.getElementById('gameContainer').style.display = 'none';
-            isGamePlaying = false;
-        }
-        
-        function stopGame() {
-            clearInterval(gameTimer);
-            const frame = document.getElementById('gameFrame');
-            frame.src = '';
-            hideGame();
-        }
-        
-        // ============================
-        // 7. ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ
-        // ============================
-        function gameCompleted() {
-            // Διακοπή timers
-            clearInterval(gameTimer);
-            
-            // Εμφάνιση μηνύματος
-            showNotification("✅ Τέλος παιχνιδιού! Συνέχισε για περισσότερους πόντους!");
-            
-            // Κρύψε το παιχνίδι
-            setTimeout(() => {
-                hideGame();
-                
-                // Νέα διαφήμιση μετά από 2 δευτερόλεπτα
-                setTimeout(showAd, 2000);
-            }, 2000);
-        }
-        
-        // ============================
-        // 8. ΑΝΙΧΝΕΥΣΗ ΤΕΛΟΥΣ ΠΑΙΧΝΙΔΙΟΥ
-        // ============================
-        function setupGameCompletionDetection() {
-            // Method 1: Αυτόματο τέλος μετά από 2 λεπτά (έχουμε ήδη)
-            
-            // Method 2: Ανίχνευση PostMessage από το παιχνίδι
-            window.addEventListener('message', function(event) {
-                // Προέλευση από GameDistribution
-                if (event.origin.includes('gamedistribution.com')) {
-                    const data = event.data;
-                    
-                    // Αν το παιχνίδι στέλνει event για τέλος
-                    if (data && (data.type === 'gameOver' || 
-                                 data.type === 'levelComplete' || 
-                                 data.gameState === 'ended')) {
-                        gameCompleted();
-                    }
-                }
-            });
-            
-            // Method 3: Έλεγχος URL changes στο iframe (για ορισμένα παιχνίδια)
-            const frame = document.getElementById('gameFrame');
-            let lastSrc = frame.src;
-            
-            const checkFrameChange = setInterval(() => {
-                if (!isGamePlaying) {
-                    clearInterval(checkFrameChange);
-                    return;
-                }
-                
-                if (frame.src !== lastSrc) {
-                    lastSrc = frame.src;
-                    // Αν άλλαξε το URL, ίσως τελείωσε το παιχνίδι
-                    if (frame.src.includes('end') || frame.src.includes('complete')) {
-                        gameCompleted();
-                        clearInterval(checkFrameChange);
-                    }
-                }
-            }, 3000);
-            
-            // Αυτόματος καθαρισμός μετά από 130 δευτερόλεπτα
-            setTimeout(() => {
-                if (isGamePlaying) {
-                    gameCompleted();
-                }
-            }, 130000);
-        }
-        
-        // ============================
-        // 9. ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ
-        // ============================
-        function resetPoints() {
-            if (confirm("Είσαι σίγουρος ότι θέλεις να μηδενίσεις τους πόντους;")) {
-                userPoints = 0;
-                localStorage.setItem('gamePoints', 0);
-                document.getElementById('points').textContent = '0';
-                showNotification("🔄 Πόντοι μηδενίστηκαν!");
-            }
-        }
-        
-        function shareGame() {
-            const shareUrl = window.location.href;
-            const shareText = "Παίξε 3 δωρεάν παιχνίδια και κέρδισε πόντους! 🎮 " + shareUrl;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Παιχνίδια & Πόντοι',
-                    text: shareText,
-                    url: shareUrl
-                });
-            } else {
-                navigator.clipboard.writeText(shareText);
-                showNotification("📋 Σύνδεσμος αντιγράφηκε! Κάνε κοινή χρήση!");
-            }
-        }
-        
-        // ============================
-        // 10. STATS & REVENUE TRACKING
-        // ============================
-        function trackAdView() {
-            // Αποθήκευση στατιστικών στο localStorage
-            const stats = JSON.parse(localStorage.getItem('gameStats')) || {
-                totalAdsWatched: 0,
-                totalPointsEarned: 0,
-                totalPlayTime: 0,
-                lastPlayDate: new Date().toISOString()
-            };
-            
-            stats.totalAdsWatched++;
-            stats.totalPointsEarned = userPoints;
-            stats.lastPlayDate = new Date().toISOString();
-            
-            localStorage.setItem('gameStats', JSON.stringify(stats));
-            
-            // Εκτίμηση εσόδων
-            const estimatedEarnings = (stats.totalAdsWatched * 0.003).toFixed(2); // ~$3 CPM
-            console.log(`Εκτιμώμενα έσοδα: $${estimatedEarnings} (${stats.totalAdsWatched} ads)`);
-        }
-        
-        // Καλέστε αυτή τη συνάρτηση κάθε φορά που τελειώνει διαφήμιση
-        window.addEventListener('beforeunload', function() {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'ad_view', {
-                    'event_category': 'monetization',
-                    'event_label': 'admaven'
-                });
-            }
-        });
     </script>
 
-    <!-- Επιπλέον Controls -->
-    <div style="position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px;">
-        <button onclick="shareGame()" style="
-            background: linear-gradient(135deg, #00C896, #009975);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
-        ">
-            📢 Κοινή Χρήση
-        </button>
-        
-        <button onclick="resetPoints()" style="
-            background: rgba(255, 107, 139, 0.2);
-            color: #FF6B8B;
-            border: 2px solid #FF6B8B;
-            padding: 12px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-        ">
-            🔄 Μηδενισμός Πόντων
-        </button>
-    </div>
-
-    <!-- AdMaven Script (στατικό) -->
+    <!-- AdMaven Script -->
     <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"></script>
     <meta name='admaven-placement' content='BqjwFpjU5'>
 
