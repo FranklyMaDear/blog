@@ -1,190 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name='admaven-placement' content='BqjwFpjU5'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FranklyMadEar - Free Credits & Rewards</title>
+    <title>Δύο Παιχνίδια με Πόντοι Rewards</title>
     <style>
-        /* Ίδια CSS με πριν */
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Header, Points Display, Categories όπως πριν -->
-        
-        <!-- VIDEO OFFERS SECTION -->
-        <div class="section-title">Βίντεο για Πόντοus</div>
-        <div class="offers-grid">
-            
-            <!-- Video Offer 1 -->
-            <div class="offer-card video-offer">
-                <div class="offer-header">
-                    <div class="offer-title">📺 Βίντεο 30 δευτερολέπτων</div>
-                    <div class="offer-points">+25</div>
-                </div>
-                <div class="offer-description">
-                    Παρακολούθησε ένα βίντεο διαφήμισης για 30 δευτερόλεπτα
-                </div>
-                <div class="offer-footer">
-                    <div class="offer-difficulty">Διάρκεια: 30 δευτ.</div>
-                    <button class="btn-claim" onclick="playVideoAd(25, 'BqjwFpjU5')">
-                        Παίξε Βίντεο
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Video Offer 2 -->
-            <div class="offer-card video-offer">
-                <div class="offer-header">
-                    <div class="offer-title">🎬 Βίντεο 45 δευτερολέπτων</div>
-                    <div class="offer-points">+40</div>
-                </div>
-                <div class="offer-description">
-                    Μεγαλύτερη διάρκεια, μεγαλύτερη ανταμοιβή
-                </div>
-                <div class="offer-footer">
-                    <div class="offer-difficulty">Διάρκεια: 45 δευτ.</div>
-                    <button class="btn-claim" onclick="playVideoAd(40, 'BqjwFpjU5')">
-                        Παίξε Βίντεο
-                    </button>
-                </div>
-            </div>
-            
-        </div>
-        
-        <!-- Κανονικές προσφορές (apps, games, surveys) -->
-        
-    </div>
-
-    <!-- ================= ADMAVEN INTEGRATION ================= -->
-    <!-- ΣΤΗΝ ΑΡΧΗ ΤΟΥ BODY ή ΣΤΟ ΤΕΛΟΣ -->
-    <script type='text/javascript'>
-        // Βασική ρύθμιση AdMaven
-        var admaven_pub_id = 'BqjwFpjU5';
-        var admaven_placement_id = ''; // Άστο κενό αν δεν έχεις
-        var admaven_subid = 'video_reward'; // Προαιρετικό για tracking
-    </script>
-    <script src='https://ads.admaven.com/popunder.js'></script>
-    <!-- ===================================================== -->
-
-    <script>
-        // User points
-        let userPoints = 1250;
-        let videoInProgress = false;
-        
-        // Function to play video ad
-        function playVideoAd(points, pubId) {
-            if (videoInProgress) {
-                alert("Παρακαλώ περίμενε να ολοκληρωθεί το τρέχον βίντεο!");
-                return;
-            }
-            
-            videoInProgress = true;
-            
-            // Show loading/confirmation
-            if (!confirm(`Θα ανοίξει βίντεο διαφήμισης για ${points} πόντους.\nΠαρακαλώ μην κλείσεις το popup!`)) {
-                videoInProgress = false;
-                return;
-            }
-            
-            // 1. TRACK START TIME
-            const startTime = new Date();
-            
-            // 2. TRIGGER ADMAVEN AD
-            try {
-                // Method 1: Auto-popunder (will open automatically)
-                // Μπορείς να αφήσεις το AdMaven να κάνει auto-popunder
-                
-                // Method 2: Manual trigger if available
-                if (typeof admaven !== 'undefined' && admaven.showAd) {
-                    admaven.showAd();
-                }
-                
-                // 3. OPEN A POPUP WINDOW (fallback)
-                const popup = window.open(
-                    'about:blank',
-                    'adWindow',
-                    'width=800,height=600,scrollbars=yes,resizable=yes'
-                );
-                
-                // 4. SHOW COUNTDOWN TO USER
-                let secondsLeft = 30;
-                const countdown = setInterval(() => {
-                    secondsLeft--;
-                    
-                    if (secondsLeft <= 0) {
-                        clearInterval(countdown);
-                        completeVideoAd(points, startTime, popup);
-                    }
-                }, 1000);
-                
-                // 5. UPDATE BUTTON STATE
-                event.target.textContent = `Παίζει... (${secondsLeft}s)`;
-                event.target.disabled = true;
-                
-            } catch (error) {
-                console.error("AdMaven error:", error);
-                alert("Σφάλμα κατά την προβολή διαφήμισης. Δοκίμασε ξανά!");
-                videoInProgress = false;
-            }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
         
-        function completeVideoAd(points, startTime, popupWindow) {
-            // Calculate if user watched enough (minimum 25 seconds)
-            const endTime = new Date();
-            const secondsWatched = Math.floor((endTime - startTime) / 1000);
-            
-            if (secondsWatched >= 25) {
-                // AWARD POINTS
-                userPoints += points;
-                updatePointsDisplay();
-                
-                // SHOW SUCCESS
-                alert(`🎉 Κέρδισες ${points} πόντους!`);
-                
-                // TRACK CONVERSION (στον server σου)
-                fetch('/api/track-video', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        userId: getUserId(),
-                        points: points,
-                        duration: secondsWatched,
-                        advertiser: 'AdMaven'
-                    })
-                });
-                
-            } else {
-                alert("Δεν παρακολούθησες το βίντεο αρκετά. Προσπάθησε ξανά!");
-            }
-            
-            // CLOSE POPUP
-            if (popupWindow && !popupWindow.closed) {
-                popupWindow.close();
-            }
-            
-            // RESET UI
-            videoInProgress = false;
-            const buttons = document.querySelectorAll('.btn-claim');
-            buttons.forEach(btn => {
-                btn.disabled = false;
-                btn.textContent = btn.textContent.replace(/Παίζει\.\.\. \(\d+s\)/, 'Παίξε Βίντεο');
-            });
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
         }
         
-        function updatePointsDisplay() {
-            // Ενημέρωσε το UI με τους νέους πόντους
-            const pointsEl = document.querySelector('.points-value');
-            if (pointsEl) {
-                pointsEl.textContent = userPoints.toLocaleString();
-            }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        function getUserId() {
-            // Επιστρέφει το ID του χρήστη (από cookies/localStorage)
-            return localStorage.getItem('user_id') || 'anonymous';
-        }
-    </script>
-</body>
-</html>
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid rgba(255, 215,
