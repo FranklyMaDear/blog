@@ -17,10 +17,10 @@
             background: #2c3e50;
             color: #fff;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         
-        .game-100percent {
+        .game-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -31,7 +31,7 @@
             background: #2c3e50;
         }
         
-        .tiny-top-bar {
+        .game-header {
             background: #e74c3c;
             padding: 8px 12px;
             text-align: center;
@@ -43,7 +43,7 @@
             justify-content: center;
         }
         
-        .compact-title {
+        .game-title {
             font-size: 1.3rem;
             font-weight: 900;
             color: #fff;
@@ -51,13 +51,13 @@
             margin-bottom: 3px;
         }
         
-        .compact-subtitle {
+        .game-subtitle {
             font-size: 0.8rem;
             color: #f1c40f;
             font-weight: 600;
         }
         
-        .game-full-area {
+        .main-game-area {
             flex: 1;
             background: #34495e;
             display: flex;
@@ -68,14 +68,14 @@
             position: relative;
         }
         
-        .game-frame-100percent {
+        .game-frame {
             width: 100%;
             height: 100%;
             border: none;
             background: #2c3e50;
         }
         
-        .loading-full {
+        .loading-screen {
             position: absolute;
             top: 0;
             left: 0;
@@ -90,7 +90,7 @@
             transition: opacity 0.3s ease;
         }
         
-        .spinner {
+        .loader {
             width: 50px;
             height: 50px;
             border: 5px solid rgba(241, 196, 15, 0.3);
@@ -104,13 +104,13 @@
             100% { transform: rotate(360deg); }
         }
         
-        .loading-msg {
+        .loading-text {
             color: #f1c40f;
             font-size: 1.2rem;
             font-weight: 600;
         }
         
-        .small-bottom-bar {
+        .game-footer {
             background: #e74c3c;
             padding: 10px 15px;
             display: flex;
@@ -121,7 +121,7 @@
             height: 70px;
         }
         
-        .small-btn {
+        .game-btn {
             padding: 8px 16px;
             background: #27ae60;
             color: white;
@@ -139,89 +139,385 @@
             min-width: 100px;
         }
         
-        .small-reload {
+        .game-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 0 #219653;
+        }
+        
+        .game-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 0 #219653;
+        }
+        
+        .reload-btn {
             background: #e67e22;
             box-shadow: 0 3px 0 #d35400;
         }
         
-        .small-sound {
+        .reload-btn:hover {
+            box-shadow: 0 4px 0 #d35400;
+        }
+        
+        .sound-btn {
             background: #3498db;
             box-shadow: 0 3px 0 #2980b9;
         }
         
+        .sound-btn:hover {
+            box-shadow: 0 4px 0 #2980b9;
+        }
+        
+        /* OTIΕΥ Ad Container */
+        .ad-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            border: 3px solid #f1c40f;
+            display: none;
+            animation: slideInUp 0.5s ease;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .ad-title {
+            color: #2c3e50;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        
+        .close-ad-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .close-ad-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+        
+        #otieuAd {
+            min-width: 300px;
+            min-height: 250px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .ad-timer {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #f1c40f;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 99;
+            display: none;
+            border: 2px solid #f1c40f;
+        }
+        
+        /* Fullscreen ad overlay */
+        .fullscreen-ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .fullscreen-ad-content {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            border: 5px solid #f1c40f;
+        }
+        
+        .fullscreen-ad-title {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        
+        #fullscreenOtieuAd {
+            width: 100%;
+            min-height: 300px;
+            margin: 15px 0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .skip-fullscreen-ad {
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .skip-fullscreen-ad:hover {
+            background: #7f8c8d;
+        }
+        
+        /* Level completion ad */
+        .level-complete-ad {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 450px;
+            width: 90%;
+            z-index: 999;
+            display: none;
+            text-align: center;
+            border: 5px solid #f1c40f;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.5s ease;
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+        
+        .level-complete-title {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+        }
+        
+        .level-complete-text {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .show-ad-level-btn {
+            padding: 12px 30px;
+            background: #f1c40f;
+            color: #2c3e50;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 0 #f39c12;
+            margin: 10px;
+        }
+        
+        .show-ad-level-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 #f39c12;
+        }
+        
+        .skip-level-ad-btn {
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        
+        .skip-level-ad-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Responsive design */
         @media (max-width: 768px) {
-            .tiny-top-bar {
+            .game-header {
                 padding: 6px 10px;
                 height: 60px;
             }
             
-            .compact-title {
+            .game-title {
                 font-size: 1.1rem;
             }
             
-            .compact-subtitle {
+            .game-subtitle {
                 font-size: 0.7rem;
             }
             
-            .small-bottom-bar {
+            .game-footer {
                 padding: 8px 12px;
                 height: 60px;
             }
             
-            .small-btn {
+            .game-btn {
                 padding: 6px 12px;
                 font-size: 0.8rem;
                 min-width: 80px;
             }
+            
+            .ad-container {
+                right: 10px;
+                bottom: 70px;
+                padding: 8px;
+            }
+            
+            #otieuAd {
+                min-width: 250px;
+                min-height: 200px;
+            }
+            
+            .fullscreen-ad-content {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .level-complete-ad {
+                padding: 20px;
+            }
         }
         
         @media (max-width: 480px) {
-            .tiny-top-bar {
+            .game-header {
                 height: 55px;
                 padding: 5px 8px;
             }
             
-            .compact-title {
+            .game-title {
                 font-size: 1rem;
                 margin-bottom: 2px;
             }
             
-            .compact-subtitle {
+            .game-subtitle {
                 font-size: 0.65rem;
             }
             
-            .small-bottom-bar {
+            .game-footer {
                 height: 55px;
                 padding: 6px 10px;
                 gap: 8px;
             }
             
-            .small-btn {
+            .game-btn {
                 padding: 5px 10px;
                 font-size: 0.75rem;
                 min-width: 70px;
                 gap: 4px;
+            }
+            
+            .ad-container {
+                display: none !important; /* Hide on very small screens */
+            }
+            
+            .ad-timer {
+                bottom: 10px;
+                right: 10px;
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            .ad-container {
+                bottom: 70px;
+            }
+            
+            .ad-timer {
+                bottom: 15px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .game-btn:hover, .show-ad-level-btn:hover, .skip-fullscreen-ad:hover {
+                transform: none;
+            }
+            
+            .game-btn:active, .show-ad-level-btn:active, .skip-fullscreen-ad:active {
+                transform: scale(0.96);
             }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="game-100percent">
-        <div class="tiny-top-bar">
-            <div class="compact-title">Krismas Mahjong 2</div>
-            <div class="compact-subtitle">Χριστουγεννιάτικο παιχνίδι Mahjong - Βρες τα ίδια πλακάκια!</div>
+    <!-- Main Game Container -->
+    <div class="game-container">
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="game-title">Krismas Mahjong 2</div>
+            <div class="game-subtitle">Χριστουγεννιάτικο παιχνίδι Mahjong - Βρες τα ίδια πλακάκια!</div>
         </div>
         
-        <div class="game-full-area">
-            <div class="loading-full" id="loadingScreen">
-                <div class="spinner"></div>
-                <div class="loading-msg">Φόρτωση παιχνιδιού...</div>
+        <!-- Main Game Area -->
+        <div class="main-game-area">
+            <div class="loading-screen" id="loadingScreen">
+                <div class="loader"></div>
+                <div class="loading-text">Φόρτωση παιχνιδιού...</div>
             </div>
             
             <iframe 
                 src="https://html5.gamedistribution.com/176415ef4cf84473b7942ab1a0ff3730/?gd_sdk_referrer_url=https://gamedistribution.com/games/krismas-mahjong-2" 
-                class="game-frame-100percent" 
+                class="game-frame" 
                 id="gameFrame"
                 scrolling="no"
                 frameborder="0"
@@ -230,17 +526,61 @@
             </iframe>
         </div>
         
-        <div class="small-bottom-bar">
-            <button class="small-btn small-reload" id="reloadBtn">
+        <!-- Game Footer -->
+        <div class="game-footer">
+            <button class="game-btn reload-btn" id="reloadBtn">
                 <i class="fas fa-redo-alt"></i> Ανανέωση
             </button>
-            <button class="small-btn small-sound" id="soundBtn">
+            <button class="game-btn sound-btn" id="soundBtn">
                 <i class="fas fa-volume-up"></i> Ήχος
             </button>
         </div>
+        
+        <!-- Next Ad Timer -->
+        <div class="ad-timer" id="adTimer">
+            Επόμενη διαφήμιση: <span id="timerDisplay">02:00</span>
+        </div>
+    </div>
+    
+    <!-- Floating Ad Container -->
+    <div class="ad-container" id="floatingAd">
+        <div class="ad-header">
+            <div class="ad-title">Διαφήμιση</div>
+            <button class="close-ad-btn" id="closeFloatingAd">×</button>
+        </div>
+        <div id="otieuAd"></div>
+    </div>
+    
+    <!-- Fullscreen Ad Overlay (appears every 3 minutes) -->
+    <div class="fullscreen-ad-overlay" id="fullscreenAdOverlay">
+        <div class="fullscreen-ad-content">
+            <div class="fullscreen-ad-title">Διαφήμιση</div>
+            <div id="fullscreenOtieuAd"></div>
+            <div style="color: #666; margin: 15px 0; font-size: 0.9rem;">
+                Η διαφήμιση υποστηρίζει το δωρεάν παιχνίδι
+            </div>
+            <button class="skip-fullscreen-ad" id="skipFullscreenAd">
+                Παράβλεψη (10)
+            </button>
+        </div>
+    </div>
+    
+    <!-- Level Complete Ad (appears after completing levels) -->
+    <div class="level-complete-ad" id="levelCompleteAd">
+        <div class="level-complete-title">🎉 Επίπεδο Ολοκληρώθηκε!</div>
+        <div class="level-complete-text">
+            Δες μια σύντομη διαφήμιση για να συνεχίσεις στο επόμενο επίπεδο!
+        </div>
+        <button class="show-ad-level-btn" id="showLevelAdBtn">
+            <i class="fas fa-play"></i> Δες Διαφήμιση
+        </button>
+        <button class="skip-level-ad-btn" id="skipLevelAdBtn">
+            Παράβλεψη
+        </button>
     </div>
 
-    <!-- OTIΕΥ Script -->
+    <!-- OTIΕΥ Ads Scripts -->
+    <!-- Floating Ad (300x250) -->
     <script type="text/javascript">
         atOptions = {
             'key' : '10274068',
@@ -249,8 +589,20 @@
             'width' : 300,
             'params' : {}
         };
+        document.write('<scr' + 'ipt type="text/javascript" src="https://otieu.com/4/10274068"></scr' + 'ipt>');
     </script>
-    <script type="text/javascript" src="https://otieu.com/4/10274068"></script>
+    
+    <!-- Fullscreen Ad (responsive) -->
+    <script type="text/javascript">
+        atOptions = {
+            'key' : '10274068',
+            'format' : 'iframe',
+            'height' : 600,
+            'width' : 300,
+            'params' : {}
+        };
+        document.write('<scr' + 'ipt type="text/javascript" src="https://otieu.com/4/10274068"></scr' + 'ipt>');
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -258,31 +610,207 @@
             const loadingScreen = document.getElementById('loadingScreen');
             const reloadBtn = document.getElementById('reloadBtn');
             const soundBtn = document.getElementById('soundBtn');
+            const floatingAd = document.getElementById('floatingAd');
+            const closeFloatingAd = document.getElementById('closeFloatingAd');
+            const adTimer = document.getElementById('adTimer');
+            const timerDisplay = document.getElementById('timerDisplay');
+            const fullscreenAdOverlay = document.getElementById('fullscreenAdOverlay');
+            const skipFullscreenAd = document.getElementById('skipFullscreenAd');
+            const levelCompleteAd = document.getElementById('levelCompleteAd');
+            const showLevelAdBtn = document.getElementById('showLevelAdBtn');
+            const skipLevelAdBtn = document.getElementById('skipLevelAdBtn');
             
+            // Game state
             let soundEnabled = true;
+            let adInterval = 180; // 3 minutes in seconds
+            let currentLevel = 1;
+            let adCounter = 0;
+            let adIntervalId;
+            let skipTimer = 10;
+            let skipIntervalId;
             
+            // Initialize game
+            function initGame() {
+                // Start ad timer
+                startAdTimer();
+                
+                // Show floating ad after 30 seconds
+                setTimeout(() => {
+                    showFloatingAd();
+                }, 30000);
+                
+                // Simulate level completion every 2 minutes (for demo)
+                setInterval(() => {
+                    simulateLevelCompletion();
+                }, 120000);
+            }
+            
+            // Start ad countdown timer
+            function startAdTimer() {
+                adInterval = 180; // 3 minutes
+                updateTimerDisplay();
+                adTimer.style.display = 'block';
+                
+                adIntervalId = setInterval(() => {
+                    adInterval--;
+                    updateTimerDisplay();
+                    
+                    if (adInterval <= 0) {
+                        showFullscreenAd();
+                        adInterval = 180; // Reset to 3 minutes
+                    }
+                }, 1000);
+            }
+            
+            // Update timer display
+            function updateTimerDisplay() {
+                const minutes = Math.floor(adInterval / 60);
+                const seconds = adInterval % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Show floating ad
+            function showFloatingAd() {
+                if (window.innerWidth > 480) { // Only show on larger screens
+                    floatingAd.style.display = 'block';
+                    
+                    // Auto-hide after 30 seconds
+                    setTimeout(() => {
+                        floatingAd.style.display = 'none';
+                    }, 30000);
+                }
+            }
+            
+            // Show fullscreen ad (every 3 minutes)
+            function showFullscreenAd() {
+                // Pause game timer
+                clearInterval(adIntervalId);
+                adTimer.style.display = 'none';
+                
+                // Show fullscreen ad
+                fullscreenAdOverlay.style.display = 'flex';
+                adCounter++;
+                
+                // Start skip countdown
+                skipTimer = 10;
+                skipFullscreenAd.textContent = `Παράβλεψη (${skipTimer})`;
+                
+                skipIntervalId = setInterval(() => {
+                    skipTimer--;
+                    skipFullscreenAd.textContent = `Παράβλεψη (${skipTimer})`;
+                    
+                    if (skipTimer <= 0) {
+                        closeFullscreenAd();
+                    }
+                }, 1000);
+            }
+            
+            // Close fullscreen ad
+            function closeFullscreenAd() {
+                fullscreenAdOverlay.style.display = 'none';
+                clearInterval(skipIntervalId);
+                
+                // Restart ad timer
+                startAdTimer();
+                
+                // Show notification
+                showNotification('Διαφήμιση ολοκληρώθηκε!');
+            }
+            
+            // Simulate level completion
+            function simulateLevelCompletion() {
+                currentLevel++;
+                levelCompleteAd.style.display = 'block';
+            }
+            
+            // Show level complete ad
+            function showLevelCompleteAd() {
+                // Hide level complete message
+                levelCompleteAd.style.display = 'none';
+                
+                // Show fullscreen ad
+                showFullscreenAd();
+            }
+            
+            // Show notification
+            function showNotification(message) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: linear-gradient(to right, #2ecc71, #27ae60);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    z-index: 1001;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    animation: slideInRight 0.5s ease, fadeOut 0.5s ease 2.5s;
+                `;
+                
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes fadeOut {
+                        to { opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                notification.innerHTML = `✅ ${message}`;
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 3000);
+            }
+            
+            // Event Listeners
+            
+            // Game loaded
             gameFrame.addEventListener('load', function() {
                 setTimeout(() => {
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => {
                         loadingScreen.style.display = 'none';
+                        // Initialize game after loading
+                        initGame();
                     }, 300);
                 }, 1500);
             });
             
+            // Reload game
             reloadBtn.addEventListener('click', function() {
                 loadingScreen.style.display = 'flex';
                 loadingScreen.style.opacity = '1';
+                
+                // Reset ad system
+                clearInterval(adIntervalId);
+                clearInterval(skipIntervalId);
+                floatingAd.style.display = 'none';
+                fullscreenAdOverlay.style.display = 'none';
+                levelCompleteAd.style.display = 'none';
+                adTimer.style.display = 'none';
+                
                 setTimeout(() => {
                     gameFrame.src = gameFrame.src;
                 }, 300);
                 
+                // Animation
                 reloadBtn.style.transform = 'rotate(180deg)';
                 setTimeout(() => {
                     reloadBtn.style.transform = '';
                 }, 300);
             });
             
+            // Sound toggle
             soundBtn.addEventListener('click', function() {
                 soundEnabled = !soundEnabled;
                 
@@ -294,12 +822,42 @@
                     soundBtn.style.background = '#7f8c8d';
                 }
                 
+                // Animation
                 soundBtn.style.transform = 'scale(1.1)';
                 setTimeout(() => {
                     soundBtn.style.transform = '';
                 }, 200);
             });
             
+            // Close floating ad
+            closeFloatingAd.addEventListener('click', function() {
+                floatingAd.style.display = 'none';
+            });
+            
+            // Skip fullscreen ad
+            skipFullscreenAd.addEventListener('click', function() {
+                closeFullscreenAd();
+            });
+            
+            // Show level ad
+            showLevelAdBtn.addEventListener('click', function() {
+                showLevelCompleteAd();
+            });
+            
+            // Skip level ad
+            skipLevelAdBtn.addEventListener('click', function() {
+                levelCompleteAd.style.display = 'none';
+                showNotification('Συνέχεια στο επίπεδο ' + currentLevel);
+            });
+            
+            // Close fullscreen ad when clicking outside
+            fullscreenAdOverlay.addEventListener('click', function(e) {
+                if (e.target === fullscreenAdOverlay) {
+                    closeFullscreenAd();
+                }
+            });
+            
+            // Error handling
             gameFrame.addEventListener('error', function() {
                 loadingScreen.innerHTML = `
                     <div style="text-align: center; padding: 20px; max-width: 400px;">
@@ -307,12 +865,15 @@
                         <div style="color: #f1c40f; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;">
                             Σφάλμα φόρτωσης
                         </div>
-                        <button class="small-btn" onclick="location.reload()" style="background: #e67e22;">
+                        <button class="game-btn" onclick="location.reload()" style="background: #e67e22;">
                             <i class="fas fa-sync-alt"></i> Ανανέωση
                         </button>
                     </div>
                 `;
             });
+            
+            // Console message
+            console.log("🎮 Krismas Mahjong 2 με OTIΕΥ Ads");
         });
     </script>
 </body>
