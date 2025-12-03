@@ -3,84 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Παίξε & Κέρδισε Πόντοι - Δωρεάν Παιχνίδια</title>
+    <title>3 Δωρεάν Παιχνίδια - Κέρδισε Πόντοι</title>
     <style>
-        /* Modern Design */
         :root {
-            --primary: #4A6FFF;
-            --secondary: #FF6B8B;
+            --primary: #FF6B8B;
+            --secondary: #4A6FFF;
             --dark: #1A1A2E;
-            --light: #F8F9FA;
-            --success: #00C896;
-            --warning: #FFD166;
+            --light: #FFFFFF;
+            --gold: #FFD700;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
         
         body {
-            background: linear-gradient(135deg, var(--dark) 0%, #16213E 100%);
+            background: linear-gradient(135deg, var(--dark) 0%, #0F3460 100%);
             color: white;
             min-height: 100vh;
-            overflow-x: hidden;
+            padding: 20px;
         }
         
         /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            text-align: center;
             padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 30px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
         
-        .points-card {
-            background: linear-gradient(135deg, var(--primary), #6A5AF9);
-            padding: 15px 25px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 5px 15px rgba(74, 111, 255, 0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .points-value {
-            font-size: 28px;
+        .points-display {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 24px;
             font-weight: bold;
-            color: var(--warning);
+            margin-top: 15px;
+            box-shadow: 0 5px 20px rgba(255, 107, 139, 0.4);
+        }
+        
+        .gold {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         
         /* Game Tabs */
-        .games-tabs {
+        .game-tabs {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             margin: 30px 0;
             flex-wrap: wrap;
         }
         
         .game-tab {
             background: rgba(255, 255, 255, 0.1);
-            padding: 15px 30px;
-            border-radius: 50px;
+            padding: 12px 25px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             border: 2px solid transparent;
         }
         
@@ -92,56 +80,74 @@
         .game-tab.active {
             background: var(--primary);
             border-color: white;
-            box-shadow: 0 5px 20px rgba(74, 111, 255, 0.4);
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+        }
+        
+        .game-icon {
+            font-size: 20px;
         }
         
         /* Ad Container */
         .ad-container {
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 20px;
-            padding: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 15px;
+            padding: 30px;
             text-align: center;
-            margin: 30px auto;
+            margin: 20px auto;
             max-width: 800px;
             display: none;
+            border: 3px solid var(--gold);
             animation: fadeIn 0.5s ease;
-            border: 2px solid var(--warning);
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .countdown {
-            font-size: 48px;
-            color: var(--warning);
+            font-size: 60px;
+            color: var(--gold);
             margin: 20px 0;
             font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+        }
+        
+        .ad-message {
+            font-size: 18px;
+            margin: 15px 0;
+            color: #FFCC00;
         }
         
         .skip-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             color: white;
-            border: none;
+            border: 2px solid var(--primary);
             padding: 10px 30px;
             border-radius: 25px;
             cursor: pointer;
             margin-top: 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
             opacity: 0;
-            transition: opacity 0.3s ease;
+        }
+        
+        .skip-btn:hover {
+            background: var(--primary);
+            transform: scale(1.05);
         }
         
         /* Game Container */
         .game-container {
             width: 100%;
             max-width: 900px;
-            margin: 0 auto;
+            margin: 20px auto;
             height: 600px;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: none;
+            background: #000;
         }
         
         .game-frame {
@@ -150,200 +156,299 @@
             border: none;
         }
         
-        /* Progress Bar */
-        .progress-container {
-            width: 100%;
-            max-width: 900px;
-            margin: 20px auto;
-            background: rgba(255, 255, 255, 0.1);
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
+        /* Game Info */
+        .game-info {
+            text-align: center;
+            margin: 15px 0;
+            color: #AAA;
         }
         
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success), var(--primary));
-            width: 0%;
-            transition: width 1s ease;
+        /* Timer */
+        .game-timer {
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px;
+            font-size: 18px;
         }
         
-        /* Notifications */
+        /* Notification */
         .notification {
             position: fixed;
-            top: 100px;
+            top: 20px;
             right: 20px;
-            background: var(--success);
+            background: linear-gradient(135deg, #00C896, #00A878);
             color: white;
             padding: 15px 25px;
             border-radius: 10px;
             display: none;
-            z-index: 1001;
-            animation: slideIn 0.3s ease;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0, 200, 150, 0.4);
         }
         
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
+            from { transform: translateX(100px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
         
         /* Instructions */
         .instructions {
-            text-align: center;
-            margin: 30px auto;
-            max-width: 600px;
-            padding: 20px;
             background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
             border-radius: 15px;
+            margin: 30px auto;
+            max-width: 800px;
+            text-align: center;
+            border-left: 5px solid var(--primary);
         }
         
-        .coin-animation {
+        .instructions h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .step {
+            display: inline-block;
+            margin: 0 15px;
+            text-align: center;
+        }
+        
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-container {
+                height: 400px;
+            }
+            
+            .game-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .game-tab {
+                width: 90%;
+                justify-content: center;
+            }
+        }
+        
+        /* Flying Coin Animation */
+        .coin {
             position: absolute;
-            font-size: 24px;
-            animation: fly 2s linear forwards;
+            font-size: 30px;
+            animation: fly 1s linear forwards;
+            pointer-events: none;
+            z-index: 999;
         }
         
         @keyframes fly {
-            0% { transform: translateY(0) scale(1); opacity: 1; }
-            100% { transform: translateY(-100px) scale(0); opacity: 0; }
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header με Πόντοι -->
+    <!-- Header -->
     <div class="header">
-        <h1>🎮 Δωρεάν Παιχνίδια</h1>
-        <div class="points-card">
-            <span>Πόντοι:</span>
-            <span class="points-value" id="points">0</span>
-            <div>💰</div>
+        <h1>🎮 3 Δωρεάν Παιχνίδια</h1>
+        <p>Παίξε & Κέρδισε Πόντοι!</p>
+        <div class="points-display">
+            Πόντοι: <span class="gold" id="points">0</span> 🪙
         </div>
     </div>
 
-    <!-- Επιλογή Παιχνιδιών -->
-    <div class="games-tabs">
-        <div class="game-tab active" onclick="selectGame('game1', this)">
-            🎱 8 Ball Pool
+    <!-- Game Tabs -->
+    <div class="game-tabs">
+        <div class="game-tab active" onclick="selectGame(1, this)">
+            <span class="game-icon">🎱</span>
+            <span>Παιχνίδι 1</span>
         </div>
-        <div class="game-tab" onclick="selectGame('game2', this)">
-            🚗 Racing Game
+        <div class="game-tab" onclick="selectGame(2, this)">
+            <span class="game-icon">🚗</span>
+            <span>Παιχνίδι 2</span>
+        </div>
+        <div class="game-tab" onclick="selectGame(3, this)">
+            <span class="game-icon">📱</span>
+            <span>Παιχνίδι 3</span>
         </div>
     </div>
 
-    <!-- Οδηγίες -->
+    <!-- Instructions -->
     <div class="instructions">
-        <h3>🎯 Πώς Λειτουργεί:</h3>
-        <p>1. Δες διαφήμιση 30 δευτερόλεπτα</p>
-        <p>2. Κέρδισε <strong>1 Πόντο</strong></p>
-        <p>3. Παίξε το παιχνίδι <strong>2 λεπτά</strong></p>
-        <p>4. Ξαναδές διαφήμιση για νέους πόντους!</p>
+        <h3>📋 Οδηγίες Παιχνιδιού</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            Δες διαφήμιση 30 δευτερολέπτων
+        </div>
+        <div class="step">
+            <span class="step-number">2</span>
+            Κέρδισε <span class="gold">1 Πόντο</span>
+        </div>
+        <div class="step">
+            <span class="step-number">3</span>
+            Παίξε 2 λεπτά
+        </div>
+        <div class="step">
+            <span class="step-number">4</span>
+            Επανάλαβε για περισσότερους πόντους!
+        </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <!-- Container για Διαφημίσεις -->
+    <!-- Ad Container -->
     <div class="ad-container" id="adContainer">
-        <h2>🎉 Κέρδισε 1 Πόντο!</h2>
-        <p>Δες αυτή τη διαφήμιση για <span id="adSeconds">30</span> δευτερόλεπτα</p>
+        <h2>✨ ΚΕΡΔΙΣΕ ΠΟΝΤΟ! ✨</h2>
+        <p class="ad-message">Δες τη διαφήμιση για <span id="adSeconds">30</span> δευτερόλεπτα</p>
         
         <div class="countdown" id="countdown">30</div>
         
-        <!-- ΕΔΩ ΜΠΑΙΝΕΙ Ο ΚΩΔΙΚΑΣ ΤΩΝ ΔΙΑΦΗΜΙΣΕΩΝ ΣΟΥ -->
+        <!-- AdMaven Ads -->
         <div id="adSpace">
-            <!-- AdMaven Code -->
-            <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"></script>
-            <meta name='admaven-placement' content='BqjwFpjU5'>
-            
-            <!-- Εναλλακτική: Google AdSense -->
-            <div id="adSenseContainer">
-                <!-- Θα μπει αυτόματα από το script -->
-            </div>
+            <!-- Οι διαφημίσεις θα φορτωθούν εδώ -->
         </div>
         
         <button class="skip-btn" id="skipBtn" onclick="skipAd()">
-            Παράλειψη σε <span id="skipTimer">10</span>s
+            Παράλειψη σε <span id="skipTimer">10</span> δευτ.
         </button>
+        
+        <p style="margin-top: 15px; color: #AAA; font-size: 14px;">
+            Μόλις ο χρόνος τελειώσει, θα κερδίσεις αυτόματα 1 πόντο! 🎉
+        </p>
     </div>
 
-    <!-- Container για Παιχνίδια -->
+    <!-- Game Container -->
     <div class="game-container" id="gameContainer">
-        <iframe class="game-frame" id="gameFrame" 
-                frameborder="0" 
-                allowfullscreen></iframe>
+        <div class="game-info">
+            Χρόνος Παιχνιδιού: <span class="game-timer" id="gameTimer">02:00</span>
+        </div>
+        <iframe class="game-frame" id="gameFrame" frameborder="0"></iframe>
     </div>
 
     <!-- Notification -->
     <div class="notification" id="notification">
-        ✅ Κέρδισες 1 Πόντο!
+        🎉 Κέρδισες 1 Πόντο! (+1)
     </div>
 
     <script>
-        // =====================
-        // ΚΟΙΝΟΣ ΚΩΔΙΚΑΣ
-        // =====================
+        // ============================
+        // ΚΟΙΝΑ ΣΤΟΙΧΕΙΑ
+        // ============================
         
-        // User Points System
-        let userPoints = localStorage.getItem('gamePoints') ? 
-                         parseInt(localStorage.getItem('gamePoints')) : 0;
-        document.getElementById('points').textContent = userPoints;
+        // Τα 3 παιχνίδια από το αρχείο σου
+        const GAMES = [
+            {
+                id: 1,
+                name: "Παιχνίδι 1",
+                url: "https://html5.gamedistribution.com/34b3dd35505444f282a9e35a7ceb4a93/",
+                width: "800",
+                height: "600",
+                icon: "🎱"
+            },
+            {
+                id: 2,
+                name: "Παιχνίδι 2",
+                url: "https://html5.gamedistribution.com/a1c1c4b21be6456ca467dcb109fbd524/",
+                width: "1920",
+                height: "1080",
+                icon: "🚗"
+            },
+            {
+                id: 3,
+                name: "Παιχνίδι 3",
+                url: "https://html5.gamedistribution.com/e7cb93267da745e596429a4735ab5457/",
+                width: "1080",
+                height: "1920",
+                icon: "📱"
+            }
+        ];
         
-        // Game Variables
-        let currentGame = '';
+        // Μεταβλητές
+        let userPoints = parseInt(localStorage.getItem('gamePoints')) || 0;
+        let currentGameId = 1;
         let adTimer, skipTimer, gameTimer;
         let adSeconds = 30;
         let skipSeconds = 10;
-        let gameDuration = 120; // 2 λεπτά
+        let gameSeconds = 120; // 2 λεπτά
+        let isGamePlaying = false;
         
-        // Game URLs
-        const games = {
-            game1: "https://html5.gamedistribution.com/34b3dd35505444f282a9e35a7ceb4a93/",
-            game2: "https://html5.gamedistribution.com/80ddf44c832b44d69d72392d9453ca00/"
-        };
+        // ============================
+        // 1. ΑΡΧΙΚΟΠΟΙΗΣΗ
+        // ============================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Εμφάνιση πόντων
+            document.getElementById('points').textContent = userPoints;
+            
+            // Επιλογή πρώτου παιχνιδιού
+            selectGame(1, document.querySelector('.game-tab'));
+        });
         
-        // =====================
-        // 1. ΕΠΙΛΟΓΗ ΠΑΙΧΝΙΔΙΟΥ
-        // =====================
+        // ============================
+        // 2. ΕΠΙΛΟΓΗ ΠΑΙΧΝΙΔΙΟΥ
+        // ============================
         function selectGame(gameId, element) {
-            // Update active tab
+            // Ενημέρωση ενεργού tab
             document.querySelectorAll('.game-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             element.classList.add('active');
             
-            currentGame = gameId;
+            currentGameId = gameId;
             
-            // Show ad before game
+            // Αν το παιχνίδι τρέχει, σταμάτα το
+            if (isGamePlaying) {
+                stopGame();
+            }
+            
+            // Εμφάνιση διαφήμισης πριν το παιχνίδι
             showAd();
         }
         
-        // =====================
-        // 2. ΕΜΦΑΝΙΣΗ ΔΙΑΦΗΜΙΣΗΣ
-        // =====================
+        // ============================
+        // 3. ΔΙΑΦΗΜΙΣΕΙΣ
+        // ============================
         function showAd() {
-            // Hide game
-            document.getElementById('gameContainer').style.display = 'none';
+            // Κρύψε το παιχνίδι
+            hideGame();
             
-            // Show ad container
+            // Εμφάνιση διαφήμισης
             const adContainer = document.getElementById('adContainer');
             adContainer.style.display = 'block';
             
-            // Reset counters
+            // Επαναφορά χρόνων
             adSeconds = 30;
             skipSeconds = 10;
+            
+            // Ενημέρωση display
             document.getElementById('countdown').textContent = adSeconds;
             document.getElementById('adSeconds').textContent = adSeconds;
+            document.getElementById('skipTimer').textContent = skipSeconds;
             document.getElementById('skipBtn').style.opacity = '0';
             
-            // Start countdown
+            // Φόρτωση διαφημίσεων
+            loadAdMavenAds();
+            
+            // Έναρξη countdown
             clearInterval(adTimer);
             adTimer = setInterval(updateAdCountdown, 1000);
-            
-            // Load ad code dynamically
-            loadAds();
         }
         
         function updateAdCountdown() {
@@ -351,278 +456,342 @@
             document.getElementById('countdown').textContent = adSeconds;
             document.getElementById('adSeconds').textContent = adSeconds;
             
-            // Show skip button after 20 seconds
+            // Εμφάνιση κουμπιού skip μετά από 20 δευτερόλεπτα
             if (adSeconds <= 10) {
                 document.getElementById('skipBtn').style.opacity = '1';
                 skipSeconds--;
                 document.getElementById('skipTimer').textContent = skipSeconds;
             }
             
-            // Ad finished
+            // Τέλος διαφήμισης
             if (adSeconds <= 0) {
-                clearInterval(adTimer);
-                givePoint();
+                finishAd();
             }
         }
         
         function skipAd() {
             clearInterval(adTimer);
+            finishAd();
+        }
+        
+        function finishAd() {
+            clearInterval(adTimer);
+            document.getElementById('adContainer').style.display = 'none';
             givePoint();
         }
         
-        // =====================
-        // 3. ΚΕΡΔΙΣΕ ΠΟΝΤΟ
-        // =====================
-        function givePoint() {
-            userPoints++;
-            localStorage.setItem('gamePoints', userPoints);
-            document.getElementById('points').textContent = userPoints;
-            
-            // Show notification with animation
-            const notification = document.getElementById('notification');
-            notification.style.display = 'block';
-            
-            // Create flying coin animation
-            createCoinAnimation();
-            
-            // Hide notification after 3 seconds
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-            
-            // Hide ad container
-            document.getElementById('adContainer').style.display = 'none';
-            
-            // Start game
-            startGame();
-        }
-        
-        function createCoinAnimation() {
-            const coin = document.createElement('div');
-            coin.className = 'coin-animation';
-            coin.textContent = '💰';
-            coin.style.left = Math.random() * window.innerWidth + 'px';
-            coin.style.top = window.innerHeight + 'px';
-            document.body.appendChild(coin);
-            
-            setTimeout(() => {
-                coin.remove();
-            }, 2000);
-        }
-        
-        // =====================
-        // 4. ΞΕΚΙΝΗΜΑ ΠΑΙΧΝΙΔΙΟΥ
-        // =====================
-        function startGame() {
-            const gameContainer = document.getElementById('gameContainer');
-            const gameFrame = document.getElementById('gameFrame');
-            
-            // Set game URL
-            gameFrame.src = games[currentGame];
-            
-            // Show game
-            gameContainer.style.display = 'block';
-            
-            // Start game timer (2 minutes)
-            startGameTimer();
-            
-            // Setup completion detection
-            setupGameCompletion();
-        }
-        
-        function startGameTimer() {
-            let timeLeft = gameDuration;
-            updateProgressBar(0);
-            
-            gameTimer = setInterval(() => {
-                timeLeft--;
-                
-                // Update progress bar
-                const progress = ((gameDuration - timeLeft) / gameDuration) * 100;
-                updateProgressBar(progress);
-                
-                // Game finished
-                if (timeLeft <= 0) {
-                    clearInterval(gameTimer);
-                    gameCompleted();
-                }
-            }, 1000);
-        }
-        
-        function updateProgressBar(percentage) {
-            document.getElementById('progressBar').style.width = percentage + '%';
-        }
-        
-        // =====================
-        // 5. ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ
-        // =====================
-        function gameCompleted() {
-            // Clear timers
-            clearInterval(gameTimer);
-            
-            // Hide game
-            document.getElementById('gameContainer').style.display = 'none';
-            document.getElementById('gameFrame').src = '';
-            
-            // Show ad again
-            setTimeout(() => {
-                showAd();
-            }, 1000);
-        }
-        
-        // =====================
-        // 6. ΑΝΙΧΝΕΥΣΗ ΤΕΛΟΥΣ ΠΑΙΧΝΙΔΙΟΥ
-        // =====================
-        function setupGameCompletion() {
-            // Method 1: PostMessage communication (if game supports it)
-            window.addEventListener('message', handleGameMessage);
-            
-            // Method 2: Auto-complete after 2 minutes (fallback)
-            setTimeout(() => {
-                if (document.getElementById('gameContainer').style.display !== 'none') {
-                    gameCompleted();
-                }
-            }, gameDuration * 1000);
-        }
-        
-        function handleGameMessage(event) {
-            // Check if message is from game distribution
-            if (event.origin.includes('gamedistribution.com')) {
-                const data = event.data;
-                
-                // Game events
-                if (data && data.type) {
-                    switch(data.type) {
-                        case 'gameOver':
-                        case 'levelComplete':
-                        case 'gameComplete':
-                            gameCompleted();
-                            break;
-                    }
-                }
-            }
-        }
-        
-        // =====================
-        // 7. ΔΙΑΦΗΜΙΣΕΙΣ
-        // =====================
-        function loadAds() {
+        // ============================
+        // 4. ΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
+        // ============================
+        function loadAdMavenAds() {
             const adSpace = document.getElementById('adSpace');
             
-            // Clear previous ads
+            // Καθαρισμός προηγούμενων
             adSpace.innerHTML = '';
             
-            // Method 1: Your AdMaven code
-            adSpace.innerHTML += `
+            // AdMaven Code από εσένα
+            adSpace.innerHTML = `
                 <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"><\/script>
                 <meta name='admaven-placement' content='BqjwFpjU5'>
             `;
             
-            // Method 2: Google AdSense (if you have it)
-            const adSenseContainer = document.getElementById('adSenseContainer');
-            if (typeof adsbygoogle !== 'undefined') {
-                adSenseContainer.innerHTML = `
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
-                         data-ad-slot="YOUR_SLOT_ID"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    <\/script>
-                `;
+            // Προσθήκη μερικών επιπλέον ads για καλύτερα έσοδα
+            setTimeout(() => {
+                if (adSpace.children.length < 3) {
+                    const extraAd = document.createElement('div');
+                    extraAd.innerHTML = `
+                        <!-- Επιπλέον διαφήμιση για περισσότερα έσοδα -->
+                        <div style="margin: 20px 0;">
+                            <iframe src="//ads.example.com/ads/123" 
+                                    width="728" height="90" 
+                                    frameborder="0" scrolling="no"></iframe>
+                        </div>
+                    `;
+                    adSpace.appendChild(extraAd);
+                }
+            }, 500);
+        }
+        
+        // ============================
+        // 5. ΚΕΡΔΙΣΜΑ ΠΟΝΤΩΝ
+        // ============================
+        function givePoint() {
+            // Αύξηση πόντων
+            userPoints++;
+            localStorage.setItem('gamePoints', userPoints);
+            document.getElementById('points').textContent = userPoints;
+            
+            // Εμφάνιση notification
+            showNotification("🎉 Κέρδισες 1 Πόντο! (+1)");
+            
+            // Animation νομίσματος
+            createCoinAnimation();
+            
+            // Έναρξη παιχνιδιού
+            startGame();
+        }
+        
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function createCoinAnimation() {
+            const coin = document.createElement('div');
+            coin.className = 'coin';
+            coin.textContent = '🪙';
+            coin.style.left = Math.random() * 80 + 10 + '%';
+            coin.style.top = '80%';
+            document.body.appendChild(coin);
+            
+            setTimeout(() => {
+                coin.remove();
+            }, 1000);
+        }
+        
+        // ============================
+        // 6. ΠΑΙΧΝΙΔΙ
+        // ============================
+        function startGame() {
+            isGamePlaying = true;
+            
+            // Εύρεση επιλεγμένου παιχνιδιού
+            const game = GAMES.find(g => g.id === currentGameId);
+            
+            // Ρύθμιση iframe
+            const frame = document.getElementById('gameFrame');
+            frame.src = game.url;
+            
+            // Προσαρμογή μεγέθους
+            const container = document.getElementById('gameContainer');
+            if (game.width > 1000) {
+                container.style.maxWidth = '95%';
+                container.style.height = '700px';
+            } else {
+                container.style.maxWidth = '900px';
+                container.style.height = '600px';
             }
             
-            // Method 3: Additional ad networks
-            loadAdditionalAds();
+            // Εμφάνιση παιχνιδιού
+            container.style.display = 'block';
+            
+            // Έναρξη timer
+            startGameTimer();
+            
+            // Παρακολούθηση για τέλος παιχνιδιού
+            setupGameCompletionDetection();
         }
         
-        function loadAdditionalAds() {
-            // Add more ad networks here for maximum revenue
-            const networks = [
-                // PropellerAds
-                '<script type="text/javascript" src="//partner.pub.network/core/ad/your-code"><\/script>',
+        function startGameTimer() {
+            gameSeconds = 120; // 2 λεπτά
+            
+            const timerElement = document.getElementById('gameTimer');
+            
+            // Ενημέρωση αρχικού χρόνου
+            updateGameTimerDisplay(timerElement);
+            
+            // Έναρξη countdown
+            clearInterval(gameTimer);
+            gameTimer = setInterval(() => {
+                gameSeconds--;
+                updateGameTimerDisplay(timerElement);
                 
-                // Media.net
-                '<script type="text/javascript">window._mNHandle = window._mNHandle || {};<\/script>',
-                
-                // RevContent
-                '<div id="rc-widget-12345" data-rc-widget data-widget-host="habu" data-endpoint="//trends.revcontent.com"><\/div>'
-            ];
-            
-            // Rotate ads randomly
-            const randomAd = networks[Math.floor(Math.random() * networks.length)];
-            document.getElementById('adSpace').innerHTML += randomAd;
-        }
-        
-        // =====================
-        // 8. MONETIZATION STRATEGY
-        // =====================
-        function calculateRevenue() {
-            // Estimated revenue per 1000 views (RPM)
-            const rpm = {
-                admaven: 3.50,  // $3.50 per 1000 views
-                adsense: 2.00,  // $2.00 per 1000 views
-                others: 1.50    // $1.50 per 1000 views
-            };
-            
-            // With this system:
-            // - 1 user = 4 ads per session (2 games × 2 ads)
-            // - 1000 users = 4000 ad views
-            // - Estimated revenue: $14 - $28 per 1000 users
-        }
-        
-        // =====================
-        // 9. INITIALIZE
-        // =====================
-        window.onload = function() {
-            // Auto-select first game
-            selectGame('game1', document.querySelector('.game-tab'));
-            
-            // Show welcome message
-            setTimeout(() => {
-                if (userPoints === 0) {
-                    alert("🎉 Καλώς ήρθες! Κέρδισε πόντους παίζοντας παιχνίδια!");
+                if (gameSeconds <= 0) {
+                    gameCompleted();
                 }
             }, 1000);
-        };
+        }
         
-        // =====================
-        // 10. SHARE & REFERRAL SYSTEM
-        // =====================
-        function shareGame() {
-            // User gets extra points for sharing
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Παίξε & Κέρδισε Πόντοι',
-                    text: 'Παίξε δωρεάν παιχνίδια και κέρδισε πόντους!',
-                    url: window.location.href
-                }).then(() => {
-                    userPoints += 5;
-                    localStorage.setItem('gamePoints', userPoints);
-                    document.getElementById('points').textContent = userPoints;
-                });
+        function updateGameTimerDisplay(element) {
+            const minutes = Math.floor(gameSeconds / 60);
+            const seconds = gameSeconds % 60;
+            element.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Αλλαγή χρώματος στα τελευταία 30 δευτερόλεπτα
+            if (gameSeconds <= 30) {
+                element.style.color = '#FF6B8B';
+                element.style.animation = 'pulse 1s infinite';
             }
         }
         
+        function hideGame() {
+            document.getElementById('gameContainer').style.display = 'none';
+            isGamePlaying = false;
+        }
+        
+        function stopGame() {
+            clearInterval(gameTimer);
+            const frame = document.getElementById('gameFrame');
+            frame.src = '';
+            hideGame();
+        }
+        
+        // ============================
+        // 7. ΤΕΛΟΣ ΠΑΙΧΝΙΔΙΟΥ
+        // ============================
+        function gameCompleted() {
+            // Διακοπή timers
+            clearInterval(gameTimer);
+            
+            // Εμφάνιση μηνύματος
+            showNotification("✅ Τέλος παιχνιδιού! Συνέχισε για περισσότερους πόντους!");
+            
+            // Κρύψε το παιχνίδι
+            setTimeout(() => {
+                hideGame();
+                
+                // Νέα διαφήμιση μετά από 2 δευτερόλεπτα
+                setTimeout(showAd, 2000);
+            }, 2000);
+        }
+        
+        // ============================
+        // 8. ΑΝΙΧΝΕΥΣΗ ΤΕΛΟΥΣ ΠΑΙΧΝΙΔΙΟΥ
+        // ============================
+        function setupGameCompletionDetection() {
+            // Method 1: Αυτόματο τέλος μετά από 2 λεπτά (έχουμε ήδη)
+            
+            // Method 2: Ανίχνευση PostMessage από το παιχνίδι
+            window.addEventListener('message', function(event) {
+                // Προέλευση από GameDistribution
+                if (event.origin.includes('gamedistribution.com')) {
+                    const data = event.data;
+                    
+                    // Αν το παιχνίδι στέλνει event για τέλος
+                    if (data && (data.type === 'gameOver' || 
+                                 data.type === 'levelComplete' || 
+                                 data.gameState === 'ended')) {
+                        gameCompleted();
+                    }
+                }
+            });
+            
+            // Method 3: Έλεγχος URL changes στο iframe (για ορισμένα παιχνίδια)
+            const frame = document.getElementById('gameFrame');
+            let lastSrc = frame.src;
+            
+            const checkFrameChange = setInterval(() => {
+                if (!isGamePlaying) {
+                    clearInterval(checkFrameChange);
+                    return;
+                }
+                
+                if (frame.src !== lastSrc) {
+                    lastSrc = frame.src;
+                    // Αν άλλαξε το URL, ίσως τελείωσε το παιχνίδι
+                    if (frame.src.includes('end') || frame.src.includes('complete')) {
+                        gameCompleted();
+                        clearInterval(checkFrameChange);
+                    }
+                }
+            }, 3000);
+            
+            // Αυτόματος καθαρισμός μετά από 130 δευτερόλεπτα
+            setTimeout(() => {
+                if (isGamePlaying) {
+                    gameCompleted();
+                }
+            }, 130000);
+        }
+        
+        // ============================
+        // 9. ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ
+        // ============================
+        function resetPoints() {
+            if (confirm("Είσαι σίγουρος ότι θέλεις να μηδενίσεις τους πόντους;")) {
+                userPoints = 0;
+                localStorage.setItem('gamePoints', 0);
+                document.getElementById('points').textContent = '0';
+                showNotification("🔄 Πόντοι μηδενίστηκαν!");
+            }
+        }
+        
+        function shareGame() {
+            const shareUrl = window.location.href;
+            const shareText = "Παίξε 3 δωρεάν παιχνίδια και κέρδισε πόντους! 🎮 " + shareUrl;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Παιχνίδια & Πόντοι',
+                    text: shareText,
+                    url: shareUrl
+                });
+            } else {
+                navigator.clipboard.writeText(shareText);
+                showNotification("📋 Σύνδεσμος αντιγράφηκε! Κάνε κοινή χρήση!");
+            }
+        }
+        
+        // ============================
+        // 10. STATS & REVENUE TRACKING
+        // ============================
+        function trackAdView() {
+            // Αποθήκευση στατιστικών στο localStorage
+            const stats = JSON.parse(localStorage.getItem('gameStats')) || {
+                totalAdsWatched: 0,
+                totalPointsEarned: 0,
+                totalPlayTime: 0,
+                lastPlayDate: new Date().toISOString()
+            };
+            
+            stats.totalAdsWatched++;
+            stats.totalPointsEarned = userPoints;
+            stats.lastPlayDate = new Date().toISOString();
+            
+            localStorage.setItem('gameStats', JSON.stringify(stats));
+            
+            // Εκτίμηση εσόδων
+            const estimatedEarnings = (stats.totalAdsWatched * 0.003).toFixed(2); // ~$3 CPM
+            console.log(`Εκτιμώμενα έσοδα: $${estimatedEarnings} (${stats.totalAdsWatched} ads)`);
+        }
+        
+        // Καλέστε αυτή τη συνάρτηση κάθε φορά που τελειώνει διαφήμιση
+        window.addEventListener('beforeunload', function() {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'ad_view', {
+                    'event_category': 'monetization',
+                    'event_label': 'admaven'
+                });
+            }
+        });
     </script>
 
-    <!-- Share Button -->
-    <div style="position: fixed; bottom: 20px; right: 20px;">
+    <!-- Επιπλέον Controls -->
+    <div style="position: fixed; bottom: 20px; left: 20px; display: flex; gap: 10px;">
         <button onclick="shareGame()" style="
-            background: linear-gradient(135deg, #FF6B8B, #FF8E53);
+            background: linear-gradient(135deg, #00C896, #009975);
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-size: 16px;
+            padding: 12px 20px;
+            border-radius: 25px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.4);
+            font-size: 14px;
+            box-shadow: 0 4px 10px rgba(0, 200, 150, 0.3);
         ">
-            📢 Κέρδισε 5 Πόντοι με Κοινή χρήση
+            📢 Κοινή Χρήση
+        </button>
+        
+        <button onclick="resetPoints()" style="
+            background: rgba(255, 107, 139, 0.2);
+            color: #FF6B8B;
+            border: 2px solid #FF6B8B;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+        ">
+            🔄 Μηδενισμός Πόντων
         </button>
     </div>
+
+    <!-- AdMaven Script (στατικό) -->
+    <script data-cfasync="false" src="//dcbbwymp1bhlf.cloudfront.net/?wbbcd=1228431"></script>
+    <meta name='admaven-placement' content='BqjwFpjU5'>
 
 </body>
 </html>
