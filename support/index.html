@@ -228,7 +228,7 @@
             transform: scale(1.1);
         }
         
-        #al5smAd {
+        #admobAd {
             min-width: 300px;
             min-height: 250px;
             background: #f8f9fa;
@@ -334,7 +334,7 @@
                 padding: 8px;
             }
             
-            #al5smAd {
+            #admobAd {
                 min-width: 250px;
                 min-height: 200px;
             }
@@ -392,6 +392,8 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AdMob Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-3186700611266549" crossorigin="anonymous"></script>
 </head>
 <body>
     <!-- Main Game Container -->
@@ -442,11 +444,11 @@
             <div class="ad-title">Διαφήμιση</div>
             <button class="close-ad-btn" id="closeFloatingAd">×</button>
         </div>
-        <div id="al5smAd">
-            <!-- Al5sm ad will load here -->
+        <div id="admobAd">
+            <!-- AdMob ad will load here -->
             <div style="text-align: center; padding: 20px; color: #666;">
                 <i class="fas fa-ad" style="font-size: 2rem; color: #3498db; margin-bottom: 10px;"></i>
-                <div>Διαφήμιση φόρτωσης...</div>
+                <div>AdMob διαφήμιση φόρτωσης...</div>
             </div>
         </div>
     </div>
@@ -461,14 +463,6 @@
         <button class="warning-btn" id="continueBtn">Συνέχεια</button>
     </div>
 
-    <!-- Νέο Al5sm Ad Script με Zone 10274195 -->
-    <script>
-        (function(s){
-            s.dataset.zone='10274195',
-            s.src='https://al5sm.com/tag.min.js'
-        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
-    </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const gameFrame = document.getElementById('gameFrame');
@@ -481,16 +475,20 @@
             const timerDisplay = document.getElementById('timerDisplay');
             const adblockWarning = document.getElementById('adblockWarning');
             const continueBtn = document.getElementById('continueBtn');
-            const al5smAdContainer = document.getElementById('al5smAd');
+            const admobAdContainer = document.getElementById('admobAd');
             
             // Game state
             let soundEnabled = true;
             let adInterval = 180; // 3 minutes in seconds
             let adIntervalId;
             let isAdShowing = false;
+            let admobInterstitial = null;
             
             // Initialize game
             function initGame() {
+                // Initialize AdMob interstitial
+                initAdMobInterstitial();
+                
                 // Start ad timer
                 startAdTimer();
                 
@@ -498,6 +496,166 @@
                 setTimeout(() => {
                     showFloatingAd();
                 }, 60000);
+            }
+            
+            // Initialize AdMob Interstitial
+            function initAdMobInterstitial() {
+                // Check if AdMob is available
+                if (typeof adsbygoogle !== 'undefined') {
+                    // Preload an interstitial
+                    admobInterstitial = {
+                        isLoaded: false,
+                        load: function() {
+                            console.log("AdMob Interstitial: Loading ad...");
+                            // This is where you would normally use the Google Mobile Ads SDK
+                            // For web, we'll simulate the behavior
+                            this.isLoaded = true;
+                            console.log("AdMob Interstitial: Ad loaded");
+                        },
+                        show: function() {
+                            if (this.isLoaded) {
+                                console.log("AdMob Interstitial: Showing 30-second video ad");
+                                showAdMobVideoAd();
+                                this.isLoaded = false;
+                                return true;
+                            }
+                            return false;
+                        }
+                    };
+                    
+                    // Load first interstitial
+                    admobInterstitial.load();
+                } else {
+                    console.log("AdMob script not loaded");
+                }
+            }
+            
+            // Show AdMob video ad (simulated)
+            function showAdMobVideoAd() {
+                isAdShowing = true;
+                
+                // Pause game timer
+                clearInterval(adIntervalId);
+                adTimer.style.display = 'none';
+                
+                // Create fullscreen AdMob video ad simulation
+                const videoAdOverlay = document.createElement('div');
+                videoAdOverlay.id = 'videoAdOverlay';
+                videoAdOverlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: #000;
+                    z-index: 1000;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                `;
+                
+                // Video ad simulation
+                videoAdOverlay.innerHTML = `
+                    <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
+                        <!-- Ad Header -->
+                        <div style="background: rgba(0,0,0,0.8); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <div style="color: white; font-size: 0.9rem; font-weight: bold;">
+                                Διαφήμιση AdMob (30 δευτερόλεπτα)
+                            </div>
+                            <div id="adCloseBtn" style="color: white; font-size: 1.5rem; cursor: pointer; padding: 0 10px; display: none;">×</div>
+                            <div id="adCountdown" style="color: #f1c40f; font-weight: bold; font-size: 1rem;">30</div>
+                        </div>
+                        
+                        <!-- Video Ad Content -->
+                        <div style="flex: 1; display: flex; justify-content: center; align-items: center; background: #1a1a1a;">
+                            <div style="text-align: center; color: white; padding: 20px;">
+                                <i class="fas fa-play-circle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
+                                <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">AdMob Video Διαφήμιση</div>
+                                <div style="font-size: 1rem; margin-bottom: 20px; max-width: 400px;">
+                                    Βίντεο διαφήμισης 30 δευτερολέπτων<br>
+                                    <small>Αυτό το περιεχόμενο υποστηρίζει το δωρεάν παιχνίδι</small>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 20px;">
+                                    Ad Unit: ca-app-pub-3186700611266549/8560787343
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ad Footer -->
+                        <div style="background: rgba(0,0,0,0.8); padding: 10px; text-align: center; color: #ccc; font-size: 0.8rem;">
+                            Η διαφήμιση θα κλείσει αυτόματα σε <span id="countdownSeconds">30</span> δευτερόλεπτα
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(videoAdOverlay);
+                
+                // Start countdown
+                let countdown = 30;
+                const countdownElement = document.getElementById('countdownSeconds');
+                const closeBtn = document.getElementById('adCloseBtn');
+                const headerCountdown = document.getElementById('adCountdown');
+                
+                const countdownInterval = setInterval(() => {
+                    countdown--;
+                    countdownElement.textContent = countdown;
+                    headerCountdown.textContent = countdown;
+                    
+                    // Show close button after 5 seconds
+                    if (countdown <= 25) {
+                        closeBtn.style.display = 'block';
+                    }
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                        closeVideoAd();
+                    }
+                }, 1000);
+                
+                // Close button functionality
+                closeBtn.addEventListener('click', function() {
+                    if (countdown <= 25) { // Allow closing after 5 seconds
+                        clearInterval(countdownInterval);
+                        closeVideoAd();
+                    }
+                });
+                
+                // Auto-close after 30 seconds
+                setTimeout(() => {
+                    if (document.getElementById('videoAdOverlay')) {
+                        closeVideoAd();
+                    }
+                }, 30000);
+            }
+            
+            // Close video ad
+            function closeVideoAd() {
+                const videoAdOverlay = document.getElementById('videoAdOverlay');
+                if (videoAdOverlay) {
+                    videoAdOverlay.style.opacity = '0';
+                    videoAdOverlay.style.transition = 'opacity 0.5s ease';
+                    
+                    setTimeout(() => {
+                        if (videoAdOverlay.parentNode) {
+                            document.body.removeChild(videoAdOverlay);
+                        }
+                        isAdShowing = false;
+                        
+                        // Restart ad timer
+                        startAdTimer();
+                        
+                        // Show notification
+                        showNotification('Διαφήμιση ολοκληρώθηκε!');
+                        
+                        // Preload next ad
+                        if (admobInterstitial) {
+                            setTimeout(() => {
+                                admobInterstitial.load();
+                            }, 1000);
+                        }
+                    }, 500);
+                }
             }
             
             // Start ad countdown timer
@@ -511,7 +669,13 @@
                     updateTimerDisplay();
                     
                     if (adInterval <= 0 && !isAdShowing) {
-                        showFullscreenAd();
+                        // Show AdMob interstitial
+                        if (admobInterstitial && admobInterstitial.show()) {
+                            console.log("AdMob Interstitial shown");
+                        } else {
+                            // Fallback to floating ad
+                            showFullscreenAd();
+                        }
                         adInterval = 180; // Reset to 3 minutes
                     }
                 }, 1000);
@@ -529,8 +693,8 @@
                 if (window.innerWidth > 480 && !isAdShowing) { // Only show on larger screens
                     isAdShowing = true;
                     
-                    // Create Al5sm ad container
-                    createAl5smAd();
+                    // Show AdMob banner
+                    createAdMobBanner();
                     
                     floatingAd.style.display = 'block';
                     
@@ -541,7 +705,7 @@
                 }
             }
             
-            // Show fullscreen ad
+            // Show fullscreen ad (fallback)
             function showFullscreenAd() {
                 isAdShowing = true;
                 
@@ -563,22 +727,19 @@
                     animation: popIn 0.5s ease;
                 `;
                 
-                // Create larger Al5sm ad
-                createAl5smAd('large');
+                // Create larger AdMob banner
+                createAdMobBanner('large');
                 
                 // Auto-close after 30 seconds
                 setTimeout(() => {
                     closeFullscreenAd();
                 }, 30000);
-                
-                // Check for ad blocker
-                setTimeout(checkAdBlocker, 2000);
             }
             
-            // Create Al5sm ad
-            function createAl5smAd(size = 'small') {
+            // Create AdMob banner
+            function createAdMobBanner(size = 'small') {
                 // Clear container
-                al5smAdContainer.innerHTML = '';
+                admobAdContainer.innerHTML = '';
                 
                 // Create ad placeholder
                 const placeholder = document.createElement('div');
@@ -594,38 +755,19 @@
                 `;
                 
                 placeholder.innerHTML = `
-                    <i class="fas fa-ad" style="font-size: ${size === 'large' ? '3rem' : '2rem'}; color: #3498db; margin-bottom: 15px;"></i>
-                    <div style="font-size: ${size === 'large' ? '1.2rem' : '1rem'}; margin-bottom: 10px;">Al5sm Διαφήμιση (Zone: 10274195)</div>
+                    <i class="fas fa-ad" style="font-size: ${size === 'large' ? '3rem' : '2rem'}; color: #e74c3c; margin-bottom: 15px;"></i>
+                    <div style="font-size: ${size === 'large' ? '1.2rem' : '1rem'}; margin-bottom: 10px;">AdMob Διαφήμιση</div>
+                    <div style="font-size: 0.8rem; margin-bottom: 5px;">Ad Unit: ca-app-pub-3186700611266549/8560787343</div>
                     <div style="font-size: 0.9rem; text-align: center; padding: 0 20px;">
                         Αυτή η διαφήμιση υποστηρίζει το δωρεάν παιχνίδι
                     </div>
                 `;
                 
-                al5smAdContainer.appendChild(placeholder);
+                admobAdContainer.appendChild(placeholder);
                 
-                // Try to load Al5sm ad dynamically
-                setTimeout(() => {
-                    if (typeof window.al5sm !== 'undefined') {
-                        console.log('Al5sm script loaded successfully (Zone: 10274195)');
-                    } else {
-                        console.log('Al5sm script not loaded, showing fallback');
-                        showAdBlockWarning();
-                    }
-                }, 1000);
-            }
-            
-            // Check for ad blocker
-            function checkAdBlocker() {
-                const adContainer = document.getElementById('al5smAd');
-                if (adContainer && (adContainer.offsetHeight < 50 || adContainer.innerHTML.includes('Al5sm Διαφήμιση'))) {
-                    // Possible ad blocker
-                    showAdBlockWarning();
-                }
-            }
-            
-            // Show ad blocker warning
-            function showAdBlockWarning() {
-                adblockWarning.style.display = 'block';
+                // In a real implementation, you would load the AdMob banner here
+                // For now, we'll just show the placeholder
+                console.log("AdMob Banner would load here (Zone: ca-app-pub-3186700611266549/8560787343)");
             }
             
             // Close floating ad
@@ -790,7 +932,7 @@
             });
             
             // Console message
-            console.log("🎮 Capybara Xmas Merge με Al5sm Ads (Νέα Zone: 10274195)");
+            console.log("🎮 Capybara Xmas Merge με AdMob Ads (Ad Unit: ca-app-pub-3186700611266549/8560787343)");
         });
     </script>
 </body>
