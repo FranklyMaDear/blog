@@ -239,20 +239,7 @@
             align-items: center;
         }
         
-        .ad-timer {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #f1c40f;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            z-index: 99;
-            display: none;
-            border: 2px solid #f1c40f;
-        }
+        /* REMOVED: .ad-timer class - no countdown display */
         
         /* Ad Blocker Warning */
         .adblock-warning {
@@ -371,13 +358,6 @@
             .ad-container {
                 display: none !important;
             }
-            
-            .ad-timer {
-                bottom: 10px;
-                right: 10px;
-                font-size: 0.8rem;
-                padding: 6px 12px;
-            }
         }
         
         /* Touch device optimizations */
@@ -431,11 +411,6 @@
                 <i class="fas fa-volume-up"></i> Ήχος
             </button>
         </div>
-        
-        <!-- Next Ad Timer -->
-        <div class="ad-timer" id="adTimer">
-            Επόμενη διαφήμιση: <span id="timerDisplay">03:00</span>
-        </div>
     </div>
     
     <!-- Floating Ad Container -->
@@ -471,15 +446,13 @@
             const soundBtn = document.getElementById('soundBtn');
             const floatingAd = document.getElementById('floatingAd');
             const closeFloatingAd = document.getElementById('closeFloatingAd');
-            const adTimer = document.getElementById('adTimer');
-            const timerDisplay = document.getElementById('timerDisplay');
             const adblockWarning = document.getElementById('adblockWarning');
             const continueBtn = document.getElementById('continueBtn');
             const admobAdContainer = document.getElementById('admobAd');
             
             // Game state
             let soundEnabled = true;
-            let adInterval = 180; // 3 minutes in seconds
+            let adInterval = 90; // 1.5 minutes in seconds (ενάμιση λεπτό)
             let adIntervalId;
             let isAdShowing = false;
             let admobInterstitial = null;
@@ -489,7 +462,7 @@
                 // Initialize AdMob interstitial
                 initAdMobInterstitial();
                 
-                // Start ad timer
+                // Start ad timer (NO VISUAL COUNTDOWN)
                 startAdTimer();
                 
                 // Show floating ad after 60 seconds
@@ -510,11 +483,11 @@
                             // This is where you would normally use the Google Mobile Ads SDK
                             // For web, we'll simulate the behavior
                             this.isLoaded = true;
-                            console.log("AdMob Interstitial: Ad loaded");
+                            console.log("AdMob Interstitial: Ad loaded (Ad Unit: ca-app-pub-3186700611266549/7794500584)");
                         },
                         show: function() {
                             if (this.isLoaded) {
-                                console.log("AdMob Interstitial: Showing 30-second video ad");
+                                console.log("AdMob Interstitial: Showing video ad at 1.5 minutes");
                                 showAdMobVideoAd();
                                 this.isLoaded = false;
                                 return true;
@@ -536,7 +509,6 @@
                 
                 // Pause game timer
                 clearInterval(adIntervalId);
-                adTimer.style.display = 'none';
                 
                 // Create fullscreen AdMob video ad simulation
                 const videoAdOverlay = document.createElement('div');
@@ -555,16 +527,15 @@
                     align-items: center;
                 `;
                 
-                // Video ad simulation
+                // Video ad simulation - NO COUNTDOWN VISIBLE
                 videoAdOverlay.innerHTML = `
                     <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-                        <!-- Ad Header -->
+                        <!-- Ad Header - Minimal, no countdown -->
                         <div style="background: rgba(0,0,0,0.8); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
                             <div style="color: white; font-size: 0.9rem; font-weight: bold;">
-                                Διαφήμιση AdMob (30 δευτερόλεπτα)
+                                Διαφήμιση AdMob
                             </div>
                             <div id="adCloseBtn" style="color: white; font-size: 1.5rem; cursor: pointer; padding: 0 10px; display: none;">×</div>
-                            <div id="adCountdown" style="color: #f1c40f; font-weight: bold; font-size: 1rem;">30</div>
                         </div>
                         
                         <!-- Video Ad Content -->
@@ -573,53 +544,27 @@
                                 <i class="fas fa-play-circle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
                                 <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">AdMob Video Διαφήμιση</div>
                                 <div style="font-size: 1rem; margin-bottom: 20px; max-width: 400px;">
-                                    Βίντεο διαφήμισης 30 δευτερολέπτων<br>
+                                    Βίντεο διαφήμισης<br>
                                     <small>Αυτό το περιεχόμενο υποστηρίζει το δωρεάν παιχνίδι</small>
                                 </div>
-                                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 20px;">
-                                    Ad Unit: ca-app-pub-3186700611266549/8560787343
+                                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 20px; font-size: 0.8rem;">
+                                    Ad Unit: ca-app-pub-3186700611266549/7794500584
                                 </div>
                             </div>
-                        </div>
-                        
-                        <!-- Ad Footer -->
-                        <div style="background: rgba(0,0,0,0.8); padding: 10px; text-align: center; color: #ccc; font-size: 0.8rem;">
-                            Η διαφήμιση θα κλείσει αυτόματα σε <span id="countdownSeconds">30</span> δευτερόλεπτα
                         </div>
                     </div>
                 `;
                 
                 document.body.appendChild(videoAdOverlay);
                 
-                // Start countdown
-                let countdown = 30;
-                const countdownElement = document.getElementById('countdownSeconds');
+                // Start countdown (INVISIBLE)
+                let countdown = 30; // 30-second video
                 const closeBtn = document.getElementById('adCloseBtn');
-                const headerCountdown = document.getElementById('adCountdown');
                 
-                const countdownInterval = setInterval(() => {
-                    countdown--;
-                    countdownElement.textContent = countdown;
-                    headerCountdown.textContent = countdown;
-                    
-                    // Show close button after 5 seconds
-                    if (countdown <= 25) {
-                        closeBtn.style.display = 'block';
-                    }
-                    
-                    if (countdown <= 0) {
-                        clearInterval(countdownInterval);
-                        closeVideoAd();
-                    }
-                }, 1000);
-                
-                // Close button functionality
-                closeBtn.addEventListener('click', function() {
-                    if (countdown <= 25) { // Allow closing after 5 seconds
-                        clearInterval(countdownInterval);
-                        closeVideoAd();
-                    }
-                });
+                // Show close button after 5 seconds
+                setTimeout(() => {
+                    closeBtn.style.display = 'block';
+                }, 5000);
                 
                 // Auto-close after 30 seconds
                 setTimeout(() => {
@@ -627,6 +572,13 @@
                         closeVideoAd();
                     }
                 }, 30000);
+                
+                // Close button functionality
+                closeBtn.addEventListener('click', function() {
+                    if (closeBtn.style.display === 'block') {
+                        closeVideoAd();
+                    }
+                });
             }
             
             // Close video ad
@@ -642,11 +594,8 @@
                         }
                         isAdShowing = false;
                         
-                        // Restart ad timer
+                        // Restart ad timer (1.5 minutes)
                         startAdTimer();
-                        
-                        // Show notification
-                        showNotification('Διαφήμιση ολοκληρώθηκε!');
                         
                         // Preload next ad
                         if (admobInterstitial) {
@@ -658,34 +607,24 @@
                 }
             }
             
-            // Start ad countdown timer
+            // Start ad countdown timer (NO VISUAL INDICATOR)
             function startAdTimer() {
-                adInterval = 180; // 3 minutes
-                updateTimerDisplay();
-                adTimer.style.display = 'block';
+                adInterval = 90; // 1.5 minutes
                 
                 adIntervalId = setInterval(() => {
                     adInterval--;
-                    updateTimerDisplay();
                     
                     if (adInterval <= 0 && !isAdShowing) {
                         // Show AdMob interstitial
                         if (admobInterstitial && admobInterstitial.show()) {
-                            console.log("AdMob Interstitial shown");
+                            console.log("AdMob Interstitial shown at 1.5 minutes");
                         } else {
                             // Fallback to floating ad
                             showFullscreenAd();
                         }
-                        adInterval = 180; // Reset to 3 minutes
+                        adInterval = 90; // Reset to 1.5 minutes
                     }
                 }, 1000);
-            }
-            
-            // Update timer display
-            function updateTimerDisplay() {
-                const minutes = Math.floor(adInterval / 60);
-                const seconds = adInterval % 60;
-                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
             
             // Show floating ad
@@ -711,7 +650,6 @@
                 
                 // Pause game timer
                 clearInterval(adIntervalId);
-                adTimer.style.display = 'none';
                 
                 // Show floating ad as fullscreen
                 floatingAd.style.cssText = `
@@ -757,7 +695,7 @@
                 placeholder.innerHTML = `
                     <i class="fas fa-ad" style="font-size: ${size === 'large' ? '3rem' : '2rem'}; color: #e74c3c; margin-bottom: 15px;"></i>
                     <div style="font-size: ${size === 'large' ? '1.2rem' : '1rem'}; margin-bottom: 10px;">AdMob Διαφήμιση</div>
-                    <div style="font-size: 0.8rem; margin-bottom: 5px;">Ad Unit: ca-app-pub-3186700611266549/8560787343</div>
+                    <div style="font-size: 0.8rem; margin-bottom: 5px;">Ad Unit: ca-app-pub-3186700611266549/7794500584</div>
                     <div style="font-size: 0.9rem; text-align: center; padding: 0 20px;">
                         Αυτή η διαφήμιση υποστηρίζει το δωρεάν παιχνίδι
                     </div>
@@ -766,8 +704,7 @@
                 admobAdContainer.appendChild(placeholder);
                 
                 // In a real implementation, you would load the AdMob banner here
-                // For now, we'll just show the placeholder
-                console.log("AdMob Banner would load here (Zone: ca-app-pub-3186700611266549/8560787343)");
+                console.log("AdMob Banner would load here (Ad Unit: ca-app-pub-3186700611266549/7794500584)");
             }
             
             // Close floating ad
@@ -798,55 +735,8 @@
                 // Hide ad blocker warning
                 adblockWarning.style.display = 'none';
                 
-                // Restart ad timer
+                // Restart ad timer (1.5 minutes)
                 startAdTimer();
-                
-                // Show notification
-                showNotification('Διαφήμιση ολοκληρώθηκε');
-            }
-            
-            // Show notification
-            function showNotification(message) {
-                const notification = document.createElement('div');
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(to right, #2ecc71, #27ae60);
-                    color: white;
-                    padding: 15px 25px;
-                    border-radius: 10px;
-                    font-size: 1rem;
-                    font-weight: 700;
-                    z-index: 1001;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                    animation: slideInRight 0.5s ease, fadeOut 0.5s ease 2.5s;
-                `;
-                
-                const style = document.createElement('style');
-                style.textContent = `
-                    @keyframes slideInRight {
-                        from { transform: translateX(100%); opacity: 0; }
-                        to { transform: translateX(0); opacity: 1; }
-                    }
-                    @keyframes fadeOut {
-                        to { opacity: 0; }
-                    }
-                    @keyframes popIn {
-                        from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-                        to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-                    }
-                `;
-                document.head.appendChild(style);
-                
-                notification.innerHTML = `✅ ${message}`;
-                document.body.appendChild(notification);
-                
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        document.body.removeChild(notification);
-                    }
-                }, 3000);
             }
             
             // Event Listeners
@@ -872,7 +762,6 @@
                 clearInterval(adIntervalId);
                 floatingAd.style.display = 'none';
                 adblockWarning.style.display = 'none';
-                adTimer.style.display = 'none';
                 isAdShowing = false;
                 
                 setTimeout(() => {
@@ -932,7 +821,8 @@
             });
             
             // Console message
-            console.log("🎮 Capybara Xmas Merge με AdMob Ads (Ad Unit: ca-app-pub-3186700611266549/8560787343)");
+            console.log("🎮 Capybara Xmas Merge με AdMob Ads (Ad Unit: ca-app-pub-3186700611266549/7794500584)");
+            console.log("📱 Διαφημίσεις θα εμφανίζονται κάθε 1.5 λεπτά χωρίς προειδοποίηση");
         });
     </script>
 </body>
