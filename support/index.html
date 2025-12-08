@@ -167,44 +167,50 @@
             box-shadow: 0 4px 0 #2980b9;
         }
         
-        /* Ad Container */
-        .ad-container {
+        /* Fullscreen Ad Overlay */
+        .ad-overlay {
             position: fixed;
-            bottom: 80px;
-            right: 20px;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-            border: 3px solid #f1c40f;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
             display: none;
-            animation: slideInUp 0.5s ease;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
         }
         
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .ad-container {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 4px solid #f1c40f;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: hidden;
         }
         
         .ad-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
         }
         
         .ad-title {
             color: #2c3e50;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 700;
         }
         
@@ -212,15 +218,17 @@
             background: #e74c3c;
             color: white;
             border: none;
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            font-size: 0.9rem;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            z-index: 1002;
         }
         
         .close-ad-btn:hover {
@@ -228,76 +236,50 @@
             transform: scale(1.1);
         }
         
-        #admobAd {
+        .ad-content {
             min-width: 300px;
             min-height: 250px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             background: #f8f9fa;
-            border-radius: 5px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        /* Google AdSense Container */
-        .adsense-container {
-            position: fixed;
-            bottom: 80px;
-            left: 20px;
-            z-index: 99;
-            background: rgba(255, 255, 255, 0.95);
             border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            border: 3px solid #3498db;
-            display: none;
-            animation: slideInLeft 0.5s ease;
+            overflow: hidden;
         }
         
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .ad-placeholder {
+            padding: 30px;
+            text-align: center;
+            color: #666;
         }
         
-        .adsense-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #ddd;
+        .ad-placeholder i {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 15px;
         }
         
-        .adsense-title {
+        .ad-placeholder h3 {
             color: #2c3e50;
-            font-size: 0.9rem;
-            font-weight: 700;
+            margin-bottom: 10px;
         }
         
-        .close-adsense-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
+        .ad-placeholder p {
             font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            margin-bottom: 5px;
         }
         
-        .close-adsense-btn:hover {
-            background: #2980b9;
-            transform: scale(1.1);
+        .ad-timer {
+            position: absolute;
+            top: 10px;
+            right: 50px;
+            background: #f1c40f;
+            color: #2c3e50;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: none;
         }
         
         /* Ad Blocker Warning */
@@ -375,20 +357,13 @@
             }
             
             .ad-container {
-                right: 10px;
-                bottom: 70px;
-                padding: 8px;
+                padding: 10px;
+                max-width: 95%;
             }
             
-            #admobAd {
+            .ad-content {
                 min-width: 250px;
                 min-height: 200px;
-            }
-            
-            .adsense-container {
-                left: 10px;
-                bottom: 70px;
-                padding: 8px;
             }
         }
         
@@ -420,12 +395,9 @@
                 gap: 4px;
             }
             
-            .ad-container {
-                display: none !important;
-            }
-            
-            .adsense-container {
-                display: none !important;
+            .ad-content {
+                min-width: 200px;
+                min-height: 150px;
             }
         }
         
@@ -441,8 +413,6 @@
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- AdMob Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-3186700611266549" crossorigin="anonymous"></script>
     <!-- Google AdSense Script -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
 </head>
@@ -484,38 +454,26 @@
         </div>
     </div>
     
-    <!-- Floating Ad Container (AdMob) -->
-    <div class="ad-container" id="floatingAd">
-        <div class="ad-header">
-            <div class="ad-title">Διαφήμιση AdMob</div>
-            <button class="close-ad-btn" id="closeFloatingAd">×</button>
-        </div>
-        <div id="admobAd">
-            <!-- AdMob ad will load here -->
-            <div style="text-align: center; padding: 20px; color: #666;">
-                <i class="fas fa-ad" style="font-size: 2rem; color: #3498db; margin-bottom: 10px;"></i>
-                <div>AdMob διαφήμιση φόρτωσης...</div>
+    <!-- Fullscreen Ad Overlay -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-container">
+            <div class="ad-header">
+                <div class="ad-title">Διαφήμιση</div>
+                <div class="ad-timer" id="adTimer"></div>
+                <button class="close-ad-btn" id="closeAdBtn">×</button>
             </div>
-        </div>
-    </div>
-    
-    <!-- Google AdSense Container -->
-    <div class="adsense-container" id="adsenseContainer">
-        <div class="adsense-header">
-            <div class="adsense-title">Διαφήμιση Google</div>
-            <button class="close-adsense-btn" id="closeAdsenseBtn">×</button>
-        </div>
-        <div id="adsenseAd">
-            <!-- Google AdSense ad -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="6125539150"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <div class="ad-content">
+                <div id="adDisplay">
+                    <!-- AdSense or custom ad will load here -->
+                    <div class="ad-placeholder" id="adPlaceholder">
+                        <i class="fas fa-ad"></i>
+                        <h3>Google AdSense</h3>
+                        <p>Αυτή η διαφήμιση υποστηρίζει το δωρεάν παιχνίδι</p>
+                        <p><small>Ad Unit: ca-pub-3186700611266549</small></p>
+                        <p><small>Slot: 6125539150</small></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -535,358 +493,169 @@
             const loadingScreen = document.getElementById('loadingScreen');
             const reloadBtn = document.getElementById('reloadBtn');
             const soundBtn = document.getElementById('soundBtn');
-            const floatingAd = document.getElementById('floatingAd');
-            const closeFloatingAd = document.getElementById('closeFloatingAd');
-            const adsenseContainer = document.getElementById('adsenseContainer');
-            const closeAdsenseBtn = document.getElementById('closeAdsenseBtn');
+            const adOverlay = document.getElementById('adOverlay');
+            const closeAdBtn = document.getElementById('closeAdBtn');
+            const adDisplay = document.getElementById('adDisplay');
+            const adPlaceholder = document.getElementById('adPlaceholder');
+            const adTimer = document.getElementById('adTimer');
             const adblockWarning = document.getElementById('adblockWarning');
             const continueBtn = document.getElementById('continueBtn');
-            const admobAdContainer = document.getElementById('admobAd');
-            const adsenseAdContainer = document.getElementById('adsenseAd');
             
             // Game state
             let soundEnabled = true;
-            let adInterval = 90; // 1.5 minutes in seconds (ενάμιση λεπτό)
-            let adIntervalId;
+            let adInterval = 90; // 1.5 minutes in seconds
+            let adIntervalId = null;
             let isAdShowing = false;
-            let admobInterstitial = null;
-            let adsenseLoaded = false;
+            let currentAdTimer = 0;
+            let adTimerInterval = null;
             
             // Initialize game
             function initGame() {
-                // Initialize AdMob interstitial
-                initAdMobInterstitial();
+                console.log("🎮 Αρχικοποίηση παιχνιδιού...");
                 
-                // Load Google AdSense
+                // Load AdSense ads
                 initAdSense();
                 
-                // Start ad timer (NO VISUAL COUNTDOWN)
+                // Start ad timer
                 startAdTimer();
                 
-                // Show ads after 30 seconds
+                // Show first ad after 5 seconds (for testing)
+                // In production, change to 30000 (30 seconds)
                 setTimeout(() => {
-                    showAds();
-                }, 30000);
-            }
-            
-            // Initialize AdMob Interstitial
-            function initAdMobInterstitial() {
-                // Check if AdMob is available
-                if (typeof adsbygoogle !== 'undefined') {
-                    // Preload an interstitial
-                    admobInterstitial = {
-                        isLoaded: false,
-                        load: function() {
-                            console.log("AdMob Interstitial: Loading ad...");
-                            // This is where you would normally use the Google Mobile Ads SDK
-                            // For web, we'll simulate the behavior
-                            this.isLoaded = true;
-                            console.log("AdMob Interstitial: Ad loaded (Ad Unit: ca-app-pub-3186700611266549/7794500584)");
-                        },
-                        show: function() {
-                            if (this.isLoaded) {
-                                console.log("AdMob Interstitial: Showing video ad at 1.5 minutes");
-                                showAdMobVideoAd();
-                                this.isLoaded = false;
-                                return true;
-                            }
-                            return false;
-                        }
-                    };
-                    
-                    // Load first interstitial
-                    admobInterstitial.load();
-                } else {
-                    console.log("AdMob script not loaded");
-                }
+                    if (!isAdShowing) {
+                        showAd();
+                    }
+                }, 5000);
             }
             
             // Initialize Google AdSense
             function initAdSense() {
-                if (typeof adsbygoogle !== 'undefined') {
-                    console.log("Google AdSense: Initializing (Ad Slot: 6125539150)");
-                    adsenseLoaded = true;
-                    
-                    // Create AdSense ad container
-                    if (adsenseAdContainer) {
-                        adsenseAdContainer.innerHTML = `
-                            <ins class="adsbygoogle"
-                                 style="display:block"
-                                 data-ad-client="ca-pub-3186700611266549"
-                                 data-ad-slot="6125539150"
-                                 data-ad-format="auto"
-                                 data-full-width-responsive="true"></ins>
-                            <script>
-                                 (adsbygoogle = window.adsbygoogle || []).push({});
-                            <\/script>
-                        `;
-                        
-                        // Try to load AdSense ad
+                console.log("📱 Φόρτωση AdSense...");
+                
+                // Create AdSense ad
+                const adSenseHTML = `
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="6125539150"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                `;
+                
+                // Add to display
+                adDisplay.innerHTML = adSenseHTML;
+                
+                // Try to load AdSense
+                setTimeout(() => {
+                    if (typeof adsbygoogle !== 'undefined') {
                         try {
                             (adsbygoogle = window.adsbygoogle || []).push({});
+                            console.log("✅ AdSense φορτώθηκε επιτυχώς");
                         } catch(e) {
-                            console.log("AdSense error: ", e);
+                            console.error("❌ AdSense error:", e);
+                            showFallbackAd();
                         }
+                    } else {
+                        console.log("⚠️ AdSense script not loaded, showing fallback");
+                        showFallbackAd();
                     }
-                } else {
-                    console.log("AdSense script not loaded");
-                }
+                }, 1000);
             }
             
-            // Show both ads
-            function showAds() {
-                if (window.innerWidth > 480 && !isAdShowing) {
-                    isAdShowing = true;
-                    
-                    // Show AdMob banner on the right
-                    createAdMobBanner();
-                    floatingAd.style.display = 'block';
-                    
-                    // Show AdSense on the left (if loaded)
-                    if (adsenseLoaded) {
-                        adsenseContainer.style.display = 'block';
-                    }
-                    
-                    // Auto-hide after 30 seconds
-                    setTimeout(() => {
-                        closeAllAds();
-                    }, 30000);
-                }
-            }
-            
-            // Show AdMob video ad (simulated)
-            function showAdMobVideoAd() {
-                isAdShowing = true;
-                
-                // Pause game timer
-                clearInterval(adIntervalId);
-                
-                // Hide other ads
-                closeAllAds();
-                
-                // Create fullscreen AdMob video ad simulation
-                const videoAdOverlay = document.createElement('div');
-                videoAdOverlay.id = 'videoAdOverlay';
-                videoAdOverlay.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: #000;
-                    z-index: 1000;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                `;
-                
-                // Video ad simulation - NO COUNTDOWN VISIBLE
-                videoAdOverlay.innerHTML = `
-                    <div style="width: 100%; height: 100%; display: flex; flex-direction: column;">
-                        <!-- Ad Header - Minimal, no countdown -->
-                        <div style="background: rgba(0,0,0,0.8); padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                            <div style="color: white; font-size: 0.9rem; font-weight: bold;">
-                                Διαφήμιση AdMob
-                            </div>
-                            <div id="adCloseBtn" style="color: white; font-size: 1.5rem; cursor: pointer; padding: 0 10px; display: none;">×</div>
-                        </div>
-                        
-                        <!-- Video Ad Content -->
-                        <div style="flex: 1; display: flex; justify-content: center; align-items: center; background: #1a1a1a;">
-                            <div style="text-align: center; color: white; padding: 20px;">
-                                <i class="fas fa-play-circle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 20px;"></i>
-                                <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 10px;">AdMob Video Διαφήμιση</div>
-                                <div style="font-size: 1rem; margin-bottom: 20px; max-width: 400px;">
-                                    Βίντεο διαφήμισης<br>
-                                    <small>Αυτό το περιεχόμενο υποστηρίζει το δωρεάν παιχνίδι</small>
-                                </div>
-                                <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 20px; font-size: 0.8rem;">
-                                    Ad Unit: ca-app-pub-3186700611266549/7794500584
-                                </div>
-                            </div>
-                        </div>
+            // Show fallback ad if AdSense fails
+            function showFallbackAd() {
+                const fallbackHTML = `
+                    <div class="ad-placeholder">
+                        <i class="fas fa-gamepad" style="color:#e74c3c;"></i>
+                        <h3>Capybara Xmas Merge</h3>
+                        <p>Παίξε περισσότερα παιχνίδια στον ιστότοπο μας!</p>
+                        <p><strong>Δωρεάν Χριστουγεννιάτικα Παιχνίδια</strong></p>
+                        <button style="margin-top:10px; padding:8px 16px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer;">
+                            Επισκεφτείτε μας
+                        </button>
                     </div>
                 `;
-                
-                document.body.appendChild(videoAdOverlay);
-                
-                // Start countdown (INVISIBLE)
-                let countdown = 30; // 30-second video
-                const closeBtn = document.getElementById('adCloseBtn');
-                
-                // Show close button after 5 seconds
-                setTimeout(() => {
-                    closeBtn.style.display = 'block';
-                }, 5000);
-                
-                // Auto-close after 30 seconds
-                setTimeout(() => {
-                    if (document.getElementById('videoAdOverlay')) {
-                        closeVideoAd();
-                    }
-                }, 30000);
-                
-                // Close button functionality
-                closeBtn.addEventListener('click', function() {
-                    if (closeBtn.style.display === 'block') {
-                        closeVideoAd();
-                    }
-                });
+                adDisplay.innerHTML = fallbackHTML;
             }
             
-            // Close video ad
-            function closeVideoAd() {
-                const videoAdOverlay = document.getElementById('videoAdOverlay');
-                if (videoAdOverlay) {
-                    videoAdOverlay.style.opacity = '0';
-                    videoAdOverlay.style.transition = 'opacity 0.5s ease';
+            // Show ad overlay
+            function showAd() {
+                if (isAdShowing || window.innerWidth <= 480) return;
+                
+                console.log(`🕒 Εμφάνιση διαφήμισης (${new Date().toLocaleTimeString()})`);
+                isAdShowing = true;
+                
+                // Pause main ad timer
+                clearInterval(adIntervalId);
+                
+                // Show overlay
+                adOverlay.style.display = 'flex';
+                
+                // Start ad timer (30 seconds countdown)
+                currentAdTimer = 30;
+                adTimer.textContent = `${currentAdTimer}s`;
+                adTimer.style.display = 'block';
+                
+                adTimerInterval = setInterval(() => {
+                    currentAdTimer--;
+                    adTimer.textContent = `${currentAdTimer}s`;
                     
-                    setTimeout(() => {
-                        if (videoAdOverlay.parentNode) {
-                            document.body.removeChild(videoAdOverlay);
-                        }
-                        isAdShowing = false;
-                        
-                        // Restart ad timer (1.5 minutes)
-                        startAdTimer();
-                        
-                        // Preload next ad
-                        if (admobInterstitial) {
-                            setTimeout(() => {
-                                admobInterstitial.load();
-                            }, 1000);
-                        }
-                    }, 500);
-                }
+                    if (currentAdTimer <= 0) {
+                        clearInterval(adTimerInterval);
+                        closeAd();
+                    }
+                }, 1000);
+                
+                // Disable close button for first 5 seconds
+                closeAdBtn.disabled = true;
+                closeAdBtn.style.opacity = '0.5';
+                setTimeout(() => {
+                    closeAdBtn.disabled = false;
+                    closeAdBtn.style.opacity = '1';
+                }, 5000);
             }
             
-            // Start ad countdown timer (NO VISUAL INDICATOR)
+            // Close ad overlay
+            function closeAd() {
+                clearInterval(adTimerInterval);
+                adOverlay.style.display = 'none';
+                isAdShowing = false;
+                
+                // Reset timer display
+                adTimer.style.display = 'none';
+                
+                // Restart main ad timer
+                startAdTimer();
+                
+                console.log("✅ Διαφήμιση κλείστηκε");
+            }
+            
+            // Start main ad timer (1.5 minutes)
             function startAdTimer() {
-                adInterval = 90; // 1.5 minutes
+                clearInterval(adIntervalId);
+                adInterval = 90; // Reset to 1.5 minutes
                 
                 adIntervalId = setInterval(() => {
                     adInterval--;
                     
                     if (adInterval <= 0 && !isAdShowing) {
-                        // Show AdMob interstitial
-                        if (admobInterstitial && admobInterstitial.show()) {
-                            console.log("AdMob Interstitial shown at 1.5 minutes");
-                        } else {
-                            // Fallback to floating ad
-                            showFullscreenAd();
-                        }
-                        adInterval = 90; // Reset to 1.5 minutes
+                        console.log("⏰ 1.5 λεπτά πέρασαν, εμφάνιση διαφήμισης");
+                        showAd();
+                        adInterval = 90; // Reset timer
                     }
                 }, 1000);
             }
             
-            // Show fullscreen ad (fallback)
-            function showFullscreenAd() {
-                isAdShowing = true;
-                
-                // Pause game timer
-                clearInterval(adIntervalId);
-                
-                // Show floating ad as fullscreen
-                floatingAd.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 90%;
-                    max-width: 500px;
-                    max-height: 80vh;
-                    z-index: 1000;
-                    display: block;
-                    animation: popIn 0.5s ease;
-                `;
-                
-                // Create larger AdMob banner
-                createAdMobBanner('large');
-                
-                // Auto-close after 30 seconds
+            // Check for ad blocker
+            function checkAdBlocker() {
+                // Simple ad blocker detection
                 setTimeout(() => {
-                    closeFullscreenAd();
-                }, 30000);
-            }
-            
-            // Create AdMob banner
-            function createAdMobBanner(size = 'small') {
-                // Clear container
-                admobAdContainer.innerHTML = '';
-                
-                // Create ad placeholder
-                const placeholder = document.createElement('div');
-                placeholder.style.cssText = `
-                    width: 100%;
-                    height: ${size === 'large' ? '400px' : '250px'};
-                    background: #f8f9fa;
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    color: #666;
-                `;
-                
-                placeholder.innerHTML = `
-                    <i class="fas fa-ad" style="font-size: ${size === 'large' ? '3rem' : '2rem'}; color: #e74c3c; margin-bottom: 15px;"></i>
-                    <div style="font-size: ${size === 'large' ? '1.2rem' : '1rem'}; margin-bottom: 10px;">AdMob Διαφήμιση</div>
-                    <div style="font-size: 0.8rem; margin-bottom: 5px;">Ad Unit: ca-app-pub-3186700611266549/7794500584</div>
-                    <div style="font-size: 0.9rem; text-align: center; padding: 0 20px;">
-                        Αυτή η διαφήμιση υποστηρίζει το δωρεάν παιχνίδι
-                    </div>
-                `;
-                
-                admobAdContainer.appendChild(placeholder);
-                
-                // In a real implementation, you would load the AdMob banner here
-                console.log("AdMob Banner would load here (Ad Unit: ca-app-pub-3186700611266549/7794500584)");
-            }
-            
-            // Close all ads
-            function closeAllAds() {
-                floatingAd.style.display = 'none';
-                adsenseContainer.style.display = 'none';
-                isAdShowing = false;
-            }
-            
-            // Close floating ad
-            function closeFloatingAdFunc() {
-                floatingAd.style.display = 'none';
-                isAdShowing = false;
-            }
-            
-            // Close AdSense ad
-            function closeAdsenseFunc() {
-                adsenseContainer.style.display = 'none';
-                isAdShowing = false;
-            }
-            
-            // Close fullscreen ad
-            function closeFullscreenAd() {
-                // Reset floating ad position
-                floatingAd.style.cssText = `
-                    position: fixed;
-                    bottom: 80px;
-                    right: 20px;
-                    z-index: 100;
-                    background: rgba(255, 255, 255, 0.95);
-                    border-radius: 10px;
-                    padding: 10px;
-                    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-                    border: 3px solid #f1c40f;
-                    display: none;
-                `;
-                
-                floatingAd.style.display = 'none';
-                isAdShowing = false;
-                
-                // Hide ad blocker warning
-                adblockWarning.style.display = 'none';
-                
-                // Restart ad timer (1.5 minutes)
-                startAdTimer();
+                    const ad = document.querySelector('.adsbygoogle');
+                    if (ad && ad.offsetHeight === 0) {
+                        console.log("⚠️ Ad blocker detected");
+                        adblockWarning.style.display = 'block';
+                    }
+                }, 3000);
             }
             
             // Event Listeners
@@ -897,8 +666,8 @@
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => {
                         loadingScreen.style.display = 'none';
-                        // Initialize game after loading
                         initGame();
+                        checkAdBlocker();
                     }, 300);
                 }, 1500);
             });
@@ -910,8 +679,8 @@
                 
                 // Reset ad system
                 clearInterval(adIntervalId);
-                floatingAd.style.display = 'none';
-                adsenseContainer.style.display = 'none';
+                clearInterval(adTimerInterval);
+                adOverlay.style.display = 'none';
                 adblockWarning.style.display = 'none';
                 isAdShowing = false;
                 
@@ -945,20 +714,16 @@
                 }, 200);
             });
             
-            // Close floating ad
-            closeFloatingAd.addEventListener('click', function() {
-                closeFloatingAdFunc();
-            });
-            
-            // Close AdSense ad
-            closeAdsenseBtn.addEventListener('click', function() {
-                closeAdsenseFunc();
+            // Close ad button
+            closeAdBtn.addEventListener('click', function() {
+                if (!closeAdBtn.disabled) {
+                    closeAd();
+                }
             });
             
             // Continue button for ad blocker warning
             continueBtn.addEventListener('click', function() {
                 adblockWarning.style.display = 'none';
-                closeFullscreenAd();
             });
             
             // Error handling
@@ -976,11 +741,18 @@
                 `;
             });
             
-            // Console message
-            console.log("🎮 Capybara Xmas Merge με AdMob & AdSense Ads");
-            console.log("📱 AdMob Ad Unit: ca-app-pub-3186700611266549/7794500584");
-            console.log("📱 AdSense Ad Slot: 6125539150");
-            console.log("📱 Διαφημίσεις θα εμφανίζονται κάθε 1.5 λεπτά");
+            // Close ad with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isAdShowing && !closeAdBtn.disabled) {
+                    closeAd();
+                }
+            });
+            
+            // Console info
+            console.log("🎮 Capybara Xmas Merge");
+            console.log("📱 Διαφημίσεις κάθε 1.5 λεπτό");
+            console.log("🔧 AdSense ID: ca-pub-3186700611266549");
+            console.log("⏰ Πρώτη διαφήμιση σε 5 δευτερόλεπτα (για δοκιμή)");
         });
     </script>
 </body>
