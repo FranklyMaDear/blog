@@ -251,6 +251,7 @@
             padding: 30px;
             text-align: center;
             color: #666;
+            width: 100%;
         }
         
         .ad-placeholder i {
@@ -262,6 +263,7 @@
         .ad-placeholder h3 {
             color: #2c3e50;
             margin-bottom: 10px;
+            font-size: 1.5rem;
         }
         
         .ad-placeholder p {
@@ -282,52 +284,26 @@
             display: none;
         }
         
-        /* Ad Blocker Warning */
-        .adblock-warning {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(231, 76, 60, 0.95);
+        /* Χριστουγεννιάτικο Styling */
+        .christmas-message {
+            background: linear-gradient(45deg, #e74c3c, #f1c40f);
             color: white;
-            padding: 25px;
-            border-radius: 15px;
-            max-width: 400px;
-            width: 90%;
-            z-index: 1001;
-            display: none;
-            text-align: center;
-            border: 4px solid #f1c40f;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-weight: bold;
         }
         
-        .warning-title {
-            font-size: 1.5rem;
-            font-weight: 900;
-            margin-bottom: 15px;
+        .countdown-display {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #e74c3c;
+            margin: 10px 0;
         }
         
-        .warning-text {
-            font-size: 1rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .warning-btn {
-            padding: 10px 25px;
-            background: #f1c40f;
-            color: #2c3e50;
-            border: none;
-            border-radius: 20px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .warning-btn:hover {
-            background: #f39c12;
-            transform: scale(1.05);
+        /* Ad Blocker Warning - ΚΡΥΜΜΕΝΟ */
+        .adblock-warning {
+            display: none !important;
         }
         
         /* Responsive design */
@@ -399,6 +375,11 @@
                 min-width: 200px;
                 min-height: 150px;
             }
+            
+            /* Κρύψτε διαφημίσεις σε κινητά */
+            .ad-overlay {
+                display: none !important;
+            }
         }
         
         /* Touch device optimizations */
@@ -458,26 +439,29 @@
     <div class="ad-overlay" id="adOverlay">
         <div class="ad-container">
             <div class="ad-header">
-                <div class="ad-title">Διαφήμιση</div>
+                <div class="ad-title">🎄 Χριστουγεννιάτικο Μήνυμα 🎄</div>
                 <div class="ad-timer" id="adTimer"></div>
                 <button class="close-ad-btn" id="closeAdBtn">×</button>
             </div>
             <div class="ad-content">
                 <div id="adDisplay">
-                    <!-- AdSense or custom ad will load here -->
+                    <!-- Fallback content - θα φορτωθεί εδώ -->
                     <div class="ad-placeholder" id="adPlaceholder">
-                        <i class="fas fa-ad"></i>
-                        <h3>Google AdSense</h3>
-                        <p>Αυτή η διαφήμιση υποστηρίζει το δωρεάν παιχνίδι</p>
-                        <p><small>Ad Unit: ca-pub-3186700611266549</small></p>
-                        <p><small>Slot: 6125539150</small></p>
+                        <i class="fas fa-gift"></i>
+                        <h3>Καλά Χριστούγεννα!</h3>
+                        <p>Απολαύστε το Capybara Xmas Merge!</p>
+                        <div class="christmas-message">
+                            Το παιχνίδι είναι εντελώς ΔΩΡΕΑΝ
+                        </div>
+                        <div class="countdown-display" id="countdownDisplay">30</div>
+                        <p>Συνέχεια παιχνιδιού σε λίγα δευτερόλεπτα...</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- Ad Blocker Warning -->
+    <!-- Ad Blocker Warning (ΚΡΥΜΜΕΝΟ) -->
     <div class="adblock-warning" id="adblockWarning">
         <div class="warning-title">⚠️ AdBlocker Ανιχνεύθηκε</div>
         <div class="warning-text">
@@ -500,104 +484,96 @@
             const adTimer = document.getElementById('adTimer');
             const adblockWarning = document.getElementById('adblockWarning');
             const continueBtn = document.getElementById('continueBtn');
+            const countdownDisplay = document.getElementById('countdownDisplay');
             
             // Game state
             let soundEnabled = true;
             let adInterval = 90; // 1.5 minutes in seconds
             let adIntervalId = null;
             let isAdShowing = false;
-            let currentAdTimer = 0;
+            let currentAdTimer = 30;
             let adTimerInterval = null;
             
             // Initialize game
             function initGame() {
-                console.log("🎮 Αρχικοποίηση παιχνιδιού...");
+                console.log("🎮 Αρχικοποίηση παιχνιδιού Capybara Xmas Merge...");
                 
-                // Load AdSense ads
+                // Αρχικοποίηση AdSense (αλλά θα χρησιμοποιήσουμε fallback μέχρι να εγκριθεί)
                 initAdSense();
                 
-                // Start ad timer
+                // Εκκίνηση timer για διαφημίσεις
                 startAdTimer();
                 
-                // Show first ad after 5 seconds (for testing)
-                // In production, change to 30000 (30 seconds)
+                // Πρώτη "διαφήμιση" μετά από 30 δευτερόλεπτα (όχι 5)
                 setTimeout(() => {
-                    if (!isAdShowing) {
+                    if (!isAdShowing && window.innerWidth > 480) {
                         showAd();
                     }
-                }, 5000);
+                }, 30000); // 30 δευτερόλεπτα
+                
+                // Κρύψει το adblock warning
+                adblockWarning.style.display = 'none';
             }
             
-            // Initialize Google AdSense
+            // Προσπάθεια φόρτωσης AdSense
             function initAdSense() {
-                console.log("📱 Φόρτωση AdSense...");
+                console.log("📱 Προσπάθεια φόρτωσης AdSense...");
                 
-                // Create AdSense ad
-                const adSenseHTML = `
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="6125539150"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                `;
-                
-                // Add to display
-                adDisplay.innerHTML = adSenseHTML;
-                
-                // Try to load AdSense
-                setTimeout(() => {
+                try {
+                    // Προσθήκη AdSense container
+                    const adSenseHTML = `
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-3186700611266549"
+                             data-ad-slot="6125539150"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                    `;
+                    
+                    // Προσθήκη στον container
+                    adDisplay.innerHTML = adSenseHTML;
+                    
+                    // Προσπάθεια φόρτωσης AdSense
                     if (typeof adsbygoogle !== 'undefined') {
-                        try {
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                            console.log("✅ AdSense φορτώθηκε επιτυχώς");
-                        } catch(e) {
-                            console.error("❌ AdSense error:", e);
-                            showFallbackAd();
-                        }
-                    } else {
-                        console.log("⚠️ AdSense script not loaded, showing fallback");
-                        showFallbackAd();
+                        setTimeout(() => {
+                            try {
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                                console.log("✅ AdSense script loaded");
+                            } catch(e) {
+                                console.log("ℹ️ AdSense not ready yet, using fallback");
+                            }
+                        }, 2000);
                     }
-                }, 1000);
+                } catch(e) {
+                    console.log("ℹ️ Using Christmas fallback message");
+                }
             }
             
-            // Show fallback ad if AdSense fails
-            function showFallbackAd() {
-                const fallbackHTML = `
-                    <div class="ad-placeholder">
-                        <i class="fas fa-gamepad" style="color:#e74c3c;"></i>
-                        <h3>Capybara Xmas Merge</h3>
-                        <p>Παίξε περισσότερα παιχνίδια στον ιστότοπο μας!</p>
-                        <p><strong>Δωρεάν Χριστουγεννιάτικα Παιχνίδια</strong></p>
-                        <button style="margin-top:10px; padding:8px 16px; background:#27ae60; color:white; border:none; border-radius:5px; cursor:pointer;">
-                            Επισκεφτείτε μας
-                        </button>
-                    </div>
-                `;
-                adDisplay.innerHTML = fallbackHTML;
-            }
-            
-            // Show ad overlay
+            // Εμφάνιση διαφήμισης (ή fallback μηνύματος)
             function showAd() {
                 if (isAdShowing || window.innerWidth <= 480) return;
                 
-                console.log(`🕒 Εμφάνιση διαφήμισης (${new Date().toLocaleTimeString()})`);
+                console.log(`🎄 Εμφάνιση Χριστουγεννιάτικου μηνύματος (${new Date().toLocaleTimeString()})`);
                 isAdShowing = true;
                 
-                // Pause main ad timer
+                // Παύση του κύριου ad timer
                 clearInterval(adIntervalId);
                 
-                // Show overlay
+                // Εμφάνιση overlay
                 adOverlay.style.display = 'flex';
                 
-                // Start ad timer (30 seconds countdown)
+                // Χριστουγεννιάτικο fallback μήνυμα
+                showChristmasMessage();
+                
+                // Χρονόμετρο 30 δευτερολέπτων
                 currentAdTimer = 30;
+                countdownDisplay.textContent = currentAdTimer;
                 adTimer.textContent = `${currentAdTimer}s`;
                 adTimer.style.display = 'block';
                 
                 adTimerInterval = setInterval(() => {
                     currentAdTimer--;
+                    countdownDisplay.textContent = currentAdTimer;
                     adTimer.textContent = `${currentAdTimer}s`;
                     
                     if (currentAdTimer <= 0) {
@@ -606,7 +582,7 @@
                     }
                 }, 1000);
                 
-                // Disable close button for first 5 seconds
+                // Απενεργοποίηση κουμπιού κλεισίματος για 5 δευτερόλεπτα
                 closeAdBtn.disabled = true;
                 closeAdBtn.style.opacity = '0.5';
                 setTimeout(() => {
@@ -615,69 +591,81 @@
                 }, 5000);
             }
             
-            // Close ad overlay
+            // Χριστουγεννιάτικο μήνυμα
+            function showChristmasMessage() {
+                const messages = [
+                    "🎅 Καλά Χριστούγεννα! 🎅",
+                    "⭐ Απολαύστε το παιχνίδι! ⭐",
+                    "🎁 Το παιχνίδι είναι ΔΩΡΕΑΝ! 🎁",
+                    "🦔 Καλή διασκέδαση με την Καπιβάρα! 🦔"
+                ];
+                
+                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+                
+                adPlaceholder.innerHTML = `
+                    <i class="fas fa-gift" style="color:#e74c3c; font-size:4rem; margin-bottom:20px;"></i>
+                    <h3 style="color:#2c3e50; margin-bottom:15px;">${randomMessage}</h3>
+                    <p style="margin-bottom:10px;">Καλή επιτυχία στο Capybara Xmas Merge!</p>
+                    <div class="christmas-message" style="margin:15px 0;">
+                        🎮 Υποστηρίξτε το δωρεάν παιχνίδι 🎮
+                    </div>
+                    <div class="countdown-display" id="countdownDisplay">30</div>
+                    <p style="margin-top:10px; color:#666; font-size:0.9rem;">
+                        Συνέχεια παιχνιδιού σε <strong>${currentAdTimer}</strong> δευτερόλεπτα...
+                    </p>
+                `;
+            }
+            
+            // Κλείσιμο διαφήμισης
             function closeAd() {
                 clearInterval(adTimerInterval);
                 adOverlay.style.display = 'none';
                 isAdShowing = false;
                 
-                // Reset timer display
+                // Επαναφορά χρονόμετρου
                 adTimer.style.display = 'none';
                 
-                // Restart main ad timer
+                // Επανεκκίνηση κύριου ad timer
                 startAdTimer();
                 
-                console.log("✅ Διαφήμιση κλείστηκε");
+                console.log("✅ Συνέχεια παιχνιδιού");
             }
             
-            // Start main ad timer (1.5 minutes)
+            // Εκκίνηση κύριου ad timer (1.5 λεπτά)
             function startAdTimer() {
                 clearInterval(adIntervalId);
-                adInterval = 90; // Reset to 1.5 minutes
+                adInterval = 90; // Επαναφορά σε 1.5 λεπτά
                 
                 adIntervalId = setInterval(() => {
                     adInterval--;
                     
-                    if (adInterval <= 0 && !isAdShowing) {
-                        console.log("⏰ 1.5 λεπτά πέρασαν, εμφάνιση διαφήμισης");
+                    if (adInterval <= 0 && !isAdShowing && window.innerWidth > 480) {
+                        console.log("⏰ 1.5 λεπτά πέρασαν, εμφάνιση μηνύματος");
                         showAd();
-                        adInterval = 90; // Reset timer
+                        adInterval = 90; // Επαναφορά timer
                     }
                 }, 1000);
             }
             
-            // Check for ad blocker
-            function checkAdBlocker() {
-                // Simple ad blocker detection
-                setTimeout(() => {
-                    const ad = document.querySelector('.adsbygoogle');
-                    if (ad && ad.offsetHeight === 0) {
-                        console.log("⚠️ Ad blocker detected");
-                        adblockWarning.style.display = 'block';
-                    }
-                }, 3000);
-            }
-            
             // Event Listeners
             
-            // Game loaded
+            // Φόρτωση παιχνιδιού
             gameFrame.addEventListener('load', function() {
                 setTimeout(() => {
                     loadingScreen.style.opacity = '0';
                     setTimeout(() => {
                         loadingScreen.style.display = 'none';
                         initGame();
-                        checkAdBlocker();
                     }, 300);
                 }, 1500);
             });
             
-            // Reload game
+            // Ανανέωση παιχνιδιού
             reloadBtn.addEventListener('click', function() {
                 loadingScreen.style.display = 'flex';
                 loadingScreen.style.opacity = '1';
                 
-                // Reset ad system
+                // Επαναφορά ad συστήματος
                 clearInterval(adIntervalId);
                 clearInterval(adTimerInterval);
                 adOverlay.style.display = 'none';
@@ -695,7 +683,7 @@
                 }, 300);
             });
             
-            // Sound toggle
+            // Ήχος
             soundBtn.addEventListener('click', function() {
                 soundEnabled = !soundEnabled;
                 
@@ -714,45 +702,53 @@
                 }, 200);
             });
             
-            // Close ad button
+            // Κλείσιμο διαφήμισης
             closeAdBtn.addEventListener('click', function() {
                 if (!closeAdBtn.disabled) {
                     closeAd();
                 }
             });
             
-            // Continue button for ad blocker warning
+            // Κουμπί συνέχειας για adblock warning
             continueBtn.addEventListener('click', function() {
                 adblockWarning.style.display = 'none';
+                if (isAdShowing) {
+                    closeAd();
+                }
             });
             
-            // Error handling
+            // Χειρισμός σφαλμάτων
             gameFrame.addEventListener('error', function() {
                 loadingScreen.innerHTML = `
                     <div style="text-align: center; padding: 20px; max-width: 400px;">
                         <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f1c40f; margin-bottom: 15px;"></i>
                         <div style="color: #f1c40f; font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;">
-                            Σφάλμα φόρτωσης
+                            Σφάλμα φόρτωσης παιχνιδιού
+                        </div>
+                        <div style="margin-bottom: 20px; color: #fff;">
+                            Δοκιμάστε να ανανεώσετε τη σελίδα
                         </div>
                         <button class="game-btn" onclick="location.reload()" style="background: #e67e22;">
-                            <i class="fas fa-sync-alt"></i> Ανανέωση
+                            <i class="fas fa-sync-alt"></i> Ανανέωση Σελίδας
                         </button>
                     </div>
                 `;
             });
             
-            // Close ad with Escape key
+            // Κλείσιμο διαφήμισης με πλήκτρο Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && isAdShowing && !closeAdBtn.disabled) {
                     closeAd();
                 }
             });
             
-            // Console info
-            console.log("🎮 Capybara Xmas Merge");
-            console.log("📱 Διαφημίσεις κάθε 1.5 λεπτό");
-            console.log("🔧 AdSense ID: ca-pub-3186700611266549");
-            console.log("⏰ Πρώτη διαφήμιση σε 5 δευτερόλεπτα (για δοκιμή)");
+            // Πληροφορίες στην κονσόλα
+            console.log("====================================");
+            console.log("🎮 CAPYBARA XMAS MERGE");
+            console.log("🎄 Χριστουγεννιάτικο Παιχνίδι");
+            console.log("📱 AdSense ID: ca-pub-3186700611266549");
+            console.log("⏰ 'Διαφημίσεις' κάθε 1.5 λεπτό");
+            console.log("====================================");
         });
     </script>
 </body>
