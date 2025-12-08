@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capybara Xmas Merge - Χριστουγεννιάτικο Παιχνίδι</title>
+    <title>Rescue Sharp Turn - FranklyMaDear</title>
     
     <!-- Google AdSense -->
     <meta name="google-adsense-account" content="ca-pub-3186700611266549">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* Βασικά στυλ */
+        /* RESET & BASE */
         * {
             margin: 0;
             padding: 0;
@@ -19,90 +22,250 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #2c3e50, #1a2530);
-            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
             min-height: 100vh;
             overflow-x: hidden;
         }
         
-        /* Header */
-        .header {
-            background: linear-gradient(90deg, #e74c3c, #f1c40f);
+        /* HEADER */
+        .site-header {
+            background: linear-gradient(90deg, #0f3460, #e94560);
             padding: 15px 20px;
             text-align: center;
-            border-bottom: 4px solid #fff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        
-        .header h1 {
-            font-size: 1.8rem;
-            font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-            margin-bottom: 5px;
-        }
-        
-        .header p {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        /* Main Content */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        /* Game Container */
-        .game-container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(241, 196, 15, 0.3);
-        }
-        
-        .game-wrapper {
+            border-bottom: 4px solid #f9f871;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             position: relative;
-            width: 100%;
-            min-height: 600px;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
+            z-index: 100;
         }
         
-        #gameFrame {
-            width: 100%;
-            height: 600px;
-            border: none;
-            border-radius: 10px;
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            color: #fff;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
-        .loading-screen {
-            position: absolute;
+        .logo span {
+            color: #f9f871;
+        }
+        
+        .tagline {
+            font-size: 1rem;
+            color: #e6e6e6;
+            font-weight: 600;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        /* FULLSCREEN GAME CONTAINER */
+        .fullscreen-game {
+            position: fixed;
             top: 0;
             left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 50;
+            background: #000;
+        }
+        
+        .game-frame {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border: none;
+            display: block;
+        }
+        
+        /* AD OVERLAY - Πάνω από το παιχνίδι */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        
+        .ad-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .ad-content {
+            background: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+            border: 4px solid #f9f871;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+        
+        .ad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .ad-title {
+            color: #0f3460;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .close-ad {
+            background: #e94560;
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .close-ad:hover {
+            background: #d1344e;
+            transform: scale(1.1);
+        }
+        
+        .ad-timer {
+            position: absolute;
+            top: 15px;
+            right: 60px;
+            background: #f9f871;
+            color: #0f3460;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        
+        /* GAME CONTROLS - ΚΟΥΜΠΙΑ */
+        .game-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 200;
+            background: rgba(15, 52, 96, 0.9);
+            padding: 12px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(249, 248, 113, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #e94560, #d1344e);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .control-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(233, 69, 96, 0.4);
+        }
+        
+        .control-btn:active {
+            transform: translateY(0);
+        }
+        
+        .control-btn.secondary {
+            background: linear-gradient(135deg, #1a936f, #106b52);
+        }
+        
+        .control-btn.secondary:hover {
+            box-shadow: 0 5px 15px rgba(26, 147, 111, 0.4);
+        }
+        
+        /* AD SIDEBAR - Δεξιά πλευρά */
+        .ad-sidebar {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 160px;
+            z-index: 150;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 10px;
+            border: 3px solid #f9f871;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            display: none; /* Θα γίνει visible με JavaScript */
+        }
+        
+        .ad-label {
+            background: #0f3460;
+            color: #f9f871;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        /* LOADING SCREEN */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f3460, #1a1a2e);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 500;
             transition: opacity 0.5s ease;
         }
         
         .loader {
-            width: 60px;
-            height: 60px;
-            border: 5px solid rgba(241, 196, 15, 0.3);
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(249, 248, 113, 0.3);
             border-radius: 50%;
-            border-top-color: #f1c40f;
-            animation: spin 1s linear infinite;
+            border-top-color: #f9f871;
+            animation: spin 1.2s linear infinite;
             margin-bottom: 20px;
         }
         
@@ -110,301 +273,234 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Ad Sections */
-        .ad-section {
-            margin: 25px 0;
-            text-align: center;
-        }
-        
-        .ad-label {
-            display: inline-block;
-            background: #f1c40f;
-            color: #2c3e50;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-        
-        .ad-container {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            border: 3px solid #f1c40f;
-            min-height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Game Info */
-        .game-info {
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            border-left: 5px solid #e74c3c;
-        }
-        
-        .game-info h3 {
-            color: #f1c40f;
-            margin-bottom: 15px;
+        .loading-text {
             font-size: 1.3rem;
-        }
-        
-        .game-info ul {
-            list-style: none;
-            padding-left: 20px;
-        }
-        
-        .game-info li {
+            color: #f9f871;
+            font-weight: 700;
             margin-bottom: 10px;
-            position: relative;
-            padding-left: 25px;
         }
         
-        .game-info li:before {
-            content: "🎮";
-            position: absolute;
-            left: 0;
-        }
-        
-        /* Controls */
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        .control-btn {
-            padding: 12px 25px;
-            background: linear-gradient(135deg, #27ae60, #219653);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 0 #1e8449;
-        }
-        
-        .control-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 0 #1e8449;
-        }
-        
-        .control-btn:active {
-            transform: translateY(1px);
-            box-shadow: 0 2px 0 #1e8449;
-        }
-        
-        .control-btn.secondary {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            box-shadow: 0 4px 0 #1c6ea4;
-        }
-        
-        .control-btn.secondary:hover {
-            box-shadow: 0 6px 0 #1c6ea4;
-        }
-        
-        .control-btn.warning {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            box-shadow: 0 4px 0 #a84300;
-        }
-        
-        .control-btn.warning:hover {
-            box-shadow: 0 6px 0 #a84300;
-        }
-        
-        /* Footer */
-        .footer {
-            background: #1a2530;
-            color: #bdc3c7;
-            padding: 30px 20px;
-            margin-top: 40px;
-            text-align: center;
-            border-top: 3px solid #f1c40f;
-        }
-        
-        .footer p {
-            margin: 10px 0;
+        .loading-subtext {
+            color: #b8b8b8;
             font-size: 0.9rem;
-        }
-        
-        .footer-links {
-            margin-top: 20px;
-        }
-        
-        .footer-links a {
-            color: #f1c40f;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: bold;
-        }
-        
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Christmas Theme */
-        .christmas-banner {
-            background: linear-gradient(90deg, #e74c3c, #f1c40f, #27ae60);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 20px 0;
             text-align: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            animation: pulse 2s infinite;
+            max-width: 300px;
         }
         
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-        
-        /* Popup Ad */
-        .popup-ad {
+        /* GAME INFO POPUP */
+        .game-info-popup {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        .popup-content {
-            background: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            padding: 20px;
-            max-width: 90%;
-            max-height: 90%;
-            overflow: auto;
-            position: relative;
-            border: 5px solid #f1c40f;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            z-index: 400;
+            display: none;
+            border: 4px solid #0f3460;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
         }
         
-        .close-popup {
+        .game-info-popup.active {
+            display: block;
+            animation: popIn 0.4s ease;
+        }
+        
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .info-title {
+            color: #0f3460;
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .info-content {
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .info-content h3 {
+            color: #e94560;
+            margin: 15px 0 8px 0;
+        }
+        
+        .info-content ul {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .info-content li {
+            margin-bottom: 8px;
+        }
+        
+        .close-info {
             position: absolute;
             top: 15px;
             right: 15px;
-            background: #e74c3c;
+            background: #e94560;
             color: white;
             border: none;
-            width: 35px;
-            height: 35px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             font-size: 1.2rem;
-            font-weight: bold;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1001;
         }
         
-        /* Responsive */
+        /* RESPONSIVE */
         @media (max-width: 768px) {
-            .header h1 {
+            .logo {
                 font-size: 1.5rem;
             }
             
-            .header p {
+            .tagline {
                 font-size: 0.9rem;
+                padding: 0 10px;
             }
             
-            .game-wrapper {
-                min-height: 400px;
-            }
-            
-            #gameFrame {
-                height: 400px;
+            .game-controls {
+                bottom: 10px;
+                padding: 10px 15px;
+                border-radius: 40px;
             }
             
             .control-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
+                padding: 8px 15px;
+                font-size: 0.8rem;
             }
             
-            .ad-container {
-                padding: 10px;
+            .ad-sidebar {
+                display: none !important; /* Κρύβουμε σε κινητά */
+            }
+            
+            .ad-content {
+                padding: 15px;
             }
         }
         
         @media (max-width: 480px) {
-            .header h1 {
+            .site-header {
+                padding: 12px 15px;
+            }
+            
+            .logo {
                 font-size: 1.3rem;
             }
             
-            .game-wrapper {
-                min-height: 300px;
+            .tagline {
+                font-size: 0.8rem;
             }
             
-            #gameFrame {
-                height: 300px;
-            }
-            
-            .controls {
+            .game-controls {
                 flex-direction: column;
-                align-items: center;
+                border-radius: 20px;
+                padding: 15px;
+                width: 90%;
             }
             
             .control-btn {
-                width: 90%;
+                width: 100%;
                 justify-content: center;
             }
         }
         
-        /* Utilities */
+        /* UTILITY */
         .hidden {
             display: none !important;
         }
     </style>
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Christmas Banner -->
-    <div class="christmas-banner">
-        🎄 Καλά Χριστούγεννα! Παίξτε το Capybara Xmas Merge ΔΩΡΕΑΝ! 🎅
+    <!-- LOADING SCREEN -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loader"></div>
+        <div class="loading-text">Φόρτωση Rescue Sharp Turn...</div>
+        <div class="loading-subtext">Το παιχνίδι θα ξεκινήσει σε πλήρη οθόνη αυτόματα</div>
     </div>
     
-    <!-- Header -->
-    <header class="header">
-        <h1>Capybara Xmas Merge</h1>
-        <p>Χριστουγεννιάτικο Παιχνίδι Συγχώνευσης με Καπιβάρα</p>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="logo">
+            <i class="fas fa-gamepad"></i>
+            Frankly<span>MaDear</span>
+        </div>
+        <div class="tagline">
+            Δωρεάν HTML5 Παιχνίδια | Rescue Sharp Turn - Κάντε απότομες στροφές και σώστε όσους μπορείτε!
+        </div>
     </header>
     
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Ad - Top -->
-        <div class="ad-section">
-            <div class="ad-label">Διαφήμιση</div>
-            <div class="ad-container" id="adTop">
-                <!-- AdSense Ad - Top -->
+    <!-- FULLSCREEN GAME -->
+    <div class="fullscreen-game" id="fullscreenGame">
+        <iframe 
+            src="https://html5.gamedistribution.com/67b7fb2c6f594ef3a4fcb241e902ce1d/?gd_sdk_referrer_url=https://gamedistribution.com/games/rescue-sharp-turn/" 
+            class="game-frame" 
+            id="gameFrame"
+            scrolling="no"
+            frameborder="0"
+            allow="autoplay; fullscreen"
+            allowfullscreen>
+        </iframe>
+    </div>
+    
+    <!-- GAME CONTROLS -->
+    <div class="game-controls" id="gameControls">
+        <button class="control-btn" id="infoBtn">
+            <i class="fas fa-info-circle"></i> Πληροφορίες
+        </button>
+        <button class="control-btn" id="reloadBtn">
+            <i class="fas fa-redo"></i> Ανανέωση
+        </button>
+        <button class="control-btn secondary" id="adBtn">
+            <i class="fas fa-ad"></i> Υποστήριξη
+        </button>
+        <button class="control-btn" id="exitFullscreenBtn">
+            <i class="fas fa-compress"></i> Έξοδος
+        </button>
+    </div>
+    
+    <!-- AD SIDEBAR (Visible on desktop) -->
+    <div class="ad-sidebar" id="adSidebar">
+        <div class="ad-label">Υποστήριξη</div>
+        <div id="sidebarAd">
+            <!-- AdSense Sidebar Ad -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
+                crossorigin="anonymous"></script>
+            <!-- Rescue Sidebar -->
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-3186700611266549"
+                data-ad-slot="4586034963"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+    
+    <!-- AD OVERLAY (Fullscreen Ad) -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-content">
+            <div class="ad-header">
+                <div class="ad-title">
+                    <i class="fas fa-hands-helping"></i> Υποστηρίξτε το Παιχνίδι
+                </div>
+                <div class="ad-timer" id="adTimer">30</div>
+                <button class="close-ad" id="closeAdBtn">×</button>
+            </div>
+            <div id="adContent">
+                <!-- Main Ad Content -->
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
                     crossorigin="anonymous"></script>
-                <!-- Capybara Top -->
+                <!-- Rescue Overlay -->
                 <ins class="adsbygoogle"
                     style="display:block"
                     data-ad-client="ca-pub-3186700611266549"
@@ -416,311 +512,239 @@
                 </script>
             </div>
         </div>
-        
-        <!-- Game Container -->
-        <div class="game-container">
-            <div class="game-wrapper">
-                <!-- Loading Screen -->
-                <div class="loading-screen" id="loadingScreen">
-                    <div class="loader"></div>
-                    <h3 style="color: #f1c40f; margin-top: 20px;">Φόρτωση Capybara Xmas Merge...</h3>
-                    <p style="margin-top: 10px; color: #bdc3c7;">Το παιχνίδι φορτώνεται, παρακαλώ περιμένετε</p>
-                </div>
-                
-                <!-- Game Iframe -->
-                <iframe 
-                    id="gameFrame"
-                    src="https://html5.gamedistribution.com/1a09e82198a8432da4f0a9c103187f7e/?gd_sdk_referrer_url=https://gamedistribution.com/games/capybara-xmas-merge"
-                    scrolling="no"
-                    frameborder="0"
-                    allow="autoplay; fullscreen"
-                    allowfullscreen>
-                </iframe>
-            </div>
-        </div>
-        
-        <!-- Controls -->
-        <div class="controls">
-            <button class="control-btn" id="reloadBtn">
-                <i class="fas fa-redo"></i> Ανανέωση Παιχνιδιού
-            </button>
-            <button class="control-btn secondary" id="fullscreenBtn">
-                <i class="fas fa-expand"></i> Πλήρης Οθόνη
-            </button>
-            <button class="control-btn warning" id="soundBtn">
-                <i class="fas fa-volume-up"></i> Εναλλαγή Ήχου
-            </button>
-        </div>
-        
-        <!-- Game Info -->
-        <div class="game-info">
-            <h3><i class="fas fa-info-circle"></i> Πληροφορίες Παιχνιδιού</h3>
+    </div>
+    
+    <!-- GAME INFO POPUP -->
+    <div class="game-info-popup" id="gameInfoPopup">
+        <button class="close-info" id="closeInfoBtn">×</button>
+        <h2 class="info-title">Rescue Sharp Turn</h2>
+        <div class="info-content">
+            <h3>🎮 Σχετικά με το παιχνίδι:</h3>
+            <p>Το <strong>Rescue Sharp Turn</strong> είναι ένα συναρπαστικό παιχνίδι οδήγησης και διάσωσης!</p>
+            
+            <h3>🎯 Στόχος:</h3>
             <ul>
-                <li><strong>Capybara Xmas Merge</strong> είναι ένα Χριστουγεννιάτικο παιχνίδι συγχώνευσης</li>
-                <li>Συγχωνεύστε παρόμοιες Καπιβάρες για να δημιουργήσετε νέες, ισχυρότερες</li>
-                <li>Συλλέξτε Χριστουγεννιάτικα δώρα και μπόνους</li>
-                <li>Το παιχνίδι είναι <strong>100% ΔΩΡΕΑΝ</strong> και λειτουργεί σε όλες τις συσκευές</li>
-                <li>Αποκτήστε υψηλό σκορ και ανταγωνιστείτε με φίλους</li>
+                <li>Οδηγήστε το ασθενοφόρο μέσα στην πόλη</li>
+                <li>Κάντε απότομες στροφές για να αποφύγετε εμπόδια</li>
+                <li>Φτάστε στο νοσοκομείο γρήγορα</li>
+                <li>Σώστε όσους περισσότερους μπορείτε</li>
             </ul>
-        </div>
-        
-        <!-- Ad - Middle -->
-        <div class="ad-section">
-            <div class="ad-label">Υποστήριξη Παιχνιδιού</div>
-            <div class="ad-container" id="adMiddle">
-                <!-- AdSense Ad - Middle -->
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                    crossorigin="anonymous"></script>
-                <!-- Capybara Middle -->
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-3186700611266549"
-                    data-ad-slot="4586034963"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
-        
-        <!-- Christmas Message -->
-        <div class="christmas-banner">
-            🎁 Καλή Διασκέδαση και Καλά Χριστούγεννα από την FranklyMaDear! 🦔
-        </div>
-        
-        <!-- Ad - Bottom -->
-        <div class="ad-section">
-            <div class="ad-label">Χριστουγεννιάτικη Προσφορά</div>
-            <div class="ad-container" id="adBottom">
-                <!-- AdSense Ad - Bottom -->
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                    crossorigin="anonymous"></script>
-                <!-- Capybara Bottom -->
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-3186700611266549"
-                    data-ad-slot="6125539150"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+            
+            <h3>🎮 Χειρισμός:</h3>
+            <ul>
+                <li><strong>Αριστερό Βέλος:</strong> Στροφή Αριστερά</li>
+                <li><strong>Δεξί Βέλος:</strong> Στροφή Δεξιά</li>
+                <li><strong>Πάνω Βέλος:</strong> Επιτάχυνση</li>
+                <li><strong>Κάτω Βέλος:</strong> Πέδηση/Πίσω</li>
+            </ul>
+            
+            <h3>⭐ Βαθμολογία:</h3>
+            <p>Κερδίστε πόντους για κάθε επιτυχημένη διάσωση!</p>
+            
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #0f3460;">
+                <p><strong>💡 Συμβουλή:</strong> Προσέξτε τις απότομες στροφές και μην χάσετε τον έλεγχο!</p>
             </div>
         </div>
     </div>
-    
-    <!-- Footer -->
-    <footer class="footer">
-        <p>© 2024 FranklyMaDear Games. Με ❤️ από την Ελλάδα.</p>
-        <p>Το Capybara Xmas Merge είναι δωρεάν παιχνίδι HTML5. Οι διαφημίσεις υποστηρίζουν το δωρεάν περιεχόμενο.</p>
-        <div class="footer-links">
-            <a href="/">Αρχική Σελίδα</a>
-            <a href="http://blog.franklymadear.com/">Blog</a>
-            <a href="https://blog.franklymadear.com/support/index.html">Υποστήριξη</a>
-            <a href="mailto:info@franklymadear.com">Επικοινωνία</a>
-        </div>
-    </footer>
-    
-    <!-- Popup Ad (for occasional fullscreen ads) -->
-    <div class="popup-ad" id="popupAd">
-        <div class="popup-content">
-            <button class="close-popup" id="closePopupBtn">×</button>
-            <h3 style="color: #2c3e50; margin-bottom: 15px; text-align: center;">
-                <i class="fas fa-gift"></i> Χριστουγεννιάτικο Μήνυμα
-            </h3>
-            <div style="text-align: center; margin-bottom: 20px;">
-                <p>Καλά Χριστούγεννα! 🎄</p>
-                <p style="color: #666; margin: 10px 0;">
-                    Το Capybara Xmas Merge είναι εντελώς δωρεάν!<br>
-                    Υποστηρίξτε το παιχνίδι μας.
-                </p>
-                <div style="background: #f1c40f; color: #2c3e50; padding: 10px; border-radius: 8px; margin: 15px 0;">
-                    <strong>Το παιχνίδι θα συνεχιστεί σε: <span id="adTimer">5</span> δευτερόλεπτα</strong>
-                </div>
-            </div>
-            <div id="popupAdContent" style="min-height: 200px; display: flex; align-items: center; justify-content: center;">
-                <!-- Popup Ad Content will be loaded here -->
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-gamepad" style="font-size: 3rem; color: #e74c3c;"></i>
-                    <p style="margin-top: 10px; color: #666;">Καλή διασκέδαση με το Capybara Xmas Merge!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+
     <script>
-        // Game variables
-        let soundEnabled = true;
-        let popupAdShown = false;
-        let adTimerInterval;
-        
         // DOM Elements
         const loadingScreen = document.getElementById('loadingScreen');
         const gameFrame = document.getElementById('gameFrame');
-        const reloadBtn = document.getElementById('reloadBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const soundBtn = document.getElementById('soundBtn');
-        const popupAd = document.getElementById('popupAd');
-        const closePopupBtn = document.getElementById('closePopupBtn');
+        const gameControls = document.getElementById('gameControls');
+        const adSidebar = document.getElementById('adSidebar');
+        const adOverlay = document.getElementById('adOverlay');
         const adTimer = document.getElementById('adTimer');
-        const popupAdContent = document.getElementById('popupAdContent');
+        const closeAdBtn = document.getElementById('closeAdBtn');
+        const gameInfoPopup = document.getElementById('gameInfoPopup');
+        const infoBtn = document.getElementById('infoBtn');
+        const closeInfoBtn = document.getElementById('closeInfoBtn');
+        const reloadBtn = document.getElementById('reloadBtn');
+        const adBtn = document.getElementById('adBtn');
+        const exitFullscreenBtn = document.getElementById('exitFullscreenBtn');
         
-        // Initialize game
-        function initGame() {
-            console.log('🎮 Αρχικοποίηση Capybara Xmas Merge...');
+        // Game State
+        let isAdShowing = false;
+        let adCountdown = 30;
+        let adCountdownInterval;
+        let gameLoaded = false;
+        let isFullscreen = true;
+        
+        // Initialize
+        function init() {
+            console.log('🚑 Rescue Sharp Turn Initializing...');
+            
+            // Enter fullscreen automatically
+            enterFullscreen();
             
             // Load AdSense ads
             loadAdsenseAds();
             
-            // Show popup ad after 60 seconds
-            setTimeout(() => {
-                if (!popupAdShown) {
-                    showPopupAd();
-                }
-            }, 60000); // 1 minute
+            // Show sidebar ad on desktop
+            if (window.innerWidth > 768) {
+                setTimeout(() => {
+                    adSidebar.style.display = 'block';
+                }, 2000);
+            }
             
-            // Additional popup every 3 minutes
-            setInterval(() => {
-                if (!popupAdShown && Math.random() > 0.3) { // 70% chance
-                    showPopupAd();
+            // First ad after 45 seconds
+            setTimeout(() => {
+                if (!isAdShowing) {
+                    showAdOverlay();
                 }
-            }, 180000); // 3 minutes
+            }, 45000); // 45 seconds
+            
+            // Regular ad interval (every 2 minutes)
+            setInterval(() => {
+                if (!isAdShowing && gameLoaded) {
+                    showAdOverlay();
+                }
+            }, 120000); // 2 minutes
+            
+            console.log('✅ Game initialized');
         }
         
-        // Load AdSense ads
+        // Enter Fullscreen
+        function enterFullscreen() {
+            const elem = document.getElementById('fullscreenGame');
+            
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            }
+            
+            isFullscreen = true;
+            exitFullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> Έξοδος';
+        }
+        
+        // Exit Fullscreen
+        function exitFullscreen() {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+            
+            isFullscreen = false;
+            exitFullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> Πλήρης';
+        }
+        
+        // Load AdSense Ads
         function loadAdsenseAds() {
             try {
-                // Push AdSense ads
                 if (typeof adsbygoogle !== 'undefined') {
                     adsbygoogle = window.adsbygoogle || [];
-                    // This will refresh any ads
+                    
+                    // Force load ads
                     setTimeout(() => {
                         try {
                             adsbygoogle.push({});
                             console.log('✅ AdSense ads loaded');
                         } catch(e) {
-                            console.log('ℹ️ AdSense may not be fully loaded yet');
+                            console.log('ℹ️ AdSense may not be ready yet');
                         }
-                    }, 1000);
+                    }, 1500);
                 }
             } catch(e) {
                 console.log('⚠️ Error loading AdSense:', e);
             }
         }
         
-        // Show popup ad
-        function showPopupAd() {
-            if (popupAdShown) return;
+        // Show Ad Overlay
+        function showAdOverlay() {
+            if (isAdShowing) return;
             
-            popupAdShown = true;
-            popupAd.style.display = 'flex';
+            isAdShowing = true;
+            adOverlay.classList.add('active');
             
-            // Load a real ad in the popup
-            loadPopupAd();
+            // Start countdown
+            adCountdown = 30;
+            adTimer.textContent = adCountdown;
             
-            // Start countdown timer
-            let countdown = 5;
-            adTimer.textContent = countdown;
-            
-            adTimerInterval = setInterval(() => {
-                countdown--;
-                adTimer.textContent = countdown;
+            adCountdownInterval = setInterval(() => {
+                adCountdown--;
+                adTimer.textContent = adCountdown;
                 
-                if (countdown <= 0) {
-                    clearInterval(adTimerInterval);
-                    closePopupAd();
+                if (adCountdown <= 0) {
+                    closeAdOverlay();
                 }
             }, 1000);
-        }
-        
-        // Load ad in popup
-        function loadPopupAd() {
-            // Try to load AdSense ad
-            try {
-                popupAdContent.innerHTML = `
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-                    <!-- Popup Ad -->
-                    <ins class="adsbygoogle"
-                        style="display:block"
-                        data-ad-client="ca-pub-3186700611266549"
-                        data-ad-slot="4586034963"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                `;
-                
-                // Force AdSense to load
-                setTimeout(() => {
-                    if (typeof adsbygoogle !== 'undefined') {
-                        adsbygoogle.push({});
-                    }
-                }, 500);
-            } catch(e) {
-                // Fallback content
-                popupAdContent.innerHTML = `
-                    <div style="text-align: center; padding: 20px;">
-                        <i class="fas fa-holly-berry" style="font-size: 3rem; color: #e74c3c;"></i>
-                        <h4 style="color: #2c3e50; margin: 15px 0;">Καλά Χριστούγεννα! 🎅</h4>
-                        <p style="color: #666;">Απολαύστε το δωρεάν παιχνίδι Capybara Xmas Merge!</p>
-                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 15px;">
-                            <strong>🎮 Υποστηρίξτε το δωρεάν παιχνίδι μας!</strong>
-                        </div>
-                    </div>
-                `;
-            }
-        }
-        
-        // Close popup ad
-        function closePopupAd() {
-            popupAd.style.display = 'none';
-            clearInterval(adTimerInterval);
             
-            // Allow new popup after 2 minutes
-            setTimeout(() => {
-                popupAdShown = false;
-            }, 120000);
+            // Load fresh ad
+            loadAdsenseAds();
+            
+            console.log('📢 Ad overlay shown');
         }
         
-        // Game frame loaded
+        // Close Ad Overlay
+        function closeAdOverlay() {
+            clearInterval(adCountdownInterval);
+            adOverlay.classList.remove('active');
+            isAdShowing = false;
+            
+            console.log('✅ Ad overlay closed');
+        }
+        
+        // Event Listeners
+        
+        // Game Loaded
         gameFrame.addEventListener('load', function() {
-            console.log('✅ Παιχνίδι φορτώθηκε');
+            console.log('✅ Game loaded successfully');
             
-            // Hide loading screen with animation
             setTimeout(() => {
                 loadingScreen.style.opacity = '0';
                 setTimeout(() => {
                     loadingScreen.classList.add('hidden');
-                    initGame();
+                    gameLoaded = true;
+                    init();
                 }, 500);
-            }, 1500);
+            }, 2000);
         });
         
-        // Game frame error
+        // Game Error
         gameFrame.addEventListener('error', function() {
-            console.log('❌ Σφάλμα φόρτωσης παιχνιδιού');
+            console.log('❌ Game failed to load');
             loadingScreen.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c;"></i>
-                    <h3 style="color: #f1c40f; margin: 20px 0;">Σφάλμα φόρτωσης παιχνιδιού</h3>
-                    <p style="margin-bottom: 20px;">Παρακαλώ δοκιμάστε ξανά</p>
-                    <button class="control-btn" onclick="location.reload()">
+                <div style="text-align: center; padding: 20px; max-width: 400px;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #f9f871; margin-bottom: 20px;"></i>
+                    <div style="color: #f9f871; font-size: 1.3rem; font-weight: 700; margin-bottom: 20px;">
+                        Σφάλμα φόρτωσης παιχνιδιού
+                    </div>
+                    <div style="margin-bottom: 25px; color: #b8b8b8;">
+                        Δοκιμάστε να ανανεώσετε τη σελίδα
+                    </div>
+                    <button class="control-btn" onclick="location.reload()" style="background: #e94560;">
                         <i class="fas fa-sync-alt"></i> Ανανέωση Σελίδας
                     </button>
                 </div>
             `;
         });
         
-        // Event Listeners
+        // Info Button
+        infoBtn.addEventListener('click', function() {
+            gameInfoPopup.classList.add('active');
+        });
         
-        // Reload game button
+        // Close Info
+        closeInfoBtn.addEventListener('click', function() {
+            gameInfoPopup.classList.remove('active');
+        });
+        
+        // Reload Game
         reloadBtn.addEventListener('click', function() {
+            if (isAdShowing) {
+                closeAdOverlay();
+            }
+            
             loadingScreen.classList.remove('hidden');
             loadingScreen.style.opacity = '1';
-            
-            // Reset game iframe
             gameFrame.src = gameFrame.src;
             
             // Button animation
@@ -730,78 +754,60 @@
             }, 300);
         });
         
-        // Fullscreen button
-        fullscreenBtn.addEventListener('click', function() {
-            const gameWrapper = document.querySelector('.game-wrapper');
-            
-            if (!document.fullscreenElement) {
-                if (gameWrapper.requestFullscreen) {
-                    gameWrapper.requestFullscreen();
-                } else if (gameWrapper.webkitRequestFullscreen) {
-                    gameWrapper.webkitRequestFullscreen();
-                } else if (gameWrapper.msRequestFullscreen) {
-                    gameWrapper.msRequestFullscreen();
-                }
-                
-                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> Έξοδος Πλήρους Οθόνης';
+        // Ad Button (Show Support Ad)
+        adBtn.addEventListener('click', function() {
+            showAdOverlay();
+        });
+        
+        // Exit/Enter Fullscreen
+        exitFullscreenBtn.addEventListener('click', function() {
+            if (isFullscreen) {
+                exitFullscreen();
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-                
-                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> Πλήρης Οθόνη';
+                enterFullscreen();
             }
         });
         
-        // Sound toggle button
-        soundBtn.addEventListener('click', function() {
-            soundEnabled = !soundEnabled;
-            
-            if (soundEnabled) {
-                soundBtn.innerHTML = '<i class="fas fa-volume-up"></i> Εναλλαγή Ήχου';
-                soundBtn.classList.remove('warning');
-                soundBtn.classList.add('secondary');
-            } else {
-                soundBtn.innerHTML = '<i class="fas fa-volume-mute"></i> Εναλλαγή Ήχου';
-                soundBtn.classList.remove('secondary');
-                soundBtn.classList.add('warning');
-            }
-            
-            // Send message to iframe (if supported)
-            try {
-                gameFrame.contentWindow.postMessage({
-                    type: 'sound',
-                    enabled: soundEnabled
-                }, '*');
-            } catch(e) {
-                // Iframe may not allow postMessage
+        // Close Ad Button
+        closeAdBtn.addEventListener('click', function() {
+            if (adCountdown <= 5) { // Allow close after 5 seconds
+                closeAdOverlay();
             }
         });
         
-        // Close popup button
-        closePopupBtn.addEventListener('click', closePopupAd);
+        // Fullscreen Change Event
+        document.addEventListener('fullscreenchange', function() {
+            isFullscreen = !!document.fullscreenElement;
+            exitFullscreenBtn.innerHTML = isFullscreen ? 
+                '<i class="fas fa-compress"></i> Έξοδος' : 
+                '<i class="fas fa-expand"></i> Πλήρης';
+        });
         
-        // Escape key closes popup
+        // Escape Key Closes Popups
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && popupAd.style.display === 'flex') {
-                closePopupAd();
+            if (e.key === 'Escape') {
+                if (gameInfoPopup.classList.contains('active')) {
+                    gameInfoPopup.classList.remove('active');
+                }
+                
+                if (isAdShowing && adCountdown <= 5) {
+                    closeAdOverlay();
+                }
             }
         });
         
-        // Initial console message
-        console.log('🎮 Capybara Xmas Merge initialized');
-        console.log('🎄 Christmas theme active');
-        console.log('📱 AdSense integrated with slots: 6125539150, 4586034963');
+        // Initial Console Message
+        console.log('🚑 ==============================');
+        console.log('🚑 RESCUE SHARP TURN');
+        console.log('🚑 Fullscreen Driving Game');
+        console.log('🚑 AdSense: ca-pub-3186700611266549');
+        console.log('🚑 ==============================');
         
-        // Auto-hide loading screen if game takes too long
+        // Auto-hide loading screen after timeout
         setTimeout(() => {
             if (!loadingScreen.classList.contains('hidden')) {
                 loadingScreen.classList.add('hidden');
-                initGame();
+                init();
             }
         }, 10000);
     </script>
