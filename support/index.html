@@ -2,40 +2,88 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorting Xmas Balls - Free Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sorting Xmas Balls - Mobile Game</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
         body {
-            background: #000;
+            background: linear-gradient(135deg, #0c1933 0%, #1a1a2e 100%);
             overflow: hidden;
             width: 100vw;
             height: 100vh;
-            font-family: 'Arial', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            -webkit-user-select: none;
+            user-select: none;
+            padding: 10px;
         }
         
+        /* Game Container - Always shows full game */
         .game-container {
-            position: relative;
             width: 100%;
             height: 100%;
+            max-width: 900px;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
+            position: relative;
         }
         
+        /* Game Header */
+        .game-header {
+            width: 100%;
+            text-align: center;
+            padding: 15px 20px 10px;
+            background: linear-gradient(135deg, rgba(25, 25, 50, 0.9), rgba(15, 30, 60, 0.9));
+            border-radius: 20px 20px 0 0;
+            margin-bottom: 5px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-bottom: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .play-text {
+            color: #FFD700;
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-shadow: 
+                0 2px 4px rgba(0,0,0,0.5),
+                0 0 20px rgba(255, 215, 0, 0.4);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .game-title {
+            color: #4CAF50;
+            font-size: 24px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        /* Game Area - Takes most space */
         .game-area {
             width: 100%;
-            height: 100%;
+            flex: 1;
+            min-height: 0;
             position: relative;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -44,52 +92,111 @@
         .game-frame {
             border: none;
             display: block;
+            width: 100%;
+            height: 100%;
             background: #000;
+            opacity: 1;
+            transition: opacity 0.3s;
         }
         
-        /* Game Loader */
+        /* Game Loader - Overlay on game */
         .game-loader {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: #000;
+            background: linear-gradient(135deg, rgba(12, 25, 51, 0.95), rgba(26, 26, 46, 0.95));
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             z-index: 100;
-            transition: opacity 0.5s ease-out;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
         }
         
         .loader-text {
-            color: #4CAF50;
-            font-size: 24px;
-            margin-bottom: 20px;
+            color: #FFD700;
+            font-size: 36px;
+            margin-bottom: 25px;
             text-align: center;
-            font-weight: bold;
+            font-weight: 900;
+            text-shadow: 
+                0 3px 6px rgba(0,0,0,0.5),
+                0 0 25px rgba(255, 215, 0, 0.5);
+            letter-spacing: 1px;
+            padding: 0 20px;
+        }
+        
+        .loader-subtitle {
+            color: #4CAF50;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
         }
         
         .loader-dots {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 18px;
+            height: 18px;
             background: #4CAF50;
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
         }
         
         .dot:nth-child(1) { animation-delay: -0.32s; }
         .dot:nth-child(2) { animation-delay: -0.16s; }
         
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+            0%, 80%, 100% { 
+                transform: scale(0.3);
+                opacity: 0.3;
+            }
+            40% { 
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+        
+        /* Game Footer */
+        .game-footer {
+            width: 100%;
+            text-align: center;
+            padding: 15px 20px;
+            background: linear-gradient(135deg, rgba(15, 30, 60, 0.9), rgba(25, 25, 50, 0.9));
+            border-radius: 0 0 20px 20px;
+            margin-top: 5px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-top: none;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .instructions {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+        
+        .blog-link {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .blog-link:hover {
+            color: #4CAF50;
         }
         
         /* Floating Objects Container */
@@ -103,22 +210,28 @@
             z-index: 90;
         }
         
-        /* Floating Objects */
+        /* Floating Objects - Mobile Optimized */
         .floating-object {
             position: absolute;
             pointer-events: auto;
             cursor: pointer;
-            transition: transform 0.3s, opacity 0.3s;
+            touch-action: none;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                       opacity 0.3s,
+                       filter 0.3s;
             z-index: 91;
             display: flex;
             flex-direction: column;
             align-items: center;
             opacity: 0.9;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+            will-change: transform, opacity;
         }
         
-        .floating-object:hover {
-            transform: scale(1.1);
+        .floating-object:hover, .floating-object:active {
+            transform: scale(1.25) !important;
             opacity: 1;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4)) brightness(1.1);
             z-index: 92;
         }
         
@@ -130,33 +243,40 @@
         }
         
         .balloon-shape {
-            width: 50px;
-            height: 60px;
+            width: 65px;
+            height: 75px;
             background: var(--balloon-color);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                inset 0 -5px 15px rgba(255, 255, 255, 0.2),
+                0 6px 15px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.2);
         }
         
         .balloon-text {
             color: white;
-            font-size: 10px;
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 800;
             text-align: center;
-            padding: 2px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            line-height: 1.2;
+            padding: 4px;
+            text-shadow: 
+                1px 1px 3px rgba(0,0,0,0.8),
+                0 0 10px rgba(255,255,255,0.3);
+            line-height: 1.3;
+            letter-spacing: 0.5px;
         }
         
         .balloon-string {
-            width: 2px;
-            height: 20px;
-            background: #888;
-            margin-top: -2px;
+            width: 3px;
+            height: 30px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.8), #888);
+            margin-top: -3px;
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
         
         /* Gift Objects */
@@ -167,76 +287,63 @@
         }
         
         .gift-shape {
-            width: 45px;
-            height: 45px;
+            width: 60px;
+            height: 60px;
             background: var(--gift-color);
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                inset 0 0 10px rgba(255,255,255,0.1),
+                0 6px 15px rgba(0, 0, 0, 0.4);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
         }
         
         .gift-ribbon {
             position: absolute;
             width: 100%;
-            height: 8px;
+            height: 12px;
             background: var(--ribbon-color);
             top: 50%;
             transform: translateY(-50%);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+        }
+        
+        .gift-ribbon:before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 100%;
+            background: var(--ribbon-color);
+            left: 50%;
+            transform: translateX(-50%);
         }
         
         .gift-text {
-            background: rgba(0, 0, 0, 0.7);
+            background: linear-gradient(135deg, 
+                rgba(0, 0, 0, 0.85), 
+                rgba(30, 30, 30, 0.85));
             color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            margin-top: 5px;
-            font-weight: bold;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            margin-top: 8px;
+            font-weight: 700;
             text-align: center;
-            max-width: 60px;
-            line-height: 1.2;
-        }
-        
-        /* Star Objects */
-        .star-object {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .star-shape {
-            width: 45px;
-            height: 45px;
-            background: var(--star-color);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: gold;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        .star-text {
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            margin-top: 5px;
-            font-weight: bold;
-            text-align: center;
-            max-width: 60px;
-            line-height: 1.2;
+            max-width: 80px;
+            line-height: 1.3;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
         }
         
         /* Object Animations */
-        @keyframes floatDown {
+        @keyframes floatAround {
             0% {
-                transform: translateY(-100px) translateX(var(--start-x));
+                transform: translate(0, 0) rotate(0deg);
                 opacity: 0;
             }
             10% {
@@ -246,120 +353,230 @@
                 opacity: 0.9;
             }
             100% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--end-x));
+                transform: translate(var(--move-x), var(--move-y)) rotate(360deg);
                 opacity: 0;
             }
         }
         
-        @keyframes floatUp {
-            0% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--start-x));
-                opacity: 0;
+        @keyframes floatBounce {
+            0%, 100% {
+                transform: translateY(0px);
             }
-            10% {
-                opacity: 0.9;
-            }
-            90% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(-100px) translateX(var(--end-x));
-                opacity: 0;
+            50% {
+                transform: translateY(-15px);
             }
         }
         
-        @keyframes floatLeft {
-            0% {
-                transform: translateX(calc(100vw + 100px)) translateY(var(--start-y));
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.9;
-            }
-            90% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateX(-100px) translateY(var(--end-y));
-                opacity: 0;
-            }
-        }
-        
-        @keyframes floatRight {
-            0% {
-                transform: translateX(-100px) translateY(var(--start-y));
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.9;
-            }
-            90% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateX(calc(100vw + 100px)) translateY(var(--end-y));
-                opacity: 0;
-            }
-        }
-        
-        /* Instructions */
-        .instructions {
+        /* Start Button */
+        .start-button {
             position: fixed;
-            bottom: 10px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 11px;
-            text-align: center;
-            z-index: 92;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 15px;
-            border-radius: 10px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.1);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            font-size: 24px;
+            font-weight: 900;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 110;
+            box-shadow: 
+                0 10px 30px rgba(76, 175, 80, 0.4),
+                0 0 40px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: none;
         }
         
-        .instructions.show {
-            opacity: 1;
+        .start-button:hover, .start-button:active {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 
+                0 15px 40px rgba(76, 175, 80, 0.6),
+                0 0 60px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .play-text {
+                font-size: 28px;
+            }
+            
+            .game-title {
+                font-size: 20px;
+            }
+            
+            .loader-text {
+                font-size: 28px;
+            }
+            
+            .loader-subtitle {
+                font-size: 16px;
+            }
+            
+            .instructions {
+                font-size: 13px;
+            }
+            
+            .balloon-shape {
+                width: 55px;
+                height: 65px;
+            }
+            
+            .gift-shape {
+                width: 55px;
+                height: 55px;
+            }
+            
+            .balloon-text, .gift-text {
+                font-size: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-header {
+                padding: 12px 15px 8px;
+            }
+            
+            .game-footer {
+                padding: 12px 15px;
+            }
+            
+            .play-text {
+                font-size: 24px;
+            }
+            
+            .game-title {
+                font-size: 18px;
+            }
+            
+            .loader-text {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .loader-subtitle {
+                font-size: 14px;
+                margin-bottom: 25px;
+            }
+            
+            .dot {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .instructions {
+                font-size: 12px;
+            }
+            
+            .blog-link {
+                font-size: 11px;
+            }
+            
+            .balloon-shape {
+                width: 50px;
+                height: 60px;
+            }
+            
+            .gift-shape {
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        @media (orientation: landscape) and (max-height: 600px) {
+            .game-container {
+                max-height: 90vh;
+            }
+            
+            .game-header {
+                padding: 10px 15px 5px;
+            }
+            
+            .game-footer {
+                padding: 10px 15px;
+            }
+            
+            .play-text {
+                font-size: 20px;
+                margin-bottom: 3px;
+            }
+            
+            .game-title {
+                font-size: 16px;
+            }
+            
+            .instructions {
+                font-size: 11px;
+                margin-bottom: 5px;
+            }
+            
+            .balloon-shape {
+                width: 45px;
+                height: 55px;
+            }
+            
+            .gift-shape {
+                width: 45px;
+                height: 45px;
+            }
+        }
+        
+        /* Portrait mode optimization */
+        @media (orientation: portrait) and (max-height: 700px) {
+            .game-area {
+                min-height: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- GAME LOADER -->
-    <div class="game-loader" id="gameLoader">
-        <div class="loader-text">Loading Sorting Xmas Balls...</div>
-        <div class="loader-dots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-    </div>
-    
-    <!-- GAME CONTAINER -->
+    <!-- Game Container -->
     <div class="game-container">
+        <!-- Game Header -->
+        <div class="game-header">
+            <div class="play-text">PLAY</div>
+            <div class="game-title">SORTING XMAS BALLS</div>
+        </div>
+        
+        <!-- Game Area -->
         <div class="game-area">
-            <!-- GAME IFRAME - Sorting Xmas Balls -->
+            <!-- Game Frame -->
             <iframe 
                 src="https://html5.gamedistribution.com/a508edbaeb1d4213aecebbe4115670c2/?gd_sdk_referrer_url=https://gamedistribution.com/games/sorting-xmas-balls/" 
                 class="game-frame" 
                 id="gameFrame"
-                width="800"
-                height="600"
-                scrolling="none"
+                scrolling="no"
                 frameborder="0"
-                allow="autoplay; fullscreen"
+                allow="autoplay; fullscreen *"
                 allowfullscreen>
             </iframe>
+            
+            <!-- Game Loader -->
+            <div class="game-loader" id="gameLoader">
+                <div class="loader-text">SORTING XMAS BALLS</div>
+                <div class="loader-subtitle">Loading game experience...</div>
+                <div class="loader-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game Footer -->
+        <div class="game-footer">
+            <div class="instructions">Game Ready • Click floating objects for rewards</div>
+            <a href="https://blog.franklymadear.com" class="blog-link" target="_blank">blog.franklymadear.com</a>
         </div>
     </div>
     
-    <!-- INSTRUCTIONS -->
-    <div class="instructions" id="instructions">Game Ready • Click floating objects for rewards</div>
+    <!-- Start Button -->
+    <button class="start-button" id="startButton">START GAME</button>
     
-    <!-- FLOATING OBJECTS CONTAINER -->
+    <!-- Floating Objects Container -->
     <div id="floatingObjects"></div>
 
     <script>
@@ -367,53 +584,125 @@
         const gameFrame = document.getElementById('gameFrame');
         const gameLoader = document.getElementById('gameLoader');
         const floatingObjects = document.getElementById('floatingObjects');
-        const instructions = document.getElementById('instructions');
+        const startButton = document.getElementById('startButton');
         
         // Game State
         let gameStarted = false;
+        let gameLoaded = false;
+        let userInteracted = false;
         let activeObjects = 0;
         const MAX_OBJECTS = 4;
         let objectInterval;
         
         // Configuration
-        const GAME_AREA_PADDING = 60;
-        const START_DELAY = 3000; // 3 seconds after game starts
-        const SPAWN_INTERVAL_MIN = 8000;
-        const SPAWN_INTERVAL_MAX = 15000;
+        const SPAWN_INTERVAL_MIN = 7000;
+        const SPAWN_INTERVAL_MAX = 14000;
         
-        // Hide loader when game loads
-        function hideLoader() {
+        // Initialize game
+        function initGame() {
+            console.log('🎮 Initializing Sorting Xmas Balls...');
+            
+            // Set up responsive game frame
+            setupGameFrame();
+            
+            // Set up game frame load handler
+            gameFrame.addEventListener('load', handleGameLoad);
+            
+            // Set up start button
+            startButton.addEventListener('click', handleStartGame);
+            
+            // Handle user interaction for audio
+            document.addEventListener('click', handleFirstInteraction);
+            document.addEventListener('touchstart', handleFirstInteraction);
+            
+            // Handle orientation and resize
+            window.addEventListener('orientationchange', handleResize);
+            window.addEventListener('resize', handleResize);
+            
+            // Fallback - auto-start after 8 seconds
+            setTimeout(() => {
+                if (!userInteracted) {
+                    handleStartGame();
+                }
+            }, 8000);
+        }
+        
+        // Set up responsive game frame
+        function setupGameFrame() {
+            const container = document.querySelector('.game-area');
+            const updateSize = () => {
+                const containerWidth = container.clientWidth;
+                const containerHeight = container.clientHeight;
+                
+                // Calculate size to fit container while maintaining 4:3 aspect ratio
+                let width = containerWidth;
+                let height = width * (3/4); // 4:3 aspect ratio
+                
+                if (height > containerHeight) {
+                    height = containerHeight;
+                    width = height * (4/3);
+                }
+                
+                // Apply with some padding
+                const padding = 10;
+                gameFrame.style.width = `${width - padding * 2}px`;
+                gameFrame.style.height = `${height - padding * 2}px`;
+                gameFrame.style.maxWidth = '800px';
+                gameFrame.style.maxHeight = '600px';
+            };
+            
+            updateSize();
+            // Update on resize with debounce
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(updateSize, 100);
+            });
+        }
+        
+        // Handle game load
+        function handleGameLoad() {
+            console.log('✅ Game frame loaded');
+            gameLoaded = true;
+            
+            // Hide loader after game is ready
             setTimeout(() => {
                 gameLoader.style.opacity = '0';
+                gameLoader.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     gameLoader.style.display = 'none';
-                    showInstructions();
                     
-                    // Start objects after delay
-                    setTimeout(startFloatingObjects, START_DELAY);
+                    // Show start button if user hasn't interacted
+                    if (!userInteracted) {
+                        startButton.style.display = 'block';
+                    }
                 }, 500);
-            }, 2000);
+            }, 1500);
         }
         
-        // Show instructions
-        function showInstructions() {
-            instructions.classList.add('show');
-            setTimeout(() => {
-                instructions.classList.remove('show');
-            }, 3000);
+        // Handle first user interaction
+        function handleFirstInteraction() {
+            if (!userInteracted) {
+                userInteracted = true;
+                console.log('👆 User interaction detected');
+            }
         }
         
-        // Get game area boundaries
-        function getGameAreaBounds() {
-            const frameRect = gameFrame.getBoundingClientRect();
-            return {
-                left: frameRect.left + GAME_AREA_PADDING,
-                right: frameRect.right - GAME_AREA_PADDING,
-                top: frameRect.top + GAME_AREA_PADDING,
-                bottom: frameRect.bottom - GAME_AREA_PADDING,
-                width: frameRect.width,
-                height: frameRect.height
-            };
+        // Handle game start
+        function handleStartGame() {
+            if (gameStarted) return;
+            
+            console.log('🚀 Starting game...');
+            gameStarted = true;
+            startButton.style.display = 'none';
+            
+            // Start floating objects after a delay
+            setTimeout(startFloatingObjects, 2000);
+        }
+        
+        // Handle resize/orientation change
+        function handleResize() {
+            setTimeout(setupGameFrame, 100);
         }
         
         // Create floating object
@@ -421,58 +710,39 @@
             if (activeObjects >= MAX_OBJECTS || !gameStarted) return;
             
             const objectTypes = [
-                // Balloons (downward/upward movement)
+                // Balloons
                 { 
                     type: 'balloon', 
-                    color: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
+                    color: 'radial-gradient(circle at 30% 30%, #4CAF50, #2E7D32)',
                     text: 'AD\nClick',
-                    animation: 'floatDown'
+                    speed: 18 + Math.random() * 12
                 },
                 { 
                     type: 'balloon', 
-                    color: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                    color: 'radial-gradient(circle at 30% 30%, #2196F3, #1976D2)',
                     text: 'Win\nPrize',
-                    animation: 'floatUp'
+                    speed: 16 + Math.random() * 10
                 },
                 { 
                     type: 'balloon', 
-                    color: 'linear-gradient(135deg, #FF9800, #F57C00)',
+                    color: 'radial-gradient(circle at 30% 30%, #FF9800, #F57C00)',
                     text: 'Free\nBonus',
-                    animation: 'floatDown'
+                    speed: 20 + Math.random() * 12
                 },
-                { 
-                    type: 'balloon', 
-                    color: 'linear-gradient(135deg, #9C27B0, #7B1FA2)',
-                    text: 'Gift\nClick',
-                    animation: 'floatUp'
-                },
-                // Gifts (left/right movement)
+                // Gifts
                 { 
                     type: 'gift', 
                     color: '#FF5722',
                     ribbon: '#FFC107',
                     text: 'Open me',
-                    animation: 'floatLeft'
+                    speed: 22 + Math.random() * 10
                 },
                 { 
                     type: 'gift', 
                     color: '#E91E63',
                     ribbon: '#00BCD4',
                     text: 'Get gift',
-                    animation: 'floatRight'
-                },
-                // Stars (downward/upward movement)
-                { 
-                    type: 'star', 
-                    color: 'radial-gradient(circle, #FFD700, #FFA500)',
-                    text: '⭐ Star',
-                    animation: 'floatDown'
-                },
-                { 
-                    type: 'star', 
-                    color: 'radial-gradient(circle, #C0C0C0, #808080)',
-                    text: '✨ Bonus',
-                    animation: 'floatUp'
+                    speed: 17 + Math.random() * 9
                 }
             ];
             
@@ -481,45 +751,22 @@
             object.className = `floating-object ${objType.type}-object`;
             
             // Get game area bounds
-            const gameBounds = getGameAreaBounds();
+            const gameArea = document.querySelector('.game-area');
+            const gameRect = gameArea.getBoundingClientRect();
             
-            // Calculate position based on animation type
-            let startX, endX, startY, endY;
+            // Create object inside game area
+            const startX = Math.random() * (gameRect.width - 100) + 50;
+            const startY = Math.random() * (gameRect.height - 100) + 50;
             
-            switch(objType.animation) {
-                case 'floatDown':
-                    startX = gameBounds.left - 20 + Math.random() * (gameBounds.width + 40);
-                    endX = startX + (Math.random() * 60 - 30);
-                    object.style.setProperty('--start-x', `${startX}px`);
-                    object.style.setProperty('--end-x', `${endX}px`);
-                    break;
-                    
-                case 'floatUp':
-                    startX = gameBounds.left - 20 + Math.random() * (gameBounds.width + 40);
-                    endX = startX + (Math.random() * 60 - 30);
-                    object.style.setProperty('--start-x', `${startX}px`);
-                    object.style.setProperty('--end-x', `${endX}px`);
-                    break;
-                    
-                case 'floatLeft':
-                    startY = gameBounds.top - 20 + Math.random() * (gameBounds.height + 40);
-                    endY = startY + (Math.random() * 60 - 30);
-                    object.style.setProperty('--start-y', `${startY}px`);
-                    object.style.setProperty('--end-y', `${endY}px`);
-                    break;
-                    
-                case 'floatRight':
-                    startY = gameBounds.top - 20 + Math.random() * (gameBounds.height + 40);
-                    endY = startY + (Math.random() * 60 - 30);
-                    object.style.setProperty('--start-y', `${startY}px`);
-                    object.style.setProperty('--end-y', `${endY}px`);
-                    break;
-            }
+            // Random movement
+            const moveX = (Math.random() - 0.5) * 400;
+            const moveY = (Math.random() - 0.5) * 400;
             
-            // Set position and animation
-            object.style.left = '0px';
-            object.style.top = '0px';
-            object.style.animation = `${objType.animation} ${18 + Math.random() * 12}s linear forwards`;
+            object.style.left = `${gameRect.left + startX}px`;
+            object.style.top = `${gameRect.top + startY}px`;
+            object.style.setProperty('--move-x', `${moveX}px`);
+            object.style.setProperty('--move-y', `${moveY}px`);
+            object.style.animation = `floatAround ${objType.speed}s linear forwards`;
             
             // Create object content
             if (objType.type === 'balloon') {
@@ -556,29 +803,15 @@
                 
                 object.appendChild(giftDiv);
                 object.appendChild(textDiv);
-                
-            } else if (objType.type === 'star') {
-                object.style.setProperty('--star-color', objType.color);
-                
-                const starDiv = document.createElement('div');
-                starDiv.className = 'star-shape';
-                starDiv.textContent = '★';
-                
-                const textDiv = document.createElement('div');
-                textDiv.className = 'star-text';
-                textDiv.textContent = objType.text;
-                
-                object.appendChild(starDiv);
-                object.appendChild(textDiv);
             }
             
-            // Click event
+            // Click/Touch event
             object.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
                 // Visual feedback
-                this.style.transform = 'scale(1.2)';
+                this.style.transform = 'scale(1.3)';
                 this.style.opacity = '0.7';
                 
                 // Open ad in new tab
@@ -590,17 +823,21 @@
                         this.remove();
                         activeObjects--;
                     }
-                }, 300);
+                }, 400);
+            });
+            
+            // Touch feedback
+            object.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(1.15)';
             });
             
             // Remove when animation completes
-            const animationDuration = parseFloat(object.style.animation.match(/(\d+\.?\d*)s/)[1]) * 1000;
             setTimeout(() => {
                 if (object.parentNode) {
                     object.remove();
                     activeObjects--;
                 }
-            }, animationDuration);
+            }, objType.speed * 1000);
             
             floatingObjects.appendChild(object);
             activeObjects++;
@@ -608,12 +845,14 @@
         
         // Start floating objects
         function startFloatingObjects() {
-            gameStarted = true;
+            if (!gameStarted) return;
             
-            // Initial spawns with delays
-            setTimeout(() => createFloatingObject(), 0);
-            setTimeout(() => createFloatingObject(), 3000);
-            setTimeout(() => createFloatingObject(), 6000);
+            console.log('🎈 Starting floating objects...');
+            
+            // Initial spawns
+            setTimeout(() => createFloatingObject(), 500);
+            setTimeout(() => createFloatingObject(), 2000);
+            setTimeout(() => createFloatingObject(), 3500);
             
             // Continuous spawning
             objectInterval = setInterval(() => {
@@ -623,45 +862,8 @@
             }, SPAWN_INTERVAL_MIN + Math.random() * (SPAWN_INTERVAL_MAX - SPAWN_INTERVAL_MIN));
         }
         
-        // Initialize
-        function init() {
-            console.log('🎮 Sorting Xmas Balls - Loading...');
-            
-            // Center game frame
-            function centerGameFrame() {
-                const windowWidth = window.innerWidth;
-                const windowHeight = window.innerHeight;
-                
-                // Calculate centered position
-                const left = Math.max(0, (windowWidth - 800) / 2);
-                const top = Math.max(0, (windowHeight - 600) / 2);
-                
-                gameFrame.style.position = 'absolute';
-                gameFrame.style.left = `${left}px`;
-                gameFrame.style.top = `${top}px`;
-            }
-            
-            // Center on load and resize
-            centerGameFrame();
-            window.addEventListener('resize', centerGameFrame);
-            
-            // Hide loader when game loads
-            gameFrame.addEventListener('load', function() {
-                console.log('✅ Game Loaded');
-                hideLoader();
-            });
-            
-            // Also hide loader after timeout (fallback)
-            setTimeout(hideLoader, 5000);
-        }
-        
-        // Event Listeners
-        gameFrame.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-        
-        // Start everything
-        init();
+        // Initialize everything
+        initGame();
     </script>
 </body>
 </html>
