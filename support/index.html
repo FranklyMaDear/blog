@@ -70,43 +70,162 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Ad balloon during game */
-        .ad-balloon {
+        /* Top Banner */
+        .top-banner {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #ff4161;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(90deg, #ff4161, #ff4b2b);
             color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 50;
-            box-shadow: 0 4px 12px rgba(255, 65, 97, 0.4);
-            animation: float 3s ease-in-out infinite;
+            padding: 12px 20px;
+            z-index: 90;
             display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            border-bottom: 3px solid #ffcc00;
+        }
+        
+        .banner-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .banner-text {
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .banner-text i {
+            color: #ffcc00;
+        }
+        
+        .close-banner {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+        
+        .close-banner:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Floating Objects */
+        .floating-object {
+            position: fixed;
+            z-index: 80;
+            cursor: pointer;
+            transition: transform 0.3s;
+            animation: float 15s linear infinite;
+        }
+        
+        .floating-object:hover {
+            transform: scale(1.2);
         }
         
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            0% {
+                transform: translateY(100vh) translateX(-50px) rotate(0deg);
+            }
+            100% {
+                transform: translateY(-100px) translateX(50px) rotate(360deg);
+            }
         }
         
-        .ad-balloon:hover {
-            background: #ff2a4d;
-            box-shadow: 0 6px 16px rgba(255, 65, 97, 0.6);
+        /* Object Styles */
+        .flower {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #ff6b9d, #ff4161);
+            border-radius: 50%;
+            position: relative;
         }
         
-        /* Fullscreen ad overlay between levels */
-        .level-complete-overlay {
+        .flower:before, .flower:after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #ff6b9d, #ff4161);
+            border-radius: 50%;
+        }
+        
+        .flower:before {
+            transform: rotate(60deg);
+        }
+        
+        .flower:after {
+            transform: rotate(120deg);
+        }
+        
+        .fruit {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle at 30% 30%, #ffcc00, #ff9800);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .fruit:before {
+            content: '🍎';
+            font-size: 20px;
+        }
+        
+        .leaf {
+            width: 40px;
+            height: 40px;
+            background: #4CAF50;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            transform: rotate(180deg);
+        }
+        
+        .object-label {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .floating-object:hover .object-label {
+            opacity: 1;
+        }
+        
+        /* Ad Overlay */
+        .ad-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
+            z-index: 200;
             display: none;
             justify-content: center;
             align-items: center;
@@ -115,18 +234,40 @@
             font-family: Arial, sans-serif;
         }
         
-        .ad-loading-text {
-            font-size: 18px;
-            margin-bottom: 20px;
+        .ad-content {
             text-align: center;
-            padding: 0 20px;
+            padding: 20px;
+            max-width: 600px;
         }
         
-        .countdown {
+        .ad-title {
             font-size: 24px;
             color: #4cc9f0;
+            margin-bottom: 20px;
             font-weight: bold;
+        }
+        
+        .ad-message {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .close-ad {
+            background: #ff4161;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
             margin-top: 20px;
+            transition: background 0.3s;
+        }
+        
+        .close-ad:hover {
+            background: #ff2a4d;
         }
         
         .hidden {
@@ -157,81 +298,154 @@
         </div>
     </div>
     
-    <!-- AD BALLOON DURING GAME -->
-    <div class="ad-balloon" id="adBalloon">ads</div>
-    
-    <!-- FULLSCREEN AD BETWEEN LEVELS -->
-    <div class="level-complete-overlay" id="levelCompleteOverlay">
-        <div class="ad-loading-text">Φόρτωση διαφήμισης...</div>
-        <div class="countdown" id="countdown">3</div>
+    <!-- TOP BANNER -->
+    <div class="top-banner" id="topBanner">
+        <div class="banner-content">
+            <div class="banner-text">
+                <i class="fas fa-ad"></i>
+                <span>Υποστήριξη Παιχνιδιού - Κάντε κλικ στα ιπτάμενα αντικείμενα!</span>
+            </div>
+            <button class="close-banner" id="closeBanner">×</button>
+        </div>
     </div>
+    
+    <!-- FLOATING OBJECTS CONTAINER -->
+    <div id="floatingObjects"></div>
+    
+    <!-- AD OVERLAY -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-content">
+            <div class="ad-title">Διαφήμιση</div>
+            <div class="ad-message">
+                Ευχαριστούμε για την υποστήριξη!<br>
+                Η διαφήμιση θα κλείσει αυτόματα σε λίγα δευτερόλεπτα.
+            </div>
+            <div id="adContainer"></div>
+            <button class="close-ad" id="closeAd">Κλείσιμο</button>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
     <script>
         // DOM Elements
         const loadingScreen = document.getElementById('loadingScreen');
         const gameFrame = document.getElementById('gameFrame');
-        const adBalloon = document.getElementById('adBalloon');
-        const levelCompleteOverlay = document.getElementById('levelCompleteOverlay');
-        const countdownElement = document.getElementById('countdown');
+        const topBanner = document.getElementById('topBanner');
+        const closeBanner = document.getElementById('closeBanner');
+        const floatingObjects = document.getElementById('floatingObjects');
+        const adOverlay = document.getElementById('adOverlay');
+        const adContainer = document.getElementById('adContainer');
+        const closeAd = document.getElementById('closeAd');
         
         // Game State
         let gameLoaded = false;
+        let bannerInterval;
+        let floatingInterval;
         let adScriptLoaded = false;
-        let currentLevel = 1;
-        let adBalloonTimeout;
         
-        // Show ad balloon during gameplay
-        function showAdBalloon() {
-            adBalloon.style.display = 'block';
+        // Show/Hide Top Banner
+        function showTopBanner() {
+            topBanner.style.display = 'block';
             
-            // Hide after 5 seconds
+            // Auto-hide after 10 seconds
             setTimeout(() => {
-                adBalloon.style.display = 'none';
-            }, 5000);
-            
-            // Show again after random interval (30-60 seconds)
-            adBalloonTimeout = setTimeout(() => {
-                if (gameLoaded) {
-                    showAdBalloon();
-                }
-            }, 30000 + Math.random() * 30000);
+                hideTopBanner();
+            }, 10000);
         }
         
-        // Show fullscreen ad between levels
-        function showLevelCompleteAd() {
-            console.log(`🏆 Πίστα ${currentLevel} ολοκληρώθηκε - Εμφάνιση διαφήμισης`);
+        function hideTopBanner() {
+            topBanner.style.display = 'none';
+        }
+        
+        // Schedule banner appearances
+        function scheduleBanner() {
+            // Show first banner after 15 seconds
+            setTimeout(() => {
+                if (gameLoaded) {
+                    showTopBanner();
+                }
+            }, 15000);
             
-            // Pause the game
+            // Then show every 2-3 minutes
+            bannerInterval = setInterval(() => {
+                if (gameLoaded) {
+                    showTopBanner();
+                }
+            }, 120000 + Math.random() * 60000);
+        }
+        
+        // Create floating objects
+        function createFloatingObject() {
+            const objectTypes = ['flower', 'fruit', 'leaf'];
+            const type = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+            
+            const object = document.createElement('div');
+            object.className = `floating-object ${type}`;
+            
+            // Random position and animation
+            const startX = Math.random() * (window.innerWidth - 100) + 50;
+            const delay = Math.random() * 5;
+            const duration = 15 + Math.random() * 10;
+            
+            object.style.left = `${startX}px`;
+            object.style.animationDelay = `${delay}s`;
+            object.style.animationDuration = `${duration}s`;
+            
+            // Add label
+            const label = document.createElement('div');
+            label.className = 'object-label';
+            label.textContent = 'Κλικ για διαφήμιση';
+            object.appendChild(label);
+            
+            // Click event to show ad
+            object.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showAd();
+                this.remove();
+            });
+            
+            // Remove when animation completes
+            setTimeout(() => {
+                if (object.parentNode) {
+                    object.remove();
+                }
+            }, (duration + delay) * 1000);
+            
+            floatingObjects.appendChild(object);
+        }
+        
+        // Schedule floating objects creation
+        function scheduleFloatingObjects() {
+            // Create objects every 10-20 seconds
+            floatingInterval = setInterval(() => {
+                if (gameLoaded && document.visibilityState === 'visible') {
+                    // Create 1-3 objects at a time
+                    const count = 1 + Math.floor(Math.random() * 3);
+                    for (let i = 0; i < count; i++) {
+                        createFloatingObject();
+                    }
+                }
+            }, 10000 + Math.random() * 10000);
+        }
+        
+        // Show ad with your script
+        function showAd() {
+            console.log('🎯 Αντικείμενο πατήθηκε - Φόρτωση διαφήμισης');
+            
+            // Pause game
             gameFrame.style.pointerEvents = 'none';
             gameFrame.style.opacity = '0.5';
             
             // Show overlay
-            levelCompleteOverlay.style.display = 'flex';
+            adOverlay.style.display = 'flex';
             
-            // Start countdown
-            let countdown = 3;
-            countdownElement.textContent = countdown;
+            // Clear previous ad
+            adContainer.innerHTML = '<div style="color:#4cc9f0; margin:20px 0;">Φόρτωση διαφήμισης...</div>';
             
-            const countdownInterval = setInterval(() => {
-                countdown--;
-                if (countdown <= 0) {
-                    clearInterval(countdownInterval);
-                    countdownElement.textContent = '';
-                    
-                    // Load the ad script
-                    loadAdScript();
-                } else {
-                    countdownElement.textContent = countdown;
-                }
-            }, 1000);
-        }
-        
-        // Load the ad script
-        function loadAdScript() {
-            if (adScriptLoaded) return;
-            
-            console.log('📢 Φόρτωση διαφημιστικού script...');
-            
+            // Load your ad script HERE
+            // REPLACE THIS WITH YOUR ACTUAL SCRIPT
             const adScript = document.createElement('script');
             adScript.src = 'https://3nbf4.com/act/files/tag.min.js?z=10021853';
             adScript.setAttribute('data-cfasync', 'false');
@@ -240,47 +454,27 @@
             adScript.onload = function() {
                 console.log('✅ Διαφημιστικό script φορτώθηκε');
                 adScriptLoaded = true;
-                
-                // Hide ad after 10 seconds
-                setTimeout(() => {
-                    hideAdOverlay();
-                    currentLevel++;
-                    
-                    // Schedule next level completion simulation
-                    scheduleNextLevelCompletion();
-                }, 10000);
+                adContainer.innerHTML = '<div style="color:#4cc9f0; margin:20px 0;">Διαφήμιση φορτώθηκε!</div>';
             };
             
             adScript.onerror = function() {
                 console.log('❌ Σφάλμα φόρτωσης script');
-                // Hide overlay anyway after 5 seconds
-                setTimeout(() => {
-                    hideAdOverlay();
-                    scheduleNextLevelCompletion();
-                }, 5000);
+                adContainer.innerHTML = '<div style="color:#ff4161; margin:20px 0;">Διαφήμιση - Ευχαριστούμε για την υποστήριξη!</div>';
             };
             
-            document.body.appendChild(adScript);
+            adContainer.appendChild(adScript);
+            
+            // Auto-close after 15 seconds
+            setTimeout(() => {
+                closeAdOverlay();
+            }, 15000);
         }
         
-        // Hide ad overlay and resume game
-        function hideAdOverlay() {
-            levelCompleteOverlay.style.display = 'none';
+        // Close ad overlay
+        function closeAdOverlay() {
+            adOverlay.style.display = 'none';
             gameFrame.style.pointerEvents = 'auto';
             gameFrame.style.opacity = '1';
-        }
-        
-        // Simulate level completion (every 60-120 seconds)
-        function scheduleNextLevelCompletion() {
-            const nextLevelTime = 60000 + Math.random() * 60000; // 60-120 seconds
-            
-            console.log(`⏰ Επόμενη πίστα σε ${Math.round(nextLevelTime/1000)} δευτερόλεπτα`);
-            
-            setTimeout(() => {
-                if (gameLoaded) {
-                    showLevelCompleteAd();
-                }
-            }, nextLevelTime);
         }
         
         // Initialize game
@@ -288,25 +482,21 @@
             console.log('🎮 Παιχνίδι έτοιμο!');
             gameLoaded = true;
             
-            // Start showing ad balloon
-            setTimeout(() => {
-                showAdBalloon();
-            }, 10000);
+            // Start banner schedule
+            scheduleBanner();
             
-            // Schedule first level completion
-            setTimeout(() => {
-                scheduleNextLevelCompletion();
-            }, 30000);
+            // Start floating objects
+            scheduleFloatingObjects();
             
-            // Click on balloon loads ad immediately
-            adBalloon.addEventListener('click', function() {
-                showLevelCompleteAd();
-                adBalloon.style.display = 'none';
-                clearTimeout(adBalloonTimeout);
-            });
+            // Create initial objects
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    createFloatingObject();
+                }, i * 2000);
+            }
         }
         
-        // Game loaded event
+        // Event Listeners
         gameFrame.addEventListener('load', function() {
             console.log('✅ Παιχνίδι φορτώθηκε');
             
@@ -316,7 +506,6 @@
             }, 2000);
         });
         
-        // Game error
         gameFrame.addEventListener('error', function() {
             console.log('❌ Σφάλμα φόρτωσης παιχνιδιού');
             loadingScreen.innerHTML = `
@@ -333,17 +522,38 @@
             `;
         });
         
+        closeBanner.addEventListener('click', function() {
+            hideTopBanner();
+        });
+        
+        closeAd.addEventListener('click', function() {
+            closeAdOverlay();
+        });
+        
+        // Click on game frame should not trigger anything
+        gameFrame.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
         // Initial message
         console.log('🎮 Royal Garden Match 2');
-        console.log('📢 Διαφημίσεις μεταξύ πιστών');
+        console.log('🎯 Ιπτάμενα αντικείμενα με διαφημίσεις');
         
-        // Auto-hide loading screen after 5 seconds max
+        // Auto-hide loading screen
         setTimeout(() => {
             if (!gameLoaded) {
                 loadingScreen.classList.add('hidden');
                 initGame();
             }
         }, 5000);
+        
+        // Handle visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && gameLoaded) {
+                // Resume creating objects when tab becomes visible
+                scheduleFloatingObjects();
+            }
+        });
     </script>
 </body>
 </html>
