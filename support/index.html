@@ -100,7 +100,7 @@
             touch-action: none;
             transition: transform 0.3s, opacity 0.3s;
             z-index: 51;
-            opacity: 0.9;
+            opacity: 0.85;
             will-change: transform;
         }
         
@@ -139,6 +139,35 @@
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
         }
         
+        /* Simple Gift Box */
+        .gift {
+            width: 50px;
+            height: 50px;
+            background: var(--gift-color);
+            position: relative;
+            border-radius: 5px;
+        }
+        
+        .gift:before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: var(--ribbon-color);
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .gift:after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 100%;
+            background: var(--ribbon-color);
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
         /* Object Animations */
         @keyframes floatDown {
             0% {
@@ -146,10 +175,10 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.9;
+                opacity: 0.85;
             }
             90% {
-                opacity: 0.9;
+                opacity: 0.85;
             }
             100% {
                 transform: translateY(calc(100vh + 100px)) translateX(var(--end-x));
@@ -163,10 +192,10 @@
                 opacity: 0;
             }
             10% {
-                opacity: 0.9;
+                opacity: 0.85;
             }
             90% {
-                opacity: 0.9;
+                opacity: 0.85;
             }
             100% {
                 transform: translateY(-100px) translateX(var(--end-x));
@@ -174,29 +203,38 @@
             }
         }
         
-        /* Start Button */
-        .start-btn {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #4CAF50;
-            color: white;
-            font-size: 20px;
-            font-weight: 600;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            z-index: 101;
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-            display: none;
+        @keyframes floatLeft {
+            0% {
+                transform: translateX(calc(100vw + 100px)) translateY(var(--start-y));
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.85;
+            }
+            90% {
+                opacity: 0.85;
+            }
+            100% {
+                transform: translateX(-100px) translateY(var(--end-y));
+                opacity: 0;
+            }
         }
         
-        .start-btn:active {
-            transform: translate(-50%, -50%) scale(0.95);
-            box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+        @keyframes floatRight {
+            0% {
+                transform: translateX(-100px) translateY(var(--start-y));
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.85;
+            }
+            90% {
+                opacity: 0.85;
+            }
+            100% {
+                transform: translateX(calc(100vw + 100px)) translateY(var(--end-y));
+                opacity: 0;
+            }
         }
         
         /* Hide on mobile if game is playing */
@@ -206,7 +244,7 @@
                 height: 55px;
             }
             
-            .star {
+            .star, .gift {
                 width: 40px;
                 height: 40px;
             }
@@ -234,9 +272,6 @@
         </div>
     </div>
     
-    <!-- Start Button -->
-    <button class="start-btn" id="startBtn">START</button>
-    
     <!-- Floating Objects Container -->
     <div id="floatingObjects"></div>
 
@@ -244,15 +279,17 @@
         // DOM Elements
         const gameFrame = document.getElementById('gameFrame');
         const loader = document.getElementById('loader');
-        const startBtn = document.getElementById('startBtn');
         const floatingObjects = document.getElementById('floatingObjects');
         
         // Game State
-        let gameStarted = false;
+        let gameLoaded = false;
         let objectsStarted = false;
         let activeObjects = 0;
         const MAX_OBJECTS = 3;
         let objectInterval;
+        
+        // Configuration
+        const OBJECT_START_DELAY = 90000; // 1.5 λεπτά = 90 δευτερόλεπτα
         
         // Initialize
         function init() {
@@ -264,22 +301,32 @@
             // Game frame loaded
             gameFrame.addEventListener('load', () => {
                 console.log('✅ Game loaded');
+                gameLoaded = true;
+                
+                // Hide loader after 2 seconds
                 setTimeout(() => {
                     loader.style.opacity = '0';
                     setTimeout(() => {
                         loader.style.display = 'none';
-                        startBtn.style.display = 'block';
+                        
+                        // Start objects after 1.5 minutes
+                        setTimeout(startFloatingObjects, OBJECT_START_DELAY);
+                        console.log(`⏰ Objects will start in ${OBJECT_START_DELAY/1000} seconds`);
                     }, 500);
-                }, 1000);
+                }, 2000);
             });
             
-            // Start button click
-            startBtn.addEventListener('click', startGame);
-            
-            // Fallback - auto start after 5 seconds
+            // Fallback - hide loader after 5 seconds
             setTimeout(() => {
-                if (!gameStarted) {
-                    startGame();
+                if (!gameLoaded) {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        gameLoaded = true;
+                        
+                        // Start objects after 1.5 minutes
+                        setTimeout(startFloatingObjects, OBJECT_START_DELAY);
+                    }, 500);
                 }
             }, 5000);
         }
@@ -297,18 +344,6 @@
             });
         }
         
-        // Start game
-        function startGame() {
-            if (gameStarted) return;
-            
-            console.log('🚀 Starting game...');
-            gameStarted = true;
-            startBtn.style.display = 'none';
-            
-            // Start objects after delay
-            setTimeout(startFloatingObjects, 2000);
-        }
-        
         // Create floating object
         function createFloatingObject() {
             if (activeObjects >= MAX_OBJECTS || !objectsStarted) return;
@@ -318,42 +353,77 @@
                     type: 'balloon',
                     color: 'radial-gradient(circle at 30% 30%, #ff3333, #cc0000)',
                     animation: 'floatDown',
-                    duration: 15 + Math.random() * 10
+                    duration: 20 + Math.random() * 15
                 },
                 {
                     type: 'balloon',
                     color: 'radial-gradient(circle at 30% 30%, #4CAF50, #2E7D32)',
                     animation: 'floatUp',
-                    duration: 18 + Math.random() * 8
+                    duration: 22 + Math.random() * 12
                 },
                 {
                     type: 'balloon',
                     color: 'radial-gradient(circle at 30% 30%, #2196F3, #1976D2)',
                     animation: 'floatDown',
-                    duration: 16 + Math.random() * 9
+                    duration: 18 + Math.random() * 14
                 },
                 {
                     type: 'star',
                     color: 'radial-gradient(circle at 50% 50%, #FFD700, #FFA500)',
                     animation: 'floatUp',
-                    duration: 14 + Math.random() * 11
+                    duration: 16 + Math.random() * 16
+                },
+                {
+                    type: 'gift',
+                    color: '#FF5722',
+                    ribbon: '#FFC107',
+                    animation: 'floatLeft',
+                    duration: 24 + Math.random() * 10
+                },
+                {
+                    type: 'gift',
+                    color: '#E91E63',
+                    ribbon: '#00BCD4',
+                    animation: 'floatRight',
+                    duration: 21 + Math.random() * 13
                 }
             ];
             
             const objType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
             const object = document.createElement('div');
             object.className = `floating-object ${objType.type}`;
-            object.style.cssText = `--balloon-color: ${objType.color}; --star-color: ${objType.color}`;
             
-            // Random position
-            const startX = Math.random() * window.innerWidth;
-            const endX = startX + (Math.random() * 100 - 50);
+            // Set colors based on type
+            if (objType.type === 'balloon' || objType.type === 'star') {
+                object.style.cssText = `--${objType.type}-color: ${objType.color}`;
+            } else if (objType.type === 'gift') {
+                object.style.cssText = `--gift-color: ${objType.color}; --ribbon-color: ${objType.ribbon}`;
+            }
+            
+            // Random position and animation parameters
+            let styleProperties = '';
+            
+            switch(objType.animation) {
+                case 'floatDown':
+                case 'floatUp':
+                    const startX = Math.random() * window.innerWidth;
+                    const endX = startX + (Math.random() * 100 - 50);
+                    object.style.setProperty('--start-x', `${startX}px`);
+                    object.style.setProperty('--end-x', `${endX}px`);
+                    break;
+                    
+                case 'floatLeft':
+                case 'floatRight':
+                    const startY = Math.random() * window.innerHeight;
+                    const endY = startY + (Math.random() * 100 - 50);
+                    object.style.setProperty('--start-y', `${startY}px`);
+                    object.style.setProperty('--end-y', `${endY}px`);
+                    break;
+            }
             
             // Set animation
             object.style.left = '0px';
             object.style.top = '0px';
-            object.style.setProperty('--start-x', `${startX}px`);
-            object.style.setProperty('--end-x', `${endX}px`);
             object.style.animation = `${objType.animation} ${objType.duration}s linear forwards`;
             
             // Click event
@@ -377,6 +447,15 @@
                 }, 300);
             });
             
+            // Touch feedback
+            object.addEventListener('touchstart', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            object.addEventListener('touchend', function() {
+                this.style.transform = 'scale(1.2)';
+            });
+            
             // Remove when animation completes
             setTimeout(() => {
                 if (object.parentNode) {
@@ -389,21 +468,21 @@
             activeObjects++;
         }
         
-        // Start floating objects
+        // Start floating objects after 1.5 minutes
         function startFloatingObjects() {
             objectsStarted = true;
-            console.log('🎈 Starting floating objects...');
+            console.log('🎈 Starting floating objects after 1.5 minutes...');
             
             // Initial objects
-            setTimeout(() => createFloatingObject(), 500);
-            setTimeout(() => createFloatingObject(), 1500);
+            setTimeout(() => createFloatingObject(), 0);
+            setTimeout(() => createFloatingObject(), 2000);
             
-            // Continuous spawn
+            // Continuous spawn every 10-15 seconds
             objectInterval = setInterval(() => {
                 if (objectsStarted && activeObjects < MAX_OBJECTS) {
                     createFloatingObject();
                 }
-            }, 8000 + Math.random() * 7000);
+            }, 10000 + Math.random() * 5000);
         }
         
         // Start everything
