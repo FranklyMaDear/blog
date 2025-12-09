@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sorting Xmas Balls</title>
+    <title>Sorting Xmas Balls - Christmas Game</title>
     <style>
         * {
             margin: 0;
@@ -14,7 +14,7 @@
         }
         
         body {
-            background: #000;
+            background: #0a1929;
             overflow: hidden;
             width: 100vw;
             height: 100vh;
@@ -28,22 +28,22 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             border: none;
             display: block;
             z-index: 1;
             background: #000;
         }
         
-        /* Simple Loader */
+        /* Simple Loader with Christmas theme */
         .loader {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #000;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a1929 0%, #1a3b5a 100%);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -54,31 +54,40 @@
         
         .loader-text {
             color: #4CAF50;
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 32px;
+            margin-bottom: 25px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .loader-subtitle {
+            color: #FFD700;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
         }
         
         .loader-dots {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
         
         .dot {
-            width: 12px;
-            height: 12px;
-            background: #4CAF50;
+            width: 14px;
+            height: 14px;
+            background: #FF5252;
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
         }
         
         .dot:nth-child(1) { animation-delay: -0.32s; }
         .dot:nth-child(2) { animation-delay: -0.16s; }
+        .dot:nth-child(3) { background: #4CAF50; }
         
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+            0%, 80%, 100% { transform: scale(0.5); }
+            40% { transform: scale(1.2); }
         }
         
         /* Floating Objects Container */
@@ -86,167 +95,264 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             pointer-events: none;
             z-index: 50;
         }
         
-        /* Minimal Floating Objects */
+        /* Christmas Ball Objects */
         .floating-object {
             position: absolute;
             pointer-events: auto;
             cursor: pointer;
             touch-action: none;
-            transition: transform 0.3s, opacity 0.3s;
             z-index: 51;
-            opacity: 0.85;
-            will-change: transform;
+            opacity: 0.9;
+            will-change: transform, opacity;
         }
         
         .floating-object:active {
-            transform: scale(1.2);
+            transform: scale(1.25) !important;
             opacity: 1;
         }
         
-        /* Simple Balloon */
-        .balloon {
-            width: 50px;
-            height: 60px;
-            background: var(--balloon-color);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        /* Christmas Ball Base */
+        .christmas-ball {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
             position: relative;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 6px 15px rgba(0, 0, 0, 0.4),
+                inset 0 -10px 20px rgba(0, 0, 0, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
         
-        .balloon:after {
-            content: '';
+        /* Ball Top Hook */
+        .ball-hook {
             position: absolute;
-            bottom: -15px;
+            top: -12px;
             left: 50%;
             transform: translateX(-50%);
-            width: 2px;
-            height: 20px;
-            background: #666;
+            width: 8px;
+            height: 15px;
+            background: #FFD700;
+            border-radius: 4px 4px 0 0;
+            z-index: 2;
         }
         
-        /* Simple Star */
-        .star {
-            width: 45px;
-            height: 45px;
-            background: var(--star-color);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        /* Ball Patterns */
+        .ball-pattern {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* Simple Gift Box */
-        .gift {
+        .pattern-stripe {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.4);
+            position: absolute;
+        }
+        
+        .pattern-stripe:nth-child(1) { transform: rotate(0deg); }
+        .pattern-stripe:nth-child(2) { transform: rotate(45deg); }
+        .pattern-stripe:nth-child(3) { transform: rotate(90deg); }
+        .pattern-stripe:nth-child(4) { transform: rotate(135deg); }
+        
+        /* Ball Center Decor */
+        .ball-center {
+            width: 15px;
+            height: 15px;
+            background: #FFD700;
+            border-radius: 50%;
+            position: absolute;
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+        
+        /* Sparkle Effect */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkleTwinkle 2s infinite;
+        }
+        
+        .sparkle:nth-child(1) { top: 10px; left: 10px; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 10px; right: 10px; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { bottom: 10px; left: 10px; animation-delay: 1s; }
+        .sparkle:nth-child(4) { bottom: 10px; right: 10px; animation-delay: 1.5s; }
+        
+        /* Christmas Star */
+        .christmas-star {
             width: 50px;
             height: 50px;
-            background: var(--gift-color);
+            background: #FFD700;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
             position: relative;
-            border-radius: 5px;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.6),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
         }
         
-        .gift:before {
-            content: '';
+        /* Gift Box */
+        .christmas-gift {
+            width: 50px;
+            height: 50px;
+            background: #FF5252;
+            position: relative;
+            border-radius: 8px;
+            box-shadow: 
+                0 6px 15px rgba(0, 0, 0, 0.3),
+                inset 0 -5px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .gift-ribbon {
             position: absolute;
             width: 100%;
-            height: 10px;
-            background: var(--ribbon-color);
+            height: 12px;
+            background: #4CAF50;
             top: 50%;
             transform: translateY(-50%);
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
         }
         
-        .gift:after {
+        .gift-ribbon:before {
             content: '';
             position: absolute;
-            width: 10px;
+            width: 12px;
             height: 100%;
-            background: var(--ribbon-color);
+            background: #4CAF50;
             left: 50%;
             transform: translateX(-50%);
         }
         
-        /* Object Animations */
+        /* Animations */
+        @keyframes sparkleTwinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        @keyframes ballGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 6px 15px rgba(0, 0, 0, 0.4),
+                    inset 0 -10px 20px rgba(0, 0, 0, 0.2),
+                    0 0 0px rgba(255, 255, 255, 0);
+            }
+            50% { 
+                box-shadow: 
+                    0 6px 15px rgba(0, 0, 0, 0.4),
+                    inset 0 -10px 20px rgba(0, 0, 0, 0.2),
+                    0 0 15px rgba(255, 255, 255, 0.6);
+            }
+        }
+        
+        @keyframes floatSlow {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-20px) rotate(10deg);
+            }
+            50% {
+                transform: translateY(-40px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-20px) rotate(-10deg);
+            }
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+        
         @keyframes floatDown {
             0% {
-                transform: translateY(-100px) translateX(var(--start-x));
+                transform: translateY(-100px) translateX(var(--start-x)) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.85;
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.85;
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--end-x));
+                transform: translateY(calc(100vh + 100px)) translateX(var(--end-x)) rotate(360deg);
                 opacity: 0;
             }
         }
         
         @keyframes floatUp {
             0% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--start-x));
+                transform: translateY(calc(100vh + 100px)) translateX(var(--start-x)) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.85;
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.85;
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(-100px) translateX(var(--end-x));
+                transform: translateY(-100px) translateX(var(--end-x)) rotate(360deg);
                 opacity: 0;
             }
         }
         
-        @keyframes floatLeft {
-            0% {
-                transform: translateX(calc(100vw + 100px)) translateY(var(--start-y));
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.85;
-            }
-            90% {
-                opacity: 0.85;
-            }
-            100% {
-                transform: translateX(-100px) translateY(var(--end-y));
-                opacity: 0;
-            }
-        }
-        
-        @keyframes floatRight {
-            0% {
-                transform: translateX(-100px) translateY(var(--start-y));
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.85;
-            }
-            90% {
-                opacity: 0.85;
-            }
-            100% {
-                transform: translateX(calc(100vw + 100px)) translateY(var(--end-y));
-                opacity: 0;
-            }
-        }
-        
-        /* Hide on mobile if game is playing */
+        /* Responsive */
         @media (max-width: 768px) {
-            .balloon {
-                width: 45px;
-                height: 55px;
+            .christmas-ball {
+                width: 50px;
+                height: 50px;
             }
             
-            .star, .gift {
+            .christmas-star, .christmas-gift {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .loader-text {
+                font-size: 28px;
+            }
+            
+            .loader-subtitle {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .christmas-ball {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .christmas-star, .christmas-gift {
                 width: 40px;
                 height: 40px;
+            }
+            
+            .loader-text {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .loader-subtitle {
+                font-size: 14px;
+                margin-bottom: 25px;
             }
         }
     </style>
@@ -258,13 +364,14 @@
         id="gameFrame"
         scrolling="no"
         frameborder="0"
-        allow="autoplay; fullscreen *"
+        allow="autoplay; fullscreen"
         allowfullscreen>
     </iframe>
     
     <!-- Loader -->
     <div class="loader" id="loader">
-        <div class="loader-text">Sorting Xmas Balls</div>
+        <div class="loader-text">🎄 Sorting Xmas Balls 🎄</div>
+        <div class="loader-subtitle">Loading Christmas Adventure...</div>
         <div class="loader-dots">
             <div class="dot"></div>
             <div class="dot"></div>
@@ -285,176 +392,207 @@
         let gameLoaded = false;
         let objectsStarted = false;
         let activeObjects = 0;
-        const MAX_OBJECTS = 3;
+        const MAX_OBJECTS = 4;
         let objectInterval;
         
         // Configuration
         const OBJECT_START_DELAY = 90000; // 1.5 λεπτά = 90 δευτερόλεπτα
         
-        // Initialize
+        // Initialize - Fixed for all browsers
         function init() {
-            console.log('🎮 Initializing game...');
+            console.log('🎄 Initializing Christmas game...');
             
-            // Set game to full screen
+            // Set game to full screen for all browsers
             setupFullScreenGame();
             
-            // Game frame loaded
-            gameFrame.addEventListener('load', () => {
-                console.log('✅ Game loaded');
-                gameLoaded = true;
-                
-                // Hide loader after 2 seconds
-                setTimeout(() => {
-                    loader.style.opacity = '0';
-                    setTimeout(() => {
-                        loader.style.display = 'none';
-                        
-                        // Start objects after 1.5 minutes
-                        setTimeout(startFloatingObjects, OBJECT_START_DELAY);
-                        console.log(`⏰ Objects will start in ${OBJECT_START_DELAY/1000} seconds`);
-                    }, 500);
-                }, 2000);
-            });
-            
-            // Fallback - hide loader after 5 seconds
-            setTimeout(() => {
+            // For browsers that don't trigger load event properly
+            const loadGame = () => {
                 if (!gameLoaded) {
-                    loader.style.opacity = '0';
+                    gameLoaded = true;
+                    console.log('✅ Game ready');
+                    
+                    // Hide loader after 2 seconds
                     setTimeout(() => {
-                        loader.style.display = 'none';
-                        gameLoaded = true;
-                        
-                        // Start objects after 1.5 minutes
-                        setTimeout(startFloatingObjects, OBJECT_START_DELAY);
-                    }, 500);
+                        loader.style.opacity = '0';
+                        setTimeout(() => {
+                            loader.style.display = 'none';
+                            
+                            // Start objects after 1.5 minutes
+                            console.log(`⏰ Christmas balls will appear in ${OBJECT_START_DELAY/1000} seconds`);
+                            setTimeout(startFloatingObjects, OBJECT_START_DELAY);
+                        }, 500);
+                    }, 2000);
                 }
-            }, 5000);
+            };
+            
+            // Multiple load detection methods
+            gameFrame.addEventListener('load', loadGame);
+            
+            // Fallback for browsers that don't fire load event
+            setTimeout(loadGame, 3000);
+            
+            // Additional fallback
+            gameFrame.addEventListener('error', () => {
+                console.log('⚠️ Game load error, using fallback');
+                loadGame();
+            });
         }
         
-        // Setup full screen game
+        // Setup full screen game for all browsers
         function setupFullScreenGame() {
             // Ensure game takes full screen
-            gameFrame.style.width = '100vw';
-            gameFrame.style.height = '100vh';
+            const updateSize = () => {
+                gameFrame.style.width = window.innerWidth + 'px';
+                gameFrame.style.height = window.innerHeight + 'px';
+            };
             
-            // Handle orientation changes
-            window.addEventListener('resize', () => {
-                gameFrame.style.width = '100vw';
-                gameFrame.style.height = '100vh';
+            updateSize();
+            
+            // Handle orientation changes and resize
+            window.addEventListener('resize', updateSize);
+            window.addEventListener('orientationchange', () => {
+                setTimeout(updateSize, 100);
             });
         }
         
-        // Create floating object
-        function createFloatingObject() {
+        // Create Christmas floating object
+        function createChristmasObject() {
             if (activeObjects >= MAX_OBJECTS || !objectsStarted) return;
             
             const objectTypes = [
                 {
-                    type: 'balloon',
+                    type: 'ball',
                     color: 'radial-gradient(circle at 30% 30%, #ff3333, #cc0000)',
                     animation: 'floatDown',
                     duration: 20 + Math.random() * 15
                 },
                 {
-                    type: 'balloon',
+                    type: 'ball',
                     color: 'radial-gradient(circle at 30% 30%, #4CAF50, #2E7D32)',
                     animation: 'floatUp',
                     duration: 22 + Math.random() * 12
                 },
                 {
-                    type: 'balloon',
+                    type: 'ball',
                     color: 'radial-gradient(circle at 30% 30%, #2196F3, #1976D2)',
                     animation: 'floatDown',
                     duration: 18 + Math.random() * 14
                 },
                 {
-                    type: 'star',
-                    color: 'radial-gradient(circle at 50% 50%, #FFD700, #FFA500)',
+                    type: 'ball',
+                    color: 'radial-gradient(circle at 30% 30%, #FFD700, #FFA500)',
                     animation: 'floatUp',
                     duration: 16 + Math.random() * 16
                 },
                 {
-                    type: 'gift',
-                    color: '#FF5722',
-                    ribbon: '#FFC107',
-                    animation: 'floatLeft',
+                    type: 'star',
+                    animation: 'floatDown',
                     duration: 24 + Math.random() * 10
                 },
                 {
                     type: 'gift',
-                    color: '#E91E63',
-                    ribbon: '#00BCD4',
-                    animation: 'floatRight',
+                    animation: 'floatUp',
                     duration: 21 + Math.random() * 13
                 }
             ];
             
             const objType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
             const object = document.createElement('div');
-            object.className = `floating-object ${objType.type}`;
+            object.className = 'floating-object';
             
-            // Set colors based on type
-            if (objType.type === 'balloon' || objType.type === 'star') {
-                object.style.cssText = `--${objType.type}-color: ${objType.color}`;
+            // Create object content based on type
+            if (objType.type === 'ball') {
+                const ball = document.createElement('div');
+                ball.className = 'christmas-ball';
+                ball.style.background = objType.color;
+                ball.style.animation = 'ballGlow 3s infinite alternate, floatSlow 4s infinite ease-in-out';
+                
+                // Add hook
+                const hook = document.createElement('div');
+                hook.className = 'ball-hook';
+                ball.appendChild(hook);
+                
+                // Add pattern
+                const pattern = document.createElement('div');
+                pattern.className = 'ball-pattern';
+                for (let i = 0; i < 4; i++) {
+                    const stripe = document.createElement('div');
+                    stripe.className = 'pattern-stripe';
+                    pattern.appendChild(stripe);
+                }
+                ball.appendChild(pattern);
+                
+                // Add center
+                const center = document.createElement('div');
+                center.className = 'ball-center';
+                ball.appendChild(center);
+                
+                // Add sparkles
+                for (let i = 0; i < 4; i++) {
+                    const sparkle = document.createElement('div');
+                    sparkle.className = 'sparkle';
+                    ball.appendChild(sparkle);
+                }
+                
+                object.appendChild(ball);
+                
+            } else if (objType.type === 'star') {
+                const star = document.createElement('div');
+                star.className = 'christmas-star';
+                star.style.animation = 'floatSlow 3s infinite ease-in-out';
+                object.appendChild(star);
+                
             } else if (objType.type === 'gift') {
-                object.style.cssText = `--gift-color: ${objType.color}; --ribbon-color: ${objType.ribbon}`;
+                const gift = document.createElement('div');
+                gift.className = 'christmas-gift';
+                gift.style.animation = 'floatSlow 3.5s infinite ease-in-out';
+                object.appendChild(gift);
+                
+                const ribbon = document.createElement('div');
+                ribbon.className = 'gift-ribbon';
+                gift.appendChild(ribbon);
             }
             
-            // Random position and animation parameters
-            let styleProperties = '';
+            // Set position and float animation
+            const startX = Math.random() * window.innerWidth;
+            const endX = startX + (Math.random() * 100 - 50);
             
-            switch(objType.animation) {
-                case 'floatDown':
-                case 'floatUp':
-                    const startX = Math.random() * window.innerWidth;
-                    const endX = startX + (Math.random() * 100 - 50);
-                    object.style.setProperty('--start-x', `${startX}px`);
-                    object.style.setProperty('--end-x', `${endX}px`);
-                    break;
-                    
-                case 'floatLeft':
-                case 'floatRight':
-                    const startY = Math.random() * window.innerHeight;
-                    const endY = startY + (Math.random() * 100 - 50);
-                    object.style.setProperty('--start-y', `${startY}px`);
-                    object.style.setProperty('--end-y', `${endY}px`);
-                    break;
-            }
-            
-            // Set animation
+            object.style.setProperty('--start-x', `${startX}px`);
+            object.style.setProperty('--end-x', `${endX}px`);
+            object.style.animation = `${objType.animation} ${objType.duration}s linear forwards`;
             object.style.left = '0px';
             object.style.top = '0px';
-            object.style.animation = `${objType.animation} ${objType.duration}s linear forwards`;
             
             // Click event
-            object.addEventListener('click', function(e) {
+            const handleClick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 
                 // Visual feedback
-                this.style.transform = 'scale(1.3)';
-                this.style.opacity = '0.7';
+                object.style.transform = 'scale(1.3)';
+                object.style.opacity = '0.7';
                 
-                // Open ad
-                window.open('https://otieu.com/4/10000770', '_blank');
+                // Open ad in new tab
+                setTimeout(() => {
+                    window.open('https://otieu.com/4/10000770', '_blank');
+                }, 100);
                 
                 // Remove object
                 setTimeout(() => {
-                    if (this.parentNode) {
-                        this.remove();
+                    if (object.parentNode) {
+                        object.remove();
                         activeObjects--;
                     }
                 }, 300);
-            });
+            };
+            
+            object.addEventListener('click', handleClick);
+            object.addEventListener('touchstart', handleClick, { passive: false });
             
             // Touch feedback
             object.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(1.1)';
-            });
-            
-            object.addEventListener('touchend', function() {
-                this.style.transform = 'scale(1.2)';
-            });
+                this.style.transform = 'scale(1.15)';
+            }, { passive: true });
             
             // Remove when animation completes
             setTimeout(() => {
@@ -470,23 +608,40 @@
         
         // Start floating objects after 1.5 minutes
         function startFloatingObjects() {
+            if (objectsStarted) return;
+            
             objectsStarted = true;
-            console.log('🎈 Starting floating objects after 1.5 minutes...');
+            console.log('🎄 Starting Christmas balls and objects...');
             
             // Initial objects
-            setTimeout(() => createFloatingObject(), 0);
-            setTimeout(() => createFloatingObject(), 2000);
+            setTimeout(() => createChristmasObject(), 0);
+            setTimeout(() => createChristmasObject(), 1500);
+            setTimeout(() => createChristmasObject(), 3000);
             
-            // Continuous spawn every 10-15 seconds
+            // Continuous spawn every 8-12 seconds
             objectInterval = setInterval(() => {
                 if (objectsStarted && activeObjects < MAX_OBJECTS) {
-                    createFloatingObject();
+                    createChristmasObject();
                 }
-            }, 10000 + Math.random() * 5000);
+            }, 8000 + Math.random() * 4000);
         }
         
-        // Start everything
-        init();
+        // Start everything when page loads
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Fallback for browsers that don't fire DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+        
+        // Prevent context menu on objects
+        document.addEventListener('contextmenu', (e) => {
+            if (e.target.closest('.floating-object')) {
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
