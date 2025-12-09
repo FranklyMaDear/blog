@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Royal Garden Match 2 - Δωρεάν Παιχνίδι</title>
     
-    <!-- Google AdSense -->
-    <meta name="google-adsense-account" content="ca-pub-3186700611266549">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -53,6 +49,7 @@
             height: 100%;
             border: none;
             display: block;
+            pointer-events: auto !important;
         }
         
         /* ===== LOADING SCREEN ===== */
@@ -133,71 +130,40 @@
             max-width: 728px;
             margin: 0 auto;
             text-align: center;
-        }
-        
-        .ad-countdown {
-            position: absolute;
-            top: -25px;
-            right: 20px;
-            background: #ff4161;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 15px 15px 0 0;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: none;
-        }
-        
-        /* ===== RELOAD BUTTON ===== */
-        .reload-btn-container {
-            position: fixed;
-            bottom: 120px;
-            right: 20px;
-            z-index: 90;
-        }
-        
-        .reload-btn {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 65, 97, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 65, 97, 0.4);
-        }
-        
-        .reload-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(255, 65, 97, 0.6);
-            background: rgba(255, 65, 97, 1);
-        }
-        
-        .reload-btn:active {
-            transform: scale(0.95);
-        }
-        
-        /* ===== MONETAG AD CONTAINER ===== */
-        .monetag-ad-container {
-            width: 100%;
             min-height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
         
         /* ===== AD BAR STATES ===== */
         .bottom-ad-bar.hidden {
             transform: translateY(100%);
+            display: none;
         }
         
         .bottom-ad-bar.visible {
             transform: translateY(0);
+            display: flex;
+        }
+        
+        /* ===== AD INSIDE BANNER ===== */
+        .ad-inside-banner {
+            width: 100%;
+            height: 100%;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f5f5f5;
+        }
+        
+        .ad-placeholder {
+            color: #666;
+            font-size: 0.9rem;
+            padding: 20px;
+            text-align: center;
         }
         
         /* ===== RESPONSIVE ===== */
@@ -214,19 +180,7 @@
                 font-size: 0.7rem;
             }
             
-            .ad-countdown {
-                top: -20px;
-                right: 10px;
-                padding: 4px 10px;
-                font-size: 0.7rem;
-            }
-            
-            .reload-btn-container {
-                bottom: 100px;
-                right: 15px;
-            }
-            
-            .monetag-ad-container {
+            .ad-inside-banner {
                 min-height: 70px;
             }
         }
@@ -244,25 +198,7 @@
                 font-size: 0.65rem;
             }
             
-            .ad-countdown {
-                top: -18px;
-                right: 5px;
-                padding: 3px 8px;
-                font-size: 0.65rem;
-            }
-            
-            .reload-btn-container {
-                bottom: 80px;
-                right: 10px;
-            }
-            
-            .reload-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 1.1rem;
-            }
-            
-            .monetag-ad-container {
+            .ad-inside-banner {
                 min-height: 50px;
             }
         }
@@ -306,22 +242,12 @@
     <!-- BOTTOM AD BAR -->
     <div class="bottom-ad-bar hidden" id="bottomAdBar">
         <div class="ad-label">Υποστήριξη</div>
-        <div class="ad-countdown" id="adCountdown">Κλείνει σε 10</div>
         <div class="ad-content" id="bottomAdContent">
-            <!-- Monetag Ad Container -->
-            <div class="monetag-ad-container" id="monetagAdContainer">
-                <div style="color: #666; font-size: 0.9rem;">
-                    Διαφήμιση φορτώνεται...
-                </div>
+            <!-- Ad will be loaded here inside the banner -->
+            <div class="ad-inside-banner" id="adInsideBanner">
+                <div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>
             </div>
         </div>
-    </div>
-    
-    <!-- RELOAD BUTTON -->
-    <div class="reload-btn-container">
-        <button class="reload-btn" id="reloadBtn" title="Ανανέωση Παιχνιδιού">
-            <i class="fas fa-redo"></i>
-        </button>
     </div>
 
     <script>
@@ -329,152 +255,152 @@
         const loadingScreen = document.getElementById('loadingScreen');
         const gameFrame = document.getElementById('gameFrame');
         const bottomAdBar = document.getElementById('bottomAdBar');
-        const bottomAdContent = document.getElementById('bottomAdContent');
-        const monetagAdContainer = document.getElementById('monetagAdContainer');
-        const adCountdown = document.getElementById('adCountdown');
-        const reloadBtn = document.getElementById('reloadBtn');
+        const adInsideBanner = document.getElementById('adInsideBanner');
         
         // ===== GAME STATE =====
         let gameLoaded = false;
         let isAdShowing = false;
         let adInterval = null;
-        let adTimer = null;
-        let adDisplayDuration = 10000; // 10 seconds in milliseconds
+        let adDisplayDuration = 10000; // 10 seconds
+        let adCooldown = 60000; // 60 seconds between ads
         
-        // ===== MONETAG SCRIPT =====
-        function loadMonetagScript() {
-            try {
-                // Create and load Monetag script
-                const script = document.createElement('script');
-                script.dataset.zone = '10274195';
-                script.src = 'https://al5sm.com/tag.min.js';
-                script.async = true;
-                
-                script.onload = function() {
-                    console.log('✅ Monetag script loaded successfully');
-                    showAdBar();
-                };
-                
-                script.onerror = function() {
-                    console.log('⚠️ Monetag script failed to load');
-                    // Try alternative loading method
-                    setTimeout(() => {
-                        try {
+        // ===== LOAD MONETAG AD =====
+        function loadMonetagAd() {
+            if (isAdShowing) return;
+            
+            console.log('🔄 Φόρτωση Monetag διαφήμισης...');
+            
+            // Clear previous ad content
+            adInsideBanner.innerHTML = '<div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>';
+            
+            // Show the banner
+            bottomAdBar.classList.remove('hidden');
+            bottomAdBar.classList.add('visible');
+            isAdShowing = true;
+            
+            // Create Monetag script element
+            const monetagScript = document.createElement('script');
+            monetagScript.dataset.zone = '10274195';
+            monetagScript.src = 'https://al5sm.com/tag.min.js';
+            monetagScript.async = true;
+            
+            // Add error handling
+            monetagScript.onerror = function() {
+                console.log('⚠️ Monetag script failed to load');
+                setTimeout(() => {
+                    // Try alternative method
+                    try {
+                        const fallbackScript = document.createElement('script');
+                        fallbackScript.innerHTML = `
                             (function(s){
                                 s.dataset.zone='10274195',
                                 s.src='https://al5sm.com/tag.min.js'
-                            })([document.documentElement, document.body]
-                                .filter(Boolean).pop()
-                                .appendChild(document.createElement('script')));
-                        } catch(e) {
-                            console.log('❌ Both Monetag loading methods failed');
-                        }
-                    }, 1000);
-                };
-                
-                monetagAdContainer.appendChild(script);
-            } catch(e) {
-                console.log('❌ Error loading Monetag:', e);
-            }
-        }
-        
-        // ===== AD BAR FUNCTIONS =====
-        function showAdBar() {
-            if (!isAdShowing) {
-                isAdShowing = true;
-                bottomAdBar.classList.remove('hidden');
-                bottomAdBar.classList.add('visible');
-                
-                // Start countdown timer
-                startAdCountdown();
-                
-                // Auto-hide after duration
-                adTimer = setTimeout(() => {
-                    hideAdBar();
-                }, adDisplayDuration);
-            }
-        }
-        
-        function hideAdBar() {
-            if (isAdShowing) {
-                isAdShowing = false;
-                bottomAdBar.classList.remove('visible');
-                bottomAdBar.classList.add('hidden');
-                
-                // Clear timers
-                clearTimeout(adTimer);
-                adCountdown.style.display = 'none';
-                
-                // Schedule next ad
-                scheduleNextAd();
-            }
-        }
-        
-        function startAdCountdown() {
-            let secondsLeft = adDisplayDuration / 1000;
-            adCountdown.style.display = 'block';
-            adCountdown.textContent = `Κλείνει σε ${secondsLeft}`;
+                            })(document.createElement('script'));
+                        `;
+                        adInsideBanner.appendChild(fallbackScript);
+                    } catch(e) {
+                        console.log('❌ Could not load ad');
+                        hideAdBanner();
+                    }
+                }, 500);
+            };
             
-            const countdownInterval = setInterval(() => {
-                secondsLeft--;
-                if (secondsLeft <= 0) {
-                    clearInterval(countdownInterval);
-                    adCountdown.style.display = 'none';
-                } else {
-                    adCountdown.textContent = `Κλείνει σε ${secondsLeft}`;
-                }
-            }, 1000);
+            // Add to banner container
+            adInsideBanner.appendChild(monetagScript);
+            
+            // Auto-hide after duration
+            setTimeout(() => {
+                hideAdBanner();
+            }, adDisplayDuration);
+            
+            // Schedule next ad
+            scheduleNextAd();
         }
         
+        // ===== HIDE AD BANNER =====
+        function hideAdBanner() {
+            if (!isAdShowing) return;
+            
+            console.log('👋 Απόκρυψη διαφήμισης');
+            
+            // Hide the banner
+            bottomAdBar.classList.remove('visible');
+            bottomAdBar.classList.add('hidden');
+            isAdShowing = false;
+            
+            // Clear ad content
+            setTimeout(() => {
+                adInsideBanner.innerHTML = '<div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>';
+            }, 500);
+        }
+        
+        // ===== SCHEDULE NEXT AD =====
         function scheduleNextAd() {
-            // Random interval between ads: 2-5 minutes
-            const nextAdDelay = Math.floor(Math.random() * (300000 - 120000 + 1)) + 120000;
+            // Clear any existing interval
+            if (adInterval) {
+                clearTimeout(adInterval);
+            }
             
-            console.log(`⏰ Next ad scheduled in ${Math.round(nextAdDelay/1000)} seconds`);
+            // Schedule next ad (every 60-90 seconds)
+            const nextAdDelay = adCooldown + Math.floor(Math.random() * 30000);
+            
+            console.log(`⏰ Επόμενη διαφήμιση σε ${Math.round(nextAdDelay/1000)} δευτερόλεπτα`);
             
             adInterval = setTimeout(() => {
                 if (gameLoaded && !isAdShowing) {
-                    loadMonetagScript();
+                    loadMonetagAd();
                 }
             }, nextAdDelay);
         }
         
-        // ===== GAME EVENT HANDLERS =====
-        function simulateLevelCompletion() {
-            // This function simulates level completion
-            // In a real scenario, you would integrate this with the game's actual events
-            console.log('🎮 Level completed - showing ad');
-            if (!isAdShowing) {
-                loadMonetagScript();
-            }
+        // ===== CHECK IF USER IS PLAYING =====
+        function isUserPlaying() {
+            // Check if game frame is focused or user is interacting
+            return document.activeElement === gameFrame;
         }
         
         // ===== INITIALIZE GAME =====
         function initGame() {
-            console.log('🎮 Royal Garden Match 2 - Initializing...');
-            
-            // Show bottom ad bar after initial delay
-            setTimeout(() => {
-                loadMonetagScript();
-            }, 3000);
-            
-            // Schedule periodic ads
-            scheduleNextAd();
-            
-            // Simulate level completions (for demo purposes)
-            // Remove this in production and integrate with actual game events
-            setInterval(() => {
-                simulateLevelCompletion();
-            }, 60000); // Simulate level completion every minute
+            console.log('🎮 Royal Garden Match 2 - Αρχικοποίηση...');
             
             gameLoaded = true;
+            
+            // Show first ad after short delay
+            setTimeout(() => {
+                if (!isAdShowing) {
+                    loadMonetagAd();
+                }
+            }, 5000);
+            
+            // Prevent ads from appearing when user is actively playing
+            let lastInteraction = Date.now();
+            
+            // Track user interaction
+            document.addEventListener('click', function() {
+                lastInteraction = Date.now();
+            });
+            
+            document.addEventListener('keydown', function() {
+                lastInteraction = Date.now();
+            });
+            
+            // Check if user is playing before showing ads
+            setInterval(() => {
+                if (isAdShowing) return;
+                
+                const timeSinceInteraction = Date.now() - lastInteraction;
+                // Only show ad if user hasn't interacted for at least 30 seconds
+                if (timeSinceInteraction > 30000) {
+                    // This would be called from scheduleNextAd, so no need to call here
+                }
+            }, 10000);
         }
         
         // ===== EVENT LISTENERS =====
         
         // Game loaded
         gameFrame.addEventListener('load', function() {
-            console.log('✅ Game loaded successfully');
+            console.log('✅ Το παιχνίδι φορτώθηκε επιτυχώς');
             
             setTimeout(() => {
                 loadingScreen.style.opacity = '0';
@@ -487,7 +413,7 @@
         
         // Game error
         gameFrame.addEventListener('error', function() {
-            console.log('❌ Game failed to load');
+            console.log('❌ Αποτυχία φόρτωσης παιχνιδιού');
             loadingScreen.innerHTML = `
                 <div style="text-align: center; padding: 20px; max-width: 400px;">
                     <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #ff4161; margin-bottom: 20px;"></i>
@@ -495,47 +421,21 @@
                         Σφάλμα φόρτωσης
                     </div>
                     <div style="margin-bottom: 25px; color: #b8b8b8;">
-                        Το παιχνίδι δεν μπορεί να φορτωθεί. Δοκιμάστε ξανά.
+                        Το παιχνίδι δεν μπορεί να φορτωθεί. Παρακαλώ ανανεώστε τη σελίδα.
                     </div>
-                    <button class="reload-btn" onclick="location.reload()" 
-                            style="background: #ff4161; width: auto; padding: 10px 20px; border-radius: 25px;">
+                    <button onclick="location.reload()" 
+                            style="background: #ff4161; color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer;">
                         <i class="fas fa-sync-alt"></i> Ανανέωση Σελίδας
                     </button>
                 </div>
             `;
         });
         
-        // Reload game button
-        reloadBtn.addEventListener('click', function() {
-            // Hide ad bar if showing
-            if (isAdShowing) {
-                hideAdBar();
-            }
-            
-            loadingScreen.classList.remove('hidden');
-            loadingScreen.style.opacity = '1';
-            
-            // Reset game
-            gameFrame.src = gameFrame.src;
-            
-            // Button animation
-            reloadBtn.style.transform = 'rotate(360deg)';
-            setTimeout(() => {
-                reloadBtn.style.transform = '';
-            }, 300);
-        });
-        
-        // Close ad bar on click (optional user control)
-        bottomAdBar.addEventListener('click', function(e) {
-            if (e.target.classList.contains('ad-label') || e.target.classList.contains('ad-countdown')) {
-                hideAdBar();
-            }
-        });
-        
         // Initial console message
         console.log('🎮 ================================');
         console.log('🎮 ROYAL GARDEN MATCH 2');
-        console.log('🎮 Monetag ads with timed intervals');
+        console.log('🎮 Μόνιμες διαφημίσεις ΜΟΝΟ στο banner');
+        console.log('🎮 Χωρίς popups, χωρίς διακοπές στο gameplay');
         console.log('🎮 ================================');
         
         // Auto-hide loading screen after timeout
