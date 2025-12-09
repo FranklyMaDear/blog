@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rescue Sharp Turn - Δωρεάν Παιχνίδι</title>
+    <title>Rescue Sharp Turn - Free Game</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
         
         body {
-            background: #000;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
             overflow: hidden;
             width: 100vw;
             height: 100vh;
@@ -46,6 +46,8 @@
             display: block;
             max-width: 100%;
             max-height: 100%;
+            box-shadow: 0 0 50px rgba(0, 150, 255, 0.3);
+            border-radius: 10px;
         }
         
         /* Game Loader */
@@ -55,41 +57,50 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
+            background: linear-gradient(135deg, #000428 0%, #004e92 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             z-index: 100;
-            transition: opacity 0.5s;
+            transition: opacity 0.8s ease-out;
         }
         
         .loader-text {
-            color: #ffcc00;
-            font-size: 24px;
-            margin-bottom: 20px;
+            color: #00ffea;
+            font-size: 28px;
+            margin-bottom: 30px;
             text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 234, 0.5);
+            font-weight: bold;
         }
         
         .loader-dots {
             display: flex;
-            gap: 10px;
+            gap: 15px;
         }
         
         .dot {
-            width: 15px;
-            height: 15px;
-            background: #ffcc00;
+            width: 20px;
+            height: 20px;
+            background: #00ffea;
             border-radius: 50%;
             animation: bounce 1.4s infinite ease-in-out both;
+            box-shadow: 0 0 10px rgba(0, 255, 234, 0.7);
         }
         
         .dot:nth-child(1) { animation-delay: -0.32s; }
         .dot:nth-child(2) { animation-delay: -0.16s; }
         
         @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+            0%, 80%, 100% { 
+                transform: scale(0);
+                opacity: 0.3;
+            }
+            40% { 
+                transform: scale(1.2);
+                opacity: 1;
+            }
         }
         
         /* Floating Objects Container */
@@ -103,120 +114,72 @@
             z-index: 80;
         }
         
-        /* Floating Objects - Smaller */
+        /* Floating Objects */
         .floating-object {
             position: absolute;
             pointer-events: auto;
             cursor: pointer;
-            transition: transform 0.3s, filter 0.3s;
+            transition: transform 0.4s, filter 0.4s;
             z-index: 81;
-            animation: floatDiagonal 35s linear infinite;
+            animation: floatDiagonal 20s linear infinite;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         
         .floating-object:hover {
-            transform: scale(1.2);
-            filter: brightness(1.3) drop-shadow(0 0 10px rgba(255, 255, 255, 0.6));
+            transform: scale(1.3) rotate(5deg);
+            filter: brightness(1.5) drop-shadow(0 0 15px rgba(255, 255, 255, 0.8));
+            animation-play-state: paused;
         }
         
         @keyframes floatDiagonal {
             0% {
-                transform: translateY(100vh) translateX(-80px) rotate(0deg);
+                transform: translateY(110vh) translateX(-120px) rotate(0deg);
                 opacity: 0;
             }
-            10% {
+            8% {
                 opacity: 1;
             }
-            90% {
+            92% {
                 opacity: 1;
             }
             100% {
-                transform: translateY(-100px) translateX(80px) rotate(360deg);
+                transform: translateY(-150px) translateX(120px) rotate(360deg);
                 opacity: 0;
             }
         }
         
-        /* Fruit Objects */
-        .fruit-object {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .fruit-shape {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-        
-        .fruit-label {
-            background: rgba(0, 0, 0, 0.85);
-            color: #ffcc00;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            white-space: nowrap;
-            border: 1px solid rgba(255, 204, 0, 0.4);
-            text-align: center;
-        }
-        
-        /* Apple */
-        .fruit-apple .fruit-shape {
-            background: radial-gradient(circle at 30% 30%, #ff3333, #cc0000);
-            box-shadow: 0 5px 15px rgba(255, 50, 50, 0.4);
-        }
-        
-        /* Orange */
-        .fruit-orange .fruit-shape {
-            background: radial-gradient(circle at 30% 30%, #ff9800, #ff5722);
-            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
-        }
-        
-        /* Strawberry */
-        .fruit-strawberry .fruit-shape {
-            background: radial-gradient(circle at 30% 30%, #ff3366, #cc0066);
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.4);
-        }
-        
-        /* Banana */
-        .fruit-banana .fruit-shape {
-            background: radial-gradient(circle at 30% 30%, #ffcc00, #ff9800);
-            box-shadow: 0 5px 15px rgba(255, 204, 0, 0.4);
-        }
-        
-        /* Grapes */
-        .fruit-grapes .fruit-shape {
-            background: radial-gradient(circle at 30% 30%, #9c27b0, #7b1fa2);
-            box-shadow: 0 5px 15px rgba(156, 39, 176, 0.4);
-        }
-        
-        /* Balloon Objects with "ads" text */
+        /* Balloon Objects with special effects */
         .balloon-object {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            animation: balloonFloat 15s ease-in-out infinite;
+        }
+        
+        @keyframes balloonFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
         }
         
         .balloon-shape {
-            width: 55px;
-            height: 65px;
+            width: 65px;
+            height: 75px;
             background: radial-gradient(circle at 30% 30%, var(--balloon-color));
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .balloon-object:hover .balloon-shape {
+            transform: scale(1.15);
+            box-shadow: 0 0 30px rgba(255, 255, 100, 0.6);
         }
         
         .ads-text {
@@ -224,32 +187,83 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 1px;
         }
         
-        .balloon-shape:before {
+        .balloon-string {
+            position: relative;
+            bottom: -5px;
+            width: 2px;
+            height: 35px;
+            background: linear-gradient(to bottom, #888, #666);
+            border-radius: 1px;
+        }
+        
+        .balloon-string:after {
             content: '';
             position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 2px;
-            height: 30px;
-            background: linear-gradient(to bottom, #888, #666);
+            bottom: -8px;
+            left: -3px;
+            width: 8px;
+            height: 8px;
+            background: #ccc;
+            border-radius: 50%;
         }
         
         .balloon-label {
-            background: rgba(0, 0, 0, 0.85);
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(50,50,50,0.9));
             color: var(--balloon-text-color);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: bold;
             white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Star Objects */
+        .star-object {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: starTwinkle 3s infinite alternate;
+        }
+        
+        @keyframes starTwinkle {
+            0% { opacity: 0.7; transform: scale(1); }
+            100% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        .star-shape {
+            width: 50px;
+            height: 50px;
+            background: var(--star-color);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .star-label {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(50,50,50,0.9));
+            color: var(--star-text-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid rgba(255, 215, 0, 0.3);
         }
         
         /* Flower Objects */
@@ -257,19 +271,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            animation: flowerSway 8s ease-in-out infinite;
+        }
+        
+        @keyframes flowerSway {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
         }
         
         .flower-shape {
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle at 50% 50%, var(--flower-color));
-            border-radius: 50%;
+            width: 60px;
+            height: 60px;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         .flower-petals {
@@ -280,64 +297,126 @@
         
         .flower-petal {
             position: absolute;
-            width: 20px;
-            height: 30px;
+            width: 25px;
+            height: 35px;
             background: var(--flower-petal-color);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform-origin: 0 0;
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.2);
         }
         
         .flower-center {
-            width: 18px;
-            height: 18px;
-            background: #ffcc00;
+            width: 22px;
+            height: 22px;
+            background: radial-gradient(circle at 30% 30%, #ffcc00, #ff9900);
             border-radius: 50%;
             position: absolute;
-            box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.7);
+            z-index: 2;
         }
         
         .flower-label {
-            background: rgba(0, 0, 0, 0.85);
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(50,50,50,0.9));
             color: var(--flower-text-color);
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 5px 12px;
+            border-radius: 15px;
             font-size: 11px;
             font-weight: bold;
-            white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        /* Object Glow Effect */
+        /* Diamond Objects */
+        .diamond-object {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: diamondSparkle 2s infinite alternate;
+        }
+        
+        @keyframes diamondSparkle {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.5) drop-shadow(0 0 10px cyan); }
+        }
+        
+        .diamond-shape {
+            width: 50px;
+            height: 50px;
+            background: var(--diamond-color);
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transform: rotate(45deg);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+        }
+        
+        .diamond-shape i {
+            transform: rotate(-45deg);
+        }
+        
+        .diamond-label {
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(50,50,50,0.9));
+            color: var(--diamond-text-color);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        /* Glow Effect for all objects */
         .object-glow {
             position: absolute;
-            top: -8px;
-            left: -8px;
-            right: -8px;
-            bottom: -8px;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
             background: inherit;
             border-radius: inherit;
-            filter: blur(12px);
-            opacity: 0.4;
+            filter: blur(20px);
+            opacity: 0.3;
             z-index: -1;
+            animation: pulseGlow 3s infinite alternate;
         }
         
-        .hidden {
+        @keyframes pulseGlow {
+            0% { opacity: 0.2; transform: scale(1); }
+            100% { opacity: 0.4; transform: scale(1.1); }
+        }
+        
+        /* Sound indicator */
+        .sound-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-size: 12px;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 10px;
+            border-radius: 15px;
+            z-index: 90;
             display: none;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <!-- GAME LOADER -->
     <div class="game-loader" id="gameLoader">
-        <div class="loader-text">Φόρτωση παιχνιδιού...</div>
+        <div class="loader-text">LOADING GAME...</div>
         <div class="loader-dots">
             <div class="dot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
         </div>
     </div>
+    
+    <!-- SOUND INDICATOR -->
+    <div class="sound-indicator" id="soundIndicator">🔊 Sound Playing</div>
     
     <!-- GAME CONTAINER -->
     <div class="game-container">
@@ -360,58 +439,23 @@
     <!-- FLOATING OBJECTS CONTAINER -->
     <div id="floatingObjects"></div>
 
-    <!-- YOUR SCRIPT WILL BE LOADED HERE -->
     <script>
         // DOM Elements
         const gameFrame = document.getElementById('gameFrame');
         const gameLoader = document.getElementById('gameLoader');
         const floatingObjects = document.getElementById('floatingObjects');
+        const soundIndicator = document.getElementById('soundIndicator');
         
         // Game State
         let gameStarted = false;
         let floatingInterval;
         let activeObjects = 0;
-        const MAX_OBJECTS = 4;
-        let adScriptLoaded = false;
+        const MAX_OBJECTS = 8; // More objects on screen
+        let soundPlayed = false;
         
-        // Load Vignette script
-        function loadVignetteScript() {
-            if (adScriptLoaded) return;
-            
-            console.log('📢 Φόρτωση Vignette script...');
-            
-            (function(s){
-                s.dataset.zone='10021677';
-                s.src='https://gizokraijaw.net/vignette.min.js';
-            })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
-            
-            adScriptLoaded = true;
-        }
-        
-        // Show Vignette ad when clicking on floating objects
-        function showVignetteAd() {
-            console.log('🎯 Προβολή Vignette διαφήμισης');
-            
-            // Check if vignette is available
-            if (typeof vignette !== 'undefined') {
-                try {
-                    // Try to display ad
-                    vignette.showAd();
-                } catch (error) {
-                    console.log('⚠️ Σφάλμα προβολής διαφήμισης:', error);
-                    showFallbackAd();
-                }
-            } else {
-                console.log('ℹ️ Vignette δεν είναι διαθέσιμο');
-                showFallbackAd();
-            }
-        }
-        
-        // Fallback ad
-        function showFallbackAd() {
-            // Open new tab with ad URL
-            window.open('https://example.com', '_blank');
-        }
+        // Audio for balloon pop
+        const balloonPopSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-balloon-pop-2928.mp3');
+        balloonPopSound.volume = 0.3;
         
         // Hide loader when game loads
         function hideLoader() {
@@ -420,99 +464,106 @@
                 setTimeout(() => {
                     gameLoader.style.display = 'none';
                     startFloatingObjects();
-                }, 500);
-            }, 2000);
+                }, 800);
+            }, 1500);
         }
         
-        // Create floating objects - Various shapes with ads
+        // Play sound with indicator
+        function playSound() {
+            if (!soundPlayed) {
+                balloonPopSound.play().catch(e => console.log("Sound autoplay prevented"));
+                soundPlayed = true;
+                
+                // Show sound indicator
+                soundIndicator.style.display = 'block';
+                setTimeout(() => {
+                    soundIndicator.style.display = 'none';
+                }, 2000);
+            }
+        }
+        
+        // Create floating objects - Various designs
         function createFloatingObject() {
             if (activeObjects >= MAX_OBJECTS || !gameStarted) return;
             
             const objectTypes = [
-                // Balloons with ADS text
+                // Balloons with ADS
                 { 
                     type: 'balloon', 
-                    subtype: 'red-ads', 
-                    label: 'Κλικ για διαφήμιση', 
-                    color: '#ff3333, #cc0000',
-                    textColor: '#ff9999'
-                },
-                { 
-                    type: 'balloon', 
-                    subtype: 'blue-ads', 
-                    label: 'Δείτε διαφήμιση', 
-                    color: '#4cc9f0, #1a5fb4',
-                    textColor: '#99ccff'
+                    subtype: 'gold-ads', 
+                    label: 'CLICK FOR AD', 
+                    color: '#FFD700, #FFA500',
+                    textColor: '#FFD700'
                 },
                 { 
                     type: 'balloon', 
-                    subtype: 'green-ads', 
-                    label: 'Υποστήριξη', 
-                    color: '#4CAF50, #2E7D32',
-                    textColor: '#99ff99'
+                    subtype: 'neon-ads', 
+                    label: 'WATCH AD', 
+                    color: '#00ffea, #0080ff',
+                    textColor: '#00ffea'
                 },
                 { 
                     type: 'balloon', 
-                    subtype: 'purple-ads', 
-                    label: 'Κλικ εδώ', 
-                    color: '#9c27b0, #7b1fa2',
-                    textColor: '#cc99ff'
+                    subtype: 'pink-ads', 
+                    label: 'SUPPORT US', 
+                    color: '#ff00ff, #cc00cc',
+                    textColor: '#ff99ff'
                 },
-                // Fruits
+                // Stars
                 { 
-                    type: 'fruit', 
-                    subtype: 'apple', 
-                    label: '🍎 Κλικ', 
-                    text: '🍎'
-                },
-                { 
-                    type: 'fruit', 
-                    subtype: 'orange', 
-                    label: '🍊 Διαφήμιση', 
-                    text: '🍊'
+                    type: 'star', 
+                    subtype: 'gold-star', 
+                    label: 'GET REWARD', 
+                    color: 'radial-gradient(circle, #FFD700, #FFA500)',
+                    textColor: '#FFD700',
+                    icon: '⭐'
                 },
                 { 
-                    type: 'fruit', 
-                    subtype: 'strawberry', 
-                    label: '🍓 Υποστήριξη', 
-                    text: '🍓'
-                },
-                { 
-                    type: 'fruit', 
-                    subtype: 'banana', 
-                    label: '🍌 Κλικ εδώ', 
-                    text: '🍌'
-                },
-                { 
-                    type: 'fruit', 
-                    subtype: 'grapes', 
-                    label: '🍇 Δείτε ad', 
-                    text: '🍇'
+                    type: 'star', 
+                    subtype: 'silver-star', 
+                    label: 'FREE BONUS', 
+                    color: 'radial-gradient(circle, #C0C0C0, #808080)',
+                    textColor: '#C0C0C0',
+                    icon: '✴️'
                 },
                 // Flowers
                 { 
                     type: 'flower', 
-                    subtype: 'pink', 
-                    label: '🌸 Κλικ', 
-                    color: '#e91e63, #c2185b',
-                    petalColor: '#ff80ab',
-                    textColor: '#ff99cc'
+                    subtype: 'rose', 
+                    label: 'CLICK HERE', 
+                    petalColor: '#ff3366',
+                    textColor: '#ff6699'
                 },
                 { 
                     type: 'flower', 
-                    subtype: 'yellow', 
-                    label: '🌼 Διαφήμιση', 
-                    color: '#ffeb3b, #fbc02d',
-                    petalColor: '#fff59d',
-                    textColor: '#ffff99'
+                    subtype: 'sunflower', 
+                    label: 'WIN PRIZE', 
+                    petalColor: '#FFD700',
+                    textColor: '#FFCC00'
                 },
                 { 
                     type: 'flower', 
-                    subtype: 'blue', 
-                    label: '🌺 Υποστήριξη', 
-                    color: '#2196F3, #1976D2',
-                    petalColor: '#90caf9',
-                    textColor: '#99ccff'
+                    subtype: 'orchid', 
+                    label: 'PLAY MORE', 
+                    petalColor: '#9933ff',
+                    textColor: '#cc99ff'
+                },
+                // Diamonds
+                { 
+                    type: 'diamond', 
+                    subtype: 'blue-diamond', 
+                    label: 'GET GEMS', 
+                    color: 'radial-gradient(circle, #00ffff, #0080ff)',
+                    textColor: '#00ffff',
+                    icon: '💎'
+                },
+                { 
+                    type: 'diamond', 
+                    subtype: 'red-diamond', 
+                    label: 'EARN COINS', 
+                    color: 'radial-gradient(circle, #ff3333, #cc0000)',
+                    textColor: '#ff6666',
+                    icon: '♦️'
                 }
             ];
             
@@ -520,73 +571,80 @@
             const object = document.createElement('div');
             object.className = `floating-object ${objType.type}-object ${objType.type}-${objType.subtype}`;
             
-            // Set CSS variables for colors
+            // Set CSS variables
             if (objType.type === 'balloon') {
                 object.style.setProperty('--balloon-color', objType.color);
                 object.style.setProperty('--balloon-text-color', objType.textColor);
+            } else if (objType.type === 'star') {
+                object.style.setProperty('--star-color', objType.color);
+                object.style.setProperty('--star-text-color', objType.textColor);
             } else if (objType.type === 'flower') {
-                object.style.setProperty('--flower-color', objType.color);
                 object.style.setProperty('--flower-petal-color', objType.petalColor);
                 object.style.setProperty('--flower-text-color', objType.textColor);
+            } else if (objType.type === 'diamond') {
+                object.style.setProperty('--diamond-color', objType.color);
+                object.style.setProperty('--diamond-text-color', objType.textColor);
             }
             
-            // Random position and animation
+            // Random position with faster movement
             const startX = Math.random() * (window.innerWidth - 100);
-            const delay = Math.random() * 5;
-            const duration = 25 + Math.random() * 20;
+            const delay = Math.random() * 2;
+            const duration = 15 + Math.random() * 10; // Faster movement
             
             object.style.left = `${startX}px`;
             object.style.animationDelay = `${delay}s`;
             object.style.animationDuration = `${duration}s`;
             
-            // Create object content based on type
-            if (objType.type === 'fruit') {
-                const fruitDiv = document.createElement('div');
-                fruitDiv.className = 'fruit-shape';
-                fruitDiv.textContent = objType.text;
-                
-                const labelDiv = document.createElement('div');
-                labelDiv.className = 'fruit-label';
-                labelDiv.textContent = objType.label;
-                
-                object.appendChild(fruitDiv);
-                object.appendChild(labelDiv);
-                
-            } else if (objType.type === 'balloon') {
+            // Create object based on type
+            if (objType.type === 'balloon') {
                 const balloonDiv = document.createElement('div');
                 balloonDiv.className = 'balloon-shape';
                 
-                // Add "ads" text
                 const adsDiv = document.createElement('div');
                 adsDiv.className = 'ads-text';
                 adsDiv.textContent = 'ADS';
                 balloonDiv.appendChild(adsDiv);
+                
+                const stringDiv = document.createElement('div');
+                stringDiv.className = 'balloon-string';
                 
                 const labelDiv = document.createElement('div');
                 labelDiv.className = 'balloon-label';
                 labelDiv.textContent = objType.label;
                 
                 object.appendChild(balloonDiv);
+                object.appendChild(stringDiv);
+                object.appendChild(labelDiv);
+                
+            } else if (objType.type === 'star') {
+                const starDiv = document.createElement('div');
+                starDiv.className = 'star-shape';
+                starDiv.textContent = objType.icon;
+                
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'star-label';
+                labelDiv.textContent = objType.label;
+                
+                object.appendChild(starDiv);
                 object.appendChild(labelDiv);
                 
             } else if (objType.type === 'flower') {
                 const flowerDiv = document.createElement('div');
                 flowerDiv.className = 'flower-shape';
                 
-                // Create petals
                 const petalsDiv = document.createElement('div');
                 petalsDiv.className = 'flower-petals';
                 
+                // Create 8 petals
                 for (let i = 0; i < 8; i++) {
                     const petalDiv = document.createElement('div');
                     petalDiv.className = 'flower-petal';
-                    petalDiv.style.transform = `translate(-50%, -50%) rotate(${i * 45}deg) translateX(25px)`;
+                    petalDiv.style.transform = `translate(-50%, -50%) rotate(${i * 45}deg) translateX(30px)`;
                     petalsDiv.appendChild(petalDiv);
                 }
                 
                 flowerDiv.appendChild(petalsDiv);
                 
-                // Add center
                 const centerDiv = document.createElement('div');
                 centerDiv.className = 'flower-center';
                 flowerDiv.appendChild(centerDiv);
@@ -597,6 +655,21 @@
                 
                 object.appendChild(flowerDiv);
                 object.appendChild(labelDiv);
+                
+            } else if (objType.type === 'diamond') {
+                const diamondDiv = document.createElement('div');
+                diamondDiv.className = 'diamond-shape';
+                
+                const iconDiv = document.createElement('div');
+                iconDiv.textContent = objType.icon;
+                diamondDiv.appendChild(iconDiv);
+                
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'diamond-label';
+                labelDiv.textContent = objType.label;
+                
+                object.appendChild(diamondDiv);
+                object.appendChild(labelDiv);
             }
             
             // Add glow effect
@@ -604,26 +677,37 @@
             glow.className = 'object-glow';
             object.appendChild(glow);
             
-            // Click event - SHOW VIGNETTE AD
+            // Click event - OPEN MONETAG AD
             object.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Visual feedback
-                this.style.transform = 'scale(1.3)';
-                this.style.opacity = '0.7';
-                this.style.filter = 'brightness(1.5) drop-shadow(0 0 20px gold)';
+                // Visual and sound effects
+                this.style.transform = 'scale(1.4)';
+                this.style.opacity = '0.8';
+                this.style.filter = 'brightness(2) drop-shadow(0 0 25px gold)';
                 
-                // Show Vignette ad
-                showVignetteAd();
+                // Play sound
+                playSound();
                 
-                // Remove object
+                // Open Monetag ad in new tab
+                window.open('https://otieu.com/4/10000770', '_blank');
+                
+                // Remove object with effect
                 setTimeout(() => {
                     if (this.parentNode) {
-                        this.remove();
-                        activeObjects--;
+                        this.style.transition = 'all 0.5s';
+                        this.style.transform = 'scale(0) rotate(180deg)';
+                        this.style.opacity = '0';
+                        
+                        setTimeout(() => {
+                            if (this.parentNode) {
+                                this.remove();
+                                activeObjects--;
+                            }
+                        }, 500);
                     }
-                }, 400);
+                }, 300);
             });
             
             // Remove when animation completes
@@ -642,32 +726,34 @@
         function startFloatingObjects() {
             gameStarted = true;
             
-            // Create objects every 15-25 seconds
+            // Create more objects more frequently
             floatingInterval = setInterval(() => {
                 if (gameStarted && document.visibilityState === 'visible' && activeObjects < MAX_OBJECTS) {
+                    // Sometimes create 2 at once
                     createFloatingObject();
+                    if (Math.random() > 0.7 && activeObjects < MAX_OBJECTS - 1) {
+                        setTimeout(createFloatingObject, 300);
+                    }
                 }
-            }, 15000 + Math.random() * 10000);
+            }, 8000 + Math.random() * 7000); // More frequent
             
-            // Create initial objects with delay
-            setTimeout(() => createFloatingObject(), 1000);
-            setTimeout(() => createFloatingObject(), 4000);
-            setTimeout(() => createFloatingObject(), 7000);
+            // Create initial objects faster
+            setTimeout(() => createFloatingObject(), 500);
+            setTimeout(() => createFloatingObject(), 1500);
+            setTimeout(() => createFloatingObject(), 2500);
+            setTimeout(() => createFloatingObject(), 3500);
         }
         
         // Initialize
         function init() {
-            console.log('🎮 Rescue Sharp Turn - Αρχικοποίηση');
+            console.log('🎮 Rescue Sharp Turn - Initializing');
             
             // Hide loader after game loads
             hideLoader();
             
-            // Load Vignette script after 30 seconds
-            setTimeout(loadVignetteScript, 30000);
-            
             // Start listening for game interactions
             gameFrame.addEventListener('load', function() {
-                console.log('✅ Παιχνίδι φορτώθηκε');
+                console.log('✅ Game Loaded');
             });
         }
         
