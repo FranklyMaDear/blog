@@ -96,7 +96,7 @@
             max-width: 300px;
         }
         
-        /* ===== BOTTOM AD BAR ===== */
+        /* ===== BOTTOM AD BAR (POPUP) ===== */
         .bottom-ad-bar {
             position: fixed;
             bottom: 0;
@@ -111,6 +111,7 @@
             align-items: center;
             min-height: 100px;
             transition: transform 0.5s ease;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.2);
         }
         
         .ad-label {
@@ -123,6 +124,28 @@
             border-radius: 15px 15px 0 0;
             font-size: 0.8rem;
             font-weight: 700;
+        }
+        
+        .close-ad-btn {
+            position: absolute;
+            top: -25px;
+            right: 20px;
+            background: #ff4161;
+            color: white;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .close-ad-btn:hover {
+            background: #ff2a4d;
         }
         
         .ad-content {
@@ -148,8 +171,8 @@
             display: flex;
         }
         
-        /* ===== AD INSIDE BANNER ===== */
-        .ad-inside-banner {
+        /* ===== MONETAG AD CONTAINER ===== */
+        .monetag-container {
             width: 100%;
             height: 100%;
             min-height: 90px;
@@ -180,7 +203,15 @@
                 font-size: 0.7rem;
             }
             
-            .ad-inside-banner {
+            .close-ad-btn {
+                top: -20px;
+                right: 10px;
+                width: 22px;
+                height: 22px;
+                font-size: 0.7rem;
+            }
+            
+            .monetag-container {
                 min-height: 70px;
             }
         }
@@ -198,7 +229,15 @@
                 font-size: 0.65rem;
             }
             
-            .ad-inside-banner {
+            .close-ad-btn {
+                top: -18px;
+                right: 5px;
+                width: 20px;
+                height: 20px;
+                font-size: 0.65rem;
+            }
+            
+            .monetag-container {
                 min-height: 50px;
             }
         }
@@ -239,12 +278,13 @@
         </div>
     </div>
     
-    <!-- BOTTOM AD BAR -->
+    <!-- BOTTOM AD BAR (POPUP) -->
     <div class="bottom-ad-bar hidden" id="bottomAdBar">
         <div class="ad-label">Υποστήριξη</div>
+        <button class="close-ad-btn" id="closeAdBtn" title="Κλείσιμο διαφήμισης">×</button>
         <div class="ad-content" id="bottomAdContent">
-            <!-- Ad will be loaded here inside the banner -->
-            <div class="ad-inside-banner" id="adInsideBanner">
+            <!-- Monetag ads will load here -->
+            <div class="monetag-container" id="monetagContainer">
                 <div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>
             </div>
         </div>
@@ -255,14 +295,17 @@
         const loadingScreen = document.getElementById('loadingScreen');
         const gameFrame = document.getElementById('gameFrame');
         const bottomAdBar = document.getElementById('bottomAdBar');
-        const adInsideBanner = document.getElementById('adInsideBanner');
+        const monetagContainer = document.getElementById('monetagContainer');
+        const closeAdBtn = document.getElementById('closeAdBtn');
         
         // ===== GAME STATE =====
         let gameLoaded = false;
         let isAdShowing = false;
         let adInterval = null;
+        let currentAdTimeout = null;
         let adDisplayDuration = 10000; // 10 seconds
         let adCooldown = 60000; // 60 seconds between ads
+        let monetagScriptLoaded = false;
         
         // ===== LOAD MONETAG AD =====
         function loadMonetagAd() {
@@ -271,67 +314,66 @@
             console.log('🔄 Φόρτωση Monetag διαφήμισης...');
             
             // Clear previous ad content
-            adInsideBanner.innerHTML = '<div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>';
+            monetagContainer.innerHTML = '<div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>';
             
-            // Show the banner
+            // Show the ad bar
             bottomAdBar.classList.remove('hidden');
             bottomAdBar.classList.add('visible');
             isAdShowing = true;
             
-            // Create Monetag script element
+            // Create and load Monetag script
             const monetagScript = document.createElement('script');
-            monetagScript.dataset.zone = '10274195';
-            monetagScript.src = 'https://al5sm.com/tag.min.js';
+            monetagScript.type = 'text/javascript';
             monetagScript.async = true;
+            monetagScript.src = 'https://otieu.com/4/10266494';
             
-            // Add error handling
-            monetagScript.onerror = function() {
-                console.log('⚠️ Monetag script failed to load');
-                setTimeout(() => {
-                    // Try alternative method
-                    try {
-                        const fallbackScript = document.createElement('script');
-                        fallbackScript.innerHTML = `
-                            (function(s){
-                                s.dataset.zone='10274195',
-                                s.src='https://al5sm.com/tag.min.js'
-                            })(document.createElement('script'));
-                        `;
-                        adInsideBanner.appendChild(fallbackScript);
-                    } catch(e) {
-                        console.log('❌ Could not load ad');
-                        hideAdBanner();
-                    }
-                }, 500);
+            // Add script to container
+            monetagContainer.appendChild(monetagScript);
+            
+            monetagScript.onload = function() {
+                console.log('✅ Monetag script loaded successfully');
+                monetagScriptLoaded = true;
             };
             
-            // Add to banner container
-            adInsideBanner.appendChild(monetagScript);
+            monetagScript.onerror = function() {
+                console.log('❌ Failed to load Monetag script');
+                monetagContainer.innerHTML = '<div class="ad-placeholder">Διαφήμιση - Ευχαριστούμε για την υποστήριξη!</div>';
+            };
             
-            // Auto-hide after duration
-            setTimeout(() => {
-                hideAdBanner();
+            // Set timeout to auto-close the ad
+            if (currentAdTimeout) {
+                clearTimeout(currentAdTimeout);
+            }
+            
+            currentAdTimeout = setTimeout(() => {
+                hideAdBar();
             }, adDisplayDuration);
-            
-            // Schedule next ad
-            scheduleNextAd();
         }
         
-        // ===== HIDE AD BANNER =====
-        function hideAdBanner() {
+        // ===== HIDE AD BAR =====
+        function hideAdBar() {
             if (!isAdShowing) return;
             
-            console.log('👋 Απόκρυψη διαφήμισης');
+            console.log('👋 Κλείσιμο διαφήμισης');
             
-            // Hide the banner
+            // Hide the ad bar
             bottomAdBar.classList.remove('visible');
             bottomAdBar.classList.add('hidden');
             isAdShowing = false;
             
-            // Clear ad content
+            // Clear ad container
             setTimeout(() => {
-                adInsideBanner.innerHTML = '<div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>';
+                monetagContainer.innerHTML = '<div class="ad-placeholder">Διαφήμιση φορτώνεται...</div>';
             }, 500);
+            
+            // Clear current timeout
+            if (currentAdTimeout) {
+                clearTimeout(currentAdTimeout);
+                currentAdTimeout = null;
+            }
+            
+            // Schedule next ad
+            scheduleNextAd();
         }
         
         // ===== SCHEDULE NEXT AD =====
@@ -353,10 +395,34 @@
             }, nextAdDelay);
         }
         
-        // ===== CHECK IF USER IS PLAYING =====
-        function isUserPlaying() {
-            // Check if game frame is focused or user is interacting
-            return document.activeElement === gameFrame;
+        // ===== SHOW AD AT LEVEL COMPLETION =====
+        function showAdOnLevelComplete() {
+            // This function should be called when a level is completed
+            console.log('🏆 Επίπεδο ολοκληρώθηκε - Εμφάνιση διαφήμισης');
+            
+            // Don't show ad if one is already showing
+            if (isAdShowing) {
+                console.log('ℹ️ Διαφήμιση ήδη εμφανίζεται, παραλείπεται');
+                return;
+            }
+            
+            // Wait a moment before showing ad
+            setTimeout(() => {
+                loadMonetagAd();
+            }, 1000);
+        }
+        
+        // ===== SIMULATE GAME EVENTS (FOR TESTING) =====
+        function simulateGameEvents() {
+            // Simulate level completion every 45-75 seconds for testing
+            setInterval(() => {
+                if (gameLoaded && !isAdShowing) {
+                    const shouldShowAd = Math.random() > 0.3; // 70% chance
+                    if (shouldShowAd) {
+                        showAdOnLevelComplete();
+                    }
+                }
+            }, 45000 + Math.floor(Math.random() * 30000));
         }
         
         // ===== INITIALIZE GAME =====
@@ -370,30 +436,13 @@
                 if (!isAdShowing) {
                     loadMonetagAd();
                 }
-            }, 5000);
+            }, 3000);
             
-            // Prevent ads from appearing when user is actively playing
-            let lastInteraction = Date.now();
+            // Start simulating game events (remove this in production)
+            simulateGameEvents();
             
-            // Track user interaction
-            document.addEventListener('click', function() {
-                lastInteraction = Date.now();
-            });
-            
-            document.addEventListener('keydown', function() {
-                lastInteraction = Date.now();
-            });
-            
-            // Check if user is playing before showing ads
-            setInterval(() => {
-                if (isAdShowing) return;
-                
-                const timeSinceInteraction = Date.now() - lastInteraction;
-                // Only show ad if user hasn't interacted for at least 30 seconds
-                if (timeSinceInteraction > 30000) {
-                    // This would be called from scheduleNextAd, so no need to call here
-                }
-            }, 10000);
+            // Initialize ad scheduling
+            scheduleNextAd();
         }
         
         // ===== EVENT LISTENERS =====
@@ -431,10 +480,27 @@
             `;
         });
         
+        // Close ad button
+        closeAdBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            hideAdBar();
+        });
+        
+        // Prevent clicking inside ad from closing it
+        monetagContainer.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        // Prevent clicks on ad content from propagating
+        bottomAdContent.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
         // Initial console message
         console.log('🎮 ================================');
         console.log('🎮 ROYAL GARDEN MATCH 2');
-        console.log('🎮 Μόνιμες διαφημίσεις ΜΟΝΟ στο banner');
+        console.log('🎮 Monetag διαφημίσεις ΜΟΝΟ στο banner');
         console.log('🎮 Χωρίς popups, χωρίς διακοπές στο gameplay');
         console.log('🎮 ================================');
         
