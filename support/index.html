@@ -70,20 +70,29 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Popup Banner - Slides down from top */
+        /* Improved Popup Banner - Smaller and better colors */
         .popup-banner {
             position: fixed;
-            top: -100px;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #ff4161, #ff8c00);
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: linear-gradient(90deg, #1a5fb4, #26a269);
             color: white;
-            padding: 15px 20px;
+            padding: 12px 15px;
             z-index: 90;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-bottom: 3px solid #ffcc00;
-            transition: top 0.5s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border-radius: 0 0 15px 15px;
+            border-bottom: 4px solid #ffcc00;
+            transition: top 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
             text-align: center;
+            animation: flashBorder 2s infinite;
+        }
+        
+        @keyframes flashBorder {
+            0%, 100% { border-bottom-color: #ffcc00; }
+            50% { border-bottom-color: #ff4161; }
         }
         
         .popup-banner.show {
@@ -91,82 +100,91 @@
         }
         
         .banner-content {
-            max-width: 800px;
-            margin: 0 auto;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
         
         .banner-icon {
             background: #ffcc00;
-            color: #ff4161;
-            width: 36px;
-            height: 36px;
+            color: #1a5fb4;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 18px;
             flex-shrink: 0;
+            animation: pulseIcon 2s infinite;
+        }
+        
+        @keyframes pulseIcon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .banner-text {
             flex: 1;
             text-align: center;
+            padding: 0 5px;
         }
         
         .banner-title {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
             margin-bottom: 3px;
             color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
         
         .banner-subtitle {
-            font-size: 14px;
+            font-size: 12px;
             opacity: 0.9;
             color: #ffcc00;
         }
         
         .banner-button {
-            background: #1a5fb4;
+            background: linear-gradient(90deg, #ff4161, #ff8c00);
             color: white;
             border: none;
-            padding: 10px 25px;
-            border-radius: 25px;
+            padding: 8px 18px;
+            border-radius: 20px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             white-space: nowrap;
             flex-shrink: 0;
+            font-size: 14px;
+            box-shadow: 0 3px 8px rgba(255, 65, 97, 0.3);
         }
         
         .banner-button:hover {
-            background: #26a269;
-            transform: scale(1.05);
+            background: linear-gradient(90deg, #ff2a4d, #ff7700);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(255, 65, 97, 0.4);
         }
         
         .close-banner {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border: none;
             color: white;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
             flex-shrink: 0;
             transition: background 0.3s;
         }
         
         .close-banner:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
         }
         
         /* Floating Objects Container */
@@ -180,14 +198,14 @@
             z-index: 80;
         }
         
-        /* Floating Objects - Fewer and more stylish */
+        /* Floating Objects */
         .floating-object {
             position: absolute;
             pointer-events: auto;
             cursor: pointer;
             transition: transform 0.3s, filter 0.3s;
             z-index: 81;
-            animation: floatUp 25s linear infinite;
+            animation: floatDiagonal 30s linear infinite;
         }
         
         .floating-object:hover {
@@ -195,9 +213,9 @@
             filter: brightness(1.3) drop-shadow(0 0 15px rgba(255, 255, 255, 0.7));
         }
         
-        @keyframes floatUp {
+        @keyframes floatDiagonal {
             0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
+                transform: translateY(100vh) translateX(-100px) rotate(0deg);
                 opacity: 0;
             }
             10% {
@@ -207,108 +225,56 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(-100px) translateX(50px) rotate(360deg);
+                transform: translateY(-100px) translateX(100px) rotate(360deg);
                 opacity: 0;
             }
         }
         
         /* Balloon Objects */
-        .balloon-red {
-            width: 60px;
-            height: 75px;
-            background: radial-gradient(circle at 30% 30%, #ff3333, #cc0000);
+        .balloon {
+            width: 55px;
+            height: 68px;
+            background: radial-gradient(circle at 30% 30%, var(--balloon-color));
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             position: relative;
         }
         
-        .balloon-red:before {
+        .balloon:before {
             content: '';
             position: absolute;
-            bottom: -20px;
+            bottom: -18px;
             left: 50%;
             transform: translateX(-50%);
-            width: 3px;
-            height: 40px;
+            width: 2px;
+            height: 35px;
             background: #666;
         }
         
-        .balloon-blue {
-            width: 60px;
-            height: 75px;
-            background: radial-gradient(circle at 30% 30%, #4cc9f0, #1a5fb4);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: relative;
-        }
-        
-        .balloon-blue:before {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            height: 40px;
-            background: #666;
-        }
-        
-        .balloon-green {
-            width: 60px;
-            height: 75px;
-            background: radial-gradient(circle at 30% 30%, #4CAF50, #2E7D32);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-            position: relative;
-        }
-        
-        .balloon-green:before {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 3px;
-            height: 40px;
-            background: #666;
-        }
-        
-        /* Simple Fruit Objects */
-        .fruit-simple {
-            width: 45px;
-            height: 45px;
-            background: radial-gradient(circle at 30% 30%, #FF9800, #FF5722);
-            border-radius: 50%;
-            position: relative;
-        }
-        
-        .fruit-simple:after {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 10px;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-        }
-        
-        /* Simple Flower */
-        .flower-simple {
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle at 30% 30%, #E91E63, #C2185B);
-            border-radius: 50%;
-            position: relative;
-        }
-        
-        .flower-simple:before {
-            content: '';
+        .balloon:after {
+            content: '🎮';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            background: #FFEB3B;
+            font-size: 20px;
+        }
+        
+        /* Simple Fruit */
+        .fruit {
+            width: 42px;
+            height: 42px;
+            background: radial-gradient(circle at 30% 30%, var(--fruit-color));
             border-radius: 50%;
+            position: relative;
+        }
+        
+        .fruit:after {
+            content: '✨';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18px;
         }
         
         /* Object Glow Effect */
@@ -320,15 +286,15 @@
             bottom: -5px;
             background: inherit;
             border-radius: inherit;
-            filter: blur(12px);
+            filter: blur(10px);
             opacity: 0.4;
             z-index: -1;
             animation: gentlePulse 2s infinite alternate;
         }
         
         @keyframes gentlePulse {
-            from { opacity: 0.3; transform: scale(1); }
-            to { opacity: 0.5; transform: scale(1.05); }
+            from { opacity: 0.3; }
+            to { opacity: 0.5; }
         }
         
         /* Object Label */
@@ -337,16 +303,17 @@
             top: -25px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             color: #ffcc00;
             padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 11px;
+            border-radius: 12px;
+            font-size: 10px;
             font-weight: bold;
             white-space: nowrap;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
+            border: 1px solid rgba(255, 204, 0, 0.3);
         }
         
         .floating-object:hover .object-label {
@@ -381,15 +348,15 @@
         </div>
     </div>
     
-    <!-- POPUP BANNER -->
+    <!-- IMPROVED POPUP BANNER -->
     <div class="popup-banner" id="popupBanner">
         <div class="banner-content">
             <div class="banner-icon">!</div>
             <div class="banner-text">
-                <div class="banner-title">🎮 Διαφημίσεις για να Συνεχίσει το Παιχνίδι Δωρεάν!</div>
-                <div class="banner-subtitle">Κάθε διαφήμιση βοηθάει στη συντήρηση και βελτίωση του παιχνιδιού</div>
+                <div class="banner-title">🎯 Υποστηρίξτε το Παιχνίδι</div>
+                <div class="banner-subtitle">Κάθε διαφήμιση βοηθάει</div>
             </div>
-            <button class="banner-button" id="bannerButton">Υποστηρίξτε τώρα</button>
+            <button class="banner-button" id="bannerButton">Υποστήριξη</button>
             <button class="close-banner" id="closeBanner">×</button>
         </div>
     </div>
@@ -408,13 +375,14 @@
         
         // Game State
         let gameLoaded = false;
-        let bannerInterval;
+        let bannerTimeout;
         let floatingInterval;
         let adScriptLoaded = false;
+        let isAdShowing = false; // Prevent duplicate ads
         let activeObjects = 0;
-        const MAX_OBJECTS = 3; // Fewer floating objects
+        const MAX_OBJECTS = 2; // Even fewer objects
         
-        // Load your ad script (Zone: 182432)
+        // Load your ad script (Zone: 182432) - Only once
         function loadAdScript() {
             if (adScriptLoaded) return;
             
@@ -438,9 +406,15 @@
             document.head.appendChild(adScript);
         }
         
-        // Open ad in new window
+        // Open ad in new window - PREVENT DUPLICATES
         function openAdInNewWindow() {
+            if (isAdShowing) {
+                console.log('⚠️ Διαφήμιση ήδη εμφανίζεται, αποφυγή διπλού άνοιγματος');
+                return;
+            }
+            
             console.log('🎯 Άνοιγμα διαφήμισης σε νέο παράθυρο');
+            isAdShowing = true;
             
             // Load the script first if not loaded
             if (!adScriptLoaded) {
@@ -448,116 +422,111 @@
             }
             
             // Open in new window (popup)
-            const popupWindow = window.open('', '_blank', 'width=728,height=400,left=100,top=100');
+            const popupWindow = window.open('', '_blank', 'width=728,height=250,left=100,top=100');
             
             if (popupWindow) {
-                // Create HTML with your script and ad content
+                // Create HTML with your script
                 popupWindow.document.write(`
                     <!DOCTYPE html>
                     <html>
                     <head>
                         <title>Υποστήριξη Παιχνιδιού</title>
                         <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
                         <style>
                             body { 
                                 margin: 0; 
                                 padding: 0; 
-                                background: linear-gradient(135deg, #1a1a2e, #16213e);
+                                background: #f8f9fa;
                                 display: flex;
                                 justify-content: center;
                                 align-items: center;
                                 min-height: 100vh;
                                 font-family: Arial, sans-serif;
-                                color: white;
                             }
                             .ad-container {
                                 text-align: center;
-                                padding: 30px;
-                                background: rgba(255, 255, 255, 0.1);
-                                backdrop-filter: blur(10px);
-                                border-radius: 15px;
-                                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                                max-width: 700px;
-                                margin: 20px;
+                                padding: 20px;
+                                background: white;
+                                border-radius: 10px;
+                                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+                                max-width: 680px;
+                                margin: 10px;
                             }
                             .thank-you {
-                                color: #4cc9f0;
-                                font-size: 24px;
-                                margin-bottom: 15px;
+                                color: #1a5fb4;
+                                font-size: 20px;
+                                margin-bottom: 10px;
                                 font-weight: bold;
                             }
                             .support-text {
-                                color: #b8b8b8;
-                                margin-bottom: 25px;
-                                line-height: 1.6;
-                                font-size: 16px;
+                                color: #666;
+                                margin-bottom: 20px;
+                                font-size: 14px;
                             }
-                            .ad-box {
-                                background: rgba(255, 255, 255, 0.05);
-                                padding: 20px;
-                                border-radius: 10px;
-                                margin: 20px 0;
-                                min-height: 250px;
+                            .ad-space {
+                                background: #f0f0f0;
+                                padding: 15px;
+                                border-radius: 5px;
+                                margin: 15px 0;
+                                min-height: 90px;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
+                                color: #888;
                             }
                             .close-btn {
-                                background: linear-gradient(90deg, #ff4161, #ff8c00);
+                                background: #ff4161;
                                 color: white;
                                 border: none;
-                                padding: 12px 40px;
-                                border-radius: 25px;
+                                padding: 10px 30px;
+                                border-radius: 20px;
                                 cursor: pointer;
                                 font-weight: bold;
-                                font-size: 16px;
-                                transition: transform 0.3s;
-                                margin-top: 20px;
+                                transition: background 0.3s;
+                                margin-top: 10px;
                             }
                             .close-btn:hover {
-                                transform: scale(1.05);
-                            }
-                            .auto-close {
-                                color: #4cc9f0;
-                                font-size: 14px;
-                                margin-top: 15px;
+                                background: #ff2a4d;
                             }
                         </style>
                     </head>
                     <body>
                         <div class="ad-container">
                             <div class="thank-you">🎮 Ευχαριστούμε για την Υποστήριξη!</div>
-                            <div class="support-text">
-                                Κάθε διαφήμιση που βλέπετε βοηθάει να παραμείνει το παιχνίδι<br>
-                                <strong>δωρεάν για όλους</strong> και να αναπτύσσονται νέα features!
+                            <div class="support-text">Η διαφήμιση φορτώνεται...</div>
+                            <div class="ad-space" id="adSpace">
+                                <div>📢 Διαφημιστικό περιεχόμενο</div>
                             </div>
-                            <div class="ad-box" id="adBox">
-                                <div style="color: #4cc9f0;">
-                                    📢 Η διαφήμιση φορτώνεται...<br>
-                                    <small>Παρακαλώ περιμένετε λίγα δευτερόλεπτα</small>
-                                </div>
-                            </div>
-                            <button class="close-btn" onclick="window.close()">Κλείσιμο & Επιστροφή στο Παιχνίδι</button>
-                            <div class="auto-close">⏰ Αυτόματο κλείσιμο σε 25 δευτερόλεπτα</div>
+                            <button class="close-btn" onclick="window.close()">Κλείσιμο</button>
                         </div>
                         <script src="https://quge5.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"><\/script>
                         <script>
-                            // Auto-close after 25 seconds
+                            // Auto-close after 20 seconds
                             setTimeout(() => {
                                 window.close();
-                            }, 25000);
+                            }, 20000);
                         <\/script>
                     </body>
                     </html>
                 `);
                 
+                // Reset ad showing flag when popup closes
+                const checkPopup = setInterval(() => {
+                    if (popupWindow.closed) {
+                        clearInterval(checkPopup);
+                        isAdShowing = false;
+                        console.log('✅ Διαφήμιση κλείστηκε');
+                    }
+                }, 500);
+                
                 // Focus on the popup
                 popupWindow.focus();
                 
             } else {
-                // If popup blocked, try to show a subtle notification
                 console.log('⚠️ Popup blocked');
-                showTempMessage('🎯 Παρακαλώ επιτρέψτε τα pop-ups για να υποστηρίξετε το παιχνίδι!');
+                isAdShowing = false; // Reset flag since no popup opened
+                showTempMessage('🔔 Παρακαλώ επιτρέψτε τα pop-ups για υποστήριξη');
             }
         }
         
@@ -569,14 +538,16 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                background: rgba(255, 65, 97, 0.9);
+                background: rgba(26, 95, 180, 0.95);
                 color: white;
-                padding: 15px 25px;
-                border-radius: 10px;
+                padding: 12px 20px;
+                border-radius: 8px;
                 z-index: 10000;
                 font-weight: bold;
                 text-align: center;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                border: 2px solid #ffcc00;
+                font-size: 14px;
             `;
             msgDiv.textContent = message;
             document.body.appendChild(msgDiv);
@@ -585,54 +556,63 @@
                 if (msgDiv.parentNode) {
                     msgDiv.parentNode.removeChild(msgDiv);
                 }
-            }, 3000);
+            }, 2000);
         }
         
         // Show/Hide Popup Banner
         function showPopupBanner() {
             popupBanner.classList.add('show');
             
-            // Auto-hide after 20 seconds
-            setTimeout(() => {
+            // Auto-hide after 15 seconds
+            bannerTimeout = setTimeout(() => {
                 hidePopupBanner();
-            }, 20000);
+            }, 15000);
         }
         
         function hidePopupBanner() {
             popupBanner.classList.remove('show');
+            if (bannerTimeout) clearTimeout(bannerTimeout);
         }
         
-        // Schedule banner appearances
+        // Schedule banner appearances - less frequent
         function scheduleBanner() {
-            // Show first banner after 15 seconds
+            // Show first banner after 30 seconds
             setTimeout(() => {
                 if (gameLoaded) {
                     showPopupBanner();
                 }
-            }, 15000);
+            }, 30000);
             
-            // Then show every 4-6 minutes
-            bannerInterval = setInterval(() => {
+            // Then show every 5-7 minutes
+            setInterval(() => {
                 if (gameLoaded) {
                     showPopupBanner();
                 }
-            }, 240000 + Math.random() * 120000);
+            }, 300000 + Math.random() * 120000);
         }
         
-        // Create floating objects (fewer)
+        // Create floating objects - START AFTER 1 MINUTE
         function createFloatingObject() {
             if (activeObjects >= MAX_OBJECTS) return;
             
-            const objectTypes = ['balloon-red', 'balloon-blue', 'balloon-green', 'fruit-simple', 'flower-simple'];
-            const type = objectTypes[Math.floor(Math.random() * objectTypes.length)];
+            const objectTypes = [
+                {type: 'balloon', color: '#ff3333, #cc0000'},
+                {type: 'balloon', color: '#4cc9f0, #1a5fb4'},
+                {type: 'balloon', color: '#4CAF50, #2E7D32'},
+                {type: 'fruit', color: '#FF9800, #FF5722'},
+                {type: 'fruit', color: '#E91E63, #C2185B'}
+            ];
+            
+            const objType = objectTypes[Math.floor(Math.random() * objectTypes.length)];
             
             const object = document.createElement('div');
-            object.className = `floating-object ${type}`;
+            object.className = `floating-object ${objType.type}`;
+            object.style.setProperty(`--${objType.type}-color`, objType.color);
             
             // Random position and animation
             const startX = Math.random() * (window.innerWidth - 100);
-            const delay = Math.random() * 5;
-            const duration = 20 + Math.random() * 10;
+            const delay = Math.random() * 3;
+            const duration = 25 + Math.random() * 10;
             
             object.style.left = `${startX}px`;
             object.style.animationDelay = `${delay}s`;
@@ -641,7 +621,7 @@
             // Add label
             const label = document.createElement('div');
             label.className = 'object-label';
-            label.textContent = '🎯 Κλικ για υποστήριξη';
+            label.textContent = '🎯 Κλικ εδώ';
             object.appendChild(label);
             
             // Add glow effect
@@ -654,9 +634,12 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
+                // Prevent multiple clicks
+                if (isAdShowing) return;
+                
                 // Add click animation
-                this.style.transform = 'scale(1.6) rotate(45deg)';
-                this.style.opacity = '0.5';
+                this.style.transform = 'scale(1.5)';
+                this.style.opacity = '0.7';
                 
                 // Open ad in new window
                 setTimeout(() => {
@@ -678,15 +661,23 @@
             activeObjects++;
         }
         
-        // Schedule floating objects creation (fewer)
+        // Schedule floating objects creation - START AFTER 1 MINUTE
         function scheduleFloatingObjects() {
-            // Create objects every 20-30 seconds
-            floatingInterval = setInterval(() => {
-                if (gameLoaded && document.visibilityState === 'visible' && activeObjects < MAX_OBJECTS) {
-                    // Create only 1 object at a time
-                    createFloatingObject();
-                }
-            }, 20000 + Math.random() * 10000);
+            // Start creating objects after 1 minute (60000ms)
+            setTimeout(() => {
+                console.log('⏰ Ξεκινάνε τα ιπτάμενα αντικείμενα μετά από 1 λεπτό');
+                
+                // Create first object
+                createFloatingObject();
+                
+                // Then create objects every 25-40 seconds
+                floatingInterval = setInterval(() => {
+                    if (gameLoaded && document.visibilityState === 'visible' && activeObjects < MAX_OBJECTS) {
+                        createFloatingObject();
+                    }
+                }, 25000 + Math.random() * 15000);
+                
+            }, 60000);
         }
         
         // Initialize game
@@ -700,17 +691,8 @@
             // Start banner schedule
             scheduleBanner();
             
-            // Start floating objects (fewer)
+            // Schedule floating objects to start after 1 minute
             scheduleFloatingObjects();
-            
-            // Create initial objects (only 2)
-            setTimeout(() => {
-                createFloatingObject();
-            }, 5000);
-            
-            setTimeout(() => {
-                createFloatingObject();
-            }, 10000);
         }
         
         // Event Listeners
@@ -741,7 +723,9 @@
         
         // Banner button events
         bannerButton.addEventListener('click', function() {
-            openAdInNewWindow();
+            if (!isAdShowing) {
+                openAdInNewWindow();
+            }
             hidePopupBanner();
         });
         
@@ -756,8 +740,9 @@
         
         // Initial message
         console.log('🎮 Royal Garden Match 2');
-        console.log('🎯 Popup Banner + Λιγότερα Ιπτάμενα Αντικείμενα');
+        console.log('🎯 Βελτιωμένο Banner + Ιπτάμενα Αντικείμενα μετά από 1 λεπτό');
         console.log('📢 Ad Script Zone: 182432');
+        console.log('🛡️ Προστασία από διπλές διαφημίσεις ενεργή');
         
         // Auto-hide loading screen
         setTimeout(() => {
@@ -770,8 +755,7 @@
         // Handle visibility change
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'visible' && gameLoaded) {
-                // Resume creating objects when tab becomes visible
-                scheduleFloatingObjects();
+                console.log('👁️ Η σελίδα είναι τώρα ορατή');
             }
         });
     </script>
