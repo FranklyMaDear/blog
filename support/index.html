@@ -81,15 +81,14 @@
             40% { transform: scale(1); }
         }
         
-        /* Floating Leaves Container */
+        /* Floating Leaves Container - ΑΛΛΑΓΗ: removed pointer-events: none */
         #floatingLeaves {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 50;
+            z-index: 9999; /* ΑΛΛΑΓΗ: Πολύ ψηλό z-index */
         }
         
         /* Leaf Objects */
@@ -98,40 +97,42 @@
             pointer-events: auto;
             cursor: pointer;
             touch-action: none;
-            z-index: 51;
-            opacity: 0.9;
+            z-index: 10000; /* ΑΛΛΑΓΗ: Ακόμα ψηλότερο */
+            opacity: 1; /* ΑΛΛΑΓΗ: Από 0.9 σε 1 */
             will-change: transform, opacity;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); /* ΑΛΛΑΓΗ: Πιο έντονη σκιά */
+            transition: transform 0.2s ease;
         }
         
-        .leaf-object:active {
+        .leaf-object:active, .leaf-object:hover {
             transform: scale(1.2) !important;
             opacity: 1;
         }
         
         /* Green Leaf Styles */
         .green-leaf {
-            width: 70px;
-            height: 70px;
+            width: 80px; /* ΑΛΛΑΓΗ: Από 70 σε 80px */
+            height: 80px;
             position: relative;
             background: linear-gradient(135deg, #4CAF50, #2E7D32);
             border-radius: 50% 0 50% 50%;
             transform: rotate(var(--rotation)) scale(1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 3px solid rgba(255, 255, 255, 0.3); /* ΑΛΛΑΓΗ: Πιο φωτεινό border */
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
             overflow: hidden;
+            animation: leafGlow 2s infinite alternate; /* ΑΛΛΑΓΗ: Προσθήκη animation σε όλα */
         }
         
         /* Ad text inside leaf */
         .ad-text {
             color: white;
-            font-size: 11px;
+            font-size: 12px; /* ΑΛΛΑΓΗ: Από 11 σε 12px */
             font-weight: bold;
             text-align: center;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9); /* ΑΛΛΑΓΗ: Πιο έντονο shadow */
             padding: 5px;
             line-height: 1.2;
             z-index: 2;
@@ -155,7 +156,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            opacity: 0.4;
+            opacity: 0.5; /* ΑΛΛΑΓΗ: Από 0.4 σε 0.5 */
         }
         
         .vein {
@@ -185,45 +186,48 @@
         
         /* Simple Green Orb */
         .green-orb {
-            width: 65px;
-            height: 65px;
+            width: 75px; /* ΑΛΛΑΓΗ: Από 65 σε 75px */
+            height: 75px;
             position: relative;
             background: radial-gradient(circle at 30% 30%, #66BB6A, #388E3C);
             border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.25);
+            border: 3px solid rgba(255, 255, 255, 0.3); /* ΑΛΛΑΓΗ */
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 
-                0 0 20px rgba(102, 187, 106, 0.5),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
+                0 0 25px rgba(102, 187, 106, 0.8), /* ΑΛΛΑΓΗ: Πιο φωτεινό */
+                inset 0 0 20px rgba(255, 255, 255, 0.2); /* ΑΛΛΑΓΗ */
+            animation: leafGlow 2s infinite alternate; /* Προσθήκη animation */
         }
         
         /* Eco Badge */
         .eco-badge {
-            width: 60px;
-            height: 60px;
+            width: 70px; /* ΑΛΛΑΓΗ */
+            height: 70px;
             position: relative;
             background: linear-gradient(135deg, #43A047, #1B5E20);
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            border: 2px solid #C8E6C9;
+            border: 3px solid #C8E6C9; /* ΑΛΛΑΓΗ */
             display: flex;
             align-items: center;
             justify-content: center;
+            animation: leafGlow 2s infinite alternate; /* Προσθήκη animation */
         }
         
         /* Simple Green Square */
         .green-square {
-            width: 55px;
-            height: 55px;
+            width: 65px; /* ΑΛΛΑΓΗ */
+            height: 65px;
             position: relative;
             background: linear-gradient(45deg, #81C784, #4CAF50);
-            border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px; /* ΑΛΛΑΓΗ: Από 10 σε 15px */
+            border: 3px solid rgba(255, 255, 255, 0.3); /* ΑΛΛΑΓΗ */
             display: flex;
             align-items: center;
             justify-content: center;
             transform: rotate(var(--rotation));
+            animation: leafGlow 2s infinite alternate; /* Προσθήκη animation */
         }
         
         /* Animations */
@@ -232,11 +236,11 @@
                 transform: translateY(-100px) translateX(var(--start-x)) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.9;
+            5% {
+                opacity: 1; /* ΑΛΛΑΓΗ: Πιο γρήγορη εμφάνιση */
             }
-            90% {
-                opacity: 0.9;
+            95% {
+                opacity: 1; /* ΑΛΛΑΓΗ */
             }
             100% {
                 transform: translateY(calc(100vh + 100px)) translateX(var(--end-x)) rotate(180deg);
@@ -249,11 +253,11 @@
                 transform: translateY(calc(100vh + 100px)) translateX(var(--start-x)) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.9;
+            5% {
+                opacity: 1;
             }
-            90% {
-                opacity: 0.9;
+            95% {
+                opacity: 1;
             }
             100% {
                 transform: translateY(-100px) translateX(var(--end-x)) rotate(180deg);
@@ -266,11 +270,11 @@
                 transform: translateX(-100px) translateY(var(--start-y)) rotate(0deg);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.9;
+            5% {
+                opacity: 1;
             }
-            90% {
-                opacity: 0.9;
+            95% {
+                opacity: 1;
             }
             100% {
                 transform: translateX(calc(100vw + 100px)) translateY(var(--end-y)) rotate(180deg);
@@ -281,28 +285,40 @@
         @keyframes leafGlow {
             0%, 100% { 
                 box-shadow: 
-                    0 0 10px rgba(76, 175, 80, 0.3),
-                    inset 0 0 10px rgba(255, 255, 255, 0.1);
+                    0 0 15px rgba(76, 175, 80, 0.6), /* ΑΛΛΑΓΗ */
+                    inset 0 0 15px rgba(255, 255, 255, 0.2); /* ΑΛΛΑΓΗ */
             }
             50% { 
                 box-shadow: 
-                    0 0 20px rgba(76, 175, 80, 0.6),
-                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+                    0 0 25px rgba(76, 175, 80, 0.9), /* ΑΛΛΑΓΗ */
+                    inset 0 0 25px rgba(255, 255, 255, 0.3); /* ΑΛΛΑΓΗ */
             }
+        }
+        
+        /* TEST MODE - For debugging */
+        .test-leaf {
+            position: fixed;
+            top: 50px;
+            left: 50px;
+            width: 100px;
+            height: 100px;
+            background: red;
+            z-index: 99999;
+            display: none;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .green-leaf, .green-orb { width: 60px; height: 60px; }
-            .eco-badge, .green-square { width: 55px; height: 55px; }
-            .ad-text { font-size: 10px; }
+            .green-leaf, .green-orb { width: 70px; height: 70px; }
+            .eco-badge, .green-square { width: 65px; height: 65px; }
+            .ad-text { font-size: 11px; }
             .loader-text { font-size: 20px; }
         }
         
         @media (max-width: 480px) {
-            .green-leaf, .green-orb { width: 55px; height: 55px; }
-            .eco-badge, .green-square { width: 50px; height: 50px; }
-            .ad-text { font-size: 9px; }
+            .green-leaf, .green-orb { width: 65px; height: 65px; }
+            .eco-badge, .green-square { width: 60px; height: 60px; }
+            .ad-text { font-size: 10px; }
             .loader-text { font-size: 18px; }
         }
     </style>
@@ -330,55 +346,119 @@
     
     <!-- Floating Leaves Container -->
     <div id="floatingLeaves"></div>
+    
+    <!-- Test element for debugging -->
+    <div class="test-leaf" id="testLeaf"></div>
 
     <script>
         // DOM Elements
         const gameFrame = document.getElementById('gameFrame');
         const loader = document.getElementById('loader');
         const floatingLeaves = document.getElementById('floatingLeaves');
+        const testLeaf = document.getElementById('testLeaf');
         
         // Game State
         let gameLoaded = false;
         let leavesStarted = false;
         let activeLeaves = 0;
-        const MAX_LEAVES = 4;
+        const MAX_LEAVES = 5; /* ΑΛΛΑΓΗ: Από 4 σε 5 */
         let leavesInterval;
         
-        // Configuration
-        const LEAVES_START_DELAY = 60000; // 1 λεπτό = 60 δευτερόλεπτα
-        const MONETAG_LINK = 'https://otieu.com/4/10274068';
+        // Configuration - TEST MODE: 3 seconds instead of 30
+        const LEAVES_START_DELAY = 3000; // TEST: 3 δευτερόλεπτα (μετά θα το αλλάξουμε σε 30000)
+        const MONETAG_LINK = 'https://otieu.com/4/10021790';
+        
+        // Debug function
+        function debugLog(message) {
+            console.log(`🍃 DEBUG: ${message}`);
+            // Also show alert for first debug message
+            if (!window.debugShown) {
+                window.debugShown = true;
+                setTimeout(() => {
+                    alert(`DEBUG: ${message}\n\nLeaves will start in ${LEAVES_START_DELAY/1000} seconds`);
+                }, 1000);
+            }
+        }
         
         // Initialize - Optimized for fast loading
         function init() {
-            console.log('🍃 Initializing Foxy Eco Sort...');
+            debugLog('Initializing Foxy Eco Sort...');
+            
+            // Test if container is visible
+            testLeaf.style.display = 'block';
+            testLeaf.style.background = 'green';
+            testLeaf.innerHTML = 'TEST';
             
             // Set game to full screen
             setupFullScreenGame();
             
-            // Hide loader quickly - don't wait for game to fully load
+            // Hide loader quickly
             setTimeout(() => {
                 loader.style.opacity = '0';
                 setTimeout(() => {
                     loader.style.display = 'none';
                     gameLoaded = true;
                     
-                    // Start leaves after 1 minute
-                    console.log(`⏰ Green leaves will appear in ${LEAVES_START_DELAY/1000} seconds`);
+                    debugLog(`Loader hidden. Leaves will start in ${LEAVES_START_DELAY/1000} seconds`);
+                    
+                    // TEST: Create one leaf immediately for testing
+                    setTimeout(() => {
+                        createTestLeaf();
+                    }, 1000);
+                    
+                    // Start leaves after delay
                     setTimeout(startFloatingLeaves, LEAVES_START_DELAY);
                 }, 300);
-            }, 1500); // Faster loader (1.5 seconds instead of 2)
+            }, 1500);
             
             // Game frame error handling
-            gameFrame.addEventListener('error', () => {
-                console.log('⚠️ Game frame error');
+            gameFrame.addEventListener('load', () => {
+                debugLog('Game frame loaded successfully');
             });
             
-            // Prevent context menu
-            document.addEventListener('contextmenu', (e) => {
-                if (e.target.closest('.leaf-object')) {
-                    e.preventDefault();
-                }
+            gameFrame.addEventListener('error', () => {
+                debugLog('Game frame error - but leaves should still work');
             });
+        }
+        
+        // Create a test leaf immediately
+        function createTestLeaf() {
+            debugLog('Creating test leaf...');
+            
+            const testLeaf = document.createElement('div');
+            testLeaf.className = 'leaf-object green-leaf';
+            testLeaf.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 99999;
+                width: 100px;
+                height: 100px;
+                background: red;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                border: 3px solid yellow;
+            `;
+            testLeaf.innerHTML = 'TEST LEAF<br>Should be visible';
+            testLeaf.onclick = () => {
+                debugLog('Test leaf clicked!');
+                window.open(MONETAG_LINK, '_blank');
+                testLeaf.remove();
+            };
+            
+            floatingLeaves.appendChild(testLeaf);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                if (testLeaf.parentNode) {
+                    testLeaf.remove();
+                    debugLog('Test leaf removed');
+                }
+            }, 5000);
         }
         
         // Setup full screen game
@@ -386,11 +466,11 @@
             const updateSize = () => {
                 gameFrame.style.width = window.innerWidth + 'px';
                 gameFrame.style.height = window.innerHeight + 'px';
+                debugLog(`Window size: ${window.innerWidth}x${window.innerHeight}`);
             };
             
             updateSize();
             
-            // Throttle resize events
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -406,40 +486,42 @@
         function createGreenLeaf() {
             if (activeLeaves >= MAX_LEAVES || !leavesStarted) return;
             
+            debugLog(`Creating leaf ${activeLeaves + 1}/${MAX_LEAVES}`);
+            
             const leafTypes = [
                 { 
                     type: 'green-leaf', 
                     name: 'Green Leaf',
                     animation: 'floatDown',
-                    duration: 15 + Math.random() * 10,
+                    duration: 12 + Math.random() * 8, /* ΑΛΛΑΓΗ: Πιο γρήγορα */
                     adText: 'Click for\nAD'
                 },
                 { 
                     type: 'green-leaf', 
                     name: 'Green Leaf',
                     animation: 'floatUp', 
-                    duration: 18 + Math.random() * 8,
+                    duration: 14 + Math.random() * 6,
                     adText: 'Watch\nAD'
                 },
                 { 
                     type: 'green-orb', 
                     name: 'Green Orb',
                     animation: 'floatDown',
-                    duration: 16 + Math.random() * 9,
+                    duration: 13 + Math.random() * 7,
                     adText: 'AD Here'
                 },
                 { 
                     type: 'eco-badge', 
                     name: 'Eco Badge',
                     animation: 'floatSide',
-                    duration: 20 + Math.random() * 5,
+                    duration: 16 + Math.random() * 4,
                     adText: 'Support\nUs'
                 },
                 { 
                     type: 'green-square', 
                     name: 'Green Square',
                     animation: 'floatUp',
-                    duration: 14 + Math.random() * 11,
+                    duration: 11 + Math.random() * 9,
                     adText: 'Click\nMe'
                 }
             ];
@@ -450,36 +532,11 @@
             const leafObject = document.createElement('div');
             leafObject.className = `leaf-object ${leafType.type}`;
             leafObject.style.setProperty('--rotation', `${rotation}deg`);
+            leafObject.style.cursor = 'pointer';
             
             // Create leaf element
             const leaf = document.createElement('div');
             leaf.className = leafType.type;
-            
-            // Add glow animation to green leaf
-            if (leafType.type === 'green-leaf') {
-                leaf.style.animation = 'leafGlow 3s infinite alternate';
-                
-                // Add veins
-                const veins = document.createElement('div');
-                veins.className = 'leaf-veins';
-                
-                const mainVein = document.createElement('div');
-                mainVein.className = 'vein vein-main';
-                veins.appendChild(mainVein);
-                
-                for (let i = 0; i < 4; i++) {
-                    const sideVein = document.createElement('div');
-                    sideVein.className = 'vein vein-side';
-                    veins.appendChild(sideVein);
-                }
-                
-                leaf.appendChild(veins);
-                
-                // Add stem
-                const stem = document.createElement('div');
-                stem.className = 'leaf-stem';
-                leaf.appendChild(stem);
-            }
             
             // Add AD text inside ALL leaves
             const adText = document.createElement('div');
@@ -492,14 +549,16 @@
             // Set position and animation
             if (leafType.animation === 'floatDown' || leafType.animation === 'floatUp') {
                 const startX = Math.random() * window.innerWidth;
-                const endX = startX + (Math.random() * 80 - 40);
+                const endX = startX + (Math.random() * 100 - 50);
                 leafObject.style.setProperty('--start-x', `${startX}px`);
                 leafObject.style.setProperty('--end-x', `${endX}px`);
+                debugLog(`Leaf path: X ${startX.toFixed(0)} -> ${endX.toFixed(0)}`);
             } else {
                 const startY = Math.random() * window.innerHeight;
-                const endY = startY + (Math.random() * 80 - 40);
+                const endY = startY + (Math.random() * 100 - 50);
                 leafObject.style.setProperty('--start-y', `${startY}px`);
                 leafObject.style.setProperty('--end-y', `${endY}px`);
+                debugLog(`Leaf path: Y ${startY.toFixed(0)} -> ${endY.toFixed(0)}`);
             }
             
             leafObject.style.animation = `${leafType.animation} ${leafType.duration}s linear forwards`;
@@ -511,70 +570,110 @@
                 e.preventDefault();
                 e.stopPropagation();
                 
+                debugLog('Leaf clicked! Opening Monetag...');
+                
                 // Visual feedback
-                leafObject.style.transform = 'scale(1.25)';
+                leafObject.style.transform = 'scale(1.4) rotate(15deg)';
                 leafObject.style.opacity = '0.8';
+                leafObject.style.transition = 'all 0.3s ease';
+                leafObject.style.filter = 'drop-shadow(0 0 10px gold)';
                 
                 // Open Monetag ad in new tab
                 window.open(MONETAG_LINK, '_blank');
                 
-                // Remove leaf
+                // Remove leaf after animation
                 setTimeout(() => {
                     if (leafObject.parentNode) {
-                        leafObject.remove();
-                        activeLeaves--;
+                        leafObject.style.opacity = '0';
+                        leafObject.style.transform = 'scale(0.3)';
+                        setTimeout(() => {
+                            if (leafObject.parentNode) {
+                                leafObject.remove();
+                                activeLeaves--;
+                                debugLog(`Leaf removed. Active: ${activeLeaves}`);
+                            }
+                        }, 300);
                     }
-                }, 300);
+                }, 400);
             };
             
             leafObject.addEventListener('click', handleClick);
             leafObject.addEventListener('touchstart', handleClick, { passive: false });
-            
-            // Touch feedback
-            leafObject.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(1.15)';
-            }, { passive: true });
             
             // Remove when animation completes
             setTimeout(() => {
                 if (leafObject.parentNode) {
                     leafObject.remove();
                     activeLeaves--;
+                    debugLog(`Leaf animation ended. Active: ${activeLeaves}`);
                 }
             }, leafType.duration * 1000);
             
             floatingLeaves.appendChild(leafObject);
             activeLeaves++;
+            
+            debugLog(`Leaf created. Total active: ${activeLeaves}`);
         }
         
-        // Start floating leaves after 1 minute
+        // Start floating leaves
         function startFloatingLeaves() {
             if (leavesStarted) return;
             
             leavesStarted = true;
-            console.log('🍃 Starting green leaves with ads...');
+            debugLog('🍃 STARTING FLOATING LEAVES NOW! 🍃');
             
-            // Initial leaves
-            setTimeout(() => createGreenLeaf(), 0);
+            // Create more leaves initially
+            createGreenLeaf();
+            setTimeout(() => createGreenLeaf(), 500);
             setTimeout(() => createGreenLeaf(), 1000);
+            setTimeout(() => createGreenLeaf(), 1500);
+            setTimeout(() => createGreenLeaf(), 2000);
             
-            // Continuous spawn every 10-15 seconds
+            // Continuous spawn
             leavesInterval = setInterval(() => {
                 if (leavesStarted && activeLeaves < MAX_LEAVES) {
                     createGreenLeaf();
                 }
-            }, 10000 + Math.random() * 5000);
+            }, 5000 + Math.random() * 3000); /* ΑΛΛΑΓΗ: Πιο συχνά */
         }
         
         // Start everything immediately
-        document.addEventListener('DOMContentLoaded', init);
-        
-        // Fallback for fast loading
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
             init();
         }
+        
+        // Global debug function
+        window.showLeavesDebug = function() {
+            debugLog('Manual debug trigger');
+            console.log({
+                gameLoaded,
+                leavesStarted,
+                activeLeaves,
+                MAX_LEAVES,
+                floatingLeaves: document.getElementById('floatingLeaves'),
+                windowSize: `${window.innerWidth}x${window.innerHeight}`
+            });
+            
+            if (!leavesStarted) {
+                startFloatingLeaves();
+            } else {
+                createGreenLeaf();
+            }
+        };
+        
+        // Press 'L' key to manually trigger leaves (for debugging)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'l' || e.key === 'L') {
+                debugLog('L key pressed - manually triggering leaves');
+                if (!leavesStarted) {
+                    startFloatingLeaves();
+                } else {
+                    createGreenLeaf();
+                }
+            }
+        });
     </script>
 </body>
 </html>
