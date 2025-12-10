@@ -2,835 +2,718 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Foxy Eco Sort - Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monetag Ads - Συμμετέχετε και Κερδίστε</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: #000;
-            overflow: hidden;
-            width: 100vw;
-            height: 100vh;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
+            background-color: #f5f9ff;
+            color: #333;
+            line-height: 1.6;
         }
-        
-        /* Game takes full screen */
-        #gameFrame {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            display: block;
-            z-index: 1;
-            background: #000;
-        }
-        
-        /* Simple Loader */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 100;
-            transition: opacity 0.3s ease-out;
-        }
-        
-        .loader-text {
-            color: #4CAF50;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-        
-        .loader-dots {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .dot {
-            width: 12px;
-            height: 12px;
-            background: #4CAF50;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-        
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
-        
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        
-        /* Floating Leaves Container */
-        #floatingLeaves {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 50;
-        }
-        
-        /* Leaf Objects */
-        .leaf-object {
-            position: absolute;
-            pointer-events: auto;
-            cursor: pointer;
-            touch-action: none;
-            z-index: 51;
-            opacity: 0.9;
-            will-change: transform, opacity;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
-            transition: transform 0.2s ease;
-        }
-        
-        .leaf-object:active {
-            transform: scale(1.2) !important;
-            opacity: 1;
-        }
-        
-        /* Green Leaf Styles */
-        .green-leaf {
-            width: 70px;
-            height: 70px;
-            position: relative;
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-            border-radius: 50% 0 50% 50%;
-            transform: rotate(var(--rotation)) scale(1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
-        
-        /* Ad text inside leaf */
-        .ad-text {
+
+        header {
+            background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
             color: white;
-            font-size: 11px;
-            font-weight: bold;
+            padding: 1.5rem 0;
             text-align: center;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-            padding: 5px;
-            line-height: 1.2;
-            z-index: 2;
-            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        
-        /* Leaf stem */
-        .leaf-stem {
-            position: absolute;
-            width: 4px;
-            height: 25px;
-            background: linear-gradient(to bottom, #8B4513, #5D4037);
-            bottom: -25px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-radius: 2px;
-        }
-        
-        /* Leaf veins */
-        .leaf-veins {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0.4;
-        }
-        
-        .vein {
-            position: absolute;
-            background: #1B5E20;
-            border-radius: 1px;
-        }
-        
-        .vein-main {
-            width: 3px;
-            height: 70%;
-            top: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .vein-side {
-            width: 2px;
-            height: 40%;
-            background: #2E7D32;
-        }
-        
-        .vein-side:nth-child(2) { top: 25%; left: 30%; transform: rotate(-30deg); }
-        .vein-side:nth-child(3) { top: 25%; right: 30%; transform: rotate(30deg); }
-        .vein-side:nth-child(4) { top: 40%; left: 20%; transform: rotate(-45deg); }
-        .vein-side:nth-child(5) { top: 40%; right: 20%; transform: rotate(45deg); }
-        
-        /* Simple Green Orb */
-        .green-orb {
-            width: 65px;
-            height: 65px;
-            position: relative;
-            background: radial-gradient(circle at 30% 30%, #66BB6A, #388E3C);
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 
-                0 0 20px rgba(102, 187, 106, 0.5),
-                inset 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-        
-        /* Eco Badge */
-        .eco-badge {
-            width: 60px;
-            height: 60px;
-            position: relative;
-            background: linear-gradient(135deg, #43A047, #1B5E20);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            border: 2px solid #C8E6C9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Simple Green Square */
-        .green-square {
-            width: 55px;
-            height: 55px;
-            position: relative;
-            background: linear-gradient(45deg, #81C784, #4CAF50);
-            border-radius: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transform: rotate(var(--rotation));
-        }
-        
-        /* Animations */
-        @keyframes floatDown {
-            0% {
-                transform: translateY(-100px) translateX(var(--start-x)) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.9;
-            }
-            90% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--end-x)) rotate(180deg);
-                opacity: 0;
-            }
-        }
-        
-        @keyframes floatUp {
-            0% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--start-x)) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.9;
-            }
-            90% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateY(-100px) translateX(var(--end-x)) rotate(180deg);
-                opacity: 0;
-            }
-        }
-        
-        @keyframes floatSide {
-            0% {
-                transform: translateX(-100px) translateY(var(--start-y)) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.9;
-            }
-            90% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translateX(calc(100vw + 100px)) translateY(var(--end-y)) rotate(180deg);
-                opacity: 0;
-            }
-        }
-        
-        @keyframes leafGlow {
-            0%, 100% { 
-                box-shadow: 
-                    0 0 10px rgba(76, 175, 80, 0.3),
-                    inset 0 0 10px rgba(255, 255, 255, 0.1);
-            }
-            50% { 
-                box-shadow: 
-                    0 0 20px rgba(76, 175, 80, 0.6),
-                    inset 0 0 20px rgba(255, 255, 255, 0.2);
-            }
-        }
-        
-        /* POP-UP BANNER STYLES */
-        .popup-banner {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(90deg, #1a237e, #283593, #3949ab);
-            color: white;
-            padding: 15px 20px;
-            z-index: 200;
-            display: none;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-            border-top: 3px solid #4CAF50;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .popup-banner.show {
-            transform: translateY(0);
-        }
-        
-        .banner-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+
+        .container {
+            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
-            gap: 20px;
+            padding: 2rem 0;
         }
-        
-        .banner-text {
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+
+        @media (min-width: 992px) {
+            .main-content {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .panel {
+            background: white;
+            border-radius: 12px;
+            padding: 1.8rem;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        h2 {
+            color: #3a0ca3;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        h3 {
+            color: #4361ee;
+            margin-bottom: 1rem;
+        }
+
+        .ads-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .ad-item {
+            border: 1px solid #e1e5ee;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            background-color: #f8faff;
+        }
+
+        .ad-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(67, 97, 238, 0.15);
+            border-color: #4361ee;
+        }
+
+        .ad-icon {
+            font-size: 2.5rem;
+            color: #4361ee;
+            margin-bottom: 1rem;
+        }
+
+        .ad-title {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: #333;
+        }
+
+        .ad-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1.2rem;
+        }
+
+        .click-btn {
+            background: linear-gradient(to right, #4361ee, #3a0ca3);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .click-btn:hover {
+            background: linear-gradient(to right, #3a0ca3, #2a0870);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+
+        .click-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
             flex: 1;
         }
-        
-        .banner-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #C5CAE9;
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
-        
-        .banner-message {
-            font-size: 14px;
+
+        .stat-label {
+            font-size: 0.9rem;
             opacity: 0.9;
-            line-height: 1.4;
         }
-        
-        .banner-button {
-            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            border-color: #4361ee;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #f72585, #b5179e);
             color: white;
+            width: 100%;
             border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: bold;
-            font-size: 14px;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            transition: all 0.3s;
         }
-        
-        .banner-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+
+        .submit-btn:hover {
+            background: linear-gradient(to right, #b5179e, #7209b7);
+            box-shadow: 0 4px 12px rgba(247, 37, 133, 0.3);
         }
-        
-        .banner-button:active {
-            transform: translateY(0);
-        }
-        
-        .close-banner {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
+
+        .admin-panel {
+            background: #1a1a2e;
             color: white;
-            width: 30px;
-            height: 30px;
+            border-radius: 12px;
+            padding: 1.8rem;
+            margin-top: 2rem;
+        }
+
+        .admin-panel h2 {
+            color: #4cc9f0;
+            border-bottom-color: #2d2d44;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .admin-stat {
+            background: #2d2d44;
+            padding: 1.2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .admin-stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #4cc9f0;
+        }
+
+        .admin-stat-label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+        }
+
+        .reset-btn {
+            background: #f72585;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .reset-btn:hover {
+            background: #b5179e;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
+
+        .instructions {
+            background-color: #e7f3ff;
+            border-left: 4px solid #4361ee;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .instructions h4 {
+            color: #3a0ca3;
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-counter {
+            display: inline-block;
+            background: #f72585;
+            color: white;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-        
-        .close-banner:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .green-leaf, .green-orb { width: 60px; height: 60px; }
-            .eco-badge, .green-square { width: 55px; height: 55px; }
-            .ad-text { font-size: 10px; }
-            .loader-text { font-size: 20px; }
-            
-            .popup-banner {
-                padding: 12px 15px;
-            }
-            
-            .banner-content {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .banner-title {
-                font-size: 16px;
-            }
-            
-            .banner-message {
-                font-size: 13px;
-            }
-            
-            .banner-button {
-                padding: 10px 20px;
-                font-size: 13px;
-                width: 100%;
-                max-width: 200px;
-            }
-            
-            .close-banner {
-                position: absolute;
-                top: 5px;
-                right: 10px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .green-leaf, .green-orb { width: 55px; height: 55px; }
-            .eco-badge, .green-square { width: 50px; height: 50px; }
-            .ad-text { font-size: 9px; }
-            .loader-text { font-size: 18px; }
-            
-            .popup-banner {
-                padding: 10px 12px;
-            }
-            
-            .banner-title {
-                font-size: 15px;
-            }
-            
-            .banner-message {
-                font-size: 12px;
-            }
-            
-            .banner-button {
-                padding: 9px 18px;
-                font-size: 12px;
-            }
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.8rem;
+            margin-left: 5px;
         }
     </style>
 </head>
 <body>
-    <!-- Game Frame - Full Screen -->
-    <iframe 
-        src="https://html5.gamedistribution.com/e0c6fbe378ad4ed5a1325176324a79dd/?gd_sdk_referrer_url=https://gamedistribution.com/games/foxy-eco-sort/" 
-        id="gameFrame"
-        scrolling="no"
-        frameborder="0"
-        allow="autoplay; fullscreen"
-        allowfullscreen>
-    </iframe>
-    
-    <!-- Loader -->
-    <div class="loader" id="loader">
-        <div class="loader-text">Loading Foxy Eco Sort...</div>
-        <div class="loader-dots">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-    </div>
-    
-    <!-- Floating Leaves Container -->
-    <div id="floatingLeaves"></div>
-    
-    <!-- POP-UP BANNER -->
-    <div class="popup-banner" id="popupBanner">
-        <div class="banner-content">
-            <div class="banner-text">
-                <div class="banner-title">🎮 You’re playing for free anyway !</div>
-                <div class="banner-message">why not watch this ad?!</div>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-ad"></i> Monetag Ads
             </div>
-            <button class="banner-button" id="bannerActionBtn">Watch this ad!</button>
-            <button class="close-banner" id="closeBannerBtn">×</button>
+            <p class="tagline">Κάντε κλικ στις διαφημίσεις για να υποστηρίξετε τον διαγωνισμό και να κερδίσετε δώρα!</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="instructions">
+            <h4><i class="fas fa-info-circle"></i> Οδηγίες Χρήσης</h4>
+            <p>Κάντε κλικ στις διαφημίσεις για να μας βοηθήσετε να κερδίσουμε έσοδα. Κάθε κλικ προσθέτει κέρδη για τον διαγωνισμό. Συμπληρώστε τα στοιχεία σας για να συμμετάσχετε στον διαγωνισμό που θα γίνει με τα κέρδη από τις διαφημίσεις.</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="main-content">
+            <div class="left-column">
+                <div class="panel">
+                    <h2><i class="fas fa-ad"></i> Διαφημίσεις για Κλικ</h2>
+                    <p>Κάντε κλικ στις παρακάτω διαφημίσεις. Κάθε κλικ προσθέτει κέρδη για τον διαγωνισμό. Μπορείτε να κάνετε κλικ σε κάθε διαφήμιση μία φορά.</p>
+                    
+                    <div class="ads-container" id="adsContainer">
+                        <!-- Ads will be generated by JavaScript -->
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalClicks">0</div>
+                            <div class="stat-label">Συνολικά Κλικ</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="totalEarnings">€0.00</div>
+                            <div class="stat-label">Συνολικά Κέρδη</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="adsClicked">0/6</div>
+                            <div class="stat-label">Διαφημίσεις Κλικ</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel">
+                    <h2><i class="fas fa-gift"></i> Συμμετοχή σε Διαγωνισμό</h2>
+                    <p>Συμπληρώστε τα παρακάτω στοιχεία για να συμμετάσχετε στον διαγωνισμό. Ο διαγωνισμός θα γίνει με τα κέρδη από τις διαφημίσεις.</p>
+                    
+                    <form id="contestForm">
+                        <div class="form-group">
+                            <label for="name">Ονοματεπώνυμο:</label>
+                            <input type="text" id="name" name="name" required placeholder="Πληκτρολογήστε το ονοματεπώνυμό σας">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Διεύθυνση Email:</label>
+                            <input type="email" id="email" name="email" required placeholder="Πληκτρολογήστε το email σας">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Τηλέφωνο (προαιρετικά):</label>
+                            <input type="text" id="phone" name="phone" placeholder="Πληκτρολογήστε το τηλέφωνό σας">
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Υποβολή Συμμετοχής
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="panel">
+                    <h2><i class="fas fa-trophy"></i> Πληροφορίες Διαγωνισμού</h2>
+                    <p><strong>Προϋπολογισμός Διαγωνισμού:</strong> <span id="contestBudget">€0.00</span></p>
+                    <p>Ο διαγωνισμός θα πραγματοποιηθεί όταν συγκεντρωθεί αρκετός προϋπολογισμός από τις διαφημίσεις.</p>
+                    
+                    <h3 style="margin-top: 1.5rem;">Κανονισμοί</h3>
+                    <ul style="padding-left: 1.2rem; margin-top: 0.5rem;">
+                        <li>Κάθε χρήστης μπορεί να κάνει κλικ μία φορά σε κάθε διαφήμιση</li>
+                        <li>Κάθε κλικ προσθέτει €0.05-€0.15 στον προϋπολογισμό</li>
+                        <li>Ο διαγωνισμός θα γίνει όταν ο προϋπολογισμός φτάσει τα €50</li>
+                        <li>Ο νικητής θα επιλεγεί τυχαία από όλους τους συμμετέχοντες</li>
+                    </ul>
+                </div>
+                
+                <div class="panel">
+                    <h2><i class="fas fa-users"></i> Στατιστικά Συμμετοχών</h2>
+                    <p><strong>Αριθμός Συμμετεχόντων:</strong> <span id="participantCount">0</span></p>
+                    <p><strong>Κέρδη ανά Συμμετέχοντα:</strong> <span id="earningsPerParticipant">€0.00</span></p>
+                    <p><strong>Εκτιμώμενη Ημερομηνία Διαγωνισμού:</strong> <span id="estimatedDate">Όταν φτάσει στόχος</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Διαχειριστής Panel (κρυφό από κανονικούς χρήστες) -->
+        <div class="admin-panel" id="adminPanel">
+            <h2><i class="fas fa-user-shield"></i> Πίνακας Διαχειριστή (Monetag)</h2>
+            <p>Αυτός ο πίνακας ελέγχου είναι ορατός μόνο σε εσάς (διαχειριστή). Εμφανίζει τα συνολικά στατιστικά και επιτρέπει την επαναφορά.</p>
+            
+            <div class="admin-stats">
+                <div class="admin-stat">
+                    <div class="admin-stat-value" id="adminTotalClicks">0</div>
+                    <div class="admin-stat-label">Συνολικά Κλικ</div>
+                </div>
+                <div class="admin-stat">
+                    <div class="admin-stat-value" id="adminTotalEarnings">€0.00</div>
+                    <div class="admin-stat-label">Συνολικά Κέρδη</div>
+                </div>
+                <div class="admin-stat">
+                    <div class="admin-stat-value" id="adminContestBudget">€0.00</div>
+                    <div class="admin-stat-label">Προϋπολογισμός Διαγωνισμού</div>
+                </div>
+                <div class="admin-stat">
+                    <div class="admin-stat-value" id="adminParticipants">0</div>
+                    <div class="admin-stat-label">Συμμετέχοντες</div>
+                </div>
+            </div>
+            
+            <button class="reset-btn" id="resetBtn">
+                <i class="fas fa-redo"></i> Επαναφορά Στατιστικών
+            </button>
+            <p style="margin-top: 0.8rem; font-size: 0.9rem; color: #aaa;">
+                <i class="fas fa-exclamation-triangle"></i> Προσοχή: Η επαναφορά θα διαγράψει όλα τα δεδομένα.
+            </p>
         </div>
     </div>
 
+    <footer>
+        <div class="container">
+            <p>Αυτή η σελίδα είναι για επίδειξη λειτουργιών Monetag. Τα κέρδη είναι προσομοιωμένα.</p>
+            <p>&copy; 2023 Monetag Ads - Διαγωνισμός. Όλα τα δικαιώματα διατηρούνται.</p>
+        </div>
+    </footer>
+
     <script>
-        // DOM Elements
-        const gameFrame = document.getElementById('gameFrame');
-        const loader = document.getElementById('loader');
-        const floatingLeaves = document.getElementById('floatingLeaves');
-        const popupBanner = document.getElementById('popupBanner');
-        const bannerActionBtn = document.getElementById('bannerActionBtn');
-        const closeBannerBtn = document.getElementById('closeBannerBtn');
-        
-        // Game State
-        let gameLoaded = false;
-        let leavesStarted = false;
-        let activeLeaves = 0;
-        const MAX_LEAVES = 4;
-        let leavesInterval;
-        
-        // Configuration
-        const LEAVES_START_DELAY = 30000; // 30 δευτερόλεπτα
-        const MONETAG_LINK = 'https://otieu.com/4/10021790';
-        
-        // Pop-up Banner Configuration
-        const BANNER_FIRST_DELAY = 45000; // 45 δευτερόλεπτα μετά το φόρτωμα
-        const BANNER_SHOW_DURATION = 15000; // 15 δευτερόλεπτα που μένει ανοιχτό
-        const BANNER_HIDE_DURATION = 45000; // 45 δευτερόλεπτα που μένει κλειστό
-        let bannerInterval;
-        let bannerTimeout;
-        let bannerIsActive = false;
-        
-        // Initialize - Optimized for fast loading
-        function init() {
-            console.log('🍃 Initializing Foxy Eco Sort...');
-            
-            // Set game to full screen
-            setupFullScreenGame();
-            
-            // Hide loader quickly - don't wait for game to fully load
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    gameLoaded = true;
-                    
-                    // Start leaves after 30 seconds
-                    console.log(`⏰ Green leaves will appear in ${LEAVES_START_DELAY/1000} seconds`);
-                    setTimeout(startFloatingLeaves, LEAVES_START_DELAY);
-                    
-                    // Start pop-up banner after 45 seconds
-                    console.log(`⏰ Pop-up banner will appear in ${BANNER_FIRST_DELAY/1000} seconds`);
-                    setTimeout(startBannerCycle, BANNER_FIRST_DELAY);
-                }, 300);
-            }, 1500);
-            
-            // Game frame error handling
-            gameFrame.addEventListener('error', () => {
-                console.log('⚠️ Game frame error');
-            });
-            
-            // Prevent context menu
-            document.addEventListener('contextmenu', (e) => {
-                if (e.target.closest('.leaf-object')) {
-                    e.preventDefault();
-                }
-            });
-            
-            // Banner event handlers
-            bannerActionBtn.addEventListener('click', () => {
-                openMonetagAd();
-                hideBanner();
-            });
-            
-            closeBannerBtn.addEventListener('click', () => {
-                hideBanner();
-                // Reset timer για επόμενη εμφάνιση
-                if (bannerTimeout) clearTimeout(bannerTimeout);
-                bannerTimeout = setTimeout(showBanner, BANNER_HIDE_DURATION);
-            });
-            
-            // Touch events for mobile
-            bannerActionBtn.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(0.98)';
-            }, { passive: true });
-            
-            bannerActionBtn.addEventListener('touchend', function() {
-                this.style.transform = '';
-            }, { passive: true });
-        }
-        
-        // Setup full screen game
-        function setupFullScreenGame() {
-            const updateSize = () => {
-                gameFrame.style.width = window.innerWidth + 'px';
-                gameFrame.style.height = window.innerHeight + 'px';
-            };
-            
-            updateSize();
-            
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(updateSize, 100);
-            });
-            
-            window.addEventListener('orientationchange', () => {
-                setTimeout(updateSize, 150);
-            });
-        }
-        
-        // POP-UP BANNER FUNCTIONS
-        function startBannerCycle() {
-            console.log('🔄 Starting pop-up banner cycle...');
-            showBanner();
-        }
-        
-        function showBanner() {
-            if (bannerIsActive) return;
-            
-            console.log('🔼 Showing pop-up banner');
-            bannerIsActive = true;
-            popupBanner.style.display = 'block';
-            
-            // Force reflow
-            void popupBanner.offsetWidth;
-            
-            // Add show class for animation
-            setTimeout(() => {
-                popupBanner.classList.add('show');
-            }, 10);
-            
-            // Auto-hide after duration
-            bannerTimeout = setTimeout(() => {
-                hideBanner();
-                // Schedule next appearance
-                bannerTimeout = setTimeout(showBanner, BANNER_HIDE_DURATION);
-            }, BANNER_SHOW_DURATION);
-        }
-        
-        function hideBanner() {
-            if (!bannerIsActive) return;
-            
-            console.log('🔽 Hiding pop-up banner');
-            popupBanner.classList.remove('show');
-            
-            // Wait for animation to complete before hiding
-            setTimeout(() => {
-                if (!popupBanner.classList.contains('show')) {
-                    popupBanner.style.display = 'none';
-                    bannerIsActive = false;
-                }
-            }, 400);
-        }
-        
-        function openMonetagAd() {
-            console.log('🔗 Opening Monetag ad...');
-            window.open(MONETAG_LINK, '_blank');
-        }
-        
-        // Create green leaf with ad text
-        function createGreenLeaf() {
-            if (activeLeaves >= MAX_LEAVES || !leavesStarted) return;
-            
-            const leafTypes = [
-                { 
-                    type: 'green-leaf', 
-                    name: 'Green Leaf',
-                    animation: 'floatDown',
-                    duration: 15 + Math.random() * 10,
-                    adText: 'Click for\nAD'
-                },
-                { 
-                    type: 'green-leaf', 
-                    name: 'Green Leaf',
-                    animation: 'floatUp', 
-                    duration: 18 + Math.random() * 8,
-                    adText: 'Watch\nAD'
-                },
-                { 
-                    type: 'green-orb', 
-                    name: 'Green Orb',
-                    animation: 'floatDown',
-                    duration: 16 + Math.random() * 9,
-                    adText: 'AD Here'
-                },
-                { 
-                    type: 'eco-badge', 
-                    name: 'Eco Badge',
-                    animation: 'floatSide',
-                    duration: 20 + Math.random() * 5,
-                    adText: 'Support\nUs'
-                },
-                { 
-                    type: 'green-square', 
-                    name: 'Green Square',
-                    animation: 'floatUp',
-                    duration: 14 + Math.random() * 11,
-                    adText: 'Click\nMe'
-                }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Αρχικά δεδομένα
+            const ads = [
+                { id: 1, title: "Νέο Smartphone", desc: "Ανακάλυψτε το τελευταίο μοντέλο", icon: "fas fa-mobile-alt", clicked: false },
+                { id: 2, title: "Ταξίδια", desc: "Εκπληκτικές προσφορές για διακοπές", icon: "fas fa-plane", clicked: false },
+                { id: 3, title: "Online Μαθήματα", desc: "Μάθετε νέες δεξιότητες", icon: "fas fa-graduation-cap", clicked: false },
+                { id: 4, title: "Τράπεζα", desc: "Ειδικά πακέτα για νέους", icon: "fas fa-university", clicked: false },
+                { id: 5, title: "Αθλητικά Είδη", desc: "Εξοπλισμός για όλα τα αθλήματα", icon: "fas fa-futbol", clicked: false },
+                { id: 6, title: "Τρόφιμα", desc: "Φρέσκα προϊόντα στο σπίτι σας", icon: "fas fa-shopping-cart", clicked: false }
             ];
             
-            const leafType = leafTypes[Math.floor(Math.random() * leafTypes.length)];
-            const rotation = Math.random() * 360;
+            let totalClicks = 0;
+            let totalEarnings = 0;
+            let contestBudget = 0;
+            let participants = [];
+            let adsClicked = 0;
             
-            const leafObject = document.createElement('div');
-            leafObject.className = `leaf-object ${leafType.type}`;
-            leafObject.style.setProperty('--rotation', `${rotation}deg`);
-            leafObject.style.cursor = 'pointer';
-            
-            // Create leaf element
-            const leaf = document.createElement('div');
-            leaf.className = leafType.type;
-            
-            // Add glow animation to green leaf
-            if (leafType.type === 'green-leaf') {
-                leaf.style.animation = 'leafGlow 3s infinite alternate';
+            // Φόρτωση δεδομένων από localStorage
+            function loadData() {
+                const savedClicks = localStorage.getItem('totalClicks');
+                const savedEarnings = localStorage.getItem('totalEarnings');
+                const savedBudget = localStorage.getItem('contestBudget');
+                const savedParticipants = localStorage.getItem('participants');
+                const savedAds = localStorage.getItem('adsClickedStatus');
                 
-                // Add veins
-                const veins = document.createElement('div');
-                veins.className = 'leaf-veins';
-                
-                const mainVein = document.createElement('div');
-                mainVein.className = 'vein vein-main';
-                veins.appendChild(mainVein);
-                
-                for (let i = 0; i < 4; i++) {
-                    const sideVein = document.createElement('div');
-                    sideVein.className = 'vein vein-side';
-                    veins.appendChild(sideVein);
+                if (savedClicks) totalClicks = parseInt(savedClicks);
+                if (savedEarnings) totalEarnings = parseFloat(savedEarnings);
+                if (savedBudget) contestBudget = parseFloat(savedBudget);
+                if (savedParticipants) participants = JSON.parse(savedParticipants);
+                if (savedAds) {
+                    const clickedStatus = JSON.parse(savedAds);
+                    ads.forEach(ad => {
+                        if (clickedStatus[ad.id]) {
+                            ad.clicked = clickedStatus[ad.id];
+                            if (ad.clicked) adsClicked++;
+                        }
+                    });
                 }
                 
-                leaf.appendChild(veins);
-                
-                // Add stem
-                const stem = document.createElement('div');
-                stem.className = 'leaf-stem';
-                leaf.appendChild(stem);
+                updateUI();
             }
             
-            // Add AD text inside ALL leaves
-            const adText = document.createElement('div');
-            adText.className = 'ad-text';
-            adText.textContent = leafType.adText;
-            leaf.appendChild(adText);
-            
-            leafObject.appendChild(leaf);
-            
-            // Set position and animation
-            if (leafType.animation === 'floatDown' || leafType.animation === 'floatUp') {
-                const startX = Math.random() * window.innerWidth;
-                const endX = startX + (Math.random() * 80 - 40);
-                leafObject.style.setProperty('--start-x', `${startX}px`);
-                leafObject.style.setProperty('--end-x', `${endX}px`);
-            } else {
-                const startY = Math.random() * window.innerHeight;
-                const endY = startY + (Math.random() * 80 - 40);
-                leafObject.style.setProperty('--start-y', `${startY}px`);
-                leafObject.style.setProperty('--end-y', `${endY}px`);
+            // Αποθήκευση δεδομένων στο localStorage
+            function saveData() {
+                localStorage.setItem('totalClicks', totalClicks);
+                localStorage.setItem('totalEarnings', totalEarnings);
+                localStorage.setItem('contestBudget', contestBudget);
+                localStorage.setItem('participants', JSON.stringify(participants));
+                
+                const clickedStatus = {};
+                ads.forEach(ad => {
+                    clickedStatus[ad.id] = ad.clicked;
+                });
+                localStorage.setItem('adsClickedStatus', JSON.stringify(clickedStatus));
             }
             
-            leafObject.style.animation = `${leafType.animation} ${leafType.duration}s linear forwards`;
-            leafObject.style.left = '0px';
-            leafObject.style.top = '0px';
+            // Ενημέρωση του UI με τα τρέχοντα δεδομένα
+            function updateUI() {
+                // Ενημέρωση βασικών στατιστικών
+                document.getElementById('totalClicks').textContent = totalClicks;
+                document.getElementById('totalEarnings').textContent = `€${totalEarnings.toFixed(2)}`;
+                document.getElementById('adsClicked').textContent = `${adsClicked}/${ads.length}`;
+                
+                // Ενημέρωση προϋπολογισμού διαγωνισμού
+                document.getElementById('contestBudget').textContent = `€${contestBudget.toFixed(2)}`;
+                
+                // Ενημέρωση στατιστικών συμμετοχών
+                document.getElementById('participantCount').textContent = participants.length;
+                const earningsPer = participants.length > 0 ? (contestBudget / participants.length).toFixed(2) : "0.00";
+                document.getElementById('earningsPerParticipant').textContent = `€${earningsPer}`;
+                
+                // Ενημέρωση εκτιμώμενης ημερομηνίας διαγωνισμού
+                const estimatedDate = calculateEstimatedDate();
+                document.getElementById('estimatedDate').textContent = estimatedDate;
+                
+                // Ενημέρωση πίνακα διαχειριστή
+                document.getElementById('adminTotalClicks').textContent = totalClicks;
+                document.getElementById('adminTotalEarnings').textContent = `€${totalEarnings.toFixed(2)}`;
+                document.getElementById('adminContestBudget').textContent = `€${contestBudget.toFixed(2)}`;
+                document.getElementById('adminParticipants').textContent = participants.length;
+                
+                // Ανανέωση διαφημίσεων
+                renderAds();
+            }
             
-            // Click event for Monetag ad
-            const handleClick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            // Υπολογισμός εκτιμώμενης ημερομηνίας διαγωνισμού
+            function calculateEstimatedDate() {
+                if (contestBudget >= 50) {
+                    return "Έτοιμο για διεξαγωγή!";
+                }
                 
-                // Visual feedback
-                leafObject.style.transform = 'scale(1.3) rotate(10deg)';
-                leafObject.style.opacity = '0.7';
-                leafObject.style.transition = 'all 0.2s ease';
+                const remaining = 50 - contestBudget;
+                const daysNeeded = Math.ceil(remaining / 0.5); // Υποθέτουμε €0.5 κέρδη ανά ημέρα
                 
-                // Open Monetag ad in new tab
-                openMonetagAd();
+                if (daysNeeded <= 0) return "Σύντομα";
                 
-                // Remove leaf after animation
-                setTimeout(() => {
-                    if (leafObject.parentNode) {
-                        leafObject.style.opacity = '0';
-                        leafObject.style.transform = 'scale(0.5)';
-                        setTimeout(() => {
-                            if (leafObject.parentNode) {
-                                leafObject.remove();
-                                activeLeaves--;
-                            }
-                        }, 200);
+                const today = new Date();
+                today.setDate(today.getDate() + daysNeeded);
+                
+                return today.toLocaleDateString('el-GR', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+            
+            // Δημιουργία διαφημίσεων
+            function renderAds() {
+                const adsContainer = document.getElementById('adsContainer');
+                adsContainer.innerHTML = '';
+                
+                ads.forEach(ad => {
+                    const adElement = document.createElement('div');
+                    adElement.className = 'ad-item';
+                    adElement.innerHTML = `
+                        <div class="ad-icon">
+                            <i class="${ad.icon}"></i>
+                        </div>
+                        <div class="ad-title">${ad.title}</div>
+                        <div class="ad-desc">${ad.desc}</div>
+                        <button class="click-btn" id="adBtn${ad.id}" ${ad.clicked ? 'disabled' : ''}>
+                            ${ad.clicked ? 'Κλικ Επιτυχές!' : 'Κάντε Κλικ Εδώ'}
+                        </button>
+                    `;
+                    
+                    // Προσθήκη event listener για κλικ
+                    if (!ad.clicked) {
+                        adElement.querySelector('button').addEventListener('click', () => clickAd(ad.id));
                     }
-                }, 300);
-            };
+                    
+                    adsContainer.appendChild(adElement);
+                });
+            }
             
-            leafObject.addEventListener('click', handleClick);
-            leafObject.addEventListener('touchstart', handleClick, { passive: false });
+            // Χειρισμός κλικ σε διαφήμιση
+            function clickAd(adId) {
+                const adIndex = ads.findIndex(ad => ad.id === adId);
+                if (adIndex === -1 || ads[adIndex].clicked) return;
+                
+                // Ενημέρωση κατάστασης διαφήμισης
+                ads[adIndex].clicked = true;
+                adsClicked++;
+                
+                // Δημιουργία τυχαίου κέρδους (€0.05 - €0.15)
+                const earnings = (Math.random() * 0.1 + 0.05);
+                
+                // Ενημέρωση στατιστικών
+                totalClicks++;
+                totalEarnings += earnings;
+                contestBudget += earnings;
+                
+                // Αποθήκευση και ενημέρωση UI
+                saveData();
+                updateUI();
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                showMessage(`Ευχαριστούμε για το κλικ! Κερδίσατε €${earnings.toFixed(2)} για τον διαγωνισμό.`, 'success');
+                
+                // Ενημέρωση κουμπιού διαφήμισης
+                const adButton = document.getElementById(`adBtn${adId}`);
+                adButton.textContent = 'Κλικ Επιτυχές!';
+                adButton.disabled = true;
+            }
             
-            // Touch feedback
-            leafObject.addEventListener('touchstart', function() {
-                this.style.transform = 'scale(1.15)';
-            }, { passive: true });
-            
-            leafObject.addEventListener('touchend', function() {
-                this.style.transform = '';
-            }, { passive: true });
-            
-            // Remove when animation completes
-            setTimeout(() => {
-                if (leafObject.parentNode) {
-                    leafObject.remove();
-                    activeLeaves--;
+            // Χειρισμός υποβολής φόρμας διαγωνισμού
+            document.getElementById('contestForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                
+                // Έλεγχος αν ο χρήστης έχει συμμετάσχει ήδη
+                const existingParticipant = participants.find(p => p.email === email);
+                if (existingParticipant) {
+                    showMessage('Έχετε ήδη συμμετάσχει στον διαγωνισμό με αυτό το email.', 'error');
+                    return;
                 }
-            }, leafType.duration * 1000);
+                
+                // Προσθήκη νέου συμμετέχοντα
+                const newParticipant = {
+                    id: Date.now(),
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    date: new Date().toISOString()
+                };
+                
+                participants.push(newParticipant);
+                
+                // Αποθήκευση και ενημέρωση UI
+                saveData();
+                updateUI();
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                showMessage(`Συμμετείχατε επιτυχώς στον διαγωνισμό! Είστε ο/η ${participants.length}ος συμμετέχων.`, 'success');
+                
+                // Επαναφορά φόρμας
+                document.getElementById('contestForm').reset();
+            });
             
-            floatingLeaves.appendChild(leafObject);
-            activeLeaves++;
-        }
-        
-        // Start floating leaves after 30 seconds
-        function startFloatingLeaves() {
-            if (leavesStarted) return;
-            
-            leavesStarted = true;
-            console.log('🍃 Starting green leaves with ads...');
-            
-            // Initial leaves
-            setTimeout(() => createGreenLeaf(), 0);
-            setTimeout(() => createGreenLeaf(), 800);
-            setTimeout(() => createGreenLeaf(), 1600);
-            
-            // Continuous spawn every 8-12 seconds
-            leavesInterval = setInterval(() => {
-                if (leavesStarted && activeLeaves < MAX_LEAVES) {
-                    createGreenLeaf();
+            // Επαναφορά στατιστικών (για διαχειριστή)
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                if (confirm('Είστε σίγουρος ότι θέλετε να επαναφέρετε όλα τα στατιστικά; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.')) {
+                    // Επαναφορά όλων των δεδομένων
+                    totalClicks = 0;
+                    totalEarnings = 0;
+                    contestBudget = 0;
+                    participants = [];
+                    adsClicked = 0;
+                    
+                    // Επαναφορά κατάστασης διαφημίσεων
+                    ads.forEach(ad => ad.clicked = false);
+                    
+                    // Καθαρισμός localStorage
+                    localStorage.clear();
+                    
+                    // Ενημέρωση UI
+                    updateUI();
+                    
+                    // Εμφάνιση μηνύματος
+                    showMessage('Όλα τα στατιστικά επαναφέρθηκαν επιτυχώς.', 'success');
                 }
-            }, 8000 + Math.random() * 4000);
-        }
-        
-        // Cleanup intervals on page unload
-        window.addEventListener('beforeunload', () => {
-            if (leavesInterval) clearInterval(leavesInterval);
-            if (bannerInterval) clearInterval(bannerInterval);
-            if (bannerTimeout) clearTimeout(bannerTimeout);
+            });
+            
+            // Εμφάνιση μηνυμάτων
+            function showMessage(text, type) {
+                const messageEl = document.getElementById('message');
+                messageEl.textContent = text;
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+                
+                // Αυτόματη απόκρυψη μηνύματος μετά από 5 δευτερόλεπτα
+                setTimeout(() => {
+                    messageEl.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Προσθήκη κρυφής λειτουργίας για εμφάνιση/απόκρυψη πίνακα διαχειριστή
+            let adminVisible = localStorage.getItem('adminVisible') === 'true';
+            document.getElementById('adminPanel').style.display = adminVisible ? 'block' : 'none';
+            
+            // Προσθήκη συντομεύσεων πληκτρολογίου για διαχειριστή (Ctrl+Shift+A)
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                    adminVisible = !adminVisible;
+                    document.getElementById('adminPanel').style.display = adminVisible ? 'block' : 'none';
+                    localStorage.setItem('adminVisible', adminVisible);
+                    showMessage(`Πίνακας Διαχειριστή ${adminVisible ? 'Ενεργοποιήθηκε' : 'Απενεργοποιήθηκε'}`, 'success');
+                }
+            });
+            
+            // Προετοιμασία αρχικών δεδομένων
+            loadData();
         });
-        
-        // Start everything immediately
-        document.addEventListener('DOMContentLoaded', init);
-        
-        // Fallback for fast loading
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
     </script>
 </body>
 </html>
