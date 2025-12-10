@@ -92,86 +92,50 @@
             z-index: 50;
         }
         
-        /* Enhanced Leaf Objects */
+        /* Leaf Objects */
         .leaf-object {
             position: absolute;
             pointer-events: auto;
             cursor: pointer;
             touch-action: none;
             z-index: 51;
-            opacity: 0.95;
-            will-change: transform, opacity, filter;
-            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.3));
-            
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            
-            animation: leafGlow 3s infinite alternate ease-in-out;
+            opacity: 0.9;
+            will-change: transform, opacity;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
         }
         
-        /* Hover effect for desktop */
-        .leaf-object:hover {
-            transform: scale(1.2) rotateY(10deg) !important;
-            filter: drop-shadow(0 8px 20px rgba(76, 175, 80, 0.6));
-            z-index: 52;
-        }
-        
-        /* Click effect */
         .leaf-object:active {
-            transform: scale(1.3) !important;
+            transform: scale(1.2) !important;
             opacity: 1;
-            filter: drop-shadow(0 0 25px rgba(76, 175, 80, 0.9));
-            animation: leafPulse 0.3s ease-out;
         }
         
-        /* Realistic Leaf Design */
-        .realistic-leaf {
-            width: 85px;
+        /* Green Leaf Styles */
+        .green-leaf {
+            width: 70px;
             height: 70px;
             position: relative;
-            background: linear-gradient(135deg, 
-                #2E7D32 0%,
-                #4CAF50 30%,
-                #81C784 60%,
-                #C8E6C9 100%);
-            border-radius: 60% 0 60% 0;
-            transform: rotate(var(--rotation, 0deg)) scale(1);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(var(--rotation)) scale(1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
             overflow: hidden;
-            
-            /* Leaf texture */
-            background-image: 
-                radial-gradient(circle at 30% 40%, rgba(255,255,255,0.2) 2%, transparent 15%),
-                radial-gradient(circle at 70% 60%, rgba(0,0,0,0.1) 2%, transparent 15%),
-                linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-            
-            /* Leaf edges */
-            box-shadow: 
-                inset 0 0 15px rgba(255, 255, 255, 0.1),
-                inset 0 0 25px rgba(0, 0, 0, 0.15),
-                0 4px 12px rgba(0, 0, 0, 0.25);
-            
-            /* Serrated edges effect */
-            &::before {
-                content: '';
-                position: absolute;
-                top: -2px;
-                left: -2px;
-                right: -2px;
-                bottom: -2px;
-                background: 
-                    radial-gradient(circle at 0% 0%, #4CAF50 2px, transparent 3px),
-                    radial-gradient(circle at 0% 100%, #4CAF50 2px, transparent 3px),
-                    radial-gradient(circle at 100% 0%, #4CAF50 2px, transparent 3px),
-                    radial-gradient(circle at 100% 100%, #4CAF50 2px, transparent 3px);
-                border-radius: 60% 0 60% 0;
-                z-index: -1;
-                opacity: 0.5;
-            }
+        }
+        
+        /* Ad text inside leaf */
+        .ad-text {
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            padding: 5px;
+            line-height: 1.2;
+            z-index: 2;
+            position: relative;
         }
         
         /* Leaf stem */
@@ -179,27 +143,11 @@
             position: absolute;
             width: 4px;
             height: 25px;
-            background: linear-gradient(to bottom, #5D4037, #3E2723, #5D4037);
+            background: linear-gradient(to bottom, #8B4513, #5D4037);
             bottom: -25px;
             left: 50%;
             transform: translateX(-50%);
             border-radius: 2px;
-            box-shadow: 
-                inset 0 0 3px rgba(0,0,0,0.3),
-                0 2px 4px rgba(0,0,0,0.2);
-            
-            /* Stem details */
-            &::before {
-                content: '';
-                position: absolute;
-                top: -2px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 6px;
-                height: 4px;
-                background: #4CAF50;
-                border-radius: 50%;
-            }
         }
         
         /* Leaf veins */
@@ -208,281 +156,154 @@
             width: 100%;
             height: 100%;
             opacity: 0.4;
-            z-index: 1;
         }
         
         .vein {
             position: absolute;
-            background: linear-gradient(to right, #1B5E20, #388E3C);
+            background: #1B5E20;
             border-radius: 1px;
-            filter: drop-shadow(0 0 1px rgba(27, 94, 32, 0.5));
         }
         
         .vein-main {
             width: 3px;
-            height: 85%;
-            top: 7.5%;
+            height: 70%;
+            top: 15%;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(to bottom, #1B5E20, #66BB6A);
-            border-radius: 1.5px;
         }
         
         .vein-side {
-            width: 1.5px;
+            width: 2px;
             height: 40%;
-            background: linear-gradient(to bottom right, #388E3C, #81C784);
-            opacity: 0.8;
+            background: #2E7D32;
         }
         
-        .vein-side:nth-child(2) { 
-            top: 15%; 
-            left: 30%; 
-            transform: rotate(-25deg); 
-        }
-        .vein-side:nth-child(3) { 
-            top: 15%; 
-            right: 30%; 
-            transform: rotate(25deg); 
-        }
-        .vein-side:nth-child(4) { 
-            top: 35%; 
-            left: 20%; 
-            transform: rotate(-40deg); 
-            height: 35%;
-        }
-        .vein-side:nth-child(5) { 
-            top: 35%; 
-            right: 20%; 
-            transform: rotate(40deg); 
-            height: 35%;
-        }
-        .vein-side:nth-child(6) { 
-            top: 55%; 
-            left: 25%; 
-            transform: rotate(-50deg); 
-            height: 30%;
-        }
-        .vein-side:nth-child(7) { 
-            top: 55%; 
-            right: 25%; 
-            transform: rotate(50deg); 
-            height: 30%;
-        }
-        .vein-side:nth-child(8) { 
-            top: 70%; 
-            left: 30%; 
-            transform: rotate(-60deg); 
-            height: 25%;
-        }
-        .vein-side:nth-child(9) { 
-            top: 70%; 
-            right: 30%; 
-            transform: rotate(60deg); 
-            height: 25%;
-        }
+        .vein-side:nth-child(2) { top: 25%; left: 30%; transform: rotate(-30deg); }
+        .vein-side:nth-child(3) { top: 25%; right: 30%; transform: rotate(30deg); }
+        .vein-side:nth-child(4) { top: 40%; left: 20%; transform: rotate(-45deg); }
+        .vein-side:nth-child(5) { top: 40%; right: 20%; transform: rotate(45deg); }
         
-        /* AD text - Modern design */
-        .ad-text {
-            color: white;
-            font-size: 11px;
-            font-weight: 800;
-            text-align: center;
-            text-shadow: 
-                1px 1px 3px rgba(0,0,0,0.8),
-                0 0 8px rgba(255,255,255,0.4),
-                0 0 15px rgba(76, 175, 80, 0.5);
-            padding: 8px;
-            line-height: 1.3;
-            z-index: 3;
+        /* Simple Green Orb */
+        .green-orb {
+            width: 65px;
+            height: 65px;
             position: relative;
-            letter-spacing: 0.3px;
-            text-transform: uppercase;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-            margin: 5px;
-            backdrop-filter: blur(2px);
-            
-            animation: textGlow 2s infinite alternate;
+            background: radial-gradient(circle at 30% 30%, #66BB6A, #388E3C);
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 20px rgba(102, 187, 106, 0.5),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
         }
         
-        /* Enhanced animations */
+        /* Eco Badge */
+        .eco-badge {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #43A047, #1B5E20);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            border: 2px solid #C8E6C9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Simple Green Square */
+        .green-square {
+            width: 55px;
+            height: 55px;
+            position: relative;
+            background: linear-gradient(45deg, #81C784, #4CAF50);
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(var(--rotation));
+        }
+        
+        /* Animations */
         @keyframes floatDown {
             0% {
-                transform: translateY(-150px) translateX(var(--start-x)) rotate(0deg) scale(0.8);
+                transform: translateY(-100px) translateX(var(--start-x)) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.95;
-                transform: translateY(-120px) translateX(var(--start-x)) rotate(5deg) scale(0.9);
-                animation-timing-function: ease-out;
-            }
-            25% {
-                transform: translateY(0) translateX(calc(var(--start-x) + var(--sway, 0px))) rotate(15deg) scale(1);
-            }
-            50% {
-                transform: translateY(calc(50vh - 50px)) translateX(calc(var(--start-x) + var(--sway, 0px) * 2)) rotate(45deg) scale(1.05);
-                filter: drop-shadow(0 5px 15px rgba(76, 175, 80, 0.5));
-            }
-            75% {
-                transform: translateY(calc(75vh - 25px)) translateX(calc(var(--start-x) + var(--sway, 0px) * 1.5)) rotate(90deg) scale(1);
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.95;
-                transform: translateY(calc(100vh - 10px)) translateX(calc(var(--start-x) + var(--sway, 0px))) rotate(120deg) scale(0.9);
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--end-x)) rotate(180deg) scale(0.8);
+                transform: translateY(calc(100vh + 100px)) translateX(var(--end-x)) rotate(180deg);
                 opacity: 0;
             }
         }
         
         @keyframes floatUp {
             0% {
-                transform: translateY(calc(100vh + 100px)) translateX(var(--start-x)) rotate(180deg) scale(0.8);
+                transform: translateY(calc(100vh + 100px)) translateX(var(--start-x)) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.95;
-                transform: translateY(calc(100vh - 20px)) translateX(var(--start-x)) rotate(150deg) scale(0.9);
-            }
-            25% {
-                transform: translateY(calc(75vh)) translateX(calc(var(--start-x) + var(--sway, 0px))) rotate(120deg) scale(1);
-            }
-            50% {
-                transform: translateY(calc(50vh - 50px)) translateX(calc(var(--start-x) + var(--sway, 0px) * 2)) rotate(90deg) scale(1.05);
-                filter: drop-shadow(0 5px 15px rgba(76, 175, 80, 0.5));
-            }
-            75% {
-                transform: translateY(calc(25vh)) translateX(calc(var(--start-x) + var(--sway, 0px) * 1.5)) rotate(60deg) scale(1);
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.95;
-                transform: translateY(10px) translateX(calc(var(--start-x) + var(--sway, 0px))) rotate(30deg) scale(0.9);
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(-150px) translateX(var(--end-x)) rotate(0deg) scale(0.8);
+                transform: translateY(-100px) translateX(var(--end-x)) rotate(180deg);
                 opacity: 0;
             }
         }
         
         @keyframes floatSide {
             0% {
-                transform: translateX(-150px) translateY(var(--start-y)) rotate(-45deg) scale(0.8);
+                transform: translateX(-100px) translateY(var(--start-y)) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.95;
-                transform: translateX(-100px) translateY(var(--start-y)) rotate(-30deg) scale(0.9);
-            }
-            30% {
-                transform: translateX(calc(25vw)) translateY(calc(var(--start-y) + var(--sway, 0px))) rotate(0deg) scale(1);
-            }
-            50% {
-                transform: translateX(calc(50vw - 50px)) translateY(calc(var(--start-y) + var(--sway, 0px) * 2)) rotate(45deg) scale(1.05);
-                filter: drop-shadow(5px 5px 15px rgba(76, 175, 80, 0.4));
-            }
-            70% {
-                transform: translateX(calc(75vw)) translateY(calc(var(--start-y) + var(--sway, 0px) * 1.5)) rotate(90deg) scale(1);
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.95;
-                transform: translateX(calc(100vw - 20px)) translateY(calc(var(--start-y) + var(--sway, 0px))) rotate(120deg) scale(0.9);
+                opacity: 0.9;
             }
             100% {
-                transform: translateX(calc(100vw + 150px)) translateY(var(--end-y)) rotate(180deg) scale(0.8);
+                transform: translateX(calc(100vw + 100px)) translateY(var(--end-y)) rotate(180deg);
                 opacity: 0;
             }
         }
         
         @keyframes leafGlow {
             0%, 100% { 
-                filter: drop-shadow(0 2px 8px rgba(76, 175, 80, 0.3));
+                box-shadow: 
+                    0 0 10px rgba(76, 175, 80, 0.3),
+                    inset 0 0 10px rgba(255, 255, 255, 0.1);
             }
             50% { 
-                filter: drop-shadow(0 4px 20px rgba(76, 175, 80, 0.6));
+                box-shadow: 
+                    0 0 20px rgba(76, 175, 80, 0.6),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
             }
         }
         
-        @keyframes leafPulse {
-            0% { 
-                transform: scale(1.1); 
-                filter: drop-shadow(0 0 20px rgba(76, 175, 80, 0.6));
-            }
-            50% { 
-                transform: scale(1.3); 
-                filter: drop-shadow(0 0 35px rgba(76, 175, 80, 0.9));
-            }
-            100% { 
-                transform: scale(1.4); 
-                opacity: 0.8;
-            }
-        }
-        
-        @keyframes textGlow {
-            0% { 
-                text-shadow: 
-                    1px 1px 3px rgba(0,0,0,0.8),
-                    0 0 8px rgba(255,255,255,0.4),
-                    0 0 15px rgba(76, 175, 80, 0.5);
-            }
-            100% { 
-                text-shadow: 
-                    1px 1px 3px rgba(0,0,0,0.8),
-                    0 0 12px rgba(255,255,255,0.6),
-                    0 0 25px rgba(76, 175, 80, 0.8);
-            }
-        }
-        
-        @keyframes leafWobble {
-            0%, 100% { 
-                transform: rotate(var(--rotation, 0deg)) scale(1); 
-            }
-            33% { 
-                transform: rotate(calc(var(--rotation, 0deg) - 2deg)) scale(1.02); 
-            }
-            66% { 
-                transform: rotate(calc(var(--rotation, 0deg) + 2deg)) scale(1.01); 
-            }
-        }
-        
-        /* Responsive design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .realistic-leaf { 
-                width: 75px; 
-                height: 62px; 
-            }
-            .ad-text { 
-                font-size: 10px; 
-                padding: 6px; 
-            }
-            
-            .leaf-object:hover {
-                transform: scale(1.15) !important;
-            }
+            .green-leaf, .green-orb { width: 60px; height: 60px; }
+            .eco-badge, .green-square { width: 55px; height: 55px; }
+            .ad-text { font-size: 10px; }
+            .loader-text { font-size: 20px; }
         }
         
         @media (max-width: 480px) {
-            .realistic-leaf { 
-                width: 70px; 
-                height: 58px; 
-            }
-            .ad-text { 
-                font-size: 9px; 
-                padding: 5px; 
-            }
-            .leaf-stem {
-                height: 20px;
-                bottom: -20px;
-            }
-        }
-        
-        /* Reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            .leaf-object,
-            .ad-text {
-                animation: none !important;
-            }
+            .green-leaf, .green-orb { width: 55px; height: 55px; }
+            .eco-badge, .green-square { width: 50px; height: 50px; }
+            .ad-text { font-size: 9px; }
+            .loader-text { font-size: 18px; }
         }
     </style>
 </head>
@@ -520,21 +341,21 @@
         let gameLoaded = false;
         let leavesStarted = false;
         let activeLeaves = 0;
-        const MAX_LEAVES = 5; // Increased for better visual
+        const MAX_LEAVES = 4;
         let leavesInterval;
         
         // Configuration
         const LEAVES_START_DELAY = 60000; // 1 λεπτό = 60 δευτερόλεπτα
         const MONETAG_LINK = 'https://otieu.com/4/10274068';
         
-        // Initialize
+        // Initialize - Optimized for fast loading
         function init() {
-            console.log('🍃 Initializing Foxy Eco Sort with realistic leaves...');
+            console.log('🍃 Initializing Foxy Eco Sort...');
             
             // Set game to full screen
             setupFullScreenGame();
             
-            // Hide loader
+            // Hide loader quickly - don't wait for game to fully load
             setTimeout(() => {
                 loader.style.opacity = '0';
                 setTimeout(() => {
@@ -542,17 +363,17 @@
                     gameLoaded = true;
                     
                     // Start leaves after 1 minute
-                    console.log(`⏰ Realistic leaves will appear in ${LEAVES_START_DELAY/1000} seconds`);
+                    console.log(`⏰ Green leaves will appear in ${LEAVES_START_DELAY/1000} seconds`);
                     setTimeout(startFloatingLeaves, LEAVES_START_DELAY);
                 }, 300);
-            }, 1500);
+            }, 1500); // Faster loader (1.5 seconds instead of 2)
             
             // Game frame error handling
             gameFrame.addEventListener('error', () => {
                 console.log('⚠️ Game frame error');
             });
             
-            // Prevent context menu on leaves
+            // Prevent context menu
             document.addEventListener('contextmenu', (e) => {
                 if (e.target.closest('.leaf-object')) {
                     e.preventDefault();
@@ -569,6 +390,7 @@
             
             updateSize();
             
+            // Throttle resize events
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -580,139 +402,131 @@
             });
         }
         
-        // Create realistic leaf with ad text
-        function createRealisticLeaf() {
+        // Create green leaf with ad text
+        function createGreenLeaf() {
             if (activeLeaves >= MAX_LEAVES || !leavesStarted) return;
             
-            const leafConfigs = [
+            const leafTypes = [
                 { 
+                    type: 'green-leaf', 
+                    name: 'Green Leaf',
                     animation: 'floatDown',
-                    duration: 20 + Math.random() * 15,
-                    adText: 'CLICK\nFOR AD',
-                    sway: Math.random() * 120 - 60,
-                    rotation: Math.random() * 360
+                    duration: 15 + Math.random() * 10,
+                    adText: 'Click for\nAD'
                 },
                 { 
+                    type: 'green-leaf', 
+                    name: 'Green Leaf',
                     animation: 'floatUp', 
-                    duration: 22 + Math.random() * 12,
-                    adText: 'WATCH\nAD NOW',
-                    sway: Math.random() * 100 - 50,
-                    rotation: Math.random() * 360
+                    duration: 18 + Math.random() * 8,
+                    adText: 'Watch\nAD'
                 },
                 { 
-                    animation: 'floatSide',
-                    duration: 25 + Math.random() * 10,
-                    adText: 'SUPPORT\nUS',
-                    sway: Math.random() * 80 - 40,
-                    rotation: Math.random() * 360
-                },
-                { 
+                    type: 'green-orb', 
+                    name: 'Green Orb',
                     animation: 'floatDown',
-                    duration: 18 + Math.random() * 14,
-                    adText: 'AD\nHERE',
-                    sway: Math.random() * 90 - 45,
-                    rotation: Math.random() * 360
+                    duration: 16 + Math.random() * 9,
+                    adText: 'AD Here'
+                },
+                { 
+                    type: 'eco-badge', 
+                    name: 'Eco Badge',
+                    animation: 'floatSide',
+                    duration: 20 + Math.random() * 5,
+                    adText: 'Support\nUs'
+                },
+                { 
+                    type: 'green-square', 
+                    name: 'Green Square',
+                    animation: 'floatUp',
+                    duration: 14 + Math.random() * 11,
+                    adText: 'Click\nMe'
                 }
             ];
             
-            const config = leafConfigs[Math.floor(Math.random() * leafConfigs.length)];
+            const leafType = leafTypes[Math.floor(Math.random() * leafTypes.length)];
+            const rotation = Math.random() * 360;
             
             const leafObject = document.createElement('div');
-            leafObject.className = 'leaf-object';
-            leafObject.style.setProperty('--rotation', `${config.rotation}deg`);
+            leafObject.className = `leaf-object ${leafType.type}`;
+            leafObject.style.setProperty('--rotation', `${rotation}deg`);
             
-            // Create realistic leaf element
+            // Create leaf element
             const leaf = document.createElement('div');
-            leaf.className = 'realistic-leaf';
+            leaf.className = leafType.type;
             
-            // Add detailed veins
-            const veins = document.createElement('div');
-            veins.className = 'leaf-veins';
-            
-            const mainVein = document.createElement('div');
-            mainVein.className = 'vein vein-main';
-            veins.appendChild(mainVein);
-            
-            // Add multiple side veins for realism
-            for (let i = 0; i < 8; i++) {
-                const sideVein = document.createElement('div');
-                sideVein.className = 'vein vein-side';
-                veins.appendChild(sideVein);
+            // Add glow animation to green leaf
+            if (leafType.type === 'green-leaf') {
+                leaf.style.animation = 'leafGlow 3s infinite alternate';
+                
+                // Add veins
+                const veins = document.createElement('div');
+                veins.className = 'leaf-veins';
+                
+                const mainVein = document.createElement('div');
+                mainVein.className = 'vein vein-main';
+                veins.appendChild(mainVein);
+                
+                for (let i = 0; i < 4; i++) {
+                    const sideVein = document.createElement('div');
+                    sideVein.className = 'vein vein-side';
+                    veins.appendChild(sideVein);
+                }
+                
+                leaf.appendChild(veins);
+                
+                // Add stem
+                const stem = document.createElement('div');
+                stem.className = 'leaf-stem';
+                leaf.appendChild(stem);
             }
             
-            leaf.appendChild(veins);
-            
-            // Add stem
-            const stem = document.createElement('div');
-            stem.className = 'leaf-stem';
-            leaf.appendChild(stem);
-            
-            // Add AD text
+            // Add AD text inside ALL leaves
             const adText = document.createElement('div');
             adText.className = 'ad-text';
-            adText.textContent = config.adText;
+            adText.textContent = leafType.adText;
             leaf.appendChild(adText);
             
             leafObject.appendChild(leaf);
             
             // Set position and animation
-            if (config.animation === 'floatDown' || config.animation === 'floatUp') {
+            if (leafType.animation === 'floatDown' || leafType.animation === 'floatUp') {
                 const startX = Math.random() * window.innerWidth;
-                const endX = startX + config.sway;
+                const endX = startX + (Math.random() * 80 - 40);
                 leafObject.style.setProperty('--start-x', `${startX}px`);
                 leafObject.style.setProperty('--end-x', `${endX}px`);
-                leafObject.style.setProperty('--sway', `${config.sway}px`);
-                leafObject.style.left = `${startX}px`;
-                leafObject.style.top = config.animation === 'floatDown' ? '-150px' : 'calc(100vh + 100px)';
             } else {
                 const startY = Math.random() * window.innerHeight;
-                const endY = startY + config.sway;
+                const endY = startY + (Math.random() * 80 - 40);
                 leafObject.style.setProperty('--start-y', `${startY}px`);
                 leafObject.style.setProperty('--end-y', `${endY}px`);
-                leafObject.style.setProperty('--sway', `${config.sway}px`);
-                leafObject.style.left = '-150px';
-                leafObject.style.top = `${startY}px`;
             }
             
-            // Set animation with wobble effect
-            leafObject.style.animation = 
-                `leafGlow 3s infinite alternate, ${config.animation} ${config.duration}s cubic-bezier(0.4, 0.2, 0.6, 0.8) forwards`;
+            leafObject.style.animation = `${leafType.animation} ${leafType.duration}s linear forwards`;
+            leafObject.style.left = '0px';
+            leafObject.style.top = '0px';
             
-            // Add wobble animation to leaf itself
-            leaf.style.animation = 'leafWobble 4s infinite ease-in-out';
-            
-            // Enhanced click event with Monetag redirect
+            // Click event for Monetag ad
             const handleClick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Enhanced visual feedback
-                leafObject.style.animation = 'leafPulse 0.4s ease-out forwards';
-                leafObject.style.pointerEvents = 'none';
+                // Visual feedback
+                leafObject.style.transform = 'scale(1.25)';
+                leafObject.style.opacity = '0.8';
                 
-                // Vibrate if available (mobile)
-                if (navigator.vibrate) {
-                    navigator.vibrate([30, 20, 30]);
-                }
+                // Open Monetag ad in new tab
+                window.open(MONETAG_LINK, '_blank');
                 
-                // Open Monetag ad in new tab after animation
+                // Remove leaf
                 setTimeout(() => {
-                    window.open(MONETAG_LINK, '_blank');
-                    
-                    // Remove leaf with fade out
-                    leafObject.style.opacity = '0';
-                    leafObject.style.transform = 'scale(0) rotate(180deg)';
-                    
-                    setTimeout(() => {
-                        if (leafObject.parentNode) {
-                            leafObject.remove();
-                            activeLeaves--;
-                        }
-                    }, 300);
-                }, 200);
+                    if (leafObject.parentNode) {
+                        leafObject.remove();
+                        activeLeaves--;
+                    }
+                }, 300);
             };
             
-            // Add both click and touch events
             leafObject.addEventListener('click', handleClick);
             leafObject.addEventListener('touchstart', handleClick, { passive: false });
             
@@ -721,41 +535,16 @@
                 this.style.transform = 'scale(1.15)';
             }, { passive: true });
             
-            leafObject.addEventListener('touchend', function() {
-                this.style.transform = '';
-            }, { passive: true });
-            
             // Remove when animation completes
-            const removeTimeout = setTimeout(() => {
+            setTimeout(() => {
                 if (leafObject.parentNode) {
-                    leafObject.style.opacity = '0';
-                    leafObject.style.transform = 'scale(0.5) rotate(90deg)';
-                    
-                    setTimeout(() => {
-                        if (leafObject.parentNode) {
-                            leafObject.remove();
-                            activeLeaves--;
-                        }
-                    }, 500);
+                    leafObject.remove();
+                    activeLeaves--;
                 }
-            }, config.duration * 1000 - 1500);
-            
-            // Clean up timeout if leaf is clicked
-            leafObject._removeTimeout = removeTimeout;
+            }, leafType.duration * 1000);
             
             floatingLeaves.appendChild(leafObject);
             activeLeaves++;
-            
-            // Add hover effect for desktop
-            if (!('ontouchstart' in window)) {
-                leafObject.addEventListener('mouseenter', () => {
-                    leaf.style.animation = 'leafWobble 2s infinite ease-in-out';
-                });
-                
-                leafObject.addEventListener('mouseleave', () => {
-                    leaf.style.animation = 'leafWobble 4s infinite ease-in-out';
-                });
-            }
         }
         
         // Start floating leaves after 1 minute
@@ -763,48 +552,29 @@
             if (leavesStarted) return;
             
             leavesStarted = true;
-            console.log('🍃 Starting REALISTIC floating leaves with Monetag ads...');
+            console.log('🍃 Starting green leaves with ads...');
             
-            // Initial batch of leaves
-            setTimeout(() => createRealisticLeaf(), 0);
-            setTimeout(() => createRealisticLeaf(), 1000);
-            setTimeout(() => createRealisticLeaf(), 2000);
-            setTimeout(() => createRealisticLeaf(), 3000);
+            // Initial leaves
+            setTimeout(() => createGreenLeaf(), 0);
+            setTimeout(() => createGreenLeaf(), 1000);
             
-            // Continuous spawn with intelligent timing
+            // Continuous spawn every 10-15 seconds
             leavesInterval = setInterval(() => {
                 if (leavesStarted && activeLeaves < MAX_LEAVES) {
-                    createRealisticLeaf();
-                    
-                    // Occasionally spawn two leaves close together
-                    if (Math.random() > 0.6 && activeLeaves < MAX_LEAVES - 1) {
-                        setTimeout(() => createRealisticLeaf(), 800 + Math.random() * 1200);
-                    }
+                    createGreenLeaf();
                 }
-            }, 6000 + Math.random() * 9000); // Variable interval for natural feel
+            }, 10000 + Math.random() * 5000);
         }
         
-        // Start everything
+        // Start everything immediately
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // Fallback for fast loading
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', init);
         } else {
             init();
         }
-        
-        // Vibration support check
-        if (!navigator.vibrate) {
-            console.log('📱 Vibration not supported on this device');
-        }
-        
-        // Handle page visibility
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && leavesInterval) {
-                clearInterval(leavesInterval);
-                leavesStarted = false;
-            } else if (!document.hidden && gameLoaded && !leavesStarted) {
-                setTimeout(startFloatingLeaves, 1000);
-            }
-        });
     </script>
 </body>
 </html>
