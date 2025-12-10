@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Προβολή Βίντεο - Με Διαφημιστικά Μπάνερ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #f1f1f1; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; padding: 20px 0 30px; border-bottom: 2px solid #0ea5e9; margin-bottom: 30px; }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; background: linear-gradient(90deg, #0ea5e9, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .subtitle { font-size: 1.2rem; color: #94a3b8; margin-bottom: 20px; }
+        .video-section { display: flex; flex-direction: column; align-items: center; margin-bottom: 50px; }
+        .video-container { width: 100%; max-width: 800px; background-color: #0f172a; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); margin-bottom: 20px; }
+        .video-player { width: 100%; height: 450px; object-fit: cover; border-bottom: 2px solid #1e293b; }
+        .video-info { padding: 15px; text-align: center; }
+        .video-title { font-size: 1.8rem; color: #f8fafc; margin-bottom: 5px; }
+        .video-desc { color: #94a3b8; font-size: 1rem; }
+
+        /* Ενότητα Μπάνερ */
+        .ad-section { margin-bottom: 40px; }
+        .section-title { font-size: 1.8rem; margin-bottom: 20px; color: #e2e8f0; text-align: center; position: relative; padding-bottom: 10px; }
+        .section-title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 100px; height: 3px; background: linear-gradient(90deg, transparent, #0ea5e9, transparent); }
+
+        .ad-banners { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .ad-banner { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); border-radius: 12px; overflow: hidden; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); cursor: pointer; border: 1px solid #475569; position: relative; transition: all 0.4s ease; }
+
+        /* ΝΕΑ ΕΦΕ ΣΤΑ ΜΠΑΝΕΡ */
+        /* 1. Εφέ "Αναπήδησης" και Ανύψωσης */
+        .ad-banner:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 30px rgba(14, 165, 233, 0.4); }
+        /* 2. Λαμπερή Γραμμή Κίνησης */
+        .ad-banner::before { content: ''; position: absolute; top: 0; left: -100%; width: 70%; height: 3px; background: linear-gradient(90deg, transparent, #0ea5e9, #22d3ee); transition: left 0.7s ease; z-index: 2; }
+        .ad-banner:hover::before { left: 100%; }
+        /* 3. Αντιστροφή Χρώματος στα Εικονίδια */
+        .ad-banner:hover .ad-icon { filter: invert(0.7) sepia(1) saturate(5) hue-rotate(175deg); }
+        /* 4. Αναλαμπή Υποβάθρου */
+        .ad-banner::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(circle at center, rgba(14, 165, 233, 0.15) 0%, transparent 70%); opacity: 0; transition: opacity 0.5s ease; z-index: 1; }
+        .ad-banner:hover::after { opacity: 1; }
+
+        .ad-content { padding: 25px; text-align: center; position: relative; z-index: 3; }
+        .ad-icon { font-size: 2.8rem; color: #0ea5e9; margin-bottom: 18px; transition: all 0.4s ease; }
+        .ad-title { font-size: 1.5rem; margin-bottom: 12px; color: #f1f5f9; }
+        .ad-desc { color: #cbd5e1; margin-bottom: 20px; line-height: 1.5; font-size: 0.95rem; }
+        .cta-button { display: inline-block; background: linear-gradient(90deg, #0ea5e9, #3b82f6); color: white; padding: 13px 28px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.05rem; transition: all 0.3s ease; border: none; cursor: pointer; position: relative; overflow: hidden; }
+        .cta-button:hover { transform: scale(1.08); box-shadow: 0 5px 18px rgba(14, 165, 233, 0.6); }
+
+        footer { text-align: center; padding: 20px; color: #64748b; border-top: 1px solid #334155; margin-top: 30px; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .video-player { height: 300px; }
+            .ad-banners { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-play-circle"></i> Πλατφόρμα Προβολής Βίντεο</h1>
+            <p class="subtitle">Παρακολουθήστε το βίντεο και επισκεφτείτε την προσφορά μας</p>
+        </header>
+
+        <main>
+            <section class="video-section">
+                <div class="video-container">
+                    <video class="video-player" controls poster="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                        <!-- Βάλτε εδώ το δικό σας βίντεο (π.χ. src="index.video") -->
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
+                    </video>
+                    <div class="video-info">
+                        <h2 class="video-title">index.video</h2>
+                        <p class="video-desc">Δείτε το βίντεο και μετά επισκεφτείτε την ιστοσελίδα μας για ειδικές προσφορές.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="ad-section">
+                <h2 class="section-title">Επισκεφτείτε την Προσφορά Μας</h2>
+                <p style="text-align: center; color: #94a3b8; margin-bottom: 20px;">Κάντε κλικ σε οποιοδήποτε από τα παρακάτω μπάνερ</p>
+
+                <div class="ad-banners">
+                    <!-- Μπάνερ 1 -->
+                    <a href="https://otieu.com/4/10274068" target="_blank" class="ad-banner">
+                        <div class="ad-content">
+                            <div class="ad-icon"><i class="fas fa-external-link-alt"></i></div>
+                            <h3 class="ad-title">ΑΝΟΙΞΕ ΤΟ ΒΙΝΤΕΟ</h3>
+                            <p class="ad-desc">Πατήστε εδώ για να μεταφερθείτε απευθείας στην ιστοσελίδα με τις προσφορές.</p>
+                            <div class="cta-button">Μετάβαση στην Προσφορά</div>
+                        </div>
+                    </a>
+
+                    <!-- Μπάνερ 2 -->
+                    <a href="https://otieu.com/4/10274068" target="_blank" class="ad-banner">
+                        <div class="ad-content">
+                            <div class="ad-icon"><i class="fas fa-hand-pointer"></i></div>
+                            <h3 class="ad-title">ΚΛΙΚ ΕΔΩ</h3>
+                            <p class="ad-desc">Ένα απλό κλικ σας οδηγεί στις καλύτερες online προσφορές. Μην το χάσετε!</p>
+                            <div class="cta-button">Ανακάλυψέ Τις</div>
+                        </div>
+                    </a>
+
+                    <!-- Μπάνερ 3 -->
+                    <a href="https://otieu.com/4/10274068" target="_blank" class="ad-banner">
+                        <div class="ad-content">
+                            <div class="ad-icon"><i class="fas fa-play"></i></div>
+                            <h3 class="ad-title">ΔΕΙΤΕ ΤΟ ΒΙΝΤΕΟ</h3>
+                            <p class="ad-desc">Μετά το βίντεο, συνεχίστε για να δείτε εκπληκτικές προτάσεις που σας αναμένουν.</p>
+                            <div class="cta-button">Δείτε Περισσότερα</div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 Πλατφόρμα Προβολής Βίντεο. Όλα τα δικαιώματα διατηρούνται.</p>
+        </footer>
+    </div>
+
+    <!-- ΚΩΔΙΚΑΣ MONETAG - Προστέθηκε εδώ -->
+    <script src="https://quge5.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
+</body>
+</html>
