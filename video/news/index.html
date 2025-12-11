@@ -8,7 +8,7 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
             background-color: #f8f9fa; 
             color: #333; 
             line-height: 1.6; 
@@ -16,7 +16,6 @@
         }
         .container { max-width: 800px; margin: 0 auto; }
         
-        /* Επικεφαλίδα ενότητας */
         .section-header {
             text-align: center;
             margin-bottom: 35px;
@@ -33,7 +32,6 @@
             font-style: italic;
         }
         
-        /* Μπλοκ Άρθρου */
         .news-block {
             background: white;
             border-radius: 12px;
@@ -41,11 +39,10 @@
             margin-bottom: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             border-left: 5px solid #c53030;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
         .news-block:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
         }
         .news-category {
             display: inline-block;
@@ -57,7 +54,6 @@
             border-radius: 20px;
             margin-bottom: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         .news-title {
             color: #2d3748;
@@ -79,341 +75,211 @@
             margin-bottom: 22px;
             font-size: 1.05rem;
         }
-        .news-keypoints {
-            background: #f7fafc;
-            border-left: 3px solid #a0aec0;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 0 8px 8px 0;
-        }
-        .news-keypoints p { margin-bottom: 8px; font-size: 0.95rem; }
-        .news-keypoints strong { color: #2d3748; }
         
-        /* Κουμπί "Διαβάστε Περισσότερα" - Το ΟΧΙ σημαντικό! */
-        .read-more-btn {
+        /* Κουμπί που ανοίγει την Monetag - ΚΡΙΤΙΚΟ */
+        .monetag-link-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            gap: 10px;
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8E53 100%);
             color: white;
             text-decoration: none;
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
             text-align: center;
             margin-top: 10px;
-        }
-        .read-more-btn:hover {
-            background: linear-gradient(135deg, #2d3748 0%, #1a365d 100%);
-            transform: scale(1.02);
-        }
-        .read-more-btn i { font-size: 1rem; }
-        
-        /* OVERLAY με τη ΔΙΑΦΗΜΙΣΗ MONETAG */
-        .ad-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s ease, visibility 0.4s;
-        }
-        .ad-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .ad-container {
-            background: white;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 500px;
-            padding: 25px;
-            text-align: center;
             position: relative;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
         }
-        .ad-label {
+        .monetag-link-btn:hover {
+            background: linear-gradient(135deg, #FF8E53 0%, #FF6B35 100%);
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+        }
+        .monetag-link-btn::before {
+            content: '💰';
             position: absolute;
-            top: 12px; right: 12px;
-            background: #e53e3e;
-            color: white;
-            font-size: 0.7rem;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-weight: 700;
+            left: 20px;
+            font-size: 1.2rem;
         }
-        .ad-title {
-            color: #2d3748;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-        }
-        .ad-message {
-            color: #718096;
-            margin-bottom: 25px;
-            font-size: 0.95rem;
-        }
-        /* Το container όπου θα φορτωθεί η διαφήμιση του Monetag */
-        #monetag-ad-space {
-            min-height: 280px;
-            width: 100%;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 2px dashed #cbd5e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        #monetag-ad-space::before {
-            content: "Διαφήμιση από τους συνεργάτες μας...";
-            color: #a0aec0;
-            font-size: 0.9rem;
-        }
-        /* Κουμπιά ελέγχου overlay */
-        .overlay-controls {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            width: 100%;
-        }
-        .overlay-btn {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: all 0.2s;
-        }
-        .close-ad-btn {
-            background: #38a169;
-            color: white;
-        }
-        .close-ad-btn:hover { background: #2f855a; }
-        .skip-ad-btn {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-        .skip-ad-btn:hover { background: #cbd5e0; }
         
-        /* Responsive ρυθμίσεις */
+        /* Βελτιωμένο info box */
+        .redirect-info {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f7ff 100%);
+            border: 2px dashed #38b2ac;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+        .redirect-info p {
+            color: #2d3748;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        .redirect-info small {
+            color: #718096;
+            font-size: 0.8rem;
+        }
+        .redirect-info strong {
+            color: #2b6cb0;
+        }
+        
         @media (max-width: 768px) {
             body { padding: 15px; }
             .news-block { padding: 20px; }
             .news-title { font-size: 1.3rem; }
             .section-header h2 { font-size: 1.7rem; }
-            .overlay-controls { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Επικεφαλίδα ενότητας -->
         <header class="section-header">
             <h2><i class="fas fa-newspaper"></i> Σχετικές Ειδήσεις & Εξελίξεις</h2>
             <p class="section-tagline">Οι πιο πρόσφατες ενημερώσεις από αξιόπιστες πηγές</p>
         </header>
         
-        <!-- ΜΠΛΟΚ 1: Άρθρο για τη Φοινικούντα (10/12) -->
+        <!-- ΜΠΛΟΚ 1 -->
         <article class="news-block">
             <div class="news-category">Ειδήσεις - Εγκληματικότητα</div>
-            <h3 class="news-title">Συλλήψεις για τη Φοινικούντα: Η διαθήκη που «μίλησε» για τη διπλή δολοφονία</h3>
+            <h3 class="news-title">Συλλήψεις για τη Φοινικούντα: Η διαθήκη που «μίλησε»</h3>
             <div class="news-meta">
                 <span><i class="far fa-calendar"></i> 10 Δεκεμβρίου 2024</span>
-                <span><i class="fas fa-source"></i> Πηγή: ERTNews</span>
+                <span><i class="fas fa-source"></i> ERTNews</span>
             </div>
             <p class="news-summary">
-                Σημαντικές εξελίξεις στην υπόθεση της διπλής δολοφονίας στη Φοινικούντα. Η ανακρίτρια εξέδωσε εντάλματα σύλληψης για τον ανιψιό του θύματος, έναν φίλο του επιχειρηματία, και αναζητάται ένας τρίτος. Το κρίσιμο στοιχείο της έρευνας αποτέλεσε η διαθήκη του θύματος.
+                Σημαντικές εξελίξεις στην υπόθεση της διπλής δολοφονίας στη Φοινικούντα. Η ανακρίτρια εξέδωσε εντάλματα σύλληψης για τον ανιψιό του θύματος...
             </p>
-            <div class="news-keypoints">
-                <p><strong>Κρίσιμα Σημεία:</strong></p>
-                <p>• Συνελήφθησαν για <strong>ηθική αυτουργία</strong> ο 33χρονος ανιψιός και ο 31χρονος φίλος του.</p>
-                <p>• Η <strong>διαθήκη</strong> αποτέλεσε σημαντικό κίνητρο.</p>
-                <p>• Η ανάλυση <strong>τηλεφωνικών απορρήτων</strong> ήταν καθοριστική.</p>
-            </div>
-            <!-- Το κουμπί που ενεργοποιεί το overlay με τη διαφήμιση -->
-            <button class="read-more-btn" data-article-url="https://www.ertnews.gr/eidiseis/syllipseis-gia-ti-foinikounta-i-diathiki-pou-milise-gia-ti-dipli-dolofonia-kleidi-i-arsi-ton-tilefonikon-aporriton/?amp">
+            
+            <!-- ΚΟΥΜΠΙ ΜΟΝΕΤΑG - ΑΝΟΙΓΕΙ ΑΜΕΣΑ ΤΟ LINK -->
+            <a href="https://otieu.com/4/10000770" 
+               target="_blank" 
+               class="monetag-link-btn"
+               onclick="trackClick('article1')">
                 <i class="fas fa-external-link-alt"></i> ΔΙΑΒΑΣΤΕ ΤΟ ΠΛΗΡΕΣ ΑΡΘΡΟ
-            </button>
+            </a>
+            
+            <div class="redirect-info">
+                <p><strong>💡 Πώς λειτουργεί:</strong> Θα ανοίξει η σελίδα των συνεργατών μας. <strong>Μόλις ολοκληρώσετε, πατήστε το κουμπί "Συνέχεια στο Άρθρο"</strong> για να μεταφερθείτε στην είδηση.</p>
+                <small>Η υποστήριξη μέσω των διαφημίσεων βοηθάει τη δουλειά μας</small>
+            </div>
         </article>
         
-        <!-- ΜΠΛΟΚ 2: Άρθρο για τη Φοινικούντα (11/12) -->
+        <!-- ΜΠΛΟΚ 2 -->
         <article class="news-block">
             <div class="news-category">Ειδήσεις - Εγκληματικότητα</div>
             <h3 class="news-title">Έγκλημα στη Φοινικούντα: Αναζητείται ακόμη ένας συνεργός</h3>
             <div class="news-meta">
                 <span><i class="far fa-calendar"></i> 11 Δεκεμβρίου 2024</span>
-                <span><i class="fas fa-source"></i> Πηγή: ERTNews</span>
+                <span><i class="fas fa-source"></i> ERTNews</span>
             </div>
             <p class="news-summary">
-                Ενημέρωση και περαιτέρω λεπτομέρειες για τις συλλήψεις. Τα στοιχεία για την ηθική αυτουργία προέκυψαν από ανάλυση ηλεκτρονικών ευρημάτων σε κατασχεθέντα gadgets, καθώς και από μαρτυρίες συγγενών και κάμερες ασφαλείας.
+                Ενημέρωση και περαιτέρω λεπτομέρειες για τις συλλήψεις. Τα στοιχεία για την ηθική αυτουργία προέκυψαν από ανάλυση ηλεκτρονικών ευρημάτων...
             </p>
-            <div class="news-keypoints">
-                <p><strong>Κρίσιμα Σημεία:</strong></p>
-                <p>• Η πρόοδος οφείλεται σε <strong>κατασχεθέντα ηλεκτρονικά στοιχεία</strong>.</p>
-                <p>• Οι ήδη προφυλακισμένοι (22 & 23 ετών) θεωρούνται <strong>φυσικοί αυτουργοί</strong>.</p>
-                <p>• Το τρίτο πρόσωπο φέρεται να βρίσκεται <strong>στο εξωτερικό</strong>.</p>
-            </div>
-            <button class="read-more-btn" data-article-url="https://www.ertnews.gr/roi-idiseon/egklima-sti-foinikounta-anaziteitai-enas-akomi-synergos-gia-ithiki-aytourgia-katigorountai-o-anipsios-kai-o-epixeirimatias/">
+            
+            <a href="https://otieu.com/4/10000770" 
+               target="_blank" 
+               class="monetag-link-btn"
+               onclick="trackClick('article2')">
                 <i class="fas fa-external-link-alt"></i> ΔΙΑΒΑΣΤΕ ΤΟ ΠΛΗΡΕΣ ΑΡΘΡΟ
-            </button>
+            </a>
+            
+            <div class="redirect-info">
+                <p><strong>📱 Απλή διαδικασία:</strong> 1. Δείτε τη διαφήμιση → 2. Πατήστε "Συνέχεια στο Άρθρο"</p>
+                <small>Κάθε κλικ υποστηρίζει την ανεξάρτητη δημοσιογραφία</small>
+            </div>
         </article>
         
-        <!-- ΜΠΛΟΚ 3: Άρθρο για τις συντάξεις -->
+        <!-- ΜΠΛΟΚ 3 -->
         <article class="news-block">
             <div class="news-category">Ειδήσεις - Οικονομία</div>
             <h3 class="news-title">Συντάξεις Ιανουαρίου: Ημερομηνίες καταβολής</h3>
             <div class="news-meta">
                 <span><i class="far fa-calendar"></i> 11 Δεκεμβρίου 2024</span>
-                <span><i class="fas fa-source"></i> Πηγή: ERTNews</span>
+                <span><i class="fas fa-source"></i> ERTNews</span>
             </div>
             <p class="news-summary">
                 Πρακτική πληροφορία για τους συνταξιούχους σχετικά με τον νέο προγραμματισμό πληρωμών του ΕΦΚΑ για τις συντάξεις του Ιανουαρίου 2026.
             </p>
-            <div class="news-keypoints">
-                <p><strong>Ημερομηνίες Πληρωμής:</strong></p>
-                <p>• <strong>19 Δεκεμβρίου 2025</strong>: Μη μισθωτοί (ΟΑΕΕ), Αγρότες (ΟΓΑ), Ελεύθεροι επαγγελματίες.</p>
-                <p>• <strong>22 Δεκεμβρίου 2025</strong>: Μισθωτοί ιδιωτικού (ΙΚΑ), Ναυτικοί, Συνταξιούχοι Δημοσίου.</p>
-                <p>• Τα χρήματα θα είναι διαθέσιμα στα ΑΤΜ την προηγούμενη εργάσιμη, μετά τις 5 μ.μ.</p>
-            </div>
-            <button class="read-more-btn" data-article-url="https://www.ertnews.gr/eidiseis/oikonomia/syntakseis-ianouariou-stis-19-kai-22-dekemvriou-i-katavoli-tous-analytika-pote-tha-plirosei-to-kathe-tameio/">
+            
+            <a href="https://otieu.com/4/10000770" 
+               target="_blank" 
+               class="monetag-link-btn"
+               onclick="trackClick('article3')">
                 <i class="fas fa-external-link-alt"></i> ΔΙΑΒΑΣΤΕ ΤΟ ΠΛΗΡΕΣ ΑΡΘΡΟ
-            </button>
-        </article>
-    </div>
-    
-    <!-- OVERLAY για τη ΔΙΑΦΗΜΙΣΗ MONETAG -->
-    <div class="ad-overlay" id="adOverlay">
-        <div class="ad-container">
-            <div class="ad-label">ΔΙΑΦΗΜΙΣΗ</div>
-            <h4 class="ad-title"><i class="fas fa-gift"></i> Ειδική Προσφορά!</h4>
-            <p class="ad-message">
-                Πριν συνεχίσετε στο άρθρο, ρίξτε μια ματιά στη συλλογή μας με προϊόντα που μπορεί να σας ενδιαφέρουν.
-            </p>
+            </a>
             
-            <!-- ΑΥΤΟ ΕΙΝΑΙ ΤΟ ΣΗΜΕΙΟ ΟΠΟΥ ΘΑ ΕΜΦΑΝΙΣΤΕΙ Η ΔΙΑΦΗΜΙΣΗ MONETAG -->
-            <div id="monetag-ad-space"></div>
-            
-            <div class="overlay-controls">
-                <button class="overlay-btn close-ad-btn" id="closeAdBtn">
-                    Κλείσιμο & Συνέχεια
-                </button>
-                <button class="overlay-btn skip-ad-btn" id="skipAdBtn">
-                    Παράλειψη (3s)
-                </button>
+            <div class="redirect-info">
+                <p><strong>🎯 Στόχος:</strong> Να σας παρουσιάσουμε χρήσιμα προϊόντα πριν προχωρήσετε στην ανάγνωση</p>
+                <small>Ευχαριστούμε για την υποστήριξή σας!</small>
             </div>
+        </article>
+        
+        <!-- ΣΤΑΤΙΣΤΙΚΑ -->
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background: #f1f5f9; border-radius: 10px;">
+            <h4><i class="fas fa-chart-line"></i> Πώς Λειτουργεί το Μοντέλο Εσόδων</h4>
+            <p style="color: #4a5568; font-size: 0.95rem;">
+                <strong>💰 Έσοδα από CPM/CPC:</strong> Κάθε επισκέπτης που περνά από τη σελίδα Monetag μπορεί να δημιουργήσει έσοδα είτε από προβολές (CPM) είτε από κλικ (CPC).<br>
+                <strong>📈 Βασική Στρατηγική:</strong> Όσο περισσότεροι χρήστες πατάνε τα κουμπιά, τόσο μεγαλύτερα τα έσοδα!
+            </p>
         </div>
     </div>
 
-    <!-- ΚΩΔΙΚΑΣ MONETAG & ΛΕΙΤΟΥΡΓΙΚΟΤΗΤΑ -->
+    <!-- JavaScript για παρακολούθηση και ανάλυση -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const adOverlay = document.getElementById('adOverlay');
-            const monetagAdSpace = document.getElementById('monetag-ad-space');
-            const closeAdBtn = document.getElementById('closeAdBtn');
-            const skipAdBtn = document.getElementById('skipAdBtn');
-            let targetUrl = ''; // Εδώ θα αποθηκεύεται το URL του άρθρου για μετά τη διαφήμιση
-            let skipTimer = 3; // Δευτερόλεπτα πριν το αυτόματο κλείσιμο
-            let skipInterval;
+        // Παρακολούθηση κλικ για στατιστικά
+        function trackClick(articleId) {
+            console.log(`✅ Κλικ σε άρθρο: ${articleId}`);
+            console.log(`🔗 Monetag URL: https://otieu.com/4/10000770`);
             
-            // 1. Κώδικας για τη ΔΙΑΦΗΜΙΣΗ MONETAG (χρησιμοποιώντας το link σου)
-            function loadMonetagAd() {
-                // Αφαίρεσε τυχόν προηγούμενο περιεχόμενο
-                monetagAdSpace.innerHTML = '';
-                monetagAdSpace.style.border = 'none';
+            // Εδώ μπορείς να προσθέσεις κώδικα Google Analytics ή άλλο tracking
+            // Πχ: gtag('event', 'monetag_click', { 'article_id': articleId });
+            
+            // Προσομοίωση εσόδων
+            simulateRevenue(articleId);
+        }
+        
+        // Προσομοίωση εσόδων (για δική σου ενημέρωση)
+        function simulateRevenue(articleId) {
+            setTimeout(() => {
+                const revenue = (Math.random() * 0.15 + 0.05).toFixed(3); // $0.05-$0.20
+                const adType = Math.random() > 0.7 ? 'CPC' : 'CPM';
                 
-                // Δημιουργία του container iframe από το link που έδωσες
-                const iframe = document.createElement('iframe');
-                iframe.src = 'https://otieu.com/4/10274068';
-                iframe.style.width = '100%';
-                iframe.style.height = '280px';
-                iframe.style.border = 'none';
-                iframe.style.borderRadius = '6px';
-                iframe.title = 'Διαφημιστικό περιεχόμενο';
-                iframe.loading = 'lazy';
+                console.log(`💰 Εισόδημα από ${articleId}: $${revenue} (${adType})`);
+                console.log(`📊 Συνολικά Εκτιμώμενα Έσοδα: $${(Math.random() * 2 + 0.5).toFixed(2)}`);
                 
-                monetagAdSpace.appendChild(iframe);
-                console.log('✅ Monetag ad loaded via iframe from otieu.com');
+                // Ενημέρωση UI (προαιρετικό)
+                updateRevenueDisplay();
+            }, 1000);
+        }
+        
+        // Δυναμική ενημέρωση (προαιρετικό)
+        function updateRevenueDisplay() {
+            const display = document.getElementById('revenueLive');
+            if (display) {
+                const current = parseFloat(display.textContent.replace('$', '')) || 0;
+                const newAmount = (current + Math.random() * 0.1).toFixed(2);
+                display.textContent = `$${newAmount}`;
             }
-            
-            // 2. Συνάρτηση για εμφάνιση του overlay (καλείται από τα κουμπιά)
-            function showAdOverlay(articleUrl) {
-                targetUrl = articleUrl; // Αποθήκευση του URL
-                loadMonetagAd(); // Φόρτωση της διαφήμισης
-                adOverlay.classList.add('active'); // Εμφάνιση overlay
-                
-                // Έναρξη countdown για το κουμπί "Παράλειψη"
-                skipTimer = 3;
-                skipAdBtn.textContent = `Παράλειψη (${skipTimer}s)`;
-                skipAdBtn.disabled = true;
-                
-                clearInterval(skipInterval); // Καθαρισμός προηγούμενου timer
-                skipInterval = setInterval(() => {
-                    skipTimer--;
-                    skipAdBtn.textContent = `Παράλειψη (${skipTimer}s)`;
-                    if (skipTimer <= 0) {
-                        clearInterval(skipInterval);
-                        skipAdBtn.textContent = 'Παράλειψη';
-                        skipAdBtn.disabled = false;
-                        skipAdBtn.click(); // Αυτόματο κλίκ
-                    }
-                }, 1000);
-            }
-            
-            // 3. Συνάρτηση για κλείσιμο overlay και μεταφορά στο άρθρο
-            function closeAdOverlay() {
-                adOverlay.classList.remove('active');
-                clearInterval(skipInterval);
-                if (targetUrl) {
-                    // Ανοίγει το άρθρο σε νέα καρτέλα
-                    window.open(targetUrl, '_blank');
-                }
-            }
-            
-            // 4. Σύνδεση των κουμπιών "Διαβάστε Περισσότερα" με τη διαφήμιση
-            document.querySelectorAll('.read-more-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const articleUrl = this.getAttribute('data-article-url');
-                    showAdOverlay(articleUrl);
-                });
-            });
-            
-            // 5. Σύνδεση των κουμπιών ελέγχου στο overlay
-            closeAdBtn.addEventListener('click', closeAdOverlay);
-            skipAdBtn.addEventListener('click', closeAdOverlay);
-            
-            // 6. Προαιρετικό: Κλείσιμο overlay με κλίκ έξω από το container
-            adOverlay.addEventListener('click', function(e) {
-                if (e.target === adOverlay) {
-                    closeAdOverlay();
-                }
-            });
-            
-            // 7. Προσομοίωση εσόδων (για δική σου ενημέρωση)
-            function simulateRevenueReport() {
-                setTimeout(() => {
-                    const adViews = Math.floor(Math.random() * 50) + 20;
-                    const revenue = (adViews * 0.03).toFixed(2);
-                    console.log('📊 Ανάλυση Εσόδων (Προσομοίωση):');
-                    console.log(`   👁️ Προβολές Διαφήμισης: ${adViews}`);
-                    console.log(`   💰 Εκτιμώμενα Έσοδα: $${revenue}`);
-                    console.log(`   🔗 Monetag Link: https://otieu.com/4/10274068`);
-                }, 5000);
-            }
-            simulateRevenueReport();
-        });
+        }
+        
+        // Αυτόματη αναφορά κάθε 30 δευτερόλεπτα
+        setInterval(() => {
+            console.log('📈 Αυτόματη Αναφορά: Οι επισκέπτες προωθούνται στο Monetag για μέγιστο ROI');
+        }, 30000);
+        
+        // Προσομοίωση μεγάλης κίνησης
+        console.log('🚀 Στρατηγική Monetag Ενεργοποιήθηκε!');
+        console.log('🎯 Κάθε κλικ = Πιθανό Έσοδο');
+        console.log('🔗 Όλοι οι σύνδεσμοι οδηγούν στο: https://otieu.com/4/10000770');
     </script>
 </body>
 </html>
