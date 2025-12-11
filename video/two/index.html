@@ -204,7 +204,7 @@
             height: fit-content;
         }
         
-        /* Video Section - με ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΕΩΝ */
+        /* Video Section - με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ */
         .video-featured { 
             margin-bottom: 40px; 
             border-radius: var(--radius); 
@@ -216,73 +216,55 @@
         
         .video-container { 
             width: 100%; 
-            height: 500px; /* Σταθερό ύψος */
+            margin-bottom: 0;
             position: relative;
-            background: #000;
         }
         
-        /* Στυλ για τη ΔΙΑΦΗΜΙΣΗ ΠΟΥ ΕΙΝΑΙ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ */
-        .video-ad-overlay {
+        .video-container::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 10;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-        }
-        
-        .video-ad-overlay.hidden {
-            display: none;
-        }
-        
-        .ad-countdown {
-            font-size: 4rem;
-            font-weight: bold;
-            color: #ff4444;
-            margin-bottom: 20px;
-        }
-        
-        .ad-message {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            text-align: center;
-            padding: 0 20px;
-        }
-        
-        .skip-ad-btn {
-            background: var(--secondary);
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .skip-ad-btn:hover {
-            background: #ff4444;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--primary) 100%);
+            z-index: 2;
         }
         
         .video-container video { 
             width: 100%; 
-            height: 100%;
-            object-fit: contain;
+            height: auto; 
+            max-height: 550px; 
             display: block;
         }
         
-        .video-info {
+        /* ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ */
+        .video-ad-container {
             padding: 20px;
             border-top: 1px solid var(--gray-light);
+            text-align: center;
+            background: #f8f9fa;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
         
-        /* Sidebar Sections */
+        .video-ad-container::before {
+            content: 'Sponsored';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        /* Sidebar Sections - με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ */
         .sidebar-section { 
             background: white; 
             border-radius: var(--radius); 
@@ -291,6 +273,8 @@
             box-shadow: var(--shadow); 
             border-top: 4px solid var(--secondary);
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
         
         .sidebar-section:hover {
@@ -312,6 +296,33 @@
             color: var(--secondary);
         }
         
+        /* ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ ΣΤΑ ΜΠΑΝΕΡ */
+        .banner-ad-container {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: var(--radius);
+            border: 1px dashed var(--gray-light);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .banner-ad-container::before {
+            content: 'Διαφήμιση';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: var(--secondary);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+        
         .cta-button { 
             display: inline-flex; 
             align-items: center;
@@ -329,6 +340,33 @@
             border: none;
             cursor: pointer;
             font-size: 0.95rem;
+        }
+        
+        /* Inline Ads μέσα στο κείμενο */
+        .inline-ad-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: var(--radius);
+            border-left: 3px solid var(--secondary);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .inline-ad-container::before {
+            content: 'Advertisement';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--gray);
+            color: white;
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
         }
         
         /* Footer */
@@ -369,10 +407,6 @@
             
             .logo {
                 font-size: 1.8rem;
-            }
-            
-            .video-container {
-                height: 300px;
             }
         }
         
@@ -416,32 +450,23 @@
         <!-- Main Content -->
         <div class="content-wrapper">
             <main class="main-content">
-                <!-- Featured Video με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ -->
+                <!-- Featured Video με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ -->
                 <section class="video-featured">
                     <div class="video-container">
-                        <!-- ΠΑΡΑΚΑΤΩ ΕΙΝΑΙ Η ΔΙΑΦΗΜΙΣΗ ΠΟΥ ΘΑ ΕΙΝΑΙ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ -->
-                        <div class="video-ad-overlay" id="videoAdOverlay">
-                            <div class="ad-countdown" id="adCountdown">5</div>
-                            <div class="ad-message">
-                                <strong>ΔΙΑΦΗΜΙΣΗ</strong><br>
-                                Η διαφήμιση τελειώνει σε <span id="adSeconds">5</span> δευτερόλεπτα
-                            </div>
-                            
-                            <!-- ΕΔΩ ΕΙΝΑΙ Η ΔΙΑΦΗΜΙΣΗ ΜΟΝΕΤΑG ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ -->
-                            <div id="videoMonetagAd" style="width: 100%; height: 300px; background: #1a1a1a; margin: 20px 0;">
-                                <!-- Η ΔΙΑΦΗΜΙΣΗ ΜΟΝΕΤΑG ΘΑ ΕΜΦΑΝΙΣΤΕΙ ΕΔΩ -->
-                            </div>
-                            
-                            <button class="skip-ad-btn" id="skipAdBtn">
-                                Παράλειψη διαφήμισης (5s)
-                            </button>
-                        </div>
-                        
-                        <!-- ΤΟ ΠΡΑΓΜΑΤΙΚΟ ΒΙΝΤΕΟ -->
-                        <video id="mainVideo" controls poster="https://blog.franklymadear.com/video/two/index.png">
+                        <video controls poster="https://blog.franklymadear.com/video/two/index.png">
                             <source src="https://blog.franklymadear.com/video/two/index.video" type="video/mp4">
                             Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
                         </video>
+                    </div>
+                    
+                    <!-- ΜΟΝΕΤΑG AD: ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ -->
+                    <div class="video-ad-container" id="monetag-video-ad-1">
+                        <!-- Η διαφήμιση Monetag θα φορτωθεί ΕΔΩ ΜΕΣΑ -->
+                        <div style="color: var(--gray); font-size: 0.9rem;">
+                            <i class="fas fa-ad fa-2x" style="margin-bottom: 10px;"></i><br>
+                            <strong>Διαφήμιση από τους συνεργάτες μας</strong><br>
+                            <small>Η διαφήμιση φορτώνεται...</small>
+                        </div>
                     </div>
                     
                     <div class="video-info">
@@ -452,9 +477,19 @@
                     </div>
                 </section>
                 
-                <!-- Article Body -->
+                <!-- Article Body με ΔΙΑΦΗΜΙΣΕΙΣ ΜΕΣΑ -->
                 <article class="article-body">
                     <p><strong>Συνελήφθησαν ο ανιψιός του ιδιοκτήτη του κάμπινγκ στη Φοινικούντα και ο επιχειρηματίας φίλος του από την Αθήνα</strong> μετά από εντάλματα της ανακρίτριας στο πλαίσιο της έρευνας για το διπλό φονικό. Οι δύο συλληφθέντες κατηγορούνται ως <strong>ηθικοί αυτουργοί</strong> του διπλού εγκλήματος.</p>
+                    
+                    <!-- ΜΟΝΕΤΑG AD: ΜΕΣΑ ΣΤΟ ΚΕΙΜΕΝΟ (1) -->
+                    <div class="inline-ad-container" id="monetag-inline-ad-1">
+                        <!-- Η διαφήμιση Monetag θα φορτωθεί ΕΔΩ ΜΕΣΑ -->
+                        <div style="color: var(--gray); font-size: 0.9rem;">
+                            <i class="fas fa-shopping-cart fa-2x" style="margin-bottom: 10px;"></i><br>
+                            <strong>Προτεινόμενα Προϊόντα</strong><br>
+                            <small>Διαφημιστικό περιεχόμενο</small>
+                        </div>
+                    </div>
                     
                     <div class="highlight-box">
                         <p><strong>ΣΥΝΟΨΗ ΤΗΣ ΥΠΟΘΕΣΗΣ:</strong> Τα εντάλματα σύλληψης εκτός από τον ανιψιό του ιδιοκτήτη του κάμπινγκ και τον επιχειρηματίας φίλο του από την Αθήνα φέρεται να αφορούν και ένα ακόμη άτομο, το οποίο αναζητούν οι Αρχές.</p>
@@ -463,6 +498,16 @@
                     <h2><i class="fas fa-search"></i> Λεπτομέρειες της Έρευνας</h2>
                     <p>Το τρίτο άτομο που αναζητείται από τις αρχές είναι σύμφωνα με πληροφορίες, φίλος του επιχειρηματία, ο οποίος κατηγορείται για συνεργεία.</p>
                     
+                    <!-- ΜΟΝΕΤΑG AD: ΜΕΣΑ ΣΤΟ ΚΕΙΜΕΝΟ (2) -->
+                    <div class="inline-ad-container" id="monetag-inline-ad-2">
+                        <!-- Η διαφήμιση Monetag θα φορτωθεί ΕΔΩ ΜΕΣΑ -->
+                        <div style="color: var(--gray); font-size: 0.9rem;">
+                            <i class="fas fa-bullhorn fa-2x" style="margin-bottom: 10px;"></i><br>
+                            <strong>Συνεργαζόμενες Εταιρίες</strong><br>
+                            <small>Διαφημιστικό μήνυμα</small>
+                        </div>
+                    </div>
+                    
                     <p>Η έρευνα φαίνεται να μην έχει κλείσει καθώς η ανακρίτρια έπαιρνε συνεχείς καταθέσεις και προσπαθούσε να δέσει την υπόθεση.</p>
                     
                     <h2><i class="fas fa-gavel"></i> Νομική Ανάλυση</h2>
@@ -470,20 +515,42 @@
                 </article>
             </main>
             
-            <!-- Sidebar -->
+            <!-- Sidebar με ΔΙΑΦΗΜΙΣΕΙΣ ΜΕΣΑ ΣΤΑ ΜΠΑΝΕΡ -->
             <aside class="sidebar">
+                <!-- ΜΠΑΝΕΡ 1 με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ -->
                 <div class="sidebar-section">
                     <h3><i class="fas fa-download"></i> Αποθήκευση στη Αρχική</h3>
                     <p>Προσθέστε αυτή τη σελίδα στην αρχική οθόνη για γρήγορη πρόσβαση.</p>
+                    
+                    <!-- ΜΟΝΕΤΑG AD: ΜΕΣΑ ΣΤΟ ΜΠΑΝΕΡ -->
+                    <div class="banner-ad-container" id="monetag-banner-ad-1">
+                        <!-- Η διαφήμιση Monetag θα φορτωθεί ΕΔΩ ΜΕΣΑ -->
+                        <div style="color: var(--gray); font-size: 0.8rem; text-align: center;">
+                            <i class="fas fa-ad fa-lg" style="margin-bottom: 5px;"></i><br>
+                            <strong>Διαφημιστικό Μπάνερ</strong>
+                        </div>
+                    </div>
+                    
                     <button class="cta-button" id="addToHomeScreen">
                         <i class="fas fa-plus-square"></i> Προσθήκη στην Αρχική
                     </button>
                 </div>
                 
+                <!-- ΜΠΑΝΕΡ 2 με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ -->
                 <div class="sidebar-section">
                     <h3><i class="fas fa-share-square"></i> Κοινή Χρήση</h3>
                     <p>Κοινοποιήστε το άρθρο στους φίλους σας.</p>
-                    <div style="display: flex; gap: 10px;">
+                    
+                    <!-- ΜΟΝΕΤΑG AD: ΜΕΣΑ ΣΤΟ ΜΠΑΝΕΡ -->
+                    <div class="banner-ad-container" id="monetag-banner-ad-2">
+                        <!-- Η διαφήμιση Monetag θα φορτωθεί ΕΔΩ ΜΕΣΑ -->
+                        <div style="color: var(--gray); font-size: 0.8rem; text-align: center;">
+                            <i class="fas fa-shopping-bag fa-lg" style="margin-bottom: 5px;"></i><br>
+                            <strong>Ειδικές Προσφορές</strong>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
                         <button class="cta-button" style="background: #4267B2;" id="sidebarFacebookShare">
                             <i class="fab fa-facebook-f"></i> Facebook
                         </button>
@@ -493,20 +560,23 @@
                     </div>
                 </div>
                 
+                <!-- ΜΠΑΝΕΡ 3 με ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ -->
                 <div class="sidebar-section">
                     <h3><i class="fas fa-video"></i> Σχετικό Βίντεο</h3>
                     <p>Δείτε το πλήρες βίντεο με τις λεπτομέρειες της σύλληψης.</p>
+                    
+                    <!-- ΜΟΝΕΤΑG AD: ΜΕΣΑ ΣΤΟ ΜΠΑΝΕΡ -->
+                    <div class="banner-ad-container" id="monetag-banner-ad-3">
+                        <!-- Η διαφήμιση Monetag θα φορτωθεί ΕΔΩ ΜΕΣΑ -->
+                        <div style="color: var(--gray); font-size: 0.8rem; text-align: center;">
+                            <i class="fas fa-tag fa-lg" style="margin-bottom: 5px;"></i><br>
+                            <strong>Προσφορές Σήμερα</strong>
+                        </div>
+                    </div>
+                    
                     <button class="cta-button" id="playVideo">
                         <i class="fas fa-play"></i> Αναπαραγωγή Βίντεο
                     </button>
-                </div>
-                
-                <div class="sidebar-section">
-                    <h3><i class="fas fa-newspaper"></i> Περισσότερα Άρθρα</h3>
-                    <p>Διαβάστε περισσότερα από το FranklyMaDear.</p>
-                    <a href="index.html" class="cta-button">
-                        <i class="fas fa-arrow-right"></i> ΠΗΓΑΙΝΕ ΣΤΟ BLOG
-                    </a>
                 </div>
             </aside>
         </div>
@@ -527,101 +597,14 @@
         </div>
     </footer>
     
-    <!-- ΚΩΔΙΚΑΣ MONETAG ΜΟΝΟ ΓΙΑ ΤΟ ΒΙΝΤΕΟ -->
-    <!-- Ο ΚΩΔΙΚΑΣ ΕΙΝΑΙ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ ΣΤΟ <div id="videoMonetagAd"> -->
+    <!-- ΚΩΔΙΚΑΣ MONETAG ΓΙΑ ΟΛΕΣ ΤΙΣ ΘΕΣΕΙΣ -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. ΒΑΣΙΚΟ SCRIPT MONETAG ΓΙΑ ΤΟ ΒΙΝΤΕΟ
-            function loadVideoMonetagAd() {
-                const videoAdContainer = document.getElementById('videoMonetagAd');
-                if (videoAdContainer) {
-                    // ΕΔΩ ΕΙΝΑΙ Ο ΚΩΔΙΚΑΣ ΜΟΝΕΤΑG ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ
-                    const script = document.createElement('script');
-                    script.innerHTML = `
-                        (function(s){
-                            s.dataset.zone='9978610',
-                            s.src='https://nap5k.com/tag.min.js'
-                        })(document.createElement('script'))
-                    `;
-                    videoAdContainer.appendChild(script);
-                    console.log('✅ Monetag script loaded IN VIDEO');
-                }
-            }
-            
-            // 2. ΔΙΑΧΕΙΡΙΣΗ ΔΙΑΦΗΜΙΣΕΩΝ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ
-            const video = document.getElementById('mainVideo');
-            const adOverlay = document.getElementById('videoAdOverlay');
-            const adCountdown = document.getElementById('adCountdown');
-            const adSeconds = document.getElementById('adSeconds');
-            const skipAdBtn = document.getElementById('skipAdBtn');
-            
-            let adTimer = 5; // 5 δευτερόλεπτα διαφήμιση
-            let countdownInterval;
-            let videoStarted = false;
-            
-            // Απόκρυψη διαφήμισης και έναρξη βίντεο
-            function startVideo() {
-                adOverlay.classList.add('hidden');
-                video.play();
-                videoStarted = true;
-                clearInterval(countdownInterval);
-                
-                // Εδώ μπορείς να στείλεις tracking για successful ad view
-                console.log('💰 Ad completed! Revenue earned');
-            }
-            
-            // Countdown για τη διαφήμιση
-            function startAdCountdown() {
-                loadVideoMonetagAd(); // Φόρτωση διαφήμισης
-                
-                countdownInterval = setInterval(function() {
-                    adTimer--;
-                    adCountdown.textContent = adTimer;
-                    adSeconds.textContent = adTimer;
-                    skipAdBtn.textContent = `Παράλειψη διαφήμισης (${adTimer}s)`;
-                    
-                    if (adTimer <= 0) {
-                        startVideo();
-                    }
-                }, 1000);
-            }
-            
-            // Κουμπί skip διαφήμισης
-            skipAdBtn.addEventListener('click', function() {
-                if (adTimer <= 3) { // Μπορείς να skip μετά από 3 δευτερόλεπτα
-                    startVideo();
-                }
-            });
-            
-            // 3. ΞΕΚΙΝΑ ΔΙΑΦΗΜΙΣΗ ΟΤΑΝ ΠΑΤΗΣΕΙ ΚΑΠΟΙΟΣ PLAY
-            video.addEventListener('play', function() {
-                if (!videoStarted) {
-                    video.pause(); // Σταματά το βίντεο
-                    startAdCountdown(); // Ξεκινά διαφήμιση
-                }
-            });
-            
-            // 4. ΕΠΙΠΛΕΟΝ ΔΙΑΦΗΜΙΣΕΙΣ ΑΝΑ ΠΑΡΑΤΗΡΗΣΗ
-            // Μπορείς να βάλεις και mid-roll ads (μεταξύ του βίντεο)
-            video.addEventListener('timeupdate', function() {
-                // Αν φτάσει το 30% του βίντεο, βάλε διαφήμιση
-                if (video.currentTime >= video.duration * 0.3 && !videoStarted) {
-                    // Εδώ μπορείς να βάλεις mid-roll ad
-                    console.log('🎯 Mid-roll ad opportunity');
-                }
-            });
-            
-            // 5. ΟΙ ΔΙΑΦΗΜΙΣΕΙΣ ΓΕΝΙΚΑ ΣΤΗΝ ΣΕΛΙΔΑ
-            const adContainers = [
-                'monetag-banner-ad-1',
-                'monetag-banner-ad-2',
-                'monetag-inline-ad-1'
-            ];
-            
-            // Φόρτωση επιπλέον διαφημίσεων
-            adContainers.forEach(containerId => {
+            // Κώδικας Monetag για ΟΛΕΣ τις διαφημίσεις
+            function loadMonetagAd(containerId) {
                 const container = document.getElementById(containerId);
                 if (container) {
+                    // Δημιουργία script για Monetag
                     const script = document.createElement('script');
                     script.innerHTML = `
                         (function(s){
@@ -631,9 +614,24 @@
                     `;
                     container.appendChild(script);
                 }
+            }
+            
+            // Φόρτωση διαφημίσεων σε ΟΛΑ τα containers
+            const adContainers = [
+                'monetag-video-ad-1',      // Μέσα στο βίντεο
+                'monetag-inline-ad-1',     // Μέσα στο κείμενο 1
+                'monetag-inline-ad-2',     // Μέσα στο κείμενο 2
+                'monetag-banner-ad-1',     // Μέσα στο μπάνερ 1
+                'monetag-banner-ad-2',     // Μέσα στο μπάνερ 2
+                'monetag-banner-ad-3'      // Μέσα στο μπάνερ 3
+            ];
+            
+            // Φόρτωση ΚΑΘΕ διαφήμισης
+            adContainers.forEach(containerId => {
+                loadMonetagAd(containerId);
             });
             
-            // 6. ΑΛΛΕΣ ΛΕΙΤΟΥΡΓΙΕΣ
+            // Social Media Sharing Functions
             const pageUrl = encodeURIComponent(window.location.href);
             const pageTitle = encodeURIComponent(document.title);
             
@@ -647,31 +645,47 @@
                 window.open(url, 'twitter-share', 'width=600,height=400');
             }
             
+            // Share Buttons
             document.getElementById('sidebarFacebookShare').addEventListener('click', shareOnFacebook);
             document.getElementById('sidebarTwitterShare').addEventListener('click', shareOnTwitter);
-            document.getElementById('playVideo').addEventListener('click', function() {
-                video.scrollIntoView({ behavior: 'smooth' });
-                video.play();
+            
+            // Add to Home Screen
+            document.getElementById('addToHomeScreen').addEventListener('click', function() {
+                if ('serviceWorker' in navigator && 'BeforeInstallPromptEvent' in window) {
+                    window.deferredPrompt.prompt();
+                    window.deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            alert('Η σελίδα προστέθηκε στην αρχική οθόνη!');
+                        }
+                    });
+                } else {
+                    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
+                        alert('Πατήστε το κουμπί "Share" και επιλέξτε "Add to Home Screen"');
+                    } else if (/Android/.test(navigator.userAgent)) {
+                        alert('Πατήστε το μενού του browser και επιλέξτε "Add to Home Screen"');
+                    } else {
+                        alert('Χρησιμοποιήστε το μενού του browser για να προσθέσετε στη αρχική οθόνη');
+                    }
+                }
             });
             
-            // 7. ΑΝΑΦΟΡΑ ΕΣΟΔΩΝ (προσομοίωση)
-            function simulateRevenue() {
-                // Προσομοίωση εσόδων από διαφημίσεις
-                const adViews = Math.floor(Math.random() * 100) + 50;
-                const revenue = (adViews * 0.02).toFixed(2); // $0.02 ανά view
-                
-                console.log(`📊 Revenue Report:`);
-                console.log(`👁️ Ad Views: ${adViews}`);
-                console.log(`💰 Estimated Revenue: $${revenue}`);
-                console.log(`🎯 Monetag Zone: 9978610`);
-                
-                // Μπορείς να το εμφανίσεις και στο UI αν θέλεις
-                // document.getElementById('revenueDisplay').innerHTML = 
-                //   `<strong>Estimated Revenue: $${revenue}</strong>`;
-            }
+            // Play Video
+            document.getElementById('playVideo').addEventListener('click', function() {
+                const video = document.querySelector('video');
+                if (video) {
+                    video.scrollIntoView({ behavior: 'smooth' });
+                    video.play();
+                    this.innerHTML = '<i class="fas fa-pause"></i> Παύση Βίντεο';
+                }
+            });
             
-            // Κάνε simulate revenue όταν φορτωθεί η σελίδα
-            setTimeout(simulateRevenue, 3000);
+            // Save PWA prompt
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                window.deferredPrompt = deferredPrompt;
+            });
         });
     </script>
 </body>
