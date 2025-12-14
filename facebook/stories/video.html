@@ -8,16 +8,16 @@
   <!-- Open Graph Meta Tags for Facebook -->
   <meta property="og:title" content="Amazing Video Collection">
   <meta property="og:description" content="Watch the most entertaining videos">
-  <meta property="og:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail2.png">
-  <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories/video2.html">
+  <meta property="og:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail.html">
+  <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories/video.html">
   <meta property="og:type" content="website">
   
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Amazing Video Collection">
   <meta name="twitter:description" content="Watch the most entertaining videos">
-  <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail2.png">
-  <meta name="twitter:url" content="https://blog.franklymadear.com/facebook/stories/video2.html">
+  <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail.html">
+  <meta name="twitter:url" content="https://blog.franklymadear.com/facebook/stories/video.html">
   
   <style>
     * {
@@ -707,14 +707,14 @@
     </div>
   </div>
 
-  <!-- Transparent Overlay for Ad Click -->
+  <!-- Transparent Overlay for Video Click -->
   <div class="transparent-overlay" id="transparentOverlay"></div>
 
   <div class="video-container" id="videoContainer">
     <!-- Video Glow Effect -->
     <div class="video-glow"></div>
     
-    <video id="mainVideo" playsinline webkit-playsinline muted preload="auto" poster="https://blog.franklymadear.com/facebook/stories/thumbnail2.png">
+    <video id="mainVideo" playsinline webkit-playsinline muted preload="auto" poster="https://blog.franklymadear.com/facebook/stories/thumbnail.html">
       <source id="videoSource" src="" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -734,9 +734,6 @@
 
     <!-- Video Counter -->
     <div class="video-counter" id="videoCounter"></div>
-
-    <!-- Ad Script INSIDE the video container -->
-    <script src="https://fpyf8.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
   </div> 
 
   <div class="reaction-bar">
@@ -835,7 +832,7 @@
     const videoPreview = document.getElementById('videoPreview');
     const transparentOverlay = document.getElementById('transparentOverlay');
 
-    // UPDATED VIDEO LIST WITH 9 VIDEOS
+    // Λίστα με 10 βίντεο
     const videoList = [
         "https://blog.franklymadear.com/facebook/stories/video1.mp4",
         "https://blog.franklymadear.com/facebook/stories/video2.mp4",
@@ -845,9 +842,11 @@
         "https://blog.franklymadear.com/facebook/stories/video6.mp4",
         "https://blog.franklymadear.com/facebook/stories/video7.mp4",
         "https://blog.franklymadear.com/facebook/stories/video8.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video9.mp4"
+        "https://blog.franklymadear.com/facebook/stories/video9.mp4",
+        "https://blog.franklymadear.com/facebook/stories/video10.mp4"
     ];
     
+    // Λίστα με 10 preview images
     const videoPreviews = [
         "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
         "https://blog.franklymadear.com/facebook/stories/thumbnail2.png",
@@ -857,23 +856,25 @@
         "https://blog.franklymadear.com/facebook/stories/thumbnail6.png",
         "https://blog.franklymadear.com/facebook/stories/thumbnail7.png",
         "https://blog.franklymadear.com/facebook/stories/thumbnail8.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail9.png"
+        "https://blog.franklymadear.com/facebook/stories/thumbnail9.png",
+        "https://blog.franklymadear.com/facebook/stories/thumbnail10.png"
     ];
     
+    // Τίτλοι για τα βίντεο
     const videoTitles = [
-        "Video 1",
-        "Video 2", 
-        "Video 3",
-        "Video 4",
-        "Video 5",
-        "Video 6",
-        "Amazing Video",
-        "Incredible Video",
-        "Final Scene"
+        "Video 1 - Awesome Moments",
+        "Video 2 - Funny Clips", 
+        "Video 3 - Amazing Scenes",
+        "Video 4 - Epic Moments",
+        "Video 5 - Funny Fails",
+        "Video 6 - Incredible Views",
+        "Video 7 - Hilarious Moments",
+        "Video 8 - Amazing Adventure",
+        "Video 9 - Epic Journey",
+        "Video 10 - Final Chapter"
     ];
 
     let currentVideoIndex = 0;
-    let hasClickedAd = false;
     let isInSocialMediaApp = false;
 
     // Check if we're in a social media app
@@ -887,7 +888,7 @@
                           userAgent.includes('twitterforandroid');
       
       if (isInSocialMediaApp) {
-        console.log('Running in social media app - disabling ads');
+        console.log('Running in social media app - auto-playing video');
         // Auto-play video immediately in social media apps
         setTimeout(() => {
           playVideo();
@@ -935,42 +936,10 @@
         
         if (!isInSocialMediaApp) {
           videoOverlay.classList.remove('hidden');
+          transparentOverlay.classList.remove('hidden');
           console.log('Page loaded - showing preview and waiting for user to play');
         } else {
           console.log('Running in social media app - auto-playing video');
-        }
-    }
-
-    // Redirect to ad URL
-    function redirectToAd() {
-        if (!hasClickedAd && !isInSocialMediaApp) {
-            hasClickedAd = true;
-            
-            // Create a more reliable ad opening method
-            const openAd = () => {
-              try {
-                const adWindow = window.open('https://otieu.com/4/10021790', '_blank');
-                if (adWindow) {
-                  // Focus back to our window after ad opens
-                  setTimeout(() => {
-                    window.focus();
-                    playVideo();
-                  }, 1000);
-                } else {
-                  // If popup blocked, play video directly
-                  playVideo();
-                }
-              } catch (e) {
-                // If any error, just play the video
-                playVideo();
-              }
-            };
-            
-            // Try to open ad
-            openAd();
-        } else {
-            // If ad already clicked or in social media app, just play the video
-            playVideo();
         }
     }
 
@@ -1033,9 +1002,6 @@
                 playVideo();
               }, 500);
             }
-            
-            // Reset ad click for new video
-            hasClickedAd = false;
             
             console.log('Loading video:', videoList[index]);
         }
@@ -1170,8 +1136,8 @@
     }
 
     // Event listeners
-    videoOverlay.addEventListener('click', redirectToAd);
-    transparentOverlay.addEventListener('click', redirectToAd);
+    videoOverlay.addEventListener('click', playVideo);
+    transparentOverlay.addEventListener('click', playVideo);
     nextVideoBtn.addEventListener('click', nextVideo);
     prevVideoBtn.addEventListener('click', prevVideo);
 
@@ -1253,7 +1219,7 @@
         prevVideo();
       } else if (event.key === ' ') {
         event.preventDefault();
-        redirectToAd();
+        playVideo();
       } else if (event.key === 'Escape') {
         closeShareModal();
       }
