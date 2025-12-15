@@ -46,7 +46,7 @@
         }
         
         /* Video Container - TRUE Full Screen */
-        .video-player {
+        .video-container {
             position: fixed;
             top: 0;
             left: 0;
@@ -59,9 +59,8 @@
             justify-content: center;
         }
         
-        /* Force Rumble iframe to be truly full screen */
-        #rumble_v70vcqs,
-        iframe {
+        /* Force iframe to be truly full screen */
+        .video-container iframe {
             position: absolute !important;
             top: 0 !important;
             left: 0 !important;
@@ -231,24 +230,8 @@
 </head>
 <body>
     <!-- Video Container - TRUE Full Screen -->
-    <div class="video-player">
-        <!-- Rumble Script for video -->
-        <div id="rumble_v70vcqs"></div>
-        <script>
-            !function(r,u,m,b,l,e){
-                r._Rumble=b,r[b]||(r[b]=function(){
-                    (r[b]._=r[b]._||[]).push(arguments);
-                    if(r[b]._.length==1){
-                        l=u.createElement(m),e=u.getElementsByTagName(m)[0],
-                        l.async=1,
-                        l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),
-                        e.parentNode.insertBefore(l,e)
-                    }
-                })
-            }(window, document, "script", "Rumble");
-            
-            Rumble("play", {"video":"v70vcqs","div":"rumble_v70vcqs"});
-        </script>
+    <div class="video-container">
+        <iframe class="rumble" width="640" height="360" src="https://rumble.com/embed/v70vcqs/?pub=4o047w" frameborder="0" allowfullscreen></iframe>
     </div>
     
     <!-- Share Buttons - Discreet Fixed Position -->
@@ -314,37 +297,23 @@
                 });
         }
         
-        // Force full screen for video player
+        // Force full screen for iframe
         function forceFullScreen() {
-            const videoDiv = document.getElementById('rumble_v70vcqs');
-            if (videoDiv) {
-                // Force the container to be full screen
-                videoDiv.style.position = 'absolute';
-                videoDiv.style.top = '0';
-                videoDiv.style.left = '0';
-                videoDiv.style.width = '100%';
-                videoDiv.style.height = '100%';
-                videoDiv.style.minHeight = '100vh';
+            const iframe = document.querySelector('iframe');
+            if (iframe) {
+                iframe.style.position = 'absolute';
+                iframe.style.top = '0';
+                iframe.style.left = '0';
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.minHeight = '100vh';
+                iframe.style.border = 'none';
             }
-            
-            // Also target any iframe that Rumble creates
-            setTimeout(() => {
-                const iframes = document.querySelectorAll('iframe');
-                iframes.forEach(iframe => {
-                    iframe.style.position = 'absolute';
-                    iframe.style.top = '0';
-                    iframe.style.left = '0';
-                    iframe.style.width = '100%';
-                    iframe.style.height = '100%';
-                    iframe.style.minHeight = '100vh';
-                    iframe.style.border = 'none';
-                });
-            }, 1000);
         }
         
-        // Run on load and after a delay for dynamic content
+        // Run on load
         window.addEventListener('load', forceFullScreen);
-        setTimeout(forceFullScreen, 2000);
+        setTimeout(forceFullScreen, 500);
         
         // Mobile tap handling for share buttons
         const shareContainer = document.querySelector('.share-container');
