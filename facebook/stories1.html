@@ -4,239 +4,272 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Βασικά Meta Tags -->
+    <!-- Facebook Meta Tags -->
     <title>Facebook Stories Video</title>
-    
-    <!-- Open Graph για Facebook -->
     <meta property="og:title" content="Facebook Stories - Ενδιαφέρον Βίντεο">
-    <meta property="og:description" content="Παρακολουθήστε αυτό το μοναδικό βίντεο με Facebook Stories">
+    <meta property="og:description" content="Παρακολουθήστε αυτό το μοναδικό βίντεο">
     <meta property="og:image" content="https://blog.franklymadear.com/facebook/thumbnail1.png">
     <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories1.html">
     <meta property="og:type" content="video.other">
     <meta property="og:video" content="https://rumble.com/embed/v70uu96/">
-    <meta property="og:site_name" content="FranklyMadEar Blog">
     
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="player">
     <meta name="twitter:title" content="Facebook Stories - Ενδιαφέρον Βίντεο">
-    <meta name="twitter:description" content="Παρακολουθήστε αυτό το μοναδικό βίντεο με Facebook Stories">
+    <meta name="twitter:description" content="Παρακολουθήστε αυτό το μοναδικό βίντεο">
     <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/thumbnail1.png">
     <meta name="twitter:player" content="https://rumble.com/embed/v70uu96/">
     <meta name="twitter:player:width" content="640">
     <meta name="twitter:player:height" content="360">
-    <meta name="twitter:site" content="@FranklyMadEar">
     
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            background-color: #000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        .video-player {
+            width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f2f5;
-        }
-        .video-container {
-            background-color: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            border-left: 5px solid #1877f2;
-        }
-        h1 {
-            color: #1877f2;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 28px;
-        }
-        .subtitle {
-            text-align: center;
-            color: #65676b;
-            margin-bottom: 25px;
-            font-size: 16px;
-        }
-        .social-share {
-            text-align: center;
-            margin-top: 25px;
-            padding: 20px;
-            background-color: #f7f8fa;
-            border-radius: 10px;
-        }
-        .social-button {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 0 12px;
-            background-color: #1877f2; /* Facebook blue */
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-        .social-button:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .social-button.twitter {
-            background-color: #1da1f2; /* Twitter blue */
-        }
-        .thumbnail-preview {
-            text-align: center;
-            margin: 25px 0;
-            padding: 15px;
-            background-color: #f7f8fa;
             border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
-        .thumbnail-preview img {
-            max-width: 320px;
-            border: 3px solid #e4e6eb;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        
+        #rumble_v70uu96 {
+            width: 100%;
+            min-height: 450px;
+            background: #111;
         }
-        .instructions {
-            background-color: #f0f8ff;
-            padding: 15px;
-            border-radius: 8px;
+        
+        .share-container {
             margin-top: 20px;
-            font-size: 14px;
-            color: #333;
-        }
-        .video-wrapper {
-            margin: 20px 0;
-            min-height: 400px;
-        }
-        .logo {
             text-align: center;
-            margin-bottom: 20px;
-            font-weight: bold;
-            color: #1877f2;
-            font-size: 20px;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+        
+        .share-container:hover {
+            opacity: 1;
+        }
+        
+        .share-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .share-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .share-btn.facebook {
+            color: #2d88ff;
+        }
+        
+        .share-btn.twitter {
+            color: #1d9bf0;
+        }
+        
+        .share-btn .icon {
+            font-size: 16px;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .video-player {
+                border-radius: 0;
+            }
+            
+            #rumble_v70uu96 {
+                min-height: 350px;
+            }
+            
+            .share-buttons {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+            }
+            
+            .share-btn {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #rumble_v70uu96 {
+                min-height: 250px;
+            }
+            
+            body {
+                padding: 5px;
+            }
+        }
+        
+        /* Loading animation for video */
+        .video-loading {
+            display: none;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 20px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="logo">FranklyMadEar Blog | Facebook Stories</div>
-    
-    <div class="video-container">
-        <h1>Facebook Stories Video</h1>
-        <div class="subtitle">Παρακολουθήστε και κοινοποιήστε αυτό το σπέσιαλ βίντεο</div>
-        
-        <div class="thumbnail-preview">
-            <p><strong>Thumbnail που θα εμφανιστεί:</strong></p>
-            <img src="thumbnail1.png" alt="Facebook Stories Thumbnail" id="video-thumbnail" 
-                 onerror="this.src='https://via.placeholder.com/320x180/1877f2/ffffff?text=Thumbnail+Not+Found'">
-            <p class="instructions">
-                Αυτή η εικόνα (thumbnail1.png) θα εμφανίζεται όταν κοινοποιείτε αυτή τη σελίδα στο Facebook και Twitter.
-            </p>
+    <!-- Video Container -->
+    <div class="video-player">
+        <div class="video-loading" id="loading">
+            Φόρτωση βίντεο...
         </div>
         
-        <div class="video-wrapper">
-            <!-- Το script που έστειλες -->
-            <script>
-            !function(r,u,m,b,l,e){
-                r._Rumble=b,
-                r[b]||(r[b]=function(){
-                    (r[b]._=r[b]._||[]).push(arguments);
-                    if(r[b]._.length==1){
-                        l=u.createElement(m),
-                        e=u.getElementsByTagName(m)[0],
-                        l.async=1,
-                        l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),
-                        e.parentNode.insertBefore(l,e)
-                    }
-                })
-            }(window, document, "script", "Rumble");
-            </script>
+        <!-- Your Rumble Script -->
+        <script>
+        !function(r,u,m,b,l,e){
+            r._Rumble=b,
+            r[b]||(r[b]=function(){
+                (r[b]._=r[b]._||[]).push(arguments);
+                if(r[b]._.length==1){
+                    l=u.createElement(m),
+                    e=u.getElementsByTagName(m)[0],
+                    l.async=1,
+                    l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),
+                    e.parentNode.insertBefore(l,e)
+                }
+            })
+        }(window, document, "script", "Rumble");
+        </script>
 
-            <div id="rumble_v70uu96"></div>
-            
-            <script>
-                Rumble("play", {
-                    "video":"v70uu96",
-                    "div":"rumble_v70uu96"
-                });
-            </script>
-        </div>
+        <div id="rumble_v70uu96"></div>
         
-        <div class="social-share">
-            <h3>Κοινοποιήστε το βίντεο:</h3>
+        <script>
+            // Show loading indicator
+            document.getElementById('loading').style.display = 'block';
             
-            <!-- Facebook Share -->
+            // Load video
+            Rumble("play", {
+                "video":"v70uu96",
+                "div":"rumble_v70uu96"
+            });
+            
+            // Hide loading when video is ready
+            setTimeout(() => {
+                document.getElementById('loading').style.display = 'none';
+            }, 2000);
+        </script>
+    </div>
+    
+    <!-- Discreet Share Buttons -->
+    <div class="share-container">
+        <div class="share-text">Κοινοποίηση</div>
+        <div class="share-buttons">
             <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/facebook/stories1.html" 
                target="_blank" 
-               class="social-button"
+               class="share-btn facebook"
                onclick="trackShare('facebook')">
-               <span>📘 Κοινή χρήση στο Facebook</span>
+               <span class="icon">📘</span>
+               <span>Facebook</span>
             </a>
             
-            <!-- Twitter Share -->
-            <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/stories1.html&text=Παρακολουθήστε%20αυτό%20το%20μοναδικό%20βίντεο%20στο%20FranklyMadEar%20Blog%20-%20Facebook%20Stories" 
+            <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/stories1.html&text=Παρακολουθήστε%20αυτό%20το%20μοναδικό%20βίντεο" 
                target="_blank" 
-               class="social-button twitter"
+               class="share-btn twitter"
                onclick="trackShare('twitter')">
-               <span>🐦 Κοινή χρήση στο Twitter</span>
+               <span class="icon">🐦</span>
+               <span>Twitter</span>
             </a>
-            
-            <div class="instructions">
-                <p><strong>Οδηγίες:</strong></p>
-                <ol>
-                    <li>Κάντε κλικ σε ένα από τα παραπάνω κουμπιά για κοινή χρήση</li>
-                    <li>Το βίντεο θα κοινοποιηθεί με τον τίτλο, περιγραφή και εικόνα που βλέπετε παραπάνω</li>
-                    <li>Βεβαιωθείτε ότι το αρχείο <code>thumbnail1.png</code> βρίσκεται στο ίδιο φάκελο</li>
-                </ol>
-            </div>
         </div>
     </div>
     
     <script>
-        // Track sharing
         function trackShare(platform) {
-            console.log(`Sharing to ${platform} from ${window.location.href}`);
+            // Analytics tracking (optional)
+            console.log(`Sharing to ${platform}`);
             
-            // You can add analytics tracking here
-            // Example: Google Analytics event tracking
-            if(typeof gtag !== 'undefined') {
-                gtag('event', 'share', {
-                    'method': platform,
-                    'content_type': 'video',
-                    'content_id': 'v70uu96'
-                });
-            }
+            // Minimal notification
+            const msg = platform === 'facebook' ? 
+                'Ανοίγει το Facebook για κοινή χρήση...' : 
+                'Ανοίγει το Twitter για κοινή χράση...';
             
-            // Show a brief message
-            alert(`Έτοιμοι για κοινή χρήση στο ${platform === 'facebook' ? 'Facebook' : 'Twitter'}!\n\nΤο βίντεο θα κοινοποιηθεί με:\n• Τίτλο: Facebook Stories - Ενδιαφέρον Βίντεο\n• Περιγραφή: Παρακολουθήστε αυτό το μοναδικό βίντεο με Facebook Stories\n• Thumbnail: thumbnail1.png`);
+            // Optional: Show a subtle notification
+            const notification = document.createElement('div');
+            notification.textContent = msg;
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 20px;
+                font-size: 13px;
+                z-index: 1000;
+                animation: fadeInOut 3s ease;
+            `;
+            
+            // Add animation styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; bottom: 10px; }
+                    20% { opacity: 1; bottom: 20px; }
+                    80% { opacity: 1; bottom: 20px; }
+                    100% { opacity: 0; bottom: 10px; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
         }
         
-        // Verify thumbnail exists
-        document.addEventListener('DOMContentLoaded', function() {
-            const thumbnail = document.getElementById('video-thumbnail');
-            
-            // Check if thumbnail loads successfully
-            thumbnail.addEventListener('load', function() {
-                console.log('Thumbnail loaded successfully');
-            });
-            
-            thumbnail.addEventListener('error', function() {
-                console.warn('Το thumbnail1.png δεν βρέθηκε. Βεβαιωθείτε ότι το αρχείο είναι στον ίδιο φάκελο.');
-                this.alt = 'Thumbnail not found - Please upload thumbnail1.png';
-            });
-            
-            // Auto-generate absolute URL for better sharing preview
-            function updateAbsoluteUrls() {
-                const currentUrl = window.location.href;
-                const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-                
-                // Update thumbnail URL for meta tags dynamically
-                document.querySelector('meta[property="og:image"]').content = 
-                    document.querySelector('meta[name="twitter:image"]').content = 
-                    baseUrl + 'thumbnail1.png';
-            }
-            
-            updateAbsoluteUrls();
-        });
+        // Handle thumbnail image
+        const metaImage = document.createElement('link');
+        metaImage.rel = 'preload';
+        metaImage.as = 'image';
+        metaImage.href = 'https://blog.franklymadear.com/facebook/thumbnail1.png';
+        document.head.appendChild(metaImage);
     </script>
 </body>
 </html>
