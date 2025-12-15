@@ -31,32 +31,44 @@
             box-sizing: border-box;
         }
         
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
             background-color: #000;
-            min-height: 100vh;
+        }
+        
+        body {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             position: relative;
         }
         
+        /* Video Container - TRUE Full Screen */
         .video-player {
-            width: 100vw;
-            height: 100vh;
-            margin: 0;
-            background: #000;
             position: fixed;
             top: 0;
             left: 0;
-            z-index: 1;
-        }
-        
-        #rumble_v70v7w4 {
             width: 100%;
             height: 100%;
+            z-index: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Force Rumble iframe to be truly full screen */
+        #rumble_v70vcqs,
+        iframe {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            min-height: 100vh !important;
         }
         
         /* Share buttons - Fixed position, discreet */
@@ -82,6 +94,7 @@
             font-size: 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
+            z-index: 1001;
         }
         
         .share-toggle:hover {
@@ -93,18 +106,19 @@
             position: absolute;
             bottom: 60px;
             right: 0;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            padding: 12px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             opacity: 0;
             visibility: hidden;
             transform: translateY(10px);
             transition: all 0.3s ease;
-            min-width: 160px;
+            min-width: 170px;
+            backdrop-filter: blur(10px);
         }
         
         .share-container:hover .share-buttons {
@@ -114,66 +128,66 @@
         }
         
         .share-title {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 12px;
-            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-bottom: 10px;
             text-align: center;
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 6px;
+            font-weight: 600;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         .share-btn {
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.9);
-            padding: 8px 12px;
-            border-radius: 6px;
+            color: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
             text-decoration: none;
-            font-size: 13px;
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             transition: all 0.2s ease;
         }
         
         .share-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             transform: translateX(-2px);
         }
         
         .share-btn.fb {
-            border-color: rgba(59, 89, 152, 0.3);
+            border-color: rgba(59, 89, 152, 0.4);
             color: #8bb9ff;
         }
         
         .share-btn.tw {
-            border-color: rgba(29, 161, 242, 0.3);
+            border-color: rgba(29, 161, 242, 0.4);
             color: #7bcbff;
         }
         
         .share-btn.wa {
-            border-color: rgba(37, 211, 102, 0.3);
+            border-color: rgba(37, 211, 102, 0.4);
             color: #8bffb3;
         }
         
         .share-btn.tg {
-            border-color: rgba(0, 136, 204, 0.3);
+            border-color: rgba(0, 136, 204, 0.4);
             color: #80d4ff;
         }
         
         .share-btn.mail {
-            border-color: rgba(220, 53, 69, 0.3);
+            border-color: rgba(220, 53, 69, 0.4);
             color: #ff8b8b;
         }
         
         .share-btn.link {
-            border-color: rgba(153, 153, 153, 0.3);
+            border-color: rgba(153, 153, 153, 0.4);
             color: #ccc;
         }
         
         .icon {
-            font-size: 14px;
+            font-size: 16px;
             min-width: 20px;
             text-align: center;
         }
@@ -194,12 +208,13 @@
             .share-buttons {
                 bottom: 55px;
                 right: 0;
-                min-width: 150px;
+                min-width: 160px;
+                padding: 12px;
             }
             
             .share-btn {
-                font-size: 12px;
-                padding: 7px 10px;
+                font-size: 13px;
+                padding: 9px 12px;
             }
         }
         
@@ -211,24 +226,13 @@
                 left: 10px;
                 min-width: auto;
             }
-            
-            .share-btn {
-                justify-content: center;
-            }
-        }
-        
-        /* Video player adjustments for mobile */
-        @media (max-height: 600px) {
-            .share-buttons {
-                bottom: 50px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Video Container - Full Screen -->
+    <!-- Video Container - TRUE Full Screen -->
     <div class="video-player">
-        <!-- Rumble Script for SECOND video -->
+        <!-- Rumble Script for video -->
         <div id="rumble_v70vcqs"></div>
         <script>
             !function(r,u,m,b,l,e){
@@ -310,36 +314,67 @@
                 });
         }
         
-        // Auto-hide share buttons after 5 seconds if not hovering
-        let hideTimeout;
+        // Force full screen for video player
+        function forceFullScreen() {
+            const videoDiv = document.getElementById('rumble_v70vcqs');
+            if (videoDiv) {
+                // Force the container to be full screen
+                videoDiv.style.position = 'absolute';
+                videoDiv.style.top = '0';
+                videoDiv.style.left = '0';
+                videoDiv.style.width = '100%';
+                videoDiv.style.height = '100%';
+                videoDiv.style.minHeight = '100vh';
+            }
+            
+            // Also target any iframe that Rumble creates
+            setTimeout(() => {
+                const iframes = document.querySelectorAll('iframe');
+                iframes.forEach(iframe => {
+                    iframe.style.position = 'absolute';
+                    iframe.style.top = '0';
+                    iframe.style.left = '0';
+                    iframe.style.width = '100%';
+                    iframe.style.height = '100%';
+                    iframe.style.minHeight = '100vh';
+                    iframe.style.border = 'none';
+                });
+            }, 1000);
+        }
+        
+        // Run on load and after a delay for dynamic content
+        window.addEventListener('load', forceFullScreen);
+        setTimeout(forceFullScreen, 2000);
+        
+        // Mobile tap handling for share buttons
         const shareContainer = document.querySelector('.share-container');
+        const shareToggle = document.querySelector('.share-toggle');
         
-        shareContainer.addEventListener('mouseenter', () => {
-            clearTimeout(hideTimeout);
-        });
-        
-        shareContainer.addEventListener('mouseleave', () => {
-            hideTimeout = setTimeout(() => {
-                shareContainer.classList.remove('active');
-            }, 3000);
-        });
-        
-        // Toggle share buttons on mobile tap
-        shareContainer.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 768) {
+            shareToggle.addEventListener('click', (e) => {
                 e.stopPropagation();
                 shareContainer.classList.toggle('active');
-            }
-        });
-        
-        // Close share buttons when clicking outside on mobile
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 && 
-                !shareContainer.contains(e.target) && 
-                shareContainer.classList.contains('active')) {
-                shareContainer.classList.remove('active');
-            }
-        });
+                if (shareContainer.classList.contains('active')) {
+                    shareContainer.querySelector('.share-buttons').style.opacity = '1';
+                    shareContainer.querySelector('.share-buttons').style.visibility = 'visible';
+                    shareContainer.querySelector('.share-buttons').style.transform = 'translateY(0)';
+                } else {
+                    shareContainer.querySelector('.share-buttons').style.opacity = '0';
+                    shareContainer.querySelector('.share-buttons').style.visibility = 'hidden';
+                    shareContainer.querySelector('.share-buttons').style.transform = 'translateY(10px)';
+                }
+            });
+            
+            // Close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!shareContainer.contains(e.target) && shareContainer.classList.contains('active')) {
+                    shareContainer.classList.remove('active');
+                    shareContainer.querySelector('.share-buttons').style.opacity = '0';
+                    shareContainer.querySelector('.share-buttons').style.visibility = 'hidden';
+                    shareContainer.querySelector('.share-buttons').style.transform = 'translateY(10px)';
+                }
+            });
+        }
     </script>
 </body>
 </html>
