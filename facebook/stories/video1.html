@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Amazing Video Collection</title>
+  <title>Άλλα λέει η θειαμ</title>
   
-  <!-- Open Graph Meta Tags for Facebook -->
-  <meta property="og:title" content="Amazing Video Collection">
-  <meta property="og:description" content="Watch the most entertaining videos">
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Amazing Rumble Videos">
+  <meta property="og:description" content="Watch the most entertaining videos from Rumble">
   <meta property="og:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail.html">
   <meta property="og:url" content="https://blog.franklymadear.com/facebook/stories/video.html">
   <meta property="og:type" content="website">
   
   <!-- Twitter Card Meta Tags -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Amazing Video Collection">
-  <meta name="twitter:description" content="Watch the most entertaining videos">
+  <meta name="twitter:title" content="Amazing Rumble Videos">
+  <meta name="twitter:description" content="Watch the most entertaining videos from Rumble">
   <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/stories/thumbnail.html">
   <meta name="twitter:url" content="https://blog.franklymadear.com/facebook/stories/video.html">
   
@@ -35,7 +35,7 @@
       position: relative;
     }
 
-    /* Enhanced Background Effects */
+    /* Background Effects */
     .background-container {
       position: fixed;
       top: 0;
@@ -153,18 +153,39 @@
       top: 0;
       left: 0;
       z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background: #000;
+    /* Iframe styling */
+    .rumble-iframe {
+      width: 90%;
+      height: 90%;
+      max-width: 1200px;
+      max-height: 675px;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
       z-index: 3;
       position: relative;
+      background: #000;
+    }
+    
+    .iframe-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .iframe-wrapper.active {
+      display: flex;
     }
 
-    /* Enhanced border glow effect */
+    /* Video Glow Effect */
     .video-glow {
       position: absolute;
       top: 50%;
@@ -202,71 +223,6 @@
         background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.3), transparent);
         box-shadow: 0 0 50px rgba(52, 152, 219, 0.2);
       }
-    }
-
-    /* Transparent Overlay for Video Click */
-    .transparent-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      z-index: 50;
-      cursor: pointer;
-    }
-    
-    .transparent-overlay.hidden {
-      display: none;
-    }
-
-    /* PLAY BUTTON OVERLAY */
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 15;
-      cursor: pointer;
-      backdrop-filter: blur(5px);
-    }
-    
-    .video-overlay.hidden {
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .play-button {
-      width: 80px;
-      height: 80px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 3px solid white;
-      box-shadow: 0 0 20px rgba(52, 152, 219, 0.7);
-      transition: all 0.3s ease;
-    }
-
-    .play-button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 30px rgba(52, 152, 219, 0.9);
-    }
-
-    .play-button::after {
-      content: '';
-      width: 0;
-      height: 0;
-      border-left: 25px solid white;
-      border-top: 15px solid transparent;
-      border-bottom: 15px solid transparent;
-      margin-left: 5px;
     }
 
     /* NEXT BUTTON */
@@ -364,6 +320,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 1;
+      border-radius: 10px;
     }
 
     .reaction-bar {
@@ -598,17 +555,31 @@
       user-select: none;
     }
 
+    /* Loading Spinner */
+    .loading-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: #3498db;
+      animation: spin 1s ease-in-out infinite;
+      z-index: 10;
+    }
+    
+    @keyframes spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
     /* Mobile optimizations */
-    @media (max-width: 480px) {
-      .play-button {
-        width: 70px;
-        height: 70px;
-      }
-      
-      .play-button::after {
-        border-left-width: 16px;
-        border-top-width: 10px;
-        border-bottom-width: 10px;
+    @media (max-width: 768px) {
+      .rumble-iframe {
+        width: 100%;
+        height: 70%;
+        max-height: 500px;
       }
       
       .next-video-btn, .prev-video-btn {
@@ -656,16 +627,10 @@
       }
     }
 
-    @media (max-width: 360px) {
-      .play-button {
-        width: 60px;
-        height: 60px;
-      }
-      
-      .play-button::after {
-        border-left-width: 14px;
-        border-top-width: 8px;
-        border-bottom-width: 8px;
+    @media (max-width: 480px) {
+      .rumble-iframe {
+        height: 60%;
+        max-height: 400px;
       }
       
       .next-video-btn, .prev-video-btn {
@@ -707,23 +672,92 @@
     </div>
   </div>
 
-  <!-- Transparent Overlay for Video Click -->
-  <div class="transparent-overlay" id="transparentOverlay"></div>
-
   <div class="video-container" id="videoContainer">
     <!-- Video Glow Effect -->
     <div class="video-glow"></div>
     
-    <video id="mainVideo" playsinline webkit-playsinline muted preload="auto" poster="https://blog.franklymadear.com/facebook/stories/thumbnail.html">
-      <source id="videoSource" src="" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner"></div>
     
-    <!-- Video Preview Image -->
-    <img id="videoPreview" class="video-preview" src="" alt="Video preview" style="display: none;">
+    <!-- Rumble Iframe Wrappers -->
+    <div class="iframe-wrapper active" id="iframeWrapper1">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu96/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
     
-    <div class="video-overlay" id="videoOverlay">
-        <div class="play-button"></div>
+    <div class="iframe-wrapper" id="iframeWrapper2">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu97/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper3">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu98/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper4">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu99/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper5">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu9a/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper6">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu9b/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper7">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu9c/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper8">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu9d/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper9">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu9e/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
+    </div>
+    
+    <div class="iframe-wrapper" id="iframeWrapper10">
+      <iframe class="rumble-iframe" 
+              src="https://rumble.com/embed/v70uu9f/?pub=4o047w"
+              frameborder="0" 
+              allowfullscreen>
+      </iframe>
     </div>
 
     <!-- Previous Video Button -->
@@ -733,9 +767,10 @@
     <button class="next-video-btn" id="nextVideoBtn" title="Next video"></button>
 
     <!-- Video Counter -->
-    <div class="video-counter" id="videoCounter"></div>
+    <div class="video-counter" id="videoCounter">1 / 10</div>
   </div> 
 
+  <!-- Reaction Bar -->
   <div class="reaction-bar">
     <div class="share-btn" onclick="openShareModal()" title="Share video">
         <span>+</span>
@@ -777,6 +812,7 @@
     </div>
   </div>
 
+  <!-- Share Modal -->
   <div class="share-modal" id="shareModal">
     <div class="share-header">
       <div class="share-title">Share Video</div>
@@ -820,241 +856,180 @@
   </div>
 
   <script>
-    const video = document.getElementById('mainVideo');
-    const videoOverlay = document.getElementById('videoOverlay');
-    const shareModal = document.getElementById('shareModal');
-    const videoSource = document.getElementById('videoSource');
+    // Video data
+    const videoData = [
+      {
+        id: 1,
+        title: "Rumble Video 1 - Awesome Moments",
+        url: "https://rumble.com/embed/v70uu96/?pub=4o047w"
+      },
+      {
+        id: 2,
+        title: "Rumble Video 2 - Funny Clips",
+        url: "https://rumble.com/embed/v70uu97/?pub=4o047w"
+      },
+      {
+        id: 3,
+        title: "Rumble Video 3 - Amazing Scenes",
+        url: "https://rumble.com/embed/v70uu98/?pub=4o047w"
+      },
+      {
+        id: 4,
+        title: "Rumble Video 4 - Epic Moments",
+        url: "https://rumble.com/embed/v70uu99/?pub=4o047w"
+      },
+      {
+        id: 5,
+        title: "Rumble Video 5 - Funny Fails",
+        url: "https://rumble.com/embed/v70uu9a/?pub=4o047w"
+      },
+      {
+        id: 6,
+        title: "Rumble Video 6 - Incredible Views",
+        url: "https://rumble.com/embed/v70uu9b/?pub=4o047w"
+      },
+      {
+        id: 7,
+        title: "Rumble Video 7 - Hilarious Moments",
+        url: "https://rumble.com/embed/v70uu9c/?pub=4o047w"
+      },
+      {
+        id: 8,
+        title: "Rumble Video 8 - Amazing Adventure",
+        url: "https://rumble.com/embed/v70uu9d/?pub=4o047w"
+      },
+      {
+        id: 9,
+        title: "Rumble Video 9 - Epic Journey",
+        url: "https://rumble.com/embed/v70uu9e/?pub=4o047w"
+      },
+      {
+        id: 10,
+        title: "Rumble Video 10 - Final Chapter",
+        url: "https://rumble.com/embed/v70uu9f/?pub=4o047w"
+      }
+    ];
+
+    // DOM Elements
     const nextVideoBtn = document.getElementById('nextVideoBtn');
     const prevVideoBtn = document.getElementById('prevVideoBtn');
     const videoCounter = document.getElementById('videoCounter');
-    const videoShareInfo = document.getElementById('videoShareInfo');
     const currentVideoName = document.getElementById('currentVideoName');
-    const videoPreview = document.getElementById('videoPreview');
-    const transparentOverlay = document.getElementById('transparentOverlay');
-
-    // Λίστα με 10 βίντεο - αλλαγή των URLs για να χρησιμοποιούν το video.html και thumbnail.html
-    const videoList = [
-        "https://blog.franklymadear.com/facebook/stories/video1.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video2.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video3.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video4.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video5.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video6.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video7.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video8.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video9.mp4",
-        "https://blog.franklymadear.com/facebook/stories/video10.mp4"
-    ];
-    
-    // Λίστα με 10 preview images - αλλαγή των URLs για να χρησιμοποιούν το thumbnail.html
-    const videoPreviews = [
-        "https://blog.franklymadear.com/facebook/stories/thumbnail1.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail2.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail3.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail4.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail5.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail6.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail7.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail8.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail9.png",
-        "https://blog.franklymadear.com/facebook/stories/thumbnail10.png"
-    ];
-    
-    // Τίτλοι για τα βίντεο
-    const videoTitles = [
-        "Video 1 - Awesome Moments",
-        "Video 2 - Funny Clips", 
-        "Video 3 - Amazing Scenes",
-        "Video 4 - Epic Moments",
-        "Video 5 - Funny Fails",
-        "Video 6 - Incredible Views",
-        "Video 7 - Hilarious Moments",
-        "Video 8 - Amazing Adventure",
-        "Video 9 - Epic Journey",
-        "Video 10 - Final Chapter"
-    ];
+    const shareModal = document.getElementById('shareModal');
+    const loadingSpinner = document.getElementById('loadingSpinner');
 
     let currentVideoIndex = 0;
-    let isInSocialMediaApp = false;
+    const totalVideos = videoData.length;
 
-    // Check if we're in a social media app
-    function checkSocialMediaApp() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      isInSocialMediaApp = userAgent.includes('facebook') || 
-                          userAgent.includes('twitter') || 
-                          userAgent.includes('fbios') || 
-                          userAgent.includes('fban') ||
-                          userAgent.includes('twitterforiphone') ||
-                          userAgent.includes('twitterforandroid');
+    // Initialize
+    function init() {
+      currentVideoIndex = getVideoIndexFromURL();
+      showVideo(currentVideoIndex);
+      updateNavigationButtons();
+      updateVideoCounter();
       
-      if (isInSocialMediaApp) {
-        console.log('Running in social media app - auto-playing video');
-        // Auto-play video immediately in social media apps
-        setTimeout(() => {
-          playVideo();
-        }, 1000);
-      }
+      // Hide loading spinner after 1 second
+      setTimeout(() => {
+        loadingSpinner.style.display = 'none';
+      }, 1000);
     }
 
-    // Function to get video index from URL
+    // Get video index from URL
     function getVideoIndexFromURL() {
       const urlParams = new URLSearchParams(window.location.search);
       const videoParam = urlParams.get('video');
       
       if (videoParam) {
         const index = parseInt(videoParam) - 1;
-        if (index >= 0 && index < videoList.length) {
+        if (index >= 0 && index < totalVideos) {
           return index;
         }
       }
       return 0;
     }
 
-    // Function to update URL without reload
+    // Update URL without reload
     function updateURL() {
       const newURL = `${window.location.pathname}?video=${currentVideoIndex + 1}`;
       window.history.replaceState({}, '', newURL);
     }
 
-    // Initialize video
-    function initVideo() {
-        checkSocialMediaApp();
-        currentVideoIndex = getVideoIndexFromURL();
-        
-        // Show preview image immediately
-        videoPreview.src = videoPreviews[currentVideoIndex];
-        videoPreview.style.display = 'block';
-        video.style.display = 'none';
-        
-        // Set video source
-        videoSource.src = videoList[currentVideoIndex];
-        video.load();
-        
-        updateURL();
-        updateVideoCounter();
-        updateNavigationButtons();
-        
-        if (!isInSocialMediaApp) {
-          videoOverlay.classList.remove('hidden');
-          transparentOverlay.classList.remove('hidden');
-          console.log('Page loaded - showing preview and waiting for user to play');
-        } else {
-          console.log('Running in social media app - auto-playing video');
+    // Show specific video
+    function showVideo(index) {
+      // Hide all iframes
+      for (let i = 1; i <= totalVideos; i++) {
+        const wrapper = document.getElementById(`iframeWrapper${i}`);
+        if (wrapper) {
+          wrapper.classList.remove('active');
         }
+      }
+      
+      // Show loading spinner
+      loadingSpinner.style.display = 'block';
+      
+      // Show selected iframe after short delay
+      setTimeout(() => {
+        const selectedWrapper = document.getElementById(`iframeWrapper${index + 1}`);
+        if (selectedWrapper) {
+          selectedWrapper.classList.add('active');
+        }
+        loadingSpinner.style.display = 'none';
+      }, 300);
+      
+      updateURL();
+      updateVideoCounter();
+      updateNavigationButtons();
     }
 
-    // Play video function - ΤΟ ΜΟΝΟ ΠΟΥ ΚΑΝΕΙ ΤΟ ΚΛΙΚ ΤΩΡΑ
-    function playVideo() {
-        videoOverlay.classList.add('hidden');
-        transparentOverlay.classList.add('hidden');
-        videoPreview.style.display = 'none';
-        video.style.display = 'block';
-        
-        // Force video to play with user interaction
-        const playPromise = video.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log('Video started playing successfully');
-                video.muted = false;
-            }).catch(e => {
-                console.log('Auto-play prevented:', e);
-                // Show play button if auto-play fails
-                videoOverlay.classList.remove('hidden');
-                transparentOverlay.classList.remove('hidden');
-            });
-        }
-    }
-
-    // Load video function
-    function loadVideo(index) {
-        if (index >= 0 && index < videoList.length) {
-            currentVideoIndex = index;
-            
-            // Pause current video
-            video.pause();
-            
-            // Show preview image while video loads
-            videoPreview.src = videoPreviews[index];
-            videoPreview.style.display = 'block';
-            video.style.display = 'none';
-            
-            // Set video source and load
-            videoSource.src = videoList[index];
-            
-            // Clear any previous error state
-            video.error = null;
-            
-            // Load the video
-            video.load();
-            
-            updateURL();
-            updateVideoCounter();
-            updateNavigationButtons();
-            
-            // Show play overlay only if not in social media app
-            if (!isInSocialMediaApp) {
-              videoOverlay.classList.remove('hidden');
-              transparentOverlay.classList.remove('hidden');
-            } else {
-              // Auto-play in social media apps
-              setTimeout(() => {
-                playVideo();
-              }, 500);
-            }
-            
-            console.log('Loading video:', videoList[index]);
-        }
-    }
-
+    // Update video counter
     function updateVideoCounter() {
-      videoCounter.textContent = `${currentVideoIndex + 1} / ${videoList.length}`;
-      currentVideoName.textContent = videoTitles[currentVideoIndex];
+      videoCounter.textContent = `${currentVideoIndex + 1} / ${totalVideos}`;
+      currentVideoName.textContent = videoData[currentVideoIndex].title;
     }
 
+    // Update navigation buttons
     function updateNavigationButtons() {
-      // Show/hide previous button
+      // Previous button
       if (currentVideoIndex > 0) {
         prevVideoBtn.style.display = 'flex';
       } else {
         prevVideoBtn.style.display = 'none';
       }
       
-      // Show/hide next button
-      if (currentVideoIndex < videoList.length - 1) {
+      // Next button
+      if (currentVideoIndex < totalVideos - 1) {
         nextVideoBtn.style.display = 'flex';
       } else {
         nextVideoBtn.style.display = 'none';
       }
     }
 
-    // Next video function
+    // Next video
     function nextVideo() {
-        if (currentVideoIndex < videoList.length - 1) {
-            currentVideoIndex++;
-            loadVideo(currentVideoIndex);
-        }
+      if (currentVideoIndex < totalVideos - 1) {
+        currentVideoIndex++;
+        showVideo(currentVideoIndex);
+      }
     }
 
-    // Previous video function
+    // Previous video
     function prevVideo() {
-        if (currentVideoIndex > 0) {
-            currentVideoIndex--;
-            loadVideo(currentVideoIndex);
-        }
+      if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        showVideo(currentVideoIndex);
+      }
     }
 
-    // React to emoji function
+    // React to emoji
     function reactToEmoji(emoji, label) {
-        const emojiElement = event.currentTarget;
-        emojiElement.classList.add('clicked');
-        
-        // Show reaction message
-        showReactionMessage(emoji, label);
-        
-        setTimeout(() => {
-            emojiElement.classList.remove('clicked');
-        }, 600);
+      const emojiElement = event.currentTarget;
+      emojiElement.classList.add('clicked');
+      
+      showReactionMessage(emoji, label);
+      
+      setTimeout(() => {
+        emojiElement.classList.remove('clicked');
+      }, 600);
     }
 
     function showReactionMessage(emoji, label) {
@@ -1086,29 +1061,28 @@
 
     // Share modal functions
     function openShareModal() {
-        shareModal.classList.add('active');
+      shareModal.classList.add('active');
     }
 
     function closeShareModal() {
-        shareModal.classList.remove('active');
+      shareModal.classList.remove('active');
     }
 
-    // Function to get share URL for current video
+    // Share functions
     function getCurrentVideoShareURL() {
       return `${window.location.origin}${window.location.pathname}?video=${currentVideoIndex + 1}`;
     }
 
-    // Share functions
     function shareToFacebook() {
       const url = encodeURIComponent(getCurrentVideoShareURL());
-      const text = encodeURIComponent(`Watch this amazing video: ${videoTitles[currentVideoIndex]}`);
+      const text = encodeURIComponent(`Watch this amazing video: ${videoData[currentVideoIndex].title}`);
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${text}`, '_blank', 'width=600,height=400');
       closeShareModal();
     }
 
     function shareToTwitter() {
       const url = encodeURIComponent(getCurrentVideoShareURL());
-      const text = encodeURIComponent(`Watch this amazing video: ${videoTitles[currentVideoIndex]}`);
+      const text = encodeURIComponent(`Watch this amazing video: ${videoData[currentVideoIndex].title}`);
       window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank', 'width=600,height=400');
       closeShareModal();
     }
@@ -1120,7 +1094,7 @@
     }
 
     function shareToWhatsApp() {
-      const text = encodeURIComponent(`Watch this amazing video: ${videoTitles[currentVideoIndex]} ${getCurrentVideoShareURL()}`);
+      const text = encodeURIComponent(`Watch this amazing video: ${videoData[currentVideoIndex].title} ${getCurrentVideoShareURL()}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
       closeShareModal();
     }
@@ -1128,112 +1102,64 @@
     function copyLink() {
       const url = getCurrentVideoShareURL();
       navigator.clipboard.writeText(url).then(() => {
-        alert(`Link for "${videoTitles[currentVideoIndex]}" copied to clipboard! 📋`);
+        alert(`Link for "${videoData[currentVideoIndex].title}" copied to clipboard! 📋`);
       }).catch(() => {
         prompt('Copy this link:', url);
       });
       closeShareModal();
     }
 
-    // Event listeners - ΜΟΝΟ ΓΙΑ PLAY VIDEO ΤΩΡΑ
-    videoOverlay.addEventListener('click', playVideo);
-    transparentOverlay.addEventListener('click', playVideo);
+    // Event listeners
     nextVideoBtn.addEventListener('click', nextVideo);
     prevVideoBtn.addEventListener('click', prevVideo);
-
-    // VIDEO END LISTENER - AUTO NEXT PLAYBACK
-    video.addEventListener('ended', function() {
-      console.log('Video ended, loading next...');
-      nextVideo();
-    });
-    
-    // HIDE PLAY BUTTON WHEN VIDEO PLAYS
-    video.addEventListener('play', function() {
-      videoOverlay.classList.add('hidden');
-      transparentOverlay.classList.add('hidden');
-    });
-    
-    // SHOW PLAY BUTTON WHEN VIDEO PAUSES
-    video.addEventListener('pause', function() {
-      if (!isInSocialMediaApp) {
-        videoOverlay.classList.remove('hidden');
-        transparentOverlay.classList.remove('hidden');
-      }
-    });
-    
-    // VIDEO LOAD ERROR HANDLER
-    video.addEventListener('error', function() {
-      console.error('Video loading error:', video.error);
-      console.error('Video source:', videoSource.src);
-      
-      // Try to show preview image if video fails
-      videoPreview.style.display = 'block';
-      video.style.display = 'none';
-      if (!isInSocialMediaApp) {
-        videoOverlay.classList.remove('hidden');
-        transparentOverlay.classList.remove('hidden');
-      }
-      
-      alert(`Video loading error: ${videoList[currentVideoIndex]}. Please check if the file exists and is accessible.`);
-    });
-
-    // Successful video load listener
-    video.addEventListener('loadeddata', function() {
-      console.log('Video loaded successfully:', videoSource.src);
-      videoPreview.style.display = 'none';
-      video.style.display = 'block';
-    });
 
     // Swipe functionality for mobile
     let touchStartX = 0;
     let touchEndX = 0;
     
     document.addEventListener('touchstart', e => {
-        touchStartX = e.changedTouches[0].screenX;
+      touchStartX = e.changedTouches[0].screenX;
     }, false);
     
     document.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
     }, false);
     
     function handleSwipe() {
-        const swipeThreshold = 50;
-        
-        if (touchEndX < touchStartX - swipeThreshold) {
-            // Swipe left - next video
-            nextVideo();
-        }
-        
-        if (touchEndX > touchStartX + swipeThreshold) {
-            // Swipe right - previous video
-            prevVideo();
-        }
+      const swipeThreshold = 50;
+      
+      if (touchEndX < touchStartX - swipeThreshold) {
+        nextVideo();
+      }
+      
+      if (touchEndX > touchStartX + swipeThreshold) {
+        prevVideo();
+      }
     }
 
-    // KEYBOARD SHORTCUTS
+    // Keyboard shortcuts
     document.addEventListener('keydown', function(event) {
       if (event.key === 'ArrowRight') {
         nextVideo();
       } else if (event.key === 'ArrowLeft') {
         prevVideo();
-      } else if (event.key === ' ') {
-        event.preventDefault();
-        playVideo();  // Αλλαγή: πλέον παίζει το βίντεο απευθείας
       } else if (event.key === 'Escape') {
         closeShareModal();
       }
     });
     
-    // CLICK OUTSIDE SHARE MODAL TO CLOSE
+    // Close share modal when clicking outside
     document.addEventListener('click', function(event) {
-      if (shareModal.classList.contains('active') && !event.target.closest('.share-modal') && !event.target.closest('.share-btn')) {
+      if (shareModal.classList.contains('active') && 
+          !event.target.closest('.share-modal') && 
+          !event.target.closest('.share-btn')) {
         closeShareModal();
       }
     });
 
-    // Initialize when page loads
-    window.addEventListener('load', initVideo);
+    // Initialize on page load
+    window.addEventListener('load', init);
   </script>
 </body>
 </html>
