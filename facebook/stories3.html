@@ -38,46 +38,89 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            position: relative;
         }
         
         .video-player {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto 20px;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #111;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            background: #000;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
         
         #rumble_v70v7w4 {
             width: 100%;
-            min-height: 500px;
+            height: 100%;
         }
         
+        /* Share buttons - Fixed position, discreet */
         .share-container {
-            max-width: 900px;
-            width: 100%;
-            text-align: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .share-toggle {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .share-toggle:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+        
+        .share-buttons {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+            min-width: 160px;
+        }
+        
+        .share-container:hover .share-buttons {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
         
         .share-title {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            margin-bottom: 12px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-align: center;
             font-weight: 500;
-        }
-        
-        .share-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 6px;
         }
         
         .share-btn {
@@ -90,13 +133,13 @@
             font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             transition: all 0.2s ease;
         }
         
         .share-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(-2px);
         }
         
         .share-btn.fb {
@@ -119,36 +162,39 @@
             color: #80d4ff;
         }
         
-        .share-btn.link {
-            border-color: rgba(153, 153, 153, 0.3);
-            color: #ccc;
-        }
-        
         .share-btn.mail {
             border-color: rgba(220, 53, 69, 0.3);
             color: #ff8b8b;
         }
         
-        .icon {
-            font-size: 14px;
+        .share-btn.link {
+            border-color: rgba(153, 153, 153, 0.3);
+            color: #ccc;
         }
         
-        /* Mobile */
+        .icon {
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        /* Mobile optimizations */
         @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            #rumble_v70v7w4 {
-                min-height: 300px;
-            }
-            
             .share-container {
-                padding: 12px;
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            .share-toggle {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
             }
             
             .share-buttons {
-                gap: 6px;
+                bottom: 55px;
+                right: 0;
+                min-width: 150px;
             }
             
             .share-btn {
@@ -158,70 +204,85 @@
         }
         
         @media (max-width: 480px) {
-            #rumble_v70v7w4 {
-                min-height: 250px;
-            }
-            
             .share-buttons {
-                flex-direction: column;
-                align-items: center;
+                position: fixed;
+                bottom: 70px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
             }
             
             .share-btn {
-                width: 180px;
                 justify-content: center;
+            }
+        }
+        
+        /* Video player adjustments for mobile */
+        @media (max-height: 600px) {
+            .share-buttons {
+                bottom: 50px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Video Container -->
+    <!-- Video Container - Full Screen -->
     <div class="video-player">
         <!-- Rumble Script for SECOND video -->
-
-
-<div id="rumble_v70vcqs"></div>
-
-<div id="rumble_v70vcqs"></div>
-<script>!function(r,u,m,b,l,e){r._Rumble=b,r[b]||(r[b]=function(){(r[b]._=r[b]._||[]).push(arguments);if(r[b]._.length==1){l=u.createElement(m),e=u.getElementsByTagName(m)[0],l.async=1,l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),e.parentNode.insertBefore(l,e)}})}(window, document, "script", "Rumble");</script>
-
-<div id="rumble_v70vcqs"></div>
-<script>
-Rumble("play", {"video":"v70vcqs","div":"rumble_v70vcqs"});</script> </div>
+        <div id="rumble_v70vcqs"></div>
+        <script>
+            !function(r,u,m,b,l,e){
+                r._Rumble=b,r[b]||(r[b]=function(){
+                    (r[b]._=r[b]._||[]).push(arguments);
+                    if(r[b]._.length==1){
+                        l=u.createElement(m),e=u.getElementsByTagName(m)[0],
+                        l.async=1,
+                        l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),
+                        e.parentNode.insertBefore(l,e)
+                    }
+                })
+            }(window, document, "script", "Rumble");
+            
+            Rumble("play", {"video":"v70vcqs","div":"rumble_v70vcqs"});
+        </script>
+    </div>
     
-    <!-- Share Buttons - Compact -->
+    <!-- Share Buttons - Discreet Fixed Position -->
     <div class="share-container">
-        <div class="share-title">Κοινοποίηση:</div>
+        <div class="share-toggle">
+            📤
+        </div>
         <div class="share-buttons">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/facebook/stories2.html" 
+            <div class="share-title">Κοινοποίηση</div>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/facebook/stories3.html" 
                target="_blank" 
                class="share-btn fb">
                <span class="icon">📘</span>
                <span>Facebook</span>
             </a>
             
-            <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/stories2.html&text=Παρακολουθήστε%20αυτό%20το%20μοναδικό%20βίντεο" 
+            <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/stories3.html&text=Παρακολουθήστε%20αυτό%20το%20μοναδικό%20βίντεο" 
                target="_blank" 
                class="share-btn tw">
                <span class="icon">🐦</span>
                <span>Twitter</span>
             </a>
             
-            <a href="https://api.whatsapp.com/send?text=Παρακολουθήστε%20αυτό%20το%20βίντεο:%20https://blog.franklymadear.com/facebook/stories2.html" 
+            <a href="https://api.whatsapp.com/send?text=Παρακολουθήστε%20αυτό%20το%20βίντεο:%20https://blog.franklymadear.com/facebook/stories3.html" 
                target="_blank" 
                class="share-btn wa">
                <span class="icon">📱</span>
                <span>WhatsApp</span>
             </a>
             
-            <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/stories2.html&text=Παρακολουθήστε%20αυτό%20το%20βίντεο" 
+            <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/stories3.html&text=Παρακολουθήστε%20αυτό%20το%20βίντεο" 
                target="_blank" 
                class="share-btn tg">
                <span class="icon">✈️</span>
                <span>Telegram</span>
             </a>
             
-            <a href="mailto:?subject=Παρακολουθήστε αυτό το βίντεο&body=Παρακολουθήστε αυτό το βίντεο: https://blog.franklymadear.com/facebook/stories2.html" 
+            <a href="mailto:?subject=Παρακολουθήστε αυτό το βίντεο&body=Παρακολουθήστε αυτό το βίντεο: https://blog.franklymadear.com/facebook/stories3.html" 
                class="share-btn mail">
                <span class="icon">✉️</span>
                <span>Email</span>
@@ -248,6 +309,37 @@ Rumble("play", {"video":"v70vcqs","div":"rumble_v70vcqs"});</script> </div>
                     console.error('Error copying:', err);
                 });
         }
+        
+        // Auto-hide share buttons after 5 seconds if not hovering
+        let hideTimeout;
+        const shareContainer = document.querySelector('.share-container');
+        
+        shareContainer.addEventListener('mouseenter', () => {
+            clearTimeout(hideTimeout);
+        });
+        
+        shareContainer.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => {
+                shareContainer.classList.remove('active');
+            }, 3000);
+        });
+        
+        // Toggle share buttons on mobile tap
+        shareContainer.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                e.stopPropagation();
+                shareContainer.classList.toggle('active');
+            }
+        });
+        
+        // Close share buttons when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && 
+                !shareContainer.contains(e.target) && 
+                shareContainer.classList.contains('active')) {
+                shareContainer.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
