@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Facebook Meta Tags (ΓΙΑ ΤΟ ΠΡΩΤΟ ΒΙΝΤΕΟ) -->
+    <!-- Facebook Meta Tags -->
     <title>Βίντεο Αφιέρωμα</title>
     <meta property="og:title" content="Βίντεο Αφιέρωμα">
     <meta property="og:description" content="Δείτε αυτά τα μοναδικά βίντεο">
@@ -18,8 +18,10 @@
     <meta name="twitter:description" content="Δείτε αυτά τα μοναδικά βίντεο">
     <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/thumbnail99.png">
 
-    <!-- Canonical URL -->
     <link rel="canonical" href="https://blog.franklymadear.com/facebook/stories.html">
+    
+    <!-- Font Awesome for professional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         * {
@@ -29,43 +31,50 @@
         }
         
         body {
-            background: #000;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1000px;
         }
         
         .slider-container {
             position: relative;
             width: 100%;
-            max-width: 900px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
         
         .video-slider {
             display: flex;
             overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
         .video-slide {
             min-width: 100%;
-            transition: transform 0.5s ease;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .video-wrapper {
             width: 100%;
-            background: #111;
+            background: #000;
+            position: relative;
         }
         
         .rumble-player {
             width: 100%;
-            min-height: 500px;
+            min-height: 560px;
+            background: #000;
         }
         
         /* Navigation Arrows */
@@ -77,270 +86,411 @@
             justify-content: space-between;
             transform: translateY(-50%);
             pointer-events: none;
-            padding: 0 10px;
+            padding: 0 15px;
+            z-index: 10;
         }
         
         .nav-arrow {
-            background: rgba(0,0,0,0.7);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
             color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            font-size: 24px;
+            font-size: 22px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             pointer-events: all;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
         
         .nav-arrow:hover {
-            background: rgba(0,0,0,0.9);
+            background: rgba(255, 255, 255, 0.25);
             transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
         
         /* Dots Indicator */
         .slider-dots {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 20px;
         }
         
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.25);
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
         
         .dot.active {
             background: #fff;
             transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
         
-        /* Share Panel */
+        /* Share Panel - ΕΠΑΓΓΕΛΜΑΤΙΚΟ */
         .share-panel {
-            max-width: 900px;
-            width: 100%;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 20px;
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .share-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .share-title {
             color: #fff;
-            text-align: center;
-            font-size: 16px;
-            margin-bottom: 20px;
-            opacity: 0.9;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
         
+        .share-count {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* ΕΠΑΓΓΕΛΜΑΤΙΚΑ ΚΟΥΜΠΙΑ */
         .share-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
         }
         
         .share-btn {
-            background: rgba(255,255,255,0.07);
-            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            font-size: 14px;
+            justify-content: flex-start;
+            gap: 14px;
+            transition: all 0.3s ease;
+            font-size: 15px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .share-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        .share-btn:hover::before {
+            left: 100%;
         }
         
         .share-btn:hover {
-            background: rgba(255,255,255,0.12);
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
         
-        .fb { border-color: #1877f2; }
-        .tw { border-color: #1da1f2; }
-        .wa { border-color: #25d366; }
-        .tg { border-color: #0088cc; }
-        .link { border-color: #666; }
+        .share-btn i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
         
-        .icon {
-            font-size: 18px;
+        /* Χρώματα πλατφορμών */
+        .fb { 
+            border-color: rgba(24, 119, 242, 0.4);
+            color: #8bb9ff;
+        }
+        .fb i { color: #1877f2; }
+        
+        .tw { 
+            border-color: rgba(29, 161, 242, 0.4);
+            color: #7bcbff;
+        }
+        .tw i { color: #1da1f2; }
+        
+        .wa { 
+            border-color: rgba(37, 211, 102, 0.4);
+            color: #8bffb3;
+        }
+        .wa i { color: #25d366; }
+        
+        .tg { 
+            border-color: rgba(0, 136, 204, 0.4);
+            color: #80d4ff;
+        }
+        .tg i { color: #0088cc; }
+        
+        .link { 
+            border-color: rgba(153, 153, 153, 0.4);
+            color: #ccc;
+        }
+        .link i { color: #999; }
+        
+        .share-btn-text {
+            flex-grow: 1;
         }
         
         /* Video Titles */
         .video-title {
             color: #fff;
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             font-size: 18px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 0 0 12px 12px;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            z-index: 5;
         }
         
         /* Mobile */
         @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
             .rumble-player {
-                min-height: 350px;
+                min-height: 400px;
             }
             
             .nav-arrow {
-                width: 40px;
-                height: 40px;
+                width: 46px;
+                height: 46px;
                 font-size: 20px;
             }
             
             .share-panel {
-                padding: 15px;
+                padding: 20px;
+            }
+            
+            .share-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
             }
             
             .share-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .share-btn {
+                padding: 14px;
+                font-size: 14px;
+                justify-content: center;
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .share-btn i {
+                font-size: 22px;
+            }
         }
         
         @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-            
             .rumble-player {
-                min-height: 250px;
+                min-height: 300px;
             }
             
             .nav-arrow {
-                width: 35px;
-                height: 35px;
+                width: 40px;
+                height: 40px;
                 font-size: 18px;
             }
             
             .share-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .share-btn {
+                flex-direction: row;
+                justify-content: flex-start;
+                padding: 16px;
+            }
+        }
+        
+        /* Video Counter */
+        .video-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 5;
         }
     </style>
 </head>
 <body>
-    <!-- Video Slider -->
-    <div class="slider-container">
-        <div class="video-slider" id="videoSlider">
-            <!-- Βίντεο 1 -->
-            <div class="video-slide">
-                <div class="video-wrapper">
-                    <div id="rumble_v70uu96" class="rumble-player"></div>
-                    <div class="video-title">Βίντεο 1</div>
+    <div class="container">
+        <!-- Video Slider -->
+        <div class="slider-container">
+            <div class="video-counter" id="videoCounter">1/2</div>
+            
+            <div class="video-slider" id="videoSlider">
+                <!-- Βίντεο 1 -->
+                <div class="video-slide">
+                    <div class="video-wrapper">
+                        <div id="rumble_v70uu96" class="rumble-player"></div>
+                        <div class="video-title">Ανθή Βούλγαρη για Καφέ</div>
+                    </div>
+                </div>
+                
+                <!-- Βίντεο 2 -->
+                <div class="video-slide">
+                    <div class="video-wrapper">
+                        <div id="rumble_v70v7w4" class="rumble-player"></div>
+                        <div class="video-title">Αφιέρωμα στην Ελλάδα</div>
+                    </div>
                 </div>
             </div>
             
-            <!-- Βίντεο 2 -->
-            <div class="video-slide">
-                <div class="video-wrapper">
-                    <div id="rumble_v70v7w4" class="rumble-player"></div>
-                    <div class="video-title">Βίντεο 2</div>
-                </div>
+            <!-- Navigation Arrows -->
+            <div class="slider-nav">
+                <button class="nav-arrow" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="nav-arrow" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <!-- Dots Indicator -->
+            <div class="slider-dots" id="dotsContainer">
+                <div class="dot active" data-slide="0"></div>
+                <div class="dot" data-slide="1"></div>
             </div>
         </div>
         
-        <!-- Navigation Arrows -->
-        <div class="slider-nav">
-            <button class="nav-arrow" id="prevBtn">❮</button>
-            <button class="nav-arrow" id="nextBtn">❯</button>
-        </div>
-        
-        <!-- Dots Indicator -->
-        <div class="slider-dots" id="dotsContainer">
-            <div class="dot active" data-slide="0"></div>
-            <div class="dot" data-slide="1"></div>
-        </div>
-    </div>
-    
-    <!-- Share Panel -->
-    <div class="share-panel">
-        <div class="share-title">Κοινοποίηση</div>
-        <div class="share-grid">
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/facebook/stories.html" 
-               target="_blank" 
-               class="share-btn fb">
-               <span class="icon">📘</span>
-               <span>Facebook</span>
-            </a>
+        <!-- ΕΠΑΓΓΕΛΜΑΤΙΚΟ Share Panel -->
+        <div class="share-panel">
+            <div class="share-header">
+                <div class="share-title">Κοινοποίηση</div>
+                <div class="share-count" id="shareCount">0 κοινόποιησεις</div>
+            </div>
             
-            <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/stories.html&text=Δείτε%20αυτά%20τα%20μοναδικά%20βίντεο" 
-               target="_blank" 
-               class="share-btn tw">
-               <span class="icon">🐦</span>
-               <span>Twitter</span>
-            </a>
-            
-            <a href="https://api.whatsapp.com/send?text=Δείτε%20αυτά%20τα%20βίντεο:%20https://blog.franklymadear.com/facebook/stories.html" 
-               target="_blank" 
-               class="share-btn wa">
-               <span class="icon">📱</span>
-               <span>WhatsApp</span>
-            </a>
-            
-            <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/stories.html&text=Δείτε%20αυτά%20τα%20βίντεο" 
-               target="_blank" 
-               class="share-btn tg">
-               <span class="icon">✈️</span>
-               <span>Telegram</span>
-            </a>
-            
-            <a href="#" 
-               class="share-btn link"
-               onclick="copyToClipboard(); return false;">
-               <span class="icon">🔗</span>
-               <span>Αντιγραφή</span>
-            </a>
+            <div class="share-grid">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/facebook/stories.html" 
+                   target="_blank" 
+                   class="share-btn fb">
+                   <i class="fab fa-facebook-f"></i>
+                   <span class="share-btn-text">Facebook</span>
+                </a>
+                
+                <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/stories.html&text=Δείτε%20αυτά%20τα%20μοναδικά%20βίντεο" 
+                   target="_blank" 
+                   class="share-btn tw">
+                   <i class="fab fa-twitter"></i>
+                   <span class="share-btn-text">Twitter</span>
+                </a>
+                
+                <a href="https://api.whatsapp.com/send?text=Δείτε%20αυτά%20τα%20βίντεο%20👉%20https://blog.franklymadear.com/facebook/stories.html" 
+                   target="_blank" 
+                   class="share-btn wa">
+                   <i class="fab fa-whatsapp"></i>
+                   <span class="share-btn-text">WhatsApp</span>
+                </a>
+                
+                <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/stories.html&text=Δείτε%20αυτά%20τα%20βίντεο" 
+                   target="_blank" 
+                   class="share-btn tg">
+                   <i class="fab fa-telegram-plane"></i>
+                   <span class="share-btn-text">Telegram</span>
+                </a>
+                
+                <a href="#" 
+                   class="share-btn link"
+                   onclick="copyToClipboard(); return false;">
+                   <i class="fas fa-link"></i>
+                   <span class="share-btn-text">Αντιγραφή</span>
+                </a>
+                
+                <a href="mailto:?subject=Δείτε αυτά τα βίντεο&body=Δείτε αυτά τα βίντεο: https://blog.franklymadear.com/facebook/stories.html" 
+                   class="share-btn" 
+                   style="border-color: rgba(220, 53, 69, 0.4); color: #ff8b8b;">
+                   <i class="fas fa-envelope" style="color: #dc3545;"></i>
+                   <span class="share-btn-text">Email</span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- Rumble Script -->
+    <!-- Rumble Script for FIRST video -->
     <script>
-        !function(r,u,m,b,l,e){
-            r._Rumble=b,
-            r[b]||(r[b]=function(){
-                (r[b]._=r[b]._||[]).push(arguments);
-                if(r[b]._.length==1){
-                    l=u.createElement(m),
-                    e=u.getElementsByTagName(m)[0],
-                    l.async=1,
-                    l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),
-                    e.parentNode.insertBefore(l,e)
-                }
-            })
-        }(window, document, "script", "Rumble");
+    !function(r,u,m,b,l,e){
+        r._Rumble=b,
+        r[b]||(r[b]=function(){
+            (r[b]._=r[b]._||[]).push(arguments);
+            if(r[b]._.length==1){
+                l=u.createElement(m),
+                e=u.getElementsByTagName(m)[0],
+                l.async=1,
+                l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),
+                e.parentNode.insertBefore(l,e)
+            }
+        })
+    }(window, document, "script", "Rumble");
+    
+    // Initialize first video
+    Rumble("play", {"video":"v70uu96","div":"rumble_v70uu96"});
+    </script>
+
+    <!-- YOUR SPECIFIC SCRIPT for SECOND video -->
+    <script>!function(r,u,m,b,l,e){r._Rumble=b,r[b]||(r[b]=function(){(r[b]._=r[b]._||[]).push(arguments);if(r[b]._.length==1){l=u.createElement(m),e=u.getElementsByTagName(m)[0],l.async=1,l.src="https://rumble.com/embedJS/u4o047w"+(arguments[1].video?'.'+arguments[1].video:'')+"/?url="+encodeURIComponent(location.href)+"&args="+encodeURIComponent(JSON.stringify([].slice.apply(arguments))),e.parentNode.insertBefore(l,e)}})}(window, document, "script", "Rumble");</script>
+
+    <div id="rumble_v70v7w4"></div>
+    <script>
+    Rumble("play", {"video":"v70v7w4","div":"rumble_v70v7w4"});
     </script>
 
     <script>
-        // Initialize both videos
-        Rumble("play", {
-            "video":"v70uu96",
-            "div":"rumble_v70uu96"
-        });
-        
-        Rumble("play", {
-            "video":"v70v7w4",
-            "div":"rumble_v70v7w4"
-        });
-        
         // Slider functionality
         const slider = document.getElementById('videoSlider');
         const slides = document.querySelectorAll('.video-slide');
         const dots = document.querySelectorAll('.dot');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const videoCounter = document.getElementById('videoCounter');
+        const shareCountElement = document.getElementById('shareCount');
         
         let currentSlide = 0;
+        let shareCount = 0;
+        
+        function updateCounter() {
+            videoCounter.textContent = `${currentSlide + 1}/${slides.length}`;
+        }
         
         function goToSlide(n) {
             currentSlide = n;
@@ -350,6 +500,8 @@
             dots.forEach((dot, index) => {
                 dot.classList.toggle('active', index === currentSlide);
             });
+            
+            updateCounter();
         }
         
         function nextSlide() {
@@ -373,28 +525,66 @@
             });
         });
         
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+        
         // Copy link function
         function copyToClipboard() {
             const url = 'https://blog.franklymadear.com/facebook/stories.html';
             navigator.clipboard.writeText(url)
                 .then(() => {
-                    alert('Ο σύνδεσμος αντιγράφηκε!');
+                    // Show temporary notification
+                    const originalText = event.target.closest('.share-btn').querySelector('.share-btn-text').textContent;
+                    event.target.closest('.share-btn').querySelector('.share-btn-text').textContent = 'Αντιγράφηκε!';
+                    
+                    setTimeout(() => {
+                        event.target.closest('.share-btn').querySelector('.share-btn-text').textContent = originalText;
+                    }, 2000);
+                    
+                    incrementShareCount();
                 })
                 .catch(err => {
                     console.error('Error copying:', err);
                 });
         }
         
-        // Simple analytics
-        document.querySelectorAll('.share-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const platform = this.textContent.trim();
-                console.log(`Shared to: ${platform}`);
+        // Share count tracking
+        function incrementShareCount() {
+            shareCount++;
+            shareCountElement.textContent = `${shareCount} κοινόποιησ${shareCount === 1 ? 'η' : 'εις'}`;
+            
+            // Save to localStorage to persist across page reloads
+            localStorage.setItem('videoShareCount', shareCount);
+        }
+        
+        // Load share count from localStorage
+        window.addEventListener('load', () => {
+            const savedCount = localStorage.getItem('videoShareCount');
+            if (savedCount) {
+                shareCount = parseInt(savedCount);
+                shareCountElement.textContent = `${shareCount} κοινόποιησ${shareCount === 1 ? 'η' : 'εις'}`;
+            }
+            
+            // Track clicks on share buttons
+            document.querySelectorAll('.share-btn').forEach(btn => {
+                if (!btn.classList.contains('link')) { // Don't count copy link clicks here
+                    btn.addEventListener('click', incrementShareCount);
+                }
             });
+            
+            // Check URL hash for direct video access
+            if (window.location.hash === '#video2') {
+                goToSlide(1);
+            }
+            
+            updateCounter();
         });
         
-        // Auto-play next video when current ends (optional)
-        // You would need Rumble API events for this
+        // Auto-advance every 30 seconds (optional)
+        // setInterval(nextSlide, 30000);
     </script>
 </body>
 </html>
