@@ -35,125 +35,96 @@
         }
         
         body {
-            display: flex;
-            flex-direction: column;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             position: relative;
-            justify-content: center;
-            align-items: center;
             color: #fff;
         }
         
+        /* Full Screen Video Container */
         .video-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #000;
-        }
-        
-        .video-title {
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            top: 0;
             left: 0;
             width: 100%;
-            text-align: center;
-            padding: 15px 20px;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            font-size: 1.5em;
-            font-weight: 600;
-            color: #fff;
-            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
         }
         
+        /* Video Player - Full Screen */
         .video-player {
-            width: 90%;
-            max-width: 800px;
-            height: 60vh;
-            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
-            border-radius: 10px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a, #1a1a1a, #0a0a0a);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+            cursor: pointer;
         }
         
-        .video-player::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                45deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.05) 50%,
-                transparent 70%
-            );
-            animation: shine 3s infinite;
-        }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-        
+        /* Play Button - Centered */
         .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 100px;
             height: 100px;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.6);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             font-size: 50px;
             cursor: pointer;
-            backdrop-filter: blur(10px);
             border: 3px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
-            z-index: 2;
+            z-index: 10;
             color: white;
+            backdrop-filter: blur(5px);
         }
         
         .play-button:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 0.25);
-            border-color: rgba(255, 255, 255, 0.4);
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(0, 0, 0, 0.8);
+            border-color: rgba(255, 255, 255, 0.5);
         }
         
+        /* Video Status - Centered below play button */
         .video-status {
-            margin-top: 30px;
-            font-size: 20px;
+            position: absolute;
+            top: calc(50% + 70px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
             color: rgba(255, 255, 255, 0.9);
-            z-index: 2;
+            z-index: 10;
             background: rgba(0, 0, 0, 0.5);
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 20px;
+            white-space: nowrap;
         }
         
-        /* Loading animation */
+        /* Loading Animation */
         .loading {
-            display: none;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 3;
+            z-index: 11;
+            display: none;
         }
         
         .loader {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border: 5px solid rgba(255, 255, 255, 0.1);
             border-top-color: #4ecdc4;
             border-radius: 50%;
@@ -164,30 +135,92 @@
             to { transform: rotate(360deg); }
         }
         
-        /* Timer */
-        .timer {
+        /* Title - Top Center */
+        .video-title {
             position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 100;
+            font-size: 1.5em;
+            font-weight: 600;
             color: #fff;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 2;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
         }
         
-        /* Share buttons - Fixed position, discreet */
+        /* Controls - Bottom Center */
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px 24px;
+            border-radius: 30px;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .timer {
+            color: #fff;
+            font-size: 14px;
+            font-family: monospace;
+            min-width: 60px;
+        }
+        
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: #4ecdc4;
+            transition: width 0.1s linear;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Share buttons - Minimal */
         .share-container {
             position: fixed;
             bottom: 20px;
-            left: 20px;
+            right: 20px;
             z-index: 1000;
             transition: all 0.3s ease;
         }
         
         .share-toggle {
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: white;
             width: 50px;
@@ -201,17 +234,18 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             z-index: 1001;
+            backdrop-filter: blur(5px);
         }
         
         .share-toggle:hover {
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.8);
             transform: scale(1.1);
         }
         
         .share-buttons {
             position: absolute;
             bottom: 60px;
-            left: 0;
+            right: 0;
             background: rgba(0, 0, 0, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
@@ -259,7 +293,7 @@
         
         .share-btn:hover {
             background: rgba(255, 255, 255, 0.2);
-            transform: translateX(2px);
+            transform: translateX(-2px);
         }
         
         .share-btn.fb {
@@ -302,12 +336,7 @@
         @media (max-width: 768px) {
             .video-title {
                 font-size: 1.2em;
-                padding: 12px 15px;
-            }
-            
-            .video-player {
-                width: 95%;
-                height: 50vh;
+                padding: 12px;
             }
             
             .play-button {
@@ -318,12 +347,22 @@
             
             .video-status {
                 font-size: 16px;
-                margin-top: 20px;
+                top: calc(50% + 60px);
+            }
+            
+            .video-controls {
+                bottom: 10px;
+                padding: 10px 20px;
+                gap: 15px;
+            }
+            
+            .progress-bar {
+                width: 150px;
             }
             
             .share-container {
                 bottom: 15px;
-                left: 15px;
+                right: 15px;
             }
             
             .share-toggle {
@@ -334,7 +373,7 @@
             
             .share-buttons {
                 bottom: 55px;
-                left: 0;
+                right: 0;
                 min-width: 160px;
                 padding: 12px;
             }
@@ -348,10 +387,7 @@
         @media (max-width: 480px) {
             .video-title {
                 font-size: 1em;
-            }
-            
-            .video-player {
-                height: 40vh;
+                top: 10px;
             }
             
             .play-button {
@@ -362,33 +398,58 @@
             
             .video-status {
                 font-size: 14px;
+                top: calc(50% + 50px);
+            }
+            
+            .video-controls {
+                bottom: 5px;
+                padding: 8px 15px;
+                gap: 10px;
+            }
+            
+            .progress-bar {
+                width: 120px;
+            }
+            
+            .timer {
+                font-size: 12px;
             }
             
             .share-buttons {
                 position: fixed;
                 bottom: 70px;
-                left: 10px;
                 right: 10px;
+                left: 10px;
                 min-width: auto;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Full Screen Video Container -->
     <div class="video-container">
-        <div class="video-title">Must Watch Video - Exclusive Content</div>
-        
-        <div class="video-player">
-            <div class="play-button">▶</div>
-            <div class="video-status">Click to play premium video</div>
-            <div class="loading">
+        <div class="video-player" id="videoPlayer">
+            <div class="video-title">Must Watch Video - Exclusive Content</div>
+            
+            <div class="play-button" id="playButton">▶</div>
+            <div class="video-status" id="videoStatus">Click to play premium video</div>
+            <div class="loading" id="loading">
                 <div class="loader"></div>
             </div>
-            <div class="timer">00:00</div>
+            
+            <div class="video-controls" id="videoControls">
+                <button class="control-btn" id="rewindBtn">⏪</button>
+                <div class="timer" id="timer">00:00</div>
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="timer" id="duration">02:30</div>
+                <button class="control-btn" id="fullscreenBtn">⛶</button>
+            </div>
         </div>
     </div>
     
-    <!-- Share Buttons - Discreet Fixed Position -->
+    <!-- Share Buttons -->
     <div class="share-container">
         <div class="share-toggle">
             📤
@@ -439,6 +500,188 @@
     </div>
 
     <script>
+        // Video simulation
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playButton = document.getElementById('playButton');
+        const videoStatus = document.getElementById('videoStatus');
+        const loading = document.getElementById('loading');
+        const timer = document.getElementById('timer');
+        const progress = document.getElementById('progress');
+        const duration = document.getElementById('duration');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const videoControls = document.getElementById('videoControls');
+        
+        let isPlaying = false;
+        let currentTime = 0;
+        const totalDuration = 150; // 2:30 in seconds
+        let timerInterval;
+        let controlsTimeout;
+        
+        // Initialize
+        updateDisplay();
+        
+        // Play/Pause functionality
+        playButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            togglePlay();
+        });
+        
+        videoPlayer.addEventListener('click', function(e) {
+            if (e.target !== playButton && e.target !== videoStatus) {
+                togglePlay();
+            }
+        });
+        
+        // Rewind functionality
+        rewindBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            rewindVideo();
+        });
+        
+        // Fullscreen functionality
+        fullscreenBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleFullscreen();
+        });
+        
+        // Progress bar click
+        document.querySelector('.progress-bar').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const rect = this.getBoundingClientRect();
+            const clickPosition = (e.clientX - rect.left) / rect.width;
+            seekVideo(clickPosition);
+        });
+        
+        // Show/hide controls
+        videoPlayer.addEventListener('mousemove', showControls);
+        videoPlayer.addEventListener('touchstart', showControls);
+        
+        function showControls() {
+            videoControls.style.opacity = '1';
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                if (isPlaying) {
+                    videoControls.style.opacity = '0';
+                }
+            }, 3000);
+        }
+        
+        function togglePlay() {
+            if (!isPlaying) {
+                // Start playing
+                isPlaying = true;
+                playButton.innerHTML = '⏸';
+                playButton.style.opacity = '0.5';
+                videoStatus.textContent = 'Premium video playing...';
+                
+                // Show loading
+                loading.style.display = 'block';
+                
+                // Simulate loading delay
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    playButton.style.opacity = '0';
+                    videoStatus.style.opacity = '0';
+                    
+                    // Start timer
+                    timerInterval = setInterval(updateTime, 1000);
+                    showControls();
+                }, 1500);
+            } else {
+                // Pause
+                isPlaying = false;
+                playButton.innerHTML = '▶';
+                playButton.style.opacity = '1';
+                videoStatus.textContent = 'Video paused';
+                videoStatus.style.opacity = '1';
+                clearInterval(timerInterval);
+                showControls();
+            }
+        }
+        
+        function updateTime() {
+            if (currentTime < totalDuration) {
+                currentTime++;
+                updateDisplay();
+                
+                if (currentTime >= totalDuration) {
+                    // Video ended
+                    isPlaying = false;
+                    playButton.innerHTML = '⟳';
+                    playButton.style.opacity = '1';
+                    videoStatus.textContent = 'Video ended. Click to replay';
+                    videoStatus.style.opacity = '1';
+                    clearInterval(timerInterval);
+                    showControls();
+                }
+            }
+        }
+        
+        function rewindVideo() {
+            currentTime = Math.max(0, currentTime - 10);
+            updateDisplay();
+            showControls();
+        }
+        
+        function seekVideo(position) {
+            currentTime = Math.floor(totalDuration * position);
+            updateDisplay();
+            showControls();
+        }
+        
+        function updateDisplay() {
+            // Update timer
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Update progress bar
+            const progressPercent = (currentTime / totalDuration) * 100;
+            progress.style.width = `${progressPercent}%`;
+            
+            // Update total duration
+            const totalMinutes = Math.floor(totalDuration / 60);
+            const totalSeconds = totalDuration % 60;
+            duration.textContent = `${totalMinutes.toString().padStart(2, '0')}:${totalSeconds.toString().padStart(2, '0')}`;
+        }
+        
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) {
+                    document.documentElement.msRequestFullscreen();
+                }
+                fullscreenBtn.innerHTML = '⛶';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
+                }
+                fullscreenBtn.innerHTML = '⛶';
+            }
+            showControls();
+        }
+        
+        // Fullscreen change listener
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+        
+        function handleFullscreenChange() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                fullscreenBtn.innerHTML = '⛶';
+            } else {
+                fullscreenBtn.innerHTML = '⛶';
+            }
+        }
+        
         // Copy link function
         function copyToClipboard() {
             const url = 'https://blog.franklymadear.com/facebook/video1.html';
@@ -481,72 +724,11 @@
             });
         }
         
-        // Video simulation
-        const playButton = document.querySelector('.play-button');
-        const videoStatus = document.querySelector('.video-status');
-        const loading = document.querySelector('.loading');
-        const timer = document.querySelector('.timer');
-        const videoPlayer = document.querySelector('.video-player');
-        
-        let isPlaying = false;
-        let seconds = 0;
-        let timerInterval;
-        
-        playButton.addEventListener('click', function() {
-            if (!isPlaying) {
-                // Start "playing"
-                isPlaying = true;
-                this.innerHTML = '⏸';
-                this.style.background = 'rgba(255, 255, 255, 0.3)';
-                this.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-                
-                // Show loading
-                loading.style.display = 'block';
-                videoStatus.textContent = 'Loading premium content...';
-                
-                // Simulate loading delay
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                    videoPlayer.style.background = 'linear-gradient(45deg, #000000, #1a1a1a)';
-                    videoStatus.textContent = 'Premium video playing...';
-                    
-                    // Start timer
-                    seconds = 0;
-                    updateTimer();
-                    timerInterval = setInterval(updateTimer, 1000);
-                }, 2000);
-            } else {
-                // Pause
-                isPlaying = false;
-                this.innerHTML = '▶';
-                this.style.background = 'rgba(255, 255, 255, 0.15)';
-                this.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                videoStatus.textContent = 'Video paused';
-                clearInterval(timerInterval);
-            }
-        });
-        
-        function updateTimer() {
-            seconds++;
-            const minutes = Math.floor(seconds / 60);
-            const remainingSeconds = seconds % 60;
-            timer.textContent = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-        }
-        
-        // Simulate video end after 30 seconds
-        setTimeout(() => {
-            if (isPlaying) {
-                isPlaying = false;
-                playButton.innerHTML = '▶';
-                playButton.style.background = 'rgba(255, 255, 255, 0.15)';
-                playButton.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-                videoStatus.textContent = 'Video ended. Click to replay';
-                clearInterval(timerInterval);
-            }
-        }, 30000);
+        // Auto-hide controls initially
+        showControls();
     </script>
     
-    <!-- New Advertisement Script -->
+    <!-- Advertisement Script -->
     <script>
         (function(s){
             s.dataset.zone='10266501',
