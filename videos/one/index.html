@@ -427,6 +427,42 @@
         .video-container.touch-active .video-controls {
             opacity: 1;
         }
+        
+        /* Autoplay fallback button */
+        .autoplay-fallback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            text-align: center;
+        }
+        
+        .play-button {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.6);
+        }
+        
+        .play-icon {
+            font-size: 24px;
+        }
     </style>
 </head>
 <body>
@@ -441,7 +477,7 @@
         <div class="video-poster" id="videoPoster"></div>
         
         <!-- Actual Video Element -->
-        <video id="mainVideo" preload="metadata" playsinline>
+        <video id="mainVideo" preload="auto" playsinline autoplay muted>
             <!-- Add your actual video source here -->
             <!-- Example: <source src="your-video.mp4" type="video/mp4"> -->
             <!-- For now using a placeholder -->
@@ -547,10 +583,11 @@
         
         // State variables
         let isPlaying = false;
-        let isMuted = false;
-        let volume = 1.0;
+        let isMuted = true; // Αρχικά muted για autoplay
+        let volume = 0; // Αρχικά 0 για autoplay
         let controlsTimeout;
         let isTouchDevice = false;
+        let autoplayBlocked = false;
         
         // Detect touch device
         if ('ontouchstart' in window || navigator.maxTouchPoints) {
@@ -598,10 +635,21 @@
         // Play/Pause functionality
         function togglePlay() {
             if (mainVideo.paused) {
-                mainVideo.play();
-                playPauseBtn.textContent = '⏸';
-                isPlaying = true;
-                showControls();
+                mainVideo.play().then(() => {
+                    playPauseBtn.textContent = '⏸';
+                    isPlaying = true;
+                    showControls();
+                    
+                    // Ενεργοποίηση ήχου όταν ο χρήστης πατάει play
+                    if (isMuted) {
+                        mainVideo.muted = false;
+                        volume = 1.0;
+                        updateVolume();
+                    }
+                }).catch(e => {
+                    console.log("Play failed:", e);
+                    showAutoplayFallback();
+                });
             } else {
                 mainVideo.pause();
                 playPauseBtn.textContent = '▶';
@@ -617,12 +665,15 @@
             
             if (volume === 0) {
                 volumeBtn.textContent = '🔇';
+                mainVideo.muted = true;
                 isMuted = true;
             } else if (volume < 0.5) {
                 volumeBtn.textContent = '🔈';
+                mainVideo.muted = false;
                 isMuted = false;
             } else {
                 volumeBtn.textContent = '🔊';
+                mainVideo.muted = false;
                 isMuted = false;
             }
         }
@@ -679,6 +730,45 @@
             showControls();
         }
         
+        // Show autoplay fallback button
+        function showAutoplayFallback() {
+            autoplayBlocked = true;
+            videoPoster.style.display = 'flex';
+            videoPoster.style.justifyContent = 'center';
+            videoPoster.style.alignItems = 'center';
+            videoPoster.style.flexDirection = 'column';
+            videoPoster.style.gap = '20px';
+            videoPoster.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+            videoPoster.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 24px; margin-bottom: 10px; color: white;">🎬</div>
+                    <div style="color: white; font-size: 18px; margin-bottom: 20px;">Το βίντεο είναι έτοιμο!</div>
+                    <button class="play-button" id="manualPlayBtn">
+                        <span class="play-icon">▶</span>
+                        <span>Παίξε το Βίντεο</span>
+                    </button>
+                    <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 15px;">
+                        Η αυτόματη αναπαραγωγή απαγορεύτηκε από το πρόγραμμα περιήγησης
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('manualPlayBtn').addEventListener('click', () => {
+                mainVideo.muted = false;
+                mainVideo.play().then(() => {
+                    videoPoster.style.opacity = '0';
+                    setTimeout(() => {
+                        videoPoster.style.display = 'none';
+                    }, 500);
+                    playPauseBtn.textContent = '⏸';
+                    isPlaying = true;
+                    volume = 1.0;
+                    updateVolume();
+                    showControls();
+                });
+            });
+        }
+        
         // Event Listeners
         
         // Video events
@@ -686,19 +776,21 @@
             loadingOverlay.style.opacity = '0';
             setTimeout(() => {
                 loadingOverlay.style.display = 'none';
-                // Auto-play video
-                mainVideo.play();
+                
+                // Το βίντεο παίζει αυτόματα λόγω autoplay
                 playPauseBtn.textContent = '⏸';
                 isPlaying = true;
                 
-                // Hide poster after video starts
+                // Κρύψε το poster αμέσως μόλις το βίντεο παίξει
                 setTimeout(() => {
                     videoPoster.style.opacity = '0';
                     setTimeout(() => {
                         videoPoster.style.display = 'none';
                     }, 500);
-                }, 1000);
-            }, 500);
+                }, 300);
+                
+                showControls();
+            }, 300);
             
             updateTime();
         });
@@ -725,12 +817,22 @@
         // Video error handling
         mainVideo.addEventListener('error', (e) => {
             console.error('Video error:', e);
-            loadingOverlay.innerHTML = '<div style="text-align: center; color: white;">Error loading video</div>';
+            loadingOverlay.innerHTML = '<div style="text-align: center; color: white;">Σφάλμα φόρτωσης βίντεο</div>';
+        });
+        
+        // Δοκίμασε autoplay και αν αποτύχει, δείξε fallback
+        mainVideo.play().then(() => {
+            console.log("Autoplay successful");
+            isPlaying = true;
+        }).catch(e => {
+            console.log("Autoplay blocked, showing fallback:", e);
+            // Μην εμφανίσεις αμέσως το fallback, άσε το loadeddata να χειριστεί
         });
         
         // User interaction events
         videoContainer.addEventListener('click', (e) => {
-            if (e.target !== videoControls && !videoControls.contains(e.target)) {
+            if (e.target !== videoControls && !videoControls.contains(e.target) && 
+                e.target.id !== 'manualPlayBtn' && !e.target.closest('#manualPlayBtn')) {
                 togglePlay();
             }
         });
