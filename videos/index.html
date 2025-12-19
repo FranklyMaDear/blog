@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Favicon για κοινόποίηση στο X -->
+    <!-- Favicon -->
     <link rel="icon" href="thumbnail55.png" type="image/png">
     <link rel="apple-touch-icon" href="thumbnail55.png">
     
@@ -13,13 +13,10 @@
     <meta name="twitter:site" content="@FranklyMaDear">
     <meta name="twitter:title" content="Must Watch Exclusive Video">
     <meta name="twitter:description" content="Watch this exclusive content now">
-    <!-- Thumbnail για προεπισκόπηση στο X -->
     <meta name="twitter:image" content="https://blog.franklymadear.com/videos/thumbnail55.png">
-    <!-- Player URL -->
     <meta name="twitter:player" content="https://blog.franklymadear.com/videos/index.html">
     <meta name="twitter:player:width" content="1280">
     <meta name="twitter:player:height" content="720">
-    <!-- Direct stream για άμεση αναπαραγωγή -->
     <meta name="twitter:player:stream" content="https://blog.franklymadear.com/videos/video55.mp4">
     <meta name="twitter:player:stream:content_type" content="video/mp4">
     
@@ -43,46 +40,55 @@
             overflow: hidden;
         }
         
+        /* MAIN CONTAINER - ΚΕΝΤΡΑΡΙΣΜΕΝΟ ΤΟ ΒΙΝΤΕΟ */
         .video-container {
             position: relative;
             width: 100vw;
             height: 100vh;
             background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
         }
         
+        /* ΒΙΝΤΕΟ - ΦΥΛΑΞΕ ΤΟ ΑΡΧΙΚΟ ΜΕΓΕΘΟΣ */
         #mainVideo {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
             z-index: 1;
+            background: #000;
+            /* ΜΗΝ ΧΡΗΣΙΜΟΠΟΙΗΣΕΙΣ object-fit: cover - ΚΡΑΤΑ ΤΟ ΠΡΩΤΟ ΜΕΓΕΘΟΣ */
         }
         
-        /* Thumbnail overlay */
+        /* Thumbnail overlay - ίδιο μέγεθος με το βίντεο */
         .thumbnail-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: #000;
             z-index: 2;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease;
+            /* Αυτόματα μέγεθος από το βίντεο */
+            max-width: 100%;
+            max-height: 100%;
         }
         
         .thumbnail-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
         }
         
-        /* Play button */
+        /* Play button - ΚΕΝΤΡΟ ΤΟΥ ΒΙΝΤΕΟ */
         .play-button-center {
             position: absolute;
             top: 50%;
@@ -121,7 +127,7 @@
             100% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0); }
         }
         
-        /* Interactive progress bar - ΜΠΑΡΑ ΠΟΥ ΠΑΤΑΕΙ Ο ΧΡΗΣΤΗΣ */
+        /* Progress bar - ΒΑΣΗ ΤΗΣ ΟΘΟΝΗΣ */
         .progress-container {
             position: absolute;
             bottom: 100px;
@@ -147,7 +153,6 @@
             transition: width 0.1s;
         }
         
-        /* Progress handle για drag & drop */
         .progress-handle {
             position: absolute;
             top: 50%;
@@ -167,7 +172,7 @@
             display: block;
         }
         
-        /* Controls */
+        /* Controls - ΒΑΣΗ ΤΗΣ ΟΘΟΝΗΣ */
         .video-controls {
             position: absolute;
             bottom: 30px;
@@ -219,7 +224,7 @@
             min-width: 70px;
         }
         
-        /* Time tooltip on progress bar hover */
+        /* Time tooltip */
         .time-tooltip {
             position: absolute;
             bottom: 25px;
@@ -240,37 +245,6 @@
             opacity: 1;
         }
         
-        /* Progress preview (preview frame on hover) */
-        .preview-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 5;
-            display: none;
-            pointer-events: none;
-        }
-        
-        .preview-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        /* Current time indicator */
-        .current-time-indicator {
-            position: absolute;
-            bottom: 90px;
-            left: 0;
-            height: 8px;
-            width: 3px;
-            background: white;
-            z-index: 4;
-            display: none;
-        }
-        
         /* Loading spinner */
         .loading-spinner {
             position: absolute;
@@ -289,6 +263,21 @@
         
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Aspect ratio warning για πολύ μεγάλα βίντεο */
+        .aspect-ratio-warning {
+            display: none;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 165, 0, 0.2);
+            border: 1px solid orange;
+            color: orange;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 5;
         }
         
         /* Mobile */
@@ -328,18 +317,15 @@
 </head>
 <body>
     <div class="video-container" id="videoContainer">
+        <!-- Aspect ratio warning -->
+        <div class="aspect-ratio-warning" id="aspectRatioWarning">
+            ⚠️ Το βίντεο εμφανίζεται στο φυσικό του μέγεθος
+        </div>
+        
         <!-- Loading spinner -->
         <div class="loading-spinner" id="loadingSpinner"></div>
         
-        <!-- Preview overlay for scrubbing -->
-        <div class="preview-overlay" id="previewOverlay">
-            <video class="preview-video" id="previewVideo" preload="metadata" muted></video>
-        </div>
-        
-        <!-- Current time indicator -->
-        <div class="current-time-indicator" id="currentTimeIndicator"></div>
-        
-        <!-- Thumbnail overlay -->
+        <!-- Thumbnail overlay - ΑΚΡΙΒΩΣ ΙΔΙΟ ΜΕΓΕΘΟΣ ΜΕ ΤΟ ΒΙΝΤΕΟ -->
         <div class="thumbnail-overlay" id="thumbnailOverlay">
             <img class="thumbnail-img" src="thumbnail55.png" alt="Video Thumbnail" 
                  onerror="this.style.display='none';">
@@ -348,12 +334,12 @@
         <!-- Play button -->
         <button class="play-button-center" id="playButton"></button>
         
-        <!-- Main video -->
+        <!-- Main video - ΧΩΡΙΣ object-fit: cover -->
         <video id="mainVideo" preload="auto" playsinline muted>
             <source src="video55.mp4" type="video/mp4">
         </video>
         
-        <!-- Interactive progress bar -->
+        <!-- Progress bar -->
         <div class="progress-container" id="progressContainer">
             <div class="time-tooltip" id="timeTooltip">00:00</div>
             <div class="progress-bar" id="progressBar">
@@ -386,10 +372,8 @@
         const progressBar = document.getElementById('progressBar');
         const progressHandle = document.getElementById('progressHandle');
         const timeTooltip = document.getElementById('timeTooltip');
-        const currentTimeIndicator = document.getElementById('currentTimeIndicator');
         const loadingSpinner = document.getElementById('loadingSpinner');
-        const previewOverlay = document.getElementById('previewOverlay');
-        const previewVideo = document.getElementById('previewVideo');
+        const aspectRatioWarning = document.getElementById('aspectRatioWarning');
         
         // State
         let isPlaying = false;
@@ -397,6 +381,8 @@
         let hasAutoPlayed = false;
         let isDragging = false;
         let isHoveringProgress = false;
+        let videoWidth = 0;
+        let videoHeight = 0;
         
         // Format time
         function formatTime(seconds) {
@@ -414,11 +400,6 @@
                 durationTimeEl.textContent = formatTime(mainVideo.duration);
                 const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
                 progressBar.style.width = `${progress}%`;
-                
-                // Update current time indicator
-                if (isHoveringProgress && !isDragging) {
-                    updateTimeTooltip();
-                }
             }
         }
         
@@ -443,10 +424,8 @@
             const time = percent * mainVideo.duration;
             mainVideo.currentTime = time;
             
-            // Show loading spinner
             loadingSpinner.style.display = 'block';
             
-            // Hide spinner after seek completes
             setTimeout(() => {
                 loadingSpinner.style.display = 'none';
             }, 500);
@@ -539,6 +518,26 @@
             });
         }
         
+        // Προσαρμογή thumbnail στο μέγεθος του βίντεο
+        function adjustThumbnailSize() {
+            if (videoWidth > 0 && videoHeight > 0) {
+                // Ορίζουμε το ίδιο μέγεθος για το thumbnail
+                thumbnailOverlay.style.width = `${videoWidth}px`;
+                thumbnailOverlay.style.height = `${videoHeight}px`;
+                
+                // Εμφάνιση προειδοποίησης αν το βίντεο είναι πολύ μεγάλο
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                
+                if (videoWidth > screenWidth || videoHeight > screenHeight) {
+                    aspectRatioWarning.style.display = 'block';
+                    setTimeout(() => {
+                        aspectRatioWarning.style.display = 'none';
+                    }, 5000);
+                }
+            }
+        }
+        
         // Progress bar interaction
         let lastHoverX = 0;
         
@@ -548,19 +547,12 @@
             
             if (mainVideo.duration && !isNaN(mainVideo.duration)) {
                 updateTimeTooltip();
-                
-                // Show current time indicator
-                const rect = progressContainer.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                currentTimeIndicator.style.left = `${percent * 100}%`;
-                currentTimeIndicator.style.display = 'block';
             }
         });
         
         progressContainer.addEventListener('mouseleave', () => {
             isHoveringProgress = false;
             timeTooltip.style.opacity = '0';
-            currentTimeIndicator.style.display = 'none';
         });
         
         progressContainer.addEventListener('click', (e) => {
@@ -587,7 +579,6 @@
                     timeTooltip.style.left = `${percent * 100}%`;
                     timeTooltip.style.opacity = '1';
                     
-                    // Pause video while dragging
                     if (isPlaying) {
                         mainVideo.pause();
                     }
@@ -607,7 +598,6 @@
                         
                         mainVideo.currentTime = percent * mainVideo.duration;
                         
-                        // Resume playing if it was playing before
                         if (isPlaying) {
                             mainVideo.play();
                         }
@@ -622,7 +612,7 @@
             document.addEventListener('mouseup', onMouseUp);
         });
         
-        // Touch support for progress bar
+        // Touch support
         progressContainer.addEventListener('touchstart', (e) => {
             e.preventDefault();
             seekToTime(e.touches[0].clientX);
@@ -630,10 +620,17 @@
         
         // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
-            updateTime();
+            // Αποθήκευση αρχικών διαστάσεων βίντεο
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
             
-            // Set up preview video
-            previewVideo.src = mainVideo.querySelector('source').src;
+            console.log('Video dimensions:', videoWidth, 'x', videoHeight);
+            console.log('Video will display at original size');
+            
+            // Προσαρμογή thumbnail
+            adjustThumbnailSize();
+            
+            updateTime();
             
             const isEmbedded = window.self !== window.top;
             if (isEmbedded) {
@@ -642,6 +639,13 @@
             } else {
                 console.log('Running in regular browser');
             }
+        });
+        
+        mainVideo.addEventListener('resize', () => {
+            // Ενημέρωση διαστάσεων αν αλλάξουν
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
+            adjustThumbnailSize();
         });
         
         mainVideo.addEventListener('timeupdate', updateTime);
@@ -736,7 +740,7 @@
             }
         });
         
-        console.log('Video player ready with favicon and interactive progress bar');
+        console.log('Video player ready - Video will display at original size');
         
     </script>
 </body>
