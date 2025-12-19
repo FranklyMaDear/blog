@@ -3,7 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    
+    <!-- X (Twitter) Player Card Tags - ΓΙΑ ΑΜΕΣΗ ΑΝΑΠΑΡΑΓΩΓΗ -->
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:site" content="@FranklyMaDear">
+    <meta name="twitter:title" content="Must Watch Exclusive Video">
+    <meta name="twitter:description" content="Watch this exclusive content now">
+    <!-- THUMBNAIL για το X -->
+    <meta name="twitter:image" content="https://blog.franklymadear.com/videos/thumbnail55.png">
+    <!-- Player URL - Η ΣΕΛΙΔΑ ΠΟΥ ΘΑ ΑΝΑΠΑΡΑΓΕΙ ΤΟ ΒΙΝΤΕΟ -->
+    <meta name="twitter:player" content="https://blog.franklymadear.com/videos/index.html">
+    <meta name="twitter:player:width" content="1280">
+    <meta name="twitter:player:height" content="720">
+    <!-- DIRECT STREAM για άμεση αναπαραγωγή στο X -->
+    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/videos/video55.mp4">
+    <meta name="twitter:player:stream:content_type" content="video/mp4">
+    
+    <title>Watch Exclusive Video</title>
+    
     <style>
         * {
             margin: 0;
@@ -40,8 +57,8 @@
             z-index: 1;
         }
         
-        /* ΚΕΝΗ ΟΘΟΝΗ ΠΡΙΝ ΤΟ ΒΙΝΤΕΟ */
-        .blank-screen {
+        /* THUMBNAIL για προεπισκόπηση πριν το play */
+        .thumbnail-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -52,17 +69,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: opacity 0.5s ease;
         }
         
-        /* ΠΛΗΡΗΣ ΟΘΟΝΗΣ PLAY BUTTON */
-        .play-button-fullscreen {
+        .thumbnail-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* PLAY BUTTON στο κέντρο */
+        .play-button-center {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 120px;
-            height: 120px;
-            background: rgba(220, 20, 60, 0.85);
+            width: 100px;
+            height: 100px;
+            background: rgba(220, 20, 60, 0.9);
             border-radius: 50%;
             border: none;
             cursor: pointer;
@@ -72,43 +96,28 @@
             align-items: center;
             transition: all 0.3s ease;
             animation: pulse 2s infinite;
-            box-shadow: 0 0 0 15px rgba(220, 20, 60, 0.2);
         }
         
-        .play-button-fullscreen:hover {
+        .play-button-center:hover {
             background: rgba(220, 20, 60, 1);
             transform: translate(-50%, -50%) scale(1.1);
-            box-shadow: 0 0 0 25px rgba(220, 20, 60, 0.3);
         }
         
-        .play-button-fullscreen::after {
+        .play-button-center::after {
             content: '▶';
             color: white;
-            font-size: 50px;
-            margin-left: 8px;
+            font-size: 40px;
+            margin-left: 5px;
             font-weight: bold;
         }
         
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.7); }
-            70% { box-shadow: 0 0 0 40px rgba(220, 20, 60, 0); }
+            70% { box-shadow: 0 0 0 25px rgba(220, 20, 60, 0); }
             100% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0); }
         }
         
-        /* Loading indicator */
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 18px;
-            z-index: 4;
-            text-align: center;
-            display: none;
-        }
-        
-        /* Video controls */
+        /* Controls */
         .video-controls {
             position: absolute;
             bottom: 30px;
@@ -119,10 +128,10 @@
             z-index: 3;
             opacity: 0;
             transition: opacity 0.3s;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             padding: 10px 20px;
             border-radius: 30px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
         }
         
         .video-container:hover .video-controls {
@@ -149,7 +158,7 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        /* Timer display */
+        /* Timer */
         .timer {
             font-family: monospace;
             font-size: 16px;
@@ -165,7 +174,7 @@
             bottom: 90px;
             left: 0;
             width: 100%;
-            height: 5px;
+            height: 4px;
             background: rgba(255, 255, 255, 0.2);
             z-index: 3;
             opacity: 0;
@@ -185,41 +194,18 @@
         
         /* Mobile */
         @media (max-width: 768px) {
-            .play-button-fullscreen {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .play-button-fullscreen::after {
-                font-size: 40px;
-            }
-            
-            .video-controls {
-                bottom: 20px;
-                gap: 10px;
-                padding: 8px 15px;
-            }
-            
-            .control-btn {
-                width: 45px;
-                height: 45px;
-                font-size: 22px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .play-button-fullscreen {
+            .play-button-center {
                 width: 80px;
                 height: 80px;
             }
             
-            .play-button-fullscreen::after {
+            .play-button-center::after {
                 font-size: 30px;
             }
             
             .video-controls {
-                bottom: 15px;
-                padding: 6px 12px;
+                bottom: 20px;
+                padding: 8px 15px;
             }
             
             .control-btn {
@@ -232,23 +218,21 @@
 </head>
 <body>
     <div class="video-container" id="videoContainer">
-        <!-- ΚΕΝΗ ΜΑΥΡΗ ΟΘΟΝΗ ΠΡΙΝ ΤΟ ΒΙΝΤΕΟ -->
-        <div class="blank-screen" id="blankScreen"></div>
-        
-        <!-- ΜΕΓΑΛΟ PLAY BUTTON -->
-        <button class="play-button-fullscreen" id="playButton"></button>
-        
-        <!-- LOADING -->
-        <div class="loading" id="loading">
-            ⏳ Φόρτωση...
+        <!-- THUMBNAIL που φαίνεται στο X και πριν το play -->
+        <div class="thumbnail-overlay" id="thumbnailOverlay">
+            <img class="thumbnail-img" src="thumbnail55.png" alt="Video Thumbnail" 
+                 onerror="this.style.display='none';">
         </div>
         
+        <!-- PLAY BUTTON -->
+        <button class="play-button-center" id="playButton"></button>
+        
         <!-- ΒΙΝΤΕΟ -->
-        <video id="mainVideo" preload="none" playsinline>
+        <video id="mainVideo" preload="auto" playsinline muted>
             <source src="video55.mp4" type="video/mp4">
         </video>
         
-        <!-- PROGRESS BAR -->
+        <!-- PROGRESS -->
         <div class="progress-container">
             <div class="progress-bar" id="progressBar"></div>
         </div>
@@ -257,7 +241,7 @@
         <div class="video-controls">
             <button class="control-btn" id="playPauseBtn">⏸</button>
             <div class="timer" id="currentTime">00:00</div>
-            <button class="control-btn" id="muteBtn">🔊</button>
+            <button class="control-btn" id="muteBtn">🔇</button>
             <div class="timer" id="durationTime">00:00</div>
             <button class="control-btn" id="fullscreenBtn">⛶</button>
         </div>
@@ -267,9 +251,8 @@
         // DOM Elements
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
-        const blankScreen = document.getElementById('blankScreen');
+        const thumbnailOverlay = document.getElementById('thumbnailOverlay');
         const playButton = document.getElementById('playButton');
-        const loading = document.getElementById('loading');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const muteBtn = document.getElementById('muteBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -280,7 +263,7 @@
         // State
         let isPlaying = false;
         let isMuted = true; // Αρχικά muted για autoplay
-        let hasStarted = false;
+        let hasAutoPlayed = false;
         
         // Format time
         function formatTime(seconds) {
@@ -296,70 +279,38 @@
             
             if (mainVideo.duration && !isNaN(mainVideo.duration)) {
                 durationTimeEl.textContent = formatTime(mainVideo.duration);
-                
-                // Update progress bar
                 const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
                 progressBar.style.width = `${progress}%`;
             }
         }
         
-        // Start video
+        // Start video (χειροκίνητο)
         function startVideo() {
-            if (hasStarted) return;
-            
-            hasStarted = true;
-            loading.style.display = 'block';
             playButton.style.display = 'none';
-            
-            // Set video source and play
-            mainVideo.src = 'video55.mp4';
-            mainVideo.load();
             
             mainVideo.play().then(() => {
                 isPlaying = true;
                 playPauseBtn.textContent = '⏸';
-                blankScreen.style.opacity = '0';
+                thumbnailOverlay.style.opacity = '0';
                 
                 setTimeout(() => {
-                    blankScreen.style.display = 'none';
-                    loading.style.display = 'none';
+                    thumbnailOverlay.style.display = 'none';
                 }, 500);
                 
-                // Unmute για καλύτερη εμπειρία
+                // Unmute
                 if (isMuted) {
                     mainVideo.muted = false;
                     isMuted = false;
                     muteBtn.textContent = '🔊';
                 }
             }).catch(e => {
-                console.error('Play failed:', e);
-                loading.style.display = 'none';
+                console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
-                hasStarted = false;
-                
-                // Show error on play button
-                playButton.style.background = 'rgba(255, 0, 0, 0.8)';
-                playButton.textContent = '❌ ΚΛΙΚ';
-                playButton.style.fontSize = '20px';
-                playButton.style.padding = '0';
-                playButton.innerHTML = 'ΚΛΙΚ ΓΙΑ ΒΙΝΤΕΟ';
-                
-                setTimeout(() => {
-                    playButton.style.background = 'rgba(220, 20, 60, 0.85)';
-                    playButton.innerHTML = '';
-                    playButton.style.fontSize = 'inherit';
-                    playButton.style.padding = 'inherit';
-                }, 2000);
             });
         }
         
         // Toggle play/pause
         function togglePlayPause() {
-            if (!hasStarted) {
-                startVideo();
-                return;
-            }
-            
             if (mainVideo.paused) {
                 mainVideo.play().then(() => {
                     isPlaying = true;
@@ -392,12 +343,56 @@
             }
         }
         
-        // Event Listeners
-        mainVideo.addEventListener('timeupdate', updateTime);
+        // ΑΥΤΟΜΑΤΗ ΕΝΑΡΞΗ (για το X player)
+        function tryAutoplay() {
+            // Προσπάθεια autoplay με ήχο muted
+            mainVideo.muted = true;
+            mainVideo.play().then(() => {
+                console.log('Autoplay successful for X player');
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸';
+                playButton.style.display = 'none';
+                thumbnailOverlay.style.opacity = '0';
+                hasAutoPlayed = true;
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                // Αφού ξεκινήσει, ξε-mute μετά από λίγο
+                setTimeout(() => {
+                    if (isPlaying) {
+                        mainVideo.muted = false;
+                        isMuted = false;
+                        muteBtn.textContent = '🔊';
+                    }
+                }, 1000);
+                
+            }).catch(e => {
+                console.log('Autoplay failed (normal for some browsers):', e.message);
+                // Κρατάμε το thumbnail και το play button ορατά
+                playButton.style.display = 'flex';
+            });
+        }
         
+        // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
             updateTime();
+            
+            // Ελέγχουμε αν είμαστε σε embedded player (X)
+            const isEmbedded = window.self !== window.top;
+            
+            if (isEmbedded) {
+                console.log('Running in X (Twitter) Player');
+                // Στο X, προσπάθεια άμεσης αναπαραγωγής
+                tryAutoplay();
+            } else {
+                // Σε κανονικό browser, περιμένουμε χειροκίνητο play
+                console.log('Running in regular browser');
+            }
         });
+        
+        mainVideo.addEventListener('timeupdate', updateTime);
         
         mainVideo.addEventListener('ended', () => {
             isPlaying = false;
@@ -406,22 +401,15 @@
         
         mainVideo.addEventListener('error', (e) => {
             console.error('Video error:', mainVideo.error);
-            loading.style.display = 'none';
             
-            // Show error message on blank screen
-            blankScreen.innerHTML = `
+            // Fallback μήνυμα
+            thumbnailOverlay.innerHTML = `
                 <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 60px; margin-bottom: 20px;">❌</div>
-                    <div style="font-size: 24px; margin-bottom: 10px;">Βίντεο δεν βρέθηκε</div>
-                    <div style="font-size: 16px; opacity: 0.8; margin-bottom: 30px;">
-                        Βεβαιωθείτε ότι το αρχείο <strong>video55.mp4</strong><br>
-                        είναι ανεβασμένο στον ίδιο φάκελο
+                    <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
+                    <div style="font-size: 20px; margin-bottom: 10px;">Video Error</div>
+                    <div style="font-size: 14px; opacity: 0.8;">
+                        Check if video55.mp4 exists in the videos folder
                     </div>
-                    <button onclick="location.reload()" 
-                            style="background: #dc143c; color: white; border: none; 
-                                   padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                        Δοκίμασε Ξανά
-                    </button>
                 </div>
             `;
             
@@ -434,18 +422,19 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // Click on video to play/pause
+        // Κλικ στο βίντεο για play/pause
         mainVideo.addEventListener('click', togglePlayPause);
         
-        // Click on blank screen to start
-        blankScreen.addEventListener('click', startVideo);
+        // Κλικ στο thumbnail για play
+        thumbnailOverlay.addEventListener('click', startVideo);
         
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             switch(e.code) {
                 case 'Space':
                     e.preventDefault();
-                    togglePlayPause();
+                    if (!hasAutoPlayed) startVideo();
+                    else togglePlayPause();
                     break;
                 case 'KeyM':
                     toggleMute();
@@ -453,19 +442,16 @@
                 case 'KeyF':
                     toggleFullscreen();
                     break;
-                case 'KeyK':
-                    togglePlayPause();
-                    break;
             }
         });
         
-        // Show controls on mouse move
+        // Show/hide controls
         let controlsTimeout;
         videoContainer.addEventListener('mousemove', () => {
             const controls = document.querySelector('.video-controls');
             const progress = document.querySelector('.progress-container');
             
-            if (hasStarted) {
+            if (isPlaying || hasAutoPlayed) {
                 controls.style.opacity = '1';
                 progress.style.opacity = '1';
                 
@@ -479,20 +465,22 @@
             }
         });
         
-        // Προσαρμογή play button για touch
-        playButton.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            playButton.style.transform = 'translate(-50%, -50%) scale(0.95)';
+        // Αυτόματη έναρξη όταν ο χρήστης αλληλεπιδράσει με τη σελίδα
+        document.addEventListener('click', () => {
+            if (!hasAutoPlayed && !isPlaying) {
+                tryAutoplay();
+            }
         });
         
-        playButton.addEventListener('touchend', (e) => {
-            e.preventDefault();
-            playButton.style.transform = 'translate(-50%, -50%) scale(1)';
-            startVideo();
+        document.addEventListener('touchstart', () => {
+            if (!hasAutoPlayed && !isPlaying) {
+                tryAutoplay();
+            }
         });
         
-        console.log('Video player ready');
-        console.log('Click the red play button to start');
+        console.log('X Player ready');
+        console.log('Thumbnail: thumbnail55.png');
+        console.log('Video: video55.mp4');
         
     </script>
 </body>
