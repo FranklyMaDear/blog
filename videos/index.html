@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Must Watch Video - Exclusive Content</title>
     
     <!-- Facebook Meta Tags -->
-    <title>Must Watch Video - Exclusive Content</title>
     <meta property="og:title" content="Must Watch Video - Exclusive Content">
     <meta property="og:description" content="Watch this exclusive video now. Premium content available for viewing.">
-    <meta property="og:image" content="https://blog.franklymadear.com/facebook/thumbnail55.png">
-    <meta property="og:url" content="https://blog.franklymadear.com/facebook/videos/one/index.html">
+    <meta property="og:image" content="thumbnail55.png"> <!-- Χρησιμοποίησε πλήρη URL αν δεν δουλεύει -->
+    <meta property="og:url" content="https://blog.franklymadear.com/videos/index.html">
     <meta property="og:type" content="video.other">
-    <meta property="og:video" content="https://blog.franklymadear.com/facebook/videos/one/video55.mp4">
+    <meta property="og:video" content="video55.mp4"> <!-- Χρησιμοποίησε πλήρη URL αν δεν δουλεύει -->
     <meta property="og:video:type" content="video/mp4">
     <meta property="og:video:width" content="1280">
     <meta property="og:video:height" content="720">
@@ -20,536 +20,555 @@
     <meta name="twitter:card" content="player">
     <meta name="twitter:title" content="Must Watch Video - Exclusive Content">
     <meta name="twitter:description" content="Watch this exclusive video now. Premium content available for viewing.">
-    <meta name="twitter:image" content="https://blog.franklymadear.com/facebook/thumbnail55.png">
-    <meta name="twitter:player" content="https://blog.franklymadear.com/facebook/videos/one/index.html">
+    <meta name="twitter:image" content="thumbnail55.png"> <!-- Χρησιμοποίησε πλήρη URL αν δεν δουλεύει -->
+    <meta name="twitter:player" content="https://blog.franklymadear.com/videos/index.html">
     <meta name="twitter:player:width" content="1280">
     <meta name="twitter:player:height" content="720">
-    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/facebook/videos/one/video55.mp4">
+    <meta name="twitter:player:stream" content="video55.mp4"> <!-- Χρησιμοποίησε πλήρη URL αν δεν δουλεύει -->
     <meta name="twitter:player:stream:content_type" content="video/mp4">
-
-    <link rel="canonical" href="https://blog.franklymadear.com/facebook/videos/one/index.html">
     
     <style>
-        /* Ολόκληρο το CSS παραμένει το ίδιο */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-        }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            position: relative;
+            background: #000;
             color: #fff;
+            height: 100vh;
+            overflow: hidden;
         }
         
-        /* ... όλο το άλλο CSS παραμένει αμετάβλητο ... */
+        /* Video Container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background: #000;
+        }
+        
+        /* Video Element */
+        #mainVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+        }
+        
+        /* Loading Animation */
+        .loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #4ecdc4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 10;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Fallback Container */
+        .fallback-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .fallback-container h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #4ecdc4;
+        }
+        
+        .fallback-container p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #ccc;
+            max-width: 600px;
+        }
+        
+        /* Play Button */
+        .play-button {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(78, 205, 196, 0.6);
+        }
+        
+        /* Error Message */
+        .error-message {
+            background: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            max-width: 600px;
+            text-align: left;
+        }
+        
+        .error-message h3 {
+            color: #dc3545;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        
+        .error-message code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 14px;
+            word-break: break-all;
+            display: block;
+            margin: 10px 0;
+        }
+        
+        /* Controls */
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            z-index: 5;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .video-container:hover .controls {
+            opacity: 1;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .timer {
+            font-family: monospace;
+            font-size: 14px;
+            min-width: 50px;
+        }
+        
+        /* Share Buttons */
+        .share-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+        
+        .share-toggle {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        
+        .share-buttons {
+            position: absolute;
+            bottom: 60px;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 15px;
+            min-width: 170px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s;
+        }
+        
+        .share-container:hover .share-buttons {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .share-btn {
+            display: block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-decoration: none;
+            margin-bottom: 8px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .fallback-container h2 {
+                font-size: 20px;
+            }
+            
+            .play-button {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+            
+            .controls {
+                bottom: 10px;
+                padding: 10px 15px;
+                gap: 10px;
+            }
+            
+            .share-container {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Full Screen Video Container -->
     <div class="video-container" id="videoContainer">
-        <!-- Loading overlay -->
-        <div class="loading-overlay" id="loadingOverlay">
-            <div class="loader"></div>
+        <!-- Loading Indicator -->
+        <div class="loader" id="loader"></div>
+        
+        <!-- Fallback UI (Shows if autoplay fails) -->
+        <div class="fallback-container" id="fallbackContainer">
+            <h2>🎬 Το βίντεο είναι έτοιμο!</h2>
+            <p>Η αυτόματη αναπαραγωγή απαγορεύτηκε από το πρόγραμμα περιήγησης</p>
+            <button class="play-button" id="manualPlayBtn">
+                <span>▶</span>
+                <span>Παίξε το Βίντεο</span>
+            </button>
+            <p>Κάντε κλικ στο κουμπί παραπάνω για να ξεκινήσει η αναπαραγωγή</p>
+            
+            <!-- Error Display Area -->
+            <div class="error-message" id="errorMessage" style="display: none;"></div>
         </div>
         
-        <!-- Poster overlay with thumbnail -->
-        <div class="video-poster" id="videoPoster" style="background: #000 url('https://blog.franklymadear.com/facebook/thumbnail55.png') center center no-repeat; background-size: cover;"></div>
-        
-        <!-- Actual Video Element -->
-        <video id="mainVideo" preload="auto" playsinline autoplay muted poster="https://blog.franklymadear.com/facebook/thumbnail55.png">
-            <!-- ΠΡΑΓΜΑΤΙΚΟ ΒΙΝΤΕΟ MP4 -->
-            <source src="https://blog.franklymadear.com/facebook/videos/one/video55.mp4" type="video/mp4">
+        <!-- Main Video Element -->
+        <video id="mainVideo" preload="metadata" playsinline>
+            <!-- ΑΛΛΑΞΤΕ ΑΥΤΗ ΤΗ ΔΙΑΔΡΟΜΗ ΕΑΝ ΔΕΝ ΔΟΥΛΕΥΕΙ -->
+            <source src="video55.mp4" type="video/mp4">
+            <!-- ΕΦΕΤΕΡΕΙΑ: <source src="https://blog.franklymadear.com/video55.mp4" type="video/mp4"> -->
             Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
         </video>
         
-        <!-- Title -->
-        <div class="video-title">Must Watch Video - Exclusive Content</div>
-        
-        <!-- Controls -->
-        <div class="video-controls" id="videoControls">
+        <!-- Video Controls -->
+        <div class="controls">
             <button class="control-btn" id="playPauseBtn">⏸</button>
-            <div class="timer" id="currentTime">00:00</div>
-            <div class="progress-bar" id="progressBar">
-                <div class="progress" id="progress"></div>
-            </div>
-            <div class="timer" id="durationTime">00:00</div>
-            
-            <div class="volume-control">
-                <button class="control-btn" id="volumeBtn">🔊</button>
-                <div class="volume-slider" id="volumeSlider">
-                    <div class="volume-level" id="volumeLevel"></div>
-                </div>
-            </div>
-            
+            <span class="timer" id="currentTime">00:00</span>
+            <span class="timer" id="durationTime">00:00</span>
+            <button class="control-btn" id="muteBtn">🔊</button>
             <button class="control-btn" id="fullscreenBtn">⛶</button>
+        </div>
+        
+        <!-- Share Buttons -->
+        <div class="share-container">
+            <div class="share-toggle">
+                📤
+            </div>
+            <div class="share-buttons">
+                <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/videos/index.html" 
+                   target="_blank" class="share-btn">Facebook</a>
+                <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/videos/index.html" 
+                   target="_blank" class="share-btn">Twitter</a>
+                <a href="https://api.whatsapp.com/send?text=Δες αυτό το βίντεο: https://blog.franklymadear.com/videos/index.html" 
+                   target="_blank" class="share-btn">WhatsApp</a>
+                <a href="#" class="share-btn" onclick="copyLink(); return false;">Αντιγραφή Link</a>
+            </div>
         </div>
     </div>
     
-    <!-- Share Buttons -->
-    <div class="share-container">
-        <div class="share-toggle">
-            📤
-        </div>
-        <div class="share-buttons">
-            <div class="share-title">Share</div>
-            <a href="https://www.facebook.com/sharer/sharer.php?u=https://blog.franklymadear.com/facebook/videos/one/index.html" 
-               target="_blank" 
-               class="share-btn fb">
-               <span class="icon">📘</span>
-               <span>Facebook</span>
-            </a>
-            
-            <a href="https://twitter.com/intent/tweet?url=https://blog.franklymadear.com/facebook/videos/one/index.html&text=Must Watch Video - Exclusive Content" 
-               target="_blank" 
-               class="share-btn tw">
-               <span class="icon">🐦</span>
-               <span>Twitter</span>
-            </a>
-            
-            <a href="https://api.whatsapp.com/send?text=Must Watch Video - Exclusive Content:%20https://blog.franklymadear.com/facebook/videos/one/index.html" 
-               target="_blank" 
-               class="share-btn wa">
-               <span class="icon">📱</span>
-               <span>WhatsApp</span>
-            </a>
-            
-            <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/videos/one/index.html&text=Must Watch Video - Exclusive Content" 
-               target="_blank" 
-               class="share-btn tg">
-               <span class="icon">✈️</span>
-               <span>Telegram</span>
-            </a>
-            
-            <a href="mailto:?subject=Must Watch Video - Exclusive Content&body=Must Watch Video - Exclusive Content: https://blog.franklymadear.com/facebook/videos/one/index.html" 
-               class="share-btn mail">
-               <span class="icon">✉️</span>
-               <span>Email</span>
-            </a>
-            
-            <a href="#" 
-               class="share-btn link"
-               onclick="copyToClipboard(); return false;">
-               <span class="icon">🔗</span>
-               <span>Copy Link</span>
-            </a>
-        </div>
-    </div>
-
     <script>
         // DOM Elements
-        const videoContainer = document.getElementById('videoContainer');
-        const mainVideo = document.getElementById('mainVideo');
-        const videoPoster = document.getElementById('videoPoster');
-        const loadingOverlay = document.getElementById('loadingOverlay');
+        const video = document.getElementById('mainVideo');
+        const loader = document.getElementById('loader');
+        const fallbackContainer = document.getElementById('fallbackContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const manualPlayBtn = document.getElementById('manualPlayBtn');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const currentTimeEl = document.getElementById('currentTime');
         const durationTimeEl = document.getElementById('durationTime');
-        const progressBar = document.getElementById('progressBar');
-        const progressEl = document.getElementById('progress');
-        const volumeBtn = document.getElementById('volumeBtn');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const volumeLevel = document.getElementById('volumeLevel');
+        const muteBtn = document.getElementById('muteBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const videoControls = document.getElementById('videoControls');
-        const videoTitle = document.querySelector('.video-title');
         
-        // Video configuration - ΠΡΑΓΜΑΤΙΚΟ ΒΙΝΤΕΟ MP4
-        const videoUrl = 'https://blog.franklymadear.com/facebook/videos/one/video55.mp4';
-        const thumbnailUrl = 'https://blog.franklymadear.com/facebook/thumbnail55.png';
-        
-        // State variables
+        // State
         let isPlaying = false;
-        let isMuted = true; // Αρχικά muted για autoplay
-        let volume = 0; // Αρχικά 0 για autoplay
-        let controlsTimeout;
-        let isTouchDevice = false;
-        let autoplayBlocked = false;
+        let isMuted = false;
         
-        // Detect touch device
-        if ('ontouchstart' in window || navigator.maxTouchPoints) {
-            isTouchDevice = true;
-            videoContainer.classList.add('touch-active');
-        }
-        
-        // Format time to MM:SS
+        // Format time as MM:SS
         function formatTime(seconds) {
             if (isNaN(seconds)) return '00:00';
-            const minutes = Math.floor(seconds / 60);
+            const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
-            return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
-        // Update time display
+        // Update time displays
         function updateTime() {
-            currentTimeEl.textContent = formatTime(mainVideo.currentTime);
+            currentTimeEl.textContent = formatTime(video.currentTime);
             
-            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
-                durationTimeEl.textContent = formatTime(mainVideo.duration);
-                
-                // Update progress
-                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
-                progressEl.style.width = `${progress}%`;
+            if (video.duration && !isNaN(video.duration)) {
+                durationTimeEl.textContent = formatTime(video.duration);
             }
         }
         
-        // Show controls temporarily
-        function showControls() {
-            videoControls.style.opacity = '1';
-            videoTitle.style.opacity = '1';
-            clearTimeout(controlsTimeout);
-            
-            if (isPlaying) {
-                controlsTimeout = setTimeout(() => {
-                    videoControls.style.opacity = '0';
-                    videoTitle.style.opacity = '0';
-                }, 3000);
-            }
-        }
-        
-        // Hide controls
-        function hideControls() {
-            videoControls.style.opacity = '0';
-            videoTitle.style.opacity = '0';
-        }
-        
-        // Play/Pause functionality
+        // Toggle play/pause
         function togglePlay() {
-            if (mainVideo.paused) {
-                mainVideo.play().then(() => {
-                    playPauseBtn.textContent = '⏸';
+            if (video.paused) {
+                video.play().then(() => {
                     isPlaying = true;
-                    showControls();
-                    
-                    // Ενεργοποίηση ήχου όταν ο χρήστης πατάει play
-                    if (isMuted) {
-                        mainVideo.muted = false;
-                        volume = 1.0;
-                        updateVolume();
-                    }
+                    playPauseBtn.textContent = '⏸';
+                    fallbackContainer.style.display = 'none';
                 }).catch(e => {
-                    console.log("Play failed:", e);
-                    showAutoplayFallback();
+                    showError('Αποτυχία αναπαραγωγής: ' + e.message);
                 });
             } else {
-                mainVideo.pause();
-                playPauseBtn.textContent = '▶';
+                video.pause();
                 isPlaying = false;
-                showControls();
-            }
-        }
-        
-        // Volume control
-        function updateVolume() {
-            mainVideo.volume = volume;
-            volumeLevel.style.width = `${volume * 100}%`;
-            
-            if (volume === 0) {
-                volumeBtn.textContent = '🔇';
-                mainVideo.muted = true;
-                isMuted = true;
-            } else if (volume < 0.5) {
-                volumeBtn.textContent = '🔈';
-                mainVideo.muted = false;
-                isMuted = false;
-            } else {
-                volumeBtn.textContent = '🔊';
-                mainVideo.muted = false;
-                isMuted = false;
+                playPauseBtn.textContent = '▶';
             }
         }
         
         // Toggle mute
         function toggleMute() {
-            if (isMuted) {
-                volume = 1.0;
-            } else {
-                volume = 0;
-            }
-            updateVolume();
-            showControls();
+            isMuted = !isMuted;
+            video.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
         }
         
         // Toggle fullscreen
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
-                if (videoContainer.requestFullscreen) {
-                    videoContainer.requestFullscreen();
-                } else if (videoContainer.webkitRequestFullscreen) {
-                    videoContainer.webkitRequestFullscreen();
-                } else if (videoContainer.msRequestFullscreen) {
-                    videoContainer.msRequestFullscreen();
-                }
-                fullscreenBtn.textContent = '🗗';
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                } else if (document.msExitFullscreen) {
-                    document.msExitFullscreen();
-                }
-                fullscreenBtn.textContent = '⛶';
-            }
-            showControls();
-        }
-        
-        // Seek video
-        function seekVideo(event) {
-            const rect = progressBar.getBoundingClientRect();
-            const pos = (event.clientX - rect.left) / rect.width;
-            mainVideo.currentTime = pos * mainVideo.duration;
-            showControls();
-        }
-        
-        // Adjust volume
-        function adjustVolume(event) {
-            const rect = volumeSlider.getBoundingClientRect();
-            const pos = (event.clientX - rect.left) / rect.width;
-            volume = Math.max(0, Math.min(1, pos));
-            updateVolume();
-            showControls();
-        }
-        
-        // Show autoplay fallback button
-        function showAutoplayFallback() {
-            autoplayBlocked = true;
-            videoPoster.style.display = 'flex';
-            videoPoster.style.justifyContent = 'center';
-            videoPoster.style.alignItems = 'center';
-            videoPoster.style.flexDirection = 'column';
-            videoPoster.style.gap = '20px';
-            videoPoster.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-            videoPoster.innerHTML = `
-                <div style="text-align: center;">
-                    <div style="font-size: 24px; margin-bottom: 10px; color: white;">🎬</div>
-                    <div style="color: white; font-size: 18px; margin-bottom: 20px;">Το βίντεο είναι έτοιμο!</div>
-                    <button class="play-button" id="manualPlayBtn">
-                        <span class="play-icon">▶</span>
-                        <span>Παίξε το Βίντεο</span>
-                    </button>
-                    <div style="color: rgba(255,255,255,0.7); font-size: 14px; margin-top: 15px;">
-                        Η αυτόματη αναπαραγωγή απαγορεύτηκε από το πρόγραμμα περιήγησης
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('manualPlayBtn').addEventListener('click', () => {
-                mainVideo.muted = false;
-                mainVideo.play().then(() => {
-                    videoPoster.style.opacity = '0';
-                    setTimeout(() => {
-                        videoPoster.style.display = 'none';
-                    }, 500);
-                    playPauseBtn.textContent = '⏸';
-                    isPlaying = true;
-                    volume = 1.0;
-                    updateVolume();
-                    showControls();
+                document.documentElement.requestFullscreen().catch(e => {
+                    console.log('Fullscreen error:', e);
                 });
-            });
+                fullscreenBtn.textContent = '🗗';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = '⛶';
+            }
         }
         
-        // Event Listeners
-        
-        // Video events
-        mainVideo.addEventListener('loadeddata', () => {
-            loadingOverlay.style.opacity = '0';
-            setTimeout(() => {
-                loadingOverlay.style.display = 'none';
-                
-                // Το βίντεο παίζει αυτόματα λόγω autoplay
-                playPauseBtn.textContent = '⏸';
-                isPlaying = true;
-                
-                // Κρύψε το poster αμέσως μόλις το βίντεο παίξει
-                setTimeout(() => {
-                    videoPoster.style.opacity = '0';
-                    setTimeout(() => {
-                        videoPoster.style.display = 'none';
-                    }, 500);
-                }, 300);
-                
-                showControls();
-            }, 300);
-            
-            updateTime();
-        });
-        
-        mainVideo.addEventListener('timeupdate', updateTime);
-        
-        mainVideo.addEventListener('ended', () => {
-            playPauseBtn.textContent = '⟳';
-            isPlaying = false;
-            showControls();
-        });
-        
-        mainVideo.addEventListener('play', () => {
-            playPauseBtn.textContent = '⏸';
-            isPlaying = true;
-        });
-        
-        mainVideo.addEventListener('pause', () => {
-            playPauseBtn.textContent = '▶';
-            isPlaying = false;
-            showControls();
-        });
-        
-        // Video error handling
-        mainVideo.addEventListener('error', (e) => {
-            console.error('Video error:', e);
-            loadingOverlay.innerHTML = `
-                <div style="text-align: center; color: white;">
-                    <div style="font-size: 30px; margin-bottom: 10px;">❌</div>
-                    <div style="font-size: 18px; margin-bottom: 10px;">Σφάλμα φόρτωσης βίντεο</div>
-                    <div style="font-size: 14px; opacity: 0.7;">Βεβαιωθείτε ότι το βίντεο υπάρχει στο URL:<br>${videoUrl}</div>
-                    <div style="font-size: 14px; opacity: 0.7; margin-top: 10px;">Thumbnail URL:<br>${thumbnailUrl}</div>
-                </div>
+        // Show error message
+        function showError(message) {
+            errorMessage.innerHTML = `
+                <h3>❌ Σφάλμα Φόρτωσης Βίντεο</h3>
+                <p>${message}</p>
+                <p>Πιθανά προβλήματα:</p>
+                <ul>
+                    <li>Το αρχείο βίντεο δεν βρίσκεται στον server</li>
+                    <li>Λάθος διαδρομή προς το βίντεο</li>
+                    <li>Το αρχείο είναι κατεστραμμένο</li>
+                </ul>
+                <p><strong>Δοκιμάστε:</strong></p>
+                <ol>
+                    <li>Ανεβάστε το αρχείο <code>video55.mp4</code> στον ίδιο φάκελο με αυτή τη σελίδα</li>
+                    <li>Βεβαιωθείτε ότι το όνομα αρχείου είναι σωστό</li>
+                    <li>Δοκιμάστε να ανοίξετε αυτό το link: <code id="videoLink"></code></li>
+                </ol>
             `;
-        });
-        
-        // Δοκίμασε autoplay και αν αποτύχει, δείξε fallback
-        mainVideo.play().then(() => {
-            console.log("Autoplay successful");
-            isPlaying = true;
-        }).catch(e => {
-            console.log("Autoplay blocked, showing fallback:", e);
-            setTimeout(() => {
-                if (mainVideo.paused) {
-                    showAutoplayFallback();
-                }
-            }, 1000);
-        });
-        
-        // User interaction events
-        videoContainer.addEventListener('click', (e) => {
-            if (e.target !== videoControls && !videoControls.contains(e.target) && 
-                e.target.id !== 'manualPlayBtn' && !e.target.closest('#manualPlayBtn')) {
-                togglePlay();
+            
+            // Show the actual video URL for debugging
+            const videoLink = document.getElementById('videoLink');
+            if (videoLink) {
+                const videoSrc = video.querySelector('source').src;
+                videoLink.textContent = videoSrc;
             }
-        });
+            
+            errorMessage.style.display = 'block';
+        }
         
-        videoContainer.addEventListener('mousemove', showControls);
-        videoContainer.addEventListener('touchstart', () => {
-            videoContainer.classList.add('touch-active');
-            showControls();
-        });
+        // Check if video file exists
+        function checkVideoExists() {
+            const videoSrc = video.querySelector('source').src;
+            
+            // Create test request
+            fetch(videoSrc, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    console.log('Video file exists:', videoSrc);
+                })
+                .catch(error => {
+                    console.error('Video file check failed:', error);
+                    showError(`Το βίντεο δεν βρέθηκε στη διαδρομή: <code>${videoSrc}</code><br>
+                              Σφάλμα: ${error.message}`);
+                    
+                    // Also hide loader since we know it won't load
+                    loader.style.display = 'none';
+                });
+        }
         
-        // Control buttons
-        playPauseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlay();
-        });
-        
-        progressBar.addEventListener('click', (e) => {
-            e.stopPropagation();
-            seekVideo(e);
-        });
-        
-        volumeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMute();
-        });
-        
-        volumeSlider.addEventListener('click', (e) => {
-            e.stopPropagation();
-            adjustVolume(e);
-        });
-        
-        fullscreenBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleFullscreen();
-        });
-        
-        // Fullscreen change listener
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                fullscreenBtn.textContent = '⛶';
-            } else {
-                fullscreenBtn.textContent = '🗗';
-            }
-        });
-        
-        // Copy link function
-        function copyToClipboard() {
-            const url = 'https://blog.franklymadear.com/facebook/videos/one/index.html';
+        // Copy link to clipboard
+        function copyLink() {
+            const url = window.location.href;
             navigator.clipboard.writeText(url)
                 .then(() => {
-                    // Show temporary notification
-                    const originalText = document.querySelector('.share-btn.link span:last-child').textContent;
-                    document.querySelector('.share-btn.link span:last-child').textContent = 'Copied!';
-                    setTimeout(() => {
-                        document.querySelector('.share-btn.link span:last-child').textContent = originalText;
-                    }, 2000);
+                    alert('Το link αντιγράφηκε!');
                 })
                 .catch(err => {
-                    console.error('Error copying:', err);
-                    // Fallback for older browsers
+                    console.error('Copy failed:', err);
+                    // Fallback
                     const textArea = document.createElement('textarea');
                     textArea.value = url;
                     document.body.appendChild(textArea);
                     textArea.select();
                     document.execCommand('copy');
                     document.body.removeChild(textArea);
-                    alert('Link copied to clipboard!');
+                    alert('Το link αντιγράφηκε (fallback)');
                 });
         }
         
-        // Mobile tap handling for share buttons
-        const shareContainer = document.querySelector('.share-container');
-        const shareToggle = document.querySelector('.share-toggle');
-        
-        if (isTouchDevice) {
-            shareToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                shareContainer.classList.toggle('active');
-                if (shareContainer.classList.contains('active')) {
-                    shareContainer.querySelector('.share-buttons').style.opacity = '1';
-                    shareContainer.querySelector('.share-buttons').style.visibility = 'visible';
-                    shareContainer.querySelector('.share-buttons').style.transform = 'translateY(0)';
-                } else {
-                    shareContainer.querySelector('.share-buttons').style.opacity = '0';
-                    shareContainer.querySelector('.share-buttons').style.visibility = 'hidden';
-                    shareContainer.querySelector('.share-buttons').style.transform = 'translateY(10px)';
-                }
-            });
+        // Event Listeners
+        video.addEventListener('loadeddata', () => {
+            loader.style.display = 'none';
+            updateTime();
             
-            // Close when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!shareContainer.contains(e.target) && shareContainer.classList.contains('active')) {
-                    shareContainer.classList.remove('active');
-                    shareContainer.querySelector('.share-buttons').style.opacity = '0';
-                    shareContainer.querySelector('.share-buttons').style.visibility = 'hidden';
-                    shareContainer.querySelector('.share-buttons').style.transform = 'translateY(10px)';
+            // Try autoplay with sound muted
+            video.muted = true;
+            video.play()
+                .then(() => {
+                    isPlaying = true;
+                    playPauseBtn.textContent = '⏸';
+                    fallbackContainer.style.display = 'none';
+                    
+                    // After 1 second, try to unmute (user gesture required)
+                    setTimeout(() => {
+                        video.muted = false;
+                        isMuted = false;
+                        muteBtn.textContent = '🔊';
+                    }, 1000);
+                })
+                .catch(e => {
+                    console.log('Autoplay failed (normal for some browsers):', e.message);
+                    // Keep fallback visible for manual play
+                    fallbackContainer.style.display = 'flex';
+                });
+        });
+        
+        video.addEventListener('timeupdate', updateTime);
+        
+        video.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.textContent = '⟳';
+        });
+        
+        video.addEventListener('error', (e) => {
+            loader.style.display = 'none';
+            console.error('Video error:', video.error);
+            
+            let errorText = 'Άγνωστο σφάλμα';
+            switch(video.error.code) {
+                case 1: errorText = 'Ακύρωση φόρτωσης'; break;
+                case 2: errorText = 'Σφάλμα δικτύου'; break;
+                case 3: errorText = 'Σφάλμα αποκωδικοποίησης βίντεο'; break;
+                case 4: errorText = 'Μη υποστηριζόμενη μορφή βίντεο'; break;
+            }
+            
+            showError(`Σφάλμα βίντεο (${errorText}). Βεβαιωθείτε ότι:
+                <ol>
+                    <li>Το αρχείο <strong>video55.mp4</strong> είναι ανεβασμένο</li>
+                    <li>Βρίσκεται στον ίδιο φάκελο με αυτή τη σελίδα</li>
+                    <li>Η μορφή είναι συμβατή MP4 (H.264 codec)</li>
+                </ol>
+                <p><strong>Γρήγορο fix:</strong> Ανέβασε το βίντεο στον ίδιο φάκελο με το index.html</p>`);
+        });
+        
+        // Manual play button
+        manualPlayBtn.addEventListener('click', togglePlay);
+        
+        // Control buttons
+        playPauseBtn.addEventListener('click', togglePlay);
+        muteBtn.addEventListener('click', toggleMute);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        // Initial setup
+        video.volume = 1.0;
+        
+        // Check if video file exists on page load
+        window.addEventListener('load', () => {
+            setTimeout(checkVideoExists, 500);
+        });
+        
+        // Show controls on mouse move
+        let controlsTimeout;
+        document.addEventListener('mousemove', () => {
+            const controls = document.querySelector('.controls');
+            controls.style.opacity = '1';
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                if (isPlaying) {
+                    controls.style.opacity = '0';
                 }
-            });
-        }
+            }, 2000);
+        });
         
-        // Initialize volume
-        updateVolume();
-        
-        // Show controls initially
-        showControls();
-        
-        console.log('Video page loaded successfully');
-        console.log('Video URL:', videoUrl);
-        console.log('Thumbnail URL:', thumbnailUrl);
-    </script>
-    
-    <!-- Advertisement Script -->
-    <script>
-        (function(s){
-            s.dataset.zone='10266501',
-            s.src='https://al5sm.com/tag.min.js'
-        })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))
+        console.log('Video page initialized');
+        console.log('Video source:', video.querySelector('source').src);
     </script>
 </body>
 </html>
