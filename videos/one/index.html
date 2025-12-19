@@ -11,7 +11,10 @@
     <meta property="og:image" content="https://blog.franklymadear.com/facebook/thumbnail1.png">
     <meta property="og:url" content="https://blog.franklymadear.com/facebook/videos/one/index.html">
     <meta property="og:type" content="video.other">
-    <meta property="og:video" content="https://blog.franklymadear.com/facebook/videos/one/index.html">
+    <meta property="og:video" content="https://blog.franklymadear.com/facebook/videos/one/video1.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="1280">
+    <meta property="og:video:height" content="720">
     
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="player">
@@ -21,6 +24,8 @@
     <meta name="twitter:player" content="https://blog.franklymadear.com/facebook/videos/one/index.html">
     <meta name="twitter:player:width" content="1280">
     <meta name="twitter:player:height" content="720">
+    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/facebook/videos/one/video1.mp4">
+    <meta name="twitter:player:stream:content_type" content="video/mp4">
 
     <link rel="canonical" href="https://blog.franklymadear.com/facebook/videos/one/index.html">
     
@@ -477,10 +482,10 @@
         <div class="video-poster" id="videoPoster"></div>
         
         <!-- Actual Video Element -->
-        <video id="mainVideo" preload="auto" playsinline autoplay muted>
-            <!-- Add your actual video source here -->
-            <!-- Example: <source src="your-video.mp4" type="video/mp4"> -->
-            <!-- For now using a placeholder -->
+        <video id="mainVideo" preload="auto" playsinline autoplay muted poster="https://blog.franklymadear.com/facebook/thumbnail1.png">
+            <!-- ΠΡΑΓΜΑΤΙΚΟ ΒΙΝΤΕΟ MP4 -->
+            <source src="https://blog.franklymadear.com/facebook/videos/one/video1.mp4" type="video/mp4">
+            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
         </video>
         
         <!-- Title -->
@@ -534,7 +539,7 @@
                <span>WhatsApp</span>
             </a>
             
-            <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/video1.html&text=Must Watch Video - Exclusive Content" 
+            <a href="https://t.me/share/url?url=https://blog.franklymadear.com/facebook/videos/one/index.html&text=Must Watch Video - Exclusive Content" 
                target="_blank" 
                class="share-btn tg">
                <span class="icon">✈️</span>
@@ -574,12 +579,17 @@
         const videoControls = document.getElementById('videoControls');
         const videoTitle = document.querySelector('.video-title');
         
-        // Video configuration - REPLACE THIS WITH YOUR ACTUAL VIDEO URL
-        const videoUrl = 'https://blog.franklymadear.com/facebook/videos/one/index.html'; // Sample video
+        // Video configuration - ΠΡΑΓΜΑΤΙΚΟ ΒΙΝΤΕΟ MP4
+        const videoUrl = 'https://blog.franklymadear.com/facebook/videos/one/video1.mp4';
         
         // Initialize video
-        mainVideo.src = videoUrl;
-        mainVideo.poster = 'https://blog.franklymadear.com/facebook/thumbnail1.png';
+        if (mainVideo.querySelector('source')) {
+            // Αν χρησιμοποιείς source tag στο HTML, το src θα οριστεί αυτόματα
+            console.log('Video source loaded from HTML source tag');
+        } else {
+            // Fallback: ορίζουμε το src μέσω JavaScript
+            mainVideo.src = videoUrl;
+        }
         
         // State variables
         let isPlaying = false;
@@ -597,6 +607,7 @@
         
         // Format time to MM:SS
         function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
@@ -605,11 +616,14 @@
         // Update time display
         function updateTime() {
             currentTimeEl.textContent = formatTime(mainVideo.currentTime);
-            durationTimeEl.textContent = formatTime(mainVideo.duration);
             
-            // Update progress
-            const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
-            progressEl.style.width = `${progress}%`;
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                durationTimeEl.textContent = formatTime(mainVideo.duration);
+                
+                // Update progress
+                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
+                progressEl.style.width = `${progress}%`;
+            }
         }
         
         // Show controls temporarily
@@ -699,7 +713,7 @@
                 } else if (videoContainer.msRequestFullscreen) {
                     videoContainer.msRequestFullscreen();
                 }
-                fullscreenBtn.textContent = '⛶';
+                fullscreenBtn.textContent = '🗗';
             } else {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
@@ -817,7 +831,13 @@
         // Video error handling
         mainVideo.addEventListener('error', (e) => {
             console.error('Video error:', e);
-            loadingOverlay.innerHTML = '<div style="text-align: center; color: white;">Σφάλμα φόρτωσης βίντεο</div>';
+            loadingOverlay.innerHTML = `
+                <div style="text-align: center; color: white;">
+                    <div style="font-size: 30px; margin-bottom: 10px;">❌</div>
+                    <div style="font-size: 18px; margin-bottom: 10px;">Σφάλμα φόρτωσης βίντεο</div>
+                    <div style="font-size: 14px; opacity: 0.7;">Βεβαιωθείτε ότι το βίντεο υπάρχει στο URL:<br>${videoUrl}</div>
+                </div>
+            `;
         });
         
         // Δοκίμασε autoplay και αν αποτύχει, δείξε fallback
@@ -826,7 +846,11 @@
             isPlaying = true;
         }).catch(e => {
             console.log("Autoplay blocked, showing fallback:", e);
-            // Μην εμφανίσεις αμέσως το fallback, άσε το loadeddata να χειριστεί
+            setTimeout(() => {
+                if (mainVideo.paused) {
+                    showAutoplayFallback();
+                }
+            }, 1000);
         });
         
         // User interaction events
@@ -873,18 +897,33 @@
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
                 fullscreenBtn.textContent = '⛶';
+            } else {
+                fullscreenBtn.textContent = '🗗';
             }
         });
         
         // Copy link function
         function copyToClipboard() {
-            const url = 'https://blog.franklymadear.com/facebook/video1.html';
+            const url = 'https://blog.franklymadear.com/facebook/videos/one/index.html';
             navigator.clipboard.writeText(url)
                 .then(() => {
-                    alert('Link copied to clipboard!');
+                    // Show temporary notification
+                    const originalText = document.querySelector('.share-btn.link span:last-child').textContent;
+                    document.querySelector('.share-btn.link span:last-child').textContent = 'Copied!';
+                    setTimeout(() => {
+                        document.querySelector('.share-btn.link span:last-child').textContent = originalText;
+                    }, 2000);
                 })
                 .catch(err => {
                     console.error('Error copying:', err);
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = url;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    alert('Link copied to clipboard!');
                 });
         }
         
@@ -924,9 +963,8 @@
         // Show controls initially
         showControls();
         
-        // IMPORTANT: Replace the sample video URL with your actual video URL
-        console.log('Replace the videoUrl variable with your actual video URL');
-        console.log('Current video source:', videoUrl);
+        console.log('Video page loaded successfully');
+        console.log('Video URL:', videoUrl);
     </script>
     
     <!-- Advertisement Script -->
