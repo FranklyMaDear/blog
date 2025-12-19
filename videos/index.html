@@ -61,7 +61,6 @@
             height: auto;
             z-index: 1;
             background: #000;
-            /* ΜΗΝ ΧΡΗΣΙΜΟΠΟΙΗΣΕΙΣ object-fit: cover - ΚΡΑΤΑ ΤΟ ΠΡΩΤΟ ΜΕΓΕΘΟΣ */
         }
         
         /* Thumbnail overlay - ίδιο μέγεθος με το βίντεο */
@@ -76,7 +75,6 @@
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease;
-            /* Αυτόματα μέγεθος από το βίντεο */
             max-width: 100%;
             max-height: 100%;
         }
@@ -265,21 +263,6 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        /* Aspect ratio warning για πολύ μεγάλα βίντεο */
-        .aspect-ratio-warning {
-            display: none;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 165, 0, 0.2);
-            border: 1px solid orange;
-            color: orange;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 5;
-        }
-        
         /* Mobile */
         @media (max-width: 768px) {
             .play-button-center {
@@ -317,11 +300,6 @@
 </head>
 <body>
     <div class="video-container" id="videoContainer">
-        <!-- Aspect ratio warning -->
-        <div class="aspect-ratio-warning" id="aspectRatioWarning">
-            ⚠️ Το βίντεο εμφανίζεται στο φυσικό του μέγεθος
-        </div>
-        
         <!-- Loading spinner -->
         <div class="loading-spinner" id="loadingSpinner"></div>
         
@@ -373,7 +351,6 @@
         const progressHandle = document.getElementById('progressHandle');
         const timeTooltip = document.getElementById('timeTooltip');
         const loadingSpinner = document.getElementById('loadingSpinner');
-        const aspectRatioWarning = document.getElementById('aspectRatioWarning');
         
         // State
         let isPlaying = false;
@@ -521,20 +498,8 @@
         // Προσαρμογή thumbnail στο μέγεθος του βίντεο
         function adjustThumbnailSize() {
             if (videoWidth > 0 && videoHeight > 0) {
-                // Ορίζουμε το ίδιο μέγεθος για το thumbnail
                 thumbnailOverlay.style.width = `${videoWidth}px`;
                 thumbnailOverlay.style.height = `${videoHeight}px`;
-                
-                // Εμφάνιση προειδοποίησης αν το βίντεο είναι πολύ μεγάλο
-                const screenWidth = window.innerWidth;
-                const screenHeight = window.innerHeight;
-                
-                if (videoWidth > screenWidth || videoHeight > screenHeight) {
-                    aspectRatioWarning.style.display = 'block';
-                    setTimeout(() => {
-                        aspectRatioWarning.style.display = 'none';
-                    }, 5000);
-                }
             }
         }
         
@@ -620,14 +585,12 @@
         
         // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
-            // Αποθήκευση αρχικών διαστάσεων βίντεο
             videoWidth = mainVideo.videoWidth;
             videoHeight = mainVideo.videoHeight;
             
             console.log('Video dimensions:', videoWidth, 'x', videoHeight);
             console.log('Video will display at original size');
             
-            // Προσαρμογή thumbnail
             adjustThumbnailSize();
             
             updateTime();
@@ -642,7 +605,6 @@
         });
         
         mainVideo.addEventListener('resize', () => {
-            // Ενημέρωση διαστάσεων αν αλλάξουν
             videoWidth = mainVideo.videoWidth;
             videoHeight = mainVideo.videoHeight;
             adjustThumbnailSize();
@@ -740,7 +702,7 @@
             }
         });
         
-        console.log('Video player ready - Video will display at original size');
+        console.log('Video player ready - Clean version without text message');
         
     </script>
 </body>
