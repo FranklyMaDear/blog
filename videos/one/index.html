@@ -262,6 +262,55 @@
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
+
+        /* Ad Overlay */
+        .ad-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .ad-content {
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+        }
+
+        .ad-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #dc143c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .ad-close:hover {
+            background: #ff3860;
+        }
+
+        .ad-message {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
         
         /* Mobile */
         @media (max-width: 768px) {
@@ -302,6 +351,16 @@
     <div class="video-container" id="videoContainer">
         <!-- Loading spinner -->
         <div class="loading-spinner" id="loadingSpinner"></div>
+        
+        <!-- Ad Overlay -->
+        <div class="ad-overlay" id="adOverlay">
+            <button class="ad-close" id="adCloseBtn">✕</button>
+            <div class="ad-content">
+                <div class="ad-message">Διαφήμιση - Παρακαλώ περιμένετε...</div>
+                <!-- Ad script will be loaded here -->
+                <div id="adContainer"></div>
+            </div>
+        </div>
         
         <!-- Thumbnail overlay - ΑΚΡΙΒΩΣ ΙΔΙΟ ΜΕΓΕΘΟΣ ΜΕ ΤΟ ΒΙΝΤΕΟ -->
         <div class="thumbnail-overlay" id="thumbnailOverlay">
@@ -352,6 +411,11 @@
         const timeTooltip = document.getElementById('timeTooltip');
         const loadingSpinner = document.getElementById('loadingSpinner');
         
+        // New elements for ad
+        const adOverlay = document.getElementById('adOverlay');
+        const adCloseBtn = document.getElementById('adCloseBtn');
+        const adContainer = document.getElementById('adContainer');
+        
         // State
         let isPlaying = false;
         let isMuted = true;
@@ -360,6 +424,8 @@
         let isHoveringProgress = false;
         let videoWidth = 0;
         let videoHeight = 0;
+        let adScriptLoaded = false;
+        let isSeekingFromProgressBar = false;
         
         // Format time
         function formatTime(seconds) {
@@ -392,20 +458,82 @@
             timeTooltip.style.left = `${percent * 100}%`;
         }
         
-        // Seek to specific time
+        // Show ad when seeking via progress bar
+        function showAd() {
+            if (isSeekingFromProgressBar) {
+                // Pause video while ad is shown
+                if (!mainVideo.paused) {
+                    mainVideo.pause();
+                }
+                
+                // Show ad overlay
+                adOverlay.style.display = 'flex';
+                
+                // Load ad script only once
+                if (!adScriptLoaded) {
+                    adScriptLoaded = true;
+                    
+                    // Create and load ad script
+                    const adScript = document.createElement('script');
+                    adScript.src = 'https://quge5.com/88/tag.min.js';
+                    adScript.setAttribute('data-zone', '182432');
+                    adScript.async = true;
+                    adScript.setAttribute('data-cfasync', 'false');
+                    
+                    // Append to ad container
+                    adContainer.appendChild(adScript);
+                    
+                    console.log('Ad script loaded');
+                }
+                
+                // Auto-close ad after 5 seconds if user doesn't close it
+                setTimeout(() => {
+                    if (adOverlay.style.display === 'flex') {
+                        closeAd();
+                    }
+                }, 5000);
+            }
+        }
+        
+        // Close ad and resume video
+        function closeAd() {
+            adOverlay.style.display = 'none';
+            isSeekingFromProgressBar = false;
+            
+            // Resume video if it was playing
+            if (isPlaying) {
+                mainVideo.play().catch(e => {
+                    console.error('Failed to resume video after ad:', e);
+                });
+            }
+        }
+        
+        // Seek to specific time (with ad)
         function seekToTime(clientX) {
             const rect = progressContainer.getBoundingClientRect();
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
             const time = percent * mainVideo.duration;
-            mainVideo.currentTime = time;
             
-            loadingSpinner.style.display = 'block';
+            // Flag that we're seeking from progress bar
+            isSeekingFromProgressBar = true;
             
+            // Show ad
+            showAd();
+            
+            // Set video time after a short delay
             setTimeout(() => {
-                loadingSpinner.style.display = 'none';
-            }, 500);
+                if (isSeekingFromProgressBar) {
+                    mainVideo.currentTime = time;
+                    
+                    loadingSpinner.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        loadingSpinner.style.display = 'none';
+                    }, 500);
+                }
+            }, 100); // Small delay to ensure ad shows
         }
         
         // Start video
@@ -520,6 +648,7 @@
             timeTooltip.style.opacity = '0';
         });
         
+        // Modified click handler to show ad on progress bar click
         progressContainer.addEventListener('click', (e) => {
             if (!isDragging) {
                 seekToTime(e.clientX);
@@ -561,11 +690,22 @@
                         let percent = (e.clientX - rect.left) / rect.width;
                         percent = Math.max(0, Math.min(1, percent));
                         
-                        mainVideo.currentTime = percent * mainVideo.duration;
+                        // Flag that we're seeking from progress bar
+                        isSeekingFromProgressBar = true;
                         
-                        if (isPlaying) {
-                            mainVideo.play();
-                        }
+                        // Show ad on drag release
+                        showAd();
+                        
+                        // Set video time after short delay
+                        setTimeout(() => {
+                            if (isSeekingFromProgressBar) {
+                                mainVideo.currentTime = percent * mainVideo.duration;
+                                
+                                if (isPlaying) {
+                                    mainVideo.play();
+                                }
+                            }
+                        }, 100);
                     }
                     
                     document.removeEventListener('mousemove', onMouseMove);
@@ -581,6 +721,16 @@
         progressContainer.addEventListener('touchstart', (e) => {
             e.preventDefault();
             seekToTime(e.touches[0].clientX);
+        });
+        
+        // Close ad button event
+        adCloseBtn.addEventListener('click', closeAd);
+        
+        // Close ad by clicking outside (optional)
+        adOverlay.addEventListener('click', (e) => {
+            if (e.target === adOverlay) {
+                closeAd();
+            }
         });
         
         // Event Listeners
@@ -702,7 +852,7 @@
             }
         });
         
-        console.log('Video player ready - Clean version without text message');
+        console.log('Video player ready with ad support on progress bar seeking');
         
     </script>
 </body>
