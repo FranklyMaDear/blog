@@ -2,431 +2,812 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Προβολή Βίντεο</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="thumbnail56.png" type="image/png">
+    <link rel="apple-touch-icon" href="thumbnail56.png">
+    
+    <!-- iOS και Android tags για native fullscreen experience -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Open Graph Meta Tags για Facebook, WhatsApp, κλπ -->
+    <meta property="og:type" content="video.other">
+    <meta property="og:title" content="Must Watch Exclusive Video">
+    <meta property="og:image" content="thumbnail56.png">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    <meta property="og:video" content="video56.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="1280">
+    <meta property="og:video:height" content="720">
+    
+    <!-- X (Twitter) Player Card Tags -->
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:title" content="Must Watch Exclusive Video">
+    <meta name="twitter:image" content="thumbnail56.png">
+    <meta name="twitter:player" content="index.html">
+    <meta name="twitter:player:width" content="375">
+    <meta name="twitter:player:height" content="667">
+    <meta name="twitter:player:stream" content="video56.mp4">
+    <meta name="twitter:player:stream:content_type" content="video/mp4">
+    
+    <!-- Απόκρυψη διεύθυνσης URL και απόσπαση προσοχής από URL -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    
+    <title>Must Watch Exclusive Video</title>
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #f1f1f1;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        header {
-            text-align: center;
-            padding: 20px 0 30px;
-            border-bottom: 2px solid #0ea5e9;
-            margin-bottom: 30px;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(90deg, #0ea5e9, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #94a3b8;
-            margin-bottom: 20px;
-        }
-        
-        .video-section {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 40px;
-        }
-        
-        .video-container {
-            width: 100%;
-            max-width: 800px;
-            background-color: #0f172a;
-            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            margin-bottom: 20px;
+            touch-action: manipulation;
         }
         
-        .video-player {
-            width: 100%;
-            height: 450px;
-            object-fit: cover;
-            border-bottom: 2px solid #1e293b;
+        /* Hide URL bar on mobile */
+        @media (max-width: 768px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+            }
         }
         
-        .video-info {
-            padding: 15px;
-            text-align: center;
-        }
-        
-        .video-title {
-            font-size: 1.8rem;
-            color: #f8fafc;
-            margin-bottom: 5px;
-        }
-        
-        .video-desc {
-            color: #94a3b8;
-            font-size: 1rem;
-        }
-        
-        .ad-section {
-            margin-bottom: 40px;
-        }
-        
-        .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: #e2e8f0;
-            text-align: center;
+        /* MAIN CONTAINER */
+        .video-container {
             position: relative;
-            padding-bottom: 10px;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
         
-        .section-title::after {
-            content: '';
+        /* VIDEO */
+        #mainVideo {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            background: #000;
+        }
+        
+        /* Thumbnail overlay */
+        .thumbnail-overlay {
             position: absolute;
-            bottom: 0;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .thumbnail-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+        
+        /* Play button - ΓΚΡΙ ΔΙΑΦΑΝΟ */
+        .play-button-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(128, 128, 128, 0.7);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .play-button-center:hover {
+            background: rgba(128, 128, 128, 0.9);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        
+        .play-button-center::after {
+            content: '▶';
+            color: white;
+            font-size: 28px;
+            margin-left: 3px;
+            font-weight: bold;
+        }
+        
+        /* Progress bar */
+        .progress-container {
+            position: absolute;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
-        }
-        
-        .ad-banners {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .ad-banner {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            width: 90%;
+            max-width: 600px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 4;
             cursor: pointer;
-            border: 1px solid #475569;
+            border-radius: 2px;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
         
-        .ad-banner:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
-            border-color: #0ea5e9;
+        .video-container:hover .progress-container {
+            opacity: 1;
         }
         
-        .ad-content {
-            padding: 20px;
-            text-align: center;
+        .progress-bar {
+            position: relative;
+            height: 100%;
+            width: 0%;
+            background: #1d9bf0;
+            border-radius: 2px;
+            transition: width 0.1s;
         }
         
-        .ad-icon {
-            font-size: 2.5rem;
-            color: #0ea5e9;
-            margin-bottom: 15px;
-        }
-        
-        .ad-title {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: #f1f5f9;
-        }
-        
-        .ad-desc {
-            color: #94a3b8;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            background: linear-gradient(90deg, #0ea5e9, #3b82f6);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
-        }
-        
-        .ad-modal {
-            display: none;
-            position: fixed;
-            top: 0;
+        /* Monetag Ad Container */
+        .monetag-ad-overlay {
+            position: absolute;
+            top: -40px;
             left: 0;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .modal-content {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            border-radius: 12px;
-            max-width: 600px;
-            width: 100%;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            border: 1px solid #475569;
-        }
-        
-        .modal-header {
-            padding: 20px;
-            background-color: rgba(14, 165, 233, 0.1);
-            border-bottom: 1px solid #334155;
+            height: 80px;
+            z-index: 5;
+            pointer-events: auto;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
         
-        .modal-title {
-            font-size: 1.5rem;
-            color: #f8fafc;
+        /* Controls */
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 4;
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 10px 20px;
+            border-radius: 25px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .close-modal {
+        .video-container:hover .video-controls {
+            opacity: 1;
+        }
+        
+        .control-btn {
             background: none;
             border: none;
-            color: #94a3b8;
-            font-size: 1.8rem;
+            color: white;
+            font-size: 22px;
             cursor: pointer;
-            transition: color 0.3s;
+            padding: 8px;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            opacity: 0.9;
         }
         
-        .close-modal:hover {
-            color: #f1f5f9;
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            opacity: 1;
         }
         
-        .modal-body {
-            padding: 30px;
-            text-align: center;
+        /* Timer - mm:ss */
+        .timer {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            min-width: 60px;
+            letter-spacing: -0.5px;
         }
         
-        .ad-preview {
-            font-size: 5rem;
-            color: #0ea5e9;
-            margin-bottom: 20px;
+        /* Time tooltip */
+        .time-tooltip {
+            position: absolute;
+            top: -30px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-family: monospace;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(-50%);
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .modal-text {
-            color: #cbd5e1;
-            margin-bottom: 25px;
-            line-height: 1.6;
+        .progress-container:hover .time-tooltip {
+            opacity: 1;
         }
         
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #64748b;
-            border-top: 1px solid #334155;
-            margin-top: 30px;
+        /* Loading spinner */
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #1d9bf0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 6;
+            display: none;
         }
         
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Hide URL bar on mobile */
+        @media (max-height: 400px) {
+            .video-controls {
+                bottom: 10px;
+                padding: 6px 12px;
+            }
+            
+            .progress-container {
+                bottom: 45px;
+            }
+        }
+        
+        /* Mobile optimizations */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2rem;
+            .play-button-center {
+                width: 60px;
+                height: 60px;
             }
             
-            .video-player {
-                height: 300px;
+            .play-button-center::after {
+                font-size: 24px;
             }
             
-            .ad-banners {
-                grid-template-columns: 1fr;
+            .video-controls {
+                bottom: 15px;
+                padding: 8px 16px;
+                gap: 15px;
             }
             
-            .modal-body {
-                padding: 20px;
+            .control-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 20px;
             }
+            
+            .progress-container {
+                bottom: 50px;
+                width: 85%;
+            }
+            
+            .timer {
+                font-size: 13px;
+            }
+        }
+        
+        /* X/Twitter player specific */
+        @media (max-width: 480px) {
+            .play-button-center {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .play-button-center::after {
+                font-size: 20px;
+            }
+            
+            .progress-container {
+                width: 80%;
+                bottom: 45px;
+            }
+            
+            .video-controls {
+                gap: 12px;
+                padding: 6px 14px;
+            }
+            
+            .control-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 18px;
+            }
+        }
+        
+        /* Fullscreen adjustments */
+        .video-container:fullscreen .progress-container {
+            bottom: 80px;
+        }
+        
+        .video-container:fullscreen .video-controls {
+            bottom: 30px;
         }
     </style>
+    
+    <!-- JavaScript για απόκρυψη URL -->
+    <script>
+        // Απόκρυψη URL bar σε mobile
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        
+        // Αποτροπή εμφάνισης URL
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+                
+                // Προσθήκη αυτής της γραμμής για iOS
+                document.body.style.height = window.innerHeight + 'px';
+                
+                // Αποτροπή zoom
+                document.addEventListener('touchmove', function(e) {
+                    if(e.scale !== 1) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+                
+                // Αποτροπή κινητών URL bars
+                var currentScroll = 0;
+                window.addEventListener('scroll', function() {
+                    currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    window.scrollTo(0, currentScroll === 0 ? 1 : currentScroll);
+                });
+            }, 0);
+        });
+    </script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1><i class="fas fa-play-circle"></i> Πλατφόρμα Προβολής Βίντεο</h1>
-            <p class="subtitle">Παρακολουθήστε το βίντεο και εξερευνήστε τις διαφημίσεις μας</p>
-        </header>
+    <div class="video-container" id="videoContainer">
+        <!-- Loading spinner -->
+        <div class="loading-spinner" id="loadingSpinner"></div>
         
-        <main>
-            <section class="video-section">
-                <div class="video-container">
-                    <video class="video-player" controls poster="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
-                        <!-- Το βίντεο που θα ανεβάσετε θα μπει εδώ -->
-                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-                        Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την αναπαραγωγή βίντεο.
-                    </video>
-                    <div class="video-info">
-                        <h2 class="video-title">index.video</h2>
-                        <p class="video-desc">Το βίντεο που ανεβάσατε θα εμφανίζεται εδώ. Μπορείτε να το παρακολουθήσετε και να εξερευνήσετε τις διαφημίσεις μας.</p>
-                    </div>
-                </div>
-            </section>
-            
-            <section class="ad-section">
-                <h2 class="section-title">Διαφημιστικά Μπάνερ</h2>
-                <p style="text-align: center; color: #94a3b8; margin-bottom: 20px;">Κάντε κλικ σε οποιοδήποτε από τα παρακάτω μπάνερ για να δείτε τη διαφήμιση</p>
-                
-                <div class="ad-banners">
-                    <!-- Μπάνερ 1 -->
-                    <div class="ad-banner" onclick="openAd(1)">
-                        <div class="ad-content">
-                            <div class="ad-icon">
-                                <i class="fas fa-gift"></i>
-                            </div>
-                            <h3 class="ad-title">Ειδική Προσφορά</h3>
-                            <p class="ad-desc">Αποκτήστε έκπτωση 50% σε όλα τα προϊόντα μας. Προσφορά περιορισμένου χρόνου!</p>
-                            <button class="cta-button">Δείτε τη Διαφήμιση</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Μπάνερ 2 -->
-                    <div class="ad-banner" onclick="openAd(2)">
-                        <div class="ad-content">
-                            <div class="ad-icon">
-                                <i class="fas fa-rocket"></i>
-                            </div>
-                            <h3 class="ad-title">Νέα Υπηρεσία</h3>
-                            <p class="ad-desc">Δοκιμάστε την καινοτόμα πλατφόρμα μας με δωρεάν δοκιμαστική περίοδο 30 ημερών.</p>
-                            <button class="cta-button">Κάντε Κλικ Εδώ</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Μπάνερ 3 -->
-                    <div class="ad-banner" onclick="openAd(3)">
-                        <div class="ad-content">
-                            <div class="ad-icon">
-                                <i class="fas fa-trophy"></i>
-                            </div>
-                            <h3 class="ad-title">Διαγωνισμός</h3>
-                            <p class="ad-desc">Συμμετέχετε στον διαγωνισμό μας και κερδίστε ταξίδια, έπαθλα και πολλά άλλα!</p>
-                            <button class="cta-button">Μάθετε Περισσότερα</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-        
-        <!-- Modal για εμφάνιση διαφήμισης -->
-        <div id="adModal" class="ad-modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title" id="modalAdTitle">Διαφήμιση</h3>
-                    <button class="close-modal" onclick="closeAd()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="ad-preview" id="modalAdIcon">
-                        <i class="fas fa-ad"></i>
-                    </div>
-                    <p class="modal-text" id="modalAdText">Εδώ θα εμφανίζεται η διαφήμιση που θα στείλετε.</p>
-                    <p class="modal-text">Μπορείτε να ανεβάσετε το δικό σας περιεχόμενο διαφήμισης που θα εμφανίζεται όταν ο χρήστης κάνει κλικ στο μπάνερ.</p>
-                    <button class="cta-button" onclick="closeAd()">Κλείσιμο</button>
-                </div>
-            </div>
+        <!-- Thumbnail overlay -->
+        <div class="thumbnail-overlay" id="thumbnailOverlay">
+            <img class="thumbnail-img" src="thumbnail56.png" alt="Video Thumbnail" 
+                 onerror="this.style.display='none';">
         </div>
         
-        <footer>
-            <p>&copy; 2023 Πλατφόρμα Προβολής Βίντεο. Με επιφύλαξη παντός δικαιώματος.</p>
-            <p>Το βίντεο που χρησιμοποιείται για επίδειξη προέρχεται από δωρεάν πηγές.</p>
-        </footer>
+        <!-- Play button -->
+        <button class="play-button-center" id="playButton"></button>
+        
+        <!-- Main video -->
+        <video id="mainVideo" preload="auto" playsinline muted>
+            <source src="video56.mp4" type="video/mp4">
+        </video>
+        
+        <!-- Progress bar with Monetag overlay -->
+        <div class="progress-container" id="progressContainer">
+            <div class="time-tooltip" id="timeTooltip">00:00</div>
+            <div class="progress-bar" id="progressBar"></div>
+            <!-- Monetag Ad Container -->
+            <div class="monetag-ad-overlay" id="monetagAdOverlay"></div>
+        </div>
+        
+        <!-- Video controls -->
+        <div class="video-controls">
+            <button class="control-btn" id="playPauseBtn">⏸</button>
+            <div class="timer" id="currentTime">00:00</div>
+            <div style="opacity: 0.3; color: white;">/</div>
+            <div class="timer" id="durationTime">00:00</div>
+            <button class="control-btn" id="muteBtn">🔇</button>
+            <button class="control-btn" id="fullscreenBtn">⛶</button>
+        </div>
     </div>
 
     <script>
-        // Διαχείριση ανοιγμάτων διαφημίσεων
-        function openAd(adNumber) {
-            const modal = document.getElementById('adModal');
-            const title = document.getElementById('modalAdTitle');
-            const icon = document.getElementById('modalAdIcon');
-            const text = document.getElementById('modalAdText');
-            
-            // Αλλαγή περιεχομένου βάσει του μπάνερ που πατήθηκε
-            switch(adNumber) {
-                case 1:
-                    title.textContent = "Ειδική Προσφορά -50%";
-                    icon.innerHTML = '<i class="fas fa-gift"></i>';
-                    text.textContent = "Αποκτήστε έκπτωση 50% σε όλα τα προϊόντα μας με τον κωδικό: VIDEO50. Η προσφορά ισχύει μέχρι 31/12/2023.";
-                    break;
-                case 2:
-                    title.textContent = "Νέα Υπηρεσία Εκτόξευσης";
-                    icon.innerHTML = '<i class="fas fa-rocket"></i>';
-                    text.textContent = "Κάντε εγγραφή τώρα για δωρεάν δοκιμή 30 ημερών στην πλατφόρμα μας. Χωρίς κάρτα, χωρίς δεσμεύσεις.";
-                    break;
-                case 3:
-                    title.textContent = "Μεγάλος Διαγωνισμός";
-                    icon.innerHTML = '<i class="fas fa-trophy"></i>';
-                    text.textContent = "Κερδίστε ένα ταξίδι για δύο στις Μπαχάμες! Συμμετέχετε μέχρι την Κυριακή. Κάντε κλικ για να δείτε όλους τους όρους.";
-                    break;
-                default:
-                    title.textContent = "Διαφήμιση";
-                    icon.innerHTML = '<i class="fas fa-ad"></i>';
-                    text.textContent = "Εδώ θα εμφανίζεται η διαφήμιση που θα στείλετε.";
-            }
-            
-            // Εμφάνιση modal
-            modal.style.display = 'flex';
-            
-            // Καταγραφή κλικ για στατιστικά (προσομοίωση)
-            console.log(`Ο χρήστης έκανε κλικ στη διαφήμιση ${adNumber}`);
+        // DOM Elements
+        const videoContainer = document.getElementById('videoContainer');
+        const mainVideo = document.getElementById('mainVideo');
+        const thumbnailOverlay = document.getElementById('thumbnailOverlay');
+        const playButton = document.getElementById('playButton');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const timeTooltip = document.getElementById('timeTooltip');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const monetagAdOverlay = document.getElementById('monetagAdOverlay');
+        
+        // State
+        let isPlaying = false;
+        let isMuted = true;
+        let hasAutoPlayed = false;
+        let isHoveringProgress = false;
+        let videoWidth = 0;
+        let videoHeight = 0;
+        let monetagLoaded = false;
+        
+        // Format time σε mm:ss
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
-        // Κλείσιμο modal διαφήμισης
-        function closeAd() {
-            const modal = document.getElementById('adModal');
-            modal.style.display = 'none';
+        // Update time display
+        function updateTime() {
+            currentTimeEl.textContent = formatTime(mainVideo.currentTime);
+            
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                durationTimeEl.textContent = formatTime(mainVideo.duration);
+                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
         }
         
-        // Κλείσιμο modal με το πλήκτρο ESC
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeAd();
-            }
-        });
+        // Update time tooltip on hover
+        let lastHoverX = 0;
         
-        // Κλείσιμο modal με κλικ έξω από το περιεχόμενο
-        document.getElementById('adModal').addEventListener('click', function(event) {
-            if (event.target === this) {
-                closeAd();
-            }
-        });
+        function updateTimeTooltip() {
+            if (!mainVideo.duration || isNaN(mainVideo.duration)) return;
+            
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (lastHoverX - rect.left) / rect.width;
+            const time = percent * mainVideo.duration;
+            
+            timeTooltip.textContent = formatTime(time);
+            timeTooltip.style.left = `${percent * 100}%`;
+        }
         
-        // Προσομοίωση φόρτωσης βίντεο
-        document.addEventListener('DOMContentLoaded', function() {
-            const video = document.querySelector('.video-player');
-            video.addEventListener('loadeddata', function() {
-                console.log('Το βίντεο φορτώθηκε επιτυχώς');
+        // Load Monetag script
+        function loadMonetag() {
+            if (!monetagLoaded) {
+                monetagLoaded = true;
+                
+                // Δημιουργία script για Monetag
+                const newScript = document.createElement('script');
+                newScript.dataset.zone = '10274195';
+                newScript.src = 'https://al5sm.com/tag.min.js';
+                newScript.async = true;
+                newScript.setAttribute('data-cfasync', 'false');
+                
+                // Προσθήκη στο monetagAdOverlay
+                monetagAdOverlay.appendChild(newScript);
+                
+                console.log('Monetag script loaded in progress bar overlay');
+            }
+        }
+        
+        // Seek to specific time
+        function seekToTime(clientX) {
+            const rect = progressContainer.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.max(0, Math.min(1, percent));
+            
+            const time = percent * mainVideo.duration;
+            
+            mainVideo.currentTime = time;
+            
+            // Εμφάνιση loading spinner
+            loadingSpinner.style.display = 'block';
+            
+            setTimeout(() => {
+                loadingSpinner.style.display = 'none';
+            }, 300);
+            
+            // Φόρτωση Monetag κατά το seeking
+            loadMonetag();
+        }
+        
+        // Start video
+        function startVideo() {
+            playButton.style.display = 'none';
+            
+            mainVideo.play().then(() => {
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸';
+                thumbnailOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                if (isMuted) {
+                    mainVideo.muted = false;
+                    isMuted = false;
+                    muteBtn.textContent = '🔊';
+                }
+                
+                // Φόρτωση Monetag μετά το play
+                setTimeout(loadMonetag, 1000);
+            }).catch(e => {
+                console.error('Manual play failed:', e);
+                playButton.style.display = 'flex';
             });
+        }
+        
+        // Toggle play/pause
+        function togglePlayPause() {
+            if (mainVideo.paused) {
+                mainVideo.play().then(() => {
+                    isPlaying = true;
+                    playPauseBtn.textContent = '⏸';
+                });
+            } else {
+                mainVideo.pause();
+                isPlaying = false;
+                playPauseBtn.textContent = '▶';
+            }
+        }
+        
+        // Toggle mute
+        function toggleMute() {
+            isMuted = !isMuted;
+            mainVideo.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch(e => {
+                    console.log('Fullscreen error:', e);
+                });
+                fullscreenBtn.textContent = '🗗';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = '⛶';
+            }
+        }
+        
+        // Try autoplay for X player
+        function tryAutoplay() {
+            mainVideo.muted = true;
+            mainVideo.play().then(() => {
+                console.log('Autoplay successful for X player');
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸';
+                playButton.style.display = 'none';
+                thumbnailOverlay.style.opacity = '0';
+                hasAutoPlayed = true;
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                setTimeout(() => {
+                    if (isPlaying) {
+                        mainVideo.muted = false;
+                        isMuted = false;
+                        muteBtn.textContent = '🔊';
+                    }
+                }, 1000);
+                
+                // Φόρτωση Monetag μετά το autoplay
+                setTimeout(loadMonetag, 1500);
+                
+            }).catch(e => {
+                console.log('Autoplay failed:', e.message);
+                playButton.style.display = 'flex';
+            });
+        }
+        
+        // Προσαρμογή thumbnail στο μέγεθος του βίντεο
+        function adjustThumbnailSize() {
+            if (videoWidth > 0 && videoHeight > 0) {
+                thumbnailOverlay.style.width = `${videoWidth}px`;
+                thumbnailOverlay.style.height = `${videoHeight}px`;
+            }
+        }
+        
+        // Progress bar interaction
+        progressContainer.addEventListener('mousemove', (e) => {
+            lastHoverX = e.clientX;
+            isHoveringProgress = true;
+            
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                updateTimeTooltip();
+            }
         });
+        
+        progressContainer.addEventListener('mouseleave', () => {
+            isHoveringProgress = false;
+            timeTooltip.style.opacity = '0';
+        });
+        
+        progressContainer.addEventListener('click', (e) => {
+            seekToTime(e.clientX);
+        });
+        
+        // Touch support
+        progressContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            seekToTime(e.touches[0].clientX);
+        });
+        
+        // Event Listeners
+        mainVideo.addEventListener('loadedmetadata', () => {
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
+            
+            console.log('Video dimensions:', videoWidth, 'x', videoHeight);
+            
+            adjustThumbnailSize();
+            updateTime();
+            
+            const isEmbedded = window.self !== window.top;
+            if (isEmbedded) {
+                console.log('Running in X (Twitter) Player');
+                tryAutoplay();
+            }
+        });
+        
+        mainVideo.addEventListener('resize', () => {
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
+            adjustThumbnailSize();
+        });
+        
+        mainVideo.addEventListener('timeupdate', updateTime);
+        
+        mainVideo.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.textContent = '⟳';
+        });
+        
+        mainVideo.addEventListener('waiting', () => {
+            loadingSpinner.style.display = 'block';
+        });
+        
+        mainVideo.addEventListener('playing', () => {
+            loadingSpinner.style.display = 'none';
+        });
+        
+        mainVideo.addEventListener('error', (e) => {
+            console.error('Video error:', mainVideo.error);
+            loadingSpinner.style.display = 'none';
+            
+            thumbnailOverlay.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
+                    <div style="font-size: 20px; margin-bottom: 10px;">Video Error</div>
+                    <div style="font-size: 14px; opacity: 0.8;">
+                        Check if video56.mp4 exists
+                    </div>
+                </div>
+            `;
+            playButton.style.display = 'none';
+        });
+        
+        // Click handlers
+        playButton.addEventListener('click', startVideo);
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        muteBtn.addEventListener('click', toggleMute);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        mainVideo.addEventListener('click', togglePlayPause);
+        thumbnailOverlay.addEventListener('click', startVideo);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    if (!hasAutoPlayed) startVideo();
+                    else togglePlayPause();
+                    break;
+                case 'KeyM':
+                    toggleMute();
+                    break;
+                case 'KeyF':
+                    toggleFullscreen();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    mainVideo.currentTime = Math.max(0, mainVideo.currentTime - 5);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    mainVideo.currentTime = Math.min(mainVideo.duration, mainVideo.currentTime + 5);
+                    break;
+            }
+        });
+        
+        // Show/hide controls
+        let controlsTimeout;
+        videoContainer.addEventListener('mousemove', () => {
+            const controls = document.querySelector('.video-controls');
+            const progress = document.querySelector('.progress-container');
+            
+            if (isPlaying || hasAutoPlayed) {
+                controls.style.opacity = '1';
+                progress.style.opacity = '1';
+                
+                clearTimeout(controlsTimeout);
+                controlsTimeout = setTimeout(() => {
+                    if (isPlaying && !isHoveringProgress) {
+                        controls.style.opacity = '0';
+                        progress.style.opacity = '0';
+                    }
+                }, 3000);
+            }
+        });
+        
+        // Auto play on interaction
+        document.addEventListener('click', () => {
+            if (!hasAutoPlayed && !isPlaying) {
+                tryAutoplay();
+            }
+        });
+        
+        // Fullscreen change events
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.textContent = '⛶';
+            }
+        });
+        
+        // Initial Monetag load after page load
+        window.addEventListener('load', () => {
+            setTimeout(loadMonetag, 2000);
+            
+            // Απόκρυψη URL
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+        });
+        
+        // Αποτροπή αντιγραφής URL
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        }, false);
+        
+        console.log('Video player ready with thumbnail sharing and hidden URL');
+        
     </script>
 </body>
 </html>
