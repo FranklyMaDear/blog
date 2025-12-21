@@ -128,7 +128,7 @@
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            z-index: 10; /* Υψηλότερο z-index για να είναι πάνω από τη διαφήμιση */
+            z-index: 10;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -150,7 +150,7 @@
             font-weight: bold;
         }
         
-        /* Progress bar - ΟΛΟΚΛΗΡΩΜΕΝΗ ΜΠΑΡΑ ΜΕ ΚΟΥΜΠΙΑ */
+        /* ΜΠΑΡΑ ΠΡΟΟΔΟΥ - ΑΚΡΙΒΩΣ ΟΠΩΣ ΣΤΟ SCREENSHOT */
         .progress-container {
             position: absolute;
             bottom: 60px;
@@ -159,16 +159,16 @@
             width: 90%;
             max-width: 700px;
             height: 48px;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(20, 20, 20, 0.95);
             z-index: 4;
-            border-radius: 10px;
+            border-radius: 8px;
             opacity: 0;
             transition: opacity 0.3s;
             overflow: hidden;
             display: flex;
             align-items: center;
-            padding: 0 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
+            padding: 0 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
         }
@@ -177,83 +177,43 @@
             opacity: 1;
         }
         
-        /* Ad Container - ΜΕΣΑ ΣΤΗ ΜΠΑΡΑ */
+        /* Ad Container - ΧΩΡΙΣ ΕΤΙΚΕΤΑ "Ad:" */
         .ad-container {
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.08);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
             border-radius: 6px;
-            padding: 0 10px;
-            min-width: 130px;
-            margin-right: 12px;
+            padding: 0 14px;
+            min-width: 140px;
+            margin-right: 16px;
             pointer-events: auto;
             flex-shrink: 0;
-        }
-        
-        .ad-label {
-            font-size: 10px;
-            color: rgba(255, 255, 255, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-right: 6px;
-            font-weight: 600;
+            border-left: 3px solid #1d9bf0;
         }
         
         .ad-content {
-            font-size: 11px;
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.9);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 85px;
+            max-width: 120px;
             font-weight: 500;
+            letter-spacing: 0.3px;
         }
         
-        /* Controls inside the progress bar */
-        .controls-in-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-right: 12px;
-            flex-shrink: 0;
-        }
-        
-        .bar-control-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            opacity: 0.9;
-            flex-shrink: 0;
-        }
-        
-        .bar-control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            opacity: 1;
-            transform: scale(1.05);
-        }
-        
-        /* Progress bar wrapper */
+        /* Progress bar wrapper - ΓΙΑ SEEKING */
         .progress-bar-wrapper {
             position: relative;
             flex: 1;
             height: 4px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 2px;
-            overflow: hidden;
+            overflow: visible;
             cursor: pointer;
-            margin: 0 12px;
+            margin: 0 16px;
         }
         
         .progress-bar {
@@ -265,20 +225,62 @@
             transition: width 0.1s;
         }
         
-        /* Time display in progress bar */
-        .progress-time {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.85);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 4px 8px;
-            border-radius: 4px;
+        /* Progress bar knob - ΓΙΑ ΟΠΤΙΚΗ ΑΝΑΓΝΩΣΗ */
+        .progress-knob {
+            position: absolute;
+            top: 50%;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.3);
             pointer-events: none;
-            min-width: 90px;
+        }
+        
+        .progress-bar-wrapper:hover .progress-knob {
+            opacity: 1;
+        }
+        
+        /* Time display - ΟΠΩΣ ΣΤΟ SCREENSHOT */
+        .progress-time {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 6px;
+            pointer-events: none;
+            min-width: 100px;
             text-align: center;
-            font-family: monospace;
-            font-weight: 500;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
             letter-spacing: 0.5px;
             flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Tooltip για seeking */
+        .seek-tooltip {
+            position: absolute;
+            bottom: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: 'Courier New', monospace;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(-50%);
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 5;
+            font-weight: 600;
         }
         
         /* Loading spinner */
@@ -322,42 +324,30 @@
             
             .progress-container {
                 bottom: 50px;
-                width: 90%;
+                width: 92%;
                 height: 44px;
-                padding: 0 10px;
+                padding: 0 14px;
             }
             
             .ad-container {
-                min-width: 110px;
-                padding: 0 8px;
-                margin-right: 10px;
+                min-width: 120px;
+                padding: 0 12px;
+                margin-right: 14px;
             }
             
             .ad-content {
-                max-width: 75px;
-                font-size: 10px;
-            }
-            
-            .bar-control-btn {
-                width: 34px;
-                height: 34px;
-                font-size: 16px;
-                padding: 5px;
-            }
-            
-            .controls-in-bar {
-                gap: 6px;
-                margin-right: 10px;
+                font-size: 11px;
+                max-width: 100px;
             }
             
             .progress-bar-wrapper {
-                margin: 0 10px;
+                margin: 0 14px;
             }
             
             .progress-time {
-                font-size: 11px;
-                min-width: 85px;
-                padding: 3px 6px;
+                font-size: 12px;
+                min-width: 90px;
+                padding: 5px 10px;
             }
         }
         
@@ -373,50 +363,34 @@
             }
             
             .progress-container {
-                width: 92%;
+                width: 94%;
                 bottom: 45px;
                 height: 40px;
-                padding: 0 8px;
-                border-radius: 8px;
+                padding: 0 12px;
+                border-radius: 6px;
             }
             
             .ad-container {
-                min-width: 95px;
-                padding: 0 6px;
-                margin-right: 8px;
-            }
-            
-            .ad-label {
-                font-size: 9px;
-                margin-right: 4px;
+                min-width: 100px;
+                padding: 0 10px;
+                margin-right: 12px;
+                border-left-width: 2px;
             }
             
             .ad-content {
-                font-size: 9px;
-                max-width: 65px;
-            }
-            
-            .bar-control-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 15px;
-                padding: 4px;
-            }
-            
-            .controls-in-bar {
-                gap: 5px;
-                margin-right: 8px;
+                font-size: 10px;
+                max-width: 85px;
             }
             
             .progress-bar-wrapper {
-                margin: 0 8px;
+                margin: 0 12px;
                 height: 3px;
             }
             
             .progress-time {
-                font-size: 10px;
-                min-width: 75px;
-                padding: 2px 5px;
+                font-size: 11px;
+                min-width: 80px;
+                padding: 4px 8px;
             }
         }
         
@@ -425,10 +399,19 @@
             bottom: 80px;
         }
         
-        /* Hover effects for the entire bar */
+        /* Hover effects */
         .progress-container:hover {
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(25, 25, 25, 0.97);
             border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .progress-bar-wrapper:hover {
+            height: 6px;
+            margin-top: -1px;
+        }
+        
+        .progress-bar-wrapper:hover .progress-bar {
+            height: 6px;
         }
     </style>
     
@@ -475,7 +458,7 @@
                  onerror="this.style.display='none';">
         </div>
         
-        <!-- Play button - ΕΛΕΥΘΕΡΟ ΑΠΟ ΔΙΑΦΗΜΙΣΗ -->
+        <!-- Play button -->
         <button class="play-button-center" id="playButton"></button>
         
         <!-- Main video -->
@@ -484,24 +467,19 @@
             Your browser does not support the video tag.
         </video>
         
-        <!-- ΟΛΟΚΛΗΡΩΜΕΝΗ ΜΠΑΡΑ ΜΕ ΚΟΥΜΠΙΑ ΚΑΙ ΔΙΑΦΗΜΙΣΗ -->
+        <!-- ΜΠΑΡΑ ΠΡΟΟΔΟΥ - ΑΚΡΙΒΩΣ ΟΠΩΣ ΣΤΟ SCREENSHOT -->
         <div class="progress-container" id="progressContainer">
-            <!-- Διαφήμιση ΜΕΣΑ στη μπάρα -->
+            <!-- Διαφήμιση ΜΕΣΑ στη μπάρα (χωρίς ετικέτα "Ad:") -->
             <div class="ad-container" id="adContainer">
-                <span class="ad-label">Ad:</span>
-                <span class="ad-content" id="adContent">Sponsored Content</span>
+                <span class="ad-content" id="adContent">Exclusive Content</span>
             </div>
             
-            <!-- Κουμπιά ελέγχου ΜΕΣΑ στη μπάρα -->
-            <div class="controls-in-bar">
-                <button class="bar-control-btn" id="playPauseBtn">⏸</button>
-                <button class="bar-control-btn" id="muteBtn">🔇</button>
-                <button class="bar-control-btn" id="fullscreenBtn">⛶</button>
-            </div>
-            
-            <!-- Μπάρα προόδου -->
+            <!-- Μπάρα προόδου με seeking capability -->
             <div class="progress-bar-wrapper" id="progressBarWrapper">
-                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-knob"></div>
+                </div>
+                <div class="seek-tooltip" id="seekTooltip">00:00</div>
             </div>
             
             <!-- Χρόνος στη μπάρα -->
@@ -515,9 +493,6 @@
         const mainVideo = document.getElementById('mainVideo');
         const thumbnailOverlay = document.getElementById('thumbnailOverlay');
         const playButton = document.getElementById('playButton');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const muteBtn = document.getElementById('muteBtn');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const progressBarWrapper = document.getElementById('progressBarWrapper');
@@ -525,12 +500,13 @@
         const adContainer = document.getElementById('adContainer');
         const adContent = document.getElementById('adContent');
         const progressTime = document.getElementById('progressTime');
+        const seekTooltip = document.getElementById('seekTooltip');
         
         // State
         let isPlaying = false;
         let isMuted = true;
         let hasAutoPlayed = false;
-        let isHoveringProgress = false;
+        let isSeeking = false;
         let videoWidth = 0;
         let videoHeight = 0;
         let monetagLoaded = false;
@@ -568,12 +544,7 @@
                     // Προσθήκη στο adContainer
                     adContainer.appendChild(newScript);
                     
-                    // Update ad content με πραγματική διαφήμιση
-                    newScript.onload = function() {
-                        console.log('Monetag script loaded in ad container');
-                    };
-                    
-                    console.log('Monetag script loaded in progress bar ad container');
+                    console.log('Monetag script loaded in ad container');
                 } catch (e) {
                     console.error('Error loading Monetag:', e);
                 }
@@ -583,11 +554,11 @@
         // Update ad content (fallback αν δεν φορτωθεί το monetag)
         function updateAdContent() {
             const adTexts = [
-                "Sponsored: Amazing Offer!",
-                "Ad: Limited Time Deal",
-                "Sponsored Content",
-                "Advertisement",
-                "Special Promotion"
+                "Exclusive Content",
+                "Premium Video",
+                "Must Watch",
+                "Special Feature",
+                "Limited Access"
             ];
             const randomAd = adTexts[Math.floor(Math.random() * adTexts.length)];
             adContent.textContent = randomAd;
@@ -601,17 +572,39 @@
             
             const time = percent * mainVideo.duration;
             
+            // Ενημέρωση του βίντεο
             mainVideo.currentTime = time;
             
-            // Εμφάνιση loading spinner
-            loadingSpinner.style.display = 'block';
-            
-            setTimeout(() => {
-                loadingSpinner.style.display = 'none';
-            }, 300);
+            // Εμφάνιση loading spinner αν το βίντεο δεν είναι σε buffered περιοχή
+            if (mainVideo.readyState < 3) {
+                loadingSpinner.style.display = 'block';
+                
+                setTimeout(() => {
+                    loadingSpinner.style.display = 'none';
+                }, 500);
+            }
             
             // Φόρτωση Monetag κατά το seeking
             loadMonetag();
+            
+            console.log(`Seeking to: ${formatTime(time)}`);
+        }
+        
+        // Update seek tooltip
+        function updateSeekTooltip(clientX) {
+            const rect = progressBarWrapper.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.max(0, Math.min(1, percent));
+            
+            const time = percent * mainVideo.duration;
+            seekTooltip.textContent = formatTime(time);
+            seekTooltip.style.left = `${percent * 100}%`;
+            seekTooltip.style.opacity = '1';
+        }
+        
+        // Hide seek tooltip
+        function hideSeekTooltip() {
+            seekTooltip.style.opacity = '0';
         }
         
         // Start video
@@ -620,7 +613,6 @@
             
             mainVideo.play().then(() => {
                 isPlaying = true;
-                playPauseBtn.textContent = '⏸';
                 thumbnailOverlay.style.opacity = '0';
                 
                 setTimeout(() => {
@@ -630,7 +622,6 @@
                 if (isMuted) {
                     mainVideo.muted = false;
                     isMuted = false;
-                    muteBtn.textContent = '🔊';
                 }
                 
                 // Φόρτωση Monetag μετά το play
@@ -647,32 +638,10 @@
             if (mainVideo.paused) {
                 mainVideo.play().then(() => {
                     isPlaying = true;
-                    playPauseBtn.textContent = '⏸';
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
-                playPauseBtn.textContent = '▶';
-            }
-        }
-        
-        // Toggle mute
-        function toggleMute() {
-            isMuted = !isMuted;
-            mainVideo.muted = isMuted;
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
-        }
-        
-        // Toggle fullscreen
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                videoContainer.requestFullscreen().catch(e => {
-                    console.log('Fullscreen error:', e);
-                });
-                fullscreenBtn.textContent = '🗗';
-            } else {
-                document.exitFullscreen();
-                fullscreenBtn.textContent = '⛶';
             }
         }
         
@@ -682,7 +651,6 @@
             mainVideo.play().then(() => {
                 console.log('Autoplay successful for X player');
                 isPlaying = true;
-                playPauseBtn.textContent = '⏸';
                 playButton.style.display = 'none';
                 thumbnailOverlay.style.opacity = '0';
                 hasAutoPlayed = true;
@@ -695,7 +663,6 @@
                     if (isPlaying) {
                         mainVideo.muted = false;
                         isMuted = false;
-                        muteBtn.textContent = '🔊';
                     }
                 }, 1000);
                 
@@ -717,15 +684,37 @@
             }
         }
         
-        // Progress bar interaction
+        // Progress bar interaction για seeking
+        progressBarWrapper.addEventListener('mousemove', (e) => {
+            if (!mainVideo.duration || isNaN(mainVideo.duration)) return;
+            updateSeekTooltip(e.clientX);
+        });
+        
+        progressBarWrapper.addEventListener('mouseleave', () => {
+            hideSeekTooltip();
+        });
+        
         progressBarWrapper.addEventListener('click', (e) => {
             seekToTime(e.clientX);
         });
         
-        // Touch support
+        // Touch support για seeking
         progressBarWrapper.addEventListener('touchstart', (e) => {
             e.preventDefault();
+            isSeeking = true;
             seekToTime(e.touches[0].clientX);
+        });
+        
+        progressBarWrapper.addEventListener('touchmove', (e) => {
+            if (isSeeking) {
+                e.preventDefault();
+                updateSeekTooltip(e.touches[0].clientX);
+            }
+        });
+        
+        progressBarWrapper.addEventListener('touchend', () => {
+            isSeeking = false;
+            hideSeekTooltip();
         });
         
         // Event Listeners
@@ -750,7 +739,6 @@
         
         mainVideo.addEventListener('ended', () => {
             isPlaying = false;
-            playPauseBtn.textContent = '⟳';
         });
         
         mainVideo.addEventListener('waiting', () => {
@@ -758,6 +746,10 @@
         });
         
         mainVideo.addEventListener('playing', () => {
+            loadingSpinner.style.display = 'none';
+        });
+        
+        mainVideo.addEventListener('seeked', () => {
             loadingSpinner.style.display = 'none';
         });
         
@@ -782,26 +774,16 @@
         
         // Click handlers
         playButton.addEventListener('click', startVideo);
-        playPauseBtn.addEventListener('click', togglePlayPause);
-        muteBtn.addEventListener('click', toggleMute);
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
-        
         mainVideo.addEventListener('click', togglePlayPause);
         thumbnailOverlay.addEventListener('click', startVideo);
         
-        // Keyboard shortcuts
+        // Keyboard shortcuts για seeking
         document.addEventListener('keydown', (e) => {
             switch(e.code) {
                 case 'Space':
                     e.preventDefault();
                     if (!hasAutoPlayed) startVideo();
                     else togglePlayPause();
-                    break;
-                case 'KeyM':
-                    toggleMute();
-                    break;
-                case 'KeyF':
-                    toggleFullscreen();
                     break;
                 case 'ArrowLeft':
                     e.preventDefault();
@@ -822,7 +804,7 @@
                 
                 clearTimeout(barTimeout);
                 barTimeout = setTimeout(() => {
-                    if (isPlaying && !isHoveringProgress) {
+                    if (isPlaying && !isSeeking) {
                         progressContainer.style.opacity = '0';
                     }
                 }, 3000);
@@ -830,25 +812,13 @@
         });
         
         progressContainer.addEventListener('mouseenter', () => {
-            isHoveringProgress = true;
             clearTimeout(barTimeout);
-        });
-        
-        progressContainer.addEventListener('mouseleave', () => {
-            isHoveringProgress = false;
         });
         
         // Auto play on interaction
         document.addEventListener('click', () => {
             if (!hasAutoPlayed && !isPlaying) {
                 tryAutoplay();
-            }
-        });
-        
-        // Fullscreen change events
-        document.addEventListener('fullscreenchange', () => {
-            if (!document.fullscreenElement) {
-                fullscreenBtn.textContent = '⛶';
             }
         });
         
