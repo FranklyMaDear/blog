@@ -85,50 +85,47 @@
         /* VIDEO */
         #mainVideo {
             position: relative;
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
             z-index: 1;
             background: #000;
         }
         
-        /* Thumbnail overlay */
+        /* Thumbnail overlay - ΜΕΓΑΛΥΝΟΥΜΕ ΓΙΑ ΚΙΝΗΤΑ */
         .thumbnail-overlay {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: #000;
             z-index: 2;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: opacity 0.5s ease;
-            max-width: 100%;
-            max-height: 100%;
         }
         
         .thumbnail-img {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
-        /* Play button - ΓΚΡΙ ΔΙΑΦΑΝΟ */
+        /* Play button - ΜΕΤΑΚΙΝΗΣΗ ΨΗΛΑ ΠΑΝΩ */
         .play-button-center {
             position: absolute;
-            top: 50%;
+            top: 20%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background: rgba(128, 128, 128, 0.7);
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.3);
             cursor: pointer;
-            z-index: 10;
+            z-index: 11; /* ΥΨΗΛΟΤΕΡΟ Z-INDEX ΓΙΑ ΝΑ ΕΙΝΑΙ ΠΑΝΩ ΑΠΟ ΤΗΝ ΔΙΑΦΗΜΙΣΗ */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -145,75 +142,67 @@
         .play-button-center::after {
             content: '▶';
             color: white;
-            font-size: 28px;
-            margin-left: 3px;
+            font-size: 32px;
+            margin-left: 5px;
             font-weight: bold;
         }
         
-        /* ΜΠΑΡΑ ΠΡΟΟΔΟΥ - ΑΚΡΙΒΩΣ ΟΠΩΣ ΣΤΟ SCREENSHOT */
+        /* ΜΠΑΡΑ ΠΡΟΟΔΟΥ - ΒΑΖΟΥΜΕ ΤΗΝ ΔΙΑΦΗΜΙΣΗ ΑΠΑΝΩ */
         .progress-container {
             position: absolute;
-            bottom: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 700px;
-            height: 48px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
             background: rgba(20, 20, 20, 0.95);
-            z-index: 4;
-            border-radius: 8px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            overflow: hidden;
+            z-index: 10;
             display: flex;
             align-items: center;
             padding: 0 16px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(10px);
         }
         
-        .video-container:hover .progress-container {
-            opacity: 1;
-        }
-        
-        /* Ad Container - ΧΩΡΙΣ ΕΤΙΚΕΤΑ "Ad:" */
+        /* Ad Container - ΔΙΑΦΗΜΙΣΗ ΠΑΝΩ */
         .ad-container {
+            width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            border-radius: 6px;
-            padding: 0 14px;
-            min-width: 140px;
-            margin-right: 16px;
+            border-radius: 0;
             pointer-events: auto;
             flex-shrink: 0;
-            border-left: 3px solid #1d9bf0;
         }
         
         .ad-content {
-            font-size: 12px;
+            font-size: 14px;
             color: rgba(255, 255, 255, 0.9);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 120px;
             font-weight: 500;
             letter-spacing: 0.3px;
+            text-align: center;
+            padding: 10px;
         }
         
-        /* Progress bar wrapper - ΓΙΑ SEEKING */
+        /* Progress bar wrapper - ΧΩΡΙΣ AD CONTAINER */
         .progress-bar-wrapper {
-            position: relative;
-            flex: 1;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 700px;
             height: 4px;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 2px;
             overflow: visible;
             cursor: pointer;
-            margin: 0 16px;
+            z-index: 5;
         }
         
         .progress-bar {
@@ -246,11 +235,14 @@
             opacity: 1;
         }
         
-        /* Time display - ΟΠΩΣ ΣΤΟ SCREENSHOT */
+        /* Time display */
         .progress-time {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
             font-size: 13px;
             color: rgba(255, 255, 255, 0.9);
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.7);
             padding: 6px 12px;
             border-radius: 6px;
             pointer-events: none;
@@ -261,6 +253,7 @@
             letter-spacing: 0.5px;
             flex-shrink: 0;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 5;
         }
         
         /* Tooltip για seeking */
@@ -303,19 +296,56 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        /* Hide URL bar on mobile */
-        @media (max-height: 400px) {
-            .progress-container {
-                bottom: 45px;
-                height: 42px;
-            }
-        }
-        
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .play-button-center {
+                width: 70px;
+                height: 70px;
+                top: 25%;
+            }
+            
+            .play-button-center::after {
+                font-size: 28px;
+            }
+            
+            .progress-container {
+                height: 50px;
+            }
+            
+            .ad-content {
+                font-size: 12px;
+                padding: 8px;
+            }
+            
+            .progress-bar-wrapper {
+                bottom: 15px;
+                width: 92%;
+            }
+            
+            .progress-time {
+                bottom: 25px;
+                right: 15px;
+                font-size: 12px;
+                min-width: 90px;
+                padding: 5px 10px;
+            }
+            
+            /* ΓΙΑ ΚΙΝΗΤΑ - ΜΕΓΑΛΥΝΟΥΜΕ ΤΗΝ ΕΙΚΟΝΑ */
+            .thumbnail-img {
+                object-fit: cover;
+            }
+            
+            #mainVideo {
+                object-fit: cover;
+            }
+        }
+        
+        /* X/Twitter player specific */
+        @media (max-width: 480px) {
+            .play-button-center {
                 width: 60px;
                 height: 60px;
+                top: 30%;
             }
             
             .play-button-center::after {
@@ -323,37 +353,61 @@
             }
             
             .progress-container {
-                bottom: 50px;
-                width: 92%;
-                height: 44px;
-                padding: 0 14px;
-            }
-            
-            .ad-container {
-                min-width: 120px;
-                padding: 0 12px;
-                margin-right: 14px;
+                height: 45px;
             }
             
             .ad-content {
                 font-size: 11px;
-                max-width: 100px;
+                padding: 6px;
             }
             
             .progress-bar-wrapper {
-                margin: 0 14px;
+                bottom: 10px;
+                width: 94%;
+                height: 3px;
             }
             
             .progress-time {
-                font-size: 12px;
-                min-width: 90px;
-                padding: 5px 10px;
+                bottom: 20px;
+                right: 10px;
+                font-size: 11px;
+                min-width: 80px;
+                padding: 4px 8px;
+            }
+            
+            /* ΑΚΟΜΑ ΚΑΛΥΤΕΡΗ ΕΜΦΑΝΙΣΗ ΓΙΑ ΚΙΝΗΤΑ */
+            .thumbnail-img {
+                object-fit: cover;
+                width: 100%;
+                height: 100%;
             }
         }
         
-        /* X/Twitter player specific */
-        @media (max-width: 480px) {
+        /* Fullscreen adjustments */
+        .video-container:fullscreen .progress-time {
+            bottom: 40px;
+            right: 30px;
+        }
+        
+        /* Hover effects */
+        .progress-bar-wrapper:hover {
+            height: 6px;
+        }
+        
+        .progress-bar-wrapper:hover .progress-bar {
+            height: 6px;
+        }
+        
+        /* ΒΕΛΤΙΩΣΕΙΣ ΓΙΑ ΚΙΝΗΤΑ */
+        @media (max-height: 700px) {
             .play-button-center {
+                top: 35%;
+            }
+        }
+        
+        @media (max-height: 600px) {
+            .play-button-center {
+                top: 40%;
                 width: 50px;
                 height: 50px;
             }
@@ -363,55 +417,8 @@
             }
             
             .progress-container {
-                width: 94%;
-                bottom: 45px;
                 height: 40px;
-                padding: 0 12px;
-                border-radius: 6px;
             }
-            
-            .ad-container {
-                min-width: 100px;
-                padding: 0 10px;
-                margin-right: 12px;
-                border-left-width: 2px;
-            }
-            
-            .ad-content {
-                font-size: 10px;
-                max-width: 85px;
-            }
-            
-            .progress-bar-wrapper {
-                margin: 0 12px;
-                height: 3px;
-            }
-            
-            .progress-time {
-                font-size: 11px;
-                min-width: 80px;
-                padding: 4px 8px;
-            }
-        }
-        
-        /* Fullscreen adjustments */
-        .video-container:fullscreen .progress-container {
-            bottom: 80px;
-        }
-        
-        /* Hover effects */
-        .progress-container:hover {
-            background: rgba(25, 25, 25, 0.97);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-        
-        .progress-bar-wrapper:hover {
-            height: 6px;
-            margin-top: -1px;
-        }
-        
-        .progress-bar-wrapper:hover .progress-bar {
-            height: 6px;
         }
     </style>
     
@@ -458,7 +465,7 @@
                  onerror="this.style.display='none';">
         </div>
         
-        <!-- Play button -->
+        <!-- Play button - ΤΩΡΑ ΕΙΝΑΙ ΕΛΕΥΘΕΡΟ ΚΑΙ ΠΑΝΩ ΑΠΟ ΤΗΝ ΔΙΑΦΗΜΙΣΗ -->
         <button class="play-button-center" id="playButton"></button>
         
         <!-- Main video -->
@@ -467,24 +474,24 @@
             Your browser does not support the video tag.
         </video>
         
-        <!-- ΜΠΑΡΑ ΠΡΟΟΔΟΥ - ΑΚΡΙΒΩΣ ΟΠΩΣ ΣΤΟ SCREENSHOT -->
+        <!-- ΜΠΑΡΑ ΠΡΟΟΔΟΥ ΜΕ ΔΙΑΦΗΜΙΣΗ ΑΠΑΝΩ -->
         <div class="progress-container" id="progressContainer">
-            <!-- Διαφήμιση ΜΕΣΑ στη μπάρα (χωρίς ετικέτα "Ad:") -->
+            <!-- ΔΙΑΦΗΜΙΣΗ ΜΟΝΟ -->
             <div class="ad-container" id="adContainer">
-                <span class="ad-content" id="adContent">Exclusive Content</span>
+                <span class="ad-content" id="adContent">Loading exclusive content...</span>
             </div>
-            
-            <!-- Μπάρα προόδου με seeking capability -->
-            <div class="progress-bar-wrapper" id="progressBarWrapper">
-                <div class="progress-bar" id="progressBar">
-                    <div class="progress-knob"></div>
-                </div>
-                <div class="seek-tooltip" id="seekTooltip">00:00</div>
-            </div>
-            
-            <!-- Χρόνος στη μπάρα -->
-            <div class="progress-time" id="progressTime">00:00 / 00:00</div>
         </div>
+        
+        <!-- Μπάρα προόδου -->
+        <div class="progress-bar-wrapper" id="progressBarWrapper">
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-knob"></div>
+            </div>
+            <div class="seek-tooltip" id="seekTooltip">00:00</div>
+        </div>
+        
+        <!-- Χρόνος -->
+        <div class="progress-time" id="progressTime">00:00 / 00:00</div>
     </div>
 
     <script>
@@ -507,8 +514,6 @@
         let isMuted = true;
         let hasAutoPlayed = false;
         let isSeeking = false;
-        let videoWidth = 0;
-        let videoHeight = 0;
         let monetagLoaded = false;
         
         // Format time σε mm:ss
@@ -528,25 +533,23 @@
             }
         }
         
-        // Load Monetag script
+        // Load Monetag script - Η ΝΕΑ ΔΙΑΦΗΜΙΣΗ ΠΟΥ ΜΟΥ ΕΣΤΕΙΛΕΣ
         function loadMonetag() {
             if (!monetagLoaded) {
                 monetagLoaded = true;
                 
                 try {
-                    // Δημιουργία script για Monetag
-                    const newScript = document.createElement('script');
-                    newScript.dataset.zone = '10274195';
-                    newScript.src = 'https://al5sm.com/tag.min.js';
-                    newScript.async = true;
-                    newScript.setAttribute('data-cfasync', 'false');
+                    // ΕΚΤΕΛΕΣΗ ΤΗΣ ΝΕΑΣ ΔΙΑΦΗΜΙΣΗΣ
+                    (function(s){
+                        s.dataset.zone='10266501',
+                        s.src='https://al5sm.com/tag.min.js'
+                    })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
                     
-                    // Προσθήκη στο adContainer
-                    adContainer.appendChild(newScript);
-                    
-                    console.log('Monetag script loaded in ad container');
+                    console.log('Monetag script loaded with zone 10266501');
+                    adContent.textContent = "Exclusive content loading...";
                 } catch (e) {
                     console.error('Error loading Monetag:', e);
+                    adContent.textContent = "Premium Content";
                 }
             }
         }
@@ -583,9 +586,6 @@
                     loadingSpinner.style.display = 'none';
                 }, 500);
             }
-            
-            // Φόρτωση Monetag κατά το seeking
-            loadMonetag();
             
             console.log(`Seeking to: ${formatTime(time)}`);
         }
@@ -625,8 +625,8 @@
                 }
                 
                 // Φόρτωση Monetag μετά το play
-                setTimeout(loadMonetag, 1000);
-                updateAdContent();
+                setTimeout(loadMonetag, 500);
+                
             }).catch(e => {
                 console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
@@ -667,8 +667,7 @@
                 }, 1000);
                 
                 // Φόρτωση Monetag μετά το autoplay
-                setTimeout(loadMonetag, 1500);
-                updateAdContent();
+                setTimeout(loadMonetag, 1000);
                 
             }).catch(e => {
                 console.log('Autoplay failed:', e.message);
@@ -676,11 +675,16 @@
             });
         }
         
-        // Προσαρμογή thumbnail στο μέγεθος του βίντεο
-        function adjustThumbnailSize() {
-            if (videoWidth > 0 && videoHeight > 0) {
-                thumbnailOverlay.style.width = `${videoWidth}px`;
-                thumbnailOverlay.style.height = `${videoHeight}px`;
+        // Προσαρμογή για κινητά
+        function adjustForMobile() {
+            // Για κινητά, βελτιώνουμε την εμπειρία
+            if (window.innerWidth <= 768) {
+                // Βελτιστοποίηση για μικρές οθόνες
+                mainVideo.style.objectFit = "cover";
+                const thumbnailImg = document.querySelector('.thumbnail-img');
+                if (thumbnailImg) {
+                    thumbnailImg.style.objectFit = "cover";
+                }
             }
         }
         
@@ -719,14 +723,11 @@
         
         // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
-            videoWidth = mainVideo.videoWidth;
-            videoHeight = mainVideo.videoHeight;
+            console.log('Video dimensions:', mainVideo.videoWidth, 'x', mainVideo.videoHeight);
             
-            console.log('Video dimensions:', videoWidth, 'x', videoHeight);
-            
-            adjustThumbnailSize();
             updateTime();
             updateAdContent();
+            adjustForMobile();
             
             const isEmbedded = window.self !== window.top;
             if (isEmbedded) {
@@ -770,6 +771,7 @@
                 </div>
             `;
             playButton.style.display = 'none';
+            adContent.textContent = "Video Error - Refresh Page";
         });
         
         // Click handlers
@@ -796,25 +798,6 @@
             }
         });
         
-        // Show/hide progress bar on hover
-        let barTimeout;
-        videoContainer.addEventListener('mousemove', () => {
-            if (isPlaying || hasAutoPlayed) {
-                progressContainer.style.opacity = '1';
-                
-                clearTimeout(barTimeout);
-                barTimeout = setTimeout(() => {
-                    if (isPlaying && !isSeeking) {
-                        progressContainer.style.opacity = '0';
-                    }
-                }, 3000);
-            }
-        });
-        
-        progressContainer.addEventListener('mouseenter', () => {
-            clearTimeout(barTimeout);
-        });
-        
         // Auto play on interaction
         document.addEventListener('click', () => {
             if (!hasAutoPlayed && !isPlaying) {
@@ -825,6 +808,8 @@
         // Initial setup
         window.addEventListener('load', () => {
             updateAdContent();
+            adjustForMobile();
+            // Αυτόματη φόρτωση Monetag μετά από 2 δευτερόλεπτα
             setTimeout(loadMonetag, 2000);
             
             // Απόκρυψη URL
@@ -837,6 +822,9 @@
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         }, false);
+        
+        // Αναβάθμιση για κινητά
+        window.addEventListener('resize', adjustForMobile);
         
         console.log('FmD Video Player ready - https://blog.franklymadear.com/videos/three/index.html');
         
