@@ -93,27 +93,30 @@
             background: #000;
         }
         
-        /* Thumbnail overlay */
+        /* Thumbnail overlay - ΜΕΓΕΘΥΜΕΝΗ */
         .thumbnail-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(1.2); /* Μεγέθυνση 20% */
             background: #000;
             z-index: 2;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: opacity 0.5s ease;
-            max-width: 100%;
-            max-height: 100%;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+            max-width: 120%; /* Μεγαλύτερο μέγιστο πλάτος */
+            max-height: 120%; /* Μεγαλύτερο μέγιστο ύψος */
+            width: auto;
+            height: auto;
+            overflow: hidden;
         }
         
         .thumbnail-img {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            width: 120%; /* Μεγέθυνση εικόνας */
+            height: 120%; /* Μεγέθυνση εικόνας */
+            object-fit: cover; /* Να καλύπτει όλο το χώρο */
+            transform: scale(1.2); /* Επιπλέον μεγέθυνση */
         }
         
         /* Play button - ΓΚΡΙ ΔΙΑΦΑΝΟ */
@@ -349,6 +352,12 @@
                 min-width: 90px;
                 padding: 5px 10px;
             }
+            
+            /* Μεγέθυνση για mobile */
+            .thumbnail-img {
+                width: 130%; /* Περισσότερη μεγέθυνση για mobile */
+                height: 130%; /* Περισσότερη μεγέθυνση για mobile */
+            }
         }
         
         /* X/Twitter player specific */
@@ -391,6 +400,12 @@
                 font-size: 11px;
                 min-width: 80px;
                 padding: 4px 8px;
+            }
+            
+            /* Μεγέθυνση για πολύ μικρές οθόνες */
+            .thumbnail-img {
+                width: 140%;
+                height: 140%;
             }
         }
         
@@ -462,7 +477,7 @@
         <button class="play-button-center" id="playButton"></button>
         
         <!-- Main video -->
-        <video id="mainVideo" preload="auto" playsinline muted>
+        <video id="mainVideo" preload="auto" playsinline muted autoplay> <!-- Προσθήκη autoplay -->
             <source src="https://blog.franklymadear.com/videos/two/video57.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -614,6 +629,7 @@
             mainVideo.play().then(() => {
                 isPlaying = true;
                 thumbnailOverlay.style.opacity = '0';
+                thumbnailOverlay.style.transform = 'translate(-50%, -50%) scale(1.2)'; // Κρατάμε την μεγέθυνση
                 
                 setTimeout(() => {
                     thumbnailOverlay.style.display = 'none';
@@ -653,6 +669,7 @@
                 isPlaying = true;
                 playButton.style.display = 'none';
                 thumbnailOverlay.style.opacity = '0';
+                thumbnailOverlay.style.transform = 'translate(-50%, -50%) scale(1.2)'; // Κρατάμε την μεγέθυνση
                 hasAutoPlayed = true;
                 
                 setTimeout(() => {
@@ -681,6 +698,51 @@
             if (videoWidth > 0 && videoHeight > 0) {
                 thumbnailOverlay.style.width = `${videoWidth}px`;
                 thumbnailOverlay.style.height = `${videoHeight}px`;
+            }
+        }
+        
+        // Προσαρμοσμένη autoplay συνάρτηση
+        function customAutoplay() {
+            console.log('Custom autoplay triggered');
+            
+            // Εξασφαλίζουμε ότι το βίντεο είναι muted για καλύτερη συμβατότητα
+            mainVideo.muted = true;
+            mainVideo.playsInline = true;
+            
+            // Προσπάθεια autoplay
+            const playPromise = mainVideo.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log('Custom autoplay successful');
+                    isPlaying = true;
+                    playButton.style.display = 'none';
+                    thumbnailOverlay.style.opacity = '0';
+                    thumbnailOverlay.style.transform = 'translate(-50%, -50%) scale(1.2)';
+                    hasAutoPlayed = true;
+                    
+                    setTimeout(() => {
+                        thumbnailOverlay.style.display = 'none';
+                    }, 500);
+                    
+                    // Απενεργοποίηση mute μετά από λίγο
+                    setTimeout(() => {
+                        if (isPlaying) {
+                            mainVideo.muted = false;
+                            isMuted = false;
+                        }
+                    }, 1500);
+                    
+                    // Φόρτωση Monetag
+                    setTimeout(loadMonetag, 2000);
+                    updateAdContent();
+                    
+                }).catch(e => {
+                    console.log('Custom autoplay failed, showing play button:', e.message);
+                    playButton.style.display = 'flex';
+                    isMuted = true;
+                    mainVideo.muted = true;
+                });
             }
         }
         
@@ -733,6 +795,9 @@
                 console.log('Running in X (Twitter) Player');
                 tryAutoplay();
             }
+            
+            // ΠΡΟΣΘΗΚΗ: Προσπάθεια autoplay μετά το φόρτωμα metadata
+            setTimeout(customAutoplay, 500);
         });
         
         mainVideo.addEventListener('timeupdate', updateTime);
@@ -827,6 +892,9 @@
             updateAdContent();
             setTimeout(loadMonetag, 2000);
             
+            // ΠΡΟΣΘΗΚΗ: Προσπάθεια autoplay κατά τη φόρτωση της σελίδας
+            setTimeout(customAutoplay, 1000);
+            
             // Απόκρυψη URL
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
@@ -844,6 +912,13 @@
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - FmD @FmD699');
         });
+        
+        // ΠΡΟΣΘΗΚΗ: Αυτόματο start μετά από λίγο
+        setTimeout(() => {
+            if (!hasAutoPlayed && !isPlaying) {
+                customAutoplay();
+            }
+        }, 1500);
         
     </script>
 </body>
