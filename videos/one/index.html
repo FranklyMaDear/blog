@@ -285,18 +285,6 @@
             opacity: 1;
         }
         
-        /* Timer - mm:ss */
-        .timer {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 14px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.9);
-            display: flex;
-            align-items: center;
-            min-width: 60px;
-            letter-spacing: -0.5px;
-        }
-        
         /* Loading spinner */
         .loading-spinner {
             position: absolute;
@@ -366,10 +354,6 @@
             .ad-content {
                 max-width: 70px;
                 font-size: 10px;
-            }
-            
-            .timer {
-                font-size: 13px;
             }
         }
         
@@ -478,7 +462,7 @@
             Your browser does not support the video tag.
         </video>
         
-        <!-- Progress bar με ενσωματωμένη διαφήμιση -->
+        <!-- ΜΟΝΟ Η ΝΕΑ ΜΠΑΡΑ ΠΡΟΟΔΟΥ ΜΕ ΔΙΑΦΗΜΙΣΗ -->
         <div class="progress-container" id="progressContainer">
             <!-- Διαφήμιση ΜΕΣΑ στη μπάρα -->
             <div class="ad-container" id="adContainer">
@@ -498,9 +482,6 @@
         <!-- Video controls -->
         <div class="video-controls">
             <button class="control-btn" id="playPauseBtn">⏸</button>
-            <div class="timer" id="currentTime">00:00</div>
-            <div style="opacity: 0.3; color: white;">/</div>
-            <div class="timer" id="durationTime">00:00</div>
             <button class="control-btn" id="muteBtn">🔇</button>
             <button class="control-btn" id="fullscreenBtn">⛶</button>
         </div>
@@ -515,8 +496,6 @@
         const playPauseBtn = document.getElementById('playPauseBtn');
         const muteBtn = document.getElementById('muteBtn');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationTimeEl = document.getElementById('durationTime');
         const progressContainer = document.getElementById('progressContainer');
         const progressBar = document.getElementById('progressBar');
         const loadingSpinner = document.getElementById('loadingSpinner');
@@ -543,10 +522,7 @@
         
         // Update time display
         function updateTime() {
-            currentTimeEl.textContent = formatTime(mainVideo.currentTime);
-            
             if (mainVideo.duration && !isNaN(mainVideo.duration)) {
-                durationTimeEl.textContent = formatTime(mainVideo.duration);
                 const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
                 progressBar.style.width = `${progress}%`;
                 progressTime.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(mainVideo.duration)}`;
@@ -571,7 +547,6 @@
                     
                     // Update ad content με πραγματική διαφήμιση
                     newScript.onload = function() {
-                        // Αυτό θα ενημερωθεί από τον monetag script
                         console.log('Monetag script loaded in ad container');
                     };
                     
@@ -750,12 +725,6 @@
             }
         });
         
-        mainVideo.addEventListener('resize', () => {
-            videoWidth = mainVideo.videoWidth;
-            videoHeight = mainVideo.videoHeight;
-            adjustThumbnailSize();
-        });
-        
         mainVideo.addEventListener('timeupdate', updateTime);
         
         mainVideo.addEventListener('ended', () => {
@@ -875,12 +844,10 @@
         }, false);
         
         console.log('FmD Video Player ready - https://blog.franklymadear.com/videos/one/index.html');
-        console.log('Twitter/X preview should show: Image + Title + Description + URL');
         
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - FmD @FmD699');
-            // Εδώ μπορείτε να προσθέσετε analytics tracking
         });
         
     </script>
