@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="thumbnail58.png" type="image/png">
+    <link rel="apple-touch-icon" href="thumbnail58.png">
+    
+    <!-- X (Twitter) Player Card Tags -->
+    <meta name="twitter:card" content="player">
+    <meta name="twitter:site" content="@FranklyMaDear">
+    <meta name="twitter:title" content="Sexy Latinas">
+    <meta name="twitter:description" content="Watch this exclusive content now">
+    <meta name="twitter:image" content="https://blog.franklymadear.com/videos/three/thumbnail58.png">
+    <meta name="twitter:player" content="https://blog.franklymadear.com/videos/three/index.html">
+    <meta name="twitter:player:width" content="1280">
+    <meta name="twitter:player:height" content="720">
+    <meta name="twitter:player:stream" content="https://blog.franklymadear.com/videos/three/video58.mp4">
+    <meta name="twitter:player:stream:content_type" content="video/mp4">
+    
+    <title>Sexy Latinas</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* MAIN CONTAINER - ΚΕΝΤΡΑΡΙΣΜΕΝΟ ΤΟ ΒΙΝΤΕΟ */
+        .video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* ΒΙΝΤΕΟ - ΦΥΛΑΞΕ ΤΟ ΑΡΧΙΚΟ ΜΕΓΕΘΟΣ */
+        #mainVideo {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            background: #000;
+        }
+        
+        /* Thumbnail overlay - ίδιο μέγεθος με το βίντεο */
+        .thumbnail-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .thumbnail-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+        
+        /* Play button - ΚΕΝΤΡΟ ΤΟΥ ΒΙΝΤΕΟ */
+        .play-button-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(220, 20, 60, 0.9);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .play-button-center:hover {
+            background: rgba(220, 20, 60, 1);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .play-button-center::after {
+            content: '▶';
+            color: white;
+            font-size: 40px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0.7); }
+            70% { box-shadow: 0 0 0 25px rgba(220, 20, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 20, 60, 0); }
+        }
+        
+        /* Progress bar - ΒΑΣΗ ΤΗΣ ΟΘΟΝΗΣ */
+        .progress-container {
+            position: absolute;
+            bottom: 100px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 4;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .video-container:hover .progress-container {
+            opacity: 1;
+        }
+        
+        .progress-bar {
+            position: relative;
+            height: 100%;
+            width: 0%;
+            background: #dc143c;
+            transition: width 0.1s;
+        }
+        
+        .progress-handle {
+            position: absolute;
+            top: 50%;
+            right: -10px;
+            width: 20px;
+            height: 20px;
+            background: #fff;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            cursor: grab;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        
+        .progress-bar:hover .progress-handle,
+        .progress-container.dragging .progress-handle {
+            display: block;
+        }
+        
+        /* Controls - ΒΑΣΗ ΤΗΣ ΟΘΟΝΗΣ */
+        .video-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.3s;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .video-container:hover .video-controls {
+            opacity: 1;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Timer */
+        .timer {
+            font-family: monospace;
+            font-size: 16px;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            min-width: 70px;
+        }
+        
+        /* Time tooltip */
+        .time-tooltip {
+            position: absolute;
+            bottom: 25px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: monospace;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(-50%);
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        
+        .progress-container:hover .time-tooltip {
+            opacity: 1;
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #dc143c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 6;
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .play-button-center {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .play-button-center::after {
+                font-size: 30px;
+            }
+            
+            .video-controls {
+                bottom: 20px;
+                padding: 8px 15px;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            
+            .progress-container {
+                bottom: 80px;
+                height: 6px;
+            }
+            
+            .progress-handle {
+                width: 16px;
+                height: 16px;
+                right: -8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container" id="videoContainer">
+        <!-- Loading spinner -->
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        
+        <!-- Thumbnail overlay - ΑΚΡΙΒΩΣ ΙΔΙΟ ΜΕΓΕΘΟΣ ΜΕ ΤΟ ΒΙΝΤΕΟ -->
+        <div class="thumbnail-overlay" id="thumbnailOverlay">
+            <img class="thumbnail-img" src="thumbnail58.png" alt="Video Thumbnail" 
+                 onerror="this.style.display='none';">
+        </div>
+        
+        <!-- Play button -->
+        <button class="play-button-center" id="playButton"></button>
+        
+        <!-- Main video - ΧΩΡΙΣ object-fit: cover -->
+        <video id="mainVideo" preload="auto" playsinline muted>
+            <source src="video58.mp4" type="video/mp4">
+        </video>
+        
+        <!-- Progress bar -->
+        <div class="progress-container" id="progressContainer">
+            <div class="time-tooltip" id="timeTooltip">00:00</div>
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-handle" id="progressHandle"></div>
+            </div>
+        </div>
+        
+        <!-- Video controls -->
+        <div class="video-controls">
+            <button class="control-btn" id="playPauseBtn">⏸</button>
+            <div class="timer" id="currentTime">00:00</div>
+            <button class="control-btn" id="muteBtn">🔇</button>
+            <div class="timer" id="durationTime">00:00</div>
+            <button class="control-btn" id="fullscreenBtn">⛶</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const videoContainer = document.getElementById('videoContainer');
+        const mainVideo = document.getElementById('mainVideo');
+        const thumbnailOverlay = document.getElementById('thumbnailOverlay');
+        const playButton = document.getElementById('playButton');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationTimeEl = document.getElementById('durationTime');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const progressHandle = document.getElementById('progressHandle');
+        const timeTooltip = document.getElementById('timeTooltip');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        // State
+        let isPlaying = false;
+        let isMuted = true;
+        let hasAutoPlayed = false;
+        let isDragging = false;
+        let isHoveringProgress = false;
+        let videoWidth = 0;
+        let videoHeight = 0;
+        
+        // Format time
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Update time display
+        function updateTime() {
+            currentTimeEl.textContent = formatTime(mainVideo.currentTime);
+            
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                durationTimeEl.textContent = formatTime(mainVideo.duration);
+                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+        }
+        
+        // Update time tooltip on hover
+        function updateTimeTooltip() {
+            if (!mainVideo.duration || isNaN(mainVideo.duration)) return;
+            
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (lastHoverX - rect.left) / rect.width;
+            const time = percent * mainVideo.duration;
+            
+            timeTooltip.textContent = formatTime(time);
+            timeTooltip.style.left = `${percent * 100}%`;
+        }
+        
+        // Seek to specific time
+        function seekToTime(clientX) {
+            const rect = progressContainer.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.max(0, Math.min(1, percent));
+            
+            const time = percent * mainVideo.duration;
+            mainVideo.currentTime = time;
+            
+            loadingSpinner.style.display = 'block';
+            
+            setTimeout(() => {
+                loadingSpinner.style.display = 'none';
+            }, 500);
+        }
+        
+        // Start video
+        function startVideo() {
+            playButton.style.display = 'none';
+            
+            mainVideo.play().then(() => {
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸';
+                thumbnailOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                if (isMuted) {
+                    mainVideo.muted = false;
+                    isMuted = false;
+                    muteBtn.textContent = '🔊';
+                }
+            }).catch(e => {
+                console.error('Manual play failed:', e);
+                playButton.style.display = 'flex';
+            });
+        }
+        
+        // Toggle play/pause
+        function togglePlayPause() {
+            if (mainVideo.paused) {
+                mainVideo.play().then(() => {
+                    isPlaying = true;
+                    playPauseBtn.textContent = '⏸';
+                });
+            } else {
+                mainVideo.pause();
+                isPlaying = false;
+                playPauseBtn.textContent = '▶';
+            }
+        }
+        
+        // Toggle mute
+        function toggleMute() {
+            isMuted = !isMuted;
+            mainVideo.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch(e => {
+                    console.log('Fullscreen error:', e);
+                });
+                fullscreenBtn.textContent = '🗗';
+            } else {
+                document.exitFullscreen();
+                fullscreenBtn.textContent = '⛶';
+            }
+        }
+        
+        // Try autoplay for X player
+        function tryAutoplay() {
+            mainVideo.muted = true;
+            mainVideo.play().then(() => {
+                console.log('Autoplay successful for X player');
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸';
+                playButton.style.display = 'none';
+                thumbnailOverlay.style.opacity = '0';
+                hasAutoPlayed = true;
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                setTimeout(() => {
+                    if (isPlaying) {
+                        mainVideo.muted = false;
+                        isMuted = false;
+                        muteBtn.textContent = '🔊';
+                    }
+                }, 1000);
+                
+            }).catch(e => {
+                console.log('Autoplay failed:', e.message);
+                playButton.style.display = 'flex';
+            });
+        }
+        
+        // Προσαρμογή thumbnail στο μέγεθος του βίντεο
+        function adjustThumbnailSize() {
+            if (videoWidth > 0 && videoHeight > 0) {
+                thumbnailOverlay.style.width = `${videoWidth}px`;
+                thumbnailOverlay.style.height = `${videoHeight}px`;
+            }
+        }
+        
+        // Progress bar interaction
+        let lastHoverX = 0;
+        
+        progressContainer.addEventListener('mousemove', (e) => {
+            lastHoverX = e.clientX;
+            isHoveringProgress = true;
+            
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                updateTimeTooltip();
+            }
+        });
+        
+        progressContainer.addEventListener('mouseleave', () => {
+            isHoveringProgress = false;
+            timeTooltip.style.opacity = '0';
+        });
+        
+        progressContainer.addEventListener('click', (e) => {
+            if (!isDragging) {
+                seekToTime(e.clientX);
+            }
+        });
+        
+        // Drag functionality for progress handle
+        progressHandle.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+            isDragging = true;
+            progressContainer.classList.add('dragging');
+            document.body.style.cursor = 'grabbing';
+            
+            function onMouseMove(e) {
+                if (isDragging && mainVideo.duration) {
+                    const rect = progressContainer.getBoundingClientRect();
+                    let percent = (e.clientX - rect.left) / rect.width;
+                    percent = Math.max(0, Math.min(1, percent));
+                    
+                    progressBar.style.width = `${percent * 100}%`;
+                    timeTooltip.textContent = formatTime(percent * mainVideo.duration);
+                    timeTooltip.style.left = `${percent * 100}%`;
+                    timeTooltip.style.opacity = '1';
+                    
+                    if (isPlaying) {
+                        mainVideo.pause();
+                    }
+                }
+            }
+            
+            function onMouseUp(e) {
+                if (isDragging) {
+                    isDragging = false;
+                    progressContainer.classList.remove('dragging');
+                    document.body.style.cursor = '';
+                    
+                    if (mainVideo.duration) {
+                        const rect = progressContainer.getBoundingClientRect();
+                        let percent = (e.clientX - rect.left) / rect.width;
+                        percent = Math.max(0, Math.min(1, percent));
+                        
+                        mainVideo.currentTime = percent * mainVideo.duration;
+                        
+                        if (isPlaying) {
+                            mainVideo.play();
+                        }
+                    }
+                    
+                    document.removeEventListener('mousemove', onMouseMove);
+                    document.removeEventListener('mouseup', onMouseUp);
+                }
+            }
+            
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
+        
+        // Touch support
+        progressContainer.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            seekToTime(e.touches[0].clientX);
+        });
+        
+        // Event Listeners
+        mainVideo.addEventListener('loadedmetadata', () => {
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
+            
+            console.log('Video dimensions:', videoWidth, 'x', videoHeight);
+            console.log('Video will display at original size');
+            
+            adjustThumbnailSize();
+            
+            updateTime();
+            
+            const isEmbedded = window.self !== window.top;
+            if (isEmbedded) {
+                console.log('Running in X (Twitter) Player');
+                tryAutoplay();
+            } else {
+                console.log('Running in regular browser');
+            }
+        });
+        
+        mainVideo.addEventListener('resize', () => {
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
+            adjustThumbnailSize();
+        });
+        
+        mainVideo.addEventListener('timeupdate', updateTime);
+        
+        mainVideo.addEventListener('ended', () => {
+            isPlaying = false;
+            playPauseBtn.textContent = '⟳';
+        });
+        
+        mainVideo.addEventListener('waiting', () => {
+            loadingSpinner.style.display = 'block';
+        });
+        
+        mainVideo.addEventListener('playing', () => {
+            loadingSpinner.style.display = 'none';
+        });
+        
+        mainVideo.addEventListener('error', (e) => {
+            console.error('Video error:', mainVideo.error);
+            loadingSpinner.style.display = 'none';
+            
+            thumbnailOverlay.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
+                    <div style="font-size: 20px; margin-bottom: 10px;">Video Error</div>
+                    <div style="font-size: 14px; opacity: 0.8;">
+                        Check if video58.mp4 exists in the videos/three folder
+                    </div>
+                </div>
+            `;
+            playButton.style.display = 'none';
+        });
+        
+        // Click handlers
+        playButton.addEventListener('click', startVideo);
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        muteBtn.addEventListener('click', toggleMute);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        mainVideo.addEventListener('click', togglePlayPause);
+        thumbnailOverlay.addEventListener('click', startVideo);
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    if (!hasAutoPlayed) startVideo();
+                    else togglePlayPause();
+                    break;
+                case 'KeyM':
+                    toggleMute();
+                    break;
+                case 'KeyF':
+                    toggleFullscreen();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    mainVideo.currentTime = Math.max(0, mainVideo.currentTime - 5);
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    mainVideo.currentTime = Math.min(mainVideo.duration, mainVideo.currentTime + 5);
+                    break;
+            }
+        });
+        
+        // Show/hide controls
+        let controlsTimeout;
+        videoContainer.addEventListener('mousemove', () => {
+            const controls = document.querySelector('.video-controls');
+            const progress = document.querySelector('.progress-container');
+            
+            if (isPlaying || hasAutoPlayed) {
+                controls.style.opacity = '1';
+                progress.style.opacity = '1';
+                
+                clearTimeout(controlsTimeout);
+                controlsTimeout = setTimeout(() => {
+                    if (isPlaying && !isDragging && !isHoveringProgress) {
+                        controls.style.opacity = '0';
+                        progress.style.opacity = '0';
+                    }
+                }, 3000);
+            }
+        });
+        
+        // Auto play on interaction
+        document.addEventListener('click', () => {
+            if (!hasAutoPlayed && !isPlaying) {
+                tryAutoplay();
+            }
+        });
+        
+        console.log('Video player ready - Clean version without text message');
+        
+    </script>
+</body>
+</html>
