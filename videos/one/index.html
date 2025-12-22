@@ -17,7 +17,7 @@
     <meta property="og:type" content="video.other">
     <meta property="og:title" content="Must Watch Exclusive Video - FmD">
     <meta property="og:description" content="Exclusive video content you must watch. Check out this amazing video from FmD!">
-    <meta property="og:url" content="https://blog.franklymadear.com/videos/one/index.html">
+    <meta property="og:url" content="https://blog.franklymadear.com/videos/three/index.html">
     <meta property="og:image" content="https://blog.franklymadear.com/videos/one/thumbnail56.png">
     <meta property="og:image:width" content="1280">
     <meta property="og:image:height" content="720">
@@ -498,7 +498,7 @@
         <div class="seek-container" id="seekContainer">
             <!-- AD OVERLAY ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ -->
             <div class="ad-overlay" id="adOverlay">
-                <div class="time-display" id="timeDisplay">00:01 / 00:59</div>
+                <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
                 <span class="ad-text" id="adText">Must Watch Exclusive Video - FmD</span>
             </div>
             
@@ -536,6 +536,7 @@
         let videoWidth = 0;
         let videoHeight = 0;
         let hideSeekBarTimeout = null;
+        let timeUpdateInterval = null;
         
         // Format time σε mm:ss
         function formatTime(seconds) {
@@ -547,10 +548,41 @@
         
         // Update time display
         function updateTime() {
-            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
-                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
-                seekProgress.style.width = `${progress}%`;
-                timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(mainVideo.duration)}`;
+            try {
+                if (mainVideo && !isNaN(mainVideo.duration) && mainVideo.duration > 0) {
+                    const currentTime = mainVideo.currentTime || 0;
+                    const duration = mainVideo.duration || 0;
+                    const progress = (currentTime / duration) * 100;
+                    
+                    seekProgress.style.width = `${progress}%`;
+                    timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+                } else {
+                    // Αν δεν είναι διαθέσιμο ακόμα, εμφάνισε προκαθορισμένο
+                    timeDisplay.textContent = `00:00 / 00:00`;
+                }
+            } catch (e) {
+                console.log('Time update error:', e);
+            }
+        }
+        
+        // Start time update interval
+        function startTimeUpdate() {
+            if (timeUpdateInterval) {
+                clearInterval(timeUpdateInterval);
+            }
+            
+            // Update αμέσως
+            updateTime();
+            
+            // Και μετά κάθε 250ms για ομαλή κίνηση
+            timeUpdateInterval = setInterval(updateTime, 250);
+        }
+        
+        // Stop time update interval
+        function stopTimeUpdate() {
+            if (timeUpdateInterval) {
+                clearInterval(timeUpdateInterval);
+                timeUpdateInterval = null;
             }
         }
         
@@ -632,21 +664,26 @@
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
-            const time = percent * mainVideo.duration;
-            
-            // Ενημέρωση του βίντεο
-            mainVideo.currentTime = time;
-            
-            // Εμφάνιση loading spinner αν το βίντεο δεν είναι σε buffered περιοχή
-            if (mainVideo.readyState < 3) {
-                loadingSpinner.style.display = 'block';
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                const time = percent * mainVideo.duration;
                 
-                setTimeout(() => {
-                    loadingSpinner.style.display = 'none';
-                }, 500);
+                // Ενημέρωση του βίντεο
+                mainVideo.currentTime = time;
+                
+                // Ενημέρωση του χρόνου αμέσως
+                updateTime();
+                
+                // Εμφάνιση loading spinner αν το βίντεο δεν είναι σε buffered περιοχή
+                if (mainVideo.readyState < 3) {
+                    loadingSpinner.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        loadingSpinner.style.display = 'none';
+                    }, 500);
+                }
+                
+                console.log(`Seeking to: ${formatTime(time)}`);
             }
-            
-            console.log(`Seeking to: ${formatTime(time)}`);
         }
         
         // Update seek tooltip
@@ -655,10 +692,12 @@
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
-            const time = percent * mainVideo.duration;
-            seekTooltip.textContent = formatTime(time);
-            seekTooltip.style.left = `${percent * 100}%`;
-            seekTooltip.style.opacity = '1';
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                const time = percent * mainVideo.duration;
+                seekTooltip.textContent = formatTime(time);
+                seekTooltip.style.left = `${percent * 100}%`;
+                seekTooltip.style.opacity = '1';
+            }
         }
         
         // Hide seek tooltip
@@ -685,6 +724,9 @@
                     isMuted = false;
                 }
                 
+                // Start time updates
+                startTimeUpdate();
+                
                 updateAdDisplay();
             }).catch(e => {
                 console.error('Manual play failed:', e);
@@ -701,6 +743,9 @@
                     setTimeout(() => {
                         thumbnailOverlay.style.display = 'none';
                     }, 500);
+                    
+                    // Start time updates
+                    startTimeUpdate();
                 });
             });
         }
@@ -710,10 +755,12 @@
             if (mainVideo.paused) {
                 mainVideo.play().then(() => {
                     isPlaying = true;
+                    startTimeUpdate();
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
+                stopTimeUpdate();
             }
         }
         
@@ -737,6 +784,9 @@
                         isMuted = false;
                     }
                 }, 1000);
+                
+                // Start time updates
+                startTimeUpdate();
                 
                 updateAdDisplay();
                 
@@ -843,6 +893,7 @@
             videoHeight = mainVideo.videoHeight;
             
             console.log('Video dimensions:', videoWidth, 'x', videoHeight);
+            console.log('Video duration:', mainVideo.duration);
             
             adjustThumbnailSize();
             updateTime();
@@ -855,10 +906,16 @@
             }
         });
         
+        mainVideo.addEventListener('durationchange', () => {
+            console.log('Duration changed:', mainVideo.duration);
+            updateTime();
+        });
+        
         mainVideo.addEventListener('timeupdate', updateTime);
         
         mainVideo.addEventListener('ended', () => {
             isPlaying = false;
+            stopTimeUpdate();
         });
         
         mainVideo.addEventListener('waiting', () => {
@@ -876,6 +933,7 @@
         mainVideo.addEventListener('error', (e) => {
             console.error('Video error:', mainVideo.error);
             loadingSpinner.style.display = 'none';
+            stopTimeUpdate();
             
             thumbnailOverlay.innerHTML = `
                 <div style="text-align: center; padding: 20px; color: white;">
@@ -915,11 +973,13 @@
                 case 'ArrowLeft':
                     e.preventDefault();
                     mainVideo.currentTime = Math.max(0, mainVideo.currentTime - 5);
+                    updateTime();
                     showSeekBar();
                     break;
                 case 'ArrowRight':
                     e.preventDefault();
                     mainVideo.currentTime = Math.min(mainVideo.duration, mainVideo.currentTime + 5);
+                    updateTime();
                     showSeekBar();
                     break;
             }
@@ -935,6 +995,16 @@
         // Initial setup
         window.addEventListener('load', () => {
             updateAdDisplay();
+            
+            // Initial time display
+            updateTime();
+            
+            // Check video duration after a short delay
+            setTimeout(() => {
+                if (mainVideo.duration > 0) {
+                    updateTime();
+                }
+            }, 1000);
             
             // Απόκρυψη URL
             if (window.history.replaceState) {
@@ -952,6 +1022,12 @@
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - FmD @FmD699');
+            startTimeUpdate();
+        });
+        
+        mainVideo.addEventListener('pause', () => {
+            console.log('Video paused');
+            stopTimeUpdate();
         });
         
     </script>
