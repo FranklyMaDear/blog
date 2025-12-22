@@ -151,10 +151,10 @@
             font-weight: bold;
         }
         
-        /* SEEK BAR CONTAINER - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΕΙΑΖΕΤΑΙ */
+        /* SEEK BAR CONTAINER - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΕΙΑΖΕΤΑΙ - ANEΒΗΚΑ 20px ΠΙΟ ΠΑΝΩ */
         .seek-container {
             position: absolute;
-            bottom: 80px;
+            bottom: 100px; /* Αλλαγή από 80px σε 100px */
             left: 50%;
             transform: translateX(-50%);
             width: 85%;
@@ -171,22 +171,22 @@
             pointer-events: all;
         }
         
-        /* AD OVERLAY - ΠΑΝΩ ΑΠΟ ΤΗΝ ΜΠΑΡΑ */
+        /* AD OVERLAY - ΤΩΡΑ ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ */
         .ad-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 40px;
+            height: 100%; /* Αλλαγή από 40px σε 100% */
             background: linear-gradient(90deg, rgba(29, 155, 240, 0.9), rgba(20, 20, 20, 0.95));
-            border-radius: 8px 8px 0 0;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 21;
             cursor: pointer;
             overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .ad-overlay::before {
@@ -353,12 +353,12 @@
             
             .seek-container {
                 width: 90%;
-                bottom: 70px;
+                bottom: 90px; /* Προσαρμογή για mobile */
                 height: 65px;
             }
             
             .ad-overlay {
-                height: 35px;
+                height: 100%;
             }
             
             .ad-text {
@@ -394,12 +394,12 @@
             
             .seek-container {
                 width: 92%;
-                bottom: 60px;
+                bottom: 80px; /* Προσαρμογή για mobile */
                 height: 60px;
             }
             
             .ad-overlay {
-                height: 32px;
+                height: 100%;
             }
             
             .ad-text {
@@ -429,7 +429,7 @@
         
         /* Fullscreen adjustments */
         .video-container:fullscreen .seek-container {
-            bottom: 100px;
+            bottom: 120px; /* Προσαρμογή για fullscreen */
         }
     </style>
     
@@ -487,9 +487,9 @@
         
         <!-- SEEK BAR - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ -->
         <div class="seek-container" id="seekContainer">
-            <!-- AD OVERLAY ΠΑΝΩ -->
+            <!-- AD OVERLAY ΤΩΡΑ ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ -->
             <div class="ad-overlay" id="adOverlay">
-                <span class="ad-text" id="adText">Sponsored Content - Click Here</span>
+                <span class="ad-text" id="adText">Sponsored Content</span>
             </div>
             
             <!-- TIME DISPLAY ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ -->
@@ -529,7 +529,7 @@
         let videoWidth = 0;
         let videoHeight = 0;
         let hideSeekBarTimeout = null;
-        const AD_LINK = "https://otieu.com/4/10274068";
+        const AD_LINK = "https://monetag.com"; // Αλλαγή σε Monetag
         
         // Format time σε mm:ss
         function formatTime(seconds) {
@@ -570,18 +570,18 @@
         
         // Open ad link
         function openAdLink() {
-            console.log('Opening ad link:', AD_LINK);
+            console.log('Opening Monetag ad link:', AD_LINK);
             window.open(AD_LINK, '_blank', 'noopener,noreferrer');
         }
         
         // Update ad display
         function updateAdDisplay() {
-            // Set ad text
+            // Set ad text - ΧΩΡΙΣ ΔΙΕΥΘΥΝΣΗ
             const adMessages = [
-                "Sponsored Content - Click Here",
-                "Exclusive Offer - Tap to View",
-                "Special Promotion - Click Now",
-                "Limited Time Offer - Tap Here"
+                "Sponsored Content",
+                "Exclusive Offer",
+                "Special Promotion",
+                "Limited Time Offer"
             ];
             const randomAd = adMessages[Math.floor(Math.random() * adMessages.length)];
             adText.textContent = randomAd;
@@ -918,7 +918,7 @@
         }, false);
         
         console.log('FmD Video Player ready - https://blog.franklymadear.com/videos/three/index.html');
-        console.log('Ad URL:', AD_LINK);
+        console.log('Monetag Ad URL:', AD_LINK);
         
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
