@@ -538,34 +538,42 @@
         let hideSeekBarTimeout = null;
         let timeUpdateInterval = null;
         
-        // Format time σε mm:ss
+        // Format time σε mm:ss - ΔΙΟΡΘΩΜΕΝΗ
         function formatTime(seconds) {
-            if (isNaN(seconds)) return '00:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
+            if (isNaN(seconds) || seconds === Infinity || seconds === undefined) {
+                return '00:00';
+            }
+            
+            // Χρήση Math.round για καλύτερο rounding και Math.floor για τα λεπτά
+            const totalSeconds = Math.round(seconds);
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
-        // Update time display
+        // Update time display - ΔΙΟΡΘΩΜΕΝΗ
         function updateTime() {
             try {
-                if (mainVideo && !isNaN(mainVideo.duration) && mainVideo.duration > 0) {
+                if (mainVideo && mainVideo.readyState > 0) {
                     const currentTime = mainVideo.currentTime || 0;
                     const duration = mainVideo.duration || 0;
-                    const progress = (currentTime / duration) * 100;
                     
-                    seekProgress.style.width = `${progress}%`;
-                    timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
-                } else {
-                    // Αν δεν είναι διαθέσιμο ακόμα, εμφάνισε προκαθορισμένο
-                    timeDisplay.textContent = `00:00 / 00:00`;
+                    if (duration > 0 && !isNaN(duration) && duration !== Infinity) {
+                        const progress = (currentTime / duration) * 100;
+                        seekProgress.style.width = `${progress}%`;
+                        timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(duration)}`;
+                    } else {
+                        // Εμφάνιση μόνο του τρέχοντος χρόνου αν η διάρκεια δεν είναι διαθέσιμη
+                        timeDisplay.textContent = `${formatTime(currentTime)} / --:--`;
+                    }
                 }
             } catch (e) {
                 console.log('Time update error:', e);
             }
         }
         
-        // Start time update interval
+        // Start time update interval - ΔΙΟΡΘΩΜΕΝΗ
         function startTimeUpdate() {
             if (timeUpdateInterval) {
                 clearInterval(timeUpdateInterval);
@@ -574,8 +582,8 @@
             // Update αμέσως
             updateTime();
             
-            // Και μετά κάθε 250ms για ομαλή κίνηση
-            timeUpdateInterval = setInterval(updateTime, 250);
+            // Και μετά κάθε 100ms για πιο ομαλή ενημέρωση
+            timeUpdateInterval = setInterval(updateTime, 100);
         }
         
         // Stop time update interval
@@ -664,7 +672,7 @@
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
-            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+            if (mainVideo.duration && !isNaN(mainVideo.duration) && mainVideo.duration > 0) {
                 const time = percent * mainVideo.duration;
                 
                 // Ενημέρωση του βίντεο
@@ -692,7 +700,7 @@
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
-            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+            if (mainVideo.duration && !isNaN(mainVideo.duration) && mainVideo.duration > 0) {
                 const time = percent * mainVideo.duration;
                 seekTooltip.textContent = formatTime(time);
                 seekTooltip.style.left = `${percent * 100}%`;
@@ -823,7 +831,7 @@
         
         // Seek bar interaction
         seekBar.addEventListener('mousemove', (e) => {
-            if (!mainVideo.duration || isNaN(mainVideo.duration)) return;
+            if (!mainVideo.duration || isNaN(mainVideo.duration) || mainVideo.duration <= 0) return;
             updateSeekTooltip(e.clientX);
         });
         
@@ -887,7 +895,7 @@
             }, 2000);
         });
         
-        // Event Listeners
+        // Event Listeners - ΔΙΟΡΘΩΜΕΝΑ
         mainVideo.addEventListener('loadedmetadata', () => {
             videoWidth = mainVideo.videoWidth;
             videoHeight = mainVideo.videoHeight;
@@ -911,7 +919,17 @@
             updateTime();
         });
         
-        mainVideo.addEventListener('timeupdate', updateTime);
+        // Προσθήκη αυτού για καλύτερη ενημέρωση χρόνου
+        mainVideo.addEventListener('timeupdate', () => {
+            if (isPlaying) {
+                updateTime();
+            }
+        });
+        
+        mainVideo.addEventListener('loadeddata', () => {
+            console.log('Video loaded data, current time:', mainVideo.currentTime);
+            updateTime();
+        });
         
         mainVideo.addEventListener('ended', () => {
             isPlaying = false;
