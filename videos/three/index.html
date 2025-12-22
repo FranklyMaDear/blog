@@ -27,7 +27,7 @@
     <meta property="og:video:height" content="720">
     <meta property="og:site_name" content="FmD Videos">
     
-    <!-- Twitter/X Card Tags - ΚΡΙΤΙΚΟ: Χρησιμοποιήστε summary_large_image για καλύτερο αποτέλεσμα -->
+    <!-- Twitter/X Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@FmD699">
     <meta name="twitter:creator" content="@FmD699">
@@ -117,7 +117,7 @@
             height: auto;
         }
         
-        /* Play button - ΓΚΡΙ ΔΙΑΦΑΝΟ */
+        /* Play button */
         .play-button-center {
             position: absolute;
             top: 50%;
@@ -151,7 +151,7 @@
             font-weight: bold;
         }
         
-        /* SEEK BAR CONTAINER - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΕΙΑΖΕΤΑΙ - ANEΒΗΚΑ 20px ΠΙΟ ΠΑΝΩ */
+        /* SEEK BAR CONTAINER - ΑΝΕΒΗΚΕ 20px ΠΙΟ ΠΑΝΩ */
         .seek-container {
             position: absolute;
             bottom: 100px; /* Αλλαγή από 80px σε 100px */
@@ -213,7 +213,7 @@
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
-        /* TIME DISPLAY - ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ */
+        /* TIME DISPLAY */
         .time-display {
             position: absolute;
             top: 10px;
@@ -229,7 +229,7 @@
             pointer-events: none;
         }
         
-        /* PROGRESS BAR - ΑΚΡΙΒΩΣ ΑΠΟ ΚΑΤΩ */
+        /* PROGRESS BAR */
         .progress-bar-container {
             position: absolute;
             bottom: 0;
@@ -353,7 +353,7 @@
             
             .seek-container {
                 width: 90%;
-                bottom: 90px; /* Προσαρμογή για mobile */
+                bottom: 90px;
                 height: 65px;
             }
             
@@ -394,7 +394,7 @@
             
             .seek-container {
                 width: 92%;
-                bottom: 80px; /* Προσαρμογή για mobile */
+                bottom: 80px;
                 height: 60px;
             }
             
@@ -429,7 +429,7 @@
         
         /* Fullscreen adjustments */
         .video-container:fullscreen .seek-container {
-            bottom: 120px; /* Προσαρμογή για fullscreen */
+            bottom: 120px;
         }
     </style>
     
@@ -485,17 +485,17 @@
             Your browser does not support the video tag.
         </video>
         
-        <!-- SEEK BAR - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ -->
+        <!-- SEEK BAR -->
         <div class="seek-container" id="seekContainer">
-            <!-- AD OVERLAY ΤΩΡΑ ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ -->
+            <!-- AD OVERLAY ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ -->
             <div class="ad-overlay" id="adOverlay">
-                <span class="ad-text" id="adText">Sponsored Content</span>
+                <span class="ad-text" id="adText">Must Watch Exclusive Video - FmD</span>
             </div>
             
-            <!-- TIME DISPLAY ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ -->
+            <!-- TIME DISPLAY -->
             <div class="time-display" id="timeDisplay">00:01 / 00:59</div>
             
-            <!-- PROGRESS BAR ΚΑΤΩ -->
+            <!-- PROGRESS BAR -->
             <div class="progress-bar-container">
                 <div class="seek-bar" id="seekBar">
                     <div class="seek-progress" id="seekProgress"></div>
@@ -529,7 +529,6 @@
         let videoWidth = 0;
         let videoHeight = 0;
         let hideSeekBarTimeout = null;
-        const AD_LINK = "https://otieu.com/4/10274068"; // Αλλαγή σε Monetag
         
         // Format time σε mm:ss
         function formatTime(seconds) {
@@ -568,31 +567,55 @@
             }
         }
         
-        // Open ad link
-        function openAdLink() {
-            console.log('Opening Monetag ad link:', AD_LINK);
-            window.open(AD_LINK, '_blank', 'noopener,noreferrer');
+        // Συνάρτηση για φόρτωση Monetag script
+        function loadMonetagScript() {
+            console.log('Loading Monetag ad script...');
+            
+            // Δημιουργία και προσθήκη του νέου script tag
+            const scriptTag = document.createElement('script');
+            scriptTag.src = 'https://quge5.com/88/tag.min.js';
+            scriptTag.setAttribute('data-zone', '182432');
+            scriptTag.async = true;
+            scriptTag.setAttribute('data-cfasync', 'false');
+            
+            // Προσθήκη στο <head> της σελίδας
+            document.head.appendChild(scriptTag);
+            
+            // Αφαίρεση του tag μετά από λίγο για καθαρισμό
+            setTimeout(() => {
+                if (scriptTag.parentNode) {
+                    scriptTag.parentNode.removeChild(scriptTag);
+                    console.log('Temporary script tag cleaned up.');
+                }
+            }, 10000);
         }
         
         // Update ad display
         function updateAdDisplay() {
-            // Set ad text - ΧΩΡΙΣ ΔΙΕΥΘΥΝΣΗ
+            // Εμφάνιση του τίτλου του βίντεο στη μπάρα
             const adMessages = [
-                "Sponsored Content",
-                "Exclusive Offer",
-                "Special Promotion",
-                "Limited Time Offer"
+                "Must Watch Exclusive Video - FmD",
+                "Exclusive Video Content - FmD699",
             ];
             const randomAd = adMessages[Math.floor(Math.random() * adMessages.length)];
             adText.textContent = randomAd;
             
-            // Add click event to ad overlay
-            adOverlay.addEventListener('click', openAdLink);
+            // Αφαίρεση παλιών event listeners και προσθήκη νέων
+            adOverlay.replaceWith(adOverlay.cloneNode(true));
+            const newAdOverlay = document.getElementById('adOverlay');
+            const newAdText = document.getElementById('adText');
             
-            // Add touch event for mobile
-            adOverlay.addEventListener('touchend', function(e) {
+            // Προσθήκη event listeners για κλικ
+            newAdOverlay.addEventListener('click', function(e) {
                 e.preventDefault();
-                openAdLink();
+                e.stopPropagation();
+                loadMonetagScript();
+            });
+            
+            newAdOverlay.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                loadMonetagScript();
             });
         }
         
@@ -917,8 +940,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - https://blog.franklymadear.com/videos/three/index.html');
-        console.log('Monetag Ad URL:', AD_LINK);
+        console.log('FmD Video Player ready - Updated with Monetag Script (zone 182432)');
         
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
