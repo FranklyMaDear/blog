@@ -27,7 +27,7 @@
     <meta property="og:video:height" content="720">
     <meta property="og:site_name" content="FmD Videos">
     
-    <!-- Twitter/X Card Tags - ΚΡΙΤΙΚΟ: Χρησιμοποιήστε summary_large_image για καλύτερο αποτέλεσμα -->
+    <!-- Twitter/X Card Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@FmD699">
     <meta name="twitter:creator" content="@FmD699">
@@ -151,15 +151,27 @@
             font-weight: bold;
         }
         
-        /* SEEK BAR CONTAINER - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΕΙΑΖΕΤΑΙ */
+        /* MONETAG AD CONTAINER - ΣΤΟ ΚΑΤΩ ΜΕΡΟΣ */
+        .monetag-ad-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 25px; /* Fixed height for ad space */
+            background: transparent;
+            z-index: 18;
+            overflow: hidden;
+        }
+        
+        /* SEEK BAR CONTAINER - ΠΑΝΩ ΑΠΟ ΤΟ MONETAG AD */
         .seek-container {
             position: absolute;
-            bottom: 80px;
+            bottom: 20px; /* Ανεβασμένο 20px πάνω από την προηγούμενη θέση */
             left: 50%;
             transform: translateX(-50%);
             width: 85%;
             max-width: 650px;
-            height: 70px;
+            height: 60px;
             z-index: 20;
             opacity: 0;
             transition: opacity 0.3s ease;
@@ -169,48 +181,6 @@
         .seek-container.active {
             opacity: 1;
             pointer-events: all;
-        }
-        
-        /* AD OVERLAY - ΠΑΝΩ ΑΠΟ ΤΗΝ ΜΠΑΡΑ */
-        .ad-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 40px;
-            background: linear-gradient(90deg, rgba(29, 155, 240, 0.9), rgba(20, 20, 20, 0.95));
-            border-radius: 8px 8px 0 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 21;
-            cursor: pointer;
-            overflow: hidden;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .ad-overlay::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shimmer 3s infinite;
-        }
-        
-        .ad-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: white;
-            letter-spacing: 0.3px;
-            z-index: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 80%;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
         }
         
         /* TIME DISPLAY - ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ */
@@ -229,33 +199,35 @@
             pointer-events: none;
         }
         
-        /* PROGRESS BAR - ΑΚΡΙΒΩΣ ΑΠΟ ΚΑΤΩ */
+        /* PROGRESS BAR CONTAINER - ΣΤΥΛ X APP */
         .progress-bar-container {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 30px;
-            background: rgba(20, 20, 20, 0.85);
-            border-radius: 0 0 8px 8px;
+            height: 40px;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 8px;
             z-index: 21;
             display: flex;
             align-items: center;
             padding: 0 15px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
         }
         
-        /* Progress bar για seeking */
+        /* Progress bar για seeking - ΣΤΥΛ X APP */
         .seek-bar {
             position: relative;
             width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
             cursor: pointer;
             overflow: visible;
+            transition: height 0.2s;
         }
         
         .seek-progress {
@@ -263,8 +235,9 @@
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, #1d9bf0, #1a8cd8);
-            border-radius: 2px;
+            border-radius: 3px;
             transition: width 0.1s;
+            box-shadow: 0 0 10px rgba(29, 155, 240, 0.3);
         }
         
         .seek-knob {
@@ -278,7 +251,7 @@
             transform: translateY(-50%);
             opacity: 0;
             transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
             border: 2px solid #1d9bf0;
             pointer-events: none;
         }
@@ -296,16 +269,16 @@
             height: 6px;
         }
         
-        /* SEEK TOOLTIP */
+        /* SEEK TOOLTIP - ΣΤΥΛ X APP */
         .seek-tooltip {
             position: absolute;
-            bottom: 25px;
-            background: rgba(0, 0, 0, 0.9);
+            bottom: 20px;
+            background: rgba(0, 0, 0, 0.95);
             color: white;
             padding: 6px 10px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 12px;
-            font-family: 'Courier New', monospace;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             pointer-events: none;
             opacity: 0;
             transform: translateX(-50%);
@@ -314,6 +287,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 23;
             font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
         
         /* Loading spinner */
@@ -336,10 +310,6 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        @keyframes shimmer {
-            100% { left: 100%; }
-        }
-        
         /* Mobile optimizations */
         @media (max-width: 768px) {
             .play-button-center {
@@ -353,16 +323,12 @@
             
             .seek-container {
                 width: 90%;
-                bottom: 70px;
-                height: 65px;
+                bottom: 20px;
+                height: 55px;
             }
             
-            .ad-overlay {
-                height: 35px;
-            }
-            
-            .ad-text {
-                font-size: 13px;
+            .monetag-ad-container {
+                height: 22px;
             }
             
             .time-display {
@@ -372,12 +338,17 @@
             }
             
             .progress-bar-container {
-                height: 28px;
+                height: 35px;
                 padding: 0 12px;
             }
             
             .seek-bar {
-                height: 3px;
+                height: 4px;
+            }
+            
+            .seek-knob {
+                width: 14px;
+                height: 14px;
             }
         }
         
@@ -394,16 +365,12 @@
             
             .seek-container {
                 width: 92%;
-                bottom: 60px;
-                height: 60px;
+                bottom: 15px;
+                height: 50px;
             }
             
-            .ad-overlay {
-                height: 32px;
-            }
-            
-            .ad-text {
-                font-size: 12px;
+            .monetag-ad-container {
+                height: 20px;
             }
             
             .time-display {
@@ -413,23 +380,28 @@
             }
             
             .progress-bar-container {
-                height: 25px;
+                height: 32px;
                 padding: 0 10px;
             }
             
             .seek-bar {
-                height: 3px;
+                height: 4px;
             }
             
             .seek-knob {
-                width: 14px;
-                height: 14px;
+                width: 12px;
+                height: 12px;
+                right: -6px;
             }
         }
         
         /* Fullscreen adjustments */
         .video-container:fullscreen .seek-container {
-            bottom: 100px;
+            bottom: 30px;
+        }
+        
+        .video-container:fullscreen .monetag-ad-container {
+            height: 30px;
         }
     </style>
     
@@ -485,17 +457,17 @@
             Your browser does not support the video tag.
         </video>
         
-        <!-- SEEK BAR - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ -->
+        <!-- MONETAG AD CONTAINER -->
+        <div class="monetag-ad-container" id="monetagAdContainer">
+            <!-- Η διαφήμιση θα εισαχθεί εδώ μέσω JavaScript -->
+        </div>
+        
+        <!-- SEEK BAR - ΣΤΥΛ X APP -->
         <div class="seek-container" id="seekContainer">
-            <!-- AD OVERLAY ΠΑΝΩ -->
-            <div class="ad-overlay" id="adOverlay">
-                <span class="ad-text" id="adText">Sponsored Content - Click Here</span>
-            </div>
-            
             <!-- TIME DISPLAY ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ -->
             <div class="time-display" id="timeDisplay">00:01 / 00:59</div>
             
-            <!-- PROGRESS BAR ΚΑΤΩ -->
+            <!-- PROGRESS BAR ΚΑΤΩ - ΣΤΥΛ X APP -->
             <div class="progress-bar-container">
                 <div class="seek-bar" id="seekBar">
                     <div class="seek-progress" id="seekProgress"></div>
@@ -514,8 +486,7 @@
         const playButton = document.getElementById('playButton');
         const seekContainer = document.getElementById('seekContainer');
         const loadingSpinner = document.getElementById('loadingSpinner');
-        const adOverlay = document.getElementById('adOverlay');
-        const adText = document.getElementById('adText');
+        const monetagAdContainer = document.getElementById('monetagAdContainer');
         const timeDisplay = document.getElementById('timeDisplay');
         const seekBar = document.getElementById('seekBar');
         const seekProgress = document.getElementById('seekProgress');
@@ -529,7 +500,7 @@
         let videoWidth = 0;
         let videoHeight = 0;
         let hideSeekBarTimeout = null;
-        const AD_LINK = "https://otieu.com/4/10274068";
+        const MONETAG_SCRIPT_ID = 'monetag-script';
         
         // Format time σε mm:ss
         function formatTime(seconds) {
@@ -568,32 +539,28 @@
             }
         }
         
-        // Open ad link
-        function openAdLink() {
-            console.log('Opening ad link:', AD_LINK);
-            window.open(AD_LINK, '_blank', 'noopener,noreferrer');
-        }
-        
-        // Update ad display
-        function updateAdDisplay() {
-            // Set ad text
-            const adMessages = [
-                "Sponsored Content - Click Here",
-                "Exclusive Offer - Tap to View",
-                "Special Promotion - Click Now",
-                "Limited Time Offer - Tap Here"
-            ];
-            const randomAd = adMessages[Math.floor(Math.random() * adMessages.length)];
-            adText.textContent = randomAd;
+        // Load Monetag script
+        function loadMonetagAd() {
+            // Remove existing script if any
+            const existingScript = document.getElementById(MONETAG_SCRIPT_ID);
+            if (existingScript) {
+                existingScript.remove();
+            }
             
-            // Add click event to ad overlay
-            adOverlay.addEventListener('click', openAdLink);
+            // Create new script
+            const script = document.createElement('script');
+            script.id = MONETAG_SCRIPT_ID;
+            script.src = 'https://mid.z-na.com/monetag.js';
+            script.setAttribute('data-cfasync', 'false');
+            script.onload = function() {
+                console.log('Monetag script loaded successfully');
+            };
+            script.onerror = function() {
+                console.error('Failed to load Monetag script');
+            };
             
-            // Add touch event for mobile
-            adOverlay.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                openAdLink();
-            });
+            // Add to container
+            monetagAdContainer.appendChild(script);
         }
         
         // Seek to specific time
@@ -655,7 +622,9 @@
                     isMuted = false;
                 }
                 
-                updateAdDisplay();
+                // Load Monetag ad when video starts
+                loadMonetagAd();
+                
             }).catch(e => {
                 console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
@@ -671,6 +640,9 @@
                     setTimeout(() => {
                         thumbnailOverlay.style.display = 'none';
                     }, 500);
+                    
+                    // Load Monetag ad when video starts
+                    loadMonetagAd();
                 });
             });
         }
@@ -708,7 +680,8 @@
                     }
                 }, 1000);
                 
-                updateAdDisplay();
+                // Load Monetag ad when video starts
+                loadMonetagAd();
                 
             }).catch(e => {
                 console.log('Autoplay failed:', e.message);
@@ -816,7 +789,6 @@
             
             adjustThumbnailSize();
             updateTime();
-            updateAdDisplay();
             
             const isEmbedded = window.self !== window.top;
             if (isEmbedded) {
@@ -904,8 +876,6 @@
         
         // Initial setup
         window.addEventListener('load', () => {
-            updateAdDisplay();
-            
             // Απόκρυψη URL
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
@@ -918,7 +888,7 @@
         }, false);
         
         console.log('FmD Video Player ready - https://blog.franklymadear.com/videos/three/index.html');
-        console.log('Ad URL:', AD_LINK);
+        console.log('Monetag ad space: 0-25px at bottom');
         
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
