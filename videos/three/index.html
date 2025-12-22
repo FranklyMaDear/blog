@@ -157,14 +157,12 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 25vh; /* ΕΝΑ ΤΕΤΑΡΤΟ ΤΗΣ ΟΘΟΝΗΣ */
+            height: 25vh;
             z-index: 20;
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7), transparent);
         }
         
         .seek-container.active {
@@ -172,24 +170,23 @@
             pointer-events: all;
         }
         
-        /* AD OVERLAY - ΜΕΓΑΛΟ ΠΛΑΙΣΙΟ (1/4 ΟΘΟΝΗΣ) */
+        /* AD OVERLAY - ΠΑΝΩ ΑΠΟ ΤΗΝ ΜΠΑΡΑ */
         .ad-overlay {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: calc(100% - 40px); /* ΑΦΗΝΩ ΧΩΡΟ ΓΙΑ ΤΗ ΜΠΑΡΑ */
-            background: linear-gradient(to top, 
-                rgba(50, 50, 50, 0.85), 
-                rgba(40, 40, 40, 0.7),
-                rgba(30, 30, 30, 0.6));
+            height: 60px;
+            background: linear-gradient(90deg, rgba(40, 40, 40, 0.85), rgba(25, 25, 25, 0.9), rgba(40, 40, 40, 0.85));
+            border-radius: 8px 8px 0 0;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 21;
             cursor: pointer;
             overflow: hidden;
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(100, 100, 100, 0.3);
             backdrop-filter: blur(15px);
-            padding: 20px;
         }
         
         .ad-overlay::before {
@@ -199,58 +196,57 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-            animation: shimmer 4s infinite;
+            background: linear-gradient(90deg, transparent, rgba(150, 150, 150, 0.1), transparent);
+            animation: shimmer 3s infinite;
         }
         
-        /* VIDEO TITLE STYLING */
-        .video-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: white;
-            text-align: center;
-            z-index: 1;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        .ad-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
             letter-spacing: 0.5px;
-            line-height: 1.3;
+            z-index: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             max-width: 80%;
-            padding: 15px 25px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+            padding: 0 20px;
         }
         
         /* TIME DISPLAY - ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ */
         .time-display {
             position: absolute;
             top: 15px;
-            left: 20px;
-            font-size: 14px;
+            left: 15px;
+            font-size: 13px;
             font-family: 'Courier New', monospace;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.95);
+            color: rgba(220, 220, 220, 0.95);
             z-index: 22;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(30, 30, 30, 0.8);
             padding: 6px 12px;
             border-radius: 6px;
             pointer-events: none;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(100, 100, 100, 0.3);
         }
         
-        /* PROGRESS BAR - ΓΚΡΙ ΔΙΑΦΑΝΕΣ */
+        /* PROGRESS BAR - ΑΚΡΙΒΩΣ ΑΠΟ ΚΑΤΩ */
         .progress-bar-container {
-            position: relative;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
             width: 100%;
             height: 40px;
-            background: rgba(100, 100, 100, 0.3); /* ΓΚΡΙ ΔΙΑΦΑΝΕΣ */
+            background: rgba(30, 30, 30, 0.75);
+            border-radius: 8px;
             z-index: 21;
             display: flex;
             align-items: center;
             padding: 0 20px;
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(100, 100, 100, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
         }
         
         /* Progress bar για seeking */
@@ -258,7 +254,7 @@
             position: relative;
             width: 100%;
             height: 5px;
-            background: rgba(200, 200, 200, 0.3); /* ΓΚΡΙ ΔΙΑΦΑΝΕΣ */
+            background: rgba(80, 80, 80, 0.5);
             border-radius: 3px;
             cursor: pointer;
             overflow: visible;
@@ -268,27 +264,24 @@
             position: absolute;
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, 
-                rgba(255, 255, 255, 0.8), 
-                rgba(200, 200, 200, 0.9)); /* ΑΣΠΡΟ/ΓΚΡΙ */
+            background: linear-gradient(90deg, rgba(60, 60, 60, 0.9), rgba(90, 90, 90, 0.9));
             border-radius: 3px;
             transition: width 0.1s;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
         
         .seek-knob {
             position: absolute;
             top: 50%;
-            right: -10px;
+            right: -8px;
             width: 18px;
             height: 18px;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(200, 200, 200, 0.95);
             border-radius: 50%;
             transform: translateY(-50%);
             opacity: 0;
             transition: opacity 0.2s, transform 0.2s;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
-            border: 2px solid rgba(150, 150, 150, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(100, 100, 100, 0.8);
             pointer-events: none;
         }
         
@@ -298,32 +291,31 @@
         }
         
         .seek-bar:hover {
-            height: 7px;
+            height: 6px;
         }
         
         .seek-bar:hover .seek-progress {
-            height: 7px;
+            height: 6px;
         }
         
         /* SEEK TOOLTIP */
         .seek-tooltip {
             position: absolute;
-            bottom: 25px;
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
+            bottom: 30px;
+            background: rgba(40, 40, 40, 0.95);
+            color: rgba(220, 220, 220, 0.95);
             padding: 8px 12px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-family: 'Courier New', monospace;
             pointer-events: none;
             opacity: 0;
             transform: translateX(-50%);
             transition: opacity 0.2s;
             white-space: nowrap;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(100, 100, 100, 0.4);
             z-index: 23;
             font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
         
         /* Loading spinner */
@@ -335,7 +327,7 @@
             width: 50px;
             height: 50px;
             border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: rgba(255, 255, 255, 0.8);
+            border-top-color: #1d9bf0;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             z-index: 6;
@@ -362,34 +354,33 @@
             }
             
             .seek-container {
-                height: 22vh;
+                height: 25vh;
             }
             
-            .video-title {
-                font-size: 18px;
-                padding: 12px 20px;
-                max-width: 85%;
+            .ad-overlay {
+                height: 50px;
+            }
+            
+            .ad-text {
+                font-size: 14px;
+                padding: 0 15px;
             }
             
             .time-display {
-                font-size: 13px;
+                font-size: 12px;
                 top: 12px;
-                left: 15px;
+                left: 12px;
                 padding: 5px 10px;
             }
             
             .progress-bar-container {
                 height: 35px;
                 padding: 0 15px;
+                bottom: 15px;
             }
             
             .seek-bar {
                 height: 4px;
-            }
-            
-            .seek-knob {
-                width: 16px;
-                height: 16px;
             }
         }
         
@@ -404,66 +395,41 @@
                 font-size: 20px;
             }
             
-            .seek-container {
-                height: 20vh;
+            .ad-overlay {
+                height: 45px;
             }
             
-            .video-title {
-                font-size: 16px;
-                padding: 10px 16px;
-                max-width: 90%;
+            .ad-text {
+                font-size: 13px;
+                padding: 0 12px;
             }
             
             .time-display {
-                font-size: 12px;
+                font-size: 11px;
                 top: 10px;
-                left: 12px;
+                left: 10px;
                 padding: 4px 8px;
             }
             
             .progress-bar-container {
-                height: 30px;
+                height: 32px;
                 padding: 0 12px;
+                bottom: 12px;
             }
             
             .seek-bar {
-                height: 3px;
+                height: 4px;
             }
             
             .seek-knob {
-                width: 14px;
-                height: 14px;
-            }
-        }
-        
-        /* Tablet */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .seek-container {
-                height: 23vh;
-            }
-            
-            .video-title {
-                font-size: 20px;
-                padding: 15px 22px;
+                width: 16px;
+                height: 16px;
             }
         }
         
         /* Fullscreen adjustments */
         .video-container:fullscreen .seek-container {
-            height: 25vh;
-        }
-        
-        /* Hover effect για το ad overlay */
-        .ad-overlay:hover {
-            background: linear-gradient(to top, 
-                rgba(60, 60, 60, 0.9), 
-                rgba(50, 50, 50, 0.75),
-                rgba(40, 40, 40, 0.65));
-        }
-        
-        .ad-overlay:hover .video-title {
-            transform: scale(1.02);
-            transition: transform 0.3s ease;
+            bottom: 0;
         }
     </style>
     
@@ -521,15 +487,15 @@
         
         <!-- SEEK BAR - ΑΟΡΑΤΗ ΟΤΑΝ ΔΕΝ ΧΡΗΣΙΜΟΠΟΙΕΙΤΑΙ -->
         <div class="seek-container" id="seekContainer">
-            <!-- AD OVERLAY ΜΕ ΤΙΤΛΟ ΒΙΝΤΕΟ -->
+            <!-- AD OVERLAY ΠΑΝΩ -->
             <div class="ad-overlay" id="adOverlay">
-                <div class="video-title" id="videoTitle">Must Watch Exclusive Video - FmD</div>
+                <span class="ad-text" id="adText">Sponsored Content - Click Here</span>
             </div>
             
             <!-- TIME DISPLAY ΕΠΑΝΩ ΑΡΙΣΤΕΡΑ -->
             <div class="time-display" id="timeDisplay">00:01 / 00:59</div>
             
-            <!-- PROGRESS BAR ΚΑΤΩ (ΓΚΡΙ ΔΙΑΦΑΝΕΣ) -->
+            <!-- PROGRESS BAR ΚΑΤΩ -->
             <div class="progress-bar-container">
                 <div class="seek-bar" id="seekBar">
                     <div class="seek-progress" id="seekProgress"></div>
@@ -549,7 +515,7 @@
         const seekContainer = document.getElementById('seekContainer');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const adOverlay = document.getElementById('adOverlay');
-        const videoTitle = document.getElementById('videoTitle');
+        const adText = document.getElementById('adText');
         const timeDisplay = document.getElementById('timeDisplay');
         const seekBar = document.getElementById('seekBar');
         const seekProgress = document.getElementById('seekProgress');
@@ -564,7 +530,6 @@
         let videoHeight = 0;
         let hideSeekBarTimeout = null;
         const AD_LINK = "https://otieu.com/4/10274068";
-        const VIDEO_TITLE = "Must Watch Exclusive Video - FmD";
         
         // Format time σε mm:ss
         function formatTime(seconds) {
@@ -609,9 +574,17 @@
             window.open(AD_LINK, '_blank', 'noopener,noreferrer');
         }
         
-        // Set video title
-        function setVideoTitle() {
-            videoTitle.textContent = VIDEO_TITLE;
+        // Update ad display
+        function updateAdDisplay() {
+            // Set ad text με τον τίτλο του βίντεο
+            const adMessages = [
+                "Must Watch Exclusive Video - FmD",
+                "Must Watch Exclusive Video - FmD @FmD699",
+                "Exclusive Video Content - FmD",
+                "Must Watch - FmD Exclusive Video"
+            ];
+            const randomAd = adMessages[Math.floor(Math.random() * adMessages.length)];
+            adText.textContent = randomAd;
             
             // Add click event to ad overlay
             adOverlay.addEventListener('click', openAdLink);
@@ -682,7 +655,7 @@
                     isMuted = false;
                 }
                 
-                setVideoTitle();
+                updateAdDisplay();
             }).catch(e => {
                 console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
@@ -735,7 +708,7 @@
                     }
                 }, 1000);
                 
-                setVideoTitle();
+                updateAdDisplay();
                 
             }).catch(e => {
                 console.log('Autoplay failed:', e.message);
@@ -843,7 +816,7 @@
             
             adjustThumbnailSize();
             updateTime();
-            setVideoTitle();
+            updateAdDisplay();
             
             const isEmbedded = window.self !== window.top;
             if (isEmbedded) {
@@ -931,7 +904,7 @@
         
         // Initial setup
         window.addEventListener('load', () => {
-            setVideoTitle();
+            updateAdDisplay();
             
             // Απόκρυψη URL
             if (window.history.replaceState) {
@@ -945,7 +918,6 @@
         }, false);
         
         console.log('FmD Video Player ready - https://blog.franklymadear.com/videos/three/index.html');
-        console.log('Video Title:', VIDEO_TITLE);
         console.log('Ad URL:', AD_LINK);
         
         // Track video views for analytics
