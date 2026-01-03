@@ -77,12 +77,18 @@
             position: relative;
         }
 
-        .ad-frame {
+        /* Πλαίσιο για τη διαφήμιση */
+        #ad-display {
             width: 100%;
-            height: 300px;
+            min-height: 300px;
             border: none;
             border-radius: 8px;
-            background-color: #fff;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #666;
         }
 
         .ad-label {
@@ -252,8 +258,8 @@
                 font-size: 2.2em;
             }
             
-            .ad-frame {
-                height: 250px;
+            #ad-display {
+                min-height: 250px;
             }
         }
     </style>
@@ -266,8 +272,8 @@
         <div class="instructions">
             <p><strong>Οδηγίες συμμετοχής:</strong></p>
             <ol>
-                <li><span class="step">Βήμα 1:</span> Παρακαλώ <strong>επισκεφτείτε τη διαφήμιση</strong> παρακάτω. Αφιερώστε μερικά δευτερόλεπτα για να τη δείτε.</li>
-                <li><span class="step">Βήμα 2:</span> Αφού επισκεφτείτε τη διαφήμιση, πατήστε το κουμπί <strong>"Επαλήθευση Επισκόπησης"</strong>.</li>
+                <li><span class="step">Βήμα 1:</span> Παρακαλώ <strong>δείτε τη διαφήμιση</strong> παρακάτω. Αφιερώστε τουλάχιστον 5 δευτερόλεπτα για να τη δείτε πλήρως.</li>
+                <li><span class="step">Βήμα 2:</span> Αφού δείτε τη διαφήμιση, πατήστε το κουμπί <strong>"Επαλήθευση Επισκόπησης"</strong>.</li>
                 <li><span class="step">Βήμα 3:</span> Μόλις επιβεβαιωθεί η επισκόπηση, θα εμφανιστεί η φόρμα συμμετοχής για να εισάγετε το <strong>ψευδώνυμό σας</strong>.</li>
                 <li><span class="step">Βήμα 4:</span> Καταχωρίστε το ψευδώνυμό σας και πατήστε <strong>"Υποβολή Συμμετοχής"</strong>.</li>
             </ol>
@@ -275,8 +281,11 @@
         
         <div class="ad-container">
             <div class="ad-label">ΔΙΑΦΗΜΙΣΗ</div>
-            <!-- Εδώ φορτώνουμε τη σελίδα της διαφήμισης -->
-            <iframe src="https://otieu.com/4/10274068" class="ad-frame" id="adFrame" title="Διαφήμιση Διαγωνισμού"></iframe>
+            <!-- Εδώ θα φορτωθεί η διαφήμιση μέσω του script -->
+            <div id="ad-display">
+                <p>Η διαφήμιση φορτώνεται...</p>
+                <div id="ad-content"></div>
+            </div>
         </div>
         
         <button class="verify-btn" id="verifyBtn">✅ Επαλήθευση Επισκόπησης</button>
@@ -304,6 +313,9 @@
         Η λίστα συμμετεχόντων αποθηκεύεται μόνο στον browser σας. Για πραγματική κλήρωση, ο διοργανωτής θα λάβει τα δεδομένα διαφορετικά.
     </footer>
 
+    <!-- Το script για τη διαφήμιση -->
+    <script src="https://quge5.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Στοιχεία της σελίδας
@@ -313,47 +325,69 @@
             const entryForm = document.getElementById('entryForm');
             const nicknameInput = document.getElementById('nickname');
             const participantsList = document.getElementById('participants');
-            const adFrame = document.getElementById('adFrame');
+            const adDisplay = document.getElementById('ad-display');
             
             // Μεταβλητές κατάστασης
             let adVisited = false;
+            let adViewTimer = null;
+            let viewTime = 0;
+            const requiredViewTime = 5; // Απαιτούμενος χρόνος προβολής σε δευτερόλεπτα
             let participants = JSON.parse(localStorage.getItem('contestParticipants')) || [];
             
             // Εμφάνιση τρεχόντων συμμετεχόντων
             updateParticipantsList();
             
-            // Επαλήθευση αν ο χρήστης επισκέφτηκε τη διαφήμιση
-            verifyBtn.addEventListener('click', function() {
-                // Στην πραγματική εφαρμογή, εδώ θα υπήρχε πιο εξελιγμένος έλεγχος
-                // Για αυτό το παράδειγμα, απλώς ρωτάμε τον χρήστη
+            // Έλεγχος αν η διαφήμιση έχει φορτωθεί
+            setTimeout(checkAdLoaded, 2000);
+            
+            function checkAdLoaded() {
+                // Έλεγχος αν το script της διαφήμισης έχει δημιουργήσει περιεχόμενο
+                const adContent = document.querySelector('[data-zone="182432"]');
+                if (adContent && adContent.children.length > 0) {
+                    adDisplay.innerHTML = '<p>Η διαφήμιση εμφανίστηκε επιτυχώς. Παρακαλώ δείτε την για τουλάχιστον 5 δευτερόλεπτα.</p>';
+                    startAdViewTimer();
+                } else {
+                    adDisplay.innerHTML = '<p>Περιμένετε για τη φόρτωση της διαφήμισης...</p>';
+                    setTimeout(checkAdLoaded, 1000);
+                }
+            }
+            
+            // Χρονομέτρηση προβολής διαφήμισης
+            function startAdViewTimer() {
+                viewTime = 0;
+                if (adViewTimer) clearInterval(adViewTimer);
                 
-                // Προσομοίωση επιτυχούς επαλήθευσης
-                // Στην πραγματική εφαρμογή, θα μπορούσατε να ελέγξετε αν το iframe έχει φορτωθεί
-                // ή να χρησιμοποιήσετε τεχνικές cross-domain αν ο διαφημιστής το επιτρέπει
-                
-                // Προσομοίωση καθυστέρησης δικτύου
-                verifyBtn.disabled = true;
-                verifyBtn.textContent = 'Επαληθεύεται...';
-                
-                setTimeout(function() {
-                    // Σε ένα πραγματικό σενάριο, εδώ θα υπήρχε έλεγχος με το iframe
-                    // αλλά λόγω περιορισμών ασφαλείας (cross-origin), αυτό δεν είναι πάντα δυνατό
-                    
-                    // Εναλλακτική λύση: ζητάμε από τον χρήστη επιβεβαίωση
-                    const userConfirmed = confirm("Έχετε επισκεφτεί πραγματικά τη διαφήμιση παραπάνω;");
-                    
-                    if (userConfirmed) {
-                        adVisited = true;
-                        showStatus("Επιτυχής επαλήθευση! Μπορείτε τώρα να συμμετάσχετε.", "success");
-                        formContainer.style.display = 'block';
-                        verifyBtn.style.display = 'none';
-                    } else {
-                        showStatus("Παρακαλώ επισκεφτείτε τη διαφήμιση πριν συνεχίσετε.", "error");
+                adViewTimer = setInterval(function() {
+                    viewTime++;
+                    if (viewTime >= requiredViewTime) {
+                        clearInterval(adViewTimer);
+                        // Αυτόματη επαλήθευση όταν φτάσει ο απαιτούμενος χρόνος
+                        autoVerifyAdView();
                     }
-                    
-                    verifyBtn.disabled = false;
-                    verifyBtn.textContent = '✅ Επαλήθευση Επισκόπησης';
-                }, 800);
+                }, 1000);
+            }
+            
+            // Αυτόματη επαλήθευση όταν ο χρήστης βλέπει τη διαφήμιση αρκετό χρόνο
+            function autoVerifyAdView() {
+                if (!adVisited) {
+                    adVisited = true;
+                    showStatus(`Επιτυχής προβολή διαφήμισης (${requiredViewTime} δευτερόλεπτα)! Μπορείτε τώρα να συμμετάσχετε.`, "success");
+                    formContainer.style.display = 'block';
+                    verifyBtn.style.display = 'none';
+                }
+            }
+            
+            // Χειροκίνητη επαλήθευση (για χρήστες που δεν θέλουν να περιμένουν)
+            verifyBtn.addEventListener('click', function() {
+                if (viewTime < requiredViewTime) {
+                    showStatus(`Παρακαλώ δείτε τη διαφήμιση για τουλάχιστον ${requiredViewTime} δευτερόλεπτα. Έχετε δει ${viewTime}.`, "error");
+                    return;
+                }
+                
+                adVisited = true;
+                showStatus("Επιτυχής επαλήθευση! Μπορείτε τώρα να συμμετάσχετε.", "success");
+                formContainer.style.display = 'block';
+                verifyBtn.style.display = 'none';
             });
             
             // Υποβολή ψευδωνύμου
@@ -377,11 +411,18 @@
                     return;
                 }
                 
+                // Έλεγχος για διπλόψηφα ψευδώνυμα
+                if (participants.some(p => p.nickname.toLowerCase() === nickname.toLowerCase())) {
+                    showStatus("Αυτό το ψευδώνυμο έχει ήδη χρησιμοποιηθεί. Παρακαλώ διαλέξτε ένα άλλο.", "error");
+                    return;
+                }
+                
                 // Προσθήκη νέου συμμετέχοντα
                 const newParticipant = {
                     id: Date.now(), // Απλή τεχνική για μοναδικό ID
                     nickname: nickname,
-                    timestamp: new Date().toLocaleString('el-GR')
+                    timestamp: new Date().toLocaleString('el-GR'),
+                    viewTime: viewTime // Αποθήκευση χρόνου προβολής διαφήμισης
                 };
                 
                 participants.push(newParticipant);
@@ -429,10 +470,15 @@
                 sortedParticipants.forEach(participant => {
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        <span>${participant.nickname}</span>
+                        <div style="flex-grow: 1;">
+                            <strong>${participant.nickname}</strong>
+                            <div style="font-size:0.85em; color:#666; margin-top:3px;">
+                                Εγγράφηκε: ${participant.timestamp}
+                                ${participant.viewTime ? ` | Προβολή: ${participant.viewTime} δευτ.` : ''}
+                            </div>
+                        </div>
                         <div>
                             <span class="participant-id">ID: ${participant.id.toString().slice(-6)}</span>
-                            <span style="font-size:0.9em; color:#777; margin-left:10px;">${participant.timestamp}</span>
                         </div>
                     `;
                     participantsList.appendChild(li);
@@ -441,7 +487,6 @@
             
             // Προσομοίωση κιμωλίας για εορτασμό
             function triggerConfetti() {
-                // Απλή CSS κιμωλία
                 const colors = ['#6a11cb', '#2575fc', '#00b09b', '#96c93d', '#ff9966', '#ff5e62'];
                 
                 for (let i = 0; i < 50; i++) {
@@ -457,7 +502,6 @@
                     confetti.style.zIndex = '9999';
                     confetti.style.pointerEvents = 'none';
                     
-                    // Τυχαίες ιδιότητες κίνησης
                     const angle = Math.random() * Math.PI * 2;
                     const velocity = 15 + Math.random() * 10;
                     const vx = Math.cos(angle) * velocity;
@@ -465,7 +509,6 @@
                     
                     document.body.appendChild(confetti);
                     
-                    // Κίνηση κιμωλίας
                     let posX = 50;
                     let posY = 50;
                     let opacity = 0.9;
@@ -473,7 +516,7 @@
                     const moveConfetti = setInterval(() => {
                         posX += vx;
                         posY += vy;
-                        vy += 0.5; // Βαρύτητα
+                        vy += 0.5;
                         opacity -= 0.02;
                         
                         confetti.style.left = posX + '%';
@@ -486,29 +529,6 @@
                         }
                     }, 30);
                 }
-            }
-            
-            // Προσπάθεια ανίχνευσης εάν ο χρήστης έχει δει τη διαφήμιση
-            // Σημείωση: Λόγω περιορισμών ασφαλείας των browsers, δεν μπορούμε να ελέγξουμε
-            // απευθείας αν ο χρήστης έχει κάνει κλικ ή έχει δει το περιεχόμενο ενός iframe
-            // από διαφορετικό domain. Αυτή είναι μια τεχνική που μπορεί να λειτουργήσει 
-            // μερικές φορές, αλλά δεν είναι αξιόπιστη.
-            
-            // Προσθήκη event listener για εάν το iframe φορτωθεί
-            adFrame.addEventListener('load', function() {
-                // Αυτό σημαίνει ότι το iframe φορτώθηκε, όχι απαραίτητα ότι ο χρήστης το είδε
-                console.log("Το iframe της διαφήμισης φορτώθηκε.");
-            });
-            
-            // Προσπάθεια ανίχνευσης κλικ στο iframe (δεν λειτουργεί cross-domain)
-            try {
-                adFrame.contentWindow.addEventListener('click', function() {
-                    console.log("Κλικ στο iframe ανιχνεύτηκε");
-                    adVisited = true;
-                });
-            } catch (e) {
-                // Αυτό θα αποτύχει λόγω πολιτικής ασφαλείας του ίδιου προέλευσης (same-origin policy)
-                console.log("Δεν είναι δυνατή η παρακολούθηση κλικ στο iframe λόγω περιορισμών ασφαλείας.");
             }
         });
     </script>
