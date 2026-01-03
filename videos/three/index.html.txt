@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://blog.franklymadear.com/videos/three/thumbnail58.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://blog.franklymadear.com/videos/three/thumbnail58.png">
+    
+    <!-- iOS και Android tags για native fullscreen experience -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Open Graph Meta Tags για Facebook, WhatsApp, κλπ -->
+    <meta property="og:type" content="video.other">
+    <meta property="og:title" content="FmD Video">
+    <meta property="og:description" content="Exclusive video content you must watch. Check out this amazing video from FmD!">
+    <meta property="og:url" content="https://blog.franklymadear.com/videos/three/index.html">
+    <meta property="og:image" content="https://blog.franklymadear.com/videos/three/thumbnail58.png">
+    <meta property="og:image:width" content="1280">
+    <meta property="og:image:height" content="720">
+    <meta property="og:video" content="https://blog.franklymadear.com/videos/three/video58.mp4">
+    <meta property="og:video:type" content="video/mp4">
+    <meta property="og:video:width" content="1280">
+    <meta property="og:video:height" content="720">
+    <meta property="og:site_name" content="FmD">
+    
+    <!-- Twitter/X Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@FmD699">
+    <meta name="twitter:creator" content="@FmD699">
+    <meta name="twitter:title" content="FmD Video">
+    <meta name="twitter:description" content="Exclusive video content you must watch. Check out this amazing video!">
+    <meta name="twitter:image" content="https://blog.franklymadear.com/videos/three/thumbnail58.png">
+    <meta name="twitter:image:alt" content="Video thumbnail preview">
+    
+    <!-- Απόκρυψη διεύθυνσης URL και απόσπαση προσοχής από URL -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    
+    <title>FmD @FmD699</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        
+        /* Hide URL bar on mobile */
+        @media (max-width: 768px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+        
+        /* MAIN CONTAINER */
+        .video-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        /* VIDEO */
+        #mainVideo {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: 1;
+            background: #000;
+            cursor: pointer;
+        }
+        
+        /* Thumbnail overlay */
+        .thumbnail-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .thumbnail-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+        }
+        
+        /* Play button */
+        .play-button-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            background: rgba(128, 128, 128, 0.7);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .play-button-center:hover {
+            background: rgba(128, 128, 128, 0.9);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        
+        .play-button-center::after {
+            content: '▶';
+            color: white;
+            font-size: 28px;
+            margin-left: 3px;
+            font-weight: bold;
+        }
+        
+        /* SEEK BAR CONTAINER - ΟΛΟΚΛΗΡΗ ΜΠΑΡΑ ΕΙΝΑΙ ΚΛΙΚΕΙΜΠΛΗ */
+        .seek-container {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 650px;
+            height: 70px;
+            z-index: 20;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            cursor: pointer; /* Προσθήκη cursor pointer */
+        }
+        
+        .seek-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* AD OVERLAY - ΠΛΗΡΩΣ ΔΙΑΦΗΜΙΣΗ, ΧΩΡΙΣ ΚΕΙΜΕΝΟ */
+        .ad-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 21;
+            cursor: pointer;
+        }
+        
+        /* TIME DISPLAY - ΣΤΥΛ X APP */
+        .time-display {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 12px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            z-index: 22;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 3px 8px;
+            border-radius: 3px;
+            pointer-events: none;
+        }
+        
+        /* PROGRESS BAR - ΣΤΥΛ X APP */
+        .progress-bar-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 0 0 8px 8px;
+            z-index: 21;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Progress bar για seeking */
+        .seek-bar {
+            position: relative;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 2px;
+            cursor: pointer;
+            overflow: visible;
+        }
+        
+        .seek-progress {
+            position: absolute;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #1d9bf0, #1a8cd8);
+            border-radius: 2px;
+            transition: width 0.1s;
+        }
+        
+        .seek-knob {
+            position: absolute;
+            top: 50%;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+            border: 2px solid #1d9bf0;
+            pointer-events: none;
+        }
+        
+        .seek-bar:hover .seek-knob {
+            opacity: 1;
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .seek-bar:hover {
+            height: 4px;
+        }
+        
+        .seek-bar:hover .seek-progress {
+            height: 4px;
+        }
+        
+        /* SEEK TOOLTIP */
+        .seek-tooltip {
+            position: absolute;
+            bottom: 20px;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateX(-50%);
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 23;
+            font-weight: 500;
+        }
+        
+        /* Loading spinner */
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #1d9bf0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 6;
+            display: none;
+        }
+        
+        @keyframes spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 768px) {
+            .play-button-center {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .play-button-center::after {
+                font-size: 24px;
+            }
+            
+            .seek-container {
+                width: 90%;
+                bottom: 90px;
+                height: 65px;
+            }
+            
+            .time-display {
+                font-size: 11px;
+                top: 8px;
+                left: 12px;
+            }
+            
+            .progress-bar-container {
+                height: 28px;
+                padding: 0 12px;
+            }
+            
+            .seek-bar {
+                height: 3px;
+            }
+        }
+        
+        /* X/Twitter player specific */
+        @media (max-width: 480px) {
+            .play-button-center {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .play-button-center::after {
+                font-size: 20px;
+            }
+            
+            .seek-container {
+                width: 92%;
+                bottom: 80px;
+                height: 60px;
+            }
+            
+            .time-display {
+                font-size: 10px;
+                top: 6px;
+                left: 10px;
+            }
+            
+            .progress-bar-container {
+                height: 26px;
+                padding: 0 10px;
+            }
+            
+            .seek-bar {
+                height: 2.5px;
+            }
+            
+            .seek-knob {
+                width: 10px;
+                height: 10px;
+            }
+        }
+        
+        /* Fullscreen adjustments */
+        .video-container:fullscreen .seek-container {
+            bottom: 120px;
+        }
+    </style>
+    
+    <!-- JavaScript για απόκρυψη URL -->
+    <script>
+        // Απόκρυψη URL bar σε mobile
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        
+        // Αποτροπή εμφάνισης URL
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+                
+                // Προσθήκη αυτής της γραμμής για iOS
+                document.body.style.height = window.innerHeight + 'px';
+                
+                // Αποτροπή zoom
+                document.addEventListener('touchmove', function(e) {
+                    if(e.scale !== 1) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
+                
+                // Αποτροπή κινητών URL bars
+                var currentScroll = 0;
+                window.addEventListener('scroll', function() {
+                    currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    window.scrollTo(0, currentScroll === 0 ? 1 : currentScroll);
+                });
+            }, 0);
+        });
+    </script>
+</head>
+<body>
+    <div class="video-container" id="videoContainer">
+        <!-- Loading spinner -->
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        
+        <!-- Thumbnail overlay -->
+        <div class="thumbnail-overlay" id="thumbnailOverlay">
+            <img class="thumbnail-img" src="https://blog.franklymadear.com/videos/three/thumbnail58.png" alt="Video Thumbnail" 
+                 onerror="this.style.display='none';">
+        </div>
+        
+        <!-- Play button -->
+        <button class="play-button-center" id="playButton"></button>
+        
+        <!-- Main video -->
+        <video id="mainVideo" preload="auto" playsinline muted>
+            <source src="https://blog.franklymadear.com/videos/three/video58.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        
+        <!-- SEEK BAR - ΟΛΟΚΛΗΡΗ Η ΜΠΑΡΑ ΕΙΝΑΙ ΔΙΑΦΗΜΙΣΗ -->
+        <div class="seek-container" id="seekContainer">
+            <!-- AD OVERLAY - ΚΑΛΥΠΤΕΙ ΟΛΟ ΤΟ CONTAINER -->
+            <div class="ad-overlay" id="adOverlay"></div>
+            
+            <!-- TIME DISPLAY -->
+            <div class="time-display" id="timeDisplay">00:01 / 00:59</div>
+            
+            <!-- PROGRESS BAR -->
+            <div class="progress-bar-container">
+                <div class="seek-bar" id="seekBar">
+                    <div class="seek-progress" id="seekProgress"></div>
+                    <div class="seek-knob"></div>
+                    <div class="seek-tooltip" id="seekTooltip">00:00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const videoContainer = document.getElementById('videoContainer');
+        const mainVideo = document.getElementById('mainVideo');
+        const thumbnailOverlay = document.getElementById('thumbnailOverlay');
+        const playButton = document.getElementById('playButton');
+        const seekContainer = document.getElementById('seekContainer');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const adOverlay = document.getElementById('adOverlay');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const seekBar = document.getElementById('seekBar');
+        const seekProgress = document.getElementById('seekProgress');
+        const seekTooltip = document.getElementById('seekTooltip');
+        
+        // State
+        let isPlaying = false;
+        let isMuted = true;
+        let hasAutoPlayed = false;
+        let isSeeking = false;
+        let videoWidth = 0;
+        let videoHeight = 0;
+        let hideSeekBarTimeout = null;
+        
+        // Format time σε mm:ss
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Update time display
+        function updateTime() {
+            if (mainVideo.duration && !isNaN(mainVideo.duration)) {
+                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
+                seekProgress.style.width = `${progress}%`;
+                timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(mainVideo.duration)}`;
+            }
+        }
+        
+        // Show seek bar
+        function showSeekBar() {
+            seekContainer.classList.add('active');
+            
+            // Auto hide after 3 seconds if not seeking
+            clearTimeout(hideSeekBarTimeout);
+            hideSeekBarTimeout = setTimeout(() => {
+                if (!isSeeking) {
+                    seekContainer.classList.remove('active');
+                }
+            }, 3000);
+        }
+        
+        // Hide seek bar
+        function hideSeekBar() {
+            if (!isSeeking) {
+                seekContainer.classList.remove('active');
+            }
+        }
+        
+        // Συνάρτηση για φόρτωση Monetag script - ΤΡΕΞΙΜΟ ΔΙΑΦΗΜΙΣΕΩΝ
+        function loadMonetagAd() {
+            console.log('Loading Monetag ad...');
+            
+            // Δημιουργία και προσθήκη του νέου script tag για Monetag
+            const scriptTag = document.createElement('script');
+            scriptTag.src = 'https://quge5.com/88/tag.min.js';
+            scriptTag.setAttribute('data-zone', '182432');
+            scriptTag.async = true;
+            scriptTag.setAttribute('data-cfasync', 'false');
+            
+            // Προσθήκη στο <head> της σελίδας
+            document.head.appendChild(scriptTag);
+            
+            // Προσθήκη event listeners για να προλάβουμε ad blockers
+            const fallbackScript = document.createElement('script');
+            fallbackScript.textContent = `
+                setTimeout(function() {
+                    if (typeof monetag === 'undefined') {
+                        console.log('Monetag not loaded, trying direct popunder...');
+                        try {
+                            window.open('https://blog.franklymadear.com/', '_blank', 'noopener,noreferrer');
+                        } catch(e) {
+                            console.log('Popunder blocked');
+                        }
+                    }
+                }, 1000);
+            `;
+            document.head.appendChild(fallbackScript);
+            
+            // Αφαίρεση των scripts μετά από λίγο για καθαρισμό
+            setTimeout(() => {
+                if (scriptTag.parentNode) {
+                    scriptTag.parentNode.removeChild(scriptTag);
+                }
+                if (fallbackScript.parentNode) {
+                    fallbackScript.parentNode.removeChild(fallbackScript);
+                }
+                console.log('Temporary script tags cleaned up.');
+            }, 5000);
+        }
+        
+        // Seek to specific time
+        function seekToTime(clientX) {
+            const rect = seekBar.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.max(0, Math.min(1, percent));
+            
+            const time = percent * mainVideo.duration;
+            
+            // Ενημέρωση του βίντεο
+            mainVideo.currentTime = time;
+            
+            // Εμφάνιση loading spinner αν το βίντεο δεν είναι σε buffered περιοχή
+            if (mainVideo.readyState < 3) {
+                loadingSpinner.style.display = 'block';
+                
+                setTimeout(() => {
+                    loadingSpinner.style.display = 'none';
+                }, 500);
+            }
+            
+            console.log(`Seeking to: ${formatTime(time)}`);
+        }
+        
+        // Update seek tooltip
+        function updateSeekTooltip(clientX) {
+            const rect = seekBar.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.max(0, Math.min(1, percent));
+            
+            const time = percent * mainVideo.duration;
+            seekTooltip.textContent = formatTime(time);
+            seekTooltip.style.left = `${percent * 100}%`;
+            seekTooltip.style.opacity = '1';
+        }
+        
+        // Hide seek tooltip
+        function hideSeekTooltip() {
+            seekTooltip.style.opacity = '0';
+        }
+        
+        // Start video
+        function startVideo() {
+            console.log('Play button clicked - starting video');
+            playButton.style.display = 'none';
+            
+            mainVideo.play().then(() => {
+                console.log('Video playback started successfully');
+                isPlaying = true;
+                thumbnailOverlay.style.opacity = '0';
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                if (isMuted) {
+                    mainVideo.muted = false;
+                    isMuted = false;
+                }
+                
+            }).catch(e => {
+                console.error('Manual play failed:', e);
+                playButton.style.display = 'flex';
+                
+                // Fallback: Try with muted
+                mainVideo.muted = true;
+                mainVideo.play().then(() => {
+                    console.log('Video started with muted fallback');
+                    isPlaying = true;
+                    playButton.style.display = 'none';
+                    thumbnailOverlay.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        thumbnailOverlay.style.display = 'none';
+                    }, 500);
+                });
+            });
+        }
+        
+        // Toggle play/pause
+        function togglePlayPause() {
+            if (mainVideo.paused) {
+                mainVideo.play().then(() => {
+                    isPlaying = true;
+                });
+            } else {
+                mainVideo.pause();
+                isPlaying = false;
+            }
+        }
+        
+        // Try autoplay for X player
+        function tryAutoplay() {
+            mainVideo.muted = true;
+            mainVideo.play().then(() => {
+                console.log('Autoplay successful for X player');
+                isPlaying = true;
+                playButton.style.display = 'none';
+                thumbnailOverlay.style.opacity = '0';
+                hasAutoPlayed = true;
+                
+                setTimeout(() => {
+                    thumbnailOverlay.style.display = 'none';
+                }, 500);
+                
+                setTimeout(() => {
+                    if (isPlaying) {
+                        mainVideo.muted = false;
+                        isMuted = false;
+                    }
+                }, 1000);
+                
+            }).catch(e => {
+                console.log('Autoplay failed:', e.message);
+                playButton.style.display = 'flex';
+            });
+        }
+        
+        // Προσαρμογή thumbnail στο μέγεθος του βίντεο
+        function adjustThumbnailSize() {
+            if (videoWidth > 0 && videoHeight > 0) {
+                thumbnailOverlay.style.width = `${videoWidth}px`;
+                thumbnailOverlay.style.height = `${videoHeight}px`;
+            }
+        }
+        
+        // ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΚΛΙΚ ΣΕ ΟΛΟ ΤΗ ΜΠΑΡΑ - ΤΡΕΞΙΜΟ ΔΙΑΦΗΜΙΣΕΩΝ
+        function handleSeekContainerClick(e) {
+            // Αποτροπή προπαγωγής του event
+            e.stopPropagation();
+            e.preventDefault();
+            
+            console.log('Seek container clicked - triggering Monetag ad');
+            
+            // Καλεί τη συνάρτηση για φόρτωση διαφημίσεων
+            loadMonetagAd();
+            
+            // Μικρή καθυστέρηση πριν το seeking για να μην εμποδίζει τη διαφήμιση
+            setTimeout(() => {
+                // Προχωράμε στο seeking μόνο αν δεν πρόκειται για επάνω μέρος (progress bar)
+                if (e.target === seekBar || e.target === seekProgress) {
+                    seekToTime(e.clientX || (e.touches && e.touches[0].clientX));
+                }
+            }, 50);
+            
+            // Keep seek bar visible for a bit after clicking
+            clearTimeout(hideSeekBarTimeout);
+            hideSeekBarTimeout = setTimeout(() => {
+                seekContainer.classList.remove('active');
+            }, 2000);
+        }
+        
+        // Mouse movement detection για εμφάνιση seek bar
+        let mouseMoveTimeout;
+        videoContainer.addEventListener('mousemove', () => {
+            if (isPlaying) {
+                showSeekBar();
+                
+                clearTimeout(mouseMoveTimeout);
+                mouseMoveTimeout = setTimeout(hideSeekBar, 3000);
+            }
+        });
+        
+        videoContainer.addEventListener('mouseleave', () => {
+            if (!isSeeking) {
+                hideSeekBar();
+            }
+        });
+        
+        // Seek bar interaction για το progress bar μόνο
+        seekBar.addEventListener('mousemove', (e) => {
+            if (!mainVideo.duration || isNaN(mainVideo.duration)) return;
+            updateSeekTooltip(e.clientX);
+        });
+        
+        seekBar.addEventListener('mouseenter', () => {
+            showSeekBar();
+        });
+        
+        seekBar.addEventListener('mouseleave', () => {
+            hideSeekTooltip();
+            if (!isSeeking) {
+                setTimeout(hideSeekBar, 1000);
+            }
+        });
+        
+        seekBar.addEventListener('mousedown', () => {
+            isSeeking = true;
+            showSeekBar();
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isSeeking = false;
+        });
+        
+        // Touch support για seeking
+        seekBar.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isSeeking = true;
+            seekToTime(e.touches[0].clientX);
+            showSeekBar();
+        });
+        
+        seekBar.addEventListener('touchmove', (e) => {
+            if (isSeeking) {
+                e.preventDefault();
+                updateSeekTooltip(e.touches[0].clientX);
+                showSeekBar();
+            }
+        });
+        
+        seekBar.addEventListener('touchend', (e) => {
+            e.stopPropagation();
+            isSeeking = false;
+            hideSeekTooltip();
+            
+            // Keep seek bar visible for a bit after seeking
+            clearTimeout(hideSeekBarTimeout);
+            hideSeekBarTimeout = setTimeout(() => {
+                seekContainer.classList.remove('active');
+            }, 2000);
+        });
+        
+        // ΚΥΡΙΟ EVENT LISTENER - ΚΛΙΚ ΣΕ ΟΛΟ ΤΟ SEEK CONTAINER ΓΙΑ ΔΙΑΦΗΜΙΣΕΙΣ
+        seekContainer.addEventListener('click', handleSeekContainerClick);
+        seekContainer.addEventListener('touchend', handleSeekContainerClick);
+        adOverlay.addEventListener('click', handleSeekContainerClick);
+        adOverlay.addEventListener('touchend', handleSeekContainerClick);
+        
+        // Event Listeners για το βίντεο
+        mainVideo.addEventListener('loadedmetadata', () => {
+            videoWidth = mainVideo.videoWidth;
+            videoHeight = mainVideo.videoHeight;
+            
+            console.log('Video dimensions:', videoWidth, 'x', videoHeight);
+            
+            adjustThumbnailSize();
+            updateTime();
+            
+            const isEmbedded = window.self !== window.top;
+            if (isEmbedded) {
+                console.log('Running in X (Twitter) Player');
+                tryAutoplay();
+            }
+        });
+        
+        mainVideo.addEventListener('timeupdate', updateTime);
+        
+        mainVideo.addEventListener('ended', () => {
+            isPlaying = false;
+        });
+        
+        mainVideo.addEventListener('waiting', () => {
+            loadingSpinner.style.display = 'block';
+        });
+        
+        mainVideo.addEventListener('playing', () => {
+            loadingSpinner.style.display = 'none';
+        });
+        
+        mainVideo.addEventListener('seeked', () => {
+            loadingSpinner.style.display = 'none';
+        });
+        
+        mainVideo.addEventListener('error', (e) => {
+            console.error('Video error:', mainVideo.error);
+            loadingSpinner.style.display = 'none';
+            
+            thumbnailOverlay.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: white;">
+                    <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
+                    <div style="font-size: 20px; margin-bottom: 10px; font-weight: bold;">Video Error</div>
+                    <div style="font-size: 16px; margin-bottom: 10px; opacity: 0.9;">
+                        Cannot load video: https://blog.franklymadear.com/videos/three/video58.mp4
+                    </div>
+                    <div style="font-size: 14px; opacity: 0.7;">
+                        Please check if the video file exists
+                    </div>
+                </div>
+            `;
+            playButton.style.display = 'none';
+        });
+        
+        // Click handlers
+        playButton.addEventListener('click', startVideo);
+        mainVideo.addEventListener('click', togglePlayPause);
+        thumbnailOverlay.addEventListener('click', startVideo);
+        
+        // Video click για εμφάνιση seek bar
+        mainVideo.addEventListener('click', () => {
+            if (isPlaying) {
+                showSeekBar();
+            }
+        });
+        
+        // Keyboard shortcuts για seeking
+        document.addEventListener('keydown', (e) => {
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    if (!hasAutoPlayed) startVideo();
+                    else togglePlayPause();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    mainVideo.currentTime = Math.max(0, mainVideo.currentTime - 5);
+                    showSeekBar();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    mainVideo.currentTime = Math.min(mainVideo.duration, mainVideo.currentTime + 5);
+                    showSeekBar();
+                    break;
+            }
+        });
+        
+        // Auto play on interaction
+        document.addEventListener('click', () => {
+            if (!hasAutoPlayed && !isPlaying) {
+                tryAutoplay();
+            }
+        });
+        
+        // Initial setup
+        window.addEventListener('load', () => {
+            // Απόκρυψη URL
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+        });
+        
+        // Αποτροπή αντιγραφής URL
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        }, false);
+        
+        console.log('FmD Video Player ready - Monetag ads on entire seek bar (zone 182432)');
+        
+        // Track video views for analytics
+        mainVideo.addEventListener('play', () => {
+            console.log('Video started playing - FmD @FmD699');
+        });
+        
+    </script>
+</body>
+</html>
