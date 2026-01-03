@@ -610,16 +610,29 @@
             <div id="adminControls" style="display: none;">
                 <h3 style="color: var(--dark); margin-bottom: 12px; text-align: center; font-size: clamp(1.1rem, 3.5vw, 1.2rem);">🎮 ΚΕΝΤΡΙΚΟΣ ΠΑΝΕΛΑΣΤΗΣ</h3>
                 
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
                     <button class="btn btn-primary" id="drawWinners">
                         🎲 ΚΛΗΡΩΣΗ ΝΙΚΗΤΩΝ
                     </button>
-                    <button class="btn btn-success" id="exportData">
-                        💾 ΕΞΑΓΩΓΗ ΣΤΟΙΧΕΙΩΝ
+                    <button class="btn btn-success" id="refreshStats">
+                        🔄 ΑΝΑΝΕΩΣΗ
+                    </button>
+                    <button class="btn btn-danger" id="resetStats">
+                        🗑️ ΜΗΔΕΝΙΣΜΟΣ
                     </button>
                     <button class="btn" id="adminLogout" style="background: #6c757d; color: white;">
-                        🚪 ΕΞΟΔΟΣ ΣΥΣΤΗΜΑΤΟΣ
+                        🚪 ΕΞΟΔΟΣ
                     </button>
+                </div>
+
+                <!-- Participants Management -->
+                <div id="participantsManagement" style="margin-top: 15px;">
+                    <h4 style="color: var(--dark); margin-bottom: 10px; text-align: center; font-size: 1rem;">📋 ΔΙΑΧΕΙΡΙΣΗ ΕΠΙΣΚΕΠΤΩΝ</h4>
+                    <div style="max-height: 200px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                        <div id="adminParticipantsList">
+                            <!-- Participants list for admin -->
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Winners Management -->
@@ -1115,6 +1128,7 @@
 
         // ========== ΔΙΑΧΕΙΡΙΣΤΗΣ ==========
         function setupEventListeners() {
+            // Σύνδεση διαχειριστή
             document.getElementById('adminLogin').addEventListener('click', () => {
                 const username = document.getElementById('adminUsername').value;
                 const password = document.getElementById('adminPassword').value;
@@ -1124,12 +1138,14 @@
                     document.getElementById('loginForm').style.display = 'none';
                     document.getElementById('adminControls').style.display = 'block';
                     document.getElementById('spinWheel').disabled = false;
+                    loadAdminParticipants();
                     showMessage('success', '✅ Συνδεθήκατε ως διαχειριστής!');
                 } else {
                     showMessage('error', '❌ Λάθος στοιχεία πρόσβασης');
                 }
             });
             
+            // Κλήρωση νικητών
             document.getElementById('drawWinners').addEventListener('click', () => {
                 if (!isAdmin) return;
                 if (participants.length < 2) {
@@ -1164,43 +1180,111 @@
                 showMessage('success', '✅ Επιλέχθηκαν οι 2 νικητές!');
             });
             
-            document.getElementById('exportData').addEventListener('click', () => {
+            // Ανανέωση στατιστικών
+            document.getElementById('refreshStats').addEventListener('click', () => {
                 if (!isAdmin) return;
-                
-                let csv = 'ID,Ψευδώνυμο,Email,Συμμετοχές,Συνολικά Κλικ,Ημερομηνία,Ώρα,Σχόλιο\n';
-                participants.forEach(p => {
-                    csv += `${p.id},"${p.nickname}","${p.email}",${p.entries},${p.clicks},${p.date},${p.timestamp.split(' ')[1]},"${p.comment || ''}"\n`;
-                });
-                
-                if (winners.length > 0) {
-                    csv += '\n\nΝΙΚΗΤΕΣ\nΘέση,Ψευδώνυμο,Email,Βραβείο,Ημερομηνία,Πληρωμένο\n';
-                    winners.forEach(w => {
-                        csv += `${w.position},"${w.nickname}","${w.email}","${w.prize}",${w.winDate},${w.paid ? 'ΝΑΙ' : 'ΟΧΙ'}\n`;
-                    });
-                }
-                
-                const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `διαγωνισμος_${new Date().toISOString().split('T')[0]}.csv`;
-                link.click();
-                showMessage('success', '✅ Τα δεδομένα εξήχθησαν!');
+                updateDisplay();
+                showMessage('success', '✅ Τα στατιστικά ανανεώθηκαν!');
             });
             
+            // Μηδενισμός στατιστικών
+            document.getElementById('resetStats').addEventListener('click', () => {
+                if (!isAdmin) return;
+                
+                if (confirm('⚠️ Είστε σίγουρος ότι θέλετε να μηδενίσετε όλα τα στατιστικά;\nΑυτή η ενέργεια δεν μπορεί να αναιρεθεί!')) {
+                    totalClicks = 0;
+                    totalParticipants = 0;
+                    participants = [];
+                    winners = [];
+                    userClicks = 0;
+                    
+                    localStorage.removeItem('totalClicks');
+                    localStorage.removeItem('totalParticipants');
+                    localStorage.removeItem('participants');
+                    localStorage.removeItem('winners');
+                    localStorage.removeItem(`userClicks_${userSessionId}`);
+                    
+                    updateDisplay();
+                    generateWheel();
+                    loadWinners();
+                    loadAdminParticipants();
+                    showMessage('success', '✅ Όλα τα στατιστικά μηδενίστηκαν!');
+                }
+            });
+            
+            // Αποσύνδεση διαχειριστή
             document.getElementById('adminLogout').addEventListener('click', () => {
                 isAdmin = false;
                 document.getElementById('spinWheel').disabled = true;
                 document.getElementById('adminModal').style.display = 'none';
+                document.getElementById('adminUsername').value = '';
+                document.getElementById('adminPassword').value = '';
                 showMessage('info', 'Αποσυνδεθήκατε από το σύστημα');
             });
             
+            // Κλείσιμο modal
             document.getElementById('adminClose').addEventListener('click', () => {
                 document.getElementById('adminModal').style.display = 'none';
+                document.getElementById('adminUsername').value = '';
+                document.getElementById('adminPassword').value = '';
             });
             
+            // Άνοιγμα modal
             document.getElementById('adminToggle').addEventListener('click', () => {
                 document.getElementById('adminModal').style.display = 'flex';
             });
+            
+            // Διαγραφή συμμετεχόντων
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('delete-participant')) {
+                    if (!isAdmin) return;
+                    
+                    const email = e.target.dataset.email;
+                    const index = participants.findIndex(p => p.email === email);
+                    
+                    if (index !== -1) {
+                        if (confirm(`Θέλετε να διαγράψετε τον/την ${participants[index].nickname};`)) {
+                            participants.splice(index, 1);
+                            localStorage.setItem('participants', JSON.stringify(participants));
+                            totalParticipants = participants.length;
+                            localStorage.setItem('totalParticipants', totalParticipants);
+                            
+                            loadParticipants();
+                            loadAdminParticipants();
+                            generateWheel();
+                            showMessage('success', '✅ Ο συμμετέχων διαγράφηκε!');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Φόρτωση συμμετεχόντων για διαχειριστή
+        function loadAdminParticipants() {
+            const container = document.getElementById('adminParticipantsList');
+            
+            if (participants.length === 0) {
+                container.innerHTML = '<p style="color:#666;text-align:center;font-size:0.9rem;padding:10px;">Δεν υπάρχουν συμμετέχοντες</p>';
+                return;
+            }
+            
+            container.innerHTML = participants.map(p => `
+                <div style="display: flex; justify-content: space-between; align-items: center; background: white; padding: 8px; margin-bottom: 6px; border-radius: 6px; border-left: 4px solid var(--secondary);">
+                    <div style="flex-grow: 1;">
+                        <strong style="color: var(--dark); font-size: 0.9rem;">${escapeHtml(p.nickname)}</strong><br>
+                        <span style="color: #666; font-size: 0.8rem;">${p.email}</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="color: var(--primary); font-size: 0.85rem; font-weight: bold;">
+                            ${p.entries} συμμ.
+                        </div>
+                        <button class="delete-participant" data-email="${p.email}" 
+                                style="background: #dc3545; color: white; border: none; padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; cursor: pointer; margin-top: 3px;">
+                            Διαγραφή
+                        </button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // ========== ΒΟΗΘΗΤΙΚΕΣ ΣΥΝΑΡΤΗΣΕΙΣ ==========
@@ -1343,6 +1427,9 @@
             updateStatistics();
             updateParticipationForm();
             loadParticipants();
+            if (isAdmin) {
+                loadAdminParticipants();
+            }
         }
 
         setInterval(() => {
