@@ -382,6 +382,67 @@
             padding: 25px;
             border-radius: 20px;
             border: 4px solid #FFD166;
+            position: relative;
+        }
+
+        /* Κουτί κλειδώματος για τη κλήρωση */
+        .locked-section {
+            filter: blur(5px);
+            pointer-events: none;
+            user-select: none;
+            position: relative;
+        }
+
+        .lock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            border-radius: 20px;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .lock-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .password-form {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .password-input {
+            padding: 15px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            border: 3px solid #FFD166;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .unlock-btn {
+            background: linear-gradient(45deg, #06D6A0, #2EC4B6);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
         .section-title {
@@ -507,13 +568,9 @@
             pointer-events: none;
         }
 
-        /* Στυλ για το διαφημιστικό πλαίσιο */
+        /* Αφαιρούμε το λευκό πλαίσιο για τη διαφήμιση */
         .ad-display-container {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            border: 2px dashed #FFD166;
+            display: none;
         }
 
         @media (max-width: 768px) {
@@ -548,7 +605,6 @@
                 <li><span class="step">ΒΗΜΑ 1:</span> <strong>ΚΑΝΤΕ 10 ΚΛΙΚ</strong> στο κουμπί της διαφήμισης! Κάθε κλικ = μια νέα διαφήμιση! 🚀</li>
                 <li><span class="step">ΒΗΜΑ 2:</span> Μόλις φτάσετε τα 10 κλικ, θα εμφανιστεί το κουμπί <strong>"ΕΠΑΛΗΘΕΥΣΗ"</strong>! ✅</li>
                 <li><span class="step">ΒΗΜΑ 3:</span> Πατήστε επαλήθευση και <strong>ΓΡΑΨΤΕ ΤΟ ΟΝΟΜΑ ΣΑΣ</strong> για να μπείτε στην κλήρωση! ✍️</li>
-                <li><span class="step">ΒΗΜΑ 4:</span> Πατήστε το κουμπί <strong>"ΤΥΧΑΙΟΣ ΝΙΚΗΤΗΣ"</strong> για να δείτε ποιος κερδίζει! 🎰</li>
             </ol>
         </div>
         
@@ -566,10 +622,8 @@
             </div>
         </div>
         
-        <!-- ΕΔΩ ΘΑ ΦΟΡΤΩΘΕΙ Η ΔΙΑΦΗΜΙΣΗ -->
-        <div class="ad-display-container">
-            <div id="adContainer"></div>
-        </div>
+        <!-- ΚΑΘΑΡΗ ΔΙΑΦΗΜΙΣΗ: ΜΟΝΟ ΤΟ SCRIPT, ΧΩΡΙΣ ΛΕΥΚΟ ΠΛΑΙΣΙΟ -->
+        <div id="cleanAdContainer" style="display: none;"></div>
         
         <button class="verify-btn" id="verifyBtn">✅ ΕΠΑΛΗΘΕΥΣΗ ΕΠΙΣΚΟΠΗΣΗΣ</button>
         
@@ -592,7 +646,20 @@
                 <ul id="participants"></ul>
             </div>
             
-            <div class="lottery-section">
+            <!-- ΠΡΟΣΤΑΤΕΥΜΕΝΗ ΚΛΗΡΩΣΗ: ΜΟΝΟ ΓΙΑ ΔΙΑΧΕΙΡΙΣΤΗ -->
+            <div class="lottery-section locked-section" id="lotterySection">
+                <div class="lock-overlay" id="lockOverlay">
+                    <div class="lock-icon">🔒</div>
+                    <h3 style="color: #FFD166; margin-bottom: 10px;">ΠΡΟΣΤΑΤΕΥΜΕΝΗ ΠΕΡΙΟΧΗ</h3>
+                    <p>Μόνο ο διαχειριστής μπορεί να αποκτήσει πρόσβαση στην κλήρωση</p>
+                    
+                    <div class="password-form">
+                        <input type="password" class="password-input" id="adminPassword" placeholder="Εισάγετε κωδικό">
+                        <button class="unlock-btn" id="unlockBtn">🔓 Ξεκλείδωμα</button>
+                    </div>
+                    <p style="font-size: 0.8em; margin-top: 15px; color: #FFD166;">Κωδικός διαχειριστή: admin123</p>
+                </div>
+                
                 <h3 class="lottery-title">🏆 ΚΛΗΡΩΣΗ ΝΙΚΗΤΗ!</h3>
                 <p style="color: #666; margin-bottom: 15px;">Πάτησε το κουμπί για να βρεις τον τυχερό νικητή!</p>
                 
@@ -600,6 +667,7 @@
                     <button class="lottery-btn" id="randomWinnerBtn">🎲 ΤΥΧΑΙΟΣ ΝΙΚΗΤΗΣ!</button>
                     <button class="lottery-btn" id="exportDataBtn">💾 ΕΞΑΓΩΓΗ ΔΕΔΟΜΕΝΩΝ</button>
                     <button class="lottery-btn" id="clearDataBtn">🗑️ ΚΑΘΑΡΙΣΜΟΣ ΛΙΣΤΑΣ</button>
+                    <button class="lottery-btn" id="lockBtn" style="background: linear-gradient(45deg, #FF6B6B, #FF9E6D);">🔒 Κλείδωμα</button>
                 </div>
                 
                 <div id="winnerDisplay" class="winner-display">
@@ -616,10 +684,9 @@
     
     <footer>
         <p>✨ Τα δεδομένα αποθηκεύονται στον browser σας. Για να κρατήσετε τη λίστα, εξάγετε τα δεδομένα πριν κλείσετε! ✨</p>
-        <p>Ο διοργανωτής μπορεί να κάνει κλήρωση οποιαδήποτε στιγμή με το κουμπί "ΤΥΧΑΙΟΣ ΝΙΚΗΤΗΣ"!</p>
     </footer>
 
-    <!-- Το script της διαφήμισης που ζητήσατε -->
+    <!-- ΤΟ SCRIPT ΤΗΣ ΔΙΑΦΗΜΙΣΗΣ - ΕΔΩ ΦΟΡΤΩΝΕΤΑΙ ΑΜΕΣΑ -->
     <script src="https://quge5.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"></script>
 
     <script>
@@ -643,17 +710,29 @@
             const winnerName = document.getElementById('winnerName');
             const winnerId = document.getElementById('winnerId');
             const totalParticipants = document.getElementById('totalParticipants');
-            const adContainer = document.getElementById('adContainer');
+            const lotterySection = document.getElementById('lotterySection');
+            const lockOverlay = document.getElementById('lockOverlay');
+            const adminPassword = document.getElementById('adminPassword');
+            const unlockBtn = document.getElementById('unlockBtn');
+            const lockBtn = document.getElementById('lockBtn');
+            const cleanAdContainer = document.getElementById('cleanAdContainer');
             
             // Μεταβλητές κατάστασης
             let clickCount = 0;
             const requiredClicks = 10;
             let participants = JSON.parse(localStorage.getItem('contestParticipants')) || [];
+            const ADMIN_PASSWORD = "admin123"; // Αλλάξτε τον κωδικό εδώ!
+            let isAdminUnlocked = localStorage.getItem('adminUnlocked') === 'true';
+            
+            // Ελέγχουμε αν είναι ήδη ξεκλειδωμένο
+            if (isAdminUnlocked) {
+                unlockLotterySection();
+            }
             
             // Εμφάνιση τρεχόντων συμμετεχόντων
             updateParticipantsList();
             
-            // Χειρισμός κλικ στη διαφήμιση
+            // Χειρισμός κλικ στη διαφήμιση - ΚΑΘΑΡΗ ΕΚΔΟΧΗ
             adClickBtn.addEventListener('click', function() {
                 // Αύξηση μετρητή
                 clickCount++;
@@ -676,8 +755,8 @@
                 // Προσθήκη εφέ κλικ
                 createClickEffect(event);
                 
-                // Άνοιγμα νέας διαφήμισης με το script που παρείχατε
-                openAdWindow();
+                // ΚΑΘΑΡΗ ΔΙΑΦΗΜΙΣΗ: Ανοίγουμε το script σε νέο παράθυρο χωρίς λευκό φόντο
+                openCleanAdWindow();
                 
                 // Έλεγχος αν ο χρήστης έφτασε τον απαιτούμενο αριθμό κλικ
                 if (clickCount >= requiredClicks) {
@@ -697,58 +776,40 @@
                 }
             });
             
-            // Συνάρτηση για άνοιγμα διαφήμισης ΜΕ ΤΟ SCRIPT ΣΑΣ
-            function openAdWindow() {
-                // Χρησιμοποιούμε το script που παρείχατε
-                // Δημιουργούμε ένα νέο iframe για να φορτώσει η διαφήμιση
-                const iframe = document.createElement('iframe');
-                iframe.style.width = '100%';
-                iframe.style.height = '300px';
-                iframe.style.border = 'none';
-                iframe.style.borderRadius = '10px';
-                iframe.style.marginTop = '15px';
-                iframe.sandbox = 'allow-scripts allow-same-origin allow-popups';
-                iframe.allow = 'autoplay; encrypted-media';
-                
-                // Δημιουργία HTML που περιλαμβάνει το script σας
-                const adHtml = `
+            // ΚΑΘΑΡΗ ΔΙΑΦΗΜΙΣΗ: Μόνο το script, χωρίς λευκό φόντο
+            function openCleanAdWindow() {
+                // Δημιουργούμε ένα απλό HTML με μόνο το script
+                const cleanAdHtml = `
                     <!DOCTYPE html>
                     <html>
                     <head>
                         <meta charset="UTF-8">
                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                        <title>Διαφήμιση</title>
                         <style>
-                            body { margin: 0; padding: 0; background: #f5f5f5; }
-                            .ad-content { text-align: center; padding: 20px; }
+                            * { margin: 0; padding: 0; }
+                            body { background: transparent; }
                         </style>
                     </head>
                     <body>
-                        <div class="ad-content">
-                            <h3>Διαφήμιση</h3>
-                            <!-- Το script σας -->
-                            <script src="https://quge5.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"><\/script>
-                            <p>Η διαφήμιση φορτώνεται...</p>
-                        </div>
+                        <!-- Μόνο το script της διαφήμισης -->
+                        <script src="https://quge5.com/88/tag.min.js" data-zone="182432" async data-cfasync="false"><\/script>
                     </body>
                     </html>
                 `;
                 
-                // Προσθήκη του iframe στο adContainer
-                adContainer.innerHTML = '';
-                adContainer.appendChild(iframe);
-                
-                // Γράψτε το HTML στο iframe
-                iframe.contentDocument.open();
-                iframe.contentDocument.write(adHtml);
-                iframe.contentDocument.close();
-                
-                // Εναλλακτικά, ανοίξτε το σε νέο παράθυρο
+                // Ανοίγουμε νέο παράθυρο
                 try {
-                    const adWindow = window.open('about:blank', '_blank', 'width=800,height=600,noopener,noreferrer');
+                    const adWindow = window.open('', '_blank', 'width=800,height=600,noopener,noreferrer');
                     if (adWindow) {
-                        adWindow.document.write(adHtml);
+                        adWindow.document.write(cleanAdHtml);
                         adWindow.document.close();
+                        
+                        // Κλείνουμε αυτόματα μετά από 5 δευτερόλεπτα (προαιρετικό)
+                        setTimeout(() => {
+                            if (!adWindow.closed) {
+                                adWindow.close();
+                            }
+                        }, 5000);
                     }
                 } catch (e) {
                     console.log('Αδυναμία ανοίγματος νέου παραθύρου: ', e);
@@ -863,8 +924,51 @@
                 }, 3000);
             });
             
+            // Ξεκλείδωμα της περιοχής κλήρωσης
+            unlockBtn.addEventListener('click', function() {
+                const password = adminPassword.value.trim();
+                
+                if (password === ADMIN_PASSWORD) {
+                    unlockLotterySection();
+                    showStatus("✅ Πρόσβαση επιτράπηκε! Μπορείτε τώρα να κάνετε κλήρωση.", "success");
+                    localStorage.setItem('adminUnlocked', 'true');
+                } else {
+                    showStatus("❌ Λάθος κωδικός! Προσπαθήστε ξανά.", "error");
+                    adminPassword.style.borderColor = '#EF476F';
+                    setTimeout(() => {
+                        adminPassword.style.borderColor = '#FFD166';
+                    }, 1000);
+                }
+            });
+            
+            // Κλείδωμα της περιοχής κλήρωσης
+            lockBtn.addEventListener('click', function() {
+                lockLotterySection();
+                showStatus("🔒 Η περιοχή κλήρωσης κλειδώθηκε!", "success");
+                localStorage.setItem('adminUnlocked', 'false');
+            });
+            
+            // Συνάρτηση ξεκλειδώματος
+            function unlockLotterySection() {
+                lotterySection.classList.remove('locked-section');
+                lockOverlay.style.display = 'none';
+                isAdminUnlocked = true;
+            }
+            
+            // Συνάρτηση κλειδώματος
+            function lockLotterySection() {
+                lotterySection.classList.add('locked-section');
+                lockOverlay.style.display = 'flex';
+                isAdminUnlocked = false;
+            }
+            
             // ΚΛΗΡΩΣΗ: Επιλογή τυχαίου νικητή
             randomWinnerBtn.addEventListener('click', function() {
+                if (!isAdminUnlocked) {
+                    showStatus("Πρέπει πρώτα να ξεκλειδώσετε την περιοχή κλήρωσης!", "error");
+                    return;
+                }
+                
                 if (participants.length === 0) {
                     showStatus("Δεν υπάρχουν συμμετέχοντες για κλήρωση!", "error");
                     return;
@@ -914,6 +1018,11 @@
             
             // Εξαγωγή δεδομένων
             exportDataBtn.addEventListener('click', function() {
+                if (!isAdminUnlocked) {
+                    showStatus("Πρέπει πρώτα να ξεκλειδώσετε την περιοχή κλήρωσης!", "error");
+                    return;
+                }
+                
                 if (participants.length === 0) {
                     showStatus("Δεν υπάρχουν δεδομένα για εξαγωγή!", "error");
                     return;
@@ -948,6 +1057,11 @@
             
             // Καθαρισμός λίστας
             clearDataBtn.addEventListener('click', function() {
+                if (!isAdminUnlocked) {
+                    showStatus("Πρέπει πρώτα να ξεκλειδώσετε την περιοχή κλήρωσης!", "error");
+                    return;
+                }
+                
                 if (participants.length === 0) {
                     showStatus("Η λίστα είναι ήδη κενή!", "error");
                     return;
@@ -1014,7 +1128,7 @@
             
             // Προσομοίωση κιμωλίας
             function triggerConfetti() {
-                const colors = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2, #9D4EDD', '#FF9E6D'];
+                const colors = ['#EF476F', '#FFD166', '#06D6A0', '#118AB2', '#9D4EDD', '#FF9E6D'];
                 
                 for (let i = 0; i < 100; i++) {
                     const confetti = document.createElement('div');
@@ -1068,6 +1182,13 @@
                 
                 setTimeout(() => effect.remove(), 500);
             }
+            
+            // Enter για να ξεκλειδώσει
+            adminPassword.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    unlockBtn.click();
+                }
+            });
         });
     </script>
 </body>
