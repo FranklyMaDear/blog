@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Διαγωνισμός - Κλήρωση</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #333;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 850px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2d3436;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+        }
+
+        .subtitle {
+            color: #636e72;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .instructions {
+            background-color: #f8f9fa;
+            border-left: 5px solid #6a11cb;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .step {
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .ad-container {
+            margin: 30px 0;
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            min-height: 350px;
+            position: relative;
+        }
+
+        .ad-frame {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .ad-label {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background-color: #6a11cb;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .verify-btn {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 17, 203, 0.4);
+        }
+
+        .verify-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .form-container {
+            display: none;
+            animation: fadeIn 0.8s ease;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #f1f1f1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-title {
+            color: #2d3436;
+            margin-bottom: 20px;
+        }
+
+        .nickname-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            transition: border 0.3s;
+        }
+
+        .nickname-input:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+
+        .submit-btn {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 176, 155, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 176, 155, 0.4);
+        }
+
+        .participants-list {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #f1f1f1;
+            text-align: left;
+        }
+
+        .participants-title {
+            color: #2d3436;
+            margin-bottom: 15px;
+        }
+
+        #participants {
+            list-style-type: none;
+            padding: 0;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #participants li {
+            background-color: #f8f9fa;
+            margin-bottom: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #6a11cb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .participant-id {
+            background-color: #e9ecef;
+            color: #6a11cb;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        footer {
+            margin-top: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .ad-frame {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Διαγωνισμός & Κλήρωση 🎉</h1>
+        <p class="subtitle">Ακολουθήστε τα βήματα για να συμμετάσχετε στην κλήρωση</p>
+        
+        <div class="instructions">
+            <p><strong>Οδηγίες συμμετοχής:</strong></p>
+            <ol>
+                <li><span class="step">Βήμα 1:</span> Παρακαλώ <strong>επισκεφτείτε τη διαφήμιση</strong> παρακάτω. Αφιερώστε μερικά δευτερόλεπτα για να τη δείτε.</li>
+                <li><span class="step">Βήμα 2:</span> Αφού επισκεφτείτε τη διαφήμιση, πατήστε το κουμπί <strong>"Επαλήθευση Επισκόπησης"</strong>.</li>
+                <li><span class="step">Βήμα 3:</span> Μόλις επιβεβαιωθεί η επισκόπηση, θα εμφανιστεί η φόρμα συμμετοχής για να εισάγετε το <strong>ψευδώνυμό σας</strong>.</li>
+                <li><span class="step">Βήμα 4:</span> Καταχωρίστε το ψευδώνυμό σας και πατήστε <strong>"Υποβολή Συμμετοχής"</strong>.</li>
+            </ol>
+        </div>
+        
+        <div class="ad-container">
+            <div class="ad-label">ΔΙΑΦΗΜΙΣΗ</div>
+            <!-- Εδώ φορτώνουμε τη σελίδα της διαφήμισης -->
+            <iframe src="https://otieu.com/4/10274068" class="ad-frame" id="adFrame" title="Διαφήμιση Διαγωνισμού"></iframe>
+        </div>
+        
+        <button class="verify-btn" id="verifyBtn">✅ Επαλήθευση Επισκόπησης</button>
+        
+        <div id="statusMessage" class="status-message"></div>
+        
+        <div class="form-container" id="formContainer">
+            <h2 class="form-title">Εισαγωγή Ψευδωνύμου</h2>
+            <p>Συμπληρώστε το ψευδώνυμό σας για να συμμετάσχετε στην κλήρωση:</p>
+            
+            <form id="entryForm">
+                <input type="text" class="nickname-input" id="nickname" placeholder="Πληκτρολογήστε το ψευδώνυμό σας..." required maxlength="30">
+                <button type="submit" class="submit-btn">🚀 Υποβολή Συμμετοχής</button>
+            </form>
+        </div>
+        
+        <div class="participants-list">
+            <h3 class="participants-title">📋 Λίστα Συμμετεχόντων</h3>
+            <p>Οι συμμετέχοντες θα εμφανίζονται εδώ καθώς εγγράφονται:</p>
+            <ul id="participants"></ul>
+        </div>
+    </div>
+    
+    <footer>
+        Η λίστα συμμετεχόντων αποθηκεύεται μόνο στον browser σας. Για πραγματική κλήρωση, ο διοργανωτής θα λάβει τα δεδομένα διαφορετικά.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Στοιχεία της σελίδας
+            const verifyBtn = document.getElementById('verifyBtn');
+            const statusMessage = document.getElementById('statusMessage');
+            const formContainer = document.getElementById('formContainer');
+            const entryForm = document.getElementById('entryForm');
+            const nicknameInput = document.getElementById('nickname');
+            const participantsList = document.getElementById('participants');
+            const adFrame = document.getElementById('adFrame');
+            
+            // Μεταβλητές κατάστασης
+            let adVisited = false;
+            let participants = JSON.parse(localStorage.getItem('contestParticipants')) || [];
+            
+            // Εμφάνιση τρεχόντων συμμετεχόντων
+            updateParticipantsList();
+            
+            // Επαλήθευση αν ο χρήστης επισκέφτηκε τη διαφήμιση
+            verifyBtn.addEventListener('click', function() {
+                // Στην πραγματική εφαρμογή, εδώ θα υπήρχε πιο εξελιγμένος έλεγχος
+                // Για αυτό το παράδειγμα, απλώς ρωτάμε τον χρήστη
+                
+                // Προσομοίωση επιτυχούς επαλήθευσης
+                // Στην πραγματική εφαρμογή, θα μπορούσατε να ελέγξετε αν το iframe έχει φορτωθεί
+                // ή να χρησιμοποιήσετε τεχνικές cross-domain αν ο διαφημιστής το επιτρέπει
+                
+                // Προσομοίωση καθυστέρησης δικτύου
+                verifyBtn.disabled = true;
+                verifyBtn.textContent = 'Επαληθεύεται...';
+                
+                setTimeout(function() {
+                    // Σε ένα πραγματικό σενάριο, εδώ θα υπήρχε έλεγχος με το iframe
+                    // αλλά λόγω περιορισμών ασφαλείας (cross-origin), αυτό δεν είναι πάντα δυνατό
+                    
+                    // Εναλλακτική λύση: ζητάμε από τον χρήστη επιβεβαίωση
+                    const userConfirmed = confirm("Έχετε επισκεφτεί πραγματικά τη διαφήμιση παραπάνω;");
+                    
+                    if (userConfirmed) {
+                        adVisited = true;
+                        showStatus("Επιτυχής επαλήθευση! Μπορείτε τώρα να συμμετάσχετε.", "success");
+                        formContainer.style.display = 'block';
+                        verifyBtn.style.display = 'none';
+                    } else {
+                        showStatus("Παρακαλώ επισκεφτείτε τη διαφήμιση πριν συνεχίσετε.", "error");
+                    }
+                    
+                    verifyBtn.disabled = false;
+                    verifyBtn.textContent = '✅ Επαλήθευση Επισκόπησης';
+                }, 800);
+            });
+            
+            // Υποβολή ψευδωνύμου
+            entryForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!adVisited) {
+                    showStatus("Παρακαλώ πρώτα επαληθεύστε ότι έχετε δει τη διαφήμιση.", "error");
+                    return;
+                }
+                
+                const nickname = nicknameInput.value.trim();
+                
+                if (nickname.length < 2) {
+                    showStatus("Το ψευδώνυμο πρέπει να έχει τουλάχιστον 2 χαρακτήρες.", "error");
+                    return;
+                }
+                
+                if (nickname.length > 30) {
+                    showStatus("Το ψευδώνυμο δεν μπορεί να υπερβαίνει τους 30 χαρακτήρες.", "error");
+                    return;
+                }
+                
+                // Προσθήκη νέου συμμετέχοντα
+                const newParticipant = {
+                    id: Date.now(), // Απλή τεχνική για μοναδικό ID
+                    nickname: nickname,
+                    timestamp: new Date().toLocaleString('el-GR')
+                };
+                
+                participants.push(newParticipant);
+                
+                // Αποθήκευση στον localStorage
+                localStorage.setItem('contestParticipants', JSON.stringify(participants));
+                
+                // Ενημέρωση λίστας
+                updateParticipantsList();
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                showStatus(`Συγχαρητήρια ${nickname}! Έχετε εγγραφεί στον διαγωνισμό.`, "success");
+                
+                // Επαναφορά φόρμας
+                nicknameInput.value = '';
+                
+                // Προσθήκη κιμωλίας στην οθόνη
+                triggerConfetti();
+            });
+            
+            // Συνάρτηση εμφάνισης μηνυμάτων κατάστασης
+            function showStatus(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = `status-message ${type}`;
+                statusMessage.style.display = 'block';
+                
+                // Αυτόματη απόκρυψη του μηνύματος μετά από 5 δευτερόλεπτα
+                setTimeout(function() {
+                    statusMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Ενημέρωση λίστας συμμετεχόντων
+            function updateParticipantsList() {
+                participantsList.innerHTML = '';
+                
+                if (participants.length === 0) {
+                    participantsList.innerHTML = '<li style="text-align:center; color:#777;">Δεν υπάρχουν ακόμη συμμετέχοντες.</li>';
+                    return;
+                }
+                
+                // Ταξινόμηση από τον πιο πρόσφατο στον παλιότερο
+                const sortedParticipants = [...participants].reverse();
+                
+                sortedParticipants.forEach(participant => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <span>${participant.nickname}</span>
+                        <div>
+                            <span class="participant-id">ID: ${participant.id.toString().slice(-6)}</span>
+                            <span style="font-size:0.9em; color:#777; margin-left:10px;">${participant.timestamp}</span>
+                        </div>
+                    `;
+                    participantsList.appendChild(li);
+                });
+            }
+            
+            // Προσομοίωση κιμωλίας για εορτασμό
+            function triggerConfetti() {
+                // Απλή CSS κιμωλία
+                const colors = ['#6a11cb', '#2575fc', '#00b09b', '#96c93d', '#ff9966', '#ff5e62'];
+                
+                for (let i = 0; i < 50; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.style.position = 'fixed';
+                    confetti.style.width = '10px';
+                    confetti.style.height = '10px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.borderRadius = '50%';
+                    confetti.style.top = '50%';
+                    confetti.style.left = '50%';
+                    confetti.style.opacity = '0.9';
+                    confetti.style.zIndex = '9999';
+                    confetti.style.pointerEvents = 'none';
+                    
+                    // Τυχαίες ιδιότητες κίνησης
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = 15 + Math.random() * 10;
+                    const vx = Math.cos(angle) * velocity;
+                    const vy = Math.sin(angle) * velocity;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Κίνηση κιμωλίας
+                    let posX = 50;
+                    let posY = 50;
+                    let opacity = 0.9;
+                    
+                    const moveConfetti = setInterval(() => {
+                        posX += vx;
+                        posY += vy;
+                        vy += 0.5; // Βαρύτητα
+                        opacity -= 0.02;
+                        
+                        confetti.style.left = posX + '%';
+                        confetti.style.top = posY + '%';
+                        confetti.style.opacity = opacity;
+                        
+                        if (posY > 100 || opacity <= 0) {
+                            clearInterval(moveConfetti);
+                            confetti.remove();
+                        }
+                    }, 30);
+                }
+            }
+            
+            // Προσπάθεια ανίχνευσης εάν ο χρήστης έχει δει τη διαφήμιση
+            // Σημείωση: Λόγω περιορισμών ασφαλείας των browsers, δεν μπορούμε να ελέγξουμε
+            // απευθείας αν ο χρήστης έχει κάνει κλικ ή έχει δει το περιεχόμενο ενός iframe
+            // από διαφορετικό domain. Αυτή είναι μια τεχνική που μπορεί να λειτουργήσει 
+            // μερικές φορές, αλλά δεν είναι αξιόπιστη.
+            
+            // Προσθήκη event listener για εάν το iframe φορτωθεί
+            adFrame.addEventListener('load', function() {
+                // Αυτό σημαίνει ότι το iframe φορτώθηκε, όχι απαραίτητα ότι ο χρήστης το είδε
+                console.log("Το iframe της διαφήμισης φορτώθηκε.");
+            });
+            
+            // Προσπάθεια ανίχνευσης κλικ στο iframe (δεν λειτουργεί cross-domain)
+            try {
+                adFrame.contentWindow.addEventListener('click', function() {
+                    console.log("Κλικ στο iframe ανιχνεύτηκε");
+                    adVisited = true;
+                });
+            } catch (e) {
+                // Αυτό θα αποτύχει λόγω πολιτικής ασφαλείας του ίδιου προέλευσης (same-origin policy)
+                console.log("Δεν είναι δυνατή η παρακολούθηση κλικ στο iframe λόγω περιορισμών ασφαλείας.");
+            }
+        });
+    </script>
+</body>
+</html>
