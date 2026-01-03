@@ -515,26 +515,25 @@
             }
         }
         
-        // Συνάρτηση για φόρτωση Monetag script - ΤΡΕΞΙΜΟ ΔΙΑΦΗΜΙΣΕΩΝ
+        // Συνάρτηση για φόρτωση διαφημίσεων - ΤΡΕΞΙΜΟ ΔΙΑΦΗΜΙΣΕΩΝ
         function loadMonetagAd() {
-            console.log('Loading Monetag ad...');
+            console.log('Loading ad...');
             
-            // Δημιουργία και προσθήκη του νέου script tag για Monetag
+            // Δημιουργία και προσθήκη του νέου script tag για ad
             const scriptTag = document.createElement('script');
-            scriptTag.src = 'https://quge5.com/88/tag.min.js';
-            scriptTag.setAttribute('data-zone', '182432');
+            scriptTag.src = 'https://otieu.com/4/10274068';
             scriptTag.async = true;
             scriptTag.setAttribute('data-cfasync', 'false');
             
             // Προσθήκη στο <head> της σελίδας
             document.head.appendChild(scriptTag);
             
-            // Προσθήκη event listeners για να προλάβουμε ad blockers
+            // Προσθήκη fallback για ad blockers
             const fallbackScript = document.createElement('script');
             fallbackScript.textContent = `
                 setTimeout(function() {
-                    if (typeof monetag === 'undefined') {
-                        console.log('Monetag not loaded, trying direct popunder...');
+                    if (!window.adLoaded) {
+                        console.log('Ad not loaded, trying direct popunder...');
                         try {
                             window.open('https://blog.franklymadear.com/', '_blank', 'noopener,noreferrer');
                         } catch(e) {
@@ -542,6 +541,9 @@
                         }
                     }
                 }, 1000);
+                
+                // Mark as loaded
+                window.adLoaded = true;
             `;
             document.head.appendChild(fallbackScript);
             
@@ -688,7 +690,7 @@
             e.stopPropagation();
             e.preventDefault();
             
-            console.log('Seek container clicked - triggering Monetag ad');
+            console.log('Seek container clicked - triggering ad');
             
             // Καλεί τη συνάρτηση για φόρτωση διαφημίσεων
             loadMonetagAd();
@@ -892,7 +894,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Monetag ads on entire seek bar (zone 182432)');
+        console.log('FmD Video Player ready - Ads on entire seek bar');
         
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
