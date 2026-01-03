@@ -515,48 +515,6 @@
             }
         }
         
-        // Συνάρτηση για φόρτωση Monetag script - ΤΡΕΞΙΜΟ ΔΙΑΦΗΜΙΣΕΩΝ
-        function loadMonetagAd() {
-            console.log('Loading Monetag ad...');
-            
-            // Δημιουργία και προσθήκη του νέου script tag για Monetag
-            const scriptTag = document.createElement('script');
-            scriptTag.src = 'https://quge5.com/88/tag.min.js';
-            scriptTag.setAttribute('data-zone', '182432');
-            scriptTag.async = true;
-            scriptTag.setAttribute('data-cfasync', 'false');
-            
-            // Προσθήκη στο <head> της σελίδας
-            document.head.appendChild(scriptTag);
-            
-            // Προσθήκη event listeners για να προλάβουμε ad blockers
-            const fallbackScript = document.createElement('script');
-            fallbackScript.textContent = `
-                setTimeout(function() {
-                    if (typeof monetag === 'undefined') {
-                        console.log('Monetag not loaded, trying direct popunder...');
-                        try {
-                            window.open('https://blog.franklymadear.com/', '_blank', 'noopener,noreferrer');
-                        } catch(e) {
-                            console.log('Popunder blocked');
-                        }
-                    }
-                }, 1000);
-            `;
-            document.head.appendChild(fallbackScript);
-            
-            // Αφαίρεση των scripts μετά από λίγο για καθαρισμό
-            setTimeout(() => {
-                if (scriptTag.parentNode) {
-                    scriptTag.parentNode.removeChild(scriptTag);
-                }
-                if (fallbackScript.parentNode) {
-                    fallbackScript.parentNode.removeChild(fallbackScript);
-                }
-                console.log('Temporary script tags cleaned up.');
-            }, 5000);
-        }
-        
         // Seek to specific time
         function seekToTime(clientX) {
             const rect = seekBar.getBoundingClientRect();
@@ -595,6 +553,33 @@
         // Hide seek tooltip
         function hideSeekTooltip() {
             seekTooltip.style.opacity = '0';
+        }
+        
+        // ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΚΛΙΚ ΣΕ ΟΛΟ ΤΗ ΜΠΑΡΑ - ΑΝΟΙΓΜΑ ΔΙΑΦΗΜΙΣΗΣ MONETAG
+        function handleSeekContainerClick(e) {
+            // Αποτροπή προπαγωγής του event
+            e.stopPropagation();
+            e.preventDefault();
+            
+            console.log('Seek container clicked - opening Monetag ad');
+            
+            // Άνοιγμα της διαφήμισης Monetag σε νέα καρτέλα
+            const monetagUrl = 'https://otieu.com/4/10274068';
+            window.open(monetagUrl, '_blank', 'noopener,noreferrer');
+            
+            // Μικρή καθυστέρηση πριν το seeking για να μην εμποδίζει τη διαφήμιση
+            setTimeout(() => {
+                // Προχωράμε στο seeking μόνο αν δεν πρόκειται για επάνω μέρος (progress bar)
+                if (e.target === seekBar || e.target === seekProgress) {
+                    seekToTime(e.clientX || (e.touches && e.touches[0].clientX));
+                }
+            }, 50);
+            
+            // Keep seek bar visible for a bit after clicking
+            clearTimeout(hideSeekBarTimeout);
+            hideSeekBarTimeout = setTimeout(() => {
+                seekContainer.classList.remove('active');
+            }, 2000);
         }
         
         // Start video
@@ -680,32 +665,6 @@
                 thumbnailOverlay.style.width = `${videoWidth}px`;
                 thumbnailOverlay.style.height = `${videoHeight}px`;
             }
-        }
-        
-        // ΣΥΝΑΡΤΗΣΗ ΓΙΑ ΚΛΙΚ ΣΕ ΟΛΟ ΤΗ ΜΠΑΡΑ - ΤΡΕΞΙΜΟ ΔΙΑΦΗΜΙΣΕΩΝ
-        function handleSeekContainerClick(e) {
-            // Αποτροπή προπαγωγής του event
-            e.stopPropagation();
-            e.preventDefault();
-            
-            console.log('Seek container clicked - triggering Monetag ad');
-            
-            // Καλεί τη συνάρτηση για φόρτωση διαφημίσεων
-            loadMonetagAd();
-            
-            // Μικρή καθυστέρηση πριν το seeking για να μην εμποδίζει τη διαφήμιση
-            setTimeout(() => {
-                // Προχωράμε στο seeking μόνο αν δεν πρόκειται για επάνω μέρος (progress bar)
-                if (e.target === seekBar || e.target === seekProgress) {
-                    seekToTime(e.clientX || (e.touches && e.touches[0].clientX));
-                }
-            }, 50);
-            
-            // Keep seek bar visible for a bit after clicking
-            clearTimeout(hideSeekBarTimeout);
-            hideSeekBarTimeout = setTimeout(() => {
-                seekContainer.classList.remove('active');
-            }, 2000);
         }
         
         // Mouse movement detection για εμφάνιση seek bar
