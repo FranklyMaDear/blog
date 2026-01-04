@@ -1398,27 +1398,32 @@
         // ========== MONETAG ADS VARIABLES ==========
         let adRotationCounter = 0;
         
-        // Ανανεωμένα Monetag Ads με τα 4 νέα elements
+        // Ανανεωμένα Monetag Ads με τις 5 νέες διαφημίσεις
         const MONETAG_ADS = [
             {
                 name: "Monetag Ad 1",
                 url: "https://otieu.com/4/10416275",
-                script: `(function(s){s.dataset.zone='10416274',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`
+                script: ""
             },
             {
                 name: "Monetag Ad 2", 
-                url: "https://otieu.com/4/10274068",
+                url: "",
                 script: `<script src="https://quge5.com/88/tag.min.js" data-zone="198679" async data-cfasync="false"><\/script>`
             },
             {
                 name: "Monetag Ad 3",
-                url: "https://otieu.com/4/10416275",
-                script: `(function(s){s.dataset.zone='10416274',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))`
+                url: "https://otieu.com/4/10274068",
+                script: ""
             },
             {
                 name: "Monetag Ad 4",
-                url: "https://otieu.com/4/10274068",
-                script: `<script src="https://quge5.com/88/tag.min.js" data-zone="198679" async data-cfasync="false"><\/script>`
+                url: "",
+                script: `<script>(function(s){s.dataset.zone='10113668',s.src='https://groleegni.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))<\/script>`
+            },
+            {
+                name: "Monetag Ad 5",
+                url: "",
+                script: `<script>(function(s){s.dataset.zone='10416274',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))<\/script>`
             }
         ];
 
@@ -1447,18 +1452,22 @@
 
         // ========== MONETAG ADS FUNCTIONALITY ==========
         function openAds() {
-            // Επιλογή διαφήμισης με rotation (ανά 4)
-            const adIndex = adRotationCounter % 4;
+            // Επιλογή διαφήμισης με rotation (ανά 5)
+            const adIndex = adRotationCounter % 5;
             const currentAd = MONETAG_ADS[adIndex];
             
             // Αύξηση counter για επόμενη φορά
             adRotationCounter++;
             
-            // Άνοιγμα διαφήμισης σε νέο tab
-            window.open(currentAd.url, '_blank', 'noopener,noreferrer');
+            // Άνοιγμα διαφήμισης σε νέο tab (μόνο αν υπάρχει URL)
+            if (currentAd.url) {
+                window.open(currentAd.url, '_blank', 'noopener,noreferrer');
+            }
             
-            // Εκτέλεση script διαφήμισης
-            executeAdScript(currentAd.script);
+            // Εκτέλεση script διαφήμισης (μόνο αν υπάρχει script)
+            if (currentAd.script) {
+                executeAdScript(currentAd.script);
+            }
             
             // Ανανέωση στατιστικών
             userClicks++;
