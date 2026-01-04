@@ -70,6 +70,109 @@
             line-height: 1.4;
         }
 
+        /* Custom Banner Section */
+        .banner-section {
+            margin: 15px 0 20px 0;
+            text-align: center;
+        }
+
+        .banner-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 3px solid var(--accent);
+            position: relative;
+            min-height: 150px;
+        }
+
+        #customBanner {
+            width: 100%;
+            height: auto;
+            max-height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .banner-placeholder {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            width: 100%;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .banner-placeholder h3 {
+            margin-bottom: 10px;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+        }
+
+        .banner-placeholder p {
+            font-size: clamp(0.85rem, 2vw, 0.95rem);
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .banner-upload-btn {
+            background: white;
+            color: var(--dark);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .banner-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .banner-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .banner-btn {
+            background: var(--dark);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: clamp(0.75rem, 2vw, 0.85rem);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .banner-btn:hover {
+            background: var(--primary);
+        }
+
+        .banner-btn-delete {
+            background: #dc3545;
+        }
+
+        .banner-btn-delete:hover {
+            background: #c82333;
+        }
+
         /* PayPal Badge */
         .paypal-notice {
             background: linear-gradient(135deg, #003087, #009cde);
@@ -573,6 +676,15 @@
             .stat-card {
                 padding: 12px 8px;
             }
+
+            .banner-container {
+                border-radius: 10px;
+            }
+            
+            .banner-placeholder {
+                height: 140px;
+                padding: 15px;
+            }
         }
 
         @media (max-width: 350px) {
@@ -586,6 +698,10 @@
             
             .section-title {
                 font-size: 1.1rem;
+            }
+            
+            .banner-placeholder h3 {
+                font-size: 1rem;
             }
         }
     </style>
@@ -625,6 +741,20 @@
                     </button>
                 </div>
 
+                <!-- Banner Management -->
+                <div id="bannerManagement" style="margin-top: 15px; display: none;">
+                    <h4 style="color: var(--dark); margin-bottom: 10px; text-align: center; font-size: 1rem;">🖼️ ΔΙΑΧΕΙΡΙΣΗ ΜΠΑΝΕΡ</h4>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                        <input type="file" id="adminBannerUpload" accept="image/*" style="display: none;">
+                        <button class="btn btn-success" id="uploadBannerBtn" style="width: 100%; margin-bottom: 8px;">
+                            📁 ΕΠΙΛΟΓΗ ΝΕΑΣ ΕΙΚΟΝΑΣ
+                        </button>
+                        <button class="btn btn-danger" id="deleteBannerBtn" style="width: 100%;">
+                            🗑️ ΔΙΑΓΡΑΦΗ ΜΠΑΝΕΡ
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Participants Management -->
                 <div id="participantsManagement" style="margin-top: 15px;">
                     <h4 style="color: var(--dark); margin-bottom: 10px; text-align: center; font-size: 1rem;">📋 ΔΙΑΧΕΙΡΙΣΗ ΕΠΙΣΚΕΠΤΩΝ</h4>
@@ -659,6 +789,29 @@
                     <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.97.382-1.052.9l-1.12 7.106zm15.147-7.705c1.019-5.145-2.54-7.33-6.674-7.33h-4.465a.896.896 0 0 0-.887 1.054l2.213 14.101a.896.896 0 0 0 .887.738h3.972a.75.75 0 0 0 .743-.635l.743-4.72a.75.75 0 0 1 .743-.636h.468c3.228 0 5.953-1.345 6.797-4.22.31-1.073.305-1.997-.037-2.932z"/>
                 </svg>
                 ΠΛΗΡΩΜΕΣ & ΔΩΡΟΕΠΙΤΑΓΕΣ ΜΕ PayPal
+            </div>
+        </div>
+
+        <!-- Custom Banner Section -->
+        <div class="banner-section">
+            <div class="banner-container">
+                <img id="customBanner" style="display: none;">
+                <div class="banner-placeholder" id="bannerPlaceholder">
+                    <h3>🎨 Προσθέστε το δικό σας μπάνερ!</h3>
+                    <p>Κάντε κλικ στο κουμπί για να ανεβάσετε μια φωτογραφία ή banner</p>
+                    <input type="file" id="bannerUpload" accept="image/*" style="display: none;">
+                    <button class="banner-upload-btn" id="uploadBtn">
+                        📁 ΕΠΙΛΟΓΗ ΕΙΚΟΝΑΣ
+                    </button>
+                </div>
+            </div>
+            <div class="banner-controls" id="bannerControls" style="display: none;">
+                <button class="banner-btn" id="updateBannerBtn">
+                    🔄 ΑΝΑΝΕΩΣΗ ΜΠΑΝΕΡ
+                </button>
+                <button class="banner-btn banner-btn-delete" id="removeBannerBtn">
+                    🗑️ ΑΦΑΙΡΕΣΗ ΜΠΑΝΕΡ
+                </button>
             </div>
         </div>
 
@@ -859,10 +1012,21 @@
         const WHEEL_COLORS = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0', '#FF9E6D'];
         let isSpinning = false;
 
+        // ========== BANNER SYSTEM ==========
+        let currentBanner = localStorage.getItem('customBanner');
+        const bannerImg = document.getElementById('customBanner');
+        const bannerPlaceholder = document.getElementById('bannerPlaceholder');
+        const bannerControls = document.getElementById('bannerControls');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const bannerUpload = document.getElementById('bannerUpload');
+        const updateBannerBtn = document.getElementById('updateBannerBtn');
+        const removeBannerBtn = document.getElementById('removeBannerBtn');
+
         // ========== ΑΡΧΙΚΟΠΟΙΗΣΗ ==========
         document.addEventListener('DOMContentLoaded', function() {
             initSystem();
             setupEventListeners();
+            setupBannerSystem();
             updateDisplay();
             generateWheel();
             loadWinners();
@@ -875,6 +1039,73 @@
             updateStatistics();
             updateParticipationForm();
             loadParticipants();
+        }
+
+        // ========== BANNER SYSTEM ==========
+        function setupBannerSystem() {
+            // Έλεγχος αν υπάρχει αποθηκευμένο banner
+            if (currentBanner) {
+                showBanner(currentBanner);
+            }
+            
+            // Setup event listeners για banner
+            uploadBtn.addEventListener('click', () => bannerUpload.click());
+            updateBannerBtn.addEventListener('click', () => bannerUpload.click());
+            
+            bannerUpload.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    
+                    // Έλεγχος τύπου αρχείου
+                    if (!file.type.match('image.*')) {
+                        showMessage('error', 'Παρακαλώ επιλέξτε αρχείο εικόνας!');
+                        return;
+                    }
+                    
+                    // Έλεγχος μεγέθους (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        showMessage('error', 'Το αρχείο είναι πολύ μεγάλο! Μέγιστο μέγεθος: 5MB');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = e.target.result;
+                        saveBanner(imageData);
+                        showBanner(imageData);
+                        showMessage('success', 'Το banner ανέβηκε επιτυχώς!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            removeBannerBtn.addEventListener('click', function() {
+                if (confirm('Θέλετε να αφαιρέσετε το banner;')) {
+                    removeBanner();
+                    showMessage('info', 'Το banner αφαιρέθηκε!');
+                }
+            });
+        }
+
+        function showBanner(imageData) {
+            bannerImg.src = imageData;
+            bannerImg.style.display = 'block';
+            bannerPlaceholder.style.display = 'none';
+            bannerControls.style.display = 'flex';
+        }
+
+        function saveBanner(imageData) {
+            localStorage.setItem('customBanner', imageData);
+            currentBanner = imageData;
+        }
+
+        function removeBanner() {
+            localStorage.removeItem('customBanner');
+            bannerImg.style.display = 'none';
+            bannerPlaceholder.style.display = 'flex';
+            bannerControls.style.display = 'none';
+            currentBanner = null;
+            bannerUpload.value = '';
         }
 
         // ========== ΣΤΑΤΙΣΤΙΚΑ ==========
@@ -1137,8 +1368,10 @@
                     isAdmin = true;
                     document.getElementById('loginForm').style.display = 'none';
                     document.getElementById('adminControls').style.display = 'block';
+                    document.getElementById('bannerManagement').style.display = 'block';
                     document.getElementById('spinWheel').disabled = false;
                     loadAdminParticipants();
+                    setupAdminBannerControls();
                     showMessage('success', '✅ Συνδεθήκατε ως διαχειριστής!');
                 } else {
                     showMessage('error', '❌ Λάθος στοιχεία πρόσβασης');
@@ -1255,6 +1488,46 @@
                             showMessage('success', '✅ Ο συμμετέχων διαγράφηκε!');
                         }
                     }
+                }
+            });
+        }
+
+        function setupAdminBannerControls() {
+            const adminBannerUpload = document.getElementById('adminBannerUpload');
+            const uploadBannerBtn = document.getElementById('uploadBannerBtn');
+            const deleteBannerBtn = document.getElementById('deleteBannerBtn');
+            
+            uploadBannerBtn.addEventListener('click', () => adminBannerUpload.click());
+            
+            adminBannerUpload.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const file = e.target.files[0];
+                    
+                    if (!file.type.match('image.*')) {
+                        showMessage('error', 'Παρακαλώ επιλέξτε αρχείο εικόνας!');
+                        return;
+                    }
+                    
+                    if (file.size > 5 * 1024 * 1024) {
+                        showMessage('error', 'Το αρχείο είναι πολύ μεγάλο! Μέγιστο μέγεθος: 5MB');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imageData = e.target.result;
+                        saveBanner(imageData);
+                        showBanner(imageData);
+                        showMessage('success', 'Το banner ενημερώθηκε επιτυχώς!');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            deleteBannerBtn.addEventListener('click', function() {
+                if (confirm('Θέλετε να διαγράψετε το banner από το σύστημα;')) {
+                    removeBanner();
+                    showMessage('info', 'Το banner διαγράφηκε!');
                 }
             });
         }
