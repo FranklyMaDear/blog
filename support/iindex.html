@@ -4,6 +4,246 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎉 ΠΑΙΞΕ & ΚΕΡΔΙΣΕ ΠΑΜΕ ΝΑ ΦΤΑΣΟΥΜΕ ΤΟ ΣΤΟΧΟ 🎉</title>
+    
+    <!-- ========== FAVICON FOR ALL BROWSERS ========== -->
+    <link rel="apple-touch-icon" sizes="57x57" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    
+    <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png">
+    <link rel="icon" href="https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png" type="image/x-icon">
+    
+    <!-- ========== PWA / MANIFEST ========== -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1A535C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Παίξε & Κέρδισε">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Παίξε & Κέρδισε">
+    
+    <!-- ========== PWA INSTALL PROMPT ========== -->
+    <style>
+        /* PWA Install Prompt */
+        .pwa-install-prompt {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--warning));
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            display: none;
+            animation: slideUp 0.5s ease;
+            border: 3px solid var(--accent);
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .pwa-install-prompt-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .pwa-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            border: 2px solid var(--accent);
+        }
+        
+        .pwa-text {
+            flex-grow: 1;
+        }
+        
+        .pwa-text h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.1rem;
+        }
+        
+        .pwa-text p {
+            margin: 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .pwa-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .pwa-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .pwa-install-btn {
+            background: white;
+            color: var(--primary);
+        }
+        
+        .pwa-later-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .pwa-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .pwa-close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Add to Home Screen Instructions */
+        .pwa-instructions {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .instructions-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            border: 4px solid var(--accent);
+        }
+        
+        .instructions-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+        
+        .instructions-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .instructions-content h3 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .instructions-content p {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        
+        .instruction-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            flex-grow: 1;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .instructions-done-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 10px;
+            width: 100%;
+        }
+    </style>
+
+    <!-- ========== MAIN STYLES ========== -->
     <style>
         * {
             box-sizing: border-box;
@@ -816,6 +1056,51 @@
     </style>
 </head>
 <body>
+    <!-- PWA Install Prompt -->
+    <div class="pwa-install-prompt" id="pwaInstallPrompt">
+        <div class="pwa-install-prompt-content">
+            <div class="pwa-icon">
+                🎯
+            </div>
+            <div class="pwa-text">
+                <h3>Προσθήκη στην Αρχική Οθόνη</h3>
+                <p>Για γρηγορότερη πρόσβαση, προσθέστε αυτή την εφαρμογή στην αρχική οθόνη σας!</p>
+                <div class="pwa-buttons">
+                    <button class="pwa-btn pwa-install-btn" id="pwaInstallBtn">ΕΓΚΑΤΑΣΤΑΣΗ</button>
+                    <button class="pwa-btn pwa-later-btn" id="pwaLaterBtn">ΑΡΓΟΤΕΡΑ</button>
+                </div>
+            </div>
+            <button class="pwa-close-btn" id="pwaCloseBtn">×</button>
+        </div>
+    </div>
+
+    <!-- Add to Home Screen Instructions -->
+    <div class="pwa-instructions" id="pwaInstructions">
+        <div class="instructions-content">
+            <button class="instructions-close" id="instructionsCloseBtn">×</button>
+            <div class="instructions-icon">📱</div>
+            <h3>Προσθήκη στην Αρχική Οθόνη</h3>
+            <p>Ακολουθήστε αυτά τα βήματα για να προσθέσετε την εφαρμογή:</p>
+            
+            <div class="instruction-step">
+                <div class="step-number">1</div>
+                <div class="step-text">Πατήστε το κουμπί "Share" στο browser σας</div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">2</div>
+                <div class="step-text">Επιλέξτε "Προσθήκη στην Αρχική Οθόνη"</div>
+            </div>
+            
+            <div class="instruction-step">
+                <div class="step-number">3</div>
+                <div class="step-text">Πατήστε "Προσθήκη" για να ολοκληρωθεί</div>
+            </div>
+            
+            <button class="instructions-done-btn" id="instructionsDoneBtn">ΚΑΤΑΛΑΒΑ</button>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -1066,6 +1351,34 @@
         </div>
     </div>
 
+    <!-- Inline manifest file as a script -->
+    <script type="application/json" id="manifestData">
+        {
+            "name": "Παίξε & Κέρδισε",
+            "short_name": "Π&Κ",
+            "description": "Παίξε & Κέρδισε - Διαγωνισμός με έπαθλα",
+            "start_url": "./",
+            "display": "standalone",
+            "background_color": "#1A535C",
+            "theme_color": "#1A535C",
+            "orientation": "portrait",
+            "icons": [
+                {
+                    "src": "https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png",
+                    "sizes": "192x192",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png",
+                    "sizes": "512x512",
+                    "type": "image/png",
+                    "purpose": "any maskable"
+                }
+            ]
+        }
+    </script>
+
     <script>
         // ========== ΚΕΝΤΡΙΚΕΣ ΜΕΤΑΒΛΗΤΕΣ ==========
         let isAdmin = false;
@@ -1081,10 +1394,15 @@
         const WHEEL_COLORS = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0', '#FF9E6D'];
         let isSpinning = false;
 
+        // ========== PWA VARIABLES ==========
+        let deferredPrompt = null;
+        let pwaInstallShown = false;
+
         // ========== ΑΡΧΙΚΟΠΟΙΗΣΗ ==========
         document.addEventListener('DOMContentLoaded', function() {
             initSystem();
             setupEventListeners();
+            setupPWA();
             updateDisplay();
             generateWheel();
             loadWinners();
@@ -1097,6 +1415,113 @@
             updateStatistics();
             updateParticipationForm();
             loadParticipants();
+        }
+
+        // ========== PWA FUNCTIONALITY ==========
+        function setupPWA() {
+            // Create dynamic manifest link
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = 'data:application/json,' + encodeURIComponent(
+                document.getElementById('manifestData').textContent
+            );
+            document.head.appendChild(manifestLink);
+
+            // Listen for beforeinstallprompt event
+            window.addEventListener('beforeinstallprompt', (e) => {
+                // Prevent Chrome 67 and earlier from automatically showing the prompt
+                e.preventDefault();
+                // Stash the event so it can be triggered later
+                deferredPrompt = e;
+                
+                // Show install prompt after 5 seconds if not already shown
+                setTimeout(() => {
+                    if (!pwaInstallShown && !isPWAInstalled()) {
+                        showInstallPrompt();
+                    }
+                }, 5000);
+            });
+
+            // Listen for app installed event
+            window.addEventListener('appinstalled', (evt) => {
+                console.log('PWA installed successfully');
+                pwaInstallShown = true;
+                hideInstallPrompt();
+            });
+
+            // Check if already installed
+            if (isPWAInstalled()) {
+                pwaInstallShown = true;
+            }
+
+            // Setup PWA prompt buttons
+            document.getElementById('pwaInstallBtn').addEventListener('click', installPWA);
+            document.getElementById('pwaLaterBtn').addEventListener('click', hideInstallPrompt);
+            document.getElementById('pwaCloseBtn').addEventListener('click', hideInstallPrompt);
+            document.getElementById('instructionsCloseBtn').addEventListener('click', hideInstructions);
+            document.getElementById('instructionsDoneBtn').addEventListener('click', hideInstructions);
+        }
+
+        function showInstallPrompt() {
+            if (pwaInstallShown) return;
+            
+            const prompt = document.getElementById('pwaInstallPrompt');
+            prompt.style.display = 'block';
+            pwaInstallShown = true;
+            
+            // Auto hide after 30 seconds
+            setTimeout(() => {
+                if (prompt.style.display === 'block') {
+                    hideInstallPrompt();
+                }
+            }, 30000);
+        }
+
+        function hideInstallPrompt() {
+            const prompt = document.getElementById('pwaInstallPrompt');
+            prompt.style.display = 'none';
+        }
+
+        function showInstructions() {
+            document.getElementById('pwaInstructions').style.display = 'flex';
+        }
+
+        function hideInstructions() {
+            document.getElementById('pwaInstructions').style.display = 'none';
+        }
+
+        async function installPWA() {
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                    // Show instructions for manual installation
+                    showInstructions();
+                }
+                
+                // Clear the saved prompt since it can't be used again
+                deferredPrompt = null;
+                
+                // Hide the install prompt
+                hideInstallPrompt();
+            } else {
+                // If deferredPrompt is not available, show instructions
+                showInstructions();
+            }
+        }
+
+        function isPWAInstalled() {
+            // Check various methods to detect if PWA is installed
+            return (window.matchMedia('(display-mode: standalone)').matches) ||
+                   (window.navigator.standalone) ||
+                   (document.referrer.includes('android-app://'));
         }
 
         // ========== ΣΤΑΤΙΣΤΙΚΑ ==========
