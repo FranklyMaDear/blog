@@ -1110,7 +1110,7 @@
             }
         }
 
-        /* NEW: Floating Ad Balls */
+        /* NEW: Floating Ad Balls - ΚΑΘΑΡΑ ΧΩΡΙΣ ΠΛΑΙΣΙΑ */
         .floating-ball {
             position: fixed;
             width: 40px;
@@ -1123,34 +1123,45 @@
             color: white;
             z-index: 100;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Ελαφρύ shadow μόνο */
             animation: floatAround 15s infinite linear;
             font-size: 0.9rem;
             user-select: none;
             transition: transform 0.2s;
+            /* ΚΑΝΕΝΑ BORDER, ΚΑΝΕΝΑ OUTLINE */
+            border: none;
+            outline: none;
         }
 
         .floating-ball:hover {
-            transform: scale(1.2);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            transform: scale(1.3); /* Περισσότερο zoom */
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.7); /* Περισσότερο φωτισμό */
         }
 
         @keyframes floatAround {
             0% {
-                transform: translate(0, 0) rotate(0deg);
+                transform: translate(0, 0) rotate(0deg) scale(1);
             }
             25% {
-                transform: translate(20vw, 20vh) rotate(90deg);
+                transform: translate(20vw, 20vh) rotate(90deg) scale(1.05);
             }
             50% {
-                transform: translate(0, 40vh) rotate(180deg);
+                transform: translate(0, 40vh) rotate(180deg) scale(1);
             }
             75% {
-                transform: translate(-20vw, 20vh) rotate(270deg);
+                transform: translate(-20vw, 20vh) rotate(270deg) scale(1.05);
             }
             100% {
-                transform: translate(0, 0) rotate(360deg);
+                transform: translate(0, 0) rotate(360deg) scale(1);
             }
+        }
+
+        /* Αφαίρεση οπτικού πλαισίου κατά το click */
+        .floating-ball:active,
+        .floating-ball:focus {
+            outline: none !important;
+            border: none !important;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.9) !important;
         }
 
         /* Responsive */
@@ -1657,7 +1668,7 @@
         // ========== FLOATING BALLS ==========
         function createFloatingBalls() {
             const colors = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0'];
-            const ballCount = 5; // Αριθμός μπαλονιών
+            const ballCount = 5;
             
             for (let i = 0; i < ballCount; i++) {
                 setTimeout(() => {
@@ -1667,26 +1678,45 @@
                     ball.style.background = `linear-gradient(135deg, ${colors[i % colors.length]}, ${colors[(i + 1) % colors.length]})`;
                     
                     // Τυχαία αρχική θέση
-                    const startX = Math.random() * 80 + 10; // 10% έως 90%
+                    const startX = Math.random() * 80 + 10;
                     const startY = Math.random() * 80 + 10;
                     
                     ball.style.left = startX + 'vw';
                     ball.style.top = startY + 'vh';
                     
-                    // Διαφορετική ταχύτητα animation για κάθε μπάλα
+                    // Διαφορετική ταχύτητα animation
                     ball.style.animationDuration = (15 + Math.random() * 10) + 's';
                     ball.style.animationDelay = (Math.random() * 5) + 's';
                     
-                    // Κλικ event για το μπαλάκι
+                    // Αφαίρεση οπτικού πλαισίου
+                    ball.style.border = 'none';
+                    ball.style.outline = 'none';
+                    
+                    // Κλικ event για το μπαλάκι - ΚΑΤΕΥΘΕΙΑΝ
+                    ball.addEventListener('mousedown', function(e) {
+                        e.preventDefault(); // Αποφυγή default behavior
+                    });
+                    
                     ball.addEventListener('click', function(e) {
                         e.stopPropagation();
+                        e.preventDefault();
+                        
+                        // Κλικ στο μπαλάκι - ανοίγει script
                         openAdFromBall(this);
-                        createClickEffectFromBall(this);
+                        
+                        // Εφέ χωρίς πλαίσιο
+                        createBallClickEffect(this);
+                        
+                        // Αποφυγή οπτικού πλαισίου focus
+                        this.blur();
                     });
+                    
+                    // Αποφυγή πλαισίου με tab navigation
+                    ball.setAttribute('tabindex', '-1');
                     
                     document.body.appendChild(ball);
                     floatingBalls.push(ball);
-                }, i * 500); // Δημιουργία με καθυστέρηση
+                }, i * 500);
             }
         }
 
@@ -1723,6 +1753,8 @@
             bubble.style.background = ball.style.background;
             bubble.style.left = x + 'px';
             bubble.style.top = y + 'px';
+            bubble.style.border = 'none';
+            bubble.style.outline = 'none';
             
             document.body.appendChild(bubble);
             
@@ -1732,27 +1764,12 @@
                     bubble.parentNode.removeChild(bubble);
                 }
             }, 1500);
-        }
-
-        function createClickEffectFromBall(ball) {
-            const effect = document.createElement('div');
-            const rect = ball.getBoundingClientRect();
             
-            effect.style.cssText = `
-                position: fixed; width: 40px; height: 40px;
-                background: ${ball.style.background}; border-radius: 50%;
-                left: ${rect.left + rect.width/2 - 20}px; top: ${rect.top + rect.height/2 - 20}px;
-                pointer-events: none; z-index: 9999;
-                box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-            `;
-            document.body.appendChild(effect);
-            
-            effect.animate([
-                { transform: 'scale(0.5)', opacity: 1 },
-                { transform: 'scale(2)', opacity: 0 }
-            ], { duration: 500 });
-            
-            setTimeout(() => effect.remove(), 500);
+            // Εφέ στο μπαλάκι χωρίς πλαίσιο
+            ball.style.transform = 'scale(1.5)';
+            setTimeout(() => {
+                ball.style.transform = 'scale(1)';
+            }, 300);
         }
 
         // ========== AD SCRIPT LOADING FUNCTION ==========
