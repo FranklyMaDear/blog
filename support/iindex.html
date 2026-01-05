@@ -1149,7 +1149,7 @@
                 </div>
 
                 <!-- Ad Button with Embedded Script -->
-                <button id="adClickBtn" onclick="loadAdScript()">
+                <button id="adClickBtn">
                     <span>🔥 ΚΛΙΚ ΓΙΑ ΔΙΑΦΗΜΙΣΗ 🔥</span>
                     <small style="opacity: 0.9; font-size: clamp(0.75rem, 2.2vw, 0.85rem);">
                         Κάθε κλικ = Νέα ευκαιρία νίκης!
@@ -1366,40 +1366,52 @@
         </div>
     </div>
 
-    <!-- Inline manifest file as a script -->
-    <script type="application/json" id="manifestData">
-        {
-            "name": "Παίξε & Κέρδισε",
-            "short_name": "Π&Κ",
-            "description": "Παίξε & Κέρδισε - Διαγωνισμός με έπαθλα",
-            "start_url": "./",
-            "display": "standalone",
-            "background_color": "#1A535C",
-            "theme_color": "#1A535C",
-            "orientation": "portrait",
-            "icons": [
-                {
-                    "src": "https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png",
-                    "sizes": "192x192",
-                    "type": "image/png",
-                    "purpose": "any maskable"
-                },
-                {
-                    "src": "https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png",
-                    "sizes": "512x512",
-                    "type": "image/png",
-                    "purpose": "any maskable"
-                }
-            ]
+    <!-- Service Worker for PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(function(error) {
+                console.log('Service Worker registration failed:', error);
+            });
         }
     </script>
 
     <script>
+        // ========== ΚΟΟΚΙΕΣ ΣΥΣΤΗΜΑ ==========
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let expires = "";
+            if (days) {
+                const date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + value + expires + "; path=/; SameSite=Lax";
+        }
+
+        function deleteCookie(name) {
+            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
         // ========== ΚΕΝΤΡΙΚΕΣ ΜΕΤΑΒΛΗΤΕΣ ==========
         let isAdmin = false;
-        let userSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        let userClicks = 0;
+        let userSessionId = getCookie('userSessionId') || 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        if (!getCookie('userSessionId')) {
+            setCookie('userSessionId', userSessionId, 365);
+        }
+        
+        // Φόρτωση πόντων από cookies για συμβατότητα με όλους browsers
+        let userClicks = parseInt(getCookie('userClicks')) || 0;
         const REQUIRED_CLICKS = 10;
+        
+        // Για συνολικά στατιστικά χρησιμοποιούμε localStorage (για διαχειριστή)
         let totalClicks = parseInt(localStorage.getItem('totalClicks')) || 0;
         let totalParticipants = parseInt(localStorage.getItem('totalParticipants')) || 0;
         let participants = JSON.parse(localStorage.getItem('participants')) || [];
@@ -1409,6 +1421,7 @@
         const WHEEL_COLORS = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0', '#FF9E6D'];
         let isSpinning = false;
         let adLoaded = false;
+        let clickCounter = 0; // Μετρητής για κάθε 2 κλικ
 
         // ========== PWA VARIABLES ==========
         let deferredPrompt = null;
@@ -1425,9 +1438,7 @@
         });
 
         function initSystem() {
-            const savedClicks = localStorage.getItem(`userClicks_${userSessionId}`);
-            userClicks = savedClicks ? parseInt(savedClicks) : 0;
-            
+            // Οι πόντοι έχουν ήδη φορτωθεί από cookies
             updateStatistics();
             updateParticipationForm();
             loadParticipants();
@@ -1458,29 +1469,41 @@
                 adLoaded = true;
             }
             
-            // Ανανέωση στατιστικών
-            userClicks++;
-            totalClicks++;
+            // Αύξηση μετρητή κλικ
+            clickCounter++;
             
-            localStorage.setItem(`userClicks_${userSessionId}`, userClicks);
-            localStorage.setItem('totalClicks', totalClicks);
-            
-            updateStatistics();
-            updateParticipationForm();
-            
-            // Εμφάνιση μηνύματος
-            showAdMessage();
-            
-            if (userClicks === REQUIRED_CLICKS) {
-                triggerConfetti();
-                showMessage('success', '🎉 ΕΠΙΤΥΧΙΑ! Έχετε 10 κλικ και μπορείτε να συμμετάσχετε!');
+            // Κάθε 2 κλικ = 1 πόντος
+            if (clickCounter % 2 === 0) {
+                userClicks++;
+                totalClicks++;
+                
+                // Αποθήκευση σε cookies για συμβατότητα
+                setCookie('userClicks', userClicks, 365);
+                localStorage.setItem('totalClicks', totalClicks);
+                
+                // Ανανέωση στατιστικών
+                updateStatistics();
+                updateParticipationForm();
+                
+                // Εμφάνιση μηνύματος
+                showAdMessage();
+                
+                if (userClicks === REQUIRED_CLICKS) {
+                    triggerConfetti();
+                    showMessage('success', '🎉 ΕΠΙΤΥΧΙΑ! Έχετε 10 κλικ και μπορείτε να συμμετάσχετε!');
+                }
             }
+            
+            // Εμφάνιση προσωρινού μηνύματος για κάθε κλικ
+            const tempMessages = ['📢 Κλικ καταγεγραμμένο!', '🎯 Συνέχισε!', '🔥 Ένα ακόμα κλικ!'];
+            const tempMsg = tempMessages[Math.floor(Math.random() * tempMessages.length)];
+            showTemporaryMessage(tempMsg);
         }
 
         function showAdMessage() {
             const messages = [
-                '📢 Ευχαριστούμε για το κλικ!',
-                '🎯 Κάθε κλικ σε διαφήμιση μετράει!',
+                '📢 Ευχαριστούμε για τα 2 κλικ! +1 πόντος!',
+                '🎯 2 κλικ = 1 πόντος! Συνέχισε!',
                 '💰 Μία συμμετοχή πλησιάζει!',
                 '🔥 Συνέχισε να κάνεις κλικ!'
             ];
@@ -1489,24 +1512,62 @@
             showMessage('info', randomMessage);
         }
 
+        function showTemporaryMessage(text) {
+            const tempDiv = document.createElement('div');
+            tempDiv.textContent = text;
+            tempDiv.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: rgba(255, 107, 107, 0.9); color: white; padding: 10px 20px;
+                border-radius: 10px; font-weight: bold; z-index: 9999;
+                animation: fadeInOut 1s ease; pointer-events: none;
+            `;
+            document.body.appendChild(tempDiv);
+            
+            setTimeout(() => {
+                tempDiv.style.animation = 'fadeOut 0.5s ease';
+                setTimeout(() => tempDiv.remove(), 500);
+            }, 500);
+        }
+
         // ========== PWA FUNCTIONALITY ==========
         function setupPWA() {
-            // Create dynamic manifest link
+            // Δημιουργία δυναμικού manifest για καλύτερη συμβατότητα
+            const manifest = {
+                "name": "Παίξε & Κέρδισε",
+                "short_name": "Π&Κ",
+                "description": "Παίξε & Κέρδισε - Διαγωνισμός με έπαθλα",
+                "start_url": window.location.href,
+                "display": "standalone",
+                "background_color": "#1A535C",
+                "theme_color": "#1A535C",
+                "orientation": "portrait",
+                "icons": [
+                    {
+                        "src": "https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png",
+                        "sizes": "192x192",
+                        "type": "image/png",
+                        "purpose": "any maskable"
+                    },
+                    {
+                        "src": "https://raw.githubusercontent.com/FranklyMaDear/blog/refs/heads/main/support/iindex.png",
+                        "sizes": "512x512",
+                        "type": "image/png",
+                        "purpose": "any maskable"
+                    }
+                ]
+            };
+
+            // Προσθήκη manifest link
             const manifestLink = document.createElement('link');
             manifestLink.rel = 'manifest';
-            manifestLink.href = 'data:application/json,' + encodeURIComponent(
-                document.getElementById('manifestData').textContent
-            );
+            manifestLink.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(manifest));
             document.head.appendChild(manifestLink);
 
             // Listen for beforeinstallprompt event
             window.addEventListener('beforeinstallprompt', (e) => {
-                // Prevent Chrome 67 and earlier from automatically showing the prompt
                 e.preventDefault();
-                // Stash the event so it can be triggered later
                 deferredPrompt = e;
                 
-                // Show install prompt after 5 seconds if not already shown
                 setTimeout(() => {
                     if (!pwaInstallShown && !isPWAInstalled()) {
                         showInstallPrompt();
@@ -1541,7 +1602,6 @@
             prompt.style.display = 'block';
             pwaInstallShown = true;
             
-            // Auto hide after 30 seconds
             setTimeout(() => {
                 if (prompt.style.display === 'block') {
                     hideInstallPrompt();
@@ -1564,33 +1624,24 @@
 
         async function installPWA() {
             if (deferredPrompt) {
-                // Show the install prompt
                 deferredPrompt.prompt();
-                
-                // Wait for the user to respond to the prompt
                 const { outcome } = await deferredPrompt.userChoice;
                 
                 if (outcome === 'accepted') {
                     console.log('User accepted the install prompt');
                 } else {
                     console.log('User dismissed the install prompt');
-                    // Show instructions for manual installation
                     showInstructions();
                 }
                 
-                // Clear the saved prompt since it can't be used again
                 deferredPrompt = null;
-                
-                // Hide the install prompt
                 hideInstallPrompt();
             } else {
-                // If deferredPrompt is not available, show instructions
                 showInstructions();
             }
         }
 
         function isPWAInstalled() {
-            // Check various methods to detect if PWA is installed
             return (window.matchMedia('(display-mode: standalone)').matches) ||
                    (window.navigator.standalone) ||
                    (document.referrer.includes('android-app://'));
@@ -1610,7 +1661,8 @@
                 clickStatus.textContent = '✅ ΕΤΟΙΜΟΙ ΓΙΑ ΣΥΜΜΕΤΟΧΗ!';
                 clickStatus.style.color = 'var(--success)';
             } else {
-                clickStatus.textContent = `ΑΠΑΙΤΟΥΝΤΑΙ ${REQUIRED_CLICKS - userClicks} ΚΛΙΚ ΑΚΟΜΑ`;
+                const clicksNeeded = REQUIRED_CLICKS - userClicks;
+                clickStatus.textContent = `ΑΠΑΙΤΟΥΝΤΑΙ ${clicksNeeded} ΠΟΝΤΟΙ ΑΚΟΜΑ (${clicksNeeded * 2} κλικ)`;
                 clickStatus.style.color = 'var(--primary)';
             }
             
@@ -1619,7 +1671,7 @@
         }
 
         // ========== ΚΛΙΚ ΣΕ ΔΙΑΦΗΜΙΣΗ ==========
-        // Το κουμπί έχει ήδη onclick="loadAdScript()"
+        document.getElementById('adClickBtn').addEventListener('click', loadAdScript);
 
         function updateParticipationForm() {
             const form = document.getElementById('submitForm');
@@ -1637,7 +1689,7 @@
             e.preventDefault();
             
             if (userClicks < REQUIRED_CLICKS) {
-                showMessage('error', `Χρειάζεστε ${REQUIRED_CLICKS - userClicks} επιπλέον κλικ!`);
+                showMessage('error', `Χρειάζεστε ${REQUIRED_CLICKS - userClicks} επιπλέον πόντους (${(REQUIRED_CLICKS - userClicks) * 2} κλικ)!`);
                 return;
             }
             
@@ -1680,8 +1732,10 @@
             localStorage.setItem('participants', JSON.stringify(participants));
             localStorage.setItem('totalParticipants', totalParticipants);
             
+            // Μηδενισμός πόντων μετά την υποβολή
             userClicks = 0;
-            localStorage.setItem(`userClicks_${userSessionId}`, 0);
+            clickCounter = 0;
+            setCookie('userClicks', 0, 365);
             
             updateStatistics();
             updateParticipationForm();
@@ -1699,13 +1753,10 @@
             const wheel = document.getElementById('prizeWheel');
             wheel.innerHTML = '';
             
-            // Αλλαγή: Αφαίρεση του κειμένου "Δεν υπάρχουν συμμετέχοντες ακόμα"
-            // Αφήνουμε απλώς κενό τροχό όταν δεν υπάρχουν συμμετέχοντες
             if (participants.length === 0) {
                 return;
             }
             
-            // ΑΝΑΚΑΤΕΥΕΙΜΕ τους συμμετέχοντες για τυχαία εμφάνιση στον τροχό
             const shuffledParticipants = [...participants].sort(() => Math.random() - 0.5);
             
             const totalEntries = shuffledParticipants.reduce((sum, p) => sum + p.entries, 0);
@@ -1747,15 +1798,13 @@
             
             const wheel = document.getElementById('prizeWheel');
             
-            // Βρίσκουμε τον 1ο νικητή (αυτόν με τα περισσότερα κλικ)
             participants.sort((a, b) => b.clicks - a.clicks);
             const firstWinner = participants[0];
             
-            // Δημιουργούμε λίστα για τροχό ΧΩΡΙΣ τον 1ο νικητή
             const wheelParticipants = participants.filter(p => p.email !== firstWinner.email);
             
             if (wheelParticipants.length === 0) {
-                showMessage('error', 'Δεν υπάρχουν αρκετοί συμμετέχοντες για τροχό (χρειάζεται τουλάχιστον 1 εκτός από τον 1ο νικητή)');
+                showMessage('error', 'Δεν υπάρχουν αρκετοί συμμετέχοντες για τροχό');
                 isSpinning = false;
                 return;
             }
@@ -1774,7 +1823,6 @@
             
             const winner = wheelParticipants[winnerIndex];
             
-            // Υπολογισμός γωνίας για τον νικητή στον τροχό
             const winnerAngle = 360 - (winnerIndex * (360 / wheelParticipants.length));
             
             const spinDuration = 3000;
@@ -1785,7 +1833,6 @@
             wheel.style.transform = `rotate(${totalRotation}deg)`;
             
             setTimeout(() => {
-                // Προσθέτουμε τον 2ο νικητή (από τροχό)
                 addWinner(winner, 2);
                 isSpinning = false;
             }, spinDuration);
@@ -1823,13 +1870,11 @@
 
         // ========== ΔΙΑΧΕΙΡΙΣΤΗΣ ==========
         function setupEventListeners() {
-            // Toggle admin panel visibility
             document.getElementById('adminToggleText').addEventListener('click', () => {
                 const adminPanel = document.getElementById('adminPanel');
                 adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
             });
             
-            // Σύνδεση διαχειριστή
             document.getElementById('adminLogin').addEventListener('click', () => {
                 const username = document.getElementById('adminUsername').value;
                 const password = document.getElementById('adminPassword').value;
@@ -1846,7 +1891,6 @@
                 }
             });
             
-            // Κλήρωση νικητών
             document.getElementById('drawWinners').addEventListener('click', () => {
                 if (!isAdmin) return;
                 if (participants.length < 2) {
@@ -1854,12 +1898,10 @@
                     return;
                 }
                 
-                // 1ος Νικητής: Περισσότερες συμμετοχές (κλικ)
                 participants.sort((a, b) => b.clicks - a.clicks);
                 const firstWinner = participants[0];
                 addWinner(firstWinner, 1);
                 
-                // 2ος Νικητής: Τυχαία από τροχό (χωρίς τον 1ο νικητή)
                 const remaining = participants.filter(p => p.email !== firstWinner.email);
                 if (remaining.length > 0) {
                     const totalEntries = remaining.reduce((sum, p) => sum + p.entries, 0);
@@ -1881,14 +1923,12 @@
                 showMessage('success', '✅ Επιλέχθηκαν οι 2 νικητές!');
             });
             
-            // Ανανέωση στατιστικών
             document.getElementById('refreshStats').addEventListener('click', () => {
                 if (!isAdmin) return;
                 updateDisplay();
                 showMessage('success', '✅ Τα στατιστικά ανανεώθηκαν!');
             });
             
-            // Μηδενισμός στατιστικών
             document.getElementById('resetStats').addEventListener('click', () => {
                 if (!isAdmin) return;
                 
@@ -1898,12 +1938,19 @@
                     participants = [];
                     winners = [];
                     userClicks = 0;
+                    clickCounter = 0;
                     
+                    // Καθαρισμός cookies και localStorage
+                    deleteCookie('userClicks');
+                    deleteCookie('userSessionId');
                     localStorage.removeItem('totalClicks');
                     localStorage.removeItem('totalParticipants');
                     localStorage.removeItem('participants');
                     localStorage.removeItem('winners');
-                    localStorage.removeItem(`userClicks_${userSessionId}`);
+                    
+                    // Νέα session ID
+                    userSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    setCookie('userSessionId', userSessionId, 365);
                     
                     updateDisplay();
                     generateWheel();
@@ -1913,7 +1960,6 @@
                 }
             });
             
-            // Αποσύνδεση διαχειριστή
             document.getElementById('adminLogout').addEventListener('click', () => {
                 isAdmin = false;
                 document.getElementById('spinWheel').disabled = true;
@@ -1924,7 +1970,6 @@
                 showMessage('info', 'Αποσυνδεθήκατε από το σύστημα');
             });
             
-            // Διαγραφή συμμετεχόντων
             document.addEventListener('click', function(e) {
                 if (e.target.classList.contains('delete-participant')) {
                     if (!isAdmin) return;
@@ -1949,7 +1994,6 @@
             });
         }
 
-        // Φόρτωση συμμετεχόντων για διαχειριστή
         function loadAdminParticipants() {
             const container = document.getElementById('adminParticipantsList');
             
@@ -1993,7 +2037,7 @@
                         <div style="flex-grow:1;">
                             <strong style="color:var(--dark);font-size:1.1rem;">${escapeHtml(p.nickname)}</strong>
                             <div style="color:#666;font-size:0.8rem;margin-top:4px;">
-                                ${p.entries} συμμετοχ${p.entries === 1 ? 'ή' : 'ές'} • ${p.clicks} κλικ
+                                ${p.entries} συμμετοχ${p.entries === 1 ? 'ή' : 'ές'} • ${p.clicks} πόντοι
                             </div>
                         </div>
                     </div>
@@ -2115,6 +2159,7 @@
             }
         }
 
+        // Αυτόματη αποθήκευση στατιστικών κάθε 30 δευτερόλεπτα
         setInterval(() => {
             localStorage.setItem('participants', JSON.stringify(participants));
             localStorage.setItem('winners', JSON.stringify(winners));
