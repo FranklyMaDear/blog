@@ -1005,6 +1005,65 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* Loading Animation */
+        .loading-animation {
+            display: none;
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            position: relative;
+            width: 80px;
+            height: 20px;
+        }
+
+        .loading-dots div {
+            position: absolute;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+        }
+
+        .loading-dots div:nth-child(1) {
+            left: 8px;
+            animation: loading-dots1 0.6s infinite;
+        }
+
+        .loading-dots div:nth-child(2) {
+            left: 8px;
+            animation: loading-dots2 0.6s infinite;
+        }
+
+        .loading-dots div:nth-child(3) {
+            left: 32px;
+            animation: loading-dots2 0.6s infinite;
+        }
+
+        .loading-dots div:nth-child(4) {
+            left: 56px;
+            animation: loading-dots3 0.6s infinite;
+        }
+
+        @keyframes loading-dots1 {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes loading-dots3 {
+            0% { transform: scale(1); }
+            100% { transform: scale(0); }
+        }
+
+        @keyframes loading-dots2 {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(24px, 0); }
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -1148,17 +1207,30 @@
                     <div id="clickStatus" style="color: var(--primary); font-weight: bold; font-size: clamp(0.85rem, 2.8vw, 0.95rem);"></div>
                 </div>
 
+                <!-- Loading Animation -->
+                <div class="loading-animation" id="adLoading">
+                    <div class="loading-dots">
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
+                    <div style="color: var(--dark); font-size: 0.9rem; margin-top: 5px;">
+                        Φόρτωση διαφήμισης...
+                    </div>
+                </div>
+
                 <!-- Ad Button with Embedded Script -->
                 <button id="adClickBtn">
                     <span>🔥 ΚΛΙΚ ΓΙΑ ΔΙΑΦΗΜΙΣΗ 🔥</span>
                     <small style="opacity: 0.9; font-size: clamp(0.75rem, 2.2vw, 0.85rem);">
-                        Κάθε κλικ = Νέα ευκαιρία νίκης!
+                        2 προβολές διαφήμισης = 1 πόντος!
                     </small>
                 </button>
 
                 <div style="text-align: center; margin-top: 10px; color: #666; font-size: clamp(0.75rem, 2.2vw, 0.8rem); line-height: 1.3;">
-                    ⚡ <strong>10 κλικ</strong> απαιτούνται για συμμετοχή<br>
-                    🔄 Κάθε συμμετοχή αυξάνει τις πιθανότητες!
+                    ⚡ <strong>2 προβολές διαφήμισης = 1 πόντος</strong><br>
+                    🔄 Χρειάζονται 10 πόντοι για συμμετοχή
                 </div>
             </div>
 
@@ -1366,17 +1438,6 @@
         </div>
     </div>
 
-    <!-- Service Worker for PWA -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').then(function(registration) {
-                console.log('Service Worker registered with scope:', registration.scope);
-            }).catch(function(error) {
-                console.log('Service Worker registration failed:', error);
-            });
-        }
-    </script>
-
     <script>
         // ========== ΚΟΟΚΙΕΣ ΣΥΣΤΗΜΑ ==========
         function getCookie(name) {
@@ -1407,11 +1468,12 @@
             setCookie('userSessionId', userSessionId, 365);
         }
         
-        // Φόρτωση πόντων από cookies για συμβατότητα με όλους browsers
+        // Μετρητές για διαφημίσεις
         let userClicks = parseInt(getCookie('userClicks')) || 0;
+        let adViews = parseInt(getCookie('adViews')) || 0; // Μετρητής προβολών διαφημίσεων
         const REQUIRED_CLICKS = 10;
         
-        // Για συνολικά στατιστικά χρησιμοποιούμε localStorage (για διαχειριστή)
+        // Για συνολικά στατιστικά
         let totalClicks = parseInt(localStorage.getItem('totalClicks')) || 0;
         let totalParticipants = parseInt(localStorage.getItem('totalParticipants')) || 0;
         let participants = JSON.parse(localStorage.getItem('participants')) || [];
@@ -1420,8 +1482,8 @@
         const ADMIN_CREDENTIALS = { username: "ap.fragos@gmail.com", password: "Mariza_2020" };
         const WHEEL_COLORS = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0', '#FF9E6D'];
         let isSpinning = false;
-        let adLoaded = false;
-        let clickCounter = 0; // Μετρητής για κάθε 2 κλικ
+        let isAdLoading = false;
+        let adScriptLoaded = false;
 
         // ========== PWA VARIABLES ==========
         let deferredPrompt = null;
@@ -1438,7 +1500,6 @@
         });
 
         function initSystem() {
-            // Οι πόντοι έχουν ήδη φορτωθεί από cookies
             updateStatistics();
             updateParticipationForm();
             loadParticipants();
@@ -1446,70 +1507,113 @@
 
         // ========== AD SCRIPT LOADING FUNCTION ==========
         function loadAdScript() {
-            if (userClicks >= REQUIRED_CLICKS) {
-                showMessage('info', '✅ Έχετε ήδη 10 κλικ! Μπορείτε να συμμετάσχετε.');
+            if (isAdLoading) {
+                showMessage('info', '⏳ Παρακαλώ περιμένετε, φορτώνει ήδη διαφήμιση...');
                 return;
             }
             
-            // Άνοιγμα διαφημίσεων
-            openAds();
+            if (userClicks >= REQUIRED_CLICKS) {
+                showMessage('info', '✅ Έχετε ήδη 10 πόντοι! Μπορείτε να συμμετάσχετε.');
+                return;
+            }
+            
+            // Εμφάνιση animation φόρτωσης
+            document.getElementById('adLoading').style.display = 'block';
+            document.getElementById('adClickBtn').disabled = true;
+            isAdLoading = true;
+            
+            // Άμεσο άνοιγμα script διαφήμισης
+            openAdsImmediately();
             
             createClickEffect(event);
         }
 
-        function openAds() {
-            // Εκτέλεση script διαφήμισης
-            if (!adLoaded) {
+        function openAdsImmediately() {
+            // Φόρτωση script διαφήμισης αμέσως
+            if (!adScriptLoaded) {
                 const script = document.createElement('script');
                 script.src = 'https://quge5.com/88/tag.min.js';
                 script.setAttribute('data-zone', '198679');
                 script.async = true;
                 script.setAttribute('data-cfasync', 'false');
+                
+                // Προσθήκη event listeners για να ξέρουμε πότε φορτώνει
+                script.onload = function() {
+                    console.log('Ad script loaded successfully');
+                    adScriptLoaded = true;
+                    startAdViewCounting();
+                };
+                
+                script.onerror = function() {
+                    console.log('Ad script failed to load');
+                    showMessage('error', 'Δεν ήταν δυνατή η φόρτωση της διαφήμισης. Παρακαλώ δοκιμάστε ξανά.');
+                    document.getElementById('adLoading').style.display = 'none';
+                    document.getElementById('adClickBtn').disabled = false;
+                    isAdLoading = false;
+                };
+                
                 document.body.appendChild(script);
-                adLoaded = true;
+            } else {
+                startAdViewCounting();
             }
+        }
+
+        function startAdViewCounting() {
+            // Προσθήκη μιας προβολής
+            adViews++;
+            setCookie('adViews', adViews, 365);
             
-            // Αύξηση μετρητή κλικ
-            clickCounter++;
+            // Εμφάνιση μηνύματος για την τρέχουσα προβολή
+            showTemporaryMessage(`📺 Προβολή ${adViews}/2`);
             
-            // Κάθε 2 κλικ = 1 πόντος
-            if (clickCounter % 2 === 0) {
+            // Απόκρυψη loading animation μετά από 2 δευτερόλεπτα
+            setTimeout(() => {
+                document.getElementById('adLoading').style.display = 'none';
+                document.getElementById('adClickBtn').disabled = false;
+                isAdLoading = false;
+            }, 2000);
+            
+            // Έλεγχος αν έχουμε 2 προβολές για να δώσουμε πόντο
+            if (adViews >= 2) {
+                // Δίνουμε 1 πόντο
                 userClicks++;
                 totalClicks++;
                 
-                // Αποθήκευση σε cookies για συμβατότητα
+                // Μηδενίζουμε το μετρητή προβολών
+                adViews = 0;
+                
+                // Αποθήκευση σε cookies και localStorage
                 setCookie('userClicks', userClicks, 365);
+                setCookie('adViews', 0, 365);
                 localStorage.setItem('totalClicks', totalClicks);
+                
+                // Εμφάνιση μηνύματος επιτυχίας
+                showAdSuccessMessage();
                 
                 // Ανανέωση στατιστικών
                 updateStatistics();
                 updateParticipationForm();
                 
-                // Εμφάνιση μηνύματος
-                showAdMessage();
-                
                 if (userClicks === REQUIRED_CLICKS) {
                     triggerConfetti();
-                    showMessage('success', '🎉 ΕΠΙΤΥΧΙΑ! Έχετε 10 κλικ και μπορείτε να συμμετάσχετε!');
+                    showMessage('success', '🎉 ΕΠΙΤΥΧΙΑ! Έχετε 10 πόντοι και μπορείτε να συμμετάσχετε!');
                 }
             }
-            
-            // Εμφάνιση προσωρινού μηνύματος για κάθε κλικ
-            const tempMessages = ['📢 Κλικ καταγεγραμμένο!', '🎯 Συνέχισε!', '🔥 Ένα ακόμα κλικ!'];
-            const tempMsg = tempMessages[Math.floor(Math.random() * tempMessages.length)];
-            showTemporaryMessage(tempMsg);
         }
 
-        function showAdMessage() {
+        function showAdSuccessMessage() {
             const messages = [
-                '📢 Ευχαριστούμε για τα 2 κλικ! +1 πόντος!',
-                '🎯 2 κλικ = 1 πόντος! Συνέχισε!',
-                '💰 Μία συμμετοχή πλησιάζει!',
-                '🔥 Συνέχισε να κάνεις κλικ!'
+                '🎉 +1 ΠΟΝΤΟΣ! (2 προβολές)',
+                '💰 Συγχαρητήρια! Κέρδισες 1 πόντο!',
+                '🔥 2 προβολές = 1 πόντος!',
+                '⚡ Μπράβο! Συγκέντρωσες πόντο!'
             ];
             
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            showMessage('info', randomMessage);
+            showMessage('success', randomMessage);
+            
+            // Εμφάνιση animation για τον νέο πόντο
+            showPointAnimation();
         }
 
         function showTemporaryMessage(text) {
@@ -1517,21 +1621,67 @@
             tempDiv.textContent = text;
             tempDiv.style.cssText = `
                 position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                background: rgba(255, 107, 107, 0.9); color: white; padding: 10px 20px;
-                border-radius: 10px; font-weight: bold; z-index: 9999;
-                animation: fadeInOut 1s ease; pointer-events: none;
+                background: rgba(255, 107, 107, 0.9); color: white; padding: 12px 24px;
+                border-radius: 12px; font-weight: bold; z-index: 9999;
+                animation: fadeInOut 2s ease; pointer-events: none;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             `;
             document.body.appendChild(tempDiv);
             
             setTimeout(() => {
                 tempDiv.style.animation = 'fadeOut 0.5s ease';
                 setTimeout(() => tempDiv.remove(), 500);
-            }, 500);
+            }, 1500);
         }
+
+        function showPointAnimation() {
+            const pointDiv = document.createElement('div');
+            pointDiv.textContent = '+1 ΠΟΝΤΟΣ!';
+            pointDiv.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, var(--primary), var(--warning));
+                color: white; padding: 15px 30px; border-radius: 15px;
+                font-weight: bold; font-size: 1.2rem; z-index: 10000;
+                animation: pointAnimation 1.5s ease; pointer-events: none;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            `;
+            document.body.appendChild(pointDiv);
+            
+            setTimeout(() => {
+                pointDiv.style.animation = 'fadeOut 0.5s ease';
+                setTimeout(() => pointDiv.remove(), 500);
+            }, 1200);
+        }
+
+        // Προσθήκη animation για τους πόντους
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+                40% { transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(1.2); }
+            }
+            
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            
+            @keyframes pointAnimation {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+                40% { transform: translate(-50%, -50%) scale(1); }
+                60% { transform: translate(-50%, -50%) scale(1.1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+            }
+        `;
+        document.head.appendChild(style);
 
         // ========== PWA FUNCTIONALITY ==========
         function setupPWA() {
-            // Δημιουργία δυναμικού manifest για καλύτερη συμβατότητα
             const manifest = {
                 "name": "Παίξε & Κέρδισε",
                 "short_name": "Π&Κ",
@@ -1557,13 +1707,11 @@
                 ]
             };
 
-            // Προσθήκη manifest link
             const manifestLink = document.createElement('link');
             manifestLink.rel = 'manifest';
             manifestLink.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(manifest));
             document.head.appendChild(manifestLink);
 
-            // Listen for beforeinstallprompt event
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
                 deferredPrompt = e;
@@ -1575,19 +1723,16 @@
                 }, 5000);
             });
 
-            // Listen for app installed event
             window.addEventListener('appinstalled', (evt) => {
                 console.log('PWA installed successfully');
                 pwaInstallShown = true;
                 hideInstallPrompt();
             });
 
-            // Check if already installed
             if (isPWAInstalled()) {
                 pwaInstallShown = true;
             }
 
-            // Setup PWA prompt buttons
             document.getElementById('pwaInstallBtn').addEventListener('click', installPWA);
             document.getElementById('pwaLaterBtn').addEventListener('click', hideInstallPrompt);
             document.getElementById('pwaCloseBtn').addEventListener('click', hideInstallPrompt);
@@ -1662,7 +1807,8 @@
                 clickStatus.style.color = 'var(--success)';
             } else {
                 const clicksNeeded = REQUIRED_CLICKS - userClicks;
-                clickStatus.textContent = `ΑΠΑΙΤΟΥΝΤΑΙ ${clicksNeeded} ΠΟΝΤΟΙ ΑΚΟΜΑ (${clicksNeeded * 2} κλικ)`;
+                const adViewsNeeded = clicksNeeded * 2 - (adViews % 2);
+                clickStatus.textContent = `Προβολές: ${adViews}/2 | Χρειάζονται: ${adViewsNeeded} ακόμα`;
                 clickStatus.style.color = 'var(--primary)';
             }
             
@@ -1689,7 +1835,9 @@
             e.preventDefault();
             
             if (userClicks < REQUIRED_CLICKS) {
-                showMessage('error', `Χρειάζεστε ${REQUIRED_CLICKS - userClicks} επιπλέον πόντους (${(REQUIRED_CLICKS - userClicks) * 2} κλικ)!`);
+                const clicksNeeded = REQUIRED_CLICKS - userClicks;
+                const adViewsNeeded = clicksNeeded * 2 - (adViews % 2);
+                showMessage('error', `Χρειάζεστε ${clicksNeeded} επιπλέον πόντους (${adViewsNeeded} προβολές διαφήμισης)!`);
                 return;
             }
             
@@ -1734,8 +1882,9 @@
             
             // Μηδενισμός πόντων μετά την υποβολή
             userClicks = 0;
-            clickCounter = 0;
+            adViews = 0;
             setCookie('userClicks', 0, 365);
+            setCookie('adViews', 0, 365);
             
             updateStatistics();
             updateParticipationForm();
@@ -1938,17 +2087,16 @@
                     participants = [];
                     winners = [];
                     userClicks = 0;
-                    clickCounter = 0;
+                    adViews = 0;
                     
-                    // Καθαρισμός cookies και localStorage
                     deleteCookie('userClicks');
+                    deleteCookie('adViews');
                     deleteCookie('userSessionId');
                     localStorage.removeItem('totalClicks');
                     localStorage.removeItem('totalParticipants');
                     localStorage.removeItem('participants');
                     localStorage.removeItem('winners');
                     
-                    // Νέα session ID
                     userSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     setCookie('userSessionId', userSessionId, 365);
                     
