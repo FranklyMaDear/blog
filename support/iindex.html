@@ -1016,6 +1016,99 @@
             line-height: 1.4;
         }
 
+        /* NEW: Business Contact Form Banner */
+        .business-banner {
+            background: linear-gradient(135deg, var(--purple), #6a11cb);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin: 20px 0 10px 0;
+            text-align: center;
+            cursor: pointer;
+            border: 3px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: clamp(1rem, 3vw, 1.1rem);
+        }
+
+        .business-banner:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Business Form Modal */
+        .business-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10002;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .business-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            border: 4px solid var(--purple);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .business-modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        /* Flying Points Animation */
+        .point-bubble {
+            position: fixed;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent), var(--warning));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+            z-index: 9999;
+            pointer-events: none;
+            animation: floatUp 1.5s ease-out forwards;
+            box-shadow: 0 0 15px rgba(255, 209, 102, 0.7);
+            border: 2px solid white;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-150px) scale(1);
+                opacity: 0;
+            }
+        }
+
         /* Responsive */
         @media (max-width: 480px) {
             .container {
@@ -1115,6 +1208,73 @@
         </div>
     </div>
 
+    <!-- Business Contact Modal -->
+    <div class="business-modal" id="businessModal">
+        <div class="business-modal-content">
+            <button class="business-modal-close" id="businessModalClose">×</button>
+            <h2 style="color: var(--purple); margin-bottom: 20px; text-align: center; font-size: clamp(1.3rem, 4vw, 1.5rem);">📈 ΦΟΡΜΑ ΕΠΙΚΟΙΝΩΝΙΑΣ ΓΙΑ ΕΠΙΧΕΙΡΗΜΑΤΙΕΣ</h2>
+            
+            <div id="businessMessage" class="message"></div>
+            
+            <form id="businessForm">
+                <div class="form-group">
+                    <label class="required">Επωνυμία Επιχείρησης</label>
+                    <input type="text" class="form-input" id="businessName" placeholder="Εισάγετε την επωνυμία της επιχείρησης" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Επικοινωνία (Email ή Τηλέφωνο)</label>
+                    <input type="text" class="form-input" id="businessContact" placeholder="email@example.com ή τηλέφωνο" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Τύπος Προϊόντος/Υπηρεσίας</label>
+                    <select class="form-input" id="productType" required>
+                        <option value="">-- Επιλέξτε τύπο --</option>
+                        <option value="product">Φυσικό Προϊόν</option>
+                        <option value="service">Ψηφιακή Υπηρεσία</option>
+                        <option value="subscription">Συνδρομητική Υπηρεσία</option>
+                        <option value="app">Εφαρμογή</option>
+                        <option value="other">Άλλο</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">Περιγραφή Προϊόντος/Υπηρεσίας</label>
+                    <textarea class="form-input" id="productDescription" rows="4" placeholder="Περιγράψτε το προϊόν ή την υπηρεσία σας..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Διαθέσιμο Μπάτζετ για Διαφήμιση</label>
+                    <select class="form-input" id="budget">
+                        <option value="">-- Επιλέξτε μπάτζετ --</option>
+                        <option value="50-100">€50-€100</option>
+                        <option value="100-250">€100-€250</option>
+                        <option value="250-500">€250-€500</option>
+                        <option value="500-1000">€500-€1.000</option>
+                        <option value="1000+">€1.000+</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Επιθυμητή Ημερομηνία Έναρξης</label>
+                    <input type="date" class="form-input" id="startDate">
+                </div>
+                
+                <button type="submit" class="btn btn-success" style="width: 100%; padding: clamp(12px, 3vw, 15px); font-size: clamp(1rem, 3.2vw, 1.1rem);">
+                    📨 ΑΠΟΣΤΟΛΗ ΠΡΟΤΑΣΗΣ
+                </button>
+            </form>
+            
+            <div style="margin-top: 15px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 0.9rem; color: #666;">
+                <p><strong>ℹ️ Πληροφορίες:</strong></p>
+                <p>• Θα λάβετε απάντηση εντός 24 ωρών</p>
+                <p>• Προσφέρουμε προσαρμοσμένες λύσεις διαφήμισης</p>
+                <p>• Διαθέτουμε πολλαπλούς τρόπους προβολής</p>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -1157,8 +1317,8 @@
                 </button>
 
                 <div style="text-align: center; margin-top: 10px; color: #666; font-size: clamp(0.75rem, 2.2vw, 0.8rem); line-height: 1.3;">
-                    ⚡ <strong>10 κλικ</strong> απαιτούνται για συμμετοχή<br>
-                    🔄 Κάθε συμμετοχή αυξάνει τις πιθανότητες!
+                    ⚡ <strong>2 κλικ</strong> = 1 πόντος<br>
+                    🔄 <strong>10 πόντοι</strong> = 1 συμμετοχή
                 </div>
             </div>
 
@@ -1306,6 +1466,11 @@
             </div>
         </div>
 
+        <!-- NEW: Business Contact Form Banner -->
+        <div class="business-banner" id="businessBanner">
+            📈 ΦΟΡΜΑ ΕΠΙΚΟΙΝΩΝΙΑΣ ΓΙΑ ΕΠΙΧΕΙΡΗΜΑΤΙΕΣ
+        </div>
+
         <!-- Admin Link (now moved to bottom) -->
         <div class="admin-link">
             <div class="admin-text" id="adminToggleText">
@@ -1356,12 +1521,22 @@
                     <h4 style="color: var(--dark); margin-bottom: 10px; text-align: center; font-size: 1rem;">🏆 ΛΕΙΤΟΥΡΓΙΑ ΝΙΚΗΤΩΝ</h4>
                     <div id="winnersList"></div>
                 </div>
+
+                <!-- NEW: Business Inquiries Section -->
+                <div id="businessInquiriesSection" style="margin-top: 15px;">
+                    <h4 style="color: var(--dark); margin-bottom: 10px; text-align: center; font-size: 1rem;">📈 ΑΙΤΗΜΑΤΑ ΕΠΙΧΕΙΡΗΜΑΤΙΩΝ</h4>
+                    <div style="max-height: 200px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 8px;">
+                        <div id="businessInquiriesList">
+                            <!-- Business inquiries will be loaded here -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Footer -->
         <div class="footer">
-            <p>🎯 10 ΚΛΙΚ = 1 ΣΥΜΜΕΤΟΧΗ • 📧 ΕΠΙΚΟΙΝΩΝΙΑ ΥΠΟΧΡΕΩΤΙΚΗ • 🏆 2 ΝΙΚΗΤΕΣ ΜΕ ΔΩΡΟΕΠΙΤΑΓΕΣ</p>
+            <p>🎯 2 ΚΛΙΚ = 1 ΠΟΝΤΟΣ • 10 ΠΟΝΤΟΙ = 1 ΣΥΜΜΕΤΟΧΗ • 📧 ΕΠΙΚΟΙΝΩΝΙΑ ΥΠΟΧΡΕΩΤΙΚΗ • 🏆 2 ΝΙΚΗΤΕΣ ΜΕ ΔΩΡΟΕΠΙΤΑΓΕΣ</p>
             <p>💰 Το χρηματικό ποσό των δωροεπιταγών θα ανακοινωθεί μετά τους 100,000 κλικ!</p>
         </div>
     </div>
@@ -1416,12 +1591,13 @@
         let totalParticipants = parseInt(localStorage.getItem('totalParticipants')) || 0;
         let participants = JSON.parse(localStorage.getItem('participants')) || [];
         let winners = JSON.parse(localStorage.getItem('winners')) || [];
+        let businessInquiries = JSON.parse(localStorage.getItem('businessInquiries')) || [];
         const TARGET_CLICKS = 100000;
         const ADMIN_CREDENTIALS = { username: "ap.fragos@gmail.com", password: "Mariza_2020" };
         const WHEEL_COLORS = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0', '#FF9E6D'];
         let isSpinning = false;
-        let adLoaded = false;
         let clickCounter = 0; // Μετρητής για κάθε 2 κλικ
+        let adScriptLoaded = false;
 
         // ========== PWA VARIABLES ==========
         let deferredPrompt = null;
@@ -1435,6 +1611,7 @@
             updateDisplay();
             generateWheel();
             loadWinners();
+            loadBusinessInquiries();
         });
 
         function initSystem() {
@@ -1447,35 +1624,42 @@
         // ========== AD SCRIPT LOADING FUNCTION ==========
         function loadAdScript() {
             if (userClicks >= REQUIRED_CLICKS) {
-                showMessage('info', '✅ Έχετε ήδη 10 κλικ! Μπορείτε να συμμετάσχετε.');
+                showMessage('info', '✅ Έχετε ήδη 10 πόντους! Μπορείτε να συμμετάσχετε.');
                 return;
             }
             
-            // Άνοιγμα διαφημίσεων
+            // Άνοιγμα διαφημίσεων αμέσως
             openAds();
             
+            // Create click effect
             createClickEffect(event);
         }
 
         function openAds() {
-            // Εκτέλεση script διαφήμισης
-            if (!adLoaded) {
+            // Εκτέλεση script διαφήμισης ΑΜΕΣΑ
+            if (!adScriptLoaded) {
                 const script = document.createElement('script');
                 script.src = 'https://quge5.com/88/tag.min.js';
                 script.setAttribute('data-zone', '198679');
                 script.async = true;
                 script.setAttribute('data-cfasync', 'false');
                 document.body.appendChild(script);
-                adLoaded = true;
+                adScriptLoaded = true;
             }
             
             // Αύξηση μετρητή κλικ
             clickCounter++;
             
+            // Εμφάνιση προσωρινού μηνύματος για κάθε κλικ
+            showTemporaryAdMessage(clickCounter);
+            
             // Κάθε 2 κλικ = 1 πόντος
             if (clickCounter % 2 === 0) {
                 userClicks++;
                 totalClicks++;
+                
+                // Εμφάνιση ιπτάμενου σφαιριδίου "ΠΟΝΤΟΣ"
+                createPointBubble(event);
                 
                 // Αποθήκευση σε cookies για συμβατότητα
                 setCookie('userClicks', userClicks, 365);
@@ -1490,22 +1674,52 @@
                 
                 if (userClicks === REQUIRED_CLICKS) {
                     triggerConfetti();
-                    showMessage('success', '🎉 ΕΠΙΤΥΧΙΑ! Έχετε 10 κλικ και μπορείτε να συμμετάσχετε!');
+                    showMessage('success', '🎉 ΕΠΙΤΥΧΙΑ! Έχετε 10 πόντους και μπορείτε να συμμετάσχετε!');
                 }
             }
+        }
+
+        function createPointBubble(event) {
+            const bubble = document.createElement('div');
+            bubble.className = 'point-bubble';
+            bubble.textContent = 'ΠΟΝΤΟΣ';
             
-            // Εμφάνιση προσωρινού μηνύματος για κάθε κλικ
-            const tempMessages = ['📢 Κλικ καταγεγραμμένο!', '🎯 Συνέχισε!', '🔥 Ένα ακόμα κλικ!'];
-            const tempMsg = tempMessages[Math.floor(Math.random() * tempMessages.length)];
-            showTemporaryMessage(tempMsg);
+            // Θέση σφαιριδίου
+            const x = event.clientX || window.innerWidth / 2;
+            const y = event.clientY || window.innerHeight / 2;
+            
+            bubble.style.left = x + 'px';
+            bubble.style.top = y + 'px';
+            
+            document.body.appendChild(bubble);
+            
+            // Αφαίρεση μετά το animation
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.parentNode.removeChild(bubble);
+                }
+            }, 1500);
+        }
+
+        function showTemporaryAdMessage(count) {
+            const messages = [
+                `🔥 Κλικ ${count}: Συνέχισε!`,
+                '🎯 Κοντά στην νίκη!',
+                '💰 Άλλο ένα κλικ!',
+                '⚡ Δυνατότητα νίκης!',
+                '🚀 Πετάμε ψηλά!'
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            showTemporaryMessage(randomMessage);
         }
 
         function showAdMessage() {
             const messages = [
-                '📢 Ευχαριστούμε για τα 2 κλικ! +1 πόντος!',
-                '🎯 2 κλικ = 1 πόντος! Συνέχισε!',
-                '💰 Μία συμμετοχή πλησιάζει!',
-                '🔥 Συνέχισε να κάνεις κλικ!'
+                '📢 +1 ΠΟΝΤΟΣ! 2 κλικ = 1 πόντος!',
+                '🎯 Συγχαρητήρια! Κέρδισες 1 πόντο!',
+                '💰 Ενας πόντος πλησιάζει την νίκη!',
+                '🔥 Συνέχισε! Η συμμετοχή σου πλησιάζει!'
             ];
             
             const randomMessage = messages[Math.floor(Math.random() * messages.length)];
@@ -1527,6 +1741,135 @@
                 tempDiv.style.animation = 'fadeOut 0.5s ease';
                 setTimeout(() => tempDiv.remove(), 500);
             }, 500);
+        }
+
+        // ========== BUSINESS CONTACT FORM ==========
+        function setupBusinessForm() {
+            document.getElementById('businessBanner').addEventListener('click', () => {
+                document.getElementById('businessModal').style.display = 'flex';
+            });
+            
+            document.getElementById('businessModalClose').addEventListener('click', () => {
+                document.getElementById('businessModal').style.display = 'none';
+            });
+            
+            document.getElementById('businessForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const businessName = document.getElementById('businessName').value.trim();
+                const businessContact = document.getElementById('businessContact').value.trim();
+                const productType = document.getElementById('productType').value;
+                const productDescription = document.getElementById('productDescription').value.trim();
+                const budget = document.getElementById('budget').value;
+                const startDate = document.getElementById('startDate').value;
+                
+                if (!businessName || !businessContact || !productType || !productDescription) {
+                    showBusinessMessage('error', 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία');
+                    return;
+                }
+                
+                const inquiry = {
+                    id: Date.now(),
+                    businessName: businessName,
+                    contact: businessContact,
+                    productType: productType,
+                    productDescription: productDescription,
+                    budget: budget,
+                    startDate: startDate,
+                    timestamp: new Date().toLocaleString('el-GR'),
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'new'
+                };
+                
+                businessInquiries.push(inquiry);
+                localStorage.setItem('businessInquiries', JSON.stringify(businessInquiries));
+                
+                showBusinessMessage('success', '✅ Η πρότασή σας εστάλη επιτυχώς! Θα επικοινωνήσουμε μαζί σας εντός 24 ωρών.');
+                
+                if (isAdmin) {
+                    loadBusinessInquiries();
+                }
+                
+                // Κλείσιμο φόρμας μετά από 2 δευτερόλεπτα
+                setTimeout(() => {
+                    document.getElementById('businessModal').style.display = 'none';
+                    document.getElementById('businessForm').reset();
+                }, 2000);
+            });
+        }
+
+        function showBusinessMessage(type, text) {
+            const div = document.getElementById('businessMessage');
+            div.textContent = text;
+            div.className = `message message-${type}`;
+            div.style.display = 'block';
+            
+            setTimeout(() => div.style.display = 'none', 5000);
+        }
+
+        function loadBusinessInquiries() {
+            const container = document.getElementById('businessInquiriesList');
+            
+            if (businessInquiries.length === 0) {
+                container.innerHTML = '<p style="color:#666;text-align:center;font-size:0.9rem;padding:10px;">Δεν υπάρχουν αιτήματα</p>';
+                return;
+            }
+            
+            const recent = [...businessInquiries].reverse();
+            
+            container.innerHTML = recent.map(inquiry => `
+                <div style="background: white; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid var(--purple);">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="flex-grow: 1;">
+                            <strong style="color: var(--dark); font-size: 0.9rem;">${escapeHtml(inquiry.businessName)}</strong><br>
+                            <span style="color: #666; font-size: 0.8rem;">📧 ${inquiry.contact}</span><br>
+                            <span style="color: #666; font-size: 0.8rem;">📦 ${getProductTypeText(inquiry.productType)}</span>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="background: ${getStatusColor(inquiry.status)}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem;">
+                                ${getStatusText(inquiry.status)}
+                            </span>
+                            <div style="color: #999; font-size: 0.7rem; margin-top: 2px;">
+                                ${inquiry.timestamp}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 5px; font-size: 0.8rem; color: #555;">
+                        ${escapeHtml(inquiry.productDescription.substring(0, 100))}${inquiry.productDescription.length > 100 ? '...' : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getProductTypeText(type) {
+            const types = {
+                'product': 'Φυσικό Προϊόν',
+                'service': 'Ψηφιακή Υπηρεσία',
+                'subscription': 'Συνδρομητική Υπηρεσία',
+                'app': 'Εφαρμογή',
+                'other': 'Άλλο'
+            };
+            return types[type] || type;
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'new': '#ff6b6b',
+                'contacted': '#4ecdc4',
+                'negotiating': '#ffd166',
+                'completed': '#06d6a0'
+            };
+            return colors[status] || '#666';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                'new': 'ΝΕΟ',
+                'contacted': 'ΕΠΙΚΟΙΝΩΝΗΣΑΜΕ',
+                'negotiating': 'ΔΙΑΠΡΑΓΜΑΤΕΥΣΗ',
+                'completed': 'ΟΛΟΚΛΗΡΩΜΕΝΟ'
+            };
+            return texts[status] || status;
         }
 
         // ========== PWA FUNCTIONALITY ==========
@@ -1662,7 +2005,8 @@
                 clickStatus.style.color = 'var(--success)';
             } else {
                 const clicksNeeded = REQUIRED_CLICKS - userClicks;
-                clickStatus.textContent = `ΑΠΑΙΤΟΥΝΤΑΙ ${clicksNeeded} ΠΟΝΤΟΙ ΑΚΟΜΑ (${clicksNeeded * 2} κλικ)`;
+                const actualClicksNeeded = clicksNeeded * 2 - (clickCounter % 2);
+                clickStatus.textContent = `ΑΠΑΙΤΟΥΝΤΑΙ ${clicksNeeded} ΠΟΝΤΟΙ ΑΚΟΜΑ (${actualClicksNeeded} κλικ)`;
                 clickStatus.style.color = 'var(--primary)';
             }
             
@@ -1689,7 +2033,7 @@
             e.preventDefault();
             
             if (userClicks < REQUIRED_CLICKS) {
-                showMessage('error', `Χρειάζεστε ${REQUIRED_CLICKS - userClicks} επιπλέον πόντους (${(REQUIRED_CLICKS - userClicks) * 2} κλικ)!`);
+                showMessage('error', `Χρειάζεστε ${REQUIRED_CLICKS - userClicks} επιπλέον πόντους (${(REQUIRED_CLICKS - userClicks) * 2 - (clickCounter % 2)} κλικ)!`);
                 return;
             }
             
@@ -1870,6 +2214,8 @@
 
         // ========== ΔΙΑΧΕΙΡΙΣΤΗΣ ==========
         function setupEventListeners() {
+            setupBusinessForm();
+            
             document.getElementById('adminToggleText').addEventListener('click', () => {
                 const adminPanel = document.getElementById('adminPanel');
                 adminPanel.style.display = adminPanel.style.display === 'block' ? 'none' : 'block';
@@ -1885,6 +2231,7 @@
                     document.getElementById('adminControls').style.display = 'block';
                     document.getElementById('spinWheel').disabled = false;
                     loadAdminParticipants();
+                    loadBusinessInquiries();
                     showMessage('success', '✅ Συνδεθήκατε ως διαχειριστής!');
                 } else {
                     showMessage('error', '❌ Λάθος στοιχεία πρόσβασης');
@@ -1926,6 +2273,7 @@
             document.getElementById('refreshStats').addEventListener('click', () => {
                 if (!isAdmin) return;
                 updateDisplay();
+                loadBusinessInquiries();
                 showMessage('success', '✅ Τα στατιστικά ανανεώθηκαν!');
             });
             
@@ -2163,6 +2511,7 @@
         setInterval(() => {
             localStorage.setItem('participants', JSON.stringify(participants));
             localStorage.setItem('winners', JSON.stringify(winners));
+            localStorage.setItem('businessInquiries', JSON.stringify(businessInquiries));
             localStorage.setItem('totalClicks', totalClicks);
         }, 30000);
     </script>
