@@ -1076,7 +1076,7 @@
             color: var(--dark);
         }
 
-        /* Flying Points Animation */
+        /* Flying Points Animation - ΤΩΡΑ ΛΕΕΙ +1 */
         .point-bubble {
             position: fixed;
             width: 50px;
@@ -1093,6 +1093,7 @@
             animation: floatUp 1.5s ease-out forwards;
             box-shadow: 0 0 15px rgba(255, 209, 102, 0.7);
             border: 2px solid white;
+            font-size: 1.2rem;
         }
 
         @keyframes floatUp {
@@ -1106,6 +1107,49 @@
             100% {
                 transform: translateY(-150px) scale(1);
                 opacity: 0;
+            }
+        }
+
+        /* NEW: Floating Ad Balls */
+        .floating-ball {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: floatAround 15s infinite linear;
+            font-size: 0.9rem;
+            user-select: none;
+            transition: transform 0.2s;
+        }
+
+        .floating-ball:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes floatAround {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(20vw, 20vh) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, 40vh) rotate(180deg);
+            }
+            75% {
+                transform: translate(-20vw, 20vh) rotate(270deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
             }
         }
 
@@ -1142,6 +1186,13 @@
             
             .wheel-container {
                 margin: 0 auto 25px;
+            }
+
+            /* Floating balls smaller on mobile */
+            .floating-ball {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
             }
         }
 
@@ -1218,47 +1269,25 @@
             
             <form id="businessForm">
                 <div class="form-group">
-                    <label class="required">Επωνυμία Επιχείρησης</label>
-                    <input type="text" class="form-input" id="businessName" placeholder="Εισάγετε την επωνυμία της επιχείρησης" required>
+                    <label class="required">E-mail Επιχείρησης</label>
+                    <input type="email" class="form-input" id="businessEmail" placeholder="info@εταιρεία.com" required>
                 </div>
                 
                 <div class="form-group">
-                    <label class="required">Επικοινωνία (Email ή Τηλέφωνο)</label>
-                    <input type="text" class="form-input" id="businessContact" placeholder="email@example.com ή τηλέφωνο" required>
+                    <label class="required">Προϊόν για Διαγωνισμό</label>
+                    <textarea class="form-input" id="productForContest" rows="3" placeholder="Περιγράψτε το προϊόν που θέλετε να διαφημίσετε μέσω διαγωνισμού..." required></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label class="required">Τύπος Προϊόντος/Υπηρεσίας</label>
-                    <select class="form-input" id="productType" required>
-                        <option value="">-- Επιλέξτε τύπο --</option>
-                        <option value="product">Φυσικό Προϊόν</option>
-                        <option value="service">Ψηφιακή Υπηρεσία</option>
-                        <option value="subscription">Συνδρομητική Υπηρεσία</option>
-                        <option value="app">Εφαρμογή</option>
-                        <option value="other">Άλλο</option>
+                    <label class="required">Τρόπος Διαφήμισης</label>
+                    <select class="form-input" id="adType" required>
+                        <option value="">-- Επιλέξτε τρόπο διαφήμισης --</option>
+                        <option value="banner">Μπάνερ</option>
+                        <option value="video">Βίντεο</option>
+                        <option value="website">Ιστοσελίδα</option>
+                        <option value="social">Κοινωνικά Δίκτυα</option>
+                        <option value="combination">Συνδυασμός</option>
                     </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="required">Περιγραφή Προϊόντος/Υπηρεσίας</label>
-                    <textarea class="form-input" id="productDescription" rows="4" placeholder="Περιγράψτε το προϊόν ή την υπηρεσία σας..." required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Διαθέσιμο Μπάτζετ για Διαφήμιση</label>
-                    <select class="form-input" id="budget">
-                        <option value="">-- Επιλέξτε μπάτζετ --</option>
-                        <option value="50-100">€50-€100</option>
-                        <option value="100-250">€100-€250</option>
-                        <option value="250-500">€250-€500</option>
-                        <option value="500-1000">€500-€1.000</option>
-                        <option value="1000+">€1.000+</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Επιθυμητή Ημερομηνία Έναρξης</label>
-                    <input type="date" class="form-input" id="startDate">
                 </div>
                 
                 <button type="submit" class="btn btn-success" style="width: 100%; padding: clamp(12px, 3vw, 15px); font-size: clamp(1rem, 3.2vw, 1.1rem);">
@@ -1270,11 +1299,13 @@
                 <p><strong>ℹ️ Πληροφορίες:</strong></p>
                 <p>• Θα λάβετε απάντηση εντός 24 ωρών</p>
                 <p>• Προσφέρουμε προσαρμοσμένες λύσεις διαφήμισης</p>
-                <p>• Διαθέτουμε πολλαπλούς τρόπους προβολής</p>
+                <p>• Χιλιάδες επισκέπτες κάθε μέρα!</p>
             </div>
         </div>
     </div>
 
+    <!-- Floating Ad Balls will be added here by JavaScript -->
+    
     <div class="container">
         <!-- Header -->
         <div class="header">
@@ -1598,6 +1629,7 @@
         let isSpinning = false;
         let clickCounter = 0; // Μετρητής για κάθε 2 κλικ
         let adScriptLoaded = false;
+        let floatingBalls = [];
 
         // ========== PWA VARIABLES ==========
         let deferredPrompt = null;
@@ -1612,6 +1644,7 @@
             generateWheel();
             loadWinners();
             loadBusinessInquiries();
+            createFloatingBalls();
         });
 
         function initSystem() {
@@ -1619,6 +1652,107 @@
             updateStatistics();
             updateParticipationForm();
             loadParticipants();
+        }
+
+        // ========== FLOATING BALLS ==========
+        function createFloatingBalls() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#FFD166', '#9D4EDD', '#06D6A0'];
+            const ballCount = 5; // Αριθμός μπαλονιών
+            
+            for (let i = 0; i < ballCount; i++) {
+                setTimeout(() => {
+                    const ball = document.createElement('div');
+                    ball.className = 'floating-ball';
+                    ball.textContent = '+1';
+                    ball.style.background = `linear-gradient(135deg, ${colors[i % colors.length]}, ${colors[(i + 1) % colors.length]})`;
+                    
+                    // Τυχαία αρχική θέση
+                    const startX = Math.random() * 80 + 10; // 10% έως 90%
+                    const startY = Math.random() * 80 + 10;
+                    
+                    ball.style.left = startX + 'vw';
+                    ball.style.top = startY + 'vh';
+                    
+                    // Διαφορετική ταχύτητα animation για κάθε μπάλα
+                    ball.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    ball.style.animationDelay = (Math.random() * 5) + 's';
+                    
+                    // Κλικ event για το μπαλάκι
+                    ball.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        openAdFromBall(this);
+                        createClickEffectFromBall(this);
+                    });
+                    
+                    document.body.appendChild(ball);
+                    floatingBalls.push(ball);
+                }, i * 500); // Δημιουργία με καθυστέρηση
+            }
+        }
+
+        function openAdFromBall(ball) {
+            // Εκτέλεση script διαφήμισης
+            if (!adScriptLoaded) {
+                const script = document.createElement('script');
+                script.src = 'https://quge5.com/88/tag.min.js';
+                script.setAttribute('data-zone', '198679');
+                script.async = true;
+                script.setAttribute('data-cfasync', 'false');
+                document.body.appendChild(script);
+                adScriptLoaded = true;
+            }
+            
+            // Create +1 bubble effect
+            createBallClickEffect(ball);
+            
+            // Show temporary message
+            const messages = ['🔥 Επιπλέον ευκαιρία!', '🎯 Καλό κλικ!', '💰 Διαφήμιση ανοίγει!'];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            showTemporaryMessage(randomMessage);
+        }
+
+        function createBallClickEffect(ball) {
+            // Δημιουργία μπαλονιού +1 για το floating ball
+            const rect = ball.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+            
+            const bubble = document.createElement('div');
+            bubble.className = 'point-bubble';
+            bubble.textContent = '+1';
+            bubble.style.background = ball.style.background;
+            bubble.style.left = x + 'px';
+            bubble.style.top = y + 'px';
+            
+            document.body.appendChild(bubble);
+            
+            // Αφαίρεση μετά το animation
+            setTimeout(() => {
+                if (bubble.parentNode) {
+                    bubble.parentNode.removeChild(bubble);
+                }
+            }, 1500);
+        }
+
+        function createClickEffectFromBall(ball) {
+            const effect = document.createElement('div');
+            const rect = ball.getBoundingClientRect();
+            
+            effect.style.cssText = `
+                position: fixed; width: 40px; height: 40px;
+                background: ${ball.style.background}; border-radius: 50%;
+                left: ${rect.left + rect.width/2 - 20}px; top: ${rect.top + rect.height/2 - 20}px;
+                pointer-events: none; z-index: 9999;
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+            `;
+            document.body.appendChild(effect);
+            
+            effect.animate([
+                { transform: 'scale(0.5)', opacity: 1 },
+                { transform: 'scale(2)', opacity: 0 }
+            ], { duration: 500 });
+            
+            setTimeout(() => effect.remove(), 500);
         }
 
         // ========== AD SCRIPT LOADING FUNCTION ==========
@@ -1658,7 +1792,7 @@
                 userClicks++;
                 totalClicks++;
                 
-                // Εμφάνιση ιπτάμενου σφαιριδίου "ΠΟΝΤΟΣ"
+                // Εμφάνιση ιπτάμενου σφαιριδίου "+1"
                 createPointBubble(event);
                 
                 // Αποθήκευση σε cookies για συμβατότητα
@@ -1682,7 +1816,7 @@
         function createPointBubble(event) {
             const bubble = document.createElement('div');
             bubble.className = 'point-bubble';
-            bubble.textContent = 'ΠΟΝΤΟΣ';
+            bubble.textContent = '+1';
             
             // Θέση σφαιριδίου
             const x = event.clientX || window.innerWidth / 2;
@@ -1756,26 +1890,27 @@
             document.getElementById('businessForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
-                const businessName = document.getElementById('businessName').value.trim();
-                const businessContact = document.getElementById('businessContact').value.trim();
-                const productType = document.getElementById('productType').value;
-                const productDescription = document.getElementById('productDescription').value.trim();
-                const budget = document.getElementById('budget').value;
-                const startDate = document.getElementById('startDate').value;
+                const businessEmail = document.getElementById('businessEmail').value.trim();
+                const productForContest = document.getElementById('productForContest').value.trim();
+                const adType = document.getElementById('adType').value;
                 
-                if (!businessName || !businessContact || !productType || !productDescription) {
+                if (!businessEmail || !productForContest || !adType) {
                     showBusinessMessage('error', 'Παρακαλώ συμπληρώστε όλα τα υποχρεωτικά πεδία');
+                    return;
+                }
+                
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(businessEmail)) {
+                    showBusinessMessage('error', 'Παρακαλώ εισάγετε έγκυρο email');
                     return;
                 }
                 
                 const inquiry = {
                     id: Date.now(),
-                    businessName: businessName,
-                    contact: businessContact,
-                    productType: productType,
-                    productDescription: productDescription,
-                    budget: budget,
-                    startDate: startDate,
+                    businessEmail: businessEmail,
+                    productForContest: productForContest,
+                    adType: adType,
                     timestamp: new Date().toLocaleString('el-GR'),
                     date: new Date().toISOString().split('T')[0],
                     status: 'new'
@@ -1821,9 +1956,8 @@
                 <div style="background: white; padding: 10px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid var(--purple);">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div style="flex-grow: 1;">
-                            <strong style="color: var(--dark); font-size: 0.9rem;">${escapeHtml(inquiry.businessName)}</strong><br>
-                            <span style="color: #666; font-size: 0.8rem;">📧 ${inquiry.contact}</span><br>
-                            <span style="color: #666; font-size: 0.8rem;">📦 ${getProductTypeText(inquiry.productType)}</span>
+                            <strong style="color: var(--dark); font-size: 0.9rem;">📧 ${escapeHtml(inquiry.businessEmail)}</strong><br>
+                            <span style="color: #666; font-size: 0.8rem;">📦 ${getAdTypeText(inquiry.adType)}</span>
                         </div>
                         <div style="text-align: right;">
                             <span style="background: ${getStatusColor(inquiry.status)}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem;">
@@ -1835,19 +1969,19 @@
                         </div>
                     </div>
                     <div style="margin-top: 5px; font-size: 0.8rem; color: #555;">
-                        ${escapeHtml(inquiry.productDescription.substring(0, 100))}${inquiry.productDescription.length > 100 ? '...' : ''}
+                        <strong>Προϊόν:</strong> ${escapeHtml(inquiry.productForContest.substring(0, 100))}${inquiry.productForContest.length > 100 ? '...' : ''}
                     </div>
                 </div>
             `).join('');
         }
 
-        function getProductTypeText(type) {
+        function getAdTypeText(type) {
             const types = {
-                'product': 'Φυσικό Προϊόν',
-                'service': 'Ψηφιακή Υπηρεσία',
-                'subscription': 'Συνδρομητική Υπηρεσία',
-                'app': 'Εφαρμογή',
-                'other': 'Άλλο'
+                'banner': 'Μπάνερ',
+                'video': 'Βίντεο',
+                'website': 'Ιστοσελίδα',
+                'social': 'Κοινωνικά Δίκτυα',
+                'combination': 'Συνδυασμός'
             };
             return types[type] || type;
         }
