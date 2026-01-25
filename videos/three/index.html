@@ -84,6 +84,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            transition: opacity 0.5s ease;
         }
         
         .large-ad-container {
@@ -128,14 +129,15 @@
             text-shadow: 0 0 10px rgba(255, 203, 46, 0.5);
         }
         
-        /* BOTTOM SLIDING ADS - 25% OF SCREEN WITH LIGHT BACKGROUND */
+        /* BOTTOM SLIDING ADS - 25% OF SCREEN WITH TRANSPARENT BACKGROUND */
         .bottom-ad-slider {
             position: fixed;
             bottom: -25vh;
             left: 0;
             width: 100%;
             height: 25vh;
-            background: linear-gradient(135deg, #ffffff, #f8f9fa); /* LIGHT BACKGROUND */
+            background: rgba(30, 30, 30, 0.85); /* TRANSPARENT DARK BACKGROUND */
+            backdrop-filter: blur(10px);
             z-index: 9999;
             display: flex;
             transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -166,7 +168,7 @@
             right: 10px;
             background: rgba(0, 0, 0, 0.2);
             border: none;
-            color: #333;
+            color: #fff;
             width: 30px;
             height: 30px;
             border-radius: 50%;
@@ -198,7 +200,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #000;
+            background: rgba(0, 0, 0, 0.3);
         }
         
         .ad-image img,
@@ -214,18 +216,18 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            color: #333; /* DARK TEXT FOR LIGHT BACKGROUND */
+            color: #fff; /* WHITE TEXT FOR DARK BACKGROUND */
         }
         
         .ad-title-bottom {
-            color: #1a237e;
+            color: #ffcb2e; /* YELLOW TITLE FOR BETTER VISIBILITY */
             font-size: 22px;
             font-weight: bold;
             margin-bottom: 12px;
         }
         
         .ad-description-bottom {
-            color: #555;
+            color: #e0e0e0; /* LIGHT GRAY TEXT */
             font-size: 16px;
             line-height: 1.5;
         }
@@ -256,7 +258,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
+            width: 100vw;
             height: 100vh;
             background: #000;
             display: flex;
@@ -272,16 +274,22 @@
             opacity: 1;
         }
         
-        /* VIDEO */
+        /* VIDEO - 100% OF SCREEN */
         #mainVideo {
-            position: relative;
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* COVERS ENTIRE SCREEN */
             z-index: 1;
             background: #000;
             cursor: pointer;
+        }
+        
+        /* For mobile, use contain to show full video */
+        @media (max-width: 768px) {
+            #mainVideo {
+                object-fit: contain; /* SHOWS FULL VIDEO ON MOBILE */
+            }
         }
         
         /* TRANSPARENT Play button overlay that disappears */
@@ -292,9 +300,9 @@
             transform: translate(-50%, -50%);
             width: 80px;
             height: 80px;
-            background: rgba(128, 128, 128, 0.3); /* MORE TRANSPARENT */
+            background: rgba(128, 128, 128, 0.3);
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.2); /* MORE TRANSPARENT */
+            border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
             z-index: 10;
             display: flex;
@@ -597,7 +605,7 @@
         <div class="video-play-overlay" id="videoPlayOverlay"></div>
         
         <!-- Main video -->
-        <video id="mainVideo" preload="none" playsinline>
+        <video id="mainVideo" preload="auto" playsinline>
             <source src="https://blog.franklymadear.com/videos/three/video99.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -605,7 +613,7 @@
         <!-- Video Controls -->
         <div class="video-controls" id="videoControls">
             <button class="control-btn" id="playPauseBtn">⏸️</button>
-            <button class="control-btn" id="muteBtn">🔇</button>
+            <button class="control-btn" id="muteBtn">🔊</button>
             <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
             <button class="control-btn" id="fullscreenBtn">⛶</button>
         </div>
@@ -855,7 +863,6 @@
                 }, 2000);
                 
                 // Start loading and playing the video WITH SOUND ON
-                mainVideo.load();
                 mainVideo.muted = false; // SOUND ON
                 isMuted = false;
                 muteBtn.textContent = '🔊';
@@ -1084,7 +1091,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Sound On + Transparent Play Button + Light Bottom Ads');
+        console.log('FmD Video Player ready - 100% Screen Video + Sound On + Transparent Bottom Ads');
         
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Exclusive Video');
