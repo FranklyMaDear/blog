@@ -129,20 +129,20 @@
             text-shadow: 0 0 10px rgba(255, 203, 46, 0.5);
         }
         
-        /* BOTTOM SLIDING ADS - 25% OF SCREEN WITH TRANSPARENT BACKGROUND */
+        /* BOTTOM SLIDING ADS - 25% OF SCREEN HEIGHT */
         .bottom-ad-slider {
             position: fixed;
-            bottom: -25vh;
+            bottom: -25vh; /* Αρχικά κρυμμένο 25% κάτω από την οθόνη */
             left: 0;
             width: 100%;
-            height: 25vh;
-            background: rgba(30, 30, 30, 0.85); /* TRANSPARENT DARK BACKGROUND */
-            backdrop-filter: blur(10px);
+            height: 25vh; /* 25% του viewport height */
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(15px);
             z-index: 9999;
             display: flex;
-            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transition: bottom 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             border-top: 4px solid #ff6b6b;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.8);
         }
         
         .bottom-ad-slider.show {
@@ -153,37 +153,39 @@
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             color: #4CAF50;
-            padding: 5px 12px;
+            padding: 6px 15px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: bold;
             z-index: 10001;
+            border: 1px solid rgba(76, 175, 80, 0.3);
         }
         
         .ad-close-bottom {
             position: absolute;
             top: 10px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(255, 107, 107, 0.8);
             border: none;
             color: #fff;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10001;
             transition: all 0.3s;
+            font-weight: bold;
         }
         
         .ad-close-bottom:hover {
-            background: rgba(255, 0, 0, 0.3);
-            transform: rotate(90deg);
+            background: rgba(255, 0, 0, 0.9);
+            transform: rotate(90deg) scale(1.1);
         }
         
         .ad-media-container {
@@ -192,15 +194,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 15px;
         }
         
         .adsense-ad-container {
             width: 100%;
             height: 100%;
+            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        
+        /* AdSense ad styling */
+        .adsense-ad-container ins {
+            width: 100% !important;
+            height: 100% !important;
         }
         
         /* MAIN VIDEO CONTAINER */
@@ -229,7 +238,7 @@
             position: absolute;
             width: 100vw;
             height: 100vh;
-            object-fit: cover; /* COVERS ENTIRE SCREEN */
+            object-fit: cover;
             z-index: 1;
             background: #000;
             cursor: pointer;
@@ -238,7 +247,7 @@
         /* For mobile, use contain to show full video */
         @media (max-width: 768px) {
             #mainVideo {
-                object-fit: contain; /* SHOWS FULL VIDEO ON MOBILE */
+                object-fit: contain;
             }
         }
         
@@ -303,7 +312,7 @@
         /* Video controls */
         .video-controls {
             position: absolute;
-            bottom: 30px;
+            bottom: 40px; /* Μένετε πάνω από τις διαφημίσεις */
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -365,7 +374,18 @@
             }
             
             .bottom-ad-slider {
-                height: 22vh;
+                height: 25vh; /* Παραμένει 25% στο mobile */
+            }
+            
+            .ad-timer-bottom {
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+            
+            .ad-close-bottom {
+                width: 28px;
+                height: 28px;
+                font-size: 18px;
             }
             
             .video-play-overlay {
@@ -378,7 +398,7 @@
             }
             
             .video-controls {
-                bottom: 20px;
+                bottom: 30px;
                 padding: 8px 15px;
                 gap: 10px;
             }
@@ -408,7 +428,12 @@
             }
             
             .bottom-ad-slider {
-                height: 20vh;
+                height: 25vh; /* Παραμένει 25% */
+            }
+            
+            .ad-timer-bottom {
+                font-size: 11px;
+                padding: 4px 10px;
             }
             
             .video-play-overlay {
@@ -421,7 +446,7 @@
             }
             
             .video-controls {
-                bottom: 15px;
+                bottom: 30px;
                 padding: 6px 12px;
                 gap: 8px;
             }
@@ -487,7 +512,7 @@
 
     <!-- BOTTOM SLIDING ADS CONTAINER -->
     <div class="bottom-ad-slider" id="bottomAdSlider">
-        <div class="ad-timer-bottom" id="bottomAdTimer">Closing in: <span id="bottomTimerCount">10</span>s</div>
+        <div class="ad-timer-bottom" id="bottomAdTimer">Ad closes in: <span id="bottomTimerCount">10</span>s</div>
         <button class="ad-close-bottom" id="closeBottomAd">×</button>
         <div class="ad-media-container" id="bottomAdMedia">
             <!-- AdSense will be loaded here -->
@@ -558,6 +583,12 @@
         let bottomAdTimerInterval;
         let bottomAdTimerValue = 10;
         let bottomAdsActive = false;
+        let adCycleCounter = 0;
+        const adSlots = [
+            '6330498148', // Βασικό slot
+            '6330498148', // Μπορείς να προσθέσεις διαφορετικά slots εδώ
+            '6330498148'
+        ];
         
         // Start countdown timer
         function startCountdown() {
@@ -597,46 +628,62 @@
         
         // Load AdSense ad for bottom slider
         function loadBottomAdsenseAd() {
-            if (!bottomAdsenseLoaded) {
-                try {
-                    // Create a new AdSense ad for bottom slider
-                    const adContainer = document.createElement('ins');
-                    adContainer.className = 'adsbygoogle';
-                    adContainer.style.display = 'block';
-                    adContainer.style.width = '100%';
-                    adContainer.style.height = '100%';
-                    adContainer.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
-                    adContainer.setAttribute('data-ad-slot', '6330498148'); // Μπορείς να χρησιμοποιήσεις διαφορετικό slot αν θέλεις
-                    adContainer.setAttribute('data-ad-format', 'auto');
-                    adContainer.setAttribute('data-full-width-responsive', 'true');
-                    
-                    // Clear container and add new ad
-                    adsenseAdContainer.innerHTML = '';
-                    adsenseAdContainer.appendChild(adContainer);
-                    
-                    // Push the ad
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    
-                    console.log("AdSense ad loaded in bottom slider");
-                    bottomAdsenseLoaded = true;
-                    
-                } catch (e) {
-                    console.log("Bottom AdSense load error:", e);
-                }
+            try {
+                // Clear previous ad
+                adsenseAdContainer.innerHTML = '';
+                
+                // Select ad slot (κυκλική εναλλαγή)
+                const adSlot = adSlots[adCycleCounter % adSlots.length];
+                adCycleCounter++;
+                
+                // Create a new AdSense ad for bottom slider
+                const adContainer = document.createElement('ins');
+                adContainer.className = 'adsbygoogle';
+                adContainer.style.display = 'block';
+                adContainer.style.width = '100%';
+                adContainer.style.height = '100%';
+                adContainer.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
+                adContainer.setAttribute('data-ad-slot', adSlot);
+                adContainer.setAttribute('data-ad-format', 'auto');
+                adContainer.setAttribute('data-full-width-responsive', 'true');
+                
+                // Add to container
+                adsenseAdContainer.appendChild(adContainer);
+                
+                // Push the ad
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                
+                console.log("AdSense ad loaded in bottom slider, slot:", adSlot);
+                bottomAdsenseLoaded = true;
+                
+                return true;
+            } catch (e) {
+                console.log("Bottom AdSense load error:", e);
+                return false;
             }
         }
         
         // Show bottom ad
         function showBottomAd() {
-            if (!bottomAdsActive) return;
+            if (!bottomAdsActive || !isPlaying) return;
             
             // Load AdSense ad
-            loadBottomAdsenseAd();
+            const adLoaded = loadBottomAdsenseAd();
+            
+            if (!adLoaded) {
+                // Αν αποτύχει το AdSense, δοκίμασε ξανά σε 2 δευτερόλεπτα
+                setTimeout(() => {
+                    if (bottomAdsActive && isPlaying) {
+                        showBottomAd();
+                    }
+                }, 2000);
+                return;
+            }
             
             // Show the ad
             bottomAdSlider.classList.add('show');
             
-            // Start timer
+            // Start timer (10 δευτερόλεπτα)
             bottomAdTimerValue = 10;
             bottomTimerCount.textContent = bottomAdTimerValue;
             
@@ -658,7 +705,7 @@
                 hideBottomAd();
             }, 10000);
             
-            console.log("Showing bottom AdSense ad");
+            console.log("Showing bottom AdSense ad for 10 seconds");
         }
         
         // Hide bottom ad
@@ -667,27 +714,29 @@
             clearInterval(bottomAdTimerInterval);
             clearTimeout(bottomAdInterval);
             
-            // Show next ad after 5 seconds
-            setTimeout(() => {
-                if (bottomAdsActive && isPlaying) {
-                    // Reset the ad container to force new ad load
-                    adsenseAdContainer.innerHTML = '';
-                    bottomAdsenseLoaded = false;
-                    showBottomAd();
-                }
-            }, 5000);
+            // Αν το βίντεο παίζει ακόμα, δείξε νέα διαφήμιση μετά από 5 δευτερόλεπτα
+            if (bottomAdsActive && isPlaying) {
+                console.log("Waiting 5 seconds before next ad...");
+                setTimeout(() => {
+                    if (bottomAdsActive && isPlaying) {
+                        showBottomAd();
+                    }
+                }, 5000);
+            }
         }
         
         // Start bottom ad rotation
         function startBottomAds() {
             if (!bottomAdsActive) {
                 bottomAdsActive = true;
-                // Wait 5 seconds before showing first ad
+                console.log("Starting bottom ad rotation");
+                
+                // Περίμενε 3 δευτερόλεπτα πριν την πρώτη διαφήμιση
                 setTimeout(() => {
                     if (bottomAdsActive && isPlaying) {
                         showBottomAd();
                     }
-                }, 5000);
+                }, 3000);
             }
         }
         
@@ -697,6 +746,7 @@
             bottomAdSlider.classList.remove('show');
             clearInterval(bottomAdTimerInterval);
             clearTimeout(bottomAdInterval);
+            console.log("Stopped bottom ads");
         }
         
         // Start video
@@ -941,7 +991,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - 100% Screen Video + Sound On + AdSense Ads');
+        console.log('FmD Video Player ready - 100% Screen Video + Sound On + Rotating AdSense Ads');
         
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Exclusive Video');
