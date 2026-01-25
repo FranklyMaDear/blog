@@ -188,69 +188,19 @@
         
         .ad-media-container {
             flex: 1;
-            display: flex;
-            overflow: hidden;
-        }
-        
-        .ad-image {
-            flex: 1;
-            min-width: 200px;
-            max-width: 300px;
-            overflow: hidden;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
         }
         
-        .ad-image img,
-        .ad-image video {
+        .adsense-ad-container {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-        }
-        
-        .ad-text-content {
-            flex: 2;
-            padding: 25px;
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            color: #fff; /* WHITE TEXT FOR DARK BACKGROUND */
-        }
-        
-        .ad-title-bottom {
-            color: #ffcb2e; /* YELLOW TITLE FOR BETTER VISIBILITY */
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-        
-        .ad-description-bottom {
-            color: #e0e0e0; /* LIGHT GRAY TEXT */
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        
-        .ad-cta-bottom {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            color: white;
-            padding: 10px 25px;
-            border-radius: 30px;
-            font-size: 16px;
-            font-weight: bold;
-            text-decoration: none;
-            margin-top: 20px;
-            transition: all 0.3s;
-            align-self: flex-start;
-            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
-        }
-        
-        .ad-cta-bottom:hover {
-            background: linear-gradient(135deg, #ff8e53, #ff6b6b);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
         }
         
         /* MAIN VIDEO CONTAINER */
@@ -418,28 +368,6 @@
                 height: 22vh;
             }
             
-            .ad-image {
-                min-width: 150px;
-                max-width: 200px;
-            }
-            
-            .ad-text-content {
-                padding: 20px;
-            }
-            
-            .ad-title-bottom {
-                font-size: 18px;
-            }
-            
-            .ad-description-bottom {
-                font-size: 14px;
-            }
-            
-            .ad-cta-bottom {
-                padding: 8px 20px;
-                font-size: 14px;
-            }
-            
             .video-play-overlay {
                 width: 70px;
                 height: 70px;
@@ -481,36 +409,6 @@
             
             .bottom-ad-slider {
                 height: 20vh;
-                flex-direction: column;
-            }
-            
-            .ad-media-container {
-                flex-direction: column;
-            }
-            
-            .ad-image {
-                min-width: 100%;
-                max-width: 100%;
-                height: 100px;
-            }
-            
-            .ad-text-content {
-                padding: 15px;
-            }
-            
-            .ad-title-bottom {
-                font-size: 16px;
-                margin-bottom: 8px;
-            }
-            
-            .ad-description-bottom {
-                font-size: 13px;
-            }
-            
-            .ad-cta-bottom {
-                padding: 7px 18px;
-                font-size: 13px;
-                margin-top: 15px;
             }
             
             .video-play-overlay {
@@ -592,7 +490,8 @@
         <div class="ad-timer-bottom" id="bottomAdTimer">Closing in: <span id="bottomTimerCount">10</span>s</div>
         <button class="ad-close-bottom" id="closeBottomAd">×</button>
         <div class="ad-media-container" id="bottomAdMedia">
-            <!-- Dynamic content will be inserted here -->
+            <!-- AdSense will be loaded here -->
+            <div class="adsense-ad-container" id="adsenseAdContainer"></div>
         </div>
     </div>
 
@@ -639,6 +538,7 @@
         const bottomAdTimer = document.getElementById('bottomAdTimer');
         const bottomTimerCount = document.getElementById('bottomTimerCount');
         const closeBottomAd = document.getElementById('closeBottomAd');
+        const adsenseAdContainer = document.getElementById('adsenseAdContainer');
         
         // State
         let isPlaying = false;
@@ -648,6 +548,7 @@
         let controlsTimeout = null;
         let videoStarted = false;
         let adsenseAdLoaded = false;
+        let bottomAdsenseLoaded = false;
         let adClosed = false;
         let countdownValue = 8;
         let countdownInterval;
@@ -655,58 +556,8 @@
         // Bottom Ad Variables
         let bottomAdInterval;
         let bottomAdTimerInterval;
-        let currentBottomAdIndex = 0;
         let bottomAdTimerValue = 10;
         let bottomAdsActive = false;
-        
-        // Bottom Ad Content Database
-        const bottomAds = [
-            {
-                id: 1,
-                type: 'image',
-                mediaUrl: 'https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?w=400&h=300&fit=crop',
-                title: 'Special Offer!',
-                description: 'Get 50% off on premium content. Limited time offer for video viewers.',
-                ctaText: 'Claim Offer',
-                ctaLink: 'https://example.com/offer1'
-            },
-            {
-                id: 2,
-                type: 'video',
-                mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-                title: 'New Series Available',
-                description: 'Watch our new exclusive series. Full episodes available now.',
-                ctaText: 'Watch Now',
-                ctaLink: 'https://example.com/series'
-            },
-            {
-                id: 3,
-                type: 'image',
-                mediaUrl: 'https://images.unsplash.com/photo-1579546929662-711aa81148cf?w=400&h=300&fit=crop',
-                title: 'Download Our App',
-                description: 'Get better experience with our mobile app. Available on iOS and Android.',
-                ctaText: 'Download',
-                ctaLink: 'https://example.com/app'
-            },
-            {
-                id: 4,
-                type: 'image',
-                mediaUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop',
-                title: 'Premium Membership',
-                description: 'Upgrade to premium for ad-free experience and exclusive content.',
-                ctaText: 'Upgrade Now',
-                ctaLink: 'https://example.com/premium'
-            },
-            {
-                id: 5,
-                type: 'video',
-                mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-                title: 'Live Events',
-                description: 'Don\'t miss our upcoming live events. Schedule and tickets available.',
-                ctaText: 'View Schedule',
-                ctaLink: 'https://example.com/events'
-            }
-        ];
         
         // Start countdown timer
         function startCountdown() {
@@ -727,7 +578,7 @@
             }, 1000);
         }
         
-        // Load AdSense ad
+        // Load AdSense ad for center overlay
         function loadAdsenseAd() {
             if (!adsenseAdLoaded) {
                 try {
@@ -744,33 +595,43 @@
             }
         }
         
+        // Load AdSense ad for bottom slider
+        function loadBottomAdsenseAd() {
+            if (!bottomAdsenseLoaded) {
+                try {
+                    // Create a new AdSense ad for bottom slider
+                    const adContainer = document.createElement('ins');
+                    adContainer.className = 'adsbygoogle';
+                    adContainer.style.display = 'block';
+                    adContainer.style.width = '100%';
+                    adContainer.style.height = '100%';
+                    adContainer.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
+                    adContainer.setAttribute('data-ad-slot', '6330498148'); // Μπορείς να χρησιμοποιήσεις διαφορετικό slot αν θέλεις
+                    adContainer.setAttribute('data-ad-format', 'auto');
+                    adContainer.setAttribute('data-full-width-responsive', 'true');
+                    
+                    // Clear container and add new ad
+                    adsenseAdContainer.innerHTML = '';
+                    adsenseAdContainer.appendChild(adContainer);
+                    
+                    // Push the ad
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    
+                    console.log("AdSense ad loaded in bottom slider");
+                    bottomAdsenseLoaded = true;
+                    
+                } catch (e) {
+                    console.log("Bottom AdSense load error:", e);
+                }
+            }
+        }
+        
         // Show bottom ad
         function showBottomAd() {
             if (!bottomAdsActive) return;
             
-            // Get current ad
-            const ad = bottomAds[currentBottomAdIndex];
-            
-            // Create ad content
-            let mediaContent = '';
-            if (ad.type === 'image') {
-                mediaContent = `<img src="${ad.mediaUrl}" alt="${ad.title}" onerror="this.src='https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?w=400&h=300&fit=crop'">`;
-            } else if (ad.type === 'video') {
-                mediaContent = `<video autoplay muted loop playsinline>
-                                  <source src="${ad.mediaUrl}" type="video/mp4">
-                                </video>`;
-            }
-            
-            bottomAdMedia.innerHTML = `
-                <div class="ad-image">
-                    ${mediaContent}
-                </div>
-                <div class="ad-text-content">
-                    <div class="ad-title-bottom">${ad.title}</div>
-                    <div class="ad-description-bottom">${ad.description}</div>
-                    <a href="${ad.ctaLink}" class="ad-cta-bottom" target="_blank" onclick="event.stopPropagation();">${ad.ctaText}</a>
-                </div>
-            `;
+            // Load AdSense ad
+            loadBottomAdsenseAd();
             
             // Show the ad
             bottomAdSlider.classList.add('show');
@@ -797,7 +658,7 @@
                 hideBottomAd();
             }, 10000);
             
-            console.log(`Showing bottom ad ${currentBottomAdIndex + 1}/${bottomAds.length}`);
+            console.log("Showing bottom AdSense ad");
         }
         
         // Hide bottom ad
@@ -806,12 +667,12 @@
             clearInterval(bottomAdTimerInterval);
             clearTimeout(bottomAdInterval);
             
-            // Move to next ad
-            currentBottomAdIndex = (currentBottomAdIndex + 1) % bottomAds.length;
-            
             // Show next ad after 5 seconds
             setTimeout(() => {
                 if (bottomAdsActive && isPlaying) {
+                    // Reset the ad container to force new ad load
+                    adsenseAdContainer.innerHTML = '';
+                    bottomAdsenseLoaded = false;
                     showBottomAd();
                 }
             }, 5000);
@@ -1051,17 +912,6 @@
             hideBottomAd();
         });
         
-        // Click on bottom ad to open link
-        bottomAdSlider.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('ad-close-bottom') && 
-                !e.target.closest('.ad-cta-bottom')) {
-                const currentAd = bottomAds[currentBottomAdIndex];
-                if (currentAd && currentAd.ctaLink) {
-                    window.open(currentAd.ctaLink, '_blank');
-                }
-            }
-        });
-        
         // Auto start video if user clicks on the large ad
         largeCenterAd.addEventListener('click', (e) => {
             if (e.target === largeCenterAd || e.target.closest('.large-ad-container')) {
@@ -1091,7 +941,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - 100% Screen Video + Sound On + Transparent Bottom Ads');
+        console.log('FmD Video Player ready - 100% Screen Video + Sound On + AdSense Ads');
         
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Exclusive Video');
