@@ -11,7 +11,7 @@
     <!-- iOS και Android tags για native fullscreen experience -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="video.other">
@@ -90,13 +90,15 @@
         .large-ad-container {
             width: 90%;
             height: 80vh;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.1); /* ΔΙΑΦΑΝΕΣ ΦΟΝΤΟ */
+            backdrop-filter: blur(20px);
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
             position: relative;
             display: flex;
             flex-direction: column;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .ad-content-large {
@@ -110,15 +112,22 @@
         .ad-footer-large {
             padding: 25px;
             text-align: center;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: rgba(26, 26, 46, 0.8);
             color: #fff;
             font-size: 22px;
             font-weight: 600;
             border-top: 4px solid #ffcb2e;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-text {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
         .countdown-timer {
@@ -127,22 +136,27 @@
             color: #ffcb2e;
             font-family: 'Courier New', monospace;
             text-shadow: 0 0 10px rgba(255, 203, 46, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 15px;
+            border-radius: 10px;
+            min-width: 50px;
+            text-align: center;
         }
         
-        /* BOTTOM SLIDING ADS - 25% OF SCREEN HEIGHT */
+        /* BOTTOM SLIDING ADS - ΜΙΚΡΟ ΜΕΡΟΣ ΟΘΟΝΗΣ (15%) */
         .bottom-ad-slider {
             position: fixed;
-            bottom: -25vh; /* Αρχικά κρυμμένο 25% κάτω από την οθόνη */
+            bottom: -15vh; /* Αρχικά κρυμμένο 15% κάτω από την οθόνη */
             left: 0;
             width: 100%;
-            height: 25vh; /* 25% του viewport height */
-            background: rgba(30, 30, 30, 0.95);
-            backdrop-filter: blur(15px);
+            height: 15vh; /* ΜΟΝΟ 15% του viewport height */
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(10px);
             z-index: 9999;
             display: flex;
-            transition: bottom 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            border-top: 4px solid #ff6b6b;
-            box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.8);
+            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-top: 3px solid #ff6b6b;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.6);
         }
         
         .bottom-ad-slider.show {
@@ -151,13 +165,13 @@
         
         .ad-timer-bottom {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 8px;
+            left: 8px;
             background: rgba(0, 0, 0, 0.8);
             color: #4CAF50;
-            padding: 6px 15px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 12px;
             font-weight: bold;
             z-index: 10001;
             border: 1px solid rgba(76, 175, 80, 0.3);
@@ -165,15 +179,15 @@
         
         .ad-close-bottom {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background: rgba(255, 107, 107, 0.8);
             border: none;
             color: #fff;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -194,13 +208,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 10px;
         }
         
         .adsense-ad-container {
             width: 100%;
             height: 100%;
-            min-height: 150px;
+            min-height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -309,19 +323,65 @@
             display: none;
         }
         
-        /* Video controls */
+        /* VIDEO PROGRESS BAR - ΒΑΣΙΚΗ ΜΠΑΡΑ ΑΝΑΠΑΡΑΓΩΓΗΣ */
+        .video-progress-container {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            z-index: 20;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+        
+        .video-progress-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #1d9bf0;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s;
+        }
+        
+        .video-progress-handle {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 12px;
+            background: #1d9bf0;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+        
+        .video-progress-container:hover .video-progress-handle {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+        
+        .video-progress-container:hover {
+            height: 6px;
+        }
+        
+        /* IMPROVED VIDEO CONTROLS */
         .video-controls {
             position: absolute;
-            bottom: 40px; /* Μένετε πάνω από τις διαφημίσεις */
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
             display: flex;
             align-items: center;
             gap: 15px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 10px 20px;
+            padding: 15px 20px;
             border-radius: 25px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
             opacity: 0;
             transition: opacity 0.3s;
             z-index: 20;
@@ -335,22 +395,66 @@
             background: none;
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-            padding: 5px;
+            padding: 8px;
             border-radius: 50%;
             transition: all 0.3s;
+            min-width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+        
+        /* VOLUME CONTROL */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto;
+        }
+        
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            transition: width 0.3s;
+        }
+        
+        .volume-level {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #ffcb2e;
+            border-radius: 2px;
+            width: 100%;
+        }
+        
+        .volume-slider:hover {
+            width: 100px;
         }
         
         .time-display {
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 16px;
             color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
+            flex: 1;
+            text-align: center;
+            min-width: 140px;
+        }
+        
+        .control-spacer {
+            flex: 1;
         }
         
         @keyframes spin {
@@ -367,25 +471,27 @@
             .ad-footer-large {
                 font-size: 18px;
                 padding: 20px;
+                gap: 15px;
             }
             
             .countdown-timer {
                 font-size: 28px;
+                padding: 4px 12px;
             }
             
             .bottom-ad-slider {
-                height: 25vh; /* Παραμένει 25% στο mobile */
+                height: 15vh; /* Παραμένει 15% */
             }
             
             .ad-timer-bottom {
-                font-size: 12px;
-                padding: 5px 12px;
+                font-size: 11px;
+                padding: 3px 8px;
             }
             
             .ad-close-bottom {
-                width: 28px;
-                height: 28px;
-                font-size: 18px;
+                width: 24px;
+                height: 24px;
+                font-size: 16px;
             }
             
             .video-play-overlay {
@@ -398,17 +504,36 @@
             }
             
             .video-controls {
-                bottom: 30px;
-                padding: 8px 15px;
+                padding: 12px 15px;
                 gap: 10px;
+                bottom: 15px;
+                left: 10px;
+                right: 10px;
             }
             
             .control-btn {
-                font-size: 18px;
+                font-size: 20px;
+                min-width: 40px;
+                padding: 6px;
             }
             
             .time-display {
-                font-size: 12px;
+                font-size: 14px;
+                min-width: 120px;
+            }
+            
+            .volume-slider {
+                width: 60px;
+            }
+            
+            .volume-slider:hover {
+                width: 70px;
+            }
+            
+            .video-progress-container {
+                bottom: 70px;
+                left: 15px;
+                right: 15px;
             }
         }
         
@@ -421,19 +546,27 @@
             .ad-footer-large {
                 font-size: 16px;
                 padding: 15px;
+                gap: 10px;
+                flex-direction: column;
+            }
+            
+            .countdown-text {
+                flex-direction: column;
+                gap: 10px;
             }
             
             .countdown-timer {
                 font-size: 24px;
+                padding: 3px 10px;
             }
             
             .bottom-ad-slider {
-                height: 25vh; /* Παραμένει 25% */
+                height: 15vh; /* Παραμένει 15% */
             }
             
             .ad-timer-bottom {
-                font-size: 11px;
-                padding: 4px 10px;
+                font-size: 10px;
+                padding: 2px 6px;
             }
             
             .video-play-overlay {
@@ -446,17 +579,41 @@
             }
             
             .video-controls {
-                bottom: 30px;
-                padding: 6px 12px;
+                padding: 10px 12px;
                 gap: 8px;
+                bottom: 12px;
+                left: 8px;
+                right: 8px;
+                flex-wrap: wrap;
+                justify-content: center;
             }
             
             .control-btn {
-                font-size: 16px;
+                font-size: 18px;
+                min-width: 36px;
+                padding: 5px;
             }
             
             .time-display {
-                font-size: 11px;
+                font-size: 13px;
+                min-width: 110px;
+                order: 3;
+                flex-basis: 100%;
+                margin-top: 5px;
+            }
+            
+            .volume-slider {
+                width: 50px;
+            }
+            
+            .volume-slider:hover {
+                width: 55px;
+            }
+            
+            .video-progress-container {
+                bottom: 65px;
+                left: 10px;
+                right: 10px;
             }
         }
     </style>
@@ -504,8 +661,10 @@
                      data-ad-slot="6330498148"></ins>
             </div>
             <div class="ad-footer-large">
-                <div>⏳ Please wait while the video starts...</div>
-                <div class="countdown-timer" id="countdownTimer">8</div>
+                <div class="countdown-text">
+                    <span id="waitText">Please wait while the video starts...</span>
+                    <div class="countdown-timer" id="countdownTimer">8</div>
+                </div>
             </div>
         </div>
     </div>
@@ -534,11 +693,27 @@
             Your browser does not support the video tag.
         </video>
         
+        <!-- Video Progress Bar -->
+        <div class="video-progress-container" id="videoProgressContainer">
+            <div class="video-progress-bar" id="videoProgressBar"></div>
+            <div class="video-progress-handle" id="videoProgressHandle"></div>
+        </div>
+        
         <!-- Video Controls -->
         <div class="video-controls" id="videoControls">
             <button class="control-btn" id="playPauseBtn">⏸️</button>
-            <button class="control-btn" id="muteBtn">🔊</button>
+            
+            <div class="volume-control">
+                <button class="control-btn" id="muteBtn">🔊</button>
+                <div class="volume-slider" id="volumeSlider">
+                    <div class="volume-level" id="volumeLevel"></div>
+                </div>
+            </div>
+            
             <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+            
+            <div class="control-spacer"></div>
+            
             <button class="control-btn" id="fullscreenBtn">⛶</button>
         </div>
     </div>
@@ -553,9 +728,15 @@
         const videoControls = document.getElementById('videoControls');
         const playPauseBtn = document.getElementById('playPauseBtn');
         const muteBtn = document.getElementById('muteBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeLevel = document.getElementById('volumeLevel');
         const timeDisplay = document.getElementById('timeDisplay');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const countdownTimer = document.getElementById('countdownTimer');
+        const waitText = document.getElementById('waitText');
+        const videoProgressContainer = document.getElementById('videoProgressContainer');
+        const videoProgressBar = document.getElementById('videoProgressBar');
+        const videoProgressHandle = document.getElementById('videoProgressHandle');
         
         // Bottom Ad Elements
         const bottomAdSlider = document.getElementById('bottomAdSlider');
@@ -567,7 +748,7 @@
         
         // State
         let isPlaying = false;
-        let isMuted = false; // START WITH SOUND ON
+        let isMuted = false;
         let videoActive = false;
         let videoDuration = 0;
         let controlsTimeout = null;
@@ -577,6 +758,12 @@
         let adClosed = false;
         let countdownValue = 8;
         let countdownInterval;
+        let languageIndex = 0;
+        const languages = [
+            { code: 'en', text: 'Please wait while the video starts...' },
+            { code: 'el', text: 'Παρακαλώ περιμένετε ενώ ξεκινά το βίντεο...' },
+            { code: 'de', text: 'Bitte warten Sie, während das Video startet...' }
+        ];
         
         // Bottom Ad Variables
         let bottomAdInterval;
@@ -590,6 +777,9 @@
             countdownValue = 8;
             countdownTimer.textContent = countdownValue;
             
+            // Start language rotation
+            rotateLanguages();
+            
             clearInterval(countdownInterval);
             countdownInterval = setInterval(() => {
                 countdownValue--;
@@ -602,6 +792,20 @@
                     }
                 }
             }, 1000);
+        }
+        
+        // Rotate languages
+        function rotateLanguages() {
+            if (languageIndex >= languages.length) languageIndex = 0;
+            waitText.textContent = languages[languageIndex].text;
+            languageIndex++;
+            
+            // Change language every 2 seconds
+            setInterval(() => {
+                if (languageIndex >= languages.length) languageIndex = 0;
+                waitText.textContent = languages[languageIndex].text;
+                languageIndex++;
+            }, 2000);
         }
         
         // Load AdSense ad for center overlay
@@ -658,13 +862,12 @@
         function showBottomAd() {
             if (!bottomAdsActive || !isPlaying) return;
             
-            console.log("🔄 Showing bottom ad (25% of screen)");
+            console.log("🔄 Showing bottom ad (15% of screen)");
             
             // Load AdSense ad
             const adLoaded = loadBottomAdsenseAd();
             
             if (!adLoaded) {
-                // Αν αποτύχει το AdSense, δοκίμασε ξανά σε 2 δευτερόλεπτα
                 setTimeout(() => {
                     if (bottomAdsActive && isPlaying) {
                         showBottomAd();
@@ -768,9 +971,11 @@
                 }, 2000);
                 
                 // Start loading and playing the video WITH SOUND ON
-                mainVideo.muted = false; // SOUND ON
+                mainVideo.muted = false;
+                mainVideo.volume = 1.0;
                 isMuted = false;
                 muteBtn.textContent = '🔊';
+                updateVolumeDisplay();
                 
                 mainVideo.play().then(() => {
                     console.log('✅ Video playback started successfully WITH SOUND');
@@ -785,10 +990,11 @@
                     
                 }).catch(e => {
                     console.error('❌ Video play failed:', e);
-                    // Try with muted as fallback
                     mainVideo.muted = true;
+                    mainVideo.volume = 0;
                     isMuted = true;
                     muteBtn.textContent = '🔇';
+                    updateVolumeDisplay();
                     mainVideo.play().then(() => {
                         console.log('✅ Video started with muted fallback');
                         isPlaying = true;
@@ -817,13 +1023,28 @@
             timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(videoDuration)}`;
         }
         
+        // Update progress bar
+        function updateProgressBar() {
+            const progress = (mainVideo.currentTime / videoDuration) * 100;
+            videoProgressBar.style.width = progress + '%';
+            videoProgressHandle.style.left = progress + '%';
+        }
+        
+        // Update volume display
+        function updateVolumeDisplay() {
+            const volume = isMuted ? 0 : mainVideo.volume;
+            volumeLevel.style.width = (volume * 100) + '%';
+        }
+        
         // Show/hide controls
         function showControls() {
             videoControls.classList.add('visible');
+            videoProgressContainer.style.opacity = '1';
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
                 if (isPlaying) {
                     videoControls.classList.remove('visible');
+                    videoProgressContainer.style.opacity = '0.5';
                 }
             }, 3000);
         }
@@ -837,7 +1058,6 @@
                     playPauseBtn.textContent = '⏸️';
                     showControls();
                     
-                    // Show play overlay briefly
                     videoPlayOverlay.classList.remove('hidden');
                     setTimeout(() => {
                         if (isPlaying) {
@@ -845,7 +1065,6 @@
                         }
                     }, 1000);
                     
-                    // Resume bottom ads if they were active
                     if (!bottomAdsActive) {
                         startBottomAds();
                     }
@@ -856,10 +1075,8 @@
                 playPauseBtn.textContent = '▶️';
                 showControls();
                 
-                // Show play overlay
                 videoPlayOverlay.classList.remove('hidden');
                 
-                // Pause bottom ads
                 stopBottomAds();
             }
         }
@@ -869,6 +1086,33 @@
             isMuted = !isMuted;
             mainVideo.muted = isMuted;
             muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            updateVolumeDisplay();
+            showControls();
+        }
+        
+        // Set volume from slider
+        function setVolume(event) {
+            const rect = volumeSlider.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            const volume = x / rect.width;
+            
+            mainVideo.volume = volume;
+            mainVideo.muted = volume === 0;
+            isMuted = volume === 0;
+            muteBtn.textContent = volume === 0 ? '🔇' : '🔊';
+            updateVolumeDisplay();
+            showControls();
+        }
+        
+        // Seek video
+        function seekVideo(event) {
+            const rect = videoProgressContainer.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            const percent = x / rect.width;
+            
+            mainVideo.currentTime = percent * videoDuration;
             showControls();
         }
         
@@ -889,10 +1133,12 @@
             console.log('📊 Video metadata loaded');
             videoDuration = mainVideo.duration;
             updateTimeDisplay();
+            updateVolumeDisplay();
         });
         
         mainVideo.addEventListener('timeupdate', () => {
             updateTimeDisplay();
+            updateProgressBar();
         });
         
         mainVideo.addEventListener('ended', () => {
@@ -901,7 +1147,6 @@
             playPauseBtn.textContent = '▶️';
             stopBottomAds();
             
-            // Show play overlay again
             videoPlayOverlay.classList.remove('hidden');
         });
         
@@ -923,11 +1168,10 @@
             videoActive = false;
             stopBottomAds();
             
-            // Show error message
             largeCenterAd.style.opacity = '1';
             largeCenterAd.style.pointerEvents = 'auto';
             largeCenterAd.innerHTML = `
-                <div class="large-ad-container" style="background: #222; display: flex; align-items: center; justify-content: center;">
+                <div class="large-ad-container" style="background: rgba(34, 34, 34, 0.9); display: flex; align-items: center; justify-content: center;">
                     <div style="text-align: center; padding: 40px; color: white;">
                         <div style="font-size: 60px; margin-bottom: 20px;">❌</div>
                         <div style="font-size: 24px; margin-bottom: 15px; font-weight: bold;">Video Error</div>
@@ -950,6 +1194,12 @@
         playPauseBtn.addEventListener('click', togglePlayPause);
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        // Volume slider
+        volumeSlider.addEventListener('click', setVolume);
+        
+        // Progress bar
+        videoProgressContainer.addEventListener('click', seekVideo);
         
         // Bottom ad close button
         closeBottomAd.addEventListener('click', () => {
@@ -976,7 +1226,6 @@
                 window.history.replaceState(null, null, window.location.pathname);
             }
             
-            // Load AdSense ad after page loads
             setTimeout(loadAdsenseAd, 500);
         });
         
@@ -989,7 +1238,9 @@
         console.log('📺 Features:');
         console.log('  - 100% Fullscreen Video');
         console.log('  - Sound ON by default');
-        console.log('  - Bottom Ads (25% of screen)');
+        console.log('  - Progress Bar & Volume Control');
+        console.log('  - Multi-language Text Rotation');
+        console.log('  - Small Bottom Ads (15% of screen)');
         console.log('  - Ad Schedule: 10s ad → 5s break → 10s ad → ...');
         
         mainVideo.addEventListener('play', () => {
