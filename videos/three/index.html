@@ -86,7 +86,7 @@
             overflow: hidden;
         }
         
-        /* VIDEO */
+        /* VIDEO - Τώρα φαίνεται το πρώτο καρέ */
         #mainVideo {
             position: relative;
             max-width: 100%;
@@ -96,29 +96,42 @@
             z-index: 1;
             background: #000;
             cursor: pointer;
+            opacity: 0; /* Αρχικά αόρατο */
+            transition: opacity 0.5s ease;
         }
         
-        /* Thumbnail overlay */
-        .thumbnail-overlay {
+        #mainVideo.visible {
+            opacity: 1; /* Γίνεται ορατό όταν φορτώσει */
+        }
+        
+        /* Πρώτο καρέ preview - αντικαθιστά το thumbnail */
+        .first-frame-preview {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: #000;
-            z-index: 2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.5s ease;
-            max-width: 100%;
-            max-height: 100%;
-        }
-        
-        .thumbnail-img {
             max-width: 100%;
             max-height: 100%;
             width: auto;
             height: auto;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+        
+        .first-frame-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .first-frame-img.loaded {
+            opacity: 1;
         }
         
         /* Play button */
@@ -155,7 +168,7 @@
             font-weight: bold;
         }
         
-        /* SEEK BAR CONTAINER - ΑΝΕΒΗΚΕ 20px ΠΙΟ ΠΑΝΩ */
+        /* SEEK BAR CONTAINER */
         .seek-container {
             position: absolute;
             bottom: 100px;
@@ -175,7 +188,7 @@
             pointer-events: all;
         }
         
-        /* AD OVERLAY - ΤΩΡΑ ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ */
+        /* AD OVERLAY */
         .ad-overlay {
             position: absolute;
             top: 0;
@@ -336,10 +349,10 @@
             display: none;
         }
         
-        /* MINI BANNER AD - ΜΙΚΡΗ ΔΙΑΦΗΜΙΣΗ ΑΠΟ ΚΑΤΩ */
+        /* MINI BANNER AD */
         .banner-ad {
             position: fixed;
-            bottom: -200px; /* Αρχικά κρυμμένη κάτω */
+            bottom: -200px;
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
@@ -584,11 +597,6 @@
                 font-size: 11px;
             }
         }
-        
-        /* Fullscreen adjustments */
-        .video-container:fullscreen .seek-container {
-            bottom: 120px;
-        }
     </style>
     
     <!-- JavaScript για απόκρυψη URL -->
@@ -624,7 +632,7 @@
     </script>
 </head>
 <body>
-    <!-- MINI BANNER AD (ΚΑΤΩ → ΠΑΝΩ) -->
+    <!-- MINI BANNER AD -->
     <div class="banner-ad" id="bannerAd">
         <div class="banner-timer" id="bannerTimer">Κλείνει σε: <span id="bannerTimerCount">10</span></div>
         <button class="banner-close-btn" id="closeBannerAd">×</button>
@@ -645,10 +653,9 @@
         <!-- Loading spinner -->
         <div class="loading-spinner" id="loadingSpinner"></div>
         
-        <!-- Thumbnail overlay -->
-        <div class="thumbnail-overlay" id="thumbnailOverlay">
-            <img class="thumbnail-img" src="https://blog.franklymadear.com/videos/three/thumbnail99.png" alt="Έχω πάει με πολλούς - Video Thumbnail" 
-                 onerror="this.style.display='none';">
+        <!-- Πρώτο καρέ από το βίντεο -->
+        <div class="first-frame-preview" id="firstFramePreview">
+            <canvas id="firstFrameCanvas" class="first-frame-img"></canvas>
         </div>
         
         <!-- Play button -->
@@ -662,7 +669,7 @@
         
         <!-- SEEK BAR -->
         <div class="seek-container" id="seekContainer">
-            <!-- AD OVERLAY ΠΙΑΝΕΙ ΟΛΗ ΤΗΝ ΜΠΑΡΑ -->
+            <!-- AD OVERLAY -->
             <div class="ad-overlay" id="adOverlay">
                 <span class="ad-text" id="adText">Έχω πάει με πολλούς</span>
             </div>
@@ -685,7 +692,8 @@
         // DOM Elements
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
-        const thumbnailOverlay = document.getElementById('thumbnailOverlay');
+        const firstFramePreview = document.getElementById('firstFramePreview');
+        const firstFrameCanvas = document.getElementById('firstFrameCanvas');
         const playButton = document.getElementById('playButton');
         const seekContainer = document.getElementById('seekContainer');
         const loadingSpinner = document.getElementById('loadingSpinner');
@@ -710,6 +718,7 @@
         let videoWidth = 0;
         let videoHeight = 0;
         let hideSeekBarTimeout = null;
+        let firstFrameExtracted = false;
         
         // Ad Variables
         let adShown = false;
@@ -718,33 +727,112 @@
         let bannerTimer;
         let bannerCountdownTimer;
         let nextAdCountdownTimer;
-        let bannerCountdownValue = 10; // 10 δευτερόλεπτα για πρώτη διαφήμιση
-        let nextAdCountdownValue = 20; // 20 δευτερόλεπτα για επόμενη διαφήμιση
+        let bannerCountdownValue = 10;
+        let nextAdCountdownValue = 20;
         let videoActive = false;
         let videoDuration = 59;
         
+        // Extract first frame from video
+        function extractFirstFrame() {
+            console.log('Extracting first frame from video...');
+            
+            // Create a temporary video element to capture first frame
+            const tempVideo = document.createElement('video');
+            tempVideo.crossOrigin = 'anonymous';
+            tempVideo.muted = true;
+            tempVideo.preload = 'metadata';
+            
+            tempVideo.addEventListener('loadeddata', function() {
+                console.log('Video metadata loaded for frame extraction');
+                
+                // Seek to 0.1 seconds to get first frame
+                tempVideo.currentTime = 0.1;
+            }, false);
+            
+            tempVideo.addEventListener('seeked', function() {
+                console.log('Video seeked, capturing frame...');
+                
+                // Setup canvas dimensions
+                const canvas = firstFrameCanvas;
+                const ctx = canvas.getContext('2d');
+                
+                // Set canvas size to video size
+                canvas.width = tempVideo.videoWidth || 1280;
+                canvas.height = tempVideo.videoHeight || 720;
+                
+                // Draw the first frame
+                ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+                
+                console.log('First frame captured:', canvas.width, 'x', canvas.height);
+                
+                // Show the canvas
+                firstFrameCanvas.classList.add('loaded');
+                
+                // Clean up
+                tempVideo.src = '';
+                tempVideo.load();
+                firstFrameExtracted = true;
+                
+                // Set main video as visible now
+                mainVideo.classList.add('visible');
+                
+            }, false);
+            
+            tempVideo.addEventListener('error', function(e) {
+                console.error('Error extracting first frame:', e);
+                // Fallback to thumbnail
+                fallbackToThumbnail();
+            }, false);
+            
+            // Start loading the video
+            tempVideo.src = 'https://blog.franklymadear.com/videos/three/video99.mp4';
+            tempVideo.load();
+            
+            // Timeout fallback
+            setTimeout(() => {
+                if (!firstFrameExtracted) {
+                    console.log('Frame extraction timeout, using fallback');
+                    fallbackToThumbnail();
+                }
+            }, 3000);
+        }
+        
+        // Fallback to thumbnail if frame extraction fails
+        function fallbackToThumbnail() {
+            console.log('Using thumbnail as fallback');
+            firstFramePreview.innerHTML = `
+                <img src="https://blog.franklymadear.com/videos/three/thumbnail99.png" 
+                     class="first-frame-img loaded"
+                     alt="Έχω πάει με πολλούς - Video Thumbnail"
+                     onerror="this.style.display='none';">
+            `;
+            firstFrameExtracted = true;
+            mainVideo.classList.add('visible');
+        }
+        
         // BANNER AD FUNCTIONS
         function showBannerAd() {
-            // Μάρκαρε ότι εμφανίστηκε
             bannerAdShown = true;
-            
-            // Reset countdown
             bannerCountdownValue = 10;
             bannerTimerCount.textContent = bannerCountdownValue;
-            
-            // Εμφάνιση banner (από ΚΑΤΩ προς ΠΑΝΩ)
             bannerAd.classList.add('show');
-            
-            // Start countdown
             startBannerCountdown();
             
-            // Auto-close μετά από 10 δευτερόλεπτα
             clearTimeout(bannerTimer);
             bannerTimer = setTimeout(() => {
                 closeBannerAdFunc();
             }, 10000);
             
-            // Track ad impression
+            // Load AdSense ad in banner
+            setTimeout(() => {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log("Banner AdSense ad loaded");
+                } catch (e) {
+                    console.log("Ad load error:", e);
+                }
+            }, 500);
+            
             console.log("Banner ad shown for 10 seconds");
         }
         
@@ -767,16 +855,14 @@
             
             console.log("Banner ad closed");
             
-            // Προγραμματισμός επόμενης διαφήμισης μετά από 20 δευτερόλεπτα
             setTimeout(() => {
                 if (videoActive && isPlaying) {
                     showBannerAd();
                 }
-            }, 20000); // 20 δευτερόλεπτα για επόμενη διαφήμιση
+            }, 20000);
         }
         
         // VIDEO PLAYER FUNCTIONS
-        // Format time σε mm:ss
         function formatTime(seconds) {
             if (isNaN(seconds)) return '00:00';
             const mins = Math.floor(seconds / 60);
@@ -784,7 +870,6 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
-        // Update time display
         function updateTime() {
             if (mainVideo.duration && !isNaN(mainVideo.duration)) {
                 videoDuration = mainVideo.duration;
@@ -796,7 +881,6 @@
             }
         }
         
-        // Show seek bar
         function showSeekBar() {
             seekContainer.classList.add('active');
             
@@ -808,14 +892,12 @@
             }, 3000);
         }
         
-        // Hide seek bar
         function hideSeekBar() {
             if (!isSeeking) {
                 seekContainer.classList.remove('active');
             }
         }
         
-        // Update ad display
         function updateAdDisplay() {
             adText.textContent = "Έχω πάει με πολλούς";
             
@@ -835,7 +917,6 @@
             });
         }
         
-        // Seek to specific time
         function seekToTime(clientX) {
             const rect = seekBar.getBoundingClientRect();
             let percent = (clientX - rect.left) / rect.width;
@@ -856,7 +937,6 @@
             console.log(`Seeking to: ${formatTime(time)}`);
         }
         
-        // Update seek tooltip
         function updateSeekTooltip(clientX) {
             const rect = seekBar.getBoundingClientRect();
             let percent = (clientX - rect.left) / rect.width;
@@ -868,25 +948,25 @@
             seekTooltip.style.opacity = '1';
         }
         
-        // Hide seek tooltip
         function hideSeekTooltip() {
             seekTooltip.style.opacity = '0';
         }
         
-        // Start video
+        // Start video and hide first frame
         function startVideo() {
             console.log('Play button clicked - starting video');
             videoActive = true;
             playButton.style.display = 'none';
             
+            // Hide first frame preview
+            firstFramePreview.style.opacity = '0';
+            setTimeout(() => {
+                firstFramePreview.style.display = 'none';
+            }, 500);
+            
             mainVideo.play().then(() => {
                 console.log('Video playback started successfully');
                 isPlaying = true;
-                thumbnailOverlay.style.opacity = '0';
-                
-                setTimeout(() => {
-                    thumbnailOverlay.style.display = 'none';
-                }, 500);
                 
                 if (isMuted) {
                     mainVideo.muted = false;
@@ -896,7 +976,7 @@
                 updateAdDisplay();
                 videoStartTime = Date.now();
                 
-                // Εμφάνιση πρώτης BANNER AD μετά από 2 δευτερόλεπτα (10 δευτερόλεπτα διάρκεια)
+                // Εμφάνιση πρώτης BANNER AD μετά από 2 δευτερόλεπτα
                 if (!adShown) {
                     setTimeout(() => {
                         showBannerAd();
@@ -915,10 +995,10 @@
                     isPlaying = true;
                     videoActive = true;
                     playButton.style.display = 'none';
-                    thumbnailOverlay.style.opacity = '0';
+                    firstFramePreview.style.opacity = '0';
                     
                     setTimeout(() => {
-                        thumbnailOverlay.style.display = 'none';
+                        firstFramePreview.style.display = 'none';
                     }, 500);
                     
                     videoStartTime = Date.now();
@@ -933,7 +1013,6 @@
             });
         }
         
-        // Toggle play/pause
         function togglePlayPause() {
             if (mainVideo.paused) {
                 mainVideo.play().then(() => {
@@ -946,7 +1025,6 @@
             }
         }
         
-        // Try autoplay for X player
         function tryAutoplay() {
             mainVideo.muted = true;
             mainVideo.play().then(() => {
@@ -954,16 +1032,15 @@
                 isPlaying = true;
                 videoActive = true;
                 playButton.style.display = 'none';
-                thumbnailOverlay.style.opacity = '0';
+                firstFramePreview.style.opacity = '0';
                 hasAutoPlayed = true;
                 
                 setTimeout(() => {
-                    thumbnailOverlay.style.display = 'none';
+                    firstFramePreview.style.display = 'none';
                 }, 500);
                 
                 videoStartTime = Date.now();
                 
-                // Εμφάνιση startup ad
                 if (!adShown) {
                     setTimeout(() => {
                         showBannerAd();
@@ -986,94 +1063,6 @@
             });
         }
         
-        // Προσαρμογή thumbnail στο μέγεθος του βίντεο
-        function adjustThumbnailSize() {
-            if (videoWidth > 0 && videoHeight > 0) {
-                thumbnailOverlay.style.width = `${videoWidth}px`;
-                thumbnailOverlay.style.height = `${videoHeight}px`;
-            }
-        }
-        
-        // Mouse movement detection για εμφάνιση seek bar
-        let mouseMoveTimeout;
-        videoContainer.addEventListener('mousemove', () => {
-            if (isPlaying) {
-                showSeekBar();
-                
-                clearTimeout(mouseMoveTimeout);
-                mouseMoveTimeout = setTimeout(hideSeekBar, 3000);
-            }
-        });
-        
-        videoContainer.addEventListener('mouseleave', () => {
-            if (!isSeeking) {
-                hideSeekBar();
-            }
-        });
-        
-        // Seek bar interaction
-        seekBar.addEventListener('mousemove', (e) => {
-            if (!mainVideo.duration || isNaN(mainVideo.duration)) return;
-            updateSeekTooltip(e.clientX);
-        });
-        
-        seekBar.addEventListener('mouseenter', () => {
-            showSeekBar();
-        });
-        
-        seekBar.addEventListener('mouseleave', () => {
-            hideSeekTooltip();
-            if (!isSeeking) {
-                setTimeout(hideSeekBar, 1000);
-            }
-        });
-        
-        seekBar.addEventListener('click', (e) => {
-            e.stopPropagation();
-            seekToTime(e.clientX);
-            
-            clearTimeout(hideSeekBarTimeout);
-            hideSeekBarTimeout = setTimeout(() => {
-                seekContainer.classList.remove('active');
-            }, 2000);
-        });
-        
-        seekBar.addEventListener('mousedown', () => {
-            isSeeking = true;
-            showSeekBar();
-        });
-        
-        document.addEventListener('mouseup', () => {
-            isSeeking = false;
-        });
-        
-        // Touch support για seeking
-        seekBar.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            isSeeking = true;
-            seekToTime(e.touches[0].clientX);
-            showSeekBar();
-        });
-        
-        seekBar.addEventListener('touchmove', (e) => {
-            if (isSeeking) {
-                e.preventDefault();
-                updateSeekTooltip(e.touches[0].clientX);
-                showSeekBar();
-            }
-        });
-        
-        seekBar.addEventListener('touchend', (e) => {
-            e.stopPropagation();
-            isSeeking = false;
-            hideSeekTooltip();
-            
-            clearTimeout(hideSeekBarTimeout);
-            hideSeekBarTimeout = setTimeout(() => {
-                seekContainer.classList.remove('active');
-            }, 2000);
-        });
-        
         // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
             videoWidth = mainVideo.videoWidth;
@@ -1082,9 +1071,11 @@
             
             console.log('Video dimensions:', videoWidth, 'x', videoHeight, 'Duration:', videoDuration);
             
-            adjustThumbnailSize();
             updateTime();
             updateAdDisplay();
+            
+            // Extract and show first frame
+            extractFirstFrame();
             
             const isEmbedded = window.self !== window.top;
             if (isEmbedded) {
@@ -1117,7 +1108,7 @@
             loadingSpinner.style.display = 'none';
             videoActive = false;
             
-            thumbnailOverlay.innerHTML = `
+            firstFramePreview.innerHTML = `
                 <div style="text-align: center; padding: 20px; color: white;">
                     <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
                     <div style="font-size: 20px; margin-bottom: 10px; font-weight: bold;">Video Error</div>
@@ -1135,7 +1126,7 @@
         // Click handlers
         playButton.addEventListener('click', startVideo);
         mainVideo.addEventListener('click', togglePlayPause);
-        thumbnailOverlay.addEventListener('click', startVideo);
+        firstFramePreview.addEventListener('click', startVideo);
         
         // Video click για εμφάνιση seek bar
         mainVideo.addEventListener('click', () => {
@@ -1149,7 +1140,6 @@
             closeBannerAdFunc();
         });
         
-        // Close banner by clicking outside
         bannerAd.addEventListener("click", (e) => {
             if (e.target === bannerAd) {
                 closeBannerAdFunc();
@@ -1178,7 +1168,7 @@
             }
         });
         
-        // Keyboard shortcuts για seeking
+        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             switch(e.code) {
                 case 'Space':
@@ -1220,12 +1210,46 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Mini banner ad system');
+        console.log('FmD Video Player ready - First frame preview system');
         
         // Track video views
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Έχω πάει με πολλούς - FmD @FmD699');
         });
+        
+        // AdSense initialization
+        (function() {
+            // Load AdSense ad in banner
+            setTimeout(() => {
+                const adContainer = document.createElement('div');
+                adContainer.className = 'adsbygoogle-container';
+                adContainer.style.cssText = 'width:100%;height:100%;overflow:hidden;';
+                
+                adContainer.innerHTML = `
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"></ins>
+                `;
+                
+                // Add to banner ad
+                const bannerContent = document.querySelector('.ad-content-mini');
+                if (bannerContent) {
+                    bannerContent.appendChild(adContainer);
+                    
+                    // Push ad after a delay
+                    setTimeout(() => {
+                        try {
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            console.log("AdSense autorelaxed ad loaded");
+                        } catch (e) {
+                            console.log("AdSense load error:", e);
+                        }
+                    }, 1000);
+                }
+            }, 2000);
+        })();
     </script>
 </body>
 </html>
