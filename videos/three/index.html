@@ -60,25 +60,32 @@
             color: #fff;
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             overflow: hidden;
-            touch-action: manipulation;
         }
         
-        /* Hide URL bar on mobile */
-        @media (max-width: 768px) {
-            body {
-                height: 100vh;
-                overflow: hidden;
-            }
+        /* Ad Container - Φιλική για το βίντεο */
+        .ad-container {
+            width: 100%;
+            background: rgba(20, 20, 20, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+            z-index: 1000;
+            flex-shrink: 0;
+            backdrop-filter: blur(10px);
         }
         
-        /* MAIN CONTAINER */
+        .ad-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Video Container - Takes remaining space */
         .video-container {
             position: relative;
-            width: 100vw;
-            height: 100vh;
+            flex: 1;
+            width: 100%;
             background: #000;
             display: flex;
             justify-content: center;
@@ -184,6 +191,50 @@
             display: none;
         }
         
+        /* Video controls */
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 20;
+        }
+        
+        .video-controls.visible {
+            opacity: 1;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+        }
+        
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
@@ -198,6 +249,24 @@
             .play-button-center::after {
                 font-size: 24px;
             }
+            
+            .video-controls {
+                bottom: 10px;
+                padding: 8px 15px;
+                gap: 10px;
+            }
+            
+            .control-btn {
+                font-size: 18px;
+            }
+            
+            .time-display {
+                font-size: 12px;
+            }
+            
+            .ad-container {
+                padding: 8px 0;
+            }
         }
         
         @media (max-width: 480px) {
@@ -208,6 +277,24 @@
             
             .play-button-center::after {
                 font-size: 20px;
+            }
+            
+            .video-controls {
+                bottom: 5px;
+                padding: 6px 12px;
+                gap: 8px;
+            }
+            
+            .control-btn {
+                font-size: 16px;
+            }
+            
+            .time-display {
+                font-size: 11px;
+            }
+            
+            .ad-container {
+                padding: 5px 0;
             }
         }
     </style>
@@ -242,17 +329,18 @@
     </script>
 </head>
 <body>
-    <!-- ADSENSE AD -->
-    <div style="position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="fluid"
-             data-ad-layout-key="-fb+5w+4e-db+86"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="3969235710"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
+    <!-- ADSENSE AD - ΦΙΛΙΚΗ ΓΙΑ ΤΟ ΒΙΝΤΕΟ -->
+    <div class="ad-container">
+        <div class="ad-wrapper">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
 
     <div class="video-container" id="videoContainer">
@@ -272,6 +360,14 @@
             <source src="https://blog.franklymadear.com/videos/three/video99.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+        
+        <!-- Video Controls -->
+        <div class="video-controls" id="videoControls">
+            <button class="control-btn" id="playPauseBtn">⏸️</button>
+            <button class="control-btn" id="muteBtn">🔇</button>
+            <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+            <button class="control-btn" id="fullscreenBtn">⛶</button>
+        </div>
     </div>
 
     <script>
@@ -282,6 +378,11 @@
         const firstFrameCanvas = document.getElementById('firstFrameCanvas');
         const playButton = document.getElementById('playButton');
         const loadingSpinner = document.getElementById('loadingSpinner');
+        const videoControls = document.getElementById('videoControls');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
         
         // State
         let isPlaying = false;
@@ -289,7 +390,32 @@
         let hasAutoPlayed = false;
         let firstFrameExtracted = false;
         let videoActive = false;
-        let videoDuration = 59;
+        let videoDuration = 0;
+        let controlsTimeout = null;
+        
+        // Format time function
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // Update time display
+        function updateTimeDisplay() {
+            timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(videoDuration)}`;
+        }
+        
+        // Show/hide controls
+        function showControls() {
+            videoControls.classList.add('visible');
+            clearTimeout(controlsTimeout);
+            controlsTimeout = setTimeout(() => {
+                if (isPlaying) {
+                    videoControls.classList.remove('visible');
+                }
+            }, 3000);
+        }
         
         // Extract first frame from video
         function extractFirstFrame() {
@@ -366,13 +492,16 @@
             mainVideo.play().then(() => {
                 console.log('Video playback started successfully');
                 isPlaying = true;
+                playPauseBtn.textContent = '⏸️';
                 
                 if (isMuted) {
                     mainVideo.muted = false;
                     isMuted = false;
+                    muteBtn.textContent = '🔊';
                 }
                 
                 videoActive = true;
+                showControls();
                 
             }).catch(e => {
                 console.error('Manual play failed:', e);
@@ -385,10 +514,14 @@
                     videoActive = true;
                     playButton.style.display = 'none';
                     firstFramePreview.style.opacity = '0';
+                    playPauseBtn.textContent = '⏸️';
+                    muteBtn.textContent = '🔇';
                     
                     setTimeout(() => {
                         firstFramePreview.style.display = 'none';
                     }, 500);
+                    
+                    showControls();
                 });
             });
         }
@@ -399,11 +532,35 @@
                 mainVideo.play().then(() => {
                     isPlaying = true;
                     videoActive = true;
+                    playPauseBtn.textContent = '⏸️';
+                    showControls();
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
+                playPauseBtn.textContent = '▶️';
+                showControls();
             }
+        }
+        
+        // Toggle mute
+        function toggleMute() {
+            isMuted = !isMuted;
+            mainVideo.muted = isMuted;
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            showControls();
+        }
+        
+        // Toggle fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                videoContainer.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+            showControls();
         }
         
         // Try autoplay for X player
@@ -416,6 +573,8 @@
                 playButton.style.display = 'none';
                 firstFramePreview.style.opacity = '0';
                 hasAutoPlayed = true;
+                playPauseBtn.textContent = '⏸️';
+                muteBtn.textContent = '🔇';
                 
                 setTimeout(() => {
                     firstFramePreview.style.display = 'none';
@@ -425,8 +584,11 @@
                     if (isPlaying) {
                         mainVideo.muted = false;
                         isMuted = false;
+                        muteBtn.textContent = '🔊';
                     }
                 }, 1000);
+                
+                showControls();
                 
             }).catch(e => {
                 console.log('Autoplay failed:', e.message);
@@ -437,6 +599,8 @@
         // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
             console.log('Video metadata loaded');
+            videoDuration = mainVideo.duration;
+            updateTimeDisplay();
             
             extractFirstFrame();
             
@@ -447,9 +611,14 @@
             }
         });
         
+        mainVideo.addEventListener('timeupdate', () => {
+            updateTimeDisplay();
+        });
+        
         mainVideo.addEventListener('ended', () => {
             isPlaying = false;
             videoActive = false;
+            playPauseBtn.textContent = '▶️';
         });
         
         mainVideo.addEventListener('waiting', () => {
@@ -486,6 +655,18 @@
         mainVideo.addEventListener('click', togglePlayPause);
         firstFramePreview.addEventListener('click', startVideo);
         
+        // Control buttons
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        muteBtn.addEventListener('click', toggleMute);
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        
+        // Show controls on mouse move
+        videoContainer.addEventListener('mousemove', () => {
+            if (isPlaying) {
+                showControls();
+            }
+        });
+        
         // Auto play on interaction
         document.addEventListener('click', () => {
             if (!hasAutoPlayed && !isPlaying) {
@@ -505,7 +686,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Clean version with AdSense header');
+        console.log('FmD Video Player ready - Video-friendly AdSense layout');
         
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Έχω πάει με πολλούς - FmD @FmD699');
