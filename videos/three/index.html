@@ -13,7 +13,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Open Graph Meta Tags για Facebook, WhatsApp, κλπ -->
+    <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="video.other">
     <meta property="og:title" content="Watch Exclusive Video">
     <meta property="og:description" content="Exclusive video content you must watch. Check out this amazing video!">
@@ -36,7 +36,7 @@
     <meta name="twitter:image" content="https://blog.franklymadear.com/videos/three/thumbnail99.png">
     <meta name="twitter:image:alt" content="Video thumbnail preview">
     
-    <!-- Απόκρυψη διεύθυνσης URL και απόσπαση προσοχής από URL -->
+    <!-- Hide URL and prevent indexing -->
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
     
@@ -71,14 +71,14 @@
             }
         }
         
-        /* CENTER AD OVERLAY */
-        .center-ad-overlay {
+        /* LARGE CENTER AD OVERLAY - 80% OF SCREEN */
+        .large-center-ad {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.98);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -86,28 +86,79 @@
             padding: 20px;
         }
         
-        .ad-container {
-            width: 100%;
-            max-width: 800px;
-            height: 500px;
+        .large-ad-container {
+            width: 90%;
+            height: 80vh;
             background: #fff;
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.9);
             position: relative;
+            display: flex;
+            flex-direction: column;
         }
         
-        .close-ad-btn {
+        .ad-content-large {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .ad-footer-large {
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            border-top: 2px solid #1d9bf0;
+        }
+        
+        /* BOTTOM SLIDING ADS - 25% OF SCREEN */
+        .bottom-ad-slider {
+            position: fixed;
+            bottom: -25vh;
+            left: 0;
+            width: 100%;
+            height: 25vh;
+            background: rgba(20, 20, 20, 0.95);
+            z-index: 9999;
+            display: flex;
+            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-top: 3px solid #ffcb2e;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+        }
+        
+        .bottom-ad-slider.show {
+            bottom: 0;
+        }
+        
+        .ad-timer-bottom {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.3);
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #4CAF50;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10001;
+        }
+        
+        .ad-close-bottom {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            font-size: 24px;
+            font-size: 18px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -116,9 +167,73 @@
             transition: all 0.3s;
         }
         
-        .close-ad-btn:hover {
-            background: rgba(0, 0, 0, 0.6);
+        .ad-close-bottom:hover {
+            background: rgba(255, 0, 0, 0.3);
             transform: rotate(90deg);
+        }
+        
+        .ad-media-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        
+        .ad-image {
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        
+        .ad-image img,
+        .ad-image video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .ad-text-content {
+            flex: 2;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .ad-title-bottom {
+            color: #ffcb2e;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .ad-description-bottom {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .ad-cta-bottom {
+            display: inline-block;
+            background: #ffcb2e;
+            color: #1a1a2e;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: all 0.3s;
+            align-self: flex-start;
+        }
+        
+        .ad-cta-bottom:hover {
+            background: #ffd95e;
+            transform: translateY(-2px);
         }
         
         /* MAIN VIDEO CONTAINER */
@@ -207,7 +322,7 @@
         /* Video controls */
         .video-controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -254,9 +369,35 @@
         
         /* Mobile optimizations */
         @media (max-width: 768px) {
-            .ad-container {
-                height: 400px;
-                max-width: 90%;
+            .large-ad-container {
+                width: 95%;
+                height: 75vh;
+            }
+            
+            .ad-footer-large {
+                font-size: 16px;
+                padding: 15px;
+            }
+            
+            .bottom-ad-slider {
+                height: 22vh;
+            }
+            
+            .ad-image {
+                min-width: 150px;
+                max-width: 200px;
+            }
+            
+            .ad-text-content {
+                padding: 15px;
+            }
+            
+            .ad-title-bottom {
+                font-size: 16px;
+            }
+            
+            .ad-description-bottom {
+                font-size: 12px;
             }
             
             .video-play-overlay {
@@ -269,7 +410,7 @@
             }
             
             .video-controls {
-                bottom: 15px;
+                bottom: 20px;
                 padding: 8px 15px;
                 gap: 10px;
             }
@@ -281,18 +422,50 @@
             .time-display {
                 font-size: 12px;
             }
-            
-            .close-ad-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 20px;
-            }
         }
         
         @media (max-width: 480px) {
-            .ad-container {
-                height: 300px;
-                max-width: 95%;
+            .large-ad-container {
+                width: 98%;
+                height: 70vh;
+            }
+            
+            .ad-footer-large {
+                font-size: 14px;
+                padding: 12px;
+            }
+            
+            .bottom-ad-slider {
+                height: 20vh;
+                flex-direction: column;
+            }
+            
+            .ad-media-container {
+                flex-direction: column;
+            }
+            
+            .ad-image {
+                min-width: 100%;
+                max-width: 100%;
+                height: 100px;
+            }
+            
+            .ad-text-content {
+                padding: 10px;
+            }
+            
+            .ad-title-bottom {
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+            
+            .ad-description-bottom {
+                font-size: 11px;
+            }
+            
+            .ad-cta-bottom {
+                padding: 6px 15px;
+                font-size: 12px;
             }
             
             .video-play-overlay {
@@ -305,7 +478,7 @@
             }
             
             .video-controls {
-                bottom: 10px;
+                bottom: 15px;
                 padding: 6px 12px;
                 gap: 8px;
             }
@@ -316,12 +489,6 @@
             
             .time-display {
                 font-size: 11px;
-            }
-            
-            .close-ad-btn {
-                width: 30px;
-                height: 30px;
-                font-size: 18px;
             }
         }
     </style>
@@ -356,18 +523,31 @@
     </script>
 </head>
 <body>
-    <!-- CENTER AD OVERLAY - ENGLISH ONLY -->
-    <div class="center-ad-overlay" id="centerAdOverlay">
-        <div class="ad-container">
-            <!-- AdSense Ad -->
-            <ins class="adsbygoogle"
-                 style="display:block; width:100%; height:100%;"
-                 data-ad-layout="in-article"
-                 data-ad-format="fluid"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="6330498148"></ins>
+    <!-- LARGE CENTER AD - 80% OF SCREEN -->
+    <div class="large-center-ad" id="largeCenterAd">
+        <div class="large-ad-container">
+            <div class="ad-content-large">
+                <!-- AdSense Ad -->
+                <ins class="adsbygoogle"
+                     style="display:block; width:100%; height:100%;"
+                     data-ad-layout="in-article"
+                     data-ad-format="fluid"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="6330498148"></ins>
+            </div>
+            <div class="ad-footer-large">
+                ⏳ Please wait while the video starts...
+            </div>
         </div>
-        <button class="close-ad-btn" id="closeAdBtn">×</button>
+    </div>
+
+    <!-- BOTTOM SLIDING ADS CONTAINER -->
+    <div class="bottom-ad-slider" id="bottomAdSlider">
+        <div class="ad-timer-bottom" id="bottomAdTimer">Closing in: <span id="bottomTimerCount">10</span>s</div>
+        <button class="ad-close-bottom" id="closeBottomAd">×</button>
+        <div class="ad-media-container" id="bottomAdMedia">
+            <!-- Dynamic content will be inserted here -->
+        </div>
     </div>
 
     <!-- MAIN VIDEO CONTAINER -->
@@ -395,10 +575,9 @@
 
     <script>
         // DOM Elements
-        const centerAdOverlay = document.getElementById('centerAdOverlay');
+        const largeCenterAd = document.getElementById('largeCenterAd');
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
-        const closeAdBtn = document.getElementById('closeAdBtn');
         const videoPlayOverlay = document.getElementById('videoPlayOverlay');
         const loadingSpinner = document.getElementById('loadingSpinner');
         const videoControls = document.getElementById('videoControls');
@@ -406,6 +585,13 @@
         const muteBtn = document.getElementById('muteBtn');
         const timeDisplay = document.getElementById('timeDisplay');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
+        
+        // Bottom Ad Elements
+        const bottomAdSlider = document.getElementById('bottomAdSlider');
+        const bottomAdMedia = document.getElementById('bottomAdMedia');
+        const bottomAdTimer = document.getElementById('bottomAdTimer');
+        const bottomTimerCount = document.getElementById('bottomTimerCount');
+        const closeBottomAd = document.getElementById('closeBottomAd');
         
         // State
         let isPlaying = false;
@@ -417,6 +603,62 @@
         let adsenseAdLoaded = false;
         let adClosed = false;
         
+        // Bottom Ad Variables
+        let bottomAdInterval;
+        let bottomAdTimerInterval;
+        let currentBottomAdIndex = 0;
+        let bottomAdTimerValue = 10;
+        let bottomAdsActive = false;
+        
+        // Bottom Ad Content Database
+        const bottomAds = [
+            {
+                id: 1,
+                type: 'image',
+                mediaUrl: 'https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?w=400&h=300&fit=crop',
+                title: 'Special Offer!',
+                description: 'Get 50% off on premium content. Limited time offer for video viewers.',
+                ctaText: 'Claim Offer',
+                ctaLink: 'https://example.com/offer1'
+            },
+            {
+                id: 2,
+                type: 'video',
+                mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+                title: 'New Series Available',
+                description: 'Watch our new exclusive series. Full episodes available now.',
+                ctaText: 'Watch Now',
+                ctaLink: 'https://example.com/series'
+            },
+            {
+                id: 3,
+                type: 'image',
+                mediaUrl: 'https://images.unsplash.com/photo-1579546929662-711aa81148cf?w=400&h=300&fit=crop',
+                title: 'Download Our App',
+                description: 'Get better experience with our mobile app. Available on iOS and Android.',
+                ctaText: 'Download',
+                ctaLink: 'https://example.com/app'
+            },
+            {
+                id: 4,
+                type: 'image',
+                mediaUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&h=300&fit=crop',
+                title: 'Premium Membership',
+                description: 'Upgrade to premium for ad-free experience and exclusive content.',
+                ctaText: 'Upgrade Now',
+                ctaLink: 'https://example.com/premium'
+            },
+            {
+                id: 5,
+                type: 'video',
+                mediaUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+                title: 'Live Events',
+                description: 'Don\'t miss our upcoming live events. Schedule and tickets available.',
+                ctaText: 'View Schedule',
+                ctaLink: 'https://example.com/events'
+            }
+        ];
+        
         // Load AdSense ad
         function loadAdsenseAd() {
             if (!adsenseAdLoaded) {
@@ -425,17 +667,111 @@
                     console.log("AdSense ad loaded in center overlay");
                     adsenseAdLoaded = true;
                     
-                    // Auto close ad after 10 seconds
+                    // Auto start video after 8 seconds
                     setTimeout(() => {
                         if (!adClosed) {
                             startVideo();
                         }
-                    }, 10000);
+                    }, 8000);
                     
                 } catch (e) {
                     console.log("AdSense load error:", e);
                 }
             }
+        }
+        
+        // Show bottom ad
+        function showBottomAd() {
+            if (!bottomAdsActive) return;
+            
+            // Get current ad
+            const ad = bottomAds[currentBottomAdIndex];
+            
+            // Create ad content
+            let mediaContent = '';
+            if (ad.type === 'image') {
+                mediaContent = `<img src="${ad.mediaUrl}" alt="${ad.title}" onerror="this.src='https://images.unsplash.com/photo-1611605698323-b1e99cfd37ea?w=400&h=300&fit=crop'">`;
+            } else if (ad.type === 'video') {
+                mediaContent = `<video autoplay muted loop playsinline>
+                                  <source src="${ad.mediaUrl}" type="video/mp4">
+                                </video>`;
+            }
+            
+            bottomAdMedia.innerHTML = `
+                <div class="ad-image">
+                    ${mediaContent}
+                </div>
+                <div class="ad-text-content">
+                    <div class="ad-title-bottom">${ad.title}</div>
+                    <div class="ad-description-bottom">${ad.description}</div>
+                    <a href="${ad.ctaLink}" class="ad-cta-bottom" target="_blank" onclick="event.stopPropagation();">${ad.ctaText}</a>
+                </div>
+            `;
+            
+            // Show the ad
+            bottomAdSlider.classList.add('show');
+            
+            // Start timer
+            bottomAdTimerValue = 10;
+            bottomTimerCount.textContent = bottomAdTimerValue;
+            
+            // Start countdown
+            clearInterval(bottomAdTimerInterval);
+            bottomAdTimerInterval = setInterval(() => {
+                bottomAdTimerValue--;
+                bottomTimerCount.textContent = bottomAdTimerValue;
+                
+                if (bottomAdTimerValue <= 0) {
+                    clearInterval(bottomAdTimerInterval);
+                    hideBottomAd();
+                }
+            }, 1000);
+            
+            // Auto hide after 10 seconds
+            clearTimeout(bottomAdInterval);
+            bottomAdInterval = setTimeout(() => {
+                hideBottomAd();
+            }, 10000);
+            
+            console.log(`Showing bottom ad ${currentBottomAdIndex + 1}/${bottomAds.length}`);
+        }
+        
+        // Hide bottom ad
+        function hideBottomAd() {
+            bottomAdSlider.classList.remove('show');
+            clearInterval(bottomAdTimerInterval);
+            clearTimeout(bottomAdInterval);
+            
+            // Move to next ad
+            currentBottomAdIndex = (currentBottomAdIndex + 1) % bottomAds.length;
+            
+            // Show next ad after 5 seconds
+            setTimeout(() => {
+                if (bottomAdsActive && isPlaying) {
+                    showBottomAd();
+                }
+            }, 5000);
+        }
+        
+        // Start bottom ad rotation
+        function startBottomAds() {
+            if (!bottomAdsActive) {
+                bottomAdsActive = true;
+                // Wait 5 seconds before showing first ad
+                setTimeout(() => {
+                    if (bottomAdsActive && isPlaying) {
+                        showBottomAd();
+                    }
+                }, 5000);
+            }
+        }
+        
+        // Stop bottom ads
+        function stopBottomAds() {
+            bottomAdsActive = false;
+            bottomAdSlider.classList.remove('show');
+            clearInterval(bottomAdTimerInterval);
+            clearTimeout(bottomAdInterval);
         }
         
         // Start video
@@ -446,9 +782,9 @@
             videoStarted = true;
             adClosed = true;
             
-            // Hide the ad overlay
-            centerAdOverlay.style.opacity = '0';
-            centerAdOverlay.style.pointerEvents = 'none';
+            // Hide the large center ad
+            largeCenterAd.style.opacity = '0';
+            largeCenterAd.style.pointerEvents = 'none';
             
             // Show video container
             setTimeout(() => {
@@ -471,6 +807,9 @@
                     
                     showControls();
                     
+                    // Start bottom ads rotation
+                    startBottomAds();
+                    
                 }).catch(e => {
                     console.error('Video play failed:', e);
                     // Try with muted as fallback
@@ -482,6 +821,9 @@
                         playPauseBtn.textContent = '⏸️';
                         muteBtn.textContent = '🔇';
                         showControls();
+                        
+                        // Start bottom ads rotation
+                        startBottomAds();
                     });
                 });
                 
@@ -520,12 +862,20 @@
                     videoActive = true;
                     playPauseBtn.textContent = '⏸️';
                     showControls();
+                    
+                    // Resume bottom ads if they were active
+                    if (!bottomAdsActive) {
+                        startBottomAds();
+                    }
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
                 playPauseBtn.textContent = '▶️';
                 showControls();
+                
+                // Pause bottom ads
+                stopBottomAds();
             }
         }
         
@@ -564,6 +914,7 @@
             isPlaying = false;
             videoActive = false;
             playPauseBtn.textContent = '▶️';
+            stopBottomAds();
         });
         
         mainVideo.addEventListener('waiting', () => {
@@ -582,29 +933,28 @@
             console.error('Video error:', mainVideo.error);
             loadingSpinner.style.display = 'none';
             videoActive = false;
+            stopBottomAds();
             
-            // Show error message in center
-            centerAdOverlay.style.opacity = '1';
-            centerAdOverlay.style.pointerEvents = 'auto';
-            centerAdOverlay.innerHTML = `
-                <div class="ad-container" style="display: flex; align-items: center; justify-content: center; background: #222;">
-                    <div style="text-align: center; padding: 30px; color: white;">
-                        <div style="font-size: 50px; margin-bottom: 20px;">❌</div>
-                        <div style="font-size: 20px; margin-bottom: 10px; font-weight: bold;">Video Error</div>
-                        <div style="font-size: 16px; margin-bottom: 20px; opacity: 0.9;">
-                            Cannot load video
+            // Show error message
+            largeCenterAd.style.opacity = '1';
+            largeCenterAd.style.pointerEvents = 'auto';
+            largeCenterAd.innerHTML = `
+                <div class="large-ad-container" style="background: #222; display: flex; align-items: center; justify-content: center;">
+                    <div style="text-align: center; padding: 40px; color: white;">
+                        <div style="font-size: 60px; margin-bottom: 20px;">❌</div>
+                        <div style="font-size: 24px; margin-bottom: 15px; font-weight: bold;">Video Error</div>
+                        <div style="font-size: 18px; margin-bottom: 25px; opacity: 0.9;">
+                            Cannot load video content
                         </div>
-                        <button onclick="location.reload()" style="background: #1d9bf0; color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; cursor: pointer;">
+                        <button onclick="location.reload()" style="background: #1d9bf0; color: white; border: none; padding: 15px 40px; border-radius: 30px; font-size: 18px; cursor: pointer; font-weight: bold;">
                             Reload Page
                         </button>
                     </div>
                 </div>
-                <button class="close-ad-btn" onclick="location.reload()">×</button>
             `;
         });
         
         // Click handlers
-        closeAdBtn.addEventListener('click', startVideo);
         videoPlayOverlay.addEventListener('click', togglePlayPause);
         mainVideo.addEventListener('click', togglePlayPause);
         
@@ -613,17 +963,33 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
+        // Bottom ad close button
+        closeBottomAd.addEventListener('click', () => {
+            hideBottomAd();
+        });
+        
+        // Click on bottom ad to open link
+        bottomAdSlider.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('ad-close-bottom') && 
+                !e.target.closest('.ad-cta-bottom')) {
+                const currentAd = bottomAds[currentBottomAdIndex];
+                if (currentAd && currentAd.ctaLink) {
+                    window.open(currentAd.ctaLink, '_blank');
+                }
+            }
+        });
+        
+        // Auto start video if user clicks on the large ad
+        largeCenterAd.addEventListener('click', (e) => {
+            if (e.target === largeCenterAd || e.target.closest('.large-ad-container')) {
+                startVideo();
+            }
+        });
+        
         // Show controls on mouse move
         videoContainer.addEventListener('mousemove', () => {
             if (isPlaying) {
                 showControls();
-            }
-        });
-        
-        // Auto play video if user clicks anywhere on the ad container
-        centerAdOverlay.addEventListener('click', (e) => {
-            if (e.target === centerAdOverlay || e.target.classList.contains('ad-container')) {
-                startVideo();
             }
         });
         
@@ -637,12 +1003,12 @@
             setTimeout(loadAdsenseAd, 500);
         });
         
-        // Αποτροπή αντιγραφής URL
+        // Prevent right-click
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Center English Ad Only');
+        console.log('FmD Video Player ready - Large Center Ad + Rotating Bottom Ads');
         
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Exclusive Video');
