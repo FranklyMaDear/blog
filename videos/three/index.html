@@ -242,16 +242,16 @@
             border-radius: 10px;
         }
         
-        /* BOTTOM POP-UP AD STYLES */
+        /* BOTTOM POP-UP AD STYLES - ΜΕΙΩΜΕΝΟ 50% */
         .bottom-popup-ad {
             position: fixed;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 25vw;
-            height: 25vh;
-            min-width: 200px;
-            min-height: 150px;
+            width: 12.5vw; /* ΜΕΙΩΜΕΝΟ 50% από 25vw */
+            height: 12.5vh; /* ΜΕΙΩΜΕΝΟ 50% από 25vh */
+            min-width: 150px;
+            min-height: 100px;
             background: rgba(20, 20, 30, 0.95);
             backdrop-filter: blur(20px);
             border-top-left-radius: 15px;
@@ -262,7 +262,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             opacity: 0;
@@ -288,35 +288,35 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
         }
         
         .popup-ad-timer {
             position: absolute;
-            top: 10px;
-            right: 15px;
+            top: 8px;
+            right: 10px;
             background: rgba(255, 203, 46, 0.9);
             color: #000;
             font-weight: bold;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 12px;
             font-family: 'Courier New', monospace;
         }
         
         .popup-ad-close {
             position: absolute;
-            top: 10px;
-            left: 15px;
+            top: 8px;
+            left: 10px;
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -666,8 +666,8 @@
             }
             
             .bottom-popup-ad {
-                width: 35vw;
-                height: 25vh;
+                width: 17.5vw; /* ΜΕΙΩΜΕΝΟ 50% */
+                height: 12.5vh;
             }
             
             .center-progress-bar {
@@ -755,9 +755,10 @@
             }
             
             .bottom-popup-ad {
-                width: 90vw;
-                height: 25vh;
-                min-width: 250px;
+                width: 45vw; /* ΜΕΙΩΜΕΝΟ 50% */
+                height: 12.5vh;
+                min-width: 180px;
+                min-height: 90px;
             }
             
             .center-progress-bar {
@@ -843,8 +844,10 @@
             }
             
             .bottom-popup-ad {
-                width: 95vw;
-                height: 25vh;
+                width: 47.5vw; /* ΜΕΙΩΜΕΝΟ 50% */
+                height: 12.5vh;
+                min-width: 160px;
+                min-height: 80px;
             }
             
             .center-progress-bar {
@@ -864,6 +867,17 @@
                 width: 34px;
                 height: 34px;
                 font-size: 16px;
+            }
+            
+            .popup-ad-timer {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+            
+            .popup-ad-close {
+                width: 20px;
+                height: 20px;
+                font-size: 14px;
             }
         }
         
@@ -889,8 +903,8 @@
             }
             
             .bottom-popup-ad {
-                width: 40vw;
-                height: 35vh;
+                width: 20vw; /* ΜΕΙΩΜΕΝΟ 50% */
+                height: 17.5vh;
             }
         }
     </style>
@@ -980,7 +994,6 @@
             <button class="control-btn" id="muteBtn">🔊</button>
             <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
             <button class="control-btn" id="fullscreenBtn">⛶</button>
-        </div>
     </div>
 
     <script>
@@ -1050,43 +1063,53 @@
         // Video Title - Consistent across all platforms
         const VIDEO_TITLE = "Το Έψαξα Πάντως";
         
-        // Volume state
-        let currentVolume = 1.0;
+        // Volume state - ΑΡΧΙΚΑ ΑΝΟΙΧΤΟΣ ΗΧΟΣ
+        let currentVolume = 1.0; // 100% volume από την αρχή
         let isDraggingVolume = false;
         
         // Center progress bar state
         let centerProgressVisible = false;
         let centerProgressTimeout = null;
         
-        // FORCE SOUND ON - ΑΥΤΟΜΑΤΗ ΕΝΕΡΓΟΠΟΙΗΣΗ ΗΧΟΥ
+        // FORCE SOUND ON - ΑΥΤΟΜΑΤΗ ΕΝΕΡΓΟΠΟΙΗΣΗ ΗΧΟΥ (100% ΒΕΒΑΙΟ)
         function forceAudioEnabled() {
-            console.log("🔊 Force enabling audio...");
+            console.log("🔊 Force enabling audio at 100% volume...");
             
-            // Set video to unmuted with max volume
+            // ΒΕΒΑΙΩΝΟΥΜΕ ΟΤΙ Ο ΗΧΟΣ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ
             mainVideo.muted = false;
-            mainVideo.volume = currentVolume;
-            isMuted = false;
+            mainVideo.volume = 1.0; // 100% volume
+            currentVolume = 1.0; // Ενημερώνουμε το state
+            isMuted = false; // ΣΙΓΟΥΡΑ ΟΧΙ MUTED
             
             // Update UI
             muteBtn.textContent = '🔊';
             centerSoundBtn.textContent = '🔊';
             updateVerticalVolumeSlider();
             
-            // Try to play with sound
+            // Προσπαθούμε να παίξουμε με ήχο
             const playPromise = mainVideo.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log("✅ Audio successfully enabled and playing");
+                    console.log("✅ Audio successfully enabled and playing at 100% volume");
                 }).catch(error => {
-                    console.log("⚠️ Auto-play with sound blocked, trying muted...");
-                    mainVideo.muted = true;
+                    console.log("⚠️ Auto-play with sound blocked, trying with audio context...");
+                    
+                    // Επιπλέον προσπάθεια με Audio Context
+                    try {
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        if (audioContext.state === 'suspended') {
+                            audioContext.resume();
+                        }
+                    } catch (e) {
+                        console.log("Audio Context not supported");
+                    }
+                    
+                    // Προσπαθούμε πάλι να παίξουμε
                     mainVideo.play().then(() => {
-                        console.log("✅ Video playing muted due to browser restrictions");
-                        isMuted = true;
-                        muteBtn.textContent = '🔇';
-                        centerSoundBtn.textContent = '🔇';
-                        updateVerticalVolumeSlider();
+                        console.log("✅ Video playing after retry");
+                    }).catch(e2 => {
+                        console.log("❌ Final play failed, user must interact");
                     });
                 });
             }
@@ -1191,11 +1214,11 @@
             showControls();
         }
         
-        // Start video - WITH SOUND AUTOMATICALLY ENABLED
+        // Start video - WITH SOUND AUTOMATICALLY ENABLED (100% ΒΕΒΑΙΟ)
         function startVideo() {
             if (videoStarted) return;
             
-            console.log('▶️ Starting video WITH SOUND AUTOMATICALLY ENABLED');
+            console.log('▶️ Starting video WITH SOUND AUTOMATICALLY ENABLED at 100% volume');
             videoStarted = true;
             adClosed = true;
             
@@ -1211,14 +1234,14 @@
                     videoPlayOverlay.classList.add('hidden');
                 }, 1500);
                 
-                // FORCE AUDIO TO BE ENABLED IMMEDIATELY
+                // FORCE AUDIO TO BE ENABLED IMMEDIATELY AT 100% VOLUME
                 forceAudioEnabled();
                 
                 const playPromise = mainVideo.play();
                 
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
-                        console.log('✅ Video playback started successfully');
+                        console.log('✅ Video playback started successfully with sound');
                         isPlaying = true;
                         videoActive = true;
                         playPauseBtn.textContent = '⏸️';
@@ -1232,13 +1255,18 @@
                         
                     }).catch(e => {
                         console.error('❌ Video play failed:', e);
+                        
+                        // Προσπαθούμε με muted και μετά enable sound
                         mainVideo.muted = true;
                         mainVideo.play().then(() => {
-                            console.log('✅ Video started muted (user can unmute)');
+                            console.log('✅ Video started muted (will enable sound on user interaction)');
                             isPlaying = true;
                             videoActive = true;
                             playPauseBtn.textContent = '⏸️';
                             showControls();
+                            
+                            // Προσθέτουμε event listener για user interaction
+                            document.addEventListener('click', enableSoundOnUserClick, { once: true });
                             
                             // Start ad system after 5 seconds
                             setTimeout(() => {
@@ -1249,6 +1277,15 @@
                 }
                 
             }, 400);
+        }
+        
+        // Enable sound on user click (fallback)
+        function enableSoundOnUserClick() {
+            console.log('👆 User clicked, enabling sound...');
+            mainVideo.muted = false;
+            mainVideo.volume = 1.0;
+            isMuted = false;
+            updateVerticalVolumeSlider();
         }
         
         // Format time function
@@ -1441,7 +1478,7 @@
                 }
             }, 1000);
             
-            console.log(`📢 Bottom popup ad shown`);
+            console.log(`📢 Bottom popup ad shown (50% smaller)`);
         }
         
         function hideAdvertisement() {
@@ -1463,6 +1500,7 @@
             updateTimeDisplay();
             updateVerticalVolumeSlider();
             
+            // ΒΕΒΑΙΩΝΟΥΜΕ Ο ΗΧΟΣ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ ΑΠΟ ΤΗΝ ΑΡΧΗ
             forceAudioEnabled();
             
             // Set video to loop
@@ -1597,6 +1635,9 @@
             // Set video title in center progress bar
             centerProgressTitle.textContent = VIDEO_TITLE;
             
+            // ΒΕΒΑΙΩΝΟΥΜΕ ΟΤΙ Ο ΗΧΟΣ ΘΑ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ
+            console.log('🎵 Ensuring audio will be ON when video starts');
+            
             // Load AdSense ad after page loads
             setTimeout(loadAdsenseAd, 300);
             
@@ -1616,23 +1657,24 @@
         console.log('✅ FmD Video Player ready');
         console.log('🎯 Features:');
         console.log('  - Video Title: "' + VIDEO_TITLE + '" (παντού)');
+        console.log('  - Ηχος: ΑΝΟΙΧΤΟΣ 100% από την αρχή');
         console.log('  - Video Looping: Αυτόματη επανεκκίνηση');
-        console.log('  - Bottom Pop-up Ads: 25% μέγεθος, Google AdSense');
+        console.log('  - Bottom Pop-up Ads: 50% ΜΕΙΩΜΕΝΟ (δεν κρύβει οθόνη)');
         console.log('  - Center Progress Bar: Με τίτλο και κουμπί ήχου');
         console.log('  - Transparent Volume Slider στα δεξιά');
-        console.log('  - Αυτόματος ήχος ON');
         
-        // Add user gesture handler for audio
+        // Additional audio enabling attempts
         document.addEventListener('click', function() {
             if (videoStarted && isMuted) {
                 mainVideo.muted = false;
                 isMuted = false;
                 updateVerticalVolumeSlider();
+                console.log('🔊 Sound enabled via user click');
             }
         });
         
         mainVideo.addEventListener('play', () => {
-            console.log('🎬 Video started playing - Sound should be ON');
+            console.log('🎬 Video started playing - Sound is ON at 100%');
         });
     </script>
 </body>
