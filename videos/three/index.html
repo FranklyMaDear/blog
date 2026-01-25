@@ -690,13 +690,13 @@
         
         <div class="ad-content">
             <div class="ad-container">
-                <!-- GOOGLE FULLSCREEN AD -->
+                <!-- Βελτιωμένη Google AdSense διαφήμιση για καλύτερα κέρδη -->
                 <ins class="adsbygoogle"
-                     style="display:block; width:100%; height:100%;"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
                      data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
+                     data-ad-slot="3969235710"></ins>
             </div>
         </div>
         
@@ -785,6 +785,7 @@
         let midgameAdTimeout;
         let adCountdownValue = 15;
         let videoActive = false;
+        let videoDuration = 59; // Προεπιλεγμένη διάρκεια
         
         // FULLSCREEN AD FUNCTIONS
         function showFullscreenAd(type = "startup") {
@@ -810,11 +811,20 @@
             adCountdownValue = 15;
             adTimerCount.textContent = adCountdownValue;
             
-            // Φόρτωση Google Ad
+            // Φόρτωση βελτιωμένης Google Ad
             setTimeout(() => {
                 try {
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log(`${type === "startup" ? "Startup" : "Mid-game"} Google Ad loaded`);
+                    console.log(`${type === "startup" ? "Startup" : "Mid-game"} Google Ad loaded with better layout`);
+                    
+                    // Track ad impression για καλύτερα κέρδη
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'ad_impression', {
+                            'ad_type': type,
+                            'video_title': 'Έχω πάει με πολλούς',
+                            'ad_position': 'fullscreen'
+                        });
+                    }
                 } catch (e) {
                     console.log("Ad load error:", e);
                 }
@@ -852,6 +862,15 @@
             fullscreenAd.classList.remove('show', 'show-abrupt');
             clearInterval(adCountdownTimer);
             clearTimeout(adTimer);
+            
+            // Track ad close
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'ad_close', {
+                    'ad_type': type,
+                    'view_duration': (15 - adCountdownValue),
+                    'video_title': 'Έχω πάει με πολλούς'
+                });
+            }
             
             // Συνεχίστε το βίντεο αν ήταν σε παύση
             if (isPlaying && type === "midgame") {
@@ -924,9 +943,13 @@
         // Update time display
         function updateTime() {
             if (mainVideo.duration && !isNaN(mainVideo.duration)) {
-                const progress = (mainVideo.currentTime / mainVideo.duration) * 100;
+                videoDuration = mainVideo.duration;
+                const progress = (mainVideo.currentTime / videoDuration) * 100;
                 seekProgress.style.width = `${progress}%`;
-                timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(mainVideo.duration)}`;
+                timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(videoDuration)}`;
+            } else {
+                // Προσωρινή εμφάνιση μέχρι να φορτώσει το βίντεο
+                timeDisplay.textContent = `00:01 / ${formatTime(videoDuration)}`;
             }
         }
         
@@ -963,12 +986,28 @@
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('Ad overlay clicked');
+                
+                // Track ad click
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'ad_click', {
+                        'ad_position': 'seekbar_overlay',
+                        'video_title': 'Έχω πάει με πολλούς'
+                    });
+                }
             });
             
             newAdOverlay.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
                 console.log('Ad overlay touched');
+                
+                // Track ad touch
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'ad_touch', {
+                        'ad_position': 'seekbar_overlay',
+                        'video_title': 'Έχω πάει με πολλούς'
+                    });
+                }
             });
         }
         
@@ -978,7 +1017,7 @@
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
-            const time = percent * mainVideo.duration;
+            const time = percent * (videoDuration || 59);
             
             // Ενημέρωση του βίντεο
             mainVideo.currentTime = time;
@@ -1001,7 +1040,7 @@
             let percent = (clientX - rect.left) / rect.width;
             percent = Math.max(0, Math.min(1, percent));
             
-            const time = percent * mainVideo.duration;
+            const time = percent * (videoDuration || 59);
             seekTooltip.textContent = formatTime(time);
             seekTooltip.style.left = `${percent * 100}%`;
             seekTooltip.style.opacity = '1';
@@ -1046,6 +1085,14 @@
                     }, 2000);
                 }
                 
+                // Track video start
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'video_start', {
+                        'video_title': 'Έχω πάει με πολλούς',
+                        'duration': videoDuration
+                    });
+                }
+                
             }).catch(e => {
                 console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
@@ -1071,6 +1118,13 @@
                             showFullscreenAd("startup");
                         }, 2000);
                     }
+                    
+                    // Track video start with muted fallback
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'video_start_muted', {
+                            'video_title': 'Έχω πάει με πολλούς'
+                        });
+                    }
                 });
             });
         }
@@ -1086,10 +1140,25 @@
                     if (!midgameAdShown) {
                         startMidgameAdCountdown();
                     }
+                    
+                    // Track video resume
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'video_resume', {
+                            'video_title': 'Έχω πάει με πολλούς'
+                        });
+                    }
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
+                
+                // Track video pause
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'video_pause', {
+                        'video_title': 'Έχω πάει με πολλούς',
+                        'current_time': mainVideo.currentTime
+                    });
+                }
             }
         }
         
@@ -1129,9 +1198,25 @@
                 
                 updateAdDisplay();
                 
+                // Track autoplay
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'autoplay_success', {
+                        'video_title': 'Έχω πάει με πολλούς',
+                        'platform': 'X/Twitter'
+                    });
+                }
+                
             }).catch(e => {
                 console.log('Autoplay failed:', e.message);
                 playButton.style.display = 'flex';
+                
+                // Track autoplay failure
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'autoplay_failed', {
+                        'video_title': 'Έχω πάει με πολλούς',
+                        'error': e.message
+                    });
+                }
             });
         }
         
@@ -1187,6 +1272,14 @@
             hideSeekBarTimeout = setTimeout(() => {
                 seekContainer.classList.remove('active');
             }, 2000);
+            
+            // Track seek action
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'video_seek', {
+                    'video_title': 'Έχω πάει με πολλούς',
+                    'seek_to': mainVideo.currentTime
+                });
+            }
         });
         
         seekBar.addEventListener('mousedown', () => {
@@ -1230,8 +1323,9 @@
         mainVideo.addEventListener('loadedmetadata', () => {
             videoWidth = mainVideo.videoWidth;
             videoHeight = mainVideo.videoHeight;
+            videoDuration = mainVideo.duration;
             
-            console.log('Video dimensions:', videoWidth, 'x', videoHeight);
+            console.log('Video dimensions:', videoWidth, 'x', videoHeight, 'Duration:', videoDuration);
             
             adjustThumbnailSize();
             updateTime();
@@ -1242,6 +1336,15 @@
                 console.log('Running in X (Twitter) Player');
                 tryAutoplay();
             }
+            
+            // Track video loaded
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'video_loaded', {
+                    'video_title': 'Έχω πάει με πολλούς',
+                    'duration': videoDuration,
+                    'resolution': `${videoWidth}x${videoHeight}`
+                });
+            }
         });
         
         mainVideo.addEventListener('timeupdate', updateTime);
@@ -1250,6 +1353,14 @@
             isPlaying = false;
             videoActive = false;
             stopMidgameAdCountdown();
+            
+            // Track video completion
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'video_complete', {
+                    'video_title': 'Έχω πάει με πολλούς',
+                    'duration': videoDuration
+                });
+            }
         });
         
         mainVideo.addEventListener('waiting', () => {
@@ -1283,6 +1394,14 @@
                 </div>
             `;
             playButton.style.display = 'none';
+            
+            // Track video error
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'video_error', {
+                    'video_title': 'Έχω πάει με πολλούς',
+                    'error_code': mainVideo.error ? mainVideo.error.code : 'unknown'
+                });
+            }
         });
         
         // Click handlers
@@ -1321,12 +1440,26 @@
                 if (isPlaying) {
                     mainVideo.pause();
                     isPlaying = false;
+                    
+                    // Track background pause
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'video_background_pause', {
+                            'video_title': 'Έχω πάει με πολλούς'
+                        });
+                    }
                 }
             } else {
                 videoActive = true;
                 // Επανεκκίνηση mid-game countdown μόνο αν το βίντεο παίζει
                 if (isPlaying && !midgameAdShown) {
                     startMidgameAdCountdown();
+                    
+                    // Track foreground resume
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'video_foreground_resume', {
+                            'video_title': 'Έχω πάει με πολλούς'
+                        });
+                    }
                 }
             }
         });
@@ -1346,7 +1479,7 @@
                     break;
                 case 'ArrowRight':
                     e.preventDefault();
-                    mainVideo.currentTime = Math.min(mainVideo.duration, mainVideo.currentTime + 5);
+                    mainVideo.currentTime = Math.min(videoDuration, mainVideo.currentTime + 5);
                     showSeekBar();
                     break;
             }
@@ -1367,6 +1500,14 @@
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
             }
+            
+            // Track page load
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    'page_title': 'Έχω πάει με πολλούς',
+                    'page_location': window.location.href
+                });
+            }
         });
         
         // Αποτροπή αντιγραφής URL
@@ -1374,12 +1515,37 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Updated with Google AdSense System');
+        console.log('FmD Video Player ready - Updated with optimized Google AdSense System');
         
         // Track video views for analytics
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Έχω πάει με πολλούς - FmD @FmD699');
         });
+        
+        // Προσθήκη Google Analytics για καλύτερο tracking
+        (function() {
+            // Google Analytics Tracking
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag('js', new Date());
+            gtag('config', 'G-XXXXXXXXXX'); // Προσθέστε το Google Analytics ID σας εδώ
+            
+            // Προσθήκη event listener για video engagement
+            let engagementTracked = false;
+            mainVideo.addEventListener('timeupdate', function() {
+                if (!engagementTracked && mainVideo.currentTime >= 10) {
+                    engagementTracked = true;
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'video_engagement', {
+                            'video_title': 'Έχω πάει με πολλούς',
+                            'engagement_time': 10
+                        });
+                    }
+                }
+            });
+        })();
     </script>
 </body>
 </html>
