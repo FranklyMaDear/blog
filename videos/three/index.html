@@ -40,9 +40,17 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
     
-    <!-- Google AdSense Script -->
+    <!-- Google AdSense Script - ΜΟΝΟ ΠΡΟΣΘΗΚΗ SCRIPT, ΧΩΡΙΣ AUTO-LOAD -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
             crossorigin="anonymous"></script>
+    
+    <!-- Block Google CMP (Consent Management Platform) -->
+    <script>
+        // Block Google CMP from loading
+        window.tcfApi = window.tcfApi || {};
+        window.__tcfapi = function() {};
+        window.__cmp = function() {};
+    </script>
     
     <title>Έχω πάει με πολλούς - FmD @FmD699</title>
     
@@ -86,7 +94,7 @@
             overflow: hidden;
         }
         
-        /* VIDEO - Τώρα φαίνεται το πρώτο καρέ */
+        /* VIDEO */
         #mainVideo {
             position: relative;
             max-width: 100%;
@@ -96,15 +104,15 @@
             z-index: 1;
             background: #000;
             cursor: pointer;
-            opacity: 0; /* Αρχικά αόρατο */
+            opacity: 0;
             transition: opacity 0.5s ease;
         }
         
         #mainVideo.visible {
-            opacity: 1; /* Γίνεται ορατό όταν φορτώσει */
+            opacity: 1;
         }
         
-        /* Πρώτο καρέ preview - αντικαθιστά το thumbnail */
+        /* Πρώτο καρέ preview */
         .first-frame-preview {
             position: absolute;
             top: 50%;
@@ -349,21 +357,22 @@
             display: none;
         }
         
-        /* MINI BANNER AD */
+        /* MINI BANNER AD - 25% ΤΗΣ ΟΘΟΝΗΣ */
         .banner-ad {
             position: fixed;
-            bottom: -200px;
+            bottom: -25vh; /* Αρχικά κρυμμένη */
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
             max-width: 500px;
-            height: 150px;
+            height: 25vh; /* 25% του viewport height */
+            max-height: 150px;
             background: linear-gradient(135deg, #1a237e, #311b92);
             border-radius: 15px 15px 0 0;
             z-index: 10000;
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 10px 15px;
             box-shadow: 0 -5px 30px rgba(0,0,0,0.7);
             border: 2px solid #ffcb2e;
             border-bottom: none;
@@ -375,11 +384,11 @@
         }
         
         .ad-image {
-            width: 100px;
-            height: 100px;
+            width: 70px;
+            height: 70px;
             border-radius: 10px;
             overflow: hidden;
-            margin-right: 15px;
+            margin-right: 12px;
             flex-shrink: 0;
             border: 2px solid #ffcb2e;
         }
@@ -396,26 +405,26 @@
         }
         
         .ad-title-mini {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             color: #ffcb2e;
         }
         
         .ad-description {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.9;
-            margin-bottom: 8px;
-            line-height: 1.3;
+            margin-bottom: 6px;
+            line-height: 1.2;
         }
         
         .ad-cta {
             display: inline-block;
             background: #ffcb2e;
             color: #1a237e;
-            padding: 6px 15px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             text-decoration: none;
             transition: all 0.3s;
@@ -428,31 +437,66 @@
         
         .banner-close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 8px;
+            right: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
-            width: 25px;
-            height: 25px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10001;
         }
         
         .banner-timer {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 8px;
+            left: 8px;
             background: rgba(0, 0, 0, 0.7);
             color: #4CAF50;
-            padding: 2px 8px;
+            padding: 2px 6px;
             border-radius: 10px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
+        }
+        
+        /* HIDE GOOGLE CMP BANNER */
+        .fc-consent-root,
+        .fc-dialog-container,
+        .as-oil,
+        .cc_banner-wrapper,
+        .cookie-consent,
+        .privacy-banner,
+        .tiktok-consent,
+        [class*="consent"],
+        [class*="cookie"],
+        [class*="privacy"],
+        [id*="consent"],
+        [id*="cookie"],
+        [id*="privacy"] {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            overflow: hidden !important;
+            position: fixed !important;
+            top: -9999px !important;
+            left: -9999px !important;
+            pointer-events: none !important;
+        }
+        
+        /* Block iframe popups */
+        iframe[src*="tiktok"],
+        iframe[src*="consent"],
+        iframe[src*="cookie"],
+        iframe[src*="privacy"] {
+            display: none !important;
         }
         
         @keyframes spin {
@@ -511,20 +555,21 @@
             
             .banner-ad {
                 max-width: 400px;
-                height: 130px;
+                height: 22vh;
+                max-height: 120px;
             }
             
             .ad-image {
-                width: 80px;
-                height: 80px;
+                width: 60px;
+                height: 60px;
             }
             
             .ad-title-mini {
-                font-size: 14px;
+                font-size: 13px;
             }
             
             .ad-description {
-                font-size: 11px;
+                font-size: 10px;
             }
         }
         
@@ -574,32 +619,33 @@
             
             .banner-ad {
                 max-width: 350px;
-                height: 110px;
-                padding: 10px;
+                height: 20vh;
+                max-height: 100px;
+                padding: 8px 12px;
             }
             
             .ad-image {
-                width: 70px;
-                height: 70px;
+                width: 50px;
+                height: 50px;
                 margin-right: 10px;
             }
             
             .ad-title-mini {
-                font-size: 13px;
+                font-size: 12px;
             }
             
             .ad-description {
-                font-size: 10px;
+                font-size: 9px;
             }
             
             .ad-cta {
-                padding: 4px 12px;
-                font-size: 11px;
+                padding: 3px 10px;
+                font-size: 10px;
             }
         }
     </style>
     
-    <!-- JavaScript για απόκρυψη URL -->
+    <!-- JavaScript για απόκρυψη URL και block popups -->
     <script>
         // Απόκρυψη URL bar σε mobile
         if ('scrollRestoration' in history) {
@@ -611,28 +657,141 @@
             setTimeout(function() {
                 window.scrollTo(0, 0);
                 
-                // Προσθήκη αυτής της γραμμής για iOS
                 document.body.style.height = window.innerHeight + 'px';
                 
-                // Αποτροπή zoom
                 document.addEventListener('touchmove', function(e) {
                     if(e.scale !== 1) {
                         e.preventDefault();
                     }
                 }, { passive: false });
                 
-                // Αποτροπή κινητών URL bars
                 var currentScroll = 0;
                 window.addEventListener('scroll', function() {
                     currentScroll = window.pageYOffset || document.documentElement.scrollTop;
                     window.scrollTo(0, currentScroll === 0 ? 1 : currentScroll);
                 });
+                
+                // Αποτροπή cookie popups
+                blockConsentPopups();
+                
+                // Monitor για νέα popups
+                monitorForPopups();
             }, 0);
         });
+        
+        // Function to block consent popups
+        function blockConsentPopups() {
+            // Remove existing popups
+            document.querySelectorAll('.fc-consent-root, .fc-dialog-container, .as-oil, .cc_banner-wrapper, .cookie-consent, .privacy-banner, [class*="consent"], [class*="cookie"], [class*="privacy"]').forEach(el => {
+                el.remove();
+            });
+            
+            // Block Google CMP
+            window.__tcfapi = function() {};
+            window.__cmp = function() {};
+            window.tcfApi = {};
+            
+            // Block TikTok and other ad consent popups
+            const style = document.createElement('style');
+            style.textContent = `
+                .fc-consent-root,
+                .fc-dialog-container,
+                .as-oil,
+                .cc_banner-wrapper,
+                .cookie-consent,
+                .privacy-banner,
+                .tiktok-consent,
+                [class*="consent"],
+                [class*="cookie"],
+                [class*="privacy"],
+                [id*="consent"],
+                [id*="cookie"],
+                [id*="privacy"],
+                iframe[src*="tiktok"],
+                iframe[src*="consent"],
+                iframe[src*="cookie"],
+                iframe[src*="privacy"] {
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                    height: 0 !important;
+                    width: 0 !important;
+                    overflow: hidden !important;
+                    position: fixed !important;
+                    top: -9999px !important;
+                    left: -9999px !important;
+                    pointer-events: none !important;
+                }
+                
+                /* Block Privacy and cookie settings text */
+                div:has(> div:contains("Privacy and cookie settings")),
+                div:contains("Managed by Google"),
+                div:contains("Complies with IAB TCF"),
+                div:contains("CMP ID:"),
+                div:contains("Privacy settings"),
+                div:contains("Cookie settings") {
+                    display: none !important;
+                    visibility: hidden !important;
+                    opacity: 0 !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Monitor for new popups
+        function monitorForPopups() {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    mutation.addedNodes.forEach(function(node) {
+                        if (node.nodeType === 1) {
+                            const el = node;
+                            if (el.classList) {
+                                const classList = Array.from(el.classList);
+                                if (classList.some(cls => 
+                                    cls.includes('consent') || 
+                                    cls.includes('cookie') || 
+                                    cls.includes('privacy') ||
+                                    cls.includes('fc-') ||
+                                    cls.includes('as-oil') ||
+                                    cls.includes('cc_')
+                                )) {
+                                    el.remove();
+                                }
+                            }
+                            
+                            if (el.tagName === 'IFRAME') {
+                                const src = el.src || '';
+                                if (src.includes('tiktok') || 
+                                    src.includes('consent') || 
+                                    src.includes('cookie') || 
+                                    src.includes('privacy')) {
+                                    el.remove();
+                                }
+                            }
+                            
+                            // Check text content for privacy messages
+                            if (el.textContent && (
+                                el.textContent.includes('Privacy and cookie settings') ||
+                                el.textContent.includes('Managed by Google') ||
+                                el.textContent.includes('Complies with IAB TCF') ||
+                                el.textContent.includes('CMP ID:')
+                            )) {
+                                el.remove();
+                            }
+                        }
+                    });
+                });
+            });
+            
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
     </script>
 </head>
 <body>
-    <!-- MINI BANNER AD -->
+    <!-- MINI BANNER AD - 25% της οθόνης -->
     <div class="banner-ad" id="bannerAd">
         <div class="banner-timer" id="bannerTimer">Κλείνει σε: <span id="bannerTimerCount">10</span></div>
         <button class="banner-close-btn" id="closeBannerAd">×</button>
@@ -726,9 +885,7 @@
         let videoStartTime = null;
         let bannerTimer;
         let bannerCountdownTimer;
-        let nextAdCountdownTimer;
         let bannerCountdownValue = 10;
-        let nextAdCountdownValue = 20;
         let videoActive = false;
         let videoDuration = 59;
         
@@ -736,7 +893,6 @@
         function extractFirstFrame() {
             console.log('Extracting first frame from video...');
             
-            // Create a temporary video element to capture first frame
             const tempVideo = document.createElement('video');
             tempVideo.crossOrigin = 'anonymous';
             tempVideo.muted = true;
@@ -744,51 +900,36 @@
             
             tempVideo.addEventListener('loadeddata', function() {
                 console.log('Video metadata loaded for frame extraction');
-                
-                // Seek to 0.1 seconds to get first frame
                 tempVideo.currentTime = 0.1;
             }, false);
             
             tempVideo.addEventListener('seeked', function() {
                 console.log('Video seeked, capturing frame...');
                 
-                // Setup canvas dimensions
                 const canvas = firstFrameCanvas;
                 const ctx = canvas.getContext('2d');
-                
-                // Set canvas size to video size
                 canvas.width = tempVideo.videoWidth || 1280;
                 canvas.height = tempVideo.videoHeight || 720;
-                
-                // Draw the first frame
                 ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
                 
                 console.log('First frame captured:', canvas.width, 'x', canvas.height);
-                
-                // Show the canvas
                 firstFrameCanvas.classList.add('loaded');
                 
-                // Clean up
                 tempVideo.src = '';
                 tempVideo.load();
                 firstFrameExtracted = true;
-                
-                // Set main video as visible now
                 mainVideo.classList.add('visible');
                 
             }, false);
             
             tempVideo.addEventListener('error', function(e) {
                 console.error('Error extracting first frame:', e);
-                // Fallback to thumbnail
                 fallbackToThumbnail();
             }, false);
             
-            // Start loading the video
             tempVideo.src = 'https://blog.franklymadear.com/videos/three/video99.mp4';
             tempVideo.load();
             
-            // Timeout fallback
             setTimeout(() => {
                 if (!firstFrameExtracted) {
                     console.log('Frame extraction timeout, using fallback');
@@ -797,7 +938,6 @@
             }, 3000);
         }
         
-        // Fallback to thumbnail if frame extraction fails
         function fallbackToThumbnail() {
             console.log('Using thumbnail as fallback');
             firstFramePreview.innerHTML = `
@@ -810,7 +950,7 @@
             mainVideo.classList.add('visible');
         }
         
-        // BANNER AD FUNCTIONS
+        // BANNER AD FUNCTIONS - 25% της οθόνης
         function showBannerAd() {
             bannerAdShown = true;
             bannerCountdownValue = 10;
@@ -823,17 +963,34 @@
                 closeBannerAdFunc();
             }, 10000);
             
-            // Load AdSense ad in banner
+            // Load AdSense ad - MANUAL PUSH ONLY
             setTimeout(() => {
                 try {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log("Banner AdSense ad loaded");
+                    // ΜΟΝΟ αν δεν υπάρχουν cookie popups
+                    if (!document.querySelector('.fc-consent-root, .fc-dialog-container, .as-oil')) {
+                        const adContainer = document.createElement('div');
+                        adContainer.style.cssText = 'width:100%;height:100%;';
+                        adContainer.innerHTML = `
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-format="autorelaxed"
+                                 data-ad-client="ca-pub-3186700611266549"
+                                 data-ad-slot="9660744817"></ins>
+                        `;
+                        
+                        const bannerContent = document.querySelector('.ad-content-mini');
+                        if (bannerContent && !document.querySelector('.adsbygoogle')) {
+                            bannerContent.appendChild(adContainer);
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            console.log("AdSense autorelaxed ad loaded");
+                        }
+                    }
                 } catch (e) {
                     console.log("Ad load error:", e);
                 }
             }, 500);
             
-            console.log("Banner ad shown for 10 seconds");
+            console.log("Banner ad shown for 10 seconds (25% of screen)");
         }
         
         function startBannerCountdown() {
@@ -855,6 +1012,7 @@
             
             console.log("Banner ad closed");
             
+            // Επόμενη διαφήμιση μετά από 20 δευτερόλεπτα
             setTimeout(() => {
                 if (videoActive && isPlaying) {
                     showBannerAd();
@@ -883,7 +1041,6 @@
         
         function showSeekBar() {
             seekContainer.classList.add('active');
-            
             clearTimeout(hideSeekBarTimeout);
             hideSeekBarTimeout = setTimeout(() => {
                 if (!isSeeking) {
@@ -923,12 +1080,10 @@
             percent = Math.max(0, Math.min(1, percent));
             
             const time = percent * (videoDuration || 59);
-            
             mainVideo.currentTime = time;
             
             if (mainVideo.readyState < 3) {
                 loadingSpinner.style.display = 'block';
-                
                 setTimeout(() => {
                     loadingSpinner.style.display = 'none';
                 }, 500);
@@ -952,13 +1107,11 @@
             seekTooltip.style.opacity = '0';
         }
         
-        // Start video and hide first frame
         function startVideo() {
             console.log('Play button clicked - starting video');
             videoActive = true;
             playButton.style.display = 'none';
             
-            // Hide first frame preview
             firstFramePreview.style.opacity = '0';
             setTimeout(() => {
                 firstFramePreview.style.display = 'none';
@@ -976,7 +1129,6 @@
                 updateAdDisplay();
                 videoStartTime = Date.now();
                 
-                // Εμφάνιση πρώτης BANNER AD μετά από 2 δευτερόλεπτα
                 if (!adShown) {
                     setTimeout(() => {
                         showBannerAd();
@@ -988,7 +1140,6 @@
                 console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
                 
-                // Fallback: Try with muted
                 mainVideo.muted = true;
                 mainVideo.play().then(() => {
                     console.log('Video started with muted fallback');
@@ -1073,8 +1224,6 @@
             
             updateTime();
             updateAdDisplay();
-            
-            // Extract and show first frame
             extractFirstFrame();
             
             const isEmbedded = window.self !== window.top;
@@ -1085,7 +1234,6 @@
         });
         
         mainVideo.addEventListener('timeupdate', updateTime);
-        
         mainVideo.addEventListener('ended', () => {
             isPlaying = false;
             videoActive = false;
@@ -1115,9 +1263,6 @@
                     <div style="font-size: 16px; margin-bottom: 10px; opacity: 0.9;">
                         Cannot load video: https://blog.franklymadear.com/videos/three/video99.mp4
                     </div>
-                    <div style="font-size: 14px; opacity: 0.7;">
-                        Please check if the video file exists
-                    </div>
                 </div>
             `;
             playButton.style.display = 'none';
@@ -1128,7 +1273,6 @@
         mainVideo.addEventListener('click', togglePlayPause);
         firstFramePreview.addEventListener('click', startVideo);
         
-        // Video click για εμφάνιση seek bar
         mainVideo.addEventListener('click', () => {
             if (isPlaying) {
                 showSeekBar();
@@ -1158,7 +1302,6 @@
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
                 videoActive = false;
-                
                 if (isPlaying) {
                     mainVideo.pause();
                     isPlaying = false;
@@ -1203,53 +1346,24 @@
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
             }
+            
+            // Extra protection against popups
+            setInterval(() => {
+                document.querySelectorAll('.fc-consent-root, .fc-dialog-container, .as-oil, .cc_banner-wrapper, [class*="consent"], [class*="cookie"], [class*="privacy"], iframe[src*="tiktok"]').forEach(el => {
+                    el.remove();
+                });
+            }, 1000);
         });
         
-        // Αποτροπή αντιγραφής URL
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - First frame preview system');
+        console.log('FmD Video Player ready - No popups, 25% banner ad');
         
-        // Track video views
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Έχω πάει με πολλούς - FmD @FmD699');
         });
-        
-        // AdSense initialization
-        (function() {
-            // Load AdSense ad in banner
-            setTimeout(() => {
-                const adContainer = document.createElement('div');
-                adContainer.className = 'adsbygoogle-container';
-                adContainer.style.cssText = 'width:100%;height:100%;overflow:hidden;';
-                
-                adContainer.innerHTML = `
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                `;
-                
-                // Add to banner ad
-                const bannerContent = document.querySelector('.ad-content-mini');
-                if (bannerContent) {
-                    bannerContent.appendChild(adContainer);
-                    
-                    // Push ad after a delay
-                    setTimeout(() => {
-                        try {
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                            console.log("AdSense autorelaxed ad loaded");
-                        } catch (e) {
-                            console.log("AdSense load error:", e);
-                        }
-                    }, 1000);
-                }
-            }, 2000);
-        })();
     </script>
 </body>
 </html>
