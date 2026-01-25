@@ -59,38 +59,31 @@
             background: #000;
             color: #fff;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
             overflow: hidden;
-        }
-        
-        /* Ad Container - Φιλική για το βίντεο */
-        .ad-container {
-            width: 100%;
-            background: rgba(20, 20, 20, 0.95);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px 0;
-            z-index: 1000;
-            flex-shrink: 0;
-            backdrop-filter: blur(10px);
-        }
-        
-        .ad-wrapper {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* Video Container - Takes remaining space */
-        .video-container {
             position: relative;
-            flex: 1;
+        }
+        
+        /* Hide URL bar on mobile */
+        @media (max-width: 768px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+            }
+        }
+        
+        /* MAIN VIDEO CONTAINER */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100vh;
             background: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            z-index: 1;
         }
         
         /* VIDEO */
@@ -191,10 +184,153 @@
             display: none;
         }
         
-        /* Video controls */
+        /* BOTTOM AD - 25% ΤΗΣ ΟΘΟΝΗΣ */
+        .bottom-ad {
+            position: fixed;
+            bottom: -25vh; /* Αρχικά κρυμμένη */
+            left: 0;
+            width: 100%;
+            height: 25vh; /* 25% της οθόνης */
+            background: linear-gradient(135deg, #0a1931, #1a1a2e);
+            z-index: 9998;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-top: 3px solid #ffcb2e;
+            box-shadow: 0 -5px 30px rgba(0,0,0,0.7);
+        }
+        
+        .bottom-ad.show {
+            bottom: 0;
+        }
+        
+        .ad-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .ad-title {
+            color: #ffcb2e;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .close-ad-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .close-ad-btn:hover {
+            background: rgba(255, 0, 0, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .ad-content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        /* POPUP AD - ΑΠΟ ΠΑΝΩ ΠΡΟΣ ΤΑ ΚΑΤΩ */
+        .popup-ad {
+            position: fixed;
+            top: -100vh; /* Αρχικά κρυμμένη */
+            left: 0;
+            width: 100%;
+            height: 50vh; /* 50% της οθόνης */
+            background: linear-gradient(135deg, #1a237e, #311b92);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border-bottom: 3px solid #ffcb2e;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.7);
+        }
+        
+        .popup-ad.show {
+            top: 0;
+        }
+        
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.4);
+        }
+        
+        .popup-title {
+            color: #ffcb2e;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .close-popup-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .close-popup-btn:hover {
+            background: rgba(255, 0, 0, 0.4);
+            transform: rotate(90deg);
+        }
+        
+        .popup-content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+        .ad-timer {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #4CAF50;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
         .video-controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
@@ -206,7 +342,7 @@
             backdrop-filter: blur(10px);
             opacity: 0;
             transition: opacity 0.3s;
-            z-index: 20;
+            z-index: 100;
         }
         
         .video-controls.visible {
@@ -250,8 +386,20 @@
                 font-size: 24px;
             }
             
+            .bottom-ad {
+                height: 22vh;
+            }
+            
+            .popup-ad {
+                height: 40vh;
+            }
+            
+            .ad-title, .popup-title {
+                font-size: 14px;
+            }
+            
             .video-controls {
-                bottom: 10px;
+                bottom: 15px;
                 padding: 8px 15px;
                 gap: 10px;
             }
@@ -262,10 +410,6 @@
             
             .time-display {
                 font-size: 12px;
-            }
-            
-            .ad-container {
-                padding: 8px 0;
             }
         }
         
@@ -279,8 +423,26 @@
                 font-size: 20px;
             }
             
+            .bottom-ad {
+                height: 20vh;
+            }
+            
+            .popup-ad {
+                height: 35vh;
+            }
+            
+            .ad-title, .popup-title {
+                font-size: 13px;
+            }
+            
+            .close-ad-btn, .close-popup-btn {
+                width: 25px;
+                height: 25px;
+                font-size: 16px;
+            }
+            
             .video-controls {
-                bottom: 5px;
+                bottom: 10px;
                 padding: 6px 12px;
                 gap: 8px;
             }
@@ -291,10 +453,6 @@
             
             .time-display {
                 font-size: 11px;
-            }
-            
-            .ad-container {
-                padding: 5px 0;
             }
         }
     </style>
@@ -329,17 +487,38 @@
     </script>
 </head>
 <body>
-    <!-- ADSENSE AD - ΦΙΛΙΚΗ ΓΙΑ ΤΟ ΒΙΝΤΕΟ -->
-    <div class="ad-container">
-        <div class="ad-wrapper">
+    <!-- POPUP AD - ΑΠΟ ΠΑΝΩ ΠΡΟΣ ΤΑ ΚΑΤΩ -->
+    <div class="popup-ad" id="popupAd">
+        <div class="popup-header">
+            <div class="popup-title">🎬 Έχω πάει με πολλούς</div>
+            <button class="close-popup-btn" id="closePopupAd">×</button>
+        </div>
+        <div class="popup-content" id="popupAdContent">
+            <!-- Popup AdSense Ad -->
             <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
+                 style="display:block; text-align:center; width:100%; height:100%;"
+                 data-ad-layout="in-article"
+                 data-ad-format="fluid"
                  data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+                 data-ad-slot="6330498148"></ins>
+        </div>
+        <div class="ad-timer" id="popupTimer">Κλείνει σε: <span id="popupTimerCount">10</span></div>
+    </div>
+
+    <!-- BOTTOM AD - 25% ΤΗΣ ΟΘΟΝΗΣ -->
+    <div class="bottom-ad" id="bottomAd">
+        <div class="ad-header">
+            <div class="ad-title">📢 Διαφήμιση</div>
+            <button class="close-ad-btn" id="closeBottomAd">×</button>
+        </div>
+        <div class="ad-content" id="bottomAdContent">
+            <!-- Bottom AdSense Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block; text-align:center; width:100%; height:100%;"
+                 data-ad-layout="in-article"
+                 data-ad-format="fluid"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="6330498148"></ins>
         </div>
     </div>
 
@@ -384,6 +563,15 @@
         const timeDisplay = document.getElementById('timeDisplay');
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         
+        // Ad Elements
+        const popupAd = document.getElementById("popupAd");
+        const bottomAd = document.getElementById("bottomAd");
+        const closePopupAd = document.getElementById("closePopupAd");
+        const closeBottomAd = document.getElementById("closeBottomAd");
+        const popupTimerCount = document.getElementById("popupTimerCount");
+        const popupAdContent = document.getElementById("popupAdContent");
+        const bottomAdContent = document.getElementById("bottomAdContent");
+        
         // State
         let isPlaying = false;
         let isMuted = true;
@@ -392,6 +580,97 @@
         let videoActive = false;
         let videoDuration = 0;
         let controlsTimeout = null;
+        
+        // Ad Variables
+        let popupAdShown = false;
+        let bottomAdShown = false;
+        let popupAdTimer;
+        let popupCountdownTimer;
+        let popupCountdownValue = 10;
+        let bottomAdClosed = false;
+        
+        // AdSense ad setup
+        function setupAdsenseAds() {
+            // Load Adsense ads after a delay
+            setTimeout(() => {
+                try {
+                    // Push popup ad
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log("Popup Adsense ad loaded");
+                    
+                    // Push bottom ad
+                    setTimeout(() => {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        console.log("Bottom Adsense ad loaded");
+                    }, 500);
+                    
+                } catch (e) {
+                    console.log("Adsense load error:", e);
+                }
+            }, 1000);
+        }
+        
+        // POPUP AD FUNCTIONS - ΑΠΟ ΠΑΝΩ ΠΡΟΣ ΤΑ ΚΑΤΩ
+        function showPopupAd() {
+            popupAdShown = true;
+            popupAd.classList.add('show');
+            popupCountdownValue = 10;
+            popupTimerCount.textContent = popupCountdownValue;
+            
+            startPopupCountdown();
+            
+            // Auto close after 10 seconds
+            clearTimeout(popupAdTimer);
+            popupAdTimer = setTimeout(() => {
+                closePopupAdFunc();
+            }, 10000);
+            
+            console.log("Popup ad shown (from top to bottom)");
+        }
+        
+        function startPopupCountdown() {
+            clearInterval(popupCountdownTimer);
+            popupCountdownTimer = setInterval(() => {
+                popupCountdownValue--;
+                popupTimerCount.textContent = popupCountdownValue;
+                
+                if (popupCountdownValue <= 0) {
+                    clearInterval(popupCountdownTimer);
+                }
+            }, 1000);
+        }
+        
+        function closePopupAdFunc() {
+            popupAd.classList.remove('show');
+            clearInterval(popupCountdownTimer);
+            clearTimeout(popupAdTimer);
+            
+            console.log("Popup ad closed");
+            
+            // Show bottom ad after popup closes
+            setTimeout(() => {
+                if (!bottomAdClosed && videoActive) {
+                    showBottomAd();
+                }
+            }, 2000);
+        }
+        
+        // BOTTOM AD FUNCTIONS - 25% ΤΗΣ ΟΘΟΝΗΣ
+        function showBottomAd() {
+            if (bottomAdClosed) return;
+            
+            bottomAdShown = true;
+            bottomAd.classList.add('show');
+            
+            console.log("Bottom ad shown (25% of screen)");
+        }
+        
+        function closeBottomAdFunc() {
+            bottomAd.classList.remove('show');
+            bottomAdClosed = true;
+            
+            console.log("Bottom ad closed permanently");
+        }
         
         // Format time function
         function formatTime(seconds) {
@@ -503,6 +782,11 @@
                 videoActive = true;
                 showControls();
                 
+                // Show popup ad after 2 seconds
+                setTimeout(() => {
+                    showPopupAd();
+                }, 2000);
+                
             }).catch(e => {
                 console.error('Manual play failed:', e);
                 playButton.style.display = 'flex';
@@ -522,6 +806,11 @@
                     }, 500);
                     
                     showControls();
+                    
+                    // Show popup ad after 2 seconds
+                    setTimeout(() => {
+                        showPopupAd();
+                    }, 2000);
                 });
             });
         }
@@ -590,6 +879,11 @@
                 
                 showControls();
                 
+                // Show popup ad after 2 seconds
+                setTimeout(() => {
+                    showPopupAd();
+                }, 2000);
+                
             }).catch(e => {
                 console.log('Autoplay failed:', e.message);
                 playButton.style.display = 'flex';
@@ -609,6 +903,9 @@
                 console.log('Running in X (Twitter) Player');
                 tryAutoplay();
             }
+            
+            // Setup Adsense ads
+            setupAdsenseAds();
         });
         
         mainVideo.addEventListener('timeupdate', () => {
@@ -660,6 +957,10 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
+        // Ad close buttons
+        closePopupAd.addEventListener("click", closePopupAdFunc);
+        closeBottomAd.addEventListener("click", closeBottomAdFunc);
+        
         // Show controls on mouse move
         videoContainer.addEventListener('mousemove', () => {
             if (isPlaying) {
@@ -686,7 +987,7 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - Video-friendly AdSense layout');
+        console.log('FmD Video Player ready - Dual Ad System with Bottom 25% and Popup Ads');
         
         mainVideo.addEventListener('play', () => {
             console.log('Video started playing - Έχω πάει με πολλούς - FmD @FmD699');
