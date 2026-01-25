@@ -11,7 +11,7 @@
     <!-- iOS και Android tags για native fullscreen experience -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-status-bar-style" content="black-translucent">
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="video.other">
@@ -584,11 +584,6 @@
         let bottomAdTimerValue = 10;
         let bottomAdsActive = false;
         let adCycleCounter = 0;
-        const adSlots = [
-            '6330498148', // Βασικό slot
-            '6330498148', // Μπορείς να προσθέσεις διαφορετικά slots εδώ
-            '6330498148'
-        ];
         
         // Start countdown timer
         function startCountdown() {
@@ -632,10 +627,6 @@
                 // Clear previous ad
                 adsenseAdContainer.innerHTML = '';
                 
-                // Select ad slot (κυκλική εναλλαγή)
-                const adSlot = adSlots[adCycleCounter % adSlots.length];
-                adCycleCounter++;
-                
                 // Create a new AdSense ad for bottom slider
                 const adContainer = document.createElement('ins');
                 adContainer.className = 'adsbygoogle';
@@ -643,7 +634,7 @@
                 adContainer.style.width = '100%';
                 adContainer.style.height = '100%';
                 adContainer.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
-                adContainer.setAttribute('data-ad-slot', adSlot);
+                adContainer.setAttribute('data-ad-slot', '6330498148');
                 adContainer.setAttribute('data-ad-format', 'auto');
                 adContainer.setAttribute('data-full-width-responsive', 'true');
                 
@@ -653,7 +644,7 @@
                 // Push the ad
                 (adsbygoogle = window.adsbygoogle || []).push({});
                 
-                console.log("AdSense ad loaded in bottom slider, slot:", adSlot);
+                console.log("AdSense ad loaded in bottom slider");
                 bottomAdsenseLoaded = true;
                 
                 return true;
@@ -666,6 +657,8 @@
         // Show bottom ad
         function showBottomAd() {
             if (!bottomAdsActive || !isPlaying) return;
+            
+            console.log("🔄 Showing bottom ad (25% of screen)");
             
             // Load AdSense ad
             const adLoaded = loadBottomAdsenseAd();
@@ -704,21 +697,21 @@
             bottomAdInterval = setTimeout(() => {
                 hideBottomAd();
             }, 10000);
-            
-            console.log("Showing bottom AdSense ad for 10 seconds");
         }
         
         // Hide bottom ad
         function hideBottomAd() {
+            console.log("⬇️ Hiding bottom ad");
             bottomAdSlider.classList.remove('show');
             clearInterval(bottomAdTimerInterval);
             clearTimeout(bottomAdInterval);
             
             // Αν το βίντεο παίζει ακόμα, δείξε νέα διαφήμιση μετά από 5 δευτερόλεπτα
             if (bottomAdsActive && isPlaying) {
-                console.log("Waiting 5 seconds before next ad...");
+                console.log("⏱️ Waiting 5 seconds before next ad...");
                 setTimeout(() => {
                     if (bottomAdsActive && isPlaying) {
+                        console.log("🔄 Showing next ad");
                         showBottomAd();
                     }
                 }, 5000);
@@ -729,7 +722,8 @@
         function startBottomAds() {
             if (!bottomAdsActive) {
                 bottomAdsActive = true;
-                console.log("Starting bottom ad rotation");
+                console.log("▶️ Starting bottom ad rotation");
+                console.log("📋 Schedule: 10s ad → 5s break → 10s ad → 5s break → ...");
                 
                 // Περίμενε 3 δευτερόλεπτα πριν την πρώτη διαφήμιση
                 setTimeout(() => {
@@ -746,14 +740,14 @@
             bottomAdSlider.classList.remove('show');
             clearInterval(bottomAdTimerInterval);
             clearTimeout(bottomAdInterval);
-            console.log("Stopped bottom ads");
+            console.log("⏹️ Stopped bottom ads");
         }
         
         // Start video
         function startVideo() {
             if (videoStarted) return;
             
-            console.log('Starting video');
+            console.log('▶️ Starting video with sound ON');
             videoStarted = true;
             adClosed = true;
             
@@ -779,7 +773,7 @@
                 muteBtn.textContent = '🔊';
                 
                 mainVideo.play().then(() => {
-                    console.log('Video playback started successfully WITH SOUND');
+                    console.log('✅ Video playback started successfully WITH SOUND');
                     isPlaying = true;
                     videoActive = true;
                     playPauseBtn.textContent = '⏸️';
@@ -790,13 +784,13 @@
                     startBottomAds();
                     
                 }).catch(e => {
-                    console.error('Video play failed:', e);
+                    console.error('❌ Video play failed:', e);
                     // Try with muted as fallback
                     mainVideo.muted = true;
                     isMuted = true;
                     muteBtn.textContent = '🔇';
                     mainVideo.play().then(() => {
-                        console.log('Video started with muted fallback');
+                        console.log('✅ Video started with muted fallback');
                         isPlaying = true;
                         videoActive = true;
                         playPauseBtn.textContent = '⏸️';
@@ -892,7 +886,7 @@
         
         // Event Listeners
         mainVideo.addEventListener('loadedmetadata', () => {
-            console.log('Video metadata loaded');
+            console.log('📊 Video metadata loaded');
             videoDuration = mainVideo.duration;
             updateTimeDisplay();
         });
@@ -924,7 +918,7 @@
         });
         
         mainVideo.addEventListener('error', (e) => {
-            console.error('Video error:', mainVideo.error);
+            console.error('❌ Video error:', mainVideo.error);
             loadingSpinner.style.display = 'none';
             videoActive = false;
             stopBottomAds();
@@ -991,10 +985,15 @@
             e.preventDefault();
         }, false);
         
-        console.log('FmD Video Player ready - 100% Screen Video + Sound On + Rotating AdSense Ads');
+        console.log('✅ FmD Video Player ready');
+        console.log('📺 Features:');
+        console.log('  - 100% Fullscreen Video');
+        console.log('  - Sound ON by default');
+        console.log('  - Bottom Ads (25% of screen)');
+        console.log('  - Ad Schedule: 10s ad → 5s break → 10s ad → ...');
         
         mainVideo.addEventListener('play', () => {
-            console.log('Video started playing - Exclusive Video');
+            console.log('🎬 Video started playing - Exclusive Video');
         });
     </script>
 </body>
