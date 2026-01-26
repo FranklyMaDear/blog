@@ -65,14 +65,14 @@
             user-select: none;
         }
         
-        /* FIRST AD OVERLAY - BEFORE VIDEO STARTS (ΜΕΓΑΛΩΜΕΝΟ) */
-        .first-ad-overlay {
+        /* CLICKABLE AD OVERLAY - BEFORE VIDEO STARTS */
+        .clickable-ad-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.98);
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -81,10 +81,10 @@
             transition: opacity 0.5s ease;
         }
         
-        .first-ad-container {
-            width: 95%;
-            max-width: 500px; /* ΜΕΓΑΛΩΣΑ ΤΟ ΜΕΓΕΘΟΣ */
-            height: 80vh; /* ΜΕΓΑΛΩΣΑ ΤΟ ΥΨΟΣ */
+        .clickable-ad-container {
+            width: 90%;
+            max-width: 500px;
+            height: 75vh;
             max-height: 600px;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(25px);
@@ -95,9 +95,16 @@
             display: flex;
             flex-direction: column;
             border: 1px solid rgba(255, 255, 255, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .first-ad-content {
+        .clickable-ad-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9);
+        }
+        
+        .clickable-ad-content {
             flex: 1;
             width: 100%;
             display: flex;
@@ -107,12 +114,12 @@
             padding: 20px;
         }
         
-        .first-ad-footer {
+        .clickable-ad-footer {
             padding: 25px;
             text-align: center;
             background: rgba(26, 26, 46, 0.85);
             color: #fff;
-            font-size: 20px; /* ΜΕΓΑΛΩΣΑ ΤΟ ΜΕΓΕΘΟΣ ΤΟΥ ΚΕΙΜΕΝΟΥ */
+            font-size: 20px;
             font-weight: 600;
             border-top: 3px solid #ffcb2e;
             display: flex;
@@ -122,23 +129,21 @@
             flex-wrap: wrap;
         }
         
-        .countdown-text {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .click-instruction {
+            font-size: 18px;
+            color: #ffcb2e;
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            margin-top: 10px;
+            animation: pulse 2s infinite;
         }
         
-        .countdown-timer {
-            font-size: 32px; /* ΜΕΓΑΛΩΣΑ ΤΟ ΜΕΓΕΘΟΣ ΤΟΥ TIMER */
-            font-weight: bold;
-            color: #ffcb2e;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(255, 203, 46, 0.5);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 6px 15px;
-            border-radius: 10px;
-            min-width: 50px;
-            text-align: center;
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
         }
         
         /* BOTTOM SLIDE-UP AD - DURING VIDEO (1/4 ΤΗΣ ΟΘΟΝΗΣ ΑΠΟ ΚΑΤΩ) */
@@ -463,27 +468,18 @@
         
         /* TABLET OPTIMIZATIONS */
         @media (min-width: 769px) and (max-width: 1024px) {
-            .first-ad-container {
-                width: 90%;
+            .clickable-ad-container {
                 max-width: 550px;
-                height: 75vh;
-                max-height: 650px;
+                height: 70vh;
             }
             
-            .first-ad-footer {
+            .clickable-ad-footer {
                 font-size: 18px;
                 padding: 22px;
-                gap: 12px;
             }
             
-            .countdown-text {
-                gap: 10px;
-            }
-            
-            .countdown-timer {
-                font-size: 30px;
-                padding: 5px 12px;
-                min-width: 48px;
+            .click-instruction {
+                font-size: 16px;
             }
             
             .bottom-slide-ad {
@@ -511,7 +507,7 @@
             
             .video-controls {
                 padding: 15px 22px;
-                bottom: 30px; /* Αναβάθμιση για να μην καλύπτεται από το slide ad */
+                bottom: 30px;
                 left: 25px;
                 right: 25px;
             }
@@ -529,7 +525,7 @@
             }
             
             .video-progress-container {
-                bottom: 120px; /* Αναβάθμιση για να μην καλύπτεται */
+                bottom: 120px;
                 left: 25px;
                 right: 25px;
                 height: 5px;
@@ -543,29 +539,20 @@
         
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
-            .first-ad-container {
+            .clickable-ad-container {
                 width: 95%;
                 max-width: 400px;
-                height: 70vh;
-                max-height: 550px;
+                height: 65vh;
             }
             
-            .first-ad-footer {
+            .clickable-ad-footer {
                 font-size: 16px;
                 padding: 18px;
-                gap: 10px;
-                flex-direction: column;
             }
             
-            .countdown-text {
-                flex-direction: row;
-                gap: 8px;
-            }
-            
-            .countdown-timer {
-                font-size: 28px;
-                padding: 4px 10px;
-                min-width: 45px;
+            .click-instruction {
+                font-size: 14px;
+                padding: 12px;
             }
             
             .bottom-slide-ad {
@@ -592,18 +579,6 @@
                 font-size: 14px;
             }
             
-            .slide-content {
-                padding: 8px;
-            }
-            
-            .slide-footer {
-                padding: 6px 12px;
-            }
-            
-            .slide-footer-text {
-                font-size: 10px;
-            }
-            
             .video-play-overlay {
                 width: 60px;
                 height: 60px;
@@ -616,7 +591,7 @@
             .video-controls {
                 padding: 12px 18px;
                 gap: 12px;
-                bottom: 25px; /* Αναβάθμιση για mobile */
+                bottom: 25px;
                 left: 15px;
                 right: 15px;
                 border-radius: 25px;
@@ -636,7 +611,7 @@
             }
             
             .video-progress-container {
-                bottom: 95px; /* Αναβάθμιση για mobile */
+                bottom: 95px;
                 left: 15px;
                 right: 15px;
                 height: 4px;
@@ -650,27 +625,20 @@
         
         /* VERY SMALL MOBILE */
         @media (max-width: 480px) {
-            .first-ad-container {
+            .clickable-ad-container {
                 width: 98%;
                 max-width: 350px;
-                height: 65vh;
-                max-height: 500px;
+                height: 60vh;
             }
             
-            .first-ad-footer {
+            .clickable-ad-footer {
                 font-size: 14px;
                 padding: 15px;
-                gap: 8px;
             }
             
-            .countdown-text {
-                gap: 6px;
-            }
-            
-            .countdown-timer {
-                font-size: 26px;
-                padding: 3px 8px;
-                min-width: 40px;
+            .click-instruction {
+                font-size: 12px;
+                padding: 10px;
             }
             
             .bottom-slide-ad {
@@ -697,18 +665,6 @@
                 font-size: 12px;
             }
             
-            .slide-content {
-                padding: 6px;
-            }
-            
-            .slide-footer {
-                padding: 4px 10px;
-            }
-            
-            .slide-footer-text {
-                font-size: 9px;
-            }
-            
             .video-play-overlay {
                 width: 50px;
                 height: 50px;
@@ -721,7 +677,7 @@
             .video-controls {
                 padding: 10px 15px;
                 gap: 10px;
-                bottom: 20px; /* Αναβάθμιση για πολύ μικρές οθόνες */
+                bottom: 20px;
                 left: 12px;
                 right: 12px;
                 border-radius: 20px;
@@ -741,7 +697,7 @@
             }
             
             .video-progress-container {
-                bottom: 85px; /* Αναβάθμιση για πολύ μικρές οθόνες */
+                bottom: 85px;
                 left: 12px;
                 right: 12px;
                 height: 3px;
@@ -767,10 +723,9 @@
         
         /* LANDSCAPE MODE */
         @media (orientation: landscape) and (max-height: 500px) {
-            .first-ad-container {
+            .clickable-ad-container {
                 width: 85%;
-                height: 90vh;
-                max-height: none;
+                height: 85vh;
             }
             
             .bottom-slide-ad {
@@ -783,7 +738,7 @@
             
             .video-controls {
                 padding: 8px 15px;
-                bottom: 35px; /* Αναβάθμιση για landscape */
+                bottom: 35px;
                 left: 15px;
                 right: 15px;
                 border-radius: 20px;
@@ -803,7 +758,7 @@
             }
             
             .video-progress-container {
-                bottom: 80px; /* Αναβάθμιση για landscape */
+                bottom: 80px;
                 left: 15px;
                 right: 15px;
                 height: 3px;
@@ -817,23 +772,23 @@
     </style>
 </head>
 <body>
-    <!-- FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) - ΜΕ ΤΟ ΣΩΣΤΟ SCRIPT -->
-    <div class="first-ad-overlay" id="firstAdOverlay">
-        <div class="first-ad-container">
-            <div class="first-ad-content">
-                <!-- Google AdSense Ad - ΕΔΩ ΒΑΖΩ ΤΟ ΣΩΣΤΟ SCRIPT -->
-                <ins class="adsbygoogle first-ad"
+    <!-- CLICKABLE AD OVERLAY - BEFORE VIDEO (CLICK TO OPEN VIDEO) -->
+    <div class="clickable-ad-overlay" id="clickableAdOverlay">
+        <div class="clickable-ad-container" id="clickableAdContainer">
+            <div class="clickable-ad-content">
+                <!-- Google AdSense Ad - ΚΛΙΚΑΡΙΣΤΟ -->
+                <ins class="adsbygoogle clickable-ad"
                      style="display:block; width:100%; height:100%;"
                      data-ad-format="autorelaxed"
                      data-ad-client="ca-pub-3186700611266549"
                      data-ad-slot="9660744817"></ins>
             </div>
-            <div class="first-ad-footer">
-                <div class="countdown-text">
-                    <span id="waitText">Please wait, video is starting...</span>
-                    <div class="countdown-timer" id="countdownTimer">10</div>
-                </div>
+            <div class="clickable-ad-footer">
+                <span id="adMessage">Click the ad to watch the video</span>
             </div>
+        </div>
+        <div class="click-instruction" id="clickInstruction">
+            👆 Click on the advertisement to start watching
         </div>
     </div>
 
@@ -849,7 +804,7 @@
         
         <div class="slide-content">
             <div class="slide-ad-container">
-                <!-- Slide Ad 1 - ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
+                <!-- Slide Ad 1 - ΠΡΩΤΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
                 <div class="ad-slot active" id="slideAd1">
                     <ins class="adsbygoogle slide-ad-1"
                          style="display:block; width:100%; height:100%;"
@@ -858,9 +813,18 @@
                          data-ad-slot="9660744817"></ins>
                 </div>
                 
-                <!-- Slide Ad 2 - ΑΛΛΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
+                <!-- Slide Ad 2 - ΔΕΥΤΕΡΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
                 <div class="ad-slot" id="slideAd2">
                     <ins class="adsbygoogle slide-ad-2"
+                         style="display:block; width:100%; height:100%;"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"></ins>
+                </div>
+                
+                <!-- Slide Ad 3 - ΤΡΙΤΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
+                <div class="ad-slot" id="slideAd3">
+                    <ins class="adsbygoogle slide-ad-3"
                          style="display:block; width:100%; height:100%;"
                          data-ad-format="autorelaxed"
                          data-ad-client="ca-pub-3186700611266549"
@@ -871,7 +835,7 @@
         
         <div class="slide-footer">
             <div class="slide-footer-text" id="slideFooterText">
-                Advertisement - Thank you for supporting our content
+                Advertisement - Supports our content
             </div>
         </div>
     </div>
@@ -911,9 +875,10 @@
 
     <script>
         // DOM Elements
-        const firstAdOverlay = document.getElementById('firstAdOverlay');
-        const waitText = document.getElementById('waitText');
-        const countdownTimer = document.getElementById('countdownTimer');
+        const clickableAdOverlay = document.getElementById('clickableAdOverlay');
+        const clickableAdContainer = document.getElementById('clickableAdContainer');
+        const adMessage = document.getElementById('adMessage');
+        const clickInstruction = document.getElementById('clickInstruction');
         
         const bottomSlideAd = document.getElementById('bottomSlideAd');
         const slideTimer = document.getElementById('slideTimer');
@@ -922,6 +887,7 @@
         
         const slideAd1 = document.getElementById('slideAd1');
         const slideAd2 = document.getElementById('slideAd2');
+        const slideAd3 = document.getElementById('slideAd3');
         
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
@@ -949,36 +915,34 @@
         const VIDEO_TITLE = "Το Έψαξα Πάντως";
         
         // Ad System State
-        let firstAdCountdown = 10;
-        let firstAdInterval;
-        let slideAdCountdown = 15;
-        let slideInterval;
         let currentSlideAdIndex = 0;
         let isSlideShowing = false;
         let slideTimerInterval;
         let slideRotationInterval;
-        let videoStartTime = 0;
-        let adsInitialized = false;
+        let slideAdCountdown = 15;
+        let adClicked = false;
         
-        // Language System για τα ads
-        const languages = [
-            { 
-                code: 'en', 
-                text: 'Please wait, video is starting...',
-                banner: 'Advertisement - Thank you for supporting our content'
-            },
-            { 
-                code: 'el', 
-                text: 'Παρακαλώ περιμένετε, ξεκινάει το βίντεο...',
-                banner: 'Διαφήμιση - Ευχαριστούμε που υποστηρίζετε το περιεχόμενό μας'
-            },
-            { 
-                code: 'de', 
-                text: 'Bitte warten Sie, das Video startet...',
-                banner: 'Werbung - Vielen Dank für Ihre Unterstützung unseres Inhalts'
-            }
+        // Language messages for ads
+        const adMessages = [
+            "Click the ad to watch the video",
+            "Κάντε κλικ στη διαφήμιση για να δείτε το βίντεο",
+            "Klicken Sie auf die Werbung, um das Video anzusehen"
         ];
-        let currentLangIndex = 0;
+        
+        const instructionMessages = [
+            "👆 Click on the advertisement to start watching",
+            "👆 Κάντε κλικ στη διαφήμιση για να ξεκινήσετε",
+            "👆 Klicken Sie auf die Werbung, um zu beginnen"
+        ];
+        
+        const footerMessages = [
+            "Advertisement - Supports our content",
+            "Διαφήμιση - Υποστηρίζει το περιεχόμενό μας",
+            "Werbung - Unterstützt unseren Inhalt"
+        ];
+        
+        let currentMessageIndex = 0;
+        let adsInitialized = false;
         
         // ================== ADSENSE FUNCTIONS ==================
         
@@ -988,36 +952,38 @@
             
             console.log('📢 Initializing AdSense ads...');
             
-            // Τώρα τα ads είναι ήδη στο HTML, απλά χρειάζονται initialization
+            // Initialize the clickable ad
+            const clickableAd = document.querySelector('.clickable-ad');
+            if (clickableAd) {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                console.log('✅ Clickable ad initialized');
+            }
+            
             adsInitialized = true;
-            console.log('✅ AdSense ads ready for loading');
+            console.log('✅ All AdSense ads ready');
         }
         
         // Load a specific AdSense ad
-        function loadAdSenseAd(adElement) {
+        function loadAdSenseAd(adClass) {
+            const adElement = document.querySelector('.' + adClass);
             if (!adElement) return;
             
             try {
-                // Check if adsbygoogle is available
                 if (typeof adsbygoogle !== 'undefined') {
-                    // Push the ad to load it
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ AdSense ad loaded for: ' + adElement.className);
+                    console.log('✅ Loaded AdSense ad: ' + adClass);
                     
-                    // Additional check to ensure ad is displayed
+                    // Ensure ad is visible
                     setTimeout(() => {
                         if (adElement.offsetParent === null) {
-                            console.log('⚠️ Ad might not be visible, retrying...');
+                            console.log('⚠️ Retrying ad load for: ' + adClass);
                             (adsbygoogle = window.adsbygoogle || []).push({});
                         }
                     }, 1000);
                 } else {
-                    // Wait for adsbygoogle to load
-                    console.log('⏳ Waiting for adsbygoogle to load...');
                     setTimeout(() => {
                         if (typeof adsbygoogle !== 'undefined') {
                             (adsbygoogle = window.adsbygoogle || []).push({});
-                            console.log('✅ AdSense ad loaded after delay');
                         }
                     }, 1500);
                 }
@@ -1026,60 +992,67 @@
             }
         }
         
+        // Rotate message texts
+        function rotateMessages() {
+            currentMessageIndex = (currentMessageIndex + 1) % adMessages.length;
+            adMessage.textContent = adMessages[currentMessageIndex];
+            clickInstruction.textContent = instructionMessages[currentMessageIndex];
+            slideFooterText.textContent = footerMessages[currentMessageIndex];
+        }
+        
         // ================== AD SYSTEM FUNCTIONS ==================
         
-        // Start first ad (10 seconds before video) - ΜΕ ΤΟ ΣΩΣΤΟ SCRIPT
-        function startFirstAd() {
-            console.log('📢 Starting first AdSense ad (10 seconds)...');
+        // Start clickable ad system
+        function startClickableAd() {
+            console.log('🖱️ Starting clickable ad system...');
             
             // Initialize AdSense
             initializeAdSense();
             
-            // Load first ad immediately
-            const firstAd = document.querySelector('.first-ad');
-            if (firstAd) {
-                console.log('🔍 Found first ad element, loading...');
-                loadAdSenseAd(firstAd);
-            } else {
-                console.log('❌ First ad element not found');
+            // Start rotating messages every 3 seconds
+            setInterval(rotateMessages, 3000);
+            
+            // Add click handler to the ad container
+            clickableAdContainer.addEventListener('click', handleAdClick);
+            
+            // Also allow clicking anywhere on the overlay to proceed
+            clickableAdOverlay.addEventListener('click', function(e) {
+                if (e.target === clickableAdOverlay) {
+                    handleAdClick(e);
+                }
+            });
+        }
+        
+        // Handle ad click
+        function handleAdClick(event) {
+            if (adClicked) return;
+            adClicked = true;
+            
+            console.log('🎯 Ad clicked, opening video...');
+            
+            // Prevent default if it's an actual ad link
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // If the click was on an actual ad link, open in new window
+            if (event.target.closest('a') || event.target.tagName === 'A') {
+                console.log('🔗 Ad link clicked, opening in new tab');
+                // Let the default link behavior happen
+                setTimeout(startVideo, 100);
+                return;
             }
             
-            // Set initial language
-            updateLanguageText();
-            
-            // Start language rotation every 2 seconds
-            setInterval(updateLanguageText, 2000);
-            
-            // Start 10-second countdown
-            firstAdCountdown = 10;
-            countdownTimer.textContent = firstAdCountdown;
-            
-            clearInterval(firstAdInterval);
-            firstAdInterval = setInterval(() => {
-                firstAdCountdown--;
-                countdownTimer.textContent = firstAdCountdown;
-                
-                if (firstAdCountdown <= 0) {
-                    clearInterval(firstAdInterval);
-                    hideFirstAdAndStartVideo();
-                }
-            }, 1000);
+            // Otherwise start the video
+            startVideo();
         }
         
-        // Update language text
-        function updateLanguageText() {
-            if (currentLangIndex >= languages.length) currentLangIndex = 0;
-            waitText.textContent = languages[currentLangIndex].text;
-            slideFooterText.textContent = languages[currentLangIndex].banner;
-            currentLangIndex++;
-        }
-        
-        // Hide first ad and start video
-        function hideFirstAdAndStartVideo() {
-            console.log('🎬 First ad finished, starting video...');
+        // Start video after ad click
+        function startVideo() {
+            console.log('▶️ Starting video...');
             
-            firstAdOverlay.style.opacity = '0';
-            firstAdOverlay.style.pointerEvents = 'none';
+            // Hide the ad overlay
+            clickableAdOverlay.style.opacity = '0';
+            clickableAdOverlay.style.pointerEvents = 'none';
             
             setTimeout(() => {
                 videoContainer.classList.add('active');
@@ -1095,14 +1068,14 @@
             }, 500);
         }
         
-        // Slide Ad System (ΒΓΑΙΝΕΙ ΑΠΟ ΚΑΤΩ ΠΡΟΣ ΤΑ ΠΑΝΩ)
+        // Slide Ad System (ΒΓΑΙΝΕΙ ΑΠΟ ΚΑΤΩ ΠΡΟΣ ΤΑ ΠΑΝΩ) - ΜΕ 3 ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
         function startSlideAdSystem() {
-            console.log('🔄 Starting slide-up ad system (1/4 of screen)...');
+            console.log('🔄 Starting slide-up ad system with 3 different ads...');
             
             // Show first slide ad
             showSlideAd();
             
-            // Set up rotation: 15 seconds ad, 5 seconds pause, repeat
+            // Set up rotation: 15 seconds ad, 5 seconds pause, repeat with DIFFERENT ADS
             slideRotationInterval = setInterval(() => {
                 if (!isSlideShowing) {
                     showSlideAd();
@@ -1110,11 +1083,11 @@
             }, 20000); // 15s ad + 5s pause = 20s total cycle
         }
         
-        // Show slide ad (slide-up από κάτω) - ΜΕ ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
+        // Show slide ad (slide-up από κάτω) - ΜΕ 3 ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
         function showSlideAd() {
             if (isSlideShowing) return;
             
-            console.log(`📢 Showing slide-up ad ${currentSlideAdIndex + 1}...`);
+            console.log(`📢 Showing slide-up ad ${currentSlideAdIndex + 1}/3...`);
             isSlideShowing = true;
             
             // Hide all ads
@@ -1122,18 +1095,30 @@
                 ad.classList.remove('active');
             });
             
-            // Show current ad
-            const currentAd = currentSlideAdIndex === 0 ? slideAd1 : slideAd2;
+            // Show current ad (rotate between 3 different ads)
+            let currentAd;
+            let adClass;
+            
+            switch(currentSlideAdIndex) {
+                case 0:
+                    currentAd = slideAd1;
+                    adClass = 'slide-ad-1';
+                    break;
+                case 1:
+                    currentAd = slideAd2;
+                    adClass = 'slide-ad-2';
+                    break;
+                case 2:
+                    currentAd = slideAd3;
+                    adClass = 'slide-ad-3';
+                    break;
+            }
+            
             currentAd.classList.add('active');
             
-            // Load the appropriate AdSense ad
+            // Load the appropriate AdSense ad (DIFFERENT AD EACH TIME)
             setTimeout(() => {
-                const adClass = currentSlideAdIndex === 0 ? 'slide-ad-1' : 'slide-ad-2';
-                const adElement = document.querySelector('.' + adClass);
-                if (adElement) {
-                    console.log(`🔍 Loading ${adClass}...`);
-                    loadAdSenseAd(adElement);
-                }
+                loadAdSenseAd(adClass);
             }, 100);
             
             // Show slide ad (slide-up animation)
@@ -1156,8 +1141,8 @@
                 }
             }, 1000);
             
-            // Rotate to next ad for next time - ΓΙΑ ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
-            currentSlideAdIndex = (currentSlideAdIndex + 1) % 2;
+            // Rotate to next ad for next time - 3 DIFFERENT ADS
+            currentSlideAdIndex = (currentSlideAdIndex + 1) % 3;
         }
         
         // Hide slide ad (slide-down)
@@ -1183,7 +1168,6 @@
             
             console.log('▶️ Starting video with audio setup...');
             videoStarted = true;
-            videoStartTime = Date.now();
             
             // Βασική ρύθμιση για audio
             mainVideo.muted = true;
@@ -1350,8 +1334,8 @@
             mainVideo.volume = 1.0;
             mainVideo.loop = true;
             
-            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΠΡΩΤΗΣ ΔΙΑΦΗΜΙΣΗΣ
-            startFirstAd();
+            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ CLICKABLE AD
+            startClickableAd();
         });
         
         mainVideo.addEventListener('timeupdate', () => {
@@ -1378,7 +1362,7 @@
             loadingSpinner.style.display = 'none';
             
             // Show error message
-            firstAdOverlay.innerHTML = `
+            clickableAdOverlay.innerHTML = `
                 <div style="text-align: center; padding: 30px; color: white; width: 100%;">
                     <div style="font-size: 50px; margin-bottom: 15px;">❌</div>
                     <div style="font-size: 20px; margin-bottom: 12px; font-weight: bold;">Video Error</div>
@@ -1447,7 +1431,7 @@
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
-        // Initial setup - ΑΜΕΣΑ ΦΟΡΤΩΝΟΥΜΕ ΤΙΣ ΔΙΑΦΗΜΙΣΕΙΣ
+        // Initial setup
         window.addEventListener('load', () => {
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
@@ -1455,7 +1439,7 @@
             
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            console.log('🚀 Page loaded - AdSense system ready...');
+            console.log('🚀 Page loaded - Clickable Ad System ready...');
             
             // Initialize AdSense immediately
             initializeAdSense();
@@ -1504,15 +1488,15 @@
         });
         
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ FmD Video Player ready with WORKING AdSense System');
-        console.log('🎯 ΤΩΡΑ ΛΕΙΤΟΥΡΓΕΙ ΚΑΝΟΝΙΚΑ:');
-        console.log('  - ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ: ΜΕΓΑΛΩΜΕΝΗ - ΕΜΦΑΝΙΖΕΤΑΙ ΚΑΝΟΝΙΚΑ');
-        console.log('  - SLIDE-UP ADS: 2 ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ');
+        console.log('✅ FmD Video Player ready with NEW Clickable Ad System');
+        console.log('🎯 ΝΕΑ ΣΥΣΤΗΜΑ ΔΙΑΦΗΜΙΣΕΩΝ:');
+        console.log('  - CLICKABLE AD: Ο χρήστης κάνει κλικ στη διαφήμιση για να δει το βίντεο');
+        console.log('  - SLIDE-UP ADS: 3 ΔΙΑΦΟΡΕΤΙΚΕΣ διαφημίσεις που εναλλάσσονται');
         console.log('  - ΜΕΓΕΘΟΣ: 1/4 της οθόνης (25vh) στη βάση');
-        console.log('  - Ad Schedule: 15s διαφήμιση → 5s παύση → 15s διαφήμιση');
-        console.log('  - ΓΛΩΣΣΕΣ: Αγγλικά, Ελληνικά, Γερμανικά');
+        console.log('  - Ad Schedule: 15s διαφήμιση → 5s παύση → επόμενη διαφήμιση');
+        console.log('  - ΓΛΩΣΣΕΣ: Αγγλικά, Ελληνικά, Γερμανικά (περιστρέφονται)');
         console.log('  - AdSense: Χρησιμοποιεί ΤΟ ΑΚΡΙΒΕΣ SCRIPT ΣΟΥ');
-        console.log('  - ΌΛΑ ΤΑ BANNERS ΕΧΟΥΝ ΤΟ ΣΩΣΤΟ SCRIPT');
+        console.log('  - ΚΑΘΕ ΦΟΡΑ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ στα slide ads');
         
         // Additional audio enabling
         document.addEventListener('click', function() {
