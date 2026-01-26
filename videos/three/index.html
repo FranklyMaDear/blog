@@ -65,105 +65,7 @@
             user-select: none;
         }
         
-        /* RIGHT SIDE VOLUME SLIDER - ΔΙΑΦΑΝΕΣ */
-        .volume-slider-vertical {
-            position: fixed;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 50px;
-            height: 220px;
-            background: rgba(0, 0, 0, 0.3); /* ΠΟΛΥ ΔΙΑΦΑΝΕΣ */
-            backdrop-filter: blur(15px);
-            border-radius: 25px;
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9996;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
-            transition: all 0.3s;
-            opacity: 0.6;
-        }
-        
-        .volume-slider-vertical:hover {
-            opacity: 1;
-            background: rgba(0, 0, 0, 0.4);
-            transform: translateY(-50%) scale(1.02);
-        }
-        
-        .volume-slider-track {
-            position: relative;
-            width: 8px;
-            height: 160px;
-            background: rgba(255, 255, 255, 0.15); /* ΔΙΑΦΑΝΕΣ ΤΡΑΚ */
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .volume-slider-fill {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to top, 
-                rgba(29, 155, 240, 0.8), 
-                rgba(255, 203, 46, 0.7)); /* ΔΙΑΦΑΝΕΣ GRADIENT */
-            border-radius: 4px;
-            transition: height 0.1s;
-            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
-        }
-        
-        .volume-slider-handle {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 24px;
-            height: 24px;
-            background: rgba(255, 255, 255, 0.9); /* ΔΙΑΦΑΝΕ ΧΕΙΡΙΣΤΗΡΙΟ */
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 
-                0 0 15px rgba(29, 155, 240, 0.5),
-                0 0 30px rgba(29, 155, 240, 0.3);
-            z-index: 2;
-            transition: all 0.2s;
-            border: 2px solid rgba(255, 255, 255, 0.6);
-        }
-        
-        .volume-slider-handle:hover {
-            transform: translateX(-50%) scale(1.2);
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 
-                0 0 20px rgba(29, 155, 240, 0.8),
-                0 0 40px rgba(29, 155, 240, 0.5);
-        }
-        
-        .volume-icon {
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.9); /* ΔΙΑΦΑΝΕΣ ΕΙΚΟΝΑ */
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-        
-        .volume-percentage {
-            font-size: 14px;
-            color: #ffcb2e;
-            font-weight: bold;
-            margin-top: 15px;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 10px rgba(255, 203, 46, 0.5);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 4px 8px;
-            border-radius: 10px;
-        }
-        
-        /* MAIN VIDEO CONTAINER */
+        /* MAIN VIDEO CONTAINER - FIXED FOR MOBILE */
         .video-container {
             position: fixed;
             top: 0;
@@ -178,22 +80,15 @@
             z-index: 1;
         }
         
-        /* VIDEO - 100% OF SCREEN */
+        /* VIDEO - OPTIMIZED FOR MOBILE DISPLAY */
         #mainVideo {
             position: absolute;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Αλλάξαμε από cover σε contain για να βλέπουμε όλο το βίντεο */
             z-index: 1;
             background: #000;
             cursor: pointer;
-        }
-        
-        /* For mobile and tablet, use contain to show full video */
-        @media (max-width: 1024px) {
-            #mainVideo {
-                object-fit: contain;
-            }
         }
         
         /* TRANSPARENT Play button overlay */
@@ -254,19 +149,83 @@
             display: none;
         }
         
-        /* VIDEO PROGRESS BAR (Original - hidden) */
+        /* IMPROVED VIDEO CONTROLS - CENTERED FOR MOBILE */
+        .video-controls {
+            position: absolute;
+            bottom: 50%; /* Αλλάξαμε από bottom: 20px σε 50% */
+            left: 50%;
+            transform: translate(-50%, 50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.85);
+            padding: 20px 30px;
+            border-radius: 30px;
+            backdrop-filter: blur(30px);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 20;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-controls.visible {
+            opacity: 1;
+            transform: translate(-50%, 50%) scale(1);
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px; /* Μεγαλύτερα εικονίδια */
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            min-width: 60px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 20px; /* Μεγαλύτερα γράμματα */
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            text-align: center;
+            padding: 0 20px;
+            min-width: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* VIDEO PROGRESS BAR - CENTERED FOR MOBILE */
         .video-progress-container {
             position: absolute;
-            bottom: 70px;
-            left: 20px;
-            right: 80px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 2px;
+            top: 50%; /* Τοποθετούμε στη μέση της οθόνης */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
             z-index: 20;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.3s, height 0.2s;
+            transition: opacity 0.3s;
         }
         
         .video-progress-bar {
@@ -274,127 +233,99 @@
             left: 0;
             top: 0;
             height: 100%;
-            background: #1d9bf0;
-            border-radius: 2px;
+            background: linear-gradient(to right, #1d9bf0, #ffcb2e);
+            border-radius: 4px;
             width: 0%;
             transition: width 0.1s;
+            box-shadow: 0 0 10px rgba(29, 155, 240, 0.5);
         }
         
         .video-progress-handle {
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 12px;
-            height: 12px;
-            background: #1d9bf0;
+            width: 20px;
+            height: 20px;
+            background: #fff;
             border-radius: 50%;
             opacity: 0;
             transition: opacity 0.3s;
-        }
-        
-        /* IMPROVED VIDEO CONTROLS */
-        .video-controls {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 80px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 15px 25px;
-            border-radius: 30px;
-            backdrop-filter: blur(20px);
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 20;
-        }
-        
-        .video-controls.visible {
-            opacity: 1;
-        }
-        
-        .control-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: all 0.3s;
-            min-width: 48px;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(1.1);
-        }
-        
-        .time-display {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.95);
-            font-weight: 600;
-            flex: 1;
-            text-align: center;
-            min-width: 150px;
-            padding: 0 15px;
+            box-shadow: 0 0 15px rgba(29, 155, 240, 0.7);
+            border: 2px solid #1d9bf0;
         }
         
         @keyframes spin {
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
+        /* VOLUME CONTROL FOR MOBILE - NEW POSITION */
+        .volume-control-mobile {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(15px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9996;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s;
+        }
+        
+        .volume-control-mobile:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.7);
+        }
+        
+        .volume-icon-mobile {
+            font-size: 24px;
+            color: white;
+        }
+        
         /* TABLET OPTIMIZATIONS */
         @media (min-width: 769px) and (max-width: 1024px) {
-            .volume-slider-vertical {
-                right: 15px;
-                width: 45px;
-                height: 200px;
-            }
-            
-            .volume-slider-track {
-                width: 7px;
-                height: 140px;
-            }
-            
-            .volume-slider-handle {
-                width: 22px;
-                height: 22px;
-            }
-            
             .video-controls {
-                bottom: 20px;
-                padding: 12px 20px;
-                right: 70px;
+                padding: 18px 25px;
+                bottom: 40%;
             }
             
             .control-btn {
-                font-size: 22px;
-                min-width: 44px;
-                min-height: 44px;
+                font-size: 26px;
+                min-width: 55px;
+                min-height: 55px;
+                padding: 10px;
             }
             
             .time-display {
-                font-size: 15px;
+                font-size: 18px;
+                min-width: 180px;
+                padding: 10px 18px;
             }
             
             .video-progress-container {
-                bottom: 70px;
-                right: 70px;
+                top: 45%;
+                width: 85%;
+                max-width: 450px;
+                height: 7px;
+            }
+            
+            .video-progress-handle {
+                width: 18px;
+                height: 18px;
             }
         }
         
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
-            .volume-slider-vertical {
-                display: none; /* Κρύβουμε το vertical slider σε mobile */
+            #mainVideo {
+                object-fit: contain; /* Κρατάμε το contain για να βλέπουμε όλο το βίντεο */
             }
             
             .video-play-overlay {
@@ -407,96 +338,170 @@
             }
             
             .video-controls {
-                padding: 12px 18px;
+                padding: 15px 20px;
                 gap: 12px;
-                bottom: 15px;
-                left: 15px;
+                bottom: 50%;
+                width: 90%;
+                max-width: 400px;
+            }
+            
+            .control-btn {
+                font-size: 24px;
+                min-width: 50px;
+                min-height: 50px;
+                padding: 8px;
+            }
+            
+            .time-display {
+                font-size: 16px;
+                min-width: 150px;
+                padding: 10px 15px;
+            }
+            
+            .video-progress-container {
+                top: 60%; /* Προσαρμογή θέσης για κινητά */
+                width: 85%;
+                height: 6px;
+            }
+            
+            .video-progress-handle {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .volume-control-mobile {
+                width: 45px;
+                height: 45px;
+                top: 15px;
                 right: 15px;
+            }
+            
+            .volume-icon-mobile {
+                font-size: 22px;
+            }
+        }
+        
+        /* VERY SMALL MOBILE */
+        @media (max-width: 480px) {
+            #mainVideo {
+                object-fit: contain; /* Σε πολύ μικρές οθόνες, το contain είναι καλύτερο */
+            }
+            
+            .video-play-overlay {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .video-play-overlay::after {
+                font-size: 20px;
+            }
+            
+            .video-controls {
+                padding: 12px 15px;
+                gap: 10px;
+                bottom: 50%;
+                width: 95%;
+                max-width: 350px;
+                border-radius: 25px;
             }
             
             .control-btn {
                 font-size: 22px;
-                min-width: 42px;
-                min-height: 42px;
+                min-width: 45px;
+                min-height: 45px;
                 padding: 6px;
             }
             
             .time-display {
                 font-size: 14px;
                 min-width: 130px;
+                padding: 8px 12px;
+                border-radius: 12px;
             }
             
             .video-progress-container {
-                bottom: 65px;
-                left: 15px;
-                right: 15px;
+                top: 65%; /* Σε πολύ μικρές οθόνες, μετακινείται πιο κάτω */
+                width: 90%;
+                height: 5px;
+            }
+            
+            .video-progress-handle {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .volume-control-mobile {
+                width: 40px;
+                height: 40px;
+                top: 10px;
+                right: 10px;
+            }
+            
+            .volume-icon-mobile {
+                font-size: 20px;
             }
         }
         
-        /* VERY SMALL MOBILE */
-        @media (max-width: 480px) {
-            .video-play-overlay {
-                width: 55px;
-                height: 55px;
+        /* SAFARI SPECIFIC FIXES */
+        @supports (-webkit-touch-callout: none) {
+            .video-container {
+                height: -webkit-fill-available;
             }
             
-            .video-play-overlay::after {
-                font-size: 22px;
+            #mainVideo {
+                object-fit: contain;
             }
             
             .video-controls {
-                padding: 10px 15px;
-                gap: 10px;
-                bottom: 12px;
-                left: 12px;
-                right: 12px;
+                -webkit-backdrop-filter: blur(30px);
+                backdrop-filter: blur(30px);
             }
-            
-            .control-btn {
-                font-size: 20px;
-                min-width: 38px;
-                min-height: 38px;
-                padding: 5px;
-            }
-            
-            .time-display {
-                font-size: 13px;
-                min-width: 120px;
-            }
-            
-            .video-progress-container {
-                bottom: 60px;
-                left: 12px;
-                right: 12px;
+        }
+        
+        /* CHROME SPECIFIC FIXES */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+            #mainVideo {
+                object-fit: contain;
             }
         }
         
         /* LANDSCAPE MODE */
         @media (orientation: landscape) and (max-height: 500px) {
-            .volume-slider-vertical {
-                height: 180px;
+            #mainVideo {
+                object-fit: contain; /* Στο landscape, κρατάμε το contain */
             }
             
             .video-controls {
-                bottom: 15px;
+                bottom: 30%;
                 padding: 10px 15px;
+                width: 80%;
             }
             
             .video-progress-container {
-                bottom: 55px;
+                top: 70%;
+                width: 70%;
+                height: 5px;
+            }
+            
+            .control-btn {
+                font-size: 20px;
+                min-width: 40px;
+                min-height: 40px;
+                padding: 5px;
+            }
+            
+            .time-display {
+                font-size: 14px;
+                min-width: 120px;
+                padding: 8px 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- RIGHT SIDE VOLUME SLIDER - ΔΙΑΦΑΝΕΣ -->
-    <div class="volume-slider-vertical" id="volumeSliderVertical">
-        <div class="volume-icon" id="volumeIcon">🔊</div>
-        <div class="volume-slider-track" id="volumeSliderTrack">
-            <div class="volume-slider-fill" id="volumeSliderFill"></div>
-            <div class="volume-slider-handle" id="volumeSliderHandle"></div>
-        </div>
-        <div class="volume-percentage" id="volumePercentage">100%</div>
+    <!-- VOLUME CONTROL FOR MOBILE -->
+    <div class="volume-control-mobile" id="volumeControlMobile">
+        <div class="volume-icon-mobile" id="volumeIconMobile">🔊</div>
     </div>
 
     <!-- MAIN VIDEO CONTAINER -->
@@ -513,13 +518,13 @@
             Your browser does not support the video tag.
         </video>
         
-        <!-- Video Progress Bar (Original - hidden) -->
+        <!-- Video Progress Bar - NOW CENTERED -->
         <div class="video-progress-container" id="videoProgressContainer">
             <div class="video-progress-bar" id="videoProgressBar"></div>
             <div class="video-progress-handle" id="videoProgressHandle"></div>
         </div>
         
-        <!-- Video Controls -->
+        <!-- Video Controls - NOW CENTERED -->
         <div class="video-controls" id="videoControls">
             <button class="control-btn" id="playPauseBtn">⏸️</button>
             <button class="control-btn" id="muteBtn">🔊</button>
@@ -542,52 +547,41 @@
         const videoProgressContainer = document.getElementById('videoProgressContainer');
         const videoProgressBar = document.getElementById('videoProgressBar');
         const videoProgressHandle = document.getElementById('videoProgressHandle');
-        
-        // Volume Slider Elements
-        const volumeSliderVertical = document.getElementById('volumeSliderVertical');
-        const volumeIcon = document.getElementById('volumeIcon');
-        const volumeSliderTrack = document.getElementById('volumeSliderTrack');
-        const volumeSliderFill = document.getElementById('volumeSliderFill');
-        const volumeSliderHandle = document.getElementById('volumeSliderHandle');
-        const volumePercentage = document.getElementById('volumePercentage');
+        const volumeControlMobile = document.getElementById('volumeControlMobile');
+        const volumeIconMobile = document.getElementById('volumeIconMobile');
         
         // State
         let isPlaying = false;
         let isMuted = false;
-        let videoActive = false;
         let videoDuration = 0;
         let controlsTimeout = null;
         let videoStarted = false;
+        let currentVolume = 1.0; // 100% volume
+        let isDraggingProgress = false;
         
-        // Volume state - ΑΡΧΙΚΑ ΑΝΟΙΧΤΟΣ ΗΧΟΣ
-        let currentVolume = 1.0; // 100% volume από την αρχή
-        let isDraggingVolume = false;
-        
-        // Video Title - Consistent across all platforms
+        // Video Title
         const VIDEO_TITLE = "Το Έψαξα Πάντως";
         
-        // FORCE SOUND ON - ΑΥΤΟΜΑΤΗ ΕΝΕΡΓΟΠΟΙΗΣΗ ΗΧΟΥ (100% ΒΕΒΑΙΟ)
+        // FORCE SOUND ON - ΑΥΤΟΜΑΤΗ ΕΝΕΡΓΟΠΟΙΗΣΗ ΗΧΟΥ
         function forceAudioEnabled() {
             console.log("🔊 Force enabling audio at 100% volume...");
             
-            // ΒΕΒΑΙΩΝΟΥΜΕ ΟΤΙ Ο ΗΧΟΣ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ
             mainVideo.muted = false;
-            mainVideo.volume = 1.0; // 100% volume
-            currentVolume = 1.0; // Ενημερώνουμε το state
-            isMuted = false; // ΣΙΓΟΥΡΑ ΟΧΙ MUTED
+            mainVideo.volume = 1.0;
+            currentVolume = 1.0;
+            isMuted = false;
             
             // Update UI
             muteBtn.textContent = '🔊';
-            updateVerticalVolumeSlider();
+            volumeIconMobile.textContent = '🔊';
             
-            // Προσπαθούμε να παίξουμε με ήχο
             const playPromise = mainVideo.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
                     console.log("✅ Audio successfully enabled and playing at 100% volume");
                 }).catch(error => {
-                    console.log("⚠️ Auto-play with sound blocked, trying with audio context...");
+                    console.log("⚠️ Auto-play with sound blocked");
                     
                     // Επιπλέον προσπάθεια με Audio Context
                     try {
@@ -609,40 +603,7 @@
             }
         }
         
-        // Update vertical volume slider
-        function updateVerticalVolumeSlider() {
-            const volume = isMuted ? 0 : currentVolume;
-            const height = volume * 100 + '%';
-            volumeSliderFill.style.height = height;
-            
-            const handlePosition = (1 - volume) * 100;
-            volumeSliderHandle.style.bottom = handlePosition + '%';
-            
-            volumePercentage.textContent = Math.round(volume * 100) + '%';
-            volumeIcon.textContent = volume === 0 ? '🔇' : volume < 0.5 ? '🔉' : '🔊';
-            
-            // Update mute button
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
-        }
-        
-        // Set volume from vertical slider
-        function setVolumeFromVertical(event) {
-            const rect = volumeSliderTrack.getBoundingClientRect();
-            let y = event.clientY - rect.top;
-            y = Math.max(0, Math.min(y, rect.height));
-            
-            const volume = 1 - (y / rect.height);
-            currentVolume = volume;
-            
-            mainVideo.volume = currentVolume;
-            mainVideo.muted = currentVolume === 0;
-            isMuted = currentVolume === 0;
-            
-            updateVerticalVolumeSlider();
-            showControls();
-        }
-        
-        // Start video - WITH SOUND AUTOMATICALLY ENABLED (100% ΒΕΒΑΙΟ)
+        // Start video
         function startVideo() {
             if (videoStarted) return;
             
@@ -651,7 +612,6 @@
             
             videoPlayOverlay.classList.add('hidden');
             
-            // FORCE AUDIO TO BE ENABLED IMMEDIATELY AT 100% VOLUME
             forceAudioEnabled();
             
             const playPromise = mainVideo.play();
@@ -660,7 +620,6 @@
                 playPromise.then(() => {
                     console.log('✅ Video playback started successfully with sound');
                     isPlaying = true;
-                    videoActive = true;
                     playPauseBtn.textContent = '⏸️';
                     
                     showControls();
@@ -668,29 +627,27 @@
                 }).catch(e => {
                     console.error('❌ Video play failed:', e);
                     
-                    // Προσπαθούμε με muted και μετά enable sound
                     mainVideo.muted = true;
                     mainVideo.play().then(() => {
-                        console.log('✅ Video started muted (will enable sound on user interaction)');
+                        console.log('✅ Video started muted');
                         isPlaying = true;
-                        videoActive = true;
                         playPauseBtn.textContent = '⏸️';
                         showControls();
                         
-                        // Προσθέτουμε event listener για user interaction
                         document.addEventListener('click', enableSoundOnUserClick, { once: true });
                     });
                 });
             }
         }
         
-        // Enable sound on user click (fallback)
+        // Enable sound on user click
         function enableSoundOnUserClick() {
             console.log('👆 User clicked, enabling sound...');
             mainVideo.muted = false;
             mainVideo.volume = 1.0;
             isMuted = false;
-            updateVerticalVolumeSlider();
+            muteBtn.textContent = '🔊';
+            volumeIconMobile.textContent = '🔊';
         }
         
         // Format time function
@@ -716,7 +673,7 @@
         // Show/hide controls
         function showControls() {
             videoControls.classList.add('visible');
-            videoProgressContainer.style.opacity = '0.5';
+            videoProgressContainer.style.opacity = '1';
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
                 if (isPlaying) {
@@ -731,7 +688,6 @@
             if (mainVideo.paused) {
                 mainVideo.play().then(() => {
                     isPlaying = true;
-                    videoActive = true;
                     playPauseBtn.textContent = '⏸️';
                     showControls();
                     
@@ -757,7 +713,11 @@
         function toggleMute() {
             isMuted = !isMuted;
             mainVideo.muted = isMuted;
-            updateVerticalVolumeSlider();
+            
+            // Update UI
+            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            volumeIconMobile.textContent = isMuted ? '🔇' : '🔊';
+            
             showControls();
         }
         
@@ -773,14 +733,26 @@
             showControls();
         }
         
+        // Handle video progress click
+        function handleProgressClick(event) {
+            const rect = videoProgressContainer.getBoundingClientRect();
+            let x = event.clientX - rect.left;
+            x = Math.max(0, Math.min(x, rect.width));
+            
+            const percent = x / rect.width;
+            mainVideo.currentTime = percent * videoDuration;
+            
+            updateProgressBar();
+            updateTimeDisplay();
+            showControls();
+        }
+        
         // VIDEO LOOPING FUNCTIONALITY
         function handleVideoEnd() {
             console.log('🔄 Video ended - restarting from beginning');
             
-            // Reset video to beginning
             mainVideo.currentTime = 0;
             
-            // Play again
             const playPromise = mainVideo.play();
             if (playPromise !== undefined) {
                 playPromise.catch(e => {
@@ -794,15 +766,14 @@
             console.log('📊 Video metadata loaded');
             videoDuration = mainVideo.duration;
             updateTimeDisplay();
-            updateVerticalVolumeSlider();
             
-            // ΒΕΒΑΙΩΝΟΥΜΕ Ο ΗΧΟΣ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ ΑΠΟ ΤΗΝ ΑΡΧΗ
+            // ΒΕΒΑΙΩΝΟΥΜΕ Ο ΗΧΟΣ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ
             forceAudioEnabled();
             
             // Set video to loop
             mainVideo.loop = true;
             
-            // Αυτόματη εκκίνηση του βίντεο
+            // Αυτόματη εκκίνηση
             startVideo();
         });
         
@@ -828,7 +799,6 @@
         mainVideo.addEventListener('error', (e) => {
             console.error('❌ Video error:', mainVideo.error);
             loadingSpinner.style.display = 'none';
-            videoActive = false;
             
             videoContainer.innerHTML = `
                 <div style="text-align: center; padding: 30px; color: white; width: 100%;">
@@ -852,45 +822,48 @@
             }
         });
         
+        // Progress bar events
+        videoProgressContainer.addEventListener('click', handleProgressClick);
+        
+        videoProgressHandle.addEventListener('mousedown', (e) => {
+            isDraggingProgress = true;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingProgress) {
+                handleProgressClick(e);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDraggingProgress = false;
+        });
+        
+        // Touch events for progress bar
+        videoProgressContainer.addEventListener('touchstart', (e) => {
+            isDraggingProgress = true;
+            handleProgressClick(e.touches[0]);
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (isDraggingProgress) {
+                handleProgressClick(e.touches[0]);
+            }
+        });
+        
+        document.addEventListener('touchend', () => {
+            isDraggingProgress = false;
+        });
+        
         // Control buttons
         playPauseBtn.addEventListener('click', togglePlayPause);
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // Volume slider events
-        volumeSliderTrack.addEventListener('click', setVolumeFromVertical);
-        
-        volumeSliderHandle.addEventListener('mousedown', (e) => {
-            isDraggingVolume = true;
-            e.preventDefault();
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            if (isDraggingVolume) {
-                setVolumeFromVertical(e);
-            }
-        });
-        
-        document.addEventListener('mouseup', () => {
-            isDraggingVolume = false;
-        });
-        
-        // Touch events for volume slider
-        volumeSliderTrack.addEventListener('touchstart', (e) => {
-            isDraggingVolume = true;
-            setVolumeFromVertical(e.touches[0]);
-            e.preventDefault();
-        });
-        
-        document.addEventListener('touchmove', (e) => {
-            if (isDraggingVolume) {
-                setVolumeFromVertical(e.touches[0]);
-            }
-        });
-        
-        document.addEventListener('touchend', () => {
-            isDraggingVolume = false;
-        });
+        // Volume control for mobile
+        volumeControlMobile.addEventListener('click', toggleMute);
         
         // Show controls on touch/mouse move
         videoContainer.addEventListener('mousemove', showControls);
@@ -902,13 +875,11 @@
                 window.history.replaceState(null, null, window.location.pathname);
             }
             
-            // Set page title with video title
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            // ΒΕΒΑΙΩΝΟΥΜΕ ΟΤΙ Ο ΗΧΟΣ ΘΑ ΕΙΝΑΙ ΑΝΟΙΧΤΟΣ
             console.log('🎵 Ensuring audio will be ON when video starts');
             
-            // Προσθήκη touch event listeners για καλύτερη συμβατότητα
+            // Προσθήκη touch event listeners
             document.addEventListener('touchstart', function(e) {
                 if (e.touches.length > 1) {
                     e.preventDefault();
@@ -924,6 +895,13 @@
                 }
                 lastTouchEnd = now;
             }, false);
+            
+            // Mobile Safari specific fix
+            if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream) {
+                document.documentElement.style.height = '100%';
+                document.body.style.height = '100%';
+                videoContainer.style.height = '100%';
+            }
         });
         
         // Prevent right-click
@@ -931,22 +909,33 @@
             e.preventDefault();
         }, false);
         
+        // Handle fullscreen change
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                console.log('📺 Entered fullscreen mode');
+            } else {
+                console.log('📺 Exited fullscreen mode');
+            }
+        });
+        
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ FmD Video Player ready');
+        console.log('✅ FmD Video Player ready - OPTIMIZED FOR MOBILE');
         console.log('🎯 Features:');
         console.log('  - Video Title: "' + VIDEO_TITLE + '"');
         console.log('  - Ηχος: ΑΝΟΙΧΤΟΣ 100% από την αρχή');
         console.log('  - Video Looping: Αυτόματη επανεκκίνηση');
-        console.log('  - Συμβατό με Chrome, Safari, Firefox');
-        console.log('  - Optimized για κινητά τηλέφωνα');
-        console.log('  - Transparent Volume Slider στα δεξιά (σε desktop/tablet)');
+        console.log('  - Optimized για Chrome & Safari στα κινητά');
+        console.log('  - Μπάρα προόδου στη μέση της οθόνης');
+        console.log('  - Όλο το βίντεο φαίνεται (object-fit: contain)');
+        console.log('  - Controls centered για καλύτερη προσβασιμότητα');
         
         // Additional audio enabling attempts
         document.addEventListener('click', function() {
             if (videoStarted && isMuted) {
                 mainVideo.muted = false;
                 isMuted = false;
-                updateVerticalVolumeSlider();
+                muteBtn.textContent = '🔊';
+                volumeIconMobile.textContent = '🔊';
                 console.log('🔊 Sound enabled via user click');
             }
         });
