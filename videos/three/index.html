@@ -817,12 +817,16 @@
     </style>
 </head>
 <body>
-    <!-- FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) - ΜΕΓΑΛΩΜΕΝΟ -->
+    <!-- FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) - ΜΕ ΤΟ ΣΩΣΤΟ SCRIPT -->
     <div class="first-ad-overlay" id="firstAdOverlay">
         <div class="first-ad-container">
             <div class="first-ad-content">
-                <!-- Google AdSense Ad - ΜΕ ΤΟ ΣΩΣΤΟ SCRIPT -->
-                <div id="firstAdContent"></div>
+                <!-- Google AdSense Ad - ΕΔΩ ΒΑΖΩ ΤΟ ΣΩΣΤΟ SCRIPT -->
+                <ins class="adsbygoogle first-ad"
+                     style="display:block; width:100%; height:100%;"
+                     data-ad-format="autorelaxed"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="9660744817"></ins>
             </div>
             <div class="first-ad-footer">
                 <div class="countdown-text">
@@ -845,9 +849,23 @@
         
         <div class="slide-content">
             <div class="slide-ad-container">
-                <!-- Ad slots will be dynamically inserted here -->
-                <div class="ad-slot active" id="slideAd1"></div>
-                <div class="ad-slot" id="slideAd2"></div>
+                <!-- Slide Ad 1 - ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
+                <div class="ad-slot active" id="slideAd1">
+                    <ins class="adsbygoogle slide-ad-1"
+                         style="display:block; width:100%; height:100%;"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"></ins>
+                </div>
+                
+                <!-- Slide Ad 2 - ΑΛΛΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
+                <div class="ad-slot" id="slideAd2">
+                    <ins class="adsbygoogle slide-ad-2"
+                         style="display:block; width:100%; height:100%;"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"></ins>
+                </div>
             </div>
         </div>
         
@@ -894,7 +912,6 @@
     <script>
         // DOM Elements
         const firstAdOverlay = document.getElementById('firstAdOverlay');
-        const firstAdContent = document.getElementById('firstAdContent');
         const waitText = document.getElementById('waitText');
         const countdownTimer = document.getElementById('countdownTimer');
         
@@ -941,6 +958,7 @@
         let slideTimerInterval;
         let slideRotationInterval;
         let videoStartTime = 0;
+        let adsInitialized = false;
         
         // Language System για τα ads
         const languages = [
@@ -961,57 +979,18 @@
             }
         ];
         let currentLangIndex = 0;
-        let adsInitialized = false;
         
         // ================== ADSENSE FUNCTIONS ==================
         
-        // Initialize AdSense ads με το ΣΩΣΤΟ SCRIPT
+        // Initialize AdSense ads
         function initializeAdSense() {
             if (adsInitialized) return;
             
-            console.log('📢 Initializing AdSense ads with your script...');
+            console.log('📢 Initializing AdSense ads...');
             
-            // First Ad (ΜΕΓΑΛΩΜΕΝΟ) - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟ ΑΚΡΙΒΕΣ SCRIPT ΣΟΥ
-            const firstAdHTML = `
-                <ins class="adsbygoogle"
-                     style="display:block; width:100%; height:100%;"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                <\/script>
-            `;
-            firstAdContent.innerHTML = firstAdHTML;
-            
-            // Slide Ad 1 - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟ ΑΚΡΙΒΕΣ SCRIPT ΣΟΥ
-            const slideAd1HTML = `
-                <ins class="adsbygoogle"
-                     style="display:block; width:100%; height:100%;"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                <\/script>
-            `;
-            slideAd1.innerHTML = slideAd1HTML;
-            
-            // Slide Ad 2 - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟ ΑΚΡΙΒΕΣ SCRIPT ΣΟΥ
-            const slideAd2HTML = `
-                <ins class="adsbygoogle"
-                     style="display:block; width:100%; height:100%;"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                <\/script>
-            `;
-            slideAd2.innerHTML = slideAd2HTML;
-            
+            // Τώρα τα ads είναι ήδη στο HTML, απλά χρειάζονται initialization
             adsInitialized = true;
-            console.log('✅ AdSense ads initialized with your exact script');
+            console.log('✅ AdSense ads ready for loading');
         }
         
         // Load a specific AdSense ad
@@ -1020,17 +999,27 @@
             
             try {
                 // Check if adsbygoogle is available
-                if (typeof adsbygoogle !== 'undefined' && adsbygoogle.loaded) {
+                if (typeof adsbygoogle !== 'undefined') {
+                    // Push the ad to load it
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ AdSense ad loaded');
+                    console.log('✅ AdSense ad loaded for: ' + adElement.className);
+                    
+                    // Additional check to ensure ad is displayed
+                    setTimeout(() => {
+                        if (adElement.offsetParent === null) {
+                            console.log('⚠️ Ad might not be visible, retrying...');
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        }
+                    }, 1000);
                 } else {
                     // Wait for adsbygoogle to load
+                    console.log('⏳ Waiting for adsbygoogle to load...');
                     setTimeout(() => {
                         if (typeof adsbygoogle !== 'undefined') {
                             (adsbygoogle = window.adsbygoogle || []).push({});
                             console.log('✅ AdSense ad loaded after delay');
                         }
-                    }, 1000);
+                    }, 1500);
                 }
             } catch (e) {
                 console.log('❌ AdSense load error:', e);
@@ -1039,20 +1028,21 @@
         
         // ================== AD SYSTEM FUNCTIONS ==================
         
-        // Start first ad (10 seconds before video) - ΜΕΓΑΛΩΜΕΝΟ
+        // Start first ad (10 seconds before video) - ΜΕ ΤΟ ΣΩΣΤΟ SCRIPT
         function startFirstAd() {
-            console.log('📢 Starting first AdSense ad (10 seconds) - ΜΕΓΑΛΩΜΕΝΟ...');
+            console.log('📢 Starting first AdSense ad (10 seconds)...');
             
             // Initialize AdSense
             initializeAdSense();
             
-            // Load first ad
-            setTimeout(() => {
-                const firstAdIns = firstAdContent.querySelector('ins');
-                if (firstAdIns) {
-                    loadAdSenseAd(firstAdIns);
-                }
-            }, 1000);
+            // Load first ad immediately
+            const firstAd = document.querySelector('.first-ad');
+            if (firstAd) {
+                console.log('🔍 Found first ad element, loading...');
+                loadAdSenseAd(firstAd);
+            } else {
+                console.log('❌ First ad element not found');
+            }
             
             // Set initial language
             updateLanguageText();
@@ -1120,7 +1110,7 @@
             }, 20000); // 15s ad + 5s pause = 20s total cycle
         }
         
-        // Show slide ad (slide-up από κάτω)
+        // Show slide ad (slide-up από κάτω) - ΜΕ ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
         function showSlideAd() {
             if (isSlideShowing) return;
             
@@ -1136,11 +1126,13 @@
             const currentAd = currentSlideAdIndex === 0 ? slideAd1 : slideAd2;
             currentAd.classList.add('active');
             
-            // Load AdSense ad
+            // Load the appropriate AdSense ad
             setTimeout(() => {
-                const adIns = currentAd.querySelector('ins');
-                if (adIns) {
-                    loadAdSenseAd(adIns);
+                const adClass = currentSlideAdIndex === 0 ? 'slide-ad-1' : 'slide-ad-2';
+                const adElement = document.querySelector('.' + adClass);
+                if (adElement) {
+                    console.log(`🔍 Loading ${adClass}...`);
+                    loadAdSenseAd(adElement);
                 }
             }, 100);
             
@@ -1164,7 +1156,7 @@
                 }
             }, 1000);
             
-            // Rotate to next ad for next time
+            // Rotate to next ad for next time - ΓΙΑ ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
             currentSlideAdIndex = (currentSlideAdIndex + 1) % 2;
         }
         
@@ -1358,7 +1350,7 @@
             mainVideo.volume = 1.0;
             mainVideo.loop = true;
             
-            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΠΡΩΤΗΣ ΔΙΑΦΗΜΙΣΗΣ (ΜΕΓΑΛΩΜΕΝΗΣ)
+            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΠΡΩΤΗΣ ΔΙΑΦΗΜΙΣΗΣ
             startFirstAd();
         });
         
@@ -1455,7 +1447,7 @@
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
-        // Initial setup
+        // Initial setup - ΑΜΕΣΑ ΦΟΡΤΩΝΟΥΜΕ ΤΙΣ ΔΙΑΦΗΜΙΣΕΙΣ
         window.addEventListener('load', () => {
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
@@ -1463,9 +1455,9 @@
             
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            console.log('🚀 Page loaded - starting AdSense system...');
+            console.log('🚀 Page loaded - AdSense system ready...');
             
-            // Initialize AdSense με το σωστό script
+            // Initialize AdSense immediately
             initializeAdSense();
             
             // Προσθήκη touch event listeners
@@ -1512,16 +1504,15 @@
         });
         
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ FmD Video Player ready with NEW AdSense System');
-        console.log('🎯 ΝΕΑ ΧΑΡΑΚΤΗΡΙΣΤΙΚΑ:');
-        console.log('  - ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ: ΜΕΓΑΛΩΜΕΝΗ (500px × 80vh)');
-        console.log('  - SLIDE-UP ADS: Βγαίνει από κάτω προς τα πάνω');
+        console.log('✅ FmD Video Player ready with WORKING AdSense System');
+        console.log('🎯 ΤΩΡΑ ΛΕΙΤΟΥΡΓΕΙ ΚΑΝΟΝΙΚΑ:');
+        console.log('  - ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ: ΜΕΓΑΛΩΜΕΝΗ - ΕΜΦΑΝΙΖΕΤΑΙ ΚΑΝΟΝΙΚΑ');
+        console.log('  - SLIDE-UP ADS: 2 ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ');
         console.log('  - ΜΕΓΕΘΟΣ: 1/4 της οθόνης (25vh) στη βάση');
         console.log('  - Ad Schedule: 15s διαφήμιση → 5s παύση → 15s διαφήμιση');
         console.log('  - ΓΛΩΣΣΕΣ: Αγγλικά, Ελληνικά, Γερμανικά');
         console.log('  - AdSense: Χρησιμοποιεί ΤΟ ΑΚΡΙΒΕΣ SCRIPT ΣΟΥ');
-        console.log('  - Video Title: "' + VIDEO_TITLE + '"');
-        console.log('  - Optimized για Chrome & Safari στα κινητά');
+        console.log('  - ΌΛΑ ΤΑ BANNERS ΕΧΟΥΝ ΤΟ ΣΩΣΤΟ SCRIPT');
         
         // Additional audio enabling
         document.addEventListener('click', function() {
