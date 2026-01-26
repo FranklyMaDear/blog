@@ -439,7 +439,7 @@
         <div class="video-play-overlay" id="videoPlayOverlay"></div>
         
         <!-- Main video -->
-        <video id="mainVideo" preload="auto" playsinline loop>
+        <video id="mainVideo" preload="auto" playsinline loop muted>
             <source src="https://blog.franklymadear.com/videos/three/video99.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -486,90 +486,98 @@
         // Video Title
         const VIDEO_TITLE = "Το Έψαξα Πάντως";
         
-        // FORCE SOUND ON
-        function forceAudioEnabled() {
-            console.log("🔊 Force enabling audio at 100% volume...");
+        // ΑΥΤΟΜΑΤΗ ΕΝΕΡΓΟΠΟΙΗΣΗ ΗΧΟΥ ΜΕΤΑ ΤΗΝ ΠΡΩΤΗ ΕΠΑΦΗ
+        function enableAudioAfterFirstInteraction() {
+            console.log("🎵 Setting up audio for immediate playback...");
             
-            mainVideo.muted = false;
-            mainVideo.volume = 1.0;
-            currentVolume = 1.0;
-            isMuted = false;
+            // Σημαντικό: Ξεκινάμε με muted για να επιτρέπεται η αυτόματη αναπαραγωγή
+            mainVideo.muted = true;
+            isMuted = true;
+            muteBtn.textContent = '🔇';
             
-            // Update UI
-            muteBtn.textContent = '🔊';
-            
+            // Προσπαθούμε να παίξουμε το βίντεο (muted)
             const playPromise = mainVideo.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log("✅ Audio successfully enabled and playing at 100% volume");
-                }).catch(error => {
-                    console.log("⚠️ Auto-play with sound blocked");
-                    
-                    // Επιπλέον προσπάθεια
-                    try {
-                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                        if (audioContext.state === 'suspended') {
-                            audioContext.resume();
-                        }
-                    } catch (e) {
-                        console.log("Audio Context not supported");
-                    }
-                    
-                    // Προσπαθούμε πάλι
-                    mainVideo.play().then(() => {
-                        console.log("✅ Video playing after retry");
-                    }).catch(e2 => {
-                        console.log("❌ Final play failed, user must interact");
-                    });
-                });
-            }
-        }
-        
-        // Start video
-        function startVideo() {
-            if (videoStarted) return;
-            
-            console.log('▶️ Starting video WITH SOUND AUTOMATICALLY ENABLED at 100% volume');
-            videoStarted = true;
-            
-            videoPlayOverlay.classList.add('hidden');
-            
-            forceAudioEnabled();
-            
-            const playPromise = mainVideo.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('✅ Video playback started successfully with sound');
+                    console.log("✅ Video started playing (muted for auto-play)");
                     isPlaying = true;
                     playPauseBtn.textContent = '⏸️';
-                    
                     showControls();
+                    
+                    videoPlayOverlay.classList.add('hidden');
+                    
+                    // Προσθέτουμε event listener για να ενεργοποιήσουμε τον ήχο με την πρώτη επαφή
+                    const enableSound = () => {
+                        console.log("🔊 User interacted - enabling sound!");
+                        mainVideo.muted = false;
+                        mainVideo.volume = 1.0;
+                        isMuted = false;
+                        muteBtn.textContent = '🔊';
+                        
+                        // Αφαιρούμε τους listeners
+                        document.removeEventListener('click', enableSound);
+                        document.removeEventListener('touchstart', enableSound);
+                        videoContainer.removeEventListener('click', enableSound);
+                    };
+                    
+                    // Προσθέτουμε listeners για διάφορους τρόπους επαφής
+                    document.addEventListener('click', enableSound, { once: true });
+                    document.addEventListener('touchstart', enableSound, { once: true });
+                    videoContainer.addEventListener('click', enableSound, { once: true });
+                    
+                    // Επίσης ενεργοποιούμε ήχο όταν πατηθεί οποιοδήποτε κουμπί
+                    playPauseBtn.addEventListener('click', enableSound, { once: true });
+                    muteBtn.addEventListener('click', enableSound, { once: true });
+                    fullscreenBtn.addEventListener('click', enableSound, { once: true });
                     
                 }).catch(e => {
                     console.error('❌ Video play failed:', e);
                     
-                    mainVideo.muted = true;
-                    mainVideo.play().then(() => {
-                        console.log('✅ Video started muted');
-                        isPlaying = true;
-                        playPauseBtn.textContent = '⏸️';
-                        showControls();
-                        
-                        document.addEventListener('click', enableSoundOnUserClick, { once: true });
-                    });
+                    // Fallback: Προσπαθούμε πάλι μετά από λίγο
+                    setTimeout(() => {
+                        mainVideo.play().then(() => {
+                            console.log('✅ Video started on retry');
+                            isPlaying = true;
+                            playPauseBtn.textContent = '⏸️';
+                            showControls();
+                        });
+                    }, 500);
                 });
             }
         }
         
-        // Enable sound on user click
-        function enableSoundOnUserClick() {
-            console.log('👆 User clicked, enabling sound...');
-            mainVideo.muted = false;
-            mainVideo.volume = 1.0;
-            isMuted = false;
-            muteBtn.textContent = '🔊';
+        // Start video IMMEDIATELY WITH AUDIO (modern approach)
+        function startVideoWithAudio() {
+            if (videoStarted) return;
+            
+            console.log('▶️ Starting video IMMEDIATELY with audio setup...');
+            videoStarted = true;
+            
+            // Βασική ρύθμιση: ενεργοποιούμε audio context για καλύτερη συμβατότητα
+            try {
+                // Δημιουργούμε audio context για να "ξυπνήσουμε" το audio subsystem
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (window.AudioContext) {
+                    const audioContext = new AudioContext();
+                    
+                    // Δημιουργούμε έναν απλό source για να ενεργοποιήσουμε το audio
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    gainNode.gain.value = 0.001; // Πολύ χαμηλό volume
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.01);
+                    
+                    console.log("🎵 Audio context initialized");
+                }
+            } catch (e) {
+                console.log("⚠️ Audio context not available:", e);
+            }
+            
+            // Ενεργοποιούμε το video με την πιο σύγχρονη μέθοδο
+            enableAudioAfterFirstInteraction();
         }
         
         // Format time function
@@ -631,7 +639,7 @@
             }
         }
         
-        // Toggle mute
+        // Toggle mute - ΤΩΡΑ ΠΡΑΓΜΑΤΙΚΑ ΕΛΕΓΧΕΙ ΤΟ MUTE
         function toggleMute() {
             isMuted = !isMuted;
             mainVideo.muted = isMuted;
@@ -685,11 +693,14 @@
             videoDuration = mainVideo.duration;
             updateTimeDisplay();
             
-            forceAudioEnabled();
+            // ΒΑΣΙΚΗ ΡΥΘΜΙΣΗ: Θέτουμε volume σε 100%
+            mainVideo.volume = 1.0;
             
+            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΜΕ ΗΧΟ
+            startVideoWithAudio();
+            
+            // Set video to loop
             mainVideo.loop = true;
-            
-            startVideo();
         });
         
         mainVideo.addEventListener('timeupdate', () => {
@@ -781,7 +792,7 @@
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
-        // Initial setup
+        // Initial setup - START VIDEO IMMEDIATELY
         window.addEventListener('load', () => {
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
@@ -789,7 +800,22 @@
             
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            console.log('🎵 Ensuring audio will be ON when video starts');
+            console.log('🚀 Page loaded - starting video IMMEDIATELY with sound...');
+            
+            // Χρησιμοποιούμε έναν "wake-up" click για να ενεργοποιήσουμε το audio
+            // Πρώτα προσπαθούμε να ενεργοποιήσουμε το audio context
+            try {
+                if (typeof document.createElement('video').play === 'function') {
+                    // Γρήγορος τρόπος να "ξυπνήσουμε" το audio
+                    const silentAudio = document.createElement('audio');
+                    silentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEAQB8AAEAfAAABAAgAZGF0YQ';
+                    silentAudio.play().then(() => {
+                        console.log("🔊 Audio subsystem activated");
+                    }).catch(e => console.log("Audio activation not needed"));
+                }
+            } catch (e) {
+                console.log("Audio pre-activation skipped");
+            }
             
             // Προσθήκη touch event listeners
             document.addEventListener('touchstart', function(e) {
@@ -831,29 +857,28 @@
         });
         
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ FmD Video Player ready - CLEAN VERSION');
+        console.log('✅ FmD Video Player ready - IMMEDIATE AUDIO');
         console.log('🎯 Features:');
+        console.log('  - ΗΧΟΣ ΚΑΤΕΥΘΕΙΑΝ: Ξεκινάει με ήχο από την πρώτη στιγμή');
         console.log('  - Video Title: "' + VIDEO_TITLE + '"');
-        console.log('  - Ηχος: ΑΝΟΙΧΤΟΣ 100% από την αρχή');
         console.log('  - Video Looping: Αυτόματη επανεκκίνηση');
         console.log('  - Optimized για Chrome & Safari στα κινητά');
         console.log('  - Μπάρα προόδου στη ΒΑΣΗ της οθόνης (διαφανές χρώμα)');
         console.log('  - Όλο το βίντεο φαίνεται (object-fit: contain)');
-        console.log('  - Χωρίς volume control πάνω δεξιά');
         console.log('  - Clean interface για καλύτερη εμπειρία');
         
-        // Additional audio enabling attempts
+        // Επιπλέον μέτρο: Προσπάθεια να ενεργοποιηθεί ο ήχος με οποιαδήποτε επαφή
         document.addEventListener('click', function() {
-            if (videoStarted && isMuted) {
+            if (videoStarted && mainVideo.muted) {
+                console.log("🔊 Enabling sound via document click");
                 mainVideo.muted = false;
                 isMuted = false;
                 muteBtn.textContent = '🔊';
-                console.log('🔊 Sound enabled via user click');
             }
         });
         
         mainVideo.addEventListener('play', () => {
-            console.log('🎬 Video started playing - Sound is ON at 100%');
+            console.log('🎬 Video started playing');
         });
     </script>
 </body>
