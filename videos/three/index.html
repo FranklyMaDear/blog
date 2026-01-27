@@ -46,10 +46,6 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
     
-    <!-- GOOGLE ADS SCRIPT (Auto Ads) -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-            crossorigin="anonymous"></script>
-    
     <style>
         * {
             margin: 0;
@@ -69,14 +65,38 @@
             user-select: none;
         }
         
-        /* FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) - ΚΕΝΤΡΟ ΟΘΟΝΗΣ */
+        /* Privacy and Cookie Settings (Google AdSense) - ΜΙΚΡΗ ΚΑΙ ΣΕ ΓΩΝΙΑ */
+        .privacy-cookie-settings {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.7);
+            color: #aaa;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            max-width: 150px;
+            text-align: center;
+            pointer-events: auto;
+        }
+        
+        .privacy-cookie-settings:hover {
+            opacity: 0.8;
+        }
+        
+        /* FIRST AD OVERLAY - BEFORE VIDEO STARTS (ΜΕΓΑΛΩΜΕΝΟ) */
         .first-ad-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.98);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -86,18 +106,19 @@
         }
         
         .first-ad-container {
-            width: 90%;
-            max-width: 400px;
-            height: 60vh;
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border-radius: 15px;
+            width: 95%;
+            max-width: 500px; /* ΜΕΓΑΛΩΣΑ ΤΟ ΜΕΓΕΘΟΣ */
+            height: 80vh; /* ΜΕΓΑΛΩΣΑ ΤΟ ΥΨΟΣ */
+            max-height: 600px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
             position: relative;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
         .first-ad-content {
@@ -107,62 +128,74 @@
             align-items: center;
             justify-content: center;
             min-height: 0;
-            padding: 15px;
+            padding: 20px;
             position: relative;
         }
         
-        /* AD CONTAINER STYLES */
-        .ad-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 8px;
-            overflow: hidden;
-            position: relative;
+        /* ΚΑΝΩ ΤΟ ADSENSE CONTAINER ΝΑ ΓΕΜΙΖΕΙ ΟΛΟ ΤΟ ΠΛΑΙΣΙΟ */
+        .adsbygoogle-first {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            min-height: 400px; /* ΕΛΑΧΙΣΤΟ ΥΨΟΣ ΓΙΑ ΒΙΝΤΕΟ ADS */
+        }
+        
+        /* AdSense Privacy Text Container */
+        .adsbygoogle-privacy {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            color: #ccc;
+            z-index: 100;
+            white-space: nowrap;
         }
         
         .first-ad-footer {
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            background: rgba(20, 20, 35, 0.9);
+            background: rgba(26, 26, 46, 0.85);
             color: #fff;
-            font-size: 16px;
+            font-size: 20px; /* ΜΕΓΑΛΩΣΑ ΤΟ ΜΕΓΕΘΟΣ ΤΟΥ ΚΕΙΜΕΝΟΥ */
             font-weight: 600;
-            border-top: 2px solid #ffcb2e;
+            border-top: 3px solid #ffcb2e;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 15px;
+            flex-wrap: wrap;
         }
         
         .countdown-text {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
         
         .countdown-timer {
-            font-size: 24px;
+            font-size: 32px; /* ΜΕΓΑΛΩΣΑ ΤΟ ΜΕΓΕΘΟΣ ΤΟΥ TIMER */
             font-weight: bold;
             color: #ffcb2e;
             font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(255, 203, 46, 0.5);
             background: rgba(0, 0, 0, 0.4);
-            padding: 5px 12px;
-            border-radius: 8px;
-            min-width: 40px;
+            padding: 6px 15px;
+            border-radius: 10px;
+            min-width: 50px;
             text-align: center;
         }
         
-        /* BOTTOM POP-UP AD - DURING VIDEO (15% ΤΗΣ ΟΘΟΝΗΣ ΑΠΟ ΚΑΤΩ) */
-        .bottom-popup-ad {
+        /* BOTTOM SLIDE-UP AD - DURING VIDEO (1/4 ΤΗΣ ΟΘΟΝΗΣ ΑΠΟ ΚΑΤΩ) */
+        .bottom-slide-ad {
             position: fixed;
-            bottom: -15vh; /* Αρχικά κρυμμένο κάτω από την οθόνη (15%) */
+            bottom: -25vh; /* Αρχικά κρυμμένο κάτω από την οθόνη */
             left: 0;
             width: 100%;
-            height: 15vh; /* 15% της οθόνης */
+            height: 25vh; /* 1/4 της οθόνης */
             background: linear-gradient(145deg, #1a1a2e, #16213e);
             z-index: 9998;
             display: flex;
@@ -170,92 +203,124 @@
             align-items: center;
             justify-content: space-between;
             overflow: hidden;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         
-        .bottom-popup-ad.visible {
+        .bottom-slide-ad.visible {
             bottom: 0; /* Εμφανίζεται */
         }
         
-        .bottom-popup-ad.hidden {
-            bottom: -15vh; /* Κρύβεται */
+        .bottom-slide-ad.hidden {
+            bottom: -25vh; /* Κρύβεται */
         }
         
-        .popup-header {
+        .slide-header {
             width: 100%;
-            padding: 8px 15px 5px;
+            padding: 12px 20px 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.4);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .popup-title {
-            font-size: 12px;
+        .slide-title {
+            font-size: 14px;
             font-weight: 600;
             color: #ffcb2e;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
         
-        .popup-timer {
+        .slide-timer {
             background: linear-gradient(45deg, #ffcb2e, #ff9900);
             color: #000;
             font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
             font-family: 'Courier New', monospace;
-            min-width: 32px;
+            min-width: 40px;
             text-align: center;
         }
         
-        .popup-close {
+        .slide-close {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all 0.3s;
             -webkit-tap-highlight-color: transparent;
         }
         
-        .popup-close:hover,
-        .popup-close:active {
+        .slide-close:hover,
+        .slide-close:active {
             background: rgba(255, 255, 255, 0.2);
             transform: scale(1.1);
         }
         
-        .popup-content {
+        .slide-content {
             flex: 1;
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            padding: 10px;
             position: relative;
         }
         
-        /* Ad Slot Styles for different ads */
-        .popup-ad-slot {
+        .slide-ad-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        /* ΒΕΛΤΙΩΜΕΝΟ STYLE ΓΙΑ ΤΑ VIDEO ADS */
+        .adsbygoogle-slide {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            min-height: 180px; /* ΕΛΑΧΙΣΤΟ ΥΨΟΣ ΓΙΑ ΒΙΝΤΕΟ ADS */
+        }
+        
+        .slide-footer {
+            width: 100%;
+            padding: 8px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .slide-footer-text {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        /* Ad Slot Styles */
+        .ad-slot {
             width: 100%;
             height: 100%;
             display: none;
             position: relative;
         }
         
-        .popup-ad-slot.active {
+        .ad-slot.active {
             display: block;
         }
         
@@ -297,8 +362,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             background: rgba(128, 128, 128, 0.25);
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.2);
@@ -312,10 +377,16 @@
             opacity: 0.7;
         }
         
+        .video-play-overlay:hover {
+            background: rgba(128, 128, 128, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%) scale(1.05);
+        }
+        
         .video-play-overlay::after {
             content: '▶';
             color: white;
-            font-size: 24px;
+            font-size: 28px;
             margin-left: 4px;
             font-weight: bold;
             opacity: 0.8;
@@ -343,18 +414,18 @@
             display: none;
         }
         
-        /* VIDEO CONTROLS - AT BOTTOM (ADJUSTED FOR 15% POPUP) */
+        /* VIDEO CONTROLS - AT BOTTOM */
         .video-controls {
             position: absolute;
-            bottom: calc(15vh + 15px); /* 15% popup + 15px margin */
-            left: 15px;
-            right: 15px;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             background: rgba(0, 0, 0, 0.7);
-            padding: 12px 20px;
-            border-radius: 25px;
+            padding: 15px 25px;
+            border-radius: 30px;
             backdrop-filter: blur(30px);
             opacity: 0;
             transition: opacity 0.3s, transform 0.3s;
@@ -372,13 +443,13 @@
             background: none;
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             border-radius: 50%;
             transition: all 0.3s;
-            min-width: 44px;
-            min-height: 44px;
+            min-width: 50px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -393,27 +464,27 @@
         
         .time-display {
             font-family: 'Courier New', monospace;
-            font-size: 14px;
+            font-size: 18px;
             color: rgba(255, 255, 255, 0.95);
             font-weight: 600;
             text-align: center;
             flex: 1;
-            padding: 0 12px;
+            padding: 0 15px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 8px 12px;
+            border-radius: 15px;
+            padding: 10px 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        /* VIDEO PROGRESS BAR - ADJUSTED FOR 15% POPUP */
+        /* VIDEO PROGRESS BAR - AT BOTTOM WITH TRANSPARENT COLOR */
         .video-progress-container {
             position: absolute;
-            bottom: calc(15vh + 80px); /* 15% popup + 80px από τα controls */
-            left: 15px;
-            right: 15px;
-            height: 4px;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            height: 6px;
             background: rgba(255, 255, 255, 0.15);
-            border-radius: 2px;
+            border-radius: 3px;
             z-index: 20;
             cursor: pointer;
             opacity: 0;
@@ -426,7 +497,7 @@
             top: 0;
             height: 100%;
             background: rgba(29, 155, 240, 0.7);
-            border-radius: 2px;
+            border-radius: 3px;
             width: 0%;
             transition: width 0.1s;
         }
@@ -435,8 +506,8 @@
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             background: rgba(255, 255, 255, 0.9);
             border-radius: 50%;
             opacity: 0;
@@ -448,12 +519,216 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        /* RESPONSIVE ADJUSTMENTS */
+        /* TABLET OPTIMIZATIONS */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .first-ad-container {
+                width: 90%;
+                max-width: 550px;
+                height: 75vh;
+                max-height: 650px;
+            }
+            
+            .first-ad-footer {
+                font-size: 18px;
+                padding: 22px;
+                gap: 12px;
+            }
+            
+            .countdown-text {
+                gap: 10px;
+            }
+            
+            .countdown-timer {
+                font-size: 30px;
+                padding: 5px 12px;
+                min-width: 48px;
+            }
+            
+            .bottom-slide-ad {
+                height: 25vh;
+            }
+            
+            .slide-header {
+                padding: 10px 18px 6px;
+            }
+            
+            .slide-title {
+                font-size: 13px;
+            }
+            
+            .slide-timer {
+                font-size: 11px;
+                padding: 2px 7px;
+            }
+            
+            .slide-close {
+                width: 22px;
+                height: 22px;
+                font-size: 15px;
+            }
+            
+            .video-controls {
+                padding: 15px 22px;
+                bottom: 30px; /* Αναβάθμιση για να μην καλύπτεται από το slide ad */
+                left: 25px;
+                right: 25px;
+            }
+            
+            .control-btn {
+                font-size: 22px;
+                min-width: 48px;
+                min-height: 48px;
+                padding: 9px;
+            }
+            
+            .time-display {
+                font-size: 16px;
+                padding: 9px 14px;
+            }
+            
+            .video-progress-container {
+                bottom: 120px; /* Αναβάθμιση για να μην καλύπτεται */
+                left: 25px;
+                right: 25px;
+                height: 5px;
+            }
+            
+            .video-progress-handle {
+                width: 15px;
+                height: 15px;
+            }
+        }
+        
+        /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
+            .privacy-cookie-settings {
+                font-size: 9px;
+                padding: 3px 6px;
+                bottom: 8px;
+                right: 8px;
+                max-width: 130px;
+            }
+            
             .first-ad-container {
                 width: 95%;
+                max-width: 400px;
+                height: 70vh;
+                max-height: 550px;
+            }
+            
+            .first-ad-footer {
+                font-size: 16px;
+                padding: 18px;
+                gap: 10px;
+                flex-direction: column;
+            }
+            
+            .countdown-text {
+                flex-direction: row;
+                gap: 8px;
+            }
+            
+            .countdown-timer {
+                font-size: 28px;
+                padding: 4px 10px;
+                min-width: 45px;
+            }
+            
+            .bottom-slide-ad {
+                height: 25vh;
+            }
+            
+            .slide-header {
+                padding: 8px 15px 6px;
+            }
+            
+            .slide-title {
+                font-size: 12px;
+            }
+            
+            .slide-timer {
+                font-size: 10px;
+                padding: 2px 6px;
+                min-width: 35px;
+            }
+            
+            .slide-close {
+                width: 20px;
+                height: 20px;
+                font-size: 14px;
+            }
+            
+            .slide-content {
+                padding: 8px;
+            }
+            
+            .slide-footer {
+                padding: 6px 12px;
+            }
+            
+            .slide-footer-text {
+                font-size: 10px;
+            }
+            
+            .video-play-overlay {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .video-play-overlay::after {
+                font-size: 24px;
+            }
+            
+            .video-controls {
+                padding: 12px 18px;
+                gap: 12px;
+                bottom: 25px; /* Αναβάθμιση για mobile */
+                left: 15px;
+                right: 15px;
+                border-radius: 25px;
+            }
+            
+            .control-btn {
+                font-size: 20px;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 8px;
+            }
+            
+            .time-display {
+                font-size: 14px;
+                padding: 8px 12px;
+                border-radius: 12px;
+            }
+            
+            .video-progress-container {
+                bottom: 95px; /* Αναβάθμιση για mobile */
+                left: 15px;
+                right: 15px;
+                height: 4px;
+            }
+            
+            .video-progress-handle {
+                width: 14px;
+                height: 14px;
+            }
+        }
+        
+        /* VERY SMALL MOBILE */
+        @media (max-width: 480px) {
+            .privacy-cookie-settings {
+                font-size: 8px;
+                padding: 2px 4px;
+                bottom: 6px;
+                right: 6px;
+                max-width: 110px;
+            }
+            
+            .first-ad-container {
+                width: 98%;
                 max-width: 350px;
-                height: 55vh;
+                height: 65vh;
+                max-height: 500px;
             }
             
             .first-ad-footer {
@@ -462,93 +737,183 @@
                 gap: 8px;
             }
             
+            .countdown-text {
+                gap: 6px;
+            }
+            
             .countdown-timer {
-                font-size: 22px;
+                font-size: 26px;
+                padding: 3px 8px;
+                min-width: 40px;
+            }
+            
+            .bottom-slide-ad {
+                height: 25vh;
+            }
+            
+            .slide-header {
+                padding: 6px 12px 4px;
+            }
+            
+            .slide-title {
+                font-size: 11px;
+            }
+            
+            .slide-timer {
+                font-size: 9px;
+                padding: 1px 5px;
+                min-width: 30px;
+            }
+            
+            .slide-close {
+                width: 18px;
+                height: 18px;
+                font-size: 12px;
+            }
+            
+            .slide-content {
+                padding: 6px;
+            }
+            
+            .slide-footer {
                 padding: 4px 10px;
             }
             
-            .bottom-popup-ad {
-                height: 15vh;
+            .slide-footer-text {
+                font-size: 9px;
             }
             
-            .video-controls {
-                bottom: calc(15vh + 10px);
-                left: 10px;
-                right: 10px;
-                padding: 10px 15px;
+            .video-play-overlay {
+                width: 50px;
+                height: 50px;
             }
             
-            .video-progress-container {
-                bottom: calc(15vh + 70px);
-                left: 10px;
-                right: 10px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .first-ad-container {
-                width: 98%;
-                max-width: 300px;
-                height: 50vh;
-            }
-            
-            .first-ad-footer {
-                font-size: 12px;
-                padding: 12px;
-            }
-            
-            .countdown-timer {
+            .video-play-overlay::after {
                 font-size: 20px;
             }
             
             .video-controls {
-                bottom: calc(15vh + 8px);
-                padding: 8px 12px;
+                padding: 10px 15px;
+                gap: 10px;
+                bottom: 20px; /* Αναβάθμιση για πολύ μικρές οθόνες */
+                left: 12px;
+                right: 12px;
+                border-radius: 20px;
+            }
+            
+            .control-btn {
+                font-size: 18px;
+                min-width: 40px;
+                min-height: 40px;
+                padding: 6px;
+            }
+            
+            .time-display {
+                font-size: 12px;
+                padding: 7px 10px;
+                border-radius: 10px;
             }
             
             .video-progress-container {
-                bottom: calc(15vh + 60px);
+                bottom: 85px; /* Αναβάθμιση για πολύ μικρές οθόνες */
+                left: 12px;
+                right: 12px;
+                height: 3px;
+            }
+            
+            .video-progress-handle {
+                width: 12px;
+                height: 12px;
             }
         }
         
-        @media (orientation: landscape) and (max-height: 500px) {
-            .first-ad-container {
-                width: 80%;
-                height: 80vh;
-            }
-            
-            .bottom-popup-ad {
-                height: 20vh;
-            }
-            
-            .bottom-popup-ad.hidden {
-                bottom: -20vh;
+        /* SAFARI SPECIFIC FIXES */
+        @supports (-webkit-touch-callout: none) {
+            .video-container {
+                height: -webkit-fill-available;
             }
             
             .video-controls {
-                bottom: calc(20vh + 10px);
+                -webkit-backdrop-filter: blur(30px);
+                backdrop-filter: blur(30px);
+            }
+        }
+        
+        /* LANDSCAPE MODE */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .privacy-cookie-settings {
+                font-size: 8px;
+                bottom: 5px;
+                right: 5px;
+            }
+            
+            .first-ad-container {
+                width: 85%;
+                height: 90vh;
+                max-height: none;
+            }
+            
+            .bottom-slide-ad {
+                height: 30vh;
+            }
+            
+            .bottom-slide-ad.hidden {
+                bottom: -30vh;
+            }
+            
+            .video-controls {
+                padding: 8px 15px;
+                bottom: 35px; /* Αναβάθμιση για landscape */
+                left: 15px;
+                right: 15px;
+                border-radius: 20px;
+            }
+            
+            .control-btn {
+                font-size: 18px;
+                min-width: 38px;
+                min-height: 38px;
+                padding: 6px;
+            }
+            
+            .time-display {
+                font-size: 12px;
+                padding: 6px 10px;
+                border-radius: 10px;
             }
             
             .video-progress-container {
-                bottom: calc(20vh + 70px);
+                bottom: 80px; /* Αναβάθμιση για landscape */
+                left: 15px;
+                right: 15px;
+                height: 3px;
+            }
+            
+            .video-progress-handle {
+                width: 12px;
+                height: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) - ΚΕΝΤΡΟ ΟΘΟΝΗΣ -->
+    <!-- Privacy and Cookie Settings (Google AdSense) - ΜΙΚΡΗ ΚΑΙ ΣΤΗΝ ΚΑΤΩ ΔΕΞΙΑ ΓΩΝΙΑ -->
+    <div class="privacy-cookie-settings">
+        Privacy and cookie settings<br>
+        Managed by Google. Complies with IAB
+    </div>
+
+    <!-- FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) - ΜΕ ΤΟ ΝΕΟ ΒΙΝΤΕΟ AD SCRIPT -->
     <div class="first-ad-overlay" id="firstAdOverlay">
         <div class="first-ad-container">
             <div class="first-ad-content">
-                <!-- ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ - AD SLOT 1 -->
-                <div class="ad-container" id="firstAdContainer">
-                    <!-- GOOGLE ADSENSE AD -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                </div>
+                <!-- ΝΕΟ AdSense Script για video ads -->
+                <ins class="adsbygoogle adsbygoogle-first"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3969235710"></ins>
             </div>
             <div class="first-ad-footer">
                 <div class="countdown-text">
@@ -559,53 +924,43 @@
         </div>
     </div>
 
-    <!-- BOTTOM POP-UP AD - DURING VIDEO (15% ΤΗΣ ΟΘΟΝΗΣ ΑΠΟ ΚΑΤΩ) -->
-    <div class="bottom-popup-ad" id="bottomPopupAd">
-        <div class="popup-header">
-            <div class="popup-title">
+    <!-- BOTTOM SLIDE-UP AD - DURING VIDEO (1/4 ΤΗΣ ΟΘΟΝΗΣ ΑΠΟ ΚΑΤΩ) -->
+    <div class="bottom-slide-ad" id="bottomSlideAd">
+        <div class="slide-header">
+            <div class="slide-title">
                 <span>📢 Advertisement</span>
             </div>
-            <div class="popup-timer" id="popupTimer">15s</div>
-            <button class="popup-close" id="popupClose">×</button>
+            <div class="slide-timer" id="slideTimer">15s</div>
+            <button class="slide-close" id="slideClose">×</button>
         </div>
         
-        <div class="popup-content">
-            <div class="popup-ad-container">
-                <!-- POPUP AD 1 - ΔΙΑΦΟΡΕΤΙΚΟ AD SLOT -->
-                <div class="popup-ad-slot active" id="popupAd1">
-                    <div class="ad-container">
-                        <!-- GOOGLE ADSENSE AD 2 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-format="autorelaxed"
-                             data-ad-client="ca-pub-3186700611266549"
-                             data-ad-slot="9660744818"></ins>
-                    </div>
+        <div class="slide-content">
+            <div class="slide-ad-container">
+                <!-- Slide Ad 1 - ΔΙΑΦΟΡΕΤΙΚΗ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΗ -->
+                <div class="ad-slot active" id="slideAd1">
+                    <ins class="adsbygoogle adsbygoogle-slide"
+                         style="display:block"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-fb+5w+4e-db+86"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="3969235710"></ins>
                 </div>
                 
-                <!-- POPUP AD 2 - ΑΛΛΟ ΔΙΑΦΟΡΕΤΙΚΟ AD SLOT -->
-                <div class="popup-ad-slot" id="popupAd2">
-                    <div class="ad-container">
-                        <!-- GOOGLE ADSENSE AD 3 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-format="autorelaxed"
-                             data-ad-client="ca-pub-3186700611266549"
-                             data-ad-slot="9660744819"></ins>
-                    </div>
+                <!-- Slide Ad 2 - ΑΛΛΗ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΗ -->
+                <div class="ad-slot" id="slideAd2">
+                    <ins class="adsbygoogle adsbygoogle-slide"
+                         style="display:block"
+                         data-ad-format="fluid"
+                         data-ad-layout-key="-fb+5w+4e-db+86"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="3969235710"></ins>
                 </div>
-                
-                <!-- POPUP AD 3 - ΑΛΛΟ ΔΙΑΦΟΡΕΤΙΚΟ AD SLOT -->
-                <div class="popup-ad-slot" id="popupAd3">
-                    <div class="ad-container">
-                        <!-- GOOGLE ADSENSE AD 4 -->
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-format="autorelaxed"
-                             data-ad-client="ca-pub-3186700611266549"
-                             data-ad-slot="9660744820"></ins>
-                    </div>
-                </div>
+            </div>
+        </div>
+        
+        <div class="slide-footer">
+            <div class="slide-footer-text" id="slideFooterText">
+                Advertisement - Thank you for supporting our content
             </div>
         </div>
     </div>
@@ -639,19 +994,23 @@
         </div>
     </div>
 
+    <!-- Google AdSense Script (LOADED ONCE) - ΝΕΟ SCRIPT ΓΙΑ ΒΙΝΤΕΟ ADS -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
+            crossorigin="anonymous"></script>
+
     <script>
         // DOM Elements
         const firstAdOverlay = document.getElementById('firstAdOverlay');
         const waitText = document.getElementById('waitText');
         const countdownTimer = document.getElementById('countdownTimer');
         
-        const bottomPopupAd = document.getElementById('bottomPopupAd');
-        const popupTimer = document.getElementById('popupTimer');
-        const popupClose = document.getElementById('popupClose');
+        const bottomSlideAd = document.getElementById('bottomSlideAd');
+        const slideTimer = document.getElementById('slideTimer');
+        const slideClose = document.getElementById('slideClose');
+        const slideFooterText = document.getElementById('slideFooterText');
         
-        const popupAd1 = document.getElementById('popupAd1');
-        const popupAd2 = document.getElementById('popupAd2');
-        const popupAd3 = document.getElementById('popupAd3');
+        const slideAd1 = document.getElementById('slideAd1');
+        const slideAd2 = document.getElementById('slideAd2');
         
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
@@ -672,6 +1031,7 @@
         let videoDuration = 0;
         let controlsTimeout = null;
         let videoStarted = false;
+        let currentVolume = 1.0;
         let isDraggingProgress = false;
         
         // Video Title
@@ -680,21 +1040,102 @@
         // Ad System State
         let firstAdCountdown = 10;
         let firstAdInterval;
-        let popupAdCountdown = 15;
-        let currentPopupAdIndex = 0;
-        let isPopupShowing = false;
-        let popupTimerInterval;
-        let popupRotationInterval;
+        let slideAdCountdown = 15;
+        let slideInterval;
+        let currentSlideAdIndex = 0;
+        let isSlideShowing = false;
+        let slideTimerInterval;
+        let slideRotationInterval;
+        let videoStartTime = 0;
+        let adsInitialized = false;
+        
+        // Language System για τα ads
+        const languages = [
+            { 
+                code: 'en', 
+                text: 'Please wait, video is starting...',
+                banner: 'Advertisement - Thank you for supporting our content'
+            },
+            { 
+                code: 'el', 
+                text: 'Παρακαλώ περιμένετε, ξεκινάει το βίντεο...',
+                banner: 'Διαφήμιση - Ευχαριστούμε που υποστηρίζετε το περιεχόμενό μας'
+            },
+            { 
+                code: 'de', 
+                text: 'Bitte warten Sie, das Video startet...',
+                banner: 'Werbung - Vielen Dank für Ihre Unterstützung unseres Inhalts'
+            }
+        ];
+        let currentLangIndex = 0;
+        
+        // ================== ADSENSE FUNCTIONS ==================
+        
+        // Initialize AdSense ads
+        function initializeAdSense() {
+            if (adsInitialized) return;
+            
+            console.log('📢 Initializing AdSense video ads...');
+            adsInitialized = true;
+            console.log('✅ AdSense video ads ready for loading');
+        }
+        
+        // Load a specific AdSense ad
+        function loadAdSenseAd(adElement) {
+            if (!adElement) return;
+            
+            try {
+                // Check if adsbygoogle is available
+                if (typeof adsbygoogle !== 'undefined') {
+                    // Push the ad to load it - ΒΙΝΤΕΟ ADS
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log('✅ AdSense video ad loaded for: ' + adElement.className);
+                    
+                    // Additional check to ensure ad is displayed
+                    setTimeout(() => {
+                        if (adElement.offsetParent === null) {
+                            console.log('⚠️ Video ad might not be visible, retrying...');
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        }
+                    }, 1000);
+                } else {
+                    // Wait for adsbygoogle to load
+                    console.log('⏳ Waiting for adsbygoogle to load video ads...');
+                    setTimeout(() => {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            console.log('✅ AdSense video ad loaded after delay');
+                        }
+                    }, 1500);
+                }
+            } catch (e) {
+                console.log('❌ AdSense video ad load error:', e);
+            }
+        }
         
         // ================== AD SYSTEM FUNCTIONS ==================
         
-        // Start first ad (10 seconds before video)
+        // Start first ad (10 seconds before video) - ΜΕ ΒΙΝΤΕΟ ADS
         function startFirstAd() {
-            console.log('📢 Starting first Google AdSense ad (10 seconds)');
-            console.log('🎯 Ad Slot: 9660744817, Format: autorelaxed');
+            console.log('📢 Starting first AdSense video ad (10 seconds)...');
             
-            // Load the first ad immediately
-            loadAdSenseAd('firstAdContainer');
+            // Initialize AdSense
+            initializeAdSense();
+            
+            // Load first ad immediately
+            const firstAd = document.querySelector('.adsbygoogle-first');
+            if (firstAd) {
+                console.log('🔍 Found first video ad element, loading...');
+                loadAdSenseAd(firstAd);
+            } else {
+                console.log('❌ First video ad element not found');
+            }
+            
+            // Set initial language
+            updateLanguageText();
+            
+            // Start language rotation every 2 seconds
+            setInterval(updateLanguageText, 2000);
             
             // Start 10-second countdown
             firstAdCountdown = 10;
@@ -712,42 +1153,17 @@
             }, 1000);
         }
         
-        // Load Google AdSense ad
-        function loadAdSenseAd(containerId) {
-            const container = document.getElementById(containerId);
-            if (!container) {
-                console.log('❌ Ad container not found:', containerId);
-                return;
-            }
-            
-            const adElement = container.querySelector('ins.adsbygoogle');
-            if (!adElement) {
-                console.log('❌ AdSense element not found in:', containerId);
-                return;
-            }
-            
-            try {
-                if (typeof adsbygoogle !== 'undefined') {
-                    // Push the ad to load it
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ Google AdSense ad loaded for:', containerId);
-                } else {
-                    console.log('⏳ Waiting for adsbygoogle to load...');
-                    setTimeout(() => {
-                        if (typeof adsbygoogle !== 'undefined') {
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                            console.log('✅ Google AdSense ad loaded after delay for:', containerId);
-                        }
-                    }, 1000);
-                }
-            } catch (e) {
-                console.log('❌ Error loading Google AdSense ad:', e);
-            }
+        // Update language text
+        function updateLanguageText() {
+            if (currentLangIndex >= languages.length) currentLangIndex = 0;
+            waitText.textContent = languages[currentLangIndex].text;
+            slideFooterText.textContent = languages[currentLangIndex].banner;
+            currentLangIndex++;
         }
         
         // Hide first ad and start video
         function hideFirstAdAndStartVideo() {
-            console.log('🎬 First ad finished, starting video...');
+            console.log('🎬 First video ad finished, starting video...');
             
             firstAdOverlay.style.opacity = '0';
             firstAdOverlay.style.pointerEvents = 'none';
@@ -758,111 +1174,94 @@
                 // Start video with audio
                 startVideoWithAudio();
                 
-                // Start popup ad system after 5 seconds
+                // Start slide ad system after 5 seconds
                 setTimeout(() => {
-                    startPopupAdSystem();
+                    startSlideAdSystem();
                 }, 5000);
                 
             }, 500);
         }
         
-        // Popup Ad System (15% of screen from bottom)
-        function startPopupAdSystem() {
-            console.log('🔄 Starting popup Google AdSense system (15% from bottom)');
-            console.log('🎯 3 DIFFERENT AD SLOTS:');
-            console.log('  1. 9660744818');
-            console.log('  2. 9660744819'); 
-            console.log('  3. 9660744820');
-            console.log('📅 Schedule: 15s ad → 5s pause → repeat');
+        // Slide Ad System (ΒΓΑΙΝΕΙ ΑΠΟ ΚΑΤΩ ΠΡΟΣ ΤΑ ΠΑΝΩ)
+        function startSlideAdSystem() {
+            console.log('🔄 Starting slide-up video ad system (1/4 of screen)...');
             
-            // Load all popup ads initially
-            loadAdSenseAd('popupAd1');
-            setTimeout(() => loadAdSenseAd('popupAd2'), 500);
-            setTimeout(() => loadAdSenseAd('popupAd3'), 1000);
-            
-            // Show first popup ad
-            showPopupAd();
+            // Show first slide ad
+            showSlideAd();
             
             // Set up rotation: 15 seconds ad, 5 seconds pause, repeat
-            popupRotationInterval = setInterval(() => {
-                if (!isPopupShowing) {
-                    showPopupAd();
+            slideRotationInterval = setInterval(() => {
+                if (!isSlideShowing) {
+                    showSlideAd();
                 }
             }, 20000); // 15s ad + 5s pause = 20s total cycle
         }
         
-        // Show popup ad (slide-up από κάτω - 15% της οθόνης)
-        function showPopupAd() {
-            if (isPopupShowing) return;
+        // Show slide ad (slide-up από κάτω) - ΜΕ ΒΙΝΤΕΟ ADS
+        function showSlideAd() {
+            if (isSlideShowing) return;
             
-            console.log(`📢 Showing popup Google AdSense ad ${currentPopupAdIndex + 1}`);
-            isPopupShowing = true;
+            console.log(`📢 Showing slide-up video ad ${currentSlideAdIndex + 1}...`);
+            isSlideShowing = true;
             
-            // Hide all popup ads
-            document.querySelectorAll('.popup-ad-slot').forEach(ad => {
+            // Hide all ads
+            document.querySelectorAll('.ad-slot').forEach(ad => {
                 ad.classList.remove('active');
             });
             
-            // Show current popup ad
-            let currentAd;
-            let adSlot;
-            switch(currentPopupAdIndex) {
-                case 0:
-                    currentAd = popupAd1;
-                    adSlot = '9660744818';
-                    break;
-                case 1:
-                    currentAd = popupAd2;
-                    adSlot = '9660744819';
-                    break;
-                case 2:
-                    currentAd = popupAd3;
-                    adSlot = '9660744820';
-                    break;
-            }
+            // Show current ad
+            const currentAd = currentSlideAdIndex === 0 ? slideAd1 : slideAd2;
+            currentAd.classList.add('active');
             
-            if (currentAd) {
-                currentAd.classList.add('active');
-                console.log('🎯 Using Ad Slot:', adSlot);
-            }
-            
-            // Show popup ad (slide-up animation)
-            bottomPopupAd.classList.remove('hidden');
+            // Load the appropriate AdSense video ad
             setTimeout(() => {
-                bottomPopupAd.classList.add('visible');
+                const adElement = currentSlideAdIndex === 0 ? 
+                    document.querySelector('#slideAd1 .adsbygoogle-slide') : 
+                    document.querySelector('#slideAd2 .adsbygoogle-slide');
+                
+                if (adElement) {
+                    console.log(`🔍 Loading video ad ${currentSlideAdIndex + 1}...`);
+                    loadAdSenseAd(adElement);
+                }
+            }, 100);
+            
+            // Show slide ad (slide-up animation)
+            bottomSlideAd.classList.remove('hidden');
+            setTimeout(() => {
+                bottomSlideAd.classList.add('visible');
             }, 10);
             
             // Start 15-second countdown
-            popupAdCountdown = 15;
-            popupTimer.textContent = popupAdCountdown + 's';
+            slideAdCountdown = 15;
+            slideTimer.textContent = slideAdCountdown + 's';
             
-            clearInterval(popupTimerInterval);
-            popupTimerInterval = setInterval(() => {
-                popupAdCountdown--;
-                popupTimer.textContent = popupAdCountdown + 's';
+            clearInterval(slideTimerInterval);
+            slideTimerInterval = setInterval(() => {
+                slideAdCountdown--;
+                slideTimer.textContent = slideAdCountdown + 's';
                 
-                if (popupAdCountdown <= 0) {
-                    hidePopupAd();
+                if (slideAdCountdown <= 0) {
+                    hideSlideAd();
                 }
             }, 1000);
             
             // Rotate to next ad for next time
-            currentPopupAdIndex = (currentPopupAdIndex + 1) % 3;
+            currentSlideAdIndex = (currentSlideAdIndex + 1) % 2;
         }
         
-        // Hide popup ad (slide-down)
-        function hidePopupAd() {
-            console.log('📢 Hiding popup ad (5 second pause)...');
-            isPopupShowing = false;
+        // Hide slide ad (slide-down)
+        function hideSlideAd() {
+            console.log('📢 Hiding slide-up video ad...');
+            isSlideShowing = false;
             
-            clearInterval(popupTimerInterval);
+            clearInterval(slideTimerInterval);
             
-            bottomPopupAd.classList.remove('visible');
+            bottomSlideAd.classList.remove('visible');
             setTimeout(() => {
-                bottomPopupAd.classList.add('hidden');
-            }, 400);
+                bottomSlideAd.classList.add('hidden');
+            }, 500);
             
-            // Next ad will show after 5 seconds (handled by rotation interval)
+            // Ad will show again after 5 seconds (handled by rotation interval)
         }
         
         // ================== VIDEO SYSTEM FUNCTIONS ==================
@@ -873,6 +1272,7 @@
             
             console.log('▶️ Starting video with audio setup...');
             videoStarted = true;
+            videoStartTime = Date.now();
             
             // Βασική ρύθμιση για audio
             mainVideo.muted = true;
@@ -941,13 +1341,13 @@
             videoProgressHandle.style.left = progress + '%';
         }
         
-        // Show/hide controls (adjusted for popup ad)
+        // Show/hide controls (adjusted for slide ad)
         function showControls() {
             videoControls.classList.add('visible');
             videoProgressContainer.style.opacity = '1';
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
-                if (isPlaying && !isPopupShowing) {
+                if (isPlaying && !isSlideShowing) {
                     videoControls.classList.remove('visible');
                     videoProgressContainer.style.opacity = '0';
                 }
@@ -1018,15 +1418,6 @@
         function handleVideoEnd() {
             console.log('🔄 Video ended - restarting from beginning');
             
-            // Clear all ad intervals when video ends
-            clearInterval(popupRotationInterval);
-            clearInterval(popupTimerInterval);
-            
-            // Hide popup if showing
-            if (isPopupShowing) {
-                hidePopupAd();
-            }
-            
             mainVideo.currentTime = 0;
             
             const playPromise = mainVideo.play();
@@ -1035,11 +1426,6 @@
                     console.log('⚠️ Auto-restart failed:', e);
                 });
             }
-            
-            // Restart popup ad system after 5 seconds
-            setTimeout(() => {
-                startPopupAdSystem();
-            }, 5000);
         }
         
         // ================== EVENT LISTENERS ==================
@@ -1053,7 +1439,7 @@
             mainVideo.volume = 1.0;
             mainVideo.loop = true;
             
-            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΠΡΩΤΗΣ ΔΙΑΦΗΜΙΣΗΣ
+            // ΑΥΤΟΜΑΤΗ ΕΚΚΙΝΗΣΗ ΠΡΩΤΗΣ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΗΣ
             startFirstAd();
         });
         
@@ -1143,14 +1529,14 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // Popup close button
-        popupClose.addEventListener('click', hidePopupAd);
+        // Slide close button
+        slideClose.addEventListener('click', hideSlideAd);
         
         // Show controls on touch/mouse move
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
-        // Initial setup
+        // Initial setup - ΑΜΕΣΑ ΦΟΡΤΩΝΟΥΜΕ ΤΙΣ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΕΙΣ
         window.addEventListener('load', () => {
             if (window.history.replaceState) {
                 window.history.replaceState(null, null, window.location.pathname);
@@ -1158,11 +1544,10 @@
             
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            console.log('🚀 Page loaded - Video Player with Google AdSense ready');
-            console.log('🎯 AD SYSTEM: GOOGLE ADSENSE + GOOGLE ADS');
-            console.log('  1. Google Ads script loaded in <head> for Auto Ads');
-            console.log('  2. Google AdSense ads in specific slots');
-            console.log('  3. 4 DIFFERENT AD SLOTS for maximum variety');
+            console.log('🚀 Page loaded - AdSense video ads system ready...');
+            
+            // Initialize AdSense immediately
+            initializeAdSense();
             
             // Προσθήκη touch event listeners
             document.addEventListener('touchstart', function(e) {
@@ -1198,9 +1583,9 @@
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 console.log('📺 Entered fullscreen mode');
-                // Hide popup ad when in fullscreen
-                if (isPopupShowing) {
-                    hidePopupAd();
+                // Hide slide ad when in fullscreen
+                if (isSlideShowing) {
+                    hideSlideAd();
                 }
             } else {
                 console.log('📺 Exited fullscreen mode');
@@ -1208,11 +1593,16 @@
         });
         
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ Video Player ready with PROPER GOOGLE AD SYSTEM');
-        console.log('🎯 Google Ads + AdSense Integration:');
-        console.log('  - Google Ads script: Auto placement capability');
-        console.log('  - Google AdSense ads: 4 specific ad slots');
-        console.log('  - Format: autorelaxed for optimal display');
+        console.log('✅ FmD Video Player ready with WORKING VIDEO AdSense System');
+        console.log('🎯 ΤΩΡΑ ΛΕΙΤΟΥΡΓΕΙ ΚΑΝΟΝΙΚΑ ΜΕ ΒΙΝΤΕΟ ADS:');
+        console.log('  - ΠΡΩΤΗ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΗ: ΜΕΓΑΛΩΜΕΝΗ - ΕΜΦΑΝΙΖΕΤΑΙ ΚΑΝΟΝΙΚΑ');
+        console.log('  - SLIDE-UP ΒΙΝΤΕΟ ADS: 2 ΔΙΑΦΟΡΕΤΙΚΕΣ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΕΙΣ');
+        console.log('  - ΜΕΓΕΘΟΣ: 1/4 της οθόνης (25vh) στη βάση');
+        console.log('  - Ad Schedule: 15s βίντεο διαφήμιση → 5s παύση → 15s βίντεο διαφήμιση');
+        console.log('  - ΓΛΩΣΣΕΣ: Αγγλικά, Ελληνικά, Γερμανικά');
+        console.log('  - AdSense: Χρησιμοποιεί ΤΟ ΝΕΟ VIDEO AD SCRIPT');
+        console.log('  - ΌΛΑ ΤΑ BANNERS ΕΧΟΥΝ ΤΟ ΣΩΣΤΟ VIDEO AD FORMAT');
+        console.log('  - PRIVACY TEXT: Μικρό και στην κάτω δεξιά γωνία');
         
         // Additional audio enabling
         document.addEventListener('click', function() {
