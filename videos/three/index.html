@@ -46,6 +46,10 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
     
+    <!-- GOOGLE ADS SCRIPT (Auto Ads) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
+            crossorigin="anonymous"></script>
+    
     <style>
         * {
             margin: 0;
@@ -538,16 +542,12 @@
             <div class="first-ad-content">
                 <!-- ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ - AD SLOT 1 -->
                 <div class="ad-container" id="firstAdContainer">
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                            crossorigin="anonymous"></script>
+                    <!-- GOOGLE ADSENSE AD -->
                     <ins class="adsbygoogle"
                          style="display:block"
                          data-ad-format="autorelaxed"
                          data-ad-client="ca-pub-3186700611266549"
                          data-ad-slot="9660744817"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
                 </div>
             </div>
             <div class="first-ad-footer">
@@ -574,48 +574,36 @@
                 <!-- POPUP AD 1 - ΔΙΑΦΟΡΕΤΙΚΟ AD SLOT -->
                 <div class="popup-ad-slot active" id="popupAd1">
                     <div class="ad-container">
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                                crossorigin="anonymous"></script>
+                        <!-- GOOGLE ADSENSE AD 2 -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-format="autorelaxed"
                              data-ad-client="ca-pub-3186700611266549"
                              data-ad-slot="9660744818"></ins>
-                        <script>
-                             (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
                     </div>
                 </div>
                 
                 <!-- POPUP AD 2 - ΑΛΛΟ ΔΙΑΦΟΡΕΤΙΚΟ AD SLOT -->
                 <div class="popup-ad-slot" id="popupAd2">
                     <div class="ad-container">
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                                crossorigin="anonymous"></script>
+                        <!-- GOOGLE ADSENSE AD 3 -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-format="autorelaxed"
                              data-ad-client="ca-pub-3186700611266549"
                              data-ad-slot="9660744819"></ins>
-                        <script>
-                             (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
                     </div>
                 </div>
                 
                 <!-- POPUP AD 3 - ΑΛΛΟ ΔΙΑΦΟΡΕΤΙΚΟ AD SLOT -->
                 <div class="popup-ad-slot" id="popupAd3">
                     <div class="ad-container">
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                                crossorigin="anonymous"></script>
+                        <!-- GOOGLE ADSENSE AD 4 -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-format="autorelaxed"
                              data-ad-client="ca-pub-3186700611266549"
                              data-ad-slot="9660744820"></ins>
-                        <script>
-                             (adsbygoogle = window.adsbygoogle || []).push({});
-                        </script>
                     </div>
                 </div>
             </div>
@@ -702,8 +690,11 @@
         
         // Start first ad (10 seconds before video)
         function startFirstAd() {
-            console.log('📢 Starting first ad (10 seconds) - Center of screen');
+            console.log('📢 Starting first Google AdSense ad (10 seconds)');
             console.log('🎯 Ad Slot: 9660744817, Format: autorelaxed');
+            
+            // Load the first ad immediately
+            loadAdSenseAd('firstAdContainer');
             
             // Start 10-second countdown
             firstAdCountdown = 10;
@@ -719,6 +710,39 @@
                     hideFirstAdAndStartVideo();
                 }
             }, 1000);
+        }
+        
+        // Load Google AdSense ad
+        function loadAdSenseAd(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.log('❌ Ad container not found:', containerId);
+                return;
+            }
+            
+            const adElement = container.querySelector('ins.adsbygoogle');
+            if (!adElement) {
+                console.log('❌ AdSense element not found in:', containerId);
+                return;
+            }
+            
+            try {
+                if (typeof adsbygoogle !== 'undefined') {
+                    // Push the ad to load it
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log('✅ Google AdSense ad loaded for:', containerId);
+                } else {
+                    console.log('⏳ Waiting for adsbygoogle to load...');
+                    setTimeout(() => {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            console.log('✅ Google AdSense ad loaded after delay for:', containerId);
+                        }
+                    }, 1000);
+                }
+            } catch (e) {
+                console.log('❌ Error loading Google AdSense ad:', e);
+            }
         }
         
         // Hide first ad and start video
@@ -744,12 +768,17 @@
         
         // Popup Ad System (15% of screen from bottom)
         function startPopupAdSystem() {
-            console.log('🔄 Starting popup ad system (15% from bottom)...');
+            console.log('🔄 Starting popup Google AdSense system (15% from bottom)');
             console.log('🎯 3 DIFFERENT AD SLOTS:');
             console.log('  1. 9660744818');
             console.log('  2. 9660744819'); 
             console.log('  3. 9660744820');
             console.log('📅 Schedule: 15s ad → 5s pause → repeat');
+            
+            // Load all popup ads initially
+            loadAdSenseAd('popupAd1');
+            setTimeout(() => loadAdSenseAd('popupAd2'), 500);
+            setTimeout(() => loadAdSenseAd('popupAd3'), 1000);
             
             // Show first popup ad
             showPopupAd();
@@ -766,7 +795,7 @@
         function showPopupAd() {
             if (isPopupShowing) return;
             
-            console.log(`📢 Showing popup ad ${currentPopupAdIndex + 1}...`);
+            console.log(`📢 Showing popup Google AdSense ad ${currentPopupAdIndex + 1}`);
             isPopupShowing = true;
             
             // Hide all popup ads
@@ -776,23 +805,25 @@
             
             // Show current popup ad
             let currentAd;
+            let adSlot;
             switch(currentPopupAdIndex) {
                 case 0:
                     currentAd = popupAd1;
-                    console.log('🎯 Using Ad Slot: 9660744818');
+                    adSlot = '9660744818';
                     break;
                 case 1:
                     currentAd = popupAd2;
-                    console.log('🎯 Using Ad Slot: 9660744819');
+                    adSlot = '9660744819';
                     break;
                 case 2:
                     currentAd = popupAd3;
-                    console.log('🎯 Using Ad Slot: 9660744820');
+                    adSlot = '9660744820';
                     break;
             }
             
             if (currentAd) {
                 currentAd.classList.add('active');
+                console.log('🎯 Using Ad Slot:', adSlot);
             }
             
             // Show popup ad (slide-up animation)
@@ -1127,11 +1158,11 @@
             
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            console.log('🚀 Page loaded - Video Player with Ad System ready');
-            console.log('🎯 AD SYSTEM: NO BANNERS - ONLY ADS');
-            console.log('  1. FIRST AD (10 seconds): Center screen');
-            console.log('  2. POPUP ADS (15% from bottom): 15s → 5s pause → repeat');
-            console.log('  3. 3 DIFFERENT AD SLOTS for variety');
+            console.log('🚀 Page loaded - Video Player with Google AdSense ready');
+            console.log('🎯 AD SYSTEM: GOOGLE ADSENSE + GOOGLE ADS');
+            console.log('  1. Google Ads script loaded in <head> for Auto Ads');
+            console.log('  2. Google AdSense ads in specific slots');
+            console.log('  3. 4 DIFFERENT AD SLOTS for maximum variety');
             
             // Προσθήκη touch event listeners
             document.addEventListener('touchstart', function(e) {
@@ -1177,8 +1208,11 @@
         });
         
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ Video Player ready - NO BANNERS, ONLY ADS');
-        console.log('🎯 Clean ad system without banners');
+        console.log('✅ Video Player ready with PROPER GOOGLE AD SYSTEM');
+        console.log('🎯 Google Ads + AdSense Integration:');
+        console.log('  - Google Ads script: Auto placement capability');
+        console.log('  - Google AdSense ads: 4 specific ad slots');
+        console.log('  - Format: autorelaxed for optimal display');
         
         // Additional audio enabling
         document.addEventListener('click', function() {
