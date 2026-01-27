@@ -65,39 +65,55 @@
             user-select: none;
         }
         
-        /* VIDEO BACKGROUND ΠΡΙΝ ΤΙΣ ΔΙΑΦΗΜΙΣΕΙΣ */
-        #videoBackground {
+        /* BACKGROUND VIDEO BEHIND FIRST AD */
+        .background-video {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             object-fit: cover;
-            z-index: -1;
-            opacity: 0.3;
-            filter: blur(15px) brightness(0.4);
+            z-index: 0;
+            filter: blur(10px) brightness(0.3);
+            opacity: 0.7;
         }
         
-        /* GOOGLE BANNER - ΚΡΥΒΕΤΑΙ ΟΤΑΝ ΞΕΚΙΝΗΣΕΙ ΤΟ ΒΙΝΤΕΟ */
-        #googleBanner {
+        /* COOKIE/PRIVACY BANNER */
+        .cookie-banner {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background: rgba(26, 26, 46, 0.95);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 10px;
-            padding: 8px 15px;
-            text-align: center;
-            z-index: 10001;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 15px 20px;
+            z-index: 10002;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: transform 0.5s ease;
         }
         
-        #googleBanner.hidden {
-            opacity: 0;
+        .cookie-banner.hidden {
             transform: translateY(100%);
-            pointer-events: none;
+        }
+        
+        .cookie-text {
+            font-size: 14px;
+            flex: 1;
+            margin-right: 20px;
+        }
+        
+        .cookie-close {
+            background: #1d9bf0;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            white-space: nowrap;
         }
         
         /* FIRST AD OVERLAY - BEFORE VIDEO STARTS (ΜΕΓΑΛΩΜΕΝΟ) */
@@ -107,13 +123,14 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 10000;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10001;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             transition: opacity 0.5s ease;
+            backdrop-filter: blur(5px);
         }
         
         .first-ad-container {
@@ -121,126 +138,41 @@
             max-width: 500px;
             height: 80vh;
             max-height: 600px;
-            background: rgba(20, 20, 30, 0.9);
-            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(25px);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
             position: relative;
             display: flex;
             flex-direction: column;
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
-        .first-ad-header {
-            padding: 15px 20px;
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            text-align: center;
-            border-bottom: 2px solid #ffcb2e;
-        }
-        
-        .first-ad-header h3 {
-            font-size: 16px;
-            color: #ffcb2e;
-            font-weight: 600;
-        }
-        
         .first-ad-content {
             flex: 1;
             width: 100%;
-            min-height: 0;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-        }
-        
-        /* ΚΑΘΕ AD BLOCK ΜΕΣΑ ΣΤΟ ΠΛΑΙΣΙΟ */
-        .ad-block {
-            background: rgba(30, 30, 45, 0.7);
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .ad-block:hover {
-            transform: translateY(-2px);
-            background: rgba(40, 40, 60, 0.8);
-            border-color: rgba(255, 203, 46, 0.3);
-        }
-        
-        .ad-block.active {
-            border: 2px solid #ffcb2e;
-            background: rgba(40, 40, 60, 0.9);
-        }
-        
-        .ad-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #ffcb2e;
-            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            min-height: 0;
+            padding: 20px;
         }
         
-        .ad-title i {
-            font-size: 16px;
-        }
-        
-        .ad-media {
-            width: 100%;
-            height: 120px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            position: relative;
-        }
-        
-        .ad-media video,
-        .ad-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .ad-description {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.4;
-            margin-bottom: 10px;
-        }
-        
-        .ad-cta {
-            background: linear-gradient(45deg, #ffcb2e, #ff9900);
-            color: #000;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-            text-align: center;
-            display: block;
-            width: 100%;
-            transition: all 0.3s;
-        }
-        
-        .ad-cta:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(255, 203, 46, 0.4);
+        /* GOOGLE ADSENSE AD STYLES */
+        .adsbygoogle-first {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+            min-height: 400px;
         }
         
         .first-ad-footer {
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            background: rgba(26, 26, 46, 0.9);
+            background: rgba(26, 26, 46, 0.85);
             color: #fff;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             border-top: 3px solid #ffcb2e;
             display: flex;
@@ -363,80 +295,28 @@
             width: 100%;
             height: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.03);
-            padding: 10px;
         }
         
-        /* POP-UP ADS STYLES - ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ ΣΕ ΚΑΘΕ POP-UP */
-        .popup-ad {
+        /* GOOGLE ADSENSE BANNER AD */
+        .adsbygoogle-banner {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+        }
+        
+        /* Ad Slot Styles */
+        .ad-slot {
             width: 100%;
             height: 100%;
             display: none;
-            flex-direction: column;
-            gap: 10px;
         }
         
-        .popup-ad.active {
-            display: flex;
-        }
-        
-        .popup-ad-media {
-            width: 100%;
-            flex: 1;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .popup-ad-media video,
-        .popup-ad-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .popup-ad-info {
-            padding: 10px;
-            background: rgba(30, 30, 45, 0.8);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .popup-ad-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #ffcb2e;
-            margin-bottom: 5px;
-        }
-        
-        .popup-ad-description {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.3;
-            margin-bottom: 8px;
-        }
-        
-        .popup-ad-cta {
-            background: linear-gradient(45deg, #1d9bf0, #0066cc);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s;
-        }
-        
-        .popup-ad-cta:hover {
-            transform: scale(1.05);
-            box-shadow: 0 3px 10px rgba(29, 155, 240, 0.4);
+        .ad-slot.active {
+            display: block;
         }
         
         .slide-footer {
@@ -474,7 +354,6 @@
             opacity: 1;
         }
         
-        /* VIDEO - OPTIMIZED FOR MOBILE DISPLAY */
         #mainVideo {
             position: absolute;
             width: 100%;
@@ -648,142 +527,424 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        /* RESPONSIVE STYLES */
+        /* TABLET OPTIMIZATIONS */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .first-ad-container {
+                width: 90%;
+                max-width: 550px;
+                height: 75vh;
+                max-height: 650px;
+            }
+            
+            .first-ad-footer {
+                font-size: 18px;
+                padding: 22px;
+                gap: 12px;
+            }
+            
+            .countdown-text {
+                gap: 10px;
+            }
+            
+            .countdown-timer {
+                font-size: 30px;
+                padding: 5px 12px;
+                min-width: 48px;
+            }
+            
+            .bottom-slide-ad {
+                height: 25vh;
+            }
+            
+            .slide-header {
+                padding: 10px 18px 6px;
+            }
+            
+            .slide-title {
+                font-size: 13px;
+            }
+            
+            .slide-timer {
+                font-size: 11px;
+                padding: 2px 7px;
+            }
+            
+            .slide-close {
+                width: 22px;
+                height: 22px;
+                font-size: 15px;
+            }
+            
+            .video-controls {
+                padding: 15px 22px;
+                bottom: 30px;
+                left: 25px;
+                right: 25px;
+            }
+            
+            .control-btn {
+                font-size: 22px;
+                min-width: 48px;
+                min-height: 48px;
+                padding: 9px;
+            }
+            
+            .time-display {
+                font-size: 16px;
+                padding: 9px 14px;
+            }
+            
+            .video-progress-container {
+                bottom: 120px;
+                left: 25px;
+                right: 25px;
+                height: 5px;
+            }
+            
+            .video-progress-handle {
+                width: 15px;
+                height: 15px;
+            }
+        }
+        
+        /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
+            .cookie-banner {
+                padding: 12px 15px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .cookie-text {
+                font-size: 12px;
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .cookie-close {
+                align-self: flex-end;
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+            
             .first-ad-container {
                 width: 95%;
                 max-width: 400px;
-                height: 75vh;
+                height: 70vh;
                 max-height: 550px;
-            }
-            
-            .ad-media {
-                height: 100px;
             }
             
             .first-ad-footer {
                 font-size: 16px;
-                padding: 15px;
+                padding: 18px;
+                gap: 10px;
+                flex-direction: column;
+            }
+            
+            .countdown-text {
+                flex-direction: row;
+                gap: 8px;
             }
             
             .countdown-timer {
                 font-size: 28px;
+                padding: 4px 10px;
+                min-width: 45px;
             }
             
-            .popup-ad-media {
-                height: 100px;
+            .bottom-slide-ad {
+                height: 25vh;
+            }
+            
+            .slide-header {
+                padding: 8px 15px 6px;
+            }
+            
+            .slide-title {
+                font-size: 12px;
+            }
+            
+            .slide-timer {
+                font-size: 10px;
+                padding: 2px 6px;
+                min-width: 35px;
+            }
+            
+            .slide-close {
+                width: 20px;
+                height: 20px;
+                font-size: 14px;
+            }
+            
+            .slide-content {
+                padding: 8px;
+            }
+            
+            .slide-footer {
+                padding: 6px 12px;
+            }
+            
+            .slide-footer-text {
+                font-size: 10px;
+            }
+            
+            .video-play-overlay {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .video-play-overlay::after {
+                font-size: 24px;
+            }
+            
+            .video-controls {
+                padding: 12px 18px;
+                gap: 12px;
+                bottom: 25px;
+                left: 15px;
+                right: 15px;
+                border-radius: 25px;
+            }
+            
+            .control-btn {
+                font-size: 20px;
+                min-width: 44px;
+                min-height: 44px;
+                padding: 8px;
+            }
+            
+            .time-display {
+                font-size: 14px;
+                padding: 8px 12px;
+                border-radius: 12px;
+            }
+            
+            .video-progress-container {
+                bottom: 95px;
+                left: 15px;
+                right: 15px;
+                height: 4px;
+            }
+            
+            .video-progress-handle {
+                width: 14px;
+                height: 14px;
             }
         }
         
+        /* VERY SMALL MOBILE */
         @media (max-width: 480px) {
+            .cookie-banner {
+                padding: 10px 12px;
+            }
+            
+            .cookie-text {
+                font-size: 11px;
+            }
+            
+            .cookie-close {
+                padding: 5px 10px;
+                font-size: 12px;
+            }
+            
             .first-ad-container {
                 width: 98%;
                 max-width: 350px;
-                height: 70vh;
+                height: 65vh;
                 max-height: 500px;
-            }
-            
-            .ad-media {
-                height: 80px;
-            }
-            
-            .ad-block {
-                padding: 12px;
-            }
-            
-            .ad-title {
-                font-size: 13px;
-            }
-            
-            .ad-description {
-                font-size: 11px;
             }
             
             .first-ad-footer {
                 font-size: 14px;
+                padding: 15px;
+                gap: 8px;
+            }
+            
+            .countdown-text {
+                gap: 6px;
             }
             
             .countdown-timer {
                 font-size: 26px;
+                padding: 3px 8px;
+                min-width: 40px;
             }
             
-            .popup-ad-media {
-                height: 80px;
+            .bottom-slide-ad {
+                height: 25vh;
+            }
+            
+            .slide-header {
+                padding: 6px 12px 4px;
+            }
+            
+            .slide-title {
+                font-size: 11px;
+            }
+            
+            .slide-timer {
+                font-size: 9px;
+                padding: 1px 5px;
+                min-width: 30px;
+            }
+            
+            .slide-close {
+                width: 18px;
+                height: 18px;
+                font-size: 12px;
+            }
+            
+            .slide-content {
+                padding: 6px;
+            }
+            
+            .slide-footer {
+                padding: 4px 10px;
+            }
+            
+            .slide-footer-text {
+                font-size: 9px;
+            }
+            
+            .video-play-overlay {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .video-play-overlay::after {
+                font-size: 20px;
+            }
+            
+            .video-controls {
+                padding: 10px 15px;
+                gap: 10px;
+                bottom: 20px;
+                left: 12px;
+                right: 12px;
+                border-radius: 20px;
+            }
+            
+            .control-btn {
+                font-size: 18px;
+                min-width: 40px;
+                min-height: 40px;
+                padding: 6px;
+            }
+            
+            .time-display {
+                font-size: 12px;
+                padding: 7px 10px;
+                border-radius: 10px;
+            }
+            
+            .video-progress-container {
+                bottom: 85px;
+                left: 12px;
+                right: 12px;
+                height: 3px;
+            }
+            
+            .video-progress-handle {
+                width: 12px;
+                height: 12px;
+            }
+        }
+        
+        /* SAFARI SPECIFIC FIXES */
+        @supports (-webkit-touch-callout: none) {
+            .video-container {
+                height: -webkit-fill-available;
+            }
+            
+            .video-controls {
+                -webkit-backdrop-filter: blur(30px);
+                backdrop-filter: blur(30px);
+            }
+        }
+        
+        /* LANDSCAPE MODE */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .cookie-banner {
+                padding: 8px 10px;
+            }
+            
+            .first-ad-container {
+                width: 85%;
+                height: 90vh;
+                max-height: none;
+            }
+            
+            .bottom-slide-ad {
+                height: 30vh;
+            }
+            
+            .bottom-slide-ad.hidden {
+                bottom: -30vh;
+            }
+            
+            .video-controls {
+                padding: 8px 15px;
+                bottom: 35px;
+                left: 15px;
+                right: 15px;
+                border-radius: 20px;
+            }
+            
+            .control-btn {
+                font-size: 18px;
+                min-width: 38px;
+                min-height: 38px;
+                padding: 6px;
+            }
+            
+            .time-display {
+                font-size: 12px;
+                padding: 6px 10px;
+                border-radius: 10px;
+            }
+            
+            .video-progress-container {
+                bottom: 80px;
+                left: 15px;
+                right: 15px;
+                height: 3px;
+            }
+            
+            .video-progress-handle {
+                width: 12px;
+                height: 12px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- VIDEO BACKGROUND - ΠΡΩΤΟ ΚΑΡΕ ΤΟΥ ΒΙΝΤΕΟ -->
-    <video id="videoBackground" muted loop preload="metadata">
+    <!-- BACKGROUND VIDEO BEHIND FIRST AD -->
+    <video class="background-video" id="backgroundVideo" autoplay muted loop playsinline>
         <source src="https://blog.franklymadear.com/videos/three/video99.mp4" type="video/mp4">
+        Your browser does not support the video tag.
     </video>
-    
-    <!-- GOOGLE BANNER - ΚΡΥΒΕΤΑΙ ΟΤΑΝ ΞΕΚΙΝΗΣΕΙ ΤΟ ΒΙΝΤΕΟ -->
-    <div id="googleBanner">
-        Privacy and cookie settings Managed by Google. Complies with IAB TCF. CMP ID: 300
+
+    <!-- COOKIE/PRIVACY BANNER -->
+    <div class="cookie-banner" id="cookieBanner">
+        <div class="cookie-text">
+            Privacy and cookie settings - Managed by Google. Complies with IAB TCF. CMP ID: 300
+        </div>
+        <button class="cookie-close" id="cookieClose">OK</button>
     </div>
-    
-    <!-- FIRST AD OVERLAY - 3 ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ -->
+
+    <!-- FIRST AD OVERLAY - BEFORE VIDEO (10 SECONDS) -->
     <div class="first-ad-overlay" id="firstAdOverlay">
         <div class="first-ad-container">
-            <div class="first-ad-header">
-                <h3>📺 Sponsored Content - Please wait 10 seconds</h3>
-            </div>
-            
             <div class="first-ad-content">
-                <!-- ΔΙΑΦΗΜΙΣΗ 1 - ΒΙΝΤΕΟ -->
-                <div class="ad-block active" id="ad1">
-                    <div class="ad-title">
-                        <i>🎬</i> Premium Streaming Service
-                    </div>
-                    <div class="ad-media">
-                        <!-- Θα μπορούσε να είναι βίντεο ad -->
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:18px;">
-                            VIDEO AD
-                        </div>
-                    </div>
-                    <div class="ad-description">
-                        Watch exclusive content on our premium streaming platform. 30-day free trial available!
-                    </div>
-                    <button class="ad-cta">Start Free Trial</button>
-                </div>
-                
-                <!-- ΔΙΑΦΗΜΙΣΗ 2 - ΦΩΤΟΓΡΑΦΙΑ -->
-                <div class="ad-block" id="ad2">
-                    <div class="ad-title">
-                        <i>🛒</i> E-commerce Special Offer
-                    </div>
-                    <div class="ad-media">
-                        <!-- Θα μπορούσε να είναι φωτογραφία ad -->
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#f093fb,#f5576c);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:18px;">
-                            PHOTO AD
-                        </div>
-                    </div>
-                    <div class="ad-description">
-                        Limited time offer! Get 50% off on all products. Free shipping worldwide.
-                    </div>
-                    <button class="ad-cta">Shop Now</button>
-                </div>
-                
-                <!-- ΔΙΑΦΗΜΙΣΗ 3 - ΒΙΝΤΕΟ -->
-                <div class="ad-block" id="ad3">
-                    <div class="ad-title">
-                        <i>🎮</i> New Game Release
-                    </div>
-                    <div class="ad-media">
-                        <!-- Θα μπορούσε να είναι βίντεο ad -->
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#4facfe,#00f2fe);display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;font-size:18px;">
-                            VIDEO AD
-                        </div>
-                    </div>
-                    <div class="ad-description">
-                        Experience the next generation of gaming. Pre-order now and get exclusive bonuses!
-                    </div>
-                    <button class="ad-cta">Pre-order Now</button>
-                </div>
+                <!-- GOOGLE ADSENSE AD FOR FIRST OVERLAY -->
+                <ins class="adsbygoogle adsbygoogle-first"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3969235710"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
             </div>
-            
             <div class="first-ad-footer">
                 <div class="countdown-text">
                     <span id="waitText">Please wait, video is starting...</span>
@@ -793,7 +954,7 @@
         </div>
     </div>
 
-    <!-- BOTTOM SLIDE-UP AD - ΔΙΑΦΟΡΕΤΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ ΣΕ ΚΑΘΕ POP-UP -->
+    <!-- BOTTOM SLIDE-UP AD - DURING VIDEO (1/4 ΤΗΣ ΟΘΟΝΗΣ ΑΠΟ ΚΑΤΩ) -->
     <div class="bottom-slide-ad" id="bottomSlideAd">
         <div class="slide-header">
             <div class="slide-title">
@@ -805,49 +966,24 @@
         
         <div class="slide-content">
             <div class="slide-ad-container">
-                <!-- POP-UP AD 1 - ΠΡΩΤΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
-                <div class="popup-ad active" id="popupAd1">
-                    <div class="popup-ad-media">
-                        <!-- ΒΙΝΤΕΟ/ΦΩΤΟ ΔΙΑΦΗΜΙΣΗΣ -->
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#ff9a9e,#fad0c4);display:flex;align-items:center;justify-content:center;color:#333;font-weight:bold;font-size:16px;">
-                            AD 1: Travel Deal
-                        </div>
-                    </div>
-                    <div class="popup-ad-info">
-                        <div class="popup-ad-title">✈️ Exclusive Travel Offer</div>
-                        <div class="popup-ad-description">Book your dream vacation now and save up to 60% on flights and hotels worldwide.</div>
-                        <button class="popup-ad-cta">Explore Deals</button>
-                    </div>
+                <!-- Slide Ad 1 - GOOGLE ADSENSE BANNER AD -->
+                <div class="ad-slot active" id="slideAd1">
+                    <ins class="adsbygoogle adsbygoogle-banner"
+                         style="display:block"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="3969235710"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
                 </div>
                 
-                <!-- POP-UP AD 2 - ΔΕΥΤΕΡΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
-                <div class="popup-ad" id="popupAd2">
-                    <div class="popup-ad-media">
-                        <!-- ΒΙΝΤΕΟ/ΦΩΤΟ ΔΙΑΦΗΜΙΣΗΣ -->
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#a1c4fd,#c2e9fb);display:flex;align-items:center;justify-content:center;color:#333;font-weight:bold;font-size:16px;">
-                            AD 2: Tech Product
-                        </div>
-                    </div>
-                    <div class="popup-ad-info">
-                        <div class="popup-ad-title">📱 New Tech Release</div>
-                        <div class="popup-ad-description">Revolutionary new device with cutting-edge features. Limited stock available!</div>
-                        <button class="popup-ad-cta">Learn More</button>
-                    </div>
-                </div>
-                
-                <!-- POP-UP AD 3 - ΤΡΙΤΗ ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
-                <div class="popup-ad" id="popupAd3">
-                    <div class="popup-ad-media">
-                        <!-- ΒΙΝΤΕΟ/ΦΩΤΟ ΔΙΑΦΗΜΙΣΗΣ -->
-                        <div style="width:100%;height:100%;background:linear-gradient(135deg,#ffecd2,#fcb69f);display:flex;align-items:center;justify-content:center;color:#333;font-weight:bold;font-size:16px;">
-                            AD 3: Fitness App
-                        </div>
-                    </div>
-                    <div class="popup-ad-info">
-                        <div class="popup-ad-title">💪 Fitness App Premium</div>
-                        <div class="popup-ad-description">Transform your body in 30 days with personalized workouts and nutrition plans.</div>
-                        <button class="popup-ad-cta">Start Free Trial</button>
-                    </div>
+                <!-- Slide Ad 2 - ΑΛΛΗ ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΗ -->
+                <div class="ad-slot" id="slideAd2">
+                    <ins class="adsbygoogle adsbygoogle-banner"
+                         style="display:block"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="3969235710"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
                 </div>
             </div>
         </div>
@@ -862,14 +998,19 @@
     <!-- MAIN VIDEO CONTAINER -->
     <div class="video-container" id="videoContainer">
         <div class="loading-spinner" id="loadingSpinner"></div>
+        
         <div class="video-play-overlay" id="videoPlayOverlay"></div>
-        <video id="mainVideo" preload="auto" playsinline loop muted>
+        
+        <video id="mainVideo" preload="auto" playsinline loop>
             <source src="https://blog.franklymadear.com/videos/three/video99.mp4" type="video/mp4">
+            Your browser does not support the video tag.
         </video>
+        
         <div class="video-progress-container" id="videoProgressContainer">
             <div class="video-progress-bar" id="videoProgressBar"></div>
             <div class="video-progress-handle" id="videoProgressHandle"></div>
         </div>
+        
         <div class="video-controls" id="videoControls">
             <button class="control-btn" id="playPauseBtn">⏸️</button>
             <button class="control-btn" id="muteBtn">🔇</button>
@@ -884,26 +1025,21 @@
 
     <script>
         // DOM Elements
-        const videoBackground = document.getElementById('videoBackground');
-        const googleBanner = document.getElementById('googleBanner');
+        const cookieBanner = document.getElementById('cookieBanner');
+        const cookieClose = document.getElementById('cookieClose');
+        const backgroundVideo = document.getElementById('backgroundVideo');
+        
         const firstAdOverlay = document.getElementById('firstAdOverlay');
         const waitText = document.getElementById('waitText');
         const countdownTimer = document.getElementById('countdownTimer');
-        
-        // Τα 3 ad blocks
-        const ad1 = document.getElementById('ad1');
-        const ad2 = document.getElementById('ad2');
-        const ad3 = document.getElementById('ad3');
         
         const bottomSlideAd = document.getElementById('bottomSlideAd');
         const slideTimer = document.getElementById('slideTimer');
         const slideClose = document.getElementById('slideClose');
         const slideFooterText = document.getElementById('slideFooterText');
         
-        // Τα 3 popup ads
-        const popupAd1 = document.getElementById('popupAd1');
-        const popupAd2 = document.getElementById('popupAd2');
-        const popupAd3 = document.getElementById('popupAd3');
+        const slideAd1 = document.getElementById('slideAd1');
+        const slideAd2 = document.getElementById('slideAd2');
         
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
@@ -927,19 +1063,22 @@
         let currentVolume = 1.0;
         let isDraggingProgress = false;
         
+        // Video Title
         const VIDEO_TITLE = "Το Έψαξα Πάντως";
         
         // Ad System State
         let firstAdCountdown = 10;
         let firstAdInterval;
         let slideAdCountdown = 15;
+        let slideInterval;
         let currentSlideAdIndex = 0;
         let isSlideShowing = false;
         let slideTimerInterval;
         let slideRotationInterval;
-        let currentPopupAdIndex = 0;
-        let adRotationInterval;
+        let videoStartTime = 0;
+        let adsInitialized = false;
         
+        // Language System για τα ads
         const languages = [
             { 
                 code: 'en', 
@@ -959,142 +1098,60 @@
         ];
         let currentLangIndex = 0;
         
-        // ================== VIDEO BACKGROUND ==================
+        // ================== INITIAL SETUP ==================
         
-        // Φορτώνει το πρώτο καρέ του βίντεο ως background
-        function setupVideoBackground() {
-            console.log('🎬 Setting up video background...');
-            
-            // Κάνε το background video να παίζει το πρώτο δευτερόλεπτο και να σταματάει
-            videoBackground.currentTime = 0.1;
-            
-            videoBackground.addEventListener('loadeddata', () => {
-                console.log('✅ Video background loaded');
-            });
-            
-            videoBackground.addEventListener('error', (e) => {
-                console.log('⚠️ Video background error, using fallback');
-                // Fallback background αν το βίντεο αποτύχει
-                videoBackground.style.display = 'none';
-                document.body.style.background = 'radial-gradient(circle at center, #1a1a2e 0%, #16213e 100%)';
-            });
+        // Hide cookie banner when video starts
+        function hideCookieBanner() {
+            cookieBanner.classList.add('hidden');
+            console.log('🍪 Cookie banner hidden');
         }
         
-        // ================== AD ROTATION SYSTEM ==================
-        
-        // Περιστροφή των 3 ad blocks στην πρώτη διαφήμιση
-        function startAdRotation() {
-            console.log('🔄 Starting ad rotation...');
-            let currentAdIndex = 0;
-            const adBlocks = [ad1, ad2, ad3];
+        // Initialize AdSense ads
+        function initializeAdSense() {
+            if (adsInitialized) return;
             
-            // Αρχικά δείξε το πρώτο ad
-            adBlocks.forEach((ad, index) => {
-                ad.classList.toggle('active', index === 0);
-            });
+            console.log('📢 Initializing Google AdSense ads...');
+            adsInitialized = true;
             
-            // Περιστροφή κάθε 3 δευτερόλεπτα
-            adRotationInterval = setInterval(() => {
-                currentAdIndex = (currentAdIndex + 1) % adBlocks.length;
-                
-                adBlocks.forEach((ad, index) => {
-                    ad.classList.toggle('active', index === currentAdIndex);
-                });
-                
-                console.log(`📱 Rotated to ad ${currentAdIndex + 1}`);
-            }, 3000);
+            // Load first ad immediately
+            loadGoogleAd('.adsbygoogle-first');
+            console.log('✅ Google AdSense ready');
         }
         
-        // ================== GOOGLE BANNER ==================
-        
-        // Κρύψε το Google banner όταν ξεκινήσει το βίντεο
-        function hideGoogleBanner() {
-            console.log('📢 Hiding Google banner...');
-            googleBanner.classList.add('hidden');
-        }
-        
-        // ================== POPUP ADS SYSTEM ==================
-        
-        // Εμφάνιση popup ad
-        function showPopupAd() {
-            if (isSlideShowing) return;
-            
-            console.log(`📢 Showing popup ad ${currentPopupAdIndex + 1}...`);
-            isSlideShowing = true;
-            
-            // Κρύψε όλα τα popup ads
-            [popupAd1, popupAd2, popupAd3].forEach(ad => {
-                ad.classList.remove('active');
-            });
-            
-            // Δείξε το τρέχον popup ad
-            const currentPopupAd = [popupAd1, popupAd2, popupAd3][currentPopupAdIndex];
-            currentPopupAd.classList.add('active');
-            
-            // Show slide ad
-            bottomSlideAd.classList.remove('hidden');
-            setTimeout(() => {
-                bottomSlideAd.classList.add('visible');
-            }, 10);
-            
-            // Start countdown
-            slideAdCountdown = 15;
-            slideTimer.textContent = slideAdCountdown + 's';
-            
-            clearInterval(slideTimerInterval);
-            slideTimerInterval = setInterval(() => {
-                slideAdCountdown--;
-                slideTimer.textContent = slideAdCountdown + 's';
-                
-                if (slideAdCountdown <= 0) {
-                    hidePopupAd();
+        // Load Google AdSense ad
+        function loadGoogleAd(selector) {
+            try {
+                const adElement = document.querySelector(selector);
+                if (adElement && typeof adsbygoogle !== 'undefined') {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log('✅ Google AdSense ad loaded for: ' + selector);
                 }
-            }, 1000);
-            
-            // Επόμενο popup ad για την επόμενη φορά
-            currentPopupAdIndex = (currentPopupAdIndex + 1) % 3;
+            } catch (e) {
+                console.log('❌ Google AdSense load error:', e);
+            }
         }
         
-        // Κρύψε popup ad
-        function hidePopupAd() {
-            console.log('📢 Hiding popup ad...');
-            isSlideShowing = false;
-            
-            clearInterval(slideTimerInterval);
-            
-            bottomSlideAd.classList.remove('visible');
-            setTimeout(() => {
-                bottomSlideAd.classList.add('hidden');
-            }, 500);
+        // Update language text
+        function updateLanguageText() {
+            if (currentLangIndex >= languages.length) currentLangIndex = 0;
+            waitText.textContent = languages[currentLangIndex].text;
+            slideFooterText.textContent = languages[currentLangIndex].banner;
+            currentLangIndex++;
         }
         
-        // Start popup ad system
-        function startPopupAdSystem() {
-            console.log('🔄 Starting popup ad system...');
-            
-            // Show first popup ad
-            showPopupAd();
-            
-            // Περιστροφή: 15s ad, 5s pause, repeat
-            slideRotationInterval = setInterval(() => {
-                if (!isSlideShowing) {
-                    showPopupAd();
-                }
-            }, 20000); // 20s total cycle
-        }
+        // ================== AD SYSTEM FUNCTIONS ==================
         
-        // ================== FIRST AD SYSTEM ==================
-        
+        // Start first ad (10 seconds before video)
         function startFirstAd() {
-            console.log('📢 Starting first ad system...');
+            console.log('📢 Starting first Google AdSense ad (10 seconds)...');
             
-            // Ξεκίνα την περιστροφή των ads
-            startAdRotation();
+            // Initialize AdSense
+            initializeAdSense();
             
             // Set initial language
             updateLanguageText();
             
-            // Περιστροφή γλώσσας κάθε 2 δευτερόλεπτα
+            // Start language rotation every 2 seconds
             setInterval(updateLanguageText, 2000);
             
             // Start 10-second countdown
@@ -1108,57 +1165,128 @@
                 
                 if (firstAdCountdown <= 0) {
                     clearInterval(firstAdInterval);
-                    clearInterval(adRotationInterval);
                     hideFirstAdAndStartVideo();
                 }
             }, 1000);
         }
         
-        function updateLanguageText() {
-            if (currentLangIndex >= languages.length) currentLangIndex = 0;
-            waitText.textContent = languages[currentLangIndex].text;
-            slideFooterText.textContent = languages[currentLangIndex].banner;
-            currentLangIndex++;
-        }
-        
+        // Hide first ad and start video
         function hideFirstAdAndStartVideo() {
             console.log('🎬 First ad finished, starting video...');
             
-            // Κρύψε το Google banner
-            hideGoogleBanner();
+            // Hide cookie banner
+            hideCookieBanner();
             
-            // Κρύψε το background video
-            videoBackground.style.opacity = '0';
-            
+            // Hide first ad
             firstAdOverlay.style.opacity = '0';
             firstAdOverlay.style.pointerEvents = 'none';
             
+            // Stop background video
+            backgroundVideo.pause();
+            
             setTimeout(() => {
+                // Show main video
                 videoContainer.classList.add('active');
                 
                 // Start video
                 startVideoWithAudio();
                 
-                // Start popup ad system after 5 seconds
+                // Start slide ad system after 5 seconds
                 setTimeout(() => {
-                    startPopupAdSystem();
+                    startSlideAdSystem();
                 }, 5000);
                 
             }, 500);
         }
         
-        // ================== VIDEO SYSTEM ==================
+        // Slide Ad System
+        function startSlideAdSystem() {
+            console.log('🔄 Starting slide-up ad system...');
+            
+            // Show first slide ad
+            showSlideAd();
+            
+            // Set up rotation: 15 seconds ad, 5 seconds pause, repeat
+            slideRotationInterval = setInterval(() => {
+                if (!isSlideShowing) {
+                    showSlideAd();
+                }
+            }, 20000);
+        }
         
+        // Show slide ad
+        function showSlideAd() {
+            if (isSlideShowing) return;
+            
+            console.log(`📢 Showing slide-up ad ${currentSlideAdIndex + 1}...`);
+            isSlideShowing = true;
+            
+            // Hide all ads
+            document.querySelectorAll('.ad-slot').forEach(ad => {
+                ad.classList.remove('active');
+            });
+            
+            // Show current ad
+            const currentAd = currentSlideAdIndex === 0 ? slideAd1 : slideAd2;
+            currentAd.classList.add('active');
+            
+            // Load Google AdSense ad
+            setTimeout(() => {
+                loadGoogleAd('.adsbygoogle-banner');
+            }, 100);
+            
+            // Show slide ad
+            bottomSlideAd.classList.remove('hidden');
+            setTimeout(() => {
+                bottomSlideAd.classList.add('visible');
+            }, 10);
+            
+            // Start 15-second countdown
+            slideAdCountdown = 15;
+            slideTimer.textContent = slideAdCountdown + 's';
+            
+            clearInterval(slideTimerInterval);
+            slideTimerInterval = setInterval(() => {
+                slideAdCountdown--;
+                slideTimer.textContent = slideAdCountdown + 's';
+                
+                if (slideAdCountdown <= 0) {
+                    hideSlideAd();
+                }
+            }, 1000);
+            
+            // Rotate to next ad for next time
+            currentSlideAdIndex = (currentSlideAdIndex + 1) % 2;
+        }
+        
+        // Hide slide ad
+        function hideSlideAd() {
+            console.log('📢 Hiding slide-up ad...');
+            isSlideShowing = false;
+            
+            clearInterval(slideTimerInterval);
+            
+            bottomSlideAd.classList.remove('visible');
+            setTimeout(() => {
+                bottomSlideAd.classList.add('hidden');
+            }, 500);
+        }
+        
+        // ================== VIDEO SYSTEM FUNCTIONS ==================
+        
+        // Start video with audio
         function startVideoWithAudio() {
             if (videoStarted) return;
             
-            console.log('▶️ Starting video with audio...');
+            console.log('▶️ Starting video with audio setup...');
             videoStarted = true;
+            videoStartTime = Date.now();
             
-            mainVideo.muted = true;
+            // Βασική ρύθμιση για audio
+            mainVideo.muted = false;
             mainVideo.volume = 1.0;
-            isMuted = true;
-            muteBtn.textContent = '🔇';
+            isMuted = false;
+            muteBtn.textContent = '🔊';
             
             videoPlayOverlay.classList.add('hidden');
             
@@ -1171,33 +1299,13 @@
                     playPauseBtn.textContent = '⏸️';
                     showControls();
                     
-                    const enableSound = () => {
-                        console.log('🔊 Enabling sound...');
-                        mainVideo.muted = false;
-                        isMuted = false;
-                        muteBtn.textContent = '🔊';
-                        
-                        document.removeEventListener('click', enableSound);
-                        document.removeEventListener('touchstart', enableSound);
-                        videoContainer.removeEventListener('click', enableSound);
-                        playPauseBtn.removeEventListener('click', enableSound);
-                        muteBtn.removeEventListener('click', enableSound);
-                        fullscreenBtn.removeEventListener('click', enableSound);
-                    };
-                    
-                    document.addEventListener('click', enableSound, { once: true });
-                    document.addEventListener('touchstart', enableSound, { once: true });
-                    videoContainer.addEventListener('click', enableSound, { once: true });
-                    playPauseBtn.addEventListener('click', enableSound, { once: true });
-                    muteBtn.addEventListener('click', enableSound, { once: true });
-                    fullscreenBtn.addEventListener('click', enableSound, { once: true });
-                    
                 }).catch(e => {
                     console.error('❌ Video play failed:', e);
                 });
             }
         }
         
+        // Format time function
         function formatTime(seconds) {
             if (isNaN(seconds)) return '00:00';
             const mins = Math.floor(seconds / 60);
@@ -1205,16 +1313,19 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
         
+        // Update time display
         function updateTimeDisplay() {
             timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(videoDuration)}`;
         }
         
+        // Update progress bar
         function updateProgressBar() {
             const progress = (mainVideo.currentTime / videoDuration) * 100;
             videoProgressBar.style.width = progress + '%';
             videoProgressHandle.style.left = progress + '%';
         }
         
+        // Show/hide controls
         function showControls() {
             videoControls.classList.add('visible');
             videoProgressContainer.style.opacity = '1';
@@ -1227,23 +1338,33 @@
             }, 3000);
         }
         
+        // Toggle play/pause
         function togglePlayPause() {
             if (mainVideo.paused) {
                 mainVideo.play().then(() => {
                     isPlaying = true;
                     playPauseBtn.textContent = '⏸️';
                     showControls();
-                    videoPlayOverlay.classList.add('hidden');
+                    
+                    videoPlayOverlay.classList.remove('hidden');
+                    setTimeout(() => {
+                        if (isPlaying) {
+                            videoPlayOverlay.classList.add('hidden');
+                        }
+                    }, 800);
+                    
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
                 playPauseBtn.textContent = '▶️';
                 showControls();
+                
                 videoPlayOverlay.classList.remove('hidden');
             }
         }
         
+        // Toggle mute
         function toggleMute() {
             isMuted = !isMuted;
             mainVideo.muted = isMuted;
@@ -1251,10 +1372,11 @@
             showControls();
         }
         
+        // Toggle fullscreen
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 videoContainer.requestFullscreen().catch(err => {
-                    console.log(`Error enabling fullscreen: ${err.message}`);
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
                 });
             } else {
                 document.exitFullscreen();
@@ -1262,6 +1384,7 @@
             showControls();
         }
         
+        // Handle video progress click
         function handleProgressClick(event) {
             const rect = videoProgressContainer.getBoundingClientRect();
             let x = event.clientX - rect.left;
@@ -1275,26 +1398,39 @@
             showControls();
         }
         
+        // VIDEO LOOPING FUNCTIONALITY
         function handleVideoEnd() {
-            console.log('🔄 Video ended - restarting');
+            console.log('🔄 Video ended - restarting from beginning');
+            
             mainVideo.currentTime = 0;
-            mainVideo.play().catch(e => console.log('⚠️ Auto-restart failed:', e));
+            
+            const playPromise = mainVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(e => {
+                    console.log('⚠️ Auto-restart failed:', e);
+                });
+            }
         }
         
         // ================== EVENT LISTENERS ==================
         
+        // Cookie banner close
+        cookieClose.addEventListener('click', hideCookieBanner);
+        
+        // Video events
         mainVideo.addEventListener('loadedmetadata', () => {
             console.log('📊 Video metadata loaded');
             videoDuration = mainVideo.duration;
             updateTimeDisplay();
             
+            // Βασικές ρυθμίσεις
             mainVideo.volume = 1.0;
             mainVideo.loop = true;
             
-            // Setup video background
-            setupVideoBackground();
+            // Start background video
+            backgroundVideo.play().catch(e => console.log('Background video autoplay blocked'));
             
-            // Start first ad system
+            // Start first ad
             startFirstAd();
         });
         
@@ -1313,59 +1449,103 @@
             loadingSpinner.style.display = 'none';
         });
         
-        videoPlayOverlay.addEventListener('click', togglePlayPause);
-        mainVideo.addEventListener('click', (e) => {
-            if (e.target === mainVideo) togglePlayPause();
+        mainVideo.addEventListener('seeked', () => {
+            loadingSpinner.style.display = 'none';
         });
         
+        mainVideo.addEventListener('error', (e) => {
+            console.error('❌ Video error:', mainVideo.error);
+            loadingSpinner.style.display = 'none';
+        });
+        
+        // Click handlers
+        videoPlayOverlay.addEventListener('click', togglePlayPause);
+        mainVideo.addEventListener('click', (e) => {
+            if (e.target === mainVideo) {
+                togglePlayPause();
+            }
+        });
+        
+        // Progress bar events
         videoProgressContainer.addEventListener('click', handleProgressClick);
         
+        videoProgressHandle.addEventListener('mousedown', (e) => {
+            isDraggingProgress = true;
+            e.preventDefault();
+        });
+        
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingProgress) {
+                handleProgressClick(e);
+            }
+        });
+        
+        document.addEventListener('mouseup', () => {
+            isDraggingProgress = false;
+        });
+        
+        // Touch events for progress bar
+        videoProgressContainer.addEventListener('touchstart', (e) => {
+            isDraggingProgress = true;
+            handleProgressClick(e.touches[0]);
+            e.preventDefault();
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            if (isDraggingProgress) {
+                handleProgressClick(e.touches[0]);
+            }
+        });
+        
+        document.addEventListener('touchend', () => {
+            isDraggingProgress = false;
+        });
+        
+        // Control buttons
         playPauseBtn.addEventListener('click', togglePlayPause);
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        slideClose.addEventListener('click', hidePopupAd);
+        // Slide close button
+        slideClose.addEventListener('click', hideSlideAd);
         
+        // Show controls on touch/mouse move
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
         // Initial setup
         window.addEventListener('load', () => {
+            if (window.history.replaceState) {
+                window.history.replaceState(null, null, window.location.pathname);
+            }
+            
             document.title = VIDEO_TITLE + " - FmD @FmD699";
-            console.log('🚀 Page loaded');
+            
+            console.log('🚀 Page loaded - Google AdSense system ready...');
+            
+            // Initialize AdSense
+            initializeAdSense();
         });
         
-        document.addEventListener('contextmenu', (e) => e.preventDefault());
-        
+        // Handle fullscreen change
         document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement && isSlideShowing) {
-                hidePopupAd();
+            if (document.fullscreenElement) {
+                console.log('📺 Entered fullscreen mode');
+                if (isSlideShowing) {
+                    hideSlideAd();
+                }
+            } else {
+                console.log('📺 Exited fullscreen mode');
             }
         });
         
-        // Ad block clicks (προσομοίωση)
-        [ad1, ad2, ad3].forEach(ad => {
-            ad.addEventListener('click', function() {
-                console.log(`🖱️ Ad clicked: ${this.querySelector('.ad-title').textContent}`);
-                // Εδώ θα μπορούσε να ανοίγει το URL της διαφήμισης
-                // window.open('https://example.com', '_blank');
-            });
-        });
-        
-        // Popup ad CTA clicks
-        document.querySelectorAll('.popup-ad-cta').forEach(button => {
-            button.addEventListener('click', function() {
-                console.log('🖱️ Popup ad CTA clicked');
-                // Εδώ θα μπορούσε να ανοίγει το URL της διαφήμισης
-            });
-        });
-        
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ Enhanced Ad System Ready:');
-        console.log('  1. Google banner hides when video starts');
-        console.log('  2. 3 different ads in first overlay (rotating every 3s)');
-        console.log('  3. Video background shows before ads');
-        console.log('  4. 3 different popup ads (rotating each time)');
+        console.log('✅ FmD Video Player ready with Google AdSense System');
+        console.log('🎯 ΤΩΡΑ ΛΕΙΤΟΥΡΓΕΙ ΜΕ GOOGLE ADSENSE:');
+        console.log('  - ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ: GOOGLE ADSENSE');
+        console.log('  - SLIDE-UP ADS: GOOGLE ADSENSE BANNERS');
+        console.log('  - BACKGROUND VIDEO: ΕΜΦΑΝΙΖΕΤΑΙ ΠΙΣΩ ΑΠΟ ΤΗΝ ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ');
+        console.log('  - COOKIE BANNER: ΦΕΥΓΕΙ ΟΤΑΝ ΞΕΚΙΝΑΕΙ ΤΟ ΒΙΝΤΕΟ');
     </script>
 </body>
 </html>
