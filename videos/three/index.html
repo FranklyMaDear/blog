@@ -43,6 +43,7 @@
             border-radius: 8px;
             overflow: hidden;
             min-height: 300px;
+            position: relative;
         }
         
         video {
@@ -51,6 +52,62 @@
             object-fit: contain;
             background-color: #000;
             display: block;
+        }
+        
+        .video-poster {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .video-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .video-poster.hidden {
+            display: none;
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .play-button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .play-button::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 30px solid white;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            margin-left: 5px;
         }
         
         .ad-container {
@@ -81,10 +138,68 @@
             justify-content: center;
         }
         
+        /* Styles για δεύτερη διαφήμιση */
+        .bottom-ad-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto 20px auto;
+            background-color: #111;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 150px;
+        }
+        
+        .bottom-ad-label {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .bottom-ad-content {
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Styles για placeholder διαφημίσεων */
         .ad-placeholder {
             width: 100%;
-            height: 100%;
             min-height: 200px;
+            background-color: #222;
+            border: 1px solid #333;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #666;
+            font-style: italic;
+            font-size: 14px;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .ad-placeholder .ad-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #888;
+        }
+        
+        .ad-placeholder .ad-text {
+            font-size: 12px;
+            line-height: 1.4;
+            max-width: 250px;
+        }
+        
+        .bottom-ad-placeholder {
+            width: 100%;
+            min-height: 120px;
             background-color: #222;
             border: 1px solid #333;
             border-radius: 4px;
@@ -93,7 +208,6 @@
             align-items: center;
             color: #666;
             font-style: italic;
-            font-size: 14px;
         }
         
         @media (max-width: 1023px) {
@@ -109,6 +223,10 @@
             .ad-container {
                 height: 30vh;
                 min-height: 200px;
+            }
+            
+            .bottom-ad-container {
+                min-height: 120px;
             }
         }
         
@@ -127,13 +245,34 @@
                 min-height: 150px;
                 padding: 10px;
             }
+            
+            .play-button {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .play-button::after {
+                border-left: 20px solid white;
+                border-top: 15px solid transparent;
+                border-bottom: 15px solid transparent;
+            }
+            
+            .bottom-ad-container {
+                padding: 10px;
+                min-height: 100px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Διάταξη με βίντεο και διαφήμιση δίπλα -->
     <div class="container">
         <div class="video-container">
-            <video controls poster="thumbnail99.png" id="mainVideo">
+            <div class="video-poster" id="videoPoster">
+                <img src="thumbnail99.png" alt="Πρώτο καρέ βίντεο" id="posterImage">
+                <button class="play-button" id="playButton"></button>
+            </div>
+            <video id="mainVideo">
                 <source src="video99.mp4" type="video/mp4">
                 Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
             </video>
@@ -142,22 +281,48 @@
         <div class="ad-container">
             <div class="ad-label">Διαφήμιση</div>
             <div class="ad-content">
-                <!-- Το script διαφήμισης που ζητήσατε -->
+                <!-- Πρώτη διαφήμιση - το script που δώσατε -->
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
                     crossorigin="anonymous"></script>
                 <ins class="adsbygoogle"
                     style="display:block"
-                    data-ad-format="autorelaxed"
+                    data-ad-format="fluid"
+                    data-ad-layout-key="-fb+5w+4e-db+86"
                     data-ad-client="ca-pub-3186700611266549"
-                    data-ad-slot="9660744817"></ins>
+                    data-ad-slot="3969235710"></ins>
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
                 
-                <!-- Placeholder για την διαφήμιση -->
-                <div class="ad-placeholder" id="adPlaceholder">
-                    Διαφήμιση
+                <!-- Placeholder που θα εμφανιστεί αν δεν υπάρχουν διαφημίσεις -->
+                <div class="ad-placeholder" id="sideAdPlaceholder">
+                    <div class="ad-title">Διαφήμιση</div>
+                    <div class="ad-text">Αυτή η θέση προορίζεται για διαφημίσεις. Εάν δεν υπάρχουν διαθέσιμες διαφημίσεις, εμφανίζεται αυτό το μήνυμα.</div>
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Δεύτερη διαφήμιση στο κάτω μέρος -->
+    <div class="bottom-ad-container">
+        <div class="bottom-ad-label">Διαφήμιση</div>
+        <div class="bottom-ad-content">
+            <!-- Δεύτερη διαφήμιση -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
+                crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+                data-ad-client="ca-pub-3186700611266549"
+                data-ad-slot="4586034963"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+            
+            <!-- Placeholder για δεύτερη διαφήμιση -->
+            <div class="bottom-ad-placeholder" id="bottomAdPlaceholder">
+                Διαφήμιση
             </div>
         </div>
     </div>
@@ -165,20 +330,97 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('mainVideo');
-            const adPlaceholder = document.getElementById('adPlaceholder');
+            const videoPoster = document.getElementById('videoPoster');
+            const posterImage = document.getElementById('posterImage');
+            const playButton = document.getElementById('playButton');
+            const sideAdPlaceholder = document.getElementById('sideAdPlaceholder');
+            const bottomAdPlaceholder = document.getElementById('bottomAdPlaceholder');
             
-            // Απόκρυψη placeholder αν η διαφήμιση φορτώθηκε
-            setTimeout(function() {
-                const adElement = document.querySelector('ins.adsbygoogle');
-                if (adElement && adElement.offsetHeight > 50) {
-                    adPlaceholder.style.display = 'none';
-                }
-            }, 2000);
+            // Προσθήκη ελέγχων στο βίντεο
+            video.controls = true;
+            
+            // Συνάρτηση για να ξεκινήσει το βίντεο
+            function startVideo() {
+                video.play();
+                videoPoster.classList.add('hidden');
+            }
+            
+            // Κουμπί play
+            playButton.addEventListener('click', startVideo);
+            
+            // Κάνε κλικ στην εικόνα για να ξεκινήσει
+            posterImage.addEventListener('click', startVideo);
+            
+            // Όταν τελειώσει το βίντεο, δείξε ξανά το πρώτο καρέ
+            video.addEventListener('ended', function() {
+                videoPoster.classList.remove('hidden');
+            });
+            
+            // Έλεγχος αν το thumbnail φορτώθηκε
+            posterImage.addEventListener('error', function() {
+                console.log('Σφάλμα φόρτωσης thumbnail. Βεβαιωθείτε ότι το thumbnail99.png είναι στον ίδιο φάκελο.');
+                posterImage.style.display = 'none';
+                videoPoster.style.backgroundColor = '#222';
+                videoPoster.innerHTML = '<div style="color: #666; text-align: center;">Κάντε κλικ για αναπαραγωγή βίντεο</div>' + 
+                                        '<button class="play-button"></button>';
+                document.querySelector('.play-button').addEventListener('click', startVideo);
+            });
             
             // Έλεγχος αν το βίντεο φορτώνεται
             video.addEventListener('error', function() {
                 console.log('Σφάλμα φόρτωσης βίντεο. Βεβαιωθείτε ότι το video99.mp4 είναι στον ίδιο φάκελο.');
+                videoPoster.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff6b6b;">Σφάλμα φόρτωσης βίντεο</div>';
             });
+            
+            // Κάνε το βίντεο να παίξει όταν πατήθηκε play από τα controls
+            video.addEventListener('play', function() {
+                videoPoster.classList.add('hidden');
+            });
+            
+            // Έλεγχος για διαφημίσεις
+            function checkAds() {
+                // Έλεγχος για πλευρική διαφήμιση
+                setTimeout(function() {
+                    const sideAds = document.querySelectorAll('ins.adsbygoogle');
+                    let sideAdLoaded = false;
+                    
+                    sideAds.forEach(function(ad) {
+                        if (ad.offsetHeight > 50 || ad.innerHTML.trim().length > 0) {
+                            sideAdLoaded = true;
+                        }
+                    });
+                    
+                    if (!sideAdLoaded) {
+                        sideAdPlaceholder.style.display = 'flex';
+                    } else {
+                        sideAdPlaceholder.style.display = 'none';
+                    }
+                }, 2000);
+                
+                // Έλεγχος για κάτω διαφήμιση
+                setTimeout(function() {
+                    const bottomAds = document.querySelectorAll('ins.adsbygoogle');
+                    let bottomAdLoaded = false;
+                    
+                    bottomAds.forEach(function(ad) {
+                        if (ad.offsetHeight > 30 || ad.innerHTML.trim().length > 0) {
+                            bottomAdLoaded = true;
+                        }
+                    });
+                    
+                    if (!bottomAdLoaded) {
+                        bottomAdPlaceholder.style.display = 'flex';
+                    } else {
+                        bottomAdPlaceholder.style.display = 'none';
+                    }
+                }, 2500);
+            }
+            
+            // Εκτέλεση ελέγχου διαφημίσεων
+            checkAds();
+            
+            // Επανάληψη ελέγχου κάθε 10 δευτερόλεπτα
+            setInterval(checkAds, 10000);
         });
     </script>
 </body>
