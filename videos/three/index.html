@@ -8,15 +8,10 @@
     <link rel="icon" href="https://blog.franklymadear.com/videos/three/thumbnail99.png" type="image/png">
     <link rel="apple-touch-icon" href="https://blog.franklymadear.com/videos/three/thumbnail99.png">
     
-    <!-- iOS και Android tags για native fullscreen experience -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
     <!-- TITLE AND VIDEO TITLE EVERYWHERE -->
     <title>Το Έψαξα Πάντως - FmD @FmD699</title>
     
-    <!-- Open Graph Meta Tags with Video Title -->
+    <!-- Open Graph Meta Tags -->
     <meta property="og:type" content="video.other">
     <meta property="og:title" content="Το Έψαξα Πάντως - Watch Now">
     <meta property="og:description" content="Don't miss this exclusive live performance video. Must watch content!">
@@ -30,7 +25,7 @@
     <meta property="og:video:height" content="720">
     <meta property="og:site_name" content="FmD Exclusive Videos">
     
-    <!-- Twitter/X Card Tags with Video Title -->
+    <!-- Twitter/X Card Tags -->
     <meta name="twitter:card" content="player">
     <meta name="twitter:site" content="@FmD699">
     <meta name="twitter:creator" content="@FmD699">
@@ -45,12 +40,6 @@
     <!-- Hide URL and prevent indexing -->
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
-    
-    <!-- AD COOKIE COMPLIANCE - ΣΩΣΤΗ ΘΕΣΗ: ΣΤΗ ΒΑΣΗ ΤΗΣ ΣΕΛΙΔΑΣ -->
-    <div id="cookie-compliance" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.9); color: white; padding: 10px; z-index: 9998; text-align: center; font-size: 12px; border-top: 1px solid #333;">
-        <span>This site uses cookies for ads. <a href="#" style="color: #4CAF50; text-decoration: none;">Privacy Policy</a></span>
-        <button onclick="document.getElementById('cookie-compliance').style.display='none'" style="margin-left: 10px; background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">OK</button>
-    </div>
     
     <style>
         * {
@@ -71,7 +60,7 @@
             user-select: none;
         }
         
-        /* FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ - ΑΠΛΟΥΣΤΕΥΜΕΝΟ */
+        /* FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ */
         .first-ad-overlay {
             position: fixed;
             top: 0;
@@ -134,41 +123,45 @@
             margin-top: 5px;
         }
         
-        /* BOTTOM SLIDE-UP AD - ΣΩΣΤΗ ΕΚΔΟΣΗ */
-        .bottom-slide-ad {
+        /* FLOATING CORNER AD - ΣΤΗΝ ΚΑΤΩ ΔΕΞΙΑ ΓΩΝΙΑ */
+        .corner-ad-overlay {
             position: fixed;
-            bottom: -200px; /* ΚΡΥΜΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗΝ ΟΘΟΝΗ */
-            left: 0;
-            width: 100%;
-            height: 200px;
-            background: #0a0a0a;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            height: 250px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
             z-index: 9999;
-            display: flex;
+            display: none;
             flex-direction: column;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.7);
-            border-top: 2px solid #4CAF50;
-            transition: bottom 0.5s ease;
+            overflow: hidden;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
         }
         
-        .bottom-slide-ad.visible {
-            bottom: 0;
+        .corner-ad-overlay.visible {
+            display: flex;
+            animation: slideInRight 0.5s ease;
         }
         
-        .bottom-slide-ad.hidden {
-            bottom: -200px;
+        .corner-ad-overlay.hidden {
+            animation: slideOutRight 0.5s ease;
+            animation-fill-mode: forwards;
         }
         
-        .bottom-ad-header {
+        .corner-ad-header {
             width: 100%;
-            padding: 8px 15px;
+            padding: 8px 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0,0,0,0.8);
-            border-bottom: 1px solid #333;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .bottom-ad-title {
+        .corner-ad-title {
             font-size: 12px;
             font-weight: 600;
             color: #4CAF50;
@@ -177,8 +170,8 @@
             gap: 5px;
         }
         
-        .bottom-ad-timer {
-            background: #4CAF50;
+        .corner-ad-timer {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             font-weight: bold;
             padding: 3px 8px;
@@ -187,74 +180,102 @@
             font-family: monospace;
             min-width: 35px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .bottom-ad-close {
-            background: #333;
+        .corner-ad-close {
+            background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: background 0.3s;
         }
         
-        .bottom-ad-close:hover {
-            background: #555;
+        .corner-ad-close:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
         
-        .bottom-ad-content {
+        .corner-ad-content {
             flex: 1;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.7);
         }
         
-        .bottom-ad-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-        
-        .bottom-ad-slot {
+        .corner-ad-slot {
             width: 100%;
             height: 100%;
             display: none;
         }
         
-        .bottom-ad-slot.active {
+        .corner-ad-slot.active {
             display: block;
         }
         
-        .adsbygoogle-bottom {
+        .adsbygoogle-corner {
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            background: #1a1a1a;
+            border-radius: 5px;
+            overflow: hidden;
         }
         
-        .bottom-ad-footer {
+        /* ΔΙΑΚΡΙΤΙΚΗ ΜΠΑΡΑ ΔΕΥΤΕΡΟΛΕΠΤΩΝ (ΓΙΑ VIDEO RELOAD) */
+        .reload-timer-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
             width: 100%;
-            padding: 5px;
-            background: rgba(0,0,0,0.9);
-            text-align: center;
-            font-size: 10px;
-            color: #888;
-            border-top: 1px solid #333;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 9998;
+            display: none;
         }
         
-        /* MAIN VIDEO CONTAINER - ΚΑΘΑΡΟΣ ΧΩΡΙΣ ΕΜΠΟΔΙΑ */
+        .reload-timer-bar.active {
+            display: block;
+        }
+        
+        .reload-timer-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0%;
+            background: #4CAF50;
+            transition: width 1s linear;
+        }
+        
+        .reload-countdown {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-family: monospace;
+            z-index: 9999;
+            display: none;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .reload-countdown.active {
+            display: block;
+        }
+        
+        /* MAIN VIDEO CONTAINER */
         .video-container {
             position: fixed;
             top: 0;
@@ -286,7 +307,7 @@
             transform: translate(-50%, -50%);
             width: 60px;
             height: 60px;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             border-radius: 50%;
             border: 2px solid white;
             cursor: pointer;
@@ -299,7 +320,7 @@
         }
         
         .video-play-overlay:hover {
-            background: rgba(0,0,0,0.9);
+            background: rgba(0, 0, 0, 0.9);
             transform: translate(-50%, -50%) scale(1.1);
         }
         
@@ -323,7 +344,7 @@
             transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(255,255,255,0.1);
+            border: 3px solid rgba(255, 255, 255, 0.1);
             border-top-color: #4CAF50;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -339,7 +360,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0, 0, 0, 0.8);
             padding: 12px 20px;
             border-radius: 30px;
             backdrop-filter: blur(10px);
@@ -355,7 +376,7 @@
         }
         
         .control-btn {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.1);
             border: none;
             color: white;
             font-size: 20px;
@@ -371,7 +392,7 @@
         }
         
         .control-btn:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
         
         .time-display {
@@ -388,7 +409,7 @@
             left: 20px;
             right: 20px;
             height: 4px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 2px;
             z-index: 20;
             cursor: pointer;
@@ -411,6 +432,28 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
             .first-ad-container {
@@ -419,13 +462,11 @@
                 max-width: 320px;
             }
             
-            .bottom-slide-ad {
-                height: 180px;
-                bottom: -180px;
-            }
-            
-            .bottom-slide-ad.hidden {
-                bottom: -180px;
+            .corner-ad-overlay {
+                width: 250px;
+                height: 200px;
+                bottom: 15px;
+                right: 15px;
             }
             
             .video-controls {
@@ -442,13 +483,20 @@
         }
         
         @media (max-width: 480px) {
-            .bottom-slide-ad {
+            .corner-ad-overlay {
+                width: 200px;
                 height: 150px;
-                bottom: -150px;
+                bottom: 10px;
+                right: 10px;
             }
             
-            .bottom-slide-ad.hidden {
-                bottom: -150px;
+            .corner-ad-header {
+                padding: 6px 10px;
+            }
+            
+            .corner-ad-timer {
+                font-size: 10px;
+                padding: 2px 6px;
             }
             
             .video-controls {
@@ -478,75 +526,70 @@
         </div>
     </div>
 
-    <!-- BOTTOM SLIDE-UP AD - ΚΑΘΕ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ -->
-    <div class="bottom-slide-ad hidden" id="bottomSlideAd">
-        <div class="bottom-ad-header">
-            <div class="bottom-ad-title">
-                <span>📢 Advertisement</span>
+    <!-- FLOATING CORNER AD - ΚΑΤΩ ΔΕΞΙΑ -->
+    <div class="corner-ad-overlay hidden" id="cornerAdOverlay">
+        <div class="corner-ad-header">
+            <div class="corner-ad-title">
+                <span>📢 Ad</span>
             </div>
-            <div class="bottom-ad-timer" id="bottomAdTimer">10</div>
-            <button class="bottom-ad-close" id="bottomAdClose">×</button>
+            <div class="corner-ad-timer" id="cornerAdTimer">10</div>
+            <button class="corner-ad-close" id="cornerAdClose">×</button>
         </div>
         
-        <div class="bottom-ad-content">
-            <div class="bottom-ad-container">
-                <!-- Bottom Ad 1 -->
-                <div class="bottom-ad-slot active" id="bottomAd1">
-                    <ins class="adsbygoogle adsbygoogle-bottom"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="5407828554"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <!-- Bottom Ad 2 -->
-                <div class="bottom-ad-slot" id="bottomAd2">
-                    <ins class="adsbygoogle adsbygoogle-bottom"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="3969235710"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <!-- Bottom Ad 3 -->
-                <div class="bottom-ad-slot" id="bottomAd3">
-                    <ins class="adsbygoogle adsbygoogle-bottom"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="1234567890"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
+        <div class="corner-ad-content">
+            <!-- Corner Ad 1 -->
+            <div class="corner-ad-slot active" id="cornerAd1">
+                <ins class="adsbygoogle adsbygoogle-corner"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="5407828554"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="false"></ins>
             </div>
-        </div>
-        
-        <div class="bottom-ad-footer">
-            Advertisement - Thank you for supporting our content
+            
+            <!-- Corner Ad 2 -->
+            <div class="corner-ad-slot" id="cornerAd2">
+                <ins class="adsbygoogle adsbygoogle-corner"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3969235710"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="false"></ins>
+            </div>
+            
+            <!-- Corner Ad 3 -->
+            <div class="corner-ad-slot" id="cornerAd3">
+                <ins class="adsbygoogle adsbygoogle-corner"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="1234567890"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="false"></ins>
+            </div>
         </div>
     </div>
 
+    <!-- RELOAD TIMER BAR -->
+    <div class="reload-timer-bar" id="reloadTimerBar">
+        <div class="reload-timer-progress" id="reloadTimerProgress"></div>
+    </div>
+    
+    <div class="reload-countdown" id="reloadCountdown">Reload in: 60s</div>
+
     <!-- MAIN VIDEO CONTAINER -->
     <div class="video-container" id="videoContainer">
-        <!-- Loading spinner -->
         <div class="loading-spinner" id="loadingSpinner"></div>
-        
-        <!-- Play button overlay -->
         <div class="video-play-overlay" id="videoPlayOverlay"></div>
         
-        <!-- Main video -->
-        <video id="mainVideo" preload="auto" playsinline loop muted>
+        <video id="mainVideo" preload="auto" playsinline loop>
             <source src="https://blog.franklymadear.com/videos/three/video99.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
         
-        <!-- Video Progress Bar -->
         <div class="video-progress-container" id="videoProgressContainer">
             <div class="video-progress-bar" id="videoProgressBar"></div>
         </div>
         
-        <!-- Video Controls -->
         <div class="video-controls" id="videoControls">
             <button class="control-btn" id="playPauseBtn">⏸️</button>
             <button class="control-btn" id="muteBtn">🔇</button>
@@ -564,14 +607,19 @@
         const firstAdOverlay = document.getElementById('firstAdOverlay');
         const countdownTimer = document.getElementById('countdownTimer');
         
-        const bottomSlideAd = document.getElementById('bottomSlideAd');
-        const bottomAdTimer = document.getElementById('bottomAdTimer');
-        const bottomAdClose = document.getElementById('bottomAdClose');
+        const cornerAdOverlay = document.getElementById('cornerAdOverlay');
+        const cornerAdTimer = document.getElementById('cornerAdTimer');
+        const cornerAdClose = document.getElementById('cornerAdClose');
         
-        // Bottom Ad Elements
-        const bottomAd1 = document.getElementById('bottomAd1');
-        const bottomAd2 = document.getElementById('bottomAd2');
-        const bottomAd3 = document.getElementById('bottomAd3');
+        // Corner Ad Elements
+        const cornerAd1 = document.getElementById('cornerAd1');
+        const cornerAd2 = document.getElementById('cornerAd2');
+        const cornerAd3 = document.getElementById('cornerAd3');
+        
+        // Reload Timer Elements
+        const reloadTimerBar = document.getElementById('reloadTimerBar');
+        const reloadTimerProgress = document.getElementById('reloadTimerProgress');
+        const reloadCountdown = document.getElementById('reloadCountdown');
         
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
@@ -594,16 +642,21 @@
         
         // AD SYSTEM STATE
         let firstAdCountdown = 10;
-        let bottomAdCountdown = 10;
-        let currentBottomAdIndex = 0;
-        let isBottomAdShowing = false;
-        let bottomAdTimerInterval;
-        let bottomAdRotationInterval;
+        let cornerAdCountdown = 10;
+        let currentCornerAdIndex = 0;
+        let isCornerAdShowing = false;
+        let cornerAdTimerInterval;
+        let cornerAdRotationInterval;
         let videoStartTime = 0;
         
+        // RELOAD SYSTEM STATE
+        let reloadCountdownValue = 60; // 60 seconds
+        let reloadTimerInterval;
+        let reloadProgressInterval;
+        
         // AD CONFIGURATION
-        const bottomAds = [bottomAd1, bottomAd2, bottomAd3];
-        const bottomAdSlots = ["5407828554", "3969235710", "1234567890"];
+        const cornerAds = [cornerAd1, cornerAd2, cornerAd3];
+        const cornerAdSlots = ["5407828554", "3969235710", "1234567890"];
         
         // ================== ADSENSE FUNCTIONS ==================
         
@@ -615,10 +668,10 @@
             }
         }
         
-        function loadBottomAd(adElement, adSlot) {
+        function loadCornerAd(adElement, adSlot) {
             if (!adElement) return;
             try {
-                const adIns = adElement.querySelector('.adsbygoogle-bottom');
+                const adIns = adElement.querySelector('.adsbygoogle-corner');
                 if (!adIns) return;
                 
                 if (adSlot) {
@@ -672,87 +725,149 @@
                 videoStarted = true;
                 videoStartTime = Date.now();
                 
-                // Show cookie compliance message at bottom (NOT over video)
-                setTimeout(() => {
-                    document.getElementById('cookie-compliance').style.display = 'block';
-                }, 2000);
+                // Start corner ads system
+                startCornerAdsSystem();
                 
-                // Start bottom ads system - ΚΑΘΕ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ
-                startBottomAdsSystem();
+                // Start reload timer system
+                startReloadTimer();
                 
             }).catch(e => {
                 console.error('Video play failed:', e);
             });
         }
         
-        function startBottomAdsSystem() {
-            console.log('Starting bottom ads system (every 10 seconds)...');
+        function startCornerAdsSystem() {
+            console.log('Starting corner ads system...');
             
-            // Show first bottom ad after 10 seconds
+            // Show first corner ad after 15 seconds
             setTimeout(() => {
-                showNextBottomAd();
-            }, 10000);
+                showNextCornerAd();
+            }, 15000);
             
-            // Set up continuous rotation every 20 seconds (10s ad + 10s pause)
-            bottomAdRotationInterval = setInterval(() => {
-                if (!isBottomAdShowing) {
-                    showNextBottomAd();
+            // Set up continuous rotation every 40 seconds (10s ad + 30s pause)
+            cornerAdRotationInterval = setInterval(() => {
+                if (!isCornerAdShowing) {
+                    showNextCornerAd();
                 }
-            }, 20000);
+            }, 40000);
         }
         
-        function showNextBottomAd() {
-            if (isBottomAdShowing) return;
+        function showNextCornerAd() {
+            if (isCornerAdShowing) return;
             
-            console.log(`Showing bottom ad ${currentBottomAdIndex + 1}...`);
-            isBottomAdShowing = true;
+            console.log(`Showing corner ad ${currentCornerAdIndex + 1}...`);
+            isCornerAdShowing = true;
             
-            // Hide all bottom ads
-            bottomAds.forEach(ad => {
+            // Hide all corner ads
+            cornerAds.forEach(ad => {
                 ad.classList.remove('active');
             });
             
-            // Show current bottom ad
-            const currentAd = bottomAds[currentBottomAdIndex];
+            // Show current corner ad
+            const currentAd = cornerAds[currentCornerAdIndex];
             currentAd.classList.add('active');
             
             // Load ad
-            const adSlot = bottomAdSlots[currentBottomAdIndex];
-            loadBottomAd(currentAd, adSlot);
+            const adSlot = cornerAdSlots[currentCornerAdIndex];
+            loadCornerAd(currentAd, adSlot);
             
-            // Show bottom ad (slide-up animation)
-            bottomSlideAd.classList.remove('hidden');
-            setTimeout(() => {
-                bottomSlideAd.classList.add('visible');
-            }, 10);
+            // Show corner ad with animation
+            cornerAdOverlay.classList.remove('hidden');
+            cornerAdOverlay.classList.add('visible');
             
             // Start 10-second countdown
-            bottomAdCountdown = 10;
-            bottomAdTimer.textContent = bottomAdCountdown;
+            cornerAdCountdown = 10;
+            cornerAdTimer.textContent = cornerAdCountdown;
             
-            clearInterval(bottomAdTimerInterval);
-            bottomAdTimerInterval = setInterval(() => {
-                bottomAdCountdown--;
-                bottomAdTimer.textContent = bottomAdCountdown;
+            clearInterval(cornerAdTimerInterval);
+            cornerAdTimerInterval = setInterval(() => {
+                cornerAdCountdown--;
+                cornerAdTimer.textContent = cornerAdCountdown;
                 
-                if (bottomAdCountdown <= 0) {
-                    hideBottomAd();
+                if (cornerAdCountdown <= 0) {
+                    hideCornerAd();
                 }
             }, 1000);
             
             // Rotate to next ad
-            currentBottomAdIndex = (currentBottomAdIndex + 1) % bottomAds.length;
+            currentCornerAdIndex = (currentCornerAdIndex + 1) % cornerAds.length;
         }
         
-        function hideBottomAd() {
-            console.log('Hiding bottom ad...');
-            isBottomAdShowing = false;
-            clearInterval(bottomAdTimerInterval);
+        function hideCornerAd() {
+            console.log('Hiding corner ad...');
+            isCornerAdShowing = false;
+            clearInterval(cornerAdTimerInterval);
             
-            bottomSlideAd.classList.remove('visible');
+            cornerAdOverlay.classList.remove('visible');
+            cornerAdOverlay.classList.add('hidden');
+            
             setTimeout(() => {
-                bottomSlideAd.classList.add('hidden');
+                cornerAdOverlay.classList.remove('hidden');
             }, 500);
+        }
+        
+        // ================== RELOAD TIMER FUNCTIONS ==================
+        
+        function startReloadTimer() {
+            console.log('Starting 60-second reload timer...');
+            
+            // Reset values
+            reloadCountdownValue = 60;
+            reloadTimerProgress.style.width = '0%';
+            
+            // Show reload elements
+            reloadTimerBar.classList.add('active');
+            reloadCountdown.classList.add('active');
+            updateReloadDisplay();
+            
+            // Start countdown
+            clearInterval(reloadTimerInterval);
+            reloadTimerInterval = setInterval(() => {
+                reloadCountdownValue--;
+                updateReloadDisplay();
+                
+                // Update progress bar
+                const progress = ((60 - reloadCountdownValue) / 60) * 100;
+                reloadTimerProgress.style.width = progress + '%';
+                
+                if (reloadCountdownValue <= 0) {
+                    reloadVideo();
+                }
+            }, 1000);
+        }
+        
+        function updateReloadDisplay() {
+            reloadCountdown.textContent = `Reload in: ${reloadCountdownValue}s`;
+        }
+        
+        function reloadVideo() {
+            console.log('Reloading video...');
+            
+            // Hide reload elements
+            reloadTimerBar.classList.remove('active');
+            reloadCountdown.classList.remove('active');
+            
+            // Pause video and reset
+            mainVideo.pause();
+            mainVideo.currentTime = 0;
+            
+            // Hide corner ad if showing
+            if (isCornerAdShowing) {
+                hideCornerAd();
+            }
+            
+            // Show first ad again
+            firstAdOverlay.style.display = 'flex';
+            startFirstAd();
+            
+            // Reset state
+            videoStarted = false;
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+            
+            // Clear intervals
+            clearInterval(reloadTimerInterval);
+            clearInterval(cornerAdRotationInterval);
         }
         
         // ================== VIDEO SYSTEM FUNCTIONS ==================
@@ -778,7 +893,7 @@
             videoProgressContainer.style.opacity = '1';
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
-                if (isPlaying && !isBottomAdShowing) {
+                if (isPlaying && !isCornerAdShowing) {
                     videoControls.classList.remove('visible');
                     videoProgressContainer.style.opacity = '0';
                 }
@@ -833,13 +948,6 @@
             showControls();
         }
         
-        function handleVideoEnd() {
-            mainVideo.currentTime = 0;
-            mainVideo.play().catch(e => {
-                console.log('Auto-restart failed:', e);
-            });
-        }
-        
         // ================== EVENT LISTENERS ==================
         
         mainVideo.addEventListener('loadedmetadata', () => {
@@ -855,8 +963,6 @@
             updateTimeDisplay();
             updateProgressBar();
         });
-        
-        mainVideo.addEventListener('ended', handleVideoEnd);
         
         mainVideo.addEventListener('waiting', () => {
             loadingSpinner.style.display = 'block';
@@ -880,15 +986,15 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // Close button for bottom ad
-        bottomAdClose.addEventListener('click', hideBottomAd);
+        // Close button for corner ad
+        cornerAdClose.addEventListener('click', hideCornerAd);
         
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
         // Initialize
         window.addEventListener('load', () => {
-            console.log('Page loaded - Fixed Ad System');
+            console.log('Page loaded - New Ad System');
             document.title = "Το Έψαξα Πάντως - FmD @FmD699";
         });
         
@@ -898,13 +1004,6 @@
                 mainVideo.muted = false;
                 isMuted = false;
                 muteBtn.textContent = '🔊';
-            }
-        });
-        
-        // Fullscreen change handler
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement && isBottomAdShowing) {
-                hideBottomAd();
             }
         });
     </script>
