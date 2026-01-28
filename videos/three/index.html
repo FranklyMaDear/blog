@@ -26,6 +26,9 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
      crossorigin="anonymous"></script>
     
+    <!-- Video Ad Script -->
+    <script async src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -41,30 +44,29 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
         }
         
         .header {
             text-align: center;
-            padding: 10px 15px;
-            background-color: #111;
-            border-bottom: 2px solid #d32f2f;
+            padding: 12px 15px;
+            background: linear-gradient(135deg, #111 0%, #d32f2f 100%);
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
-            background-color: rgba(17, 17, 17, 0.9);
+            box-shadow: 0 4px 20px rgba(211, 47, 47, 0.3);
         }
         
         .header h1 {
-            font-size: clamp(16px, 4vw, 22px);
+            font-size: clamp(18px, 5vw, 24px);
             color: #fff;
             max-width: 800px;
             margin: 0 auto;
             line-height: 1.3;
-            font-weight: 600;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         
         .container {
@@ -85,11 +87,12 @@
         .video-container {
             flex: 3;
             background-color: #111;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
             position: relative;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            min-height: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            min-height: 450px;
+            border: 2px solid #333;
         }
         
         video {
@@ -118,7 +121,7 @@
         .video-poster img {
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: cover;
             -webkit-user-select: none;
             user-select: none;
         }
@@ -132,9 +135,9 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: clamp(60px, 15vw, 80px);
-            height: clamp(60px, 15vw, 80px);
-            background-color: rgba(211, 47, 47, 0.9);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #d32f2f 0%, #b71c1c 100%);
             border-radius: 50%;
             border: none;
             cursor: pointer;
@@ -144,140 +147,165 @@
             align-items: center;
             transition: all 0.3s;
             touch-action: manipulation;
+            box-shadow: 0 4px 15px rgba(211, 47, 47, 0.5);
+        }
+        
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(211, 47, 47, 0.7);
         }
         
         .play-button::after {
             content: '';
             width: 0;
             height: 0;
-            border-left: clamp(20px, 5vw, 30px) solid white;
-            border-top: clamp(15px, 4vw, 20px) solid transparent;
-            border-bottom: clamp(15px, 4vw, 20px) solid transparent;
-            margin-left: 4px;
+            border-left: 30px solid white;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            margin-left: 5px;
         }
         
-        .ad-container {
-            flex: 1;
-            min-width: 0;
-            background-color: #111;
-            border-radius: 8px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            min-height: 250px;
-        }
-        
-        @media (max-width: 767px) {
-            .ad-container {
-                width: 100%;
-                min-height: 150px;
-                order: 2;
-            }
-            
-            .video-container {
-                height: 50vh;
-                min-height: 300px;
-                order: 1;
-            }
-        }
-        
-        .ad-label {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 10px;
-            text-align: center;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #333;
-        }
-        
-        .ad-content {
-            flex: 1;
+        /* VIDEO AD CONTAINER */
+        .video-ad-container {
             width: 100%;
+            margin: 15px auto;
+            background: linear-gradient(135deg, #1a1a1a 0%, #222 100%);
+            border-radius: 10px;
+            padding: 15px;
+            border: 3px solid #d32f2f;
+            box-shadow: 0 4px 20px rgba(211, 47, 47, 0.3);
+            min-height: 150px;
+        }
+        
+        .video-ad-label {
+            color: #ff9800;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+        }
+        
+        .video-ad-content {
+            width: 100%;
+            min-height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100px;
         }
         
-        /* ΚΑΤΩ ΔΙΑΦΗΜΙΣΕΙΣ - ΠΛΑΤΕΣ, ΣΑΦΕΙΣ, ΠΟΛΥ ΕΜΦΑΝΕΙΣ */
-        .bottom-ads-container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 20px auto 0 auto;
+        /* SIDEBAR ADS */
+        .sidebar-ads {
+            flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
         
-        .bottom-ad {
-            width: 100%;
-            background-color: #111;
-            border-radius: 8px;
+        .ad-unit {
+            background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+            border-radius: 10px;
             padding: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.4);
             border: 2px solid #333;
-            min-height: 120px;
-            display: flex;
-            flex-direction: column;
+            min-height: 200px;
         }
         
-        .bottom-ad-label {
-            color: #ff6b6b;
+        .ad-label {
+            color: #4fc3f7;
             font-size: 14px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             text-align: center;
             padding-bottom: 10px;
-            border-bottom: 2px solid #444;
+            border-bottom: 1px solid #444;
         }
         
-        .bottom-ad-content {
-            flex: 1;
+        .ad-content {
             width: 100%;
-            min-height: 90px;
+            min-height: 150px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        /* ΑΝΑΔΥΟΜΕΝΟ POPUP AD */
-        .popup-ad {
-            position: fixed;
-            bottom: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 500px;
+        /* BOTTOM ADS */
+        .bottom-ads-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 20px auto 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            padding: 0 15px;
+        }
+        
+        .bottom-ad {
             background: linear-gradient(135deg, #111 0%, #222 100%);
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 -5px 30px rgba(211, 47, 47, 0.3);
-            border: 3px solid #d32f2f;
-            z-index: 9999;
-            transition: bottom 0.5s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 2px solid #444;
+            min-height: 150px;
         }
         
-        .popup-ad.active {
-            bottom: 20px;
-        }
-        
-        .popup-ad-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .bottom-ad-label {
+            color: #69f0ae;
+            font-size: 14px;
+            font-weight: bold;
             margin-bottom: 10px;
+            text-align: center;
             padding-bottom: 10px;
             border-bottom: 1px solid #444;
         }
         
-        .popup-ad-title {
-            color: #fff;
-            font-size: 16px;
-            font-weight: bold;
+        .bottom-ad-content {
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .close-popup {
+        /* STICKY AD */
+        .sticky-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(17, 17, 17, 0.95);
+            padding: 10px;
+            z-index: 9999;
+            border-top: 3px solid #d32f2f;
+            display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .sticky-ad.active {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { bottom: -100px; }
+            to { bottom: 0; }
+        }
+        
+        .sticky-ad-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
+        }
+        
+        .close-sticky {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
             background: #d32f2f;
             color: white;
             border: none;
@@ -285,62 +313,45 @@
             width: 30px;
             height: 30px;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .popup-ad-content {
-            width: 100%;
-            min-height: 100px;
-        }
-        
-        /* PLACEHOLDER αν δεν φορτώσει ad */
-        .ad-placeholder {
-            width: 100%;
-            height: 100%;
-            min-height: 100px;
-            background: linear-gradient(135deg, #222 0%, #1a1a1a 100%);
-            border: 2px dashed #444;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #888;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .ad-placeholder .placeholder-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #aaa;
-        }
-        
-        .ad-placeholder .placeholder-text {
-            font-size: 12px;
-            line-height: 1.3;
-            max-width: 300px;
-        }
-        
-        /* Responsive */
+        /* RESPONSIVE */
         @media (max-width: 767px) {
             .container {
+                flex-direction: column;
                 padding: 10px;
                 gap: 10px;
             }
             
-            .bottom-ads-container {
-                padding: 0 10px;
-                margin-top: 10px;
+            .sidebar-ads {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
             }
             
-            .popup-ad {
-                width: 95%;
-                padding: 12px;
+            .ad-unit {
+                flex: 1;
+                min-width: 48%;
+            }
+            
+            .bottom-ads-container {
+                grid-template-columns: 1fr;
+                padding: 0 10px;
+            }
+            
+            .play-button {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .play-button::after {
+                border-left: 25px solid white;
+                border-top: 15px solid transparent;
+                border-bottom: 15px solid transparent;
             }
         }
     </style>
@@ -362,31 +373,81 @@
             </video>
         </div>
         
-        <div class="ad-container">
-            <div class="ad-label">ΔΙΑΦΗΜΙΣΗ</div>
-            <div class="ad-content">
-                <!-- ΠΛΑΤΕΣ ΔΙΑΦΗΜΙΣΕΙΣ - Sidebar -->
-                <ins class="adsbygoogle"
-                    style="display:block"
-                    data-ad-client="ca-pub-3186700611266549"
-                    data-ad-slot="9660744817"
-                    data-ad-format="auto"
-                    data-full-width-responsive="true"></ins>
-                <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+        <div class="sidebar-ads">
+            <!-- ΔΙΑΦΗΜΙΣΗ 1: Sidebar Top -->
+            <div class="ad-unit">
+                <div class="ad-label">💰 ΔΙΑΦΗΜΙΣΗ 1 💰</div>
+                <div class="ad-content">
+                    <ins class="adsbygoogle"
+                        style="display:block; width: 100%; min-height: 180px;"
+                        data-ad-client="ca-pub-3186700611266549"
+                        data-ad-slot="9660744817"
+                        data-ad-format="rectangle"
+                        data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+            
+            <!-- ΔΙΑΦΗΜΙΣΗ 2: Sidebar Middle -->
+            <div class="ad-unit">
+                <div class="ad-label">🔥 ΔΙΑΦΗΜΙΣΗ 2 🔥</div>
+                <div class="ad-content">
+                    <ins class="adsbygoogle"
+                        style="display:block; width: 100%; min-height: 180px;"
+                        data-ad-client="ca-pub-3186700611266549"
+                        data-ad-slot="9660744817"
+                        data-ad-format="vertical"
+                        data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+            
+            <!-- ΔΙΑΦΗΜΙΣΗ 3: Sidebar Bottom -->
+            <div class="ad-unit">
+                <div class="ad-label">🎯 ΔΙΑΦΗΜΙΣΗ 3 🎯</div>
+                <div class="ad-content">
+                    <ins class="adsbygoogle"
+                        style="display:block; width: 100%; min-height: 180px;"
+                        data-ad-client="ca-pub-3186700611266549"
+                        data-ad-slot="9660744817"
+                        data-ad-format="rectangle"
+                        data-full-width-responsive="true"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
             </div>
         </div>
     </div>
     
-    <!-- ΔΥΟ ΓΑΜΗΜΕΝΕΣ ΔΙΑΦΗΜΙΣΕΙΣ ΑΠΟ ΚΑΤΩ -->
+    <!-- VIDEO AD (4η Διαφήμιση - Υψηλό Κέρδος) -->
+    <div class="video-ad-container">
+        <div class="video-ad-label">🎬 ΒΙΝΤΕΟ ΔΙΑΦΗΜΙΣΗ 🎬</div>
+        <div class="video-ad-content">
+            <ins class="adsbygoogle"
+                style="display:block; width: 100%; min-height: 120px;"
+                data-ad-client="ca-pub-3186700611266549"
+                data-ad-slot="9660744817"
+                data-ad-format="video"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+    
+    <!-- BOTTOM ADS (5η & 6η Διαφήμιση) -->
     <div class="bottom-ads-container">
-        <!-- ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ -->
-        <div class="bottom-ad" id="bottomAd1">
-            <div class="bottom-ad-label">⭐ ΔΙΑΦΗΜΙΣΗ ⭐</div>
+        <!-- ΔΙΑΦΗΜΙΣΗ 5: Bottom Left -->
+        <div class="bottom-ad">
+            <div class="bottom-ad-label">⭐ ΔΙΑΦΗΜΙΣΗ 5 ⭐</div>
             <div class="bottom-ad-content">
                 <ins class="adsbygoogle"
-                    style="display:block"
+                    style="display:block; width: 100%; min-height: 120px;"
                     data-ad-client="ca-pub-3186700611266549"
                     data-ad-slot="9660744817"
                     data-ad-format="horizontal"
@@ -397,15 +458,15 @@
             </div>
         </div>
         
-        <!-- ΔΕΥΤΕΡΗ ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ -->
-        <div class="bottom-ad" id="bottomAd2">
-            <div class="bottom-ad-label">🔥 ΔΙΑΦΗΜΙΣΗ 🔥</div>
+        <!-- ΔΙΑΦΗΜΙΣΗ 6: Bottom Right -->
+        <div class="bottom-ad">
+            <div class="bottom-ad-label">🚀 ΔΙΑΦΗΜΙΣΗ 6 🚀</div>
             <div class="bottom-ad-content">
                 <ins class="adsbygoogle"
-                    style="display:block"
+                    style="display:block; width: 100%; min-height: 120px;"
                     data-ad-client="ca-pub-3186700611266549"
                     data-ad-slot="9660744817"
-                    data-ad-format="rectangle"
+                    data-ad-format="horizontal"
                     data-full-width-responsive="true"></ins>
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
@@ -414,23 +475,18 @@
         </div>
     </div>
     
-    <!-- ΑΝΑΔΥΟΜΕΝΟ POPUP AD -->
-    <div class="popup-ad" id="popupAd">
-        <div class="popup-ad-header">
-            <div class="popup-ad-title">🚨 ΕΙΔΙΚΗ ΠΡΟΣΦΟΡΑ 🚨</div>
-            <button class="close-popup" id="closePopup">×</button>
-        </div>
-        <div class="popup-ad-content">
+    <!-- STICKY AD (7η Διαφήμιση) -->
+    <div class="sticky-ad" id="stickyAd">
+        <div class="sticky-ad-content">
             <ins class="adsbygoogle"
-                style="display:block"
+                style="display:inline-block; width: 100%; height: 70px;"
                 data-ad-client="ca-pub-3186700611266549"
-                data-ad-slot="9660744817"
-                data-ad-format="auto"
-                data-full-width-responsive="true"></ins>
+                data-ad-slot="9660744817"></ins>
             <script>
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
+        <button class="close-sticky" id="closeSticky">×</button>
     </div>
     
     <script>
@@ -438,93 +494,121 @@
             const video = document.getElementById('mainVideo');
             const videoPoster = document.getElementById('videoPoster');
             const playButton = document.getElementById('playButton');
-            const popupAd = document.getElementById('popupAd');
-            const closePopup = document.getElementById('closePopup');
+            const stickyAd = document.getElementById('stickyAd');
+            const closeSticky = document.getElementById('closeSticky');
             
-            // ΒΑΣΙΚΗ ΛΕΙΤΟΥΡΓΙΑ ΒΙΝΤΕΟ
+            // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ
             playButton.addEventListener('click', function() {
                 video.play().then(() => {
                     videoPoster.classList.add('hidden');
+                    showStickyAd();
                 }).catch(e => {
-                    console.log('Video play error:', e);
+                    console.log('Video error:', e);
                 });
             });
             
-            // ΑΝΑΔΥΟΜΕΝΟ POPUP AD
-            let popupShown = false;
-            
-            function showPopupAd() {
-                if (!popupShown) {
-                    setTimeout(() => {
-                        popupAd.classList.add('active');
-                        popupShown = true;
-                        
-                        // Κλείνει αυτόματα μετά από 15 δευτερόλεπτα
-                        setTimeout(() => {
-                            popupAd.classList.remove('active');
-                        }, 15000);
-                    }, 10000); // Εμφανίζεται μετά από 10 δευτερόλεπτα
-                }
+            // STICKY AD
+            function showStickyAd() {
+                setTimeout(() => {
+                    stickyAd.classList.add('active');
+                }, 15000); // Εμφανίζεται μετά από 15 δευτερόλεπτα
             }
             
-            // Κλείσιμο popup
-            closePopup.addEventListener('click', function() {
-                popupAd.classList.remove('active');
+            closeSticky.addEventListener('click', function() {
+                stickyAd.classList.remove('active');
             });
             
-            // ΕΚΚΙΝΗΣΗ ΑΝΑΔΥΟΜΕΝΟΥ ΟΤΑΝ ΞΕΚΙΝΗΣΕΙ ΤΟ ΒΙΝΤΕΟ
-            video.addEventListener('play', function() {
-                videoPoster.classList.add('hidden');
-                showPopupAd();
-            });
-            
-            // FORCE AD LOAD - ΒΙΑΙΑ ΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
-            function forceLoadAds() {
+            // AGGRESSIVE AD LOADING
+            function loadAllAds() {
+                console.log('Loading ALL ads...');
+                
                 // Προσπάθεια 1
                 try {
                     if (typeof adsbygoogle !== 'undefined') {
                         adsbygoogle.push({});
+                        console.log('Ads attempt 1');
                     }
-                } catch (e) {}
+                } catch(e) {}
                 
-                // Προσπάθεια 2 με καθυστέρηση
+                // Προσπάθεια 2
                 setTimeout(() => {
                     try {
                         if (typeof adsbygoogle !== 'undefined') {
                             adsbygoogle.push({});
+                            console.log('Ads attempt 2');
                         }
-                    } catch (e) {}
-                }, 1000);
+                    } catch(e) {}
+                }, 1500);
                 
                 // Προσπάθεια 3
                 setTimeout(() => {
                     try {
                         if (typeof adsbygoogle !== 'undefined') {
                             adsbygoogle.push({});
+                            console.log('Ads attempt 3');
                         }
-                    } catch (e) {}
-                }, 2000);
+                    } catch(e) {}
+                }, 3000);
                 
-                console.log('Ads force loaded - 3 attempts');
+                // Προσπάθεια 4 (video ads)
+                setTimeout(() => {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                            console.log('Video ads loaded');
+                        }
+                    } catch(e) {}
+                }, 4500);
             }
             
-            // ΕΚΤΕΛΕΣΗ ΜΟΛΙΣ ΦΟΡΤΩΘΕΙ Η ΣΕΛΙΔΑ
-            setTimeout(forceLoadAds, 2000);
+            // LOAD ADS ON PAGE LOAD
+            setTimeout(loadAllAds, 1000);
             
-            // ΕΠΑΝΑΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ ΚΑΘΕ 30 ΔΕΥΤΕΡΟΛΕΠΤΑ
+            // REFRESH ADS EVERY 25 SECONDS
             setInterval(() => {
                 try {
                     if (typeof adsbygoogle !== 'undefined') {
                         adsbygoogle.push({});
                         console.log('Ads refreshed');
                     }
-                } catch (e) {}
-            }, 30000);
+                } catch(e) {}
+            }, 25000);
             
-            // ΕΛΕΓΧΟΣ ΓΙΑ ΟΡΘΗ ΕΜΦΑΝΙΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
-            function checkAdsVisibility() {
-                const bottomAds = document.querySelectorAll('.bottom-ad ins.adsbygoogle');
-                bottomAds.forEach(ad => {
+            // REFRESH ON VIDEO INTERACTIONS
+            video.addEventListener('play', () => {
+                setTimeout(() => {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                        }
+                    } catch(e) {}
+                }, 10000);
+            });
+            
+            video.addEventListener('pause', () => {
+                try {
+                    if (typeof adsbygoogle !== 'undefined') {
+                        adsbygoogle.push({});
+                    }
+                } catch(e) {}
+            });
+            
+            video.addEventListener('ended', () => {
+                setTimeout(() => {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                            adsbygoogle.push({});
+                        }
+                    } catch(e) {}
+                }, 2000);
+                showStickyAd();
+            });
+            
+            // CHECK AD VISIBILITY
+            function checkAds() {
+                const allAds = document.querySelectorAll('ins.adsbygoogle');
+                allAds.forEach(ad => {
                     if (ad.offsetHeight < 50) {
                         ad.style.minHeight = '100px';
                         ad.style.backgroundColor = '#222';
@@ -532,20 +616,7 @@
                 });
             }
             
-            // ΕΚΤΕΛΕΣΗ ΕΛΕΓΧΩΝ
-            setTimeout(checkAdsVisibility, 3000);
-            setInterval(checkAdsVisibility, 10000);
-            
-            // ΤΕΛΕΥΤΑΙΟ TRICK: ΚΛΙΚ ΣΤΟ ΒΙΝΤΕΟ = AD REFRESH
-            video.addEventListener('click', function() {
-                setTimeout(() => {
-                    try {
-                        if (typeof adsbygoogle !== 'undefined') {
-                            adsbygoogle.push({});
-                        }
-                    } catch (e) {}
-                }, 500);
-            });
+            setInterval(checkAds, 5000);
         });
     </script>
 </body>
