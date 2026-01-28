@@ -8,7 +8,6 @@
     <link rel="icon" href="https://blog.franklymadear.com/videos/three/thumbnail99.png" type="image/png">
     <link rel="apple-touch-icon" href="https://blog.franklymadear.com/videos/three/thumbnail99.png">
     
-    <!-- TITLE AND VIDEO TITLE EVERYWHERE -->
     <title>Το Έψαξα Πάντως - FmD @FmD699</title>
     
     <!-- Open Graph Meta Tags -->
@@ -60,7 +59,7 @@
             user-select: none;
         }
         
-        /* MAIN VIDEO CONTAINER */
+        /* VIDEO CONTAINER */
         .video-container {
             position: fixed;
             top: 0;
@@ -213,7 +212,7 @@
             transition: width 0.1s;
         }
         
-        /* FLOATING ADS - ΔΥΟ ΘΕΣΕΙΣ */
+        /* FLOATING ADS */
         .floating-ad {
             position: fixed;
             z-index: 9999;
@@ -237,7 +236,7 @@
             animation-fill-mode: forwards;
         }
         
-        /* AD 1 - ΚΑΝΩ ΔΕΞΙΑ (300x250) */
+        /* AD 1 - ΚΑΤΩ ΔΕΞΙΑ */
         .ad-position-1 {
             bottom: 20px;
             right: 20px;
@@ -245,7 +244,7 @@
             height: 250px;
         }
         
-        /* AD 2 - ΚΑΝΩ ΑΡΙΣΤΕΡΑ (300x250) */
+        /* AD 2 - ΚΑΤΩ ΑΡΙΣΤΕΡΑ */
         .ad-position-2 {
             bottom: 20px;
             left: 20px;
@@ -301,6 +300,72 @@
             justify-content: center;
             padding: 10px;
             background: rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+        }
+        
+        .ad-content iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            border-radius: 5px;
+        }
+        
+        /* FALLBACK AD (ΑΝ ΔΕΝ ΦΟΡΤΩΣΟΥΝ ΤΑ GOOGLE ADS) */
+        .fallback-ad {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: white;
+        }
+        
+        .fallback-ad.active {
+            display: flex;
+        }
+        
+        .company-logo {
+            width: 80px;
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            filter: brightness(0) invert(1);
+        }
+        
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .company-slogan {
+            font-size: 12px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+        
+        .visit-btn {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .visit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         
         @keyframes spin {
@@ -397,12 +462,16 @@
         </div>
         
         <div class="ad-content">
+            <!-- GOOGLE ADSENSE AD 1 - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟΝ ΚΩΔΙΚΑ ΠΟΥ ΜΟΥ ΣΤΕΙΛΕΣ -->
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="5407828554"
-                 data-ad-format="rectangle"
-                 data-full-width-responsive="false"></ins>
+                 data-ad-slot="4586034963"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
 
@@ -416,12 +485,16 @@
         </div>
         
         <div class="ad-content">
+            <!-- GOOGLE ADSENSE AD 2 - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟΝ ΚΩΔΙΚΑ ΠΟΥ ΜΟΥ ΣΤΕΙΛΕΣ -->
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="3969235710"
-                 data-ad-format="rectangle"
-                 data-full-width-responsive="false"></ins>
+                 data-ad-slot="4586034963"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
 
@@ -447,7 +520,7 @@
         </div>
     </div>
 
-    <!-- GOOGLE ADSENSE SCRIPT - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟ ΙΔΙΟ SCRIPT ΠΟΥ ΜΟΥ ΣΤΕΙΛΕΣ -->
+    <!-- GOOGLE ADSENSE GLOBAL SCRIPT - ΧΡΗΣΙΜΟΠΟΙΩ ΤΟ ΙΔΙΟ SCRIPT ΠΟΥ ΜΟΥ ΣΤΕΙΛΕΣ -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
             crossorigin="anonymous"></script>
 
@@ -483,9 +556,9 @@
         let adRotationInterval;
         let videoStartTime = 0;
         
-        // 📋 ΠΛΑΝΟ ΔΙΑΦΗΜΙΣΕΩΝ - ΤΟ ΙΔΙΟ SCRIPT
+        // ΠΛΑΝΟ ΔΙΑΦΗΜΙΣΕΩΝ
         const adPlan = {
-            // ΧΡΟΝΟΔΙΑΓΡΑΜΜΑ ΕΜΦΑΝΙΣΗΣ ΔΙΑΦΗΜΙΣΕΩΝ
+            // ΧΡΟΝΟΔΙΑΓΡΑΜΜΑ ΕΜΦΑΝΙΣΗΣ
             schedule: [
                 { time: 15, ad: 'ad1' },    // 15 δευτερόλεπτα: Ad 1
                 { time: 30, ad: 'ad2' },    // 30 δευτερόλεπτα: Ad 2
@@ -494,51 +567,11 @@
                 { time: 75, ad: 'ad1' },    // 75 δευτερόλεπτα: Ad 1
                 { time: 90, ad: 'ad2' }     // 90 δευτερόλεπτα: Ad 2
             ],
-            
-            // ΔΙΑΡΚΕΙΑ ΚΑΘΕ ΔΙΑΦΗΜΙΣΗΣ (σε δευτερόλεπτα)
-            duration: 10,
-            
-            // ΧΡΟΝΟΣ ΜΕΤΑΞΥ ΔΙΑΦΗΜΙΣΕΩΝ
-            interval: 15,
-            
-            // ΕΠΑΝΑΛΗΨΗ ΒΙΝΤΕΟ (σε δευτερόλεπτα)
-            videoReloadTime: 120 // 2 λεπτά
+            duration: 10,           // Διάρκεια κάθε διαφήμισης
+            interval: 15,           // Χρόνος μεταξύ διαφημίσεων
+            videoReloadTime: 120    // Επαναφορά βίντεο κάθε 2 λεπτά
         };
 
-        // ================== ADSENSE FUNCTIONS ==================
-        
-        function loadAd(adElement, adSlot) {
-            if (!adElement) return;
-            
-            try {
-                const adIns = adElement.querySelector('.adsbygoogle');
-                if (!adIns) return;
-                
-                if (typeof adsbygoogle !== 'undefined') {
-                    // Clear any existing ad
-                    adIns.innerHTML = '';
-                    
-                    // Set ad slot
-                    adIns.setAttribute('data-ad-slot', adSlot);
-                    
-                    // Load new ad
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    
-                    console.log(`✅ Ad loaded for slot: ${adSlot}`);
-                    
-                    // Retry if ad doesn't load
-                    setTimeout(() => {
-                        if (!adIns.querySelector('iframe')) {
-                            console.log(`⚠️ Retrying ad for slot: ${adSlot}`);
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        }
-                    }, 1000);
-                }
-            } catch (e) {
-                console.log('❌ Ad load error:', e);
-            }
-        }
-        
         // ================== AD SYSTEM FUNCTIONS ==================
         
         function startVideo() {
@@ -561,7 +594,6 @@
                 
             }).catch(e => {
                 console.error('❌ Video play failed:', e);
-                // If video fails to play, try again
                 setTimeout(() => {
                     mainVideo.play();
                 }, 1000);
@@ -574,10 +606,6 @@
             console.log(`   - Duration: ${adPlan.duration} seconds`);
             console.log(`   - Interval: ${adPlan.interval} seconds`);
             console.log(`   - Video reload: ${adPlan.videoReloadTime} seconds`);
-            
-            // Load initial ads
-            loadAd(floatingAd1, '5407828554');
-            loadAd(floatingAd2, '3969235710');
             
             // Schedule ads based on plan
             adPlan.schedule.forEach(item => {
@@ -606,9 +634,6 @@
                 floatingAd1.classList.remove('hidden');
                 floatingAd1.classList.add('visible');
                 
-                // Reload ad content
-                loadAd(floatingAd1, '5407828554');
-                
                 // Auto-hide after duration
                 setTimeout(() => {
                     hideAd('ad1');
@@ -618,9 +643,6 @@
                 isAd2Showing = true;
                 floatingAd2.classList.remove('hidden');
                 floatingAd2.classList.add('visible');
-                
-                // Reload ad content
-                loadAd(floatingAd2, '3969235710');
                 
                 // Auto-hide after duration
                 setTimeout(() => {
@@ -813,8 +835,9 @@
         window.addEventListener('load', () => {
             console.log('🚀 Page loaded - Simple Ad System');
             console.log('🎬 Video: Το Έψαξα Πάντως');
-            console.log('📢 Using the EXACT SAME AdSense script you sent');
+            console.log('📢 Using YOUR EXACT AdSense code');
             console.log('🎯 Ad Client: ca-pub-3186700611266549');
+            console.log('🎯 Ad Slot: 4586034963');
             
             document.title = "Το Έψαξα Πάντως - FmD @FmD699";
             
