@@ -22,6 +22,19 @@
     <link rel="icon" type="image/png" href="thumbnail99.png">
     <link rel="apple-touch-icon" href="thumbnail99.png">
     
+    <!-- Google AdSense Script (Loaded Early for Better Performance) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
+     crossorigin="anonymous"></script>
+    
+    <!-- AdSense Auto Ads (Maximizes Revenue) -->
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-3186700611266549",
+            enable_page_level_ads: true,
+            overlays: {bottom: true}
+        });
+    </script>
+    
     <style>
         * {
             margin: 0;
@@ -378,6 +391,23 @@
             user-select: none;
             -webkit-touch-callout: none;
         }
+        
+        /* Sticky Footer Ad */
+        .sticky-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #111;
+            padding: 5px;
+            z-index: 1000;
+            border-top: 1px solid #333;
+            display: none;
+        }
+        
+        .sticky-ad.active {
+            display: block;
+        }
     </style>
 </head>
 <body class="no-select">
@@ -400,25 +430,16 @@
         <div class="ad-container">
             <div class="ad-label">Διαφήμιση</div>
             <div class="ad-content">
-                <div class="fluid-ad-slot">
-                    <!-- Πρώτη διαφήμιση - Το συγκεκριμένο script που ζητήσατε -->
-                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                        crossorigin="anonymous"></script>
-                    <ins class="adsbygoogle"
-                        style="display:block"
-                        data-ad-format="fluid"
-                        data-ad-layout-key="-fb+5w+4e-db+86"
-                        data-ad-client="ca-pub-3186700611266549"
-                        data-ad-slot="3969235710"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                    
-                    <div class="mobile-ad-placeholder" id="sideAdPlaceholder">
-                        <div class="ad-title">Διαφήμιση</div>
-                        <div class="ad-text">Η διαφήμιση θα εμφανιστεί σύντομα</div>
-                    </div>
-                </div>
+                <!-- High Value Sidebar Ad -->
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-3186700611266549"
+                    data-ad-slot="3969235710"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
             </div>
         </div>
     </div>
@@ -426,24 +447,28 @@
     <div class="bottom-ad-container">
         <div class="bottom-ad-label">Διαφήμιση</div>
         <div class="bottom-ad-content">
-            <!-- Δεύτερη διαφήμιση - Το ίδιο script για συνοχή -->
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
-                crossorigin="anonymous"></script>
+            <!-- High Value Bottom Ad -->
             <ins class="adsbygoogle"
                 style="display:block"
-                data-ad-format="fluid"
-                data-ad-layout-key="-fb+5w+4e-db+86"
                 data-ad-client="ca-pub-3186700611266549"
-                data-ad-slot="3969235710"></ins>
+                data-ad-slot="3969235710"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
             <script>
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
-            
-            <div class="mobile-ad-placeholder" id="bottomAdPlaceholder">
-                <div class="ad-title">Διαφήμιση</div>
-                <div class="ad-text">Διαφημιστικό περιεχόμενο</div>
-            </div>
         </div>
+    </div>
+    
+    <!-- Sticky Mobile Ad (High CTR) -->
+    <div class="sticky-ad" id="stickyAd">
+        <ins class="adsbygoogle"
+            style="display:inline-block;width:100%;height:90px"
+            data-ad-client="ca-pub-3186700611266549"
+            data-ad-slot="3969235710"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
     </div>
     
     <script>
@@ -452,8 +477,7 @@
             const videoPoster = document.getElementById('videoPoster');
             const posterImage = document.getElementById('posterImage');
             const playButton = document.getElementById('playButton');
-            const sideAdPlaceholder = document.getElementById('sideAdPlaceholder');
-            const bottomAdPlaceholder = document.getElementById('bottomAdPlaceholder');
+            const stickyAd = document.getElementById('stickyAd');
             
             // Προσθήκη ελέγχων στο βίντεο
             video.controls = true;
@@ -472,8 +496,26 @@
                         playPromise.then(function() {
                             // Αναπαραγωγή ξεκίνησε επιτυχώς
                             videoPoster.classList.add('hidden');
+                            
+                            // Εμφάνιση sticky ad μετά από 10 δευτερόλεπτα
+                            setTimeout(function() {
+                                if (window.innerWidth <= 768) {
+                                    stickyAd.classList.add('active');
+                                }
+                            }, 10000);
+                            
+                            // Προσπάθεια εμφάνισης περισσότερων διαφημίσεων
+                            setTimeout(function() {
+                                try {
+                                    if (typeof adsbygoogle !== 'undefined') {
+                                        adsbygoogle.push({});
+                                    }
+                                } catch (e) {
+                                    console.log('Additional ad push:', e);
+                                }
+                            }, 15000);
+                            
                         }).catch(function(error) {
-                            // Αυτόματη αναπαραγωγή απορρίφθηκε, αλλά το βίντεο είναι έτοιμο
                             console.log('Χειροκίνητη αναπαραγωγή απαιτείται:', error);
                             videoPoster.classList.remove('hidden');
                         });
@@ -498,6 +540,17 @@
             // Όταν τελειώσει το βίντεο, δείξε ξανά το πρώτο καρέ
             video.addEventListener('ended', function() {
                 videoPoster.classList.remove('hidden');
+                
+                // Εμφάνιση ad μετά το τέλος του βίντεο
+                setTimeout(function() {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                        }
+                    } catch (e) {
+                        console.log('Post-video ad push:', e);
+                    }
+                }, 2000);
             });
             
             // Κάνε το βίντεο να παίξει όταν πατήθηκε play από τα controls
@@ -511,9 +564,19 @@
                 }
             });
             
-            // Έλεγχος αν το thumbnail φορτώθηκε
+            // Προσωρινή απόκρυψη sticky ad όταν παίζει το βίντεο
+            video.addEventListener('play', function() {
+                stickyAd.classList.remove('active');
+            });
+            
+            video.addEventListener('pause', function() {
+                if (window.innerWidth <= 768 && !video.ended) {
+                    stickyAd.classList.add('active');
+                }
+            });
+            
+            // Ελέγχουμε το thumbnail
             posterImage.addEventListener('error', function() {
-                console.log('Σφάλμα φόρτωσης thumbnail.');
                 posterImage.style.display = 'none';
                 videoPoster.style.backgroundColor = '#222';
                 videoPoster.innerHTML = '<div style="color: #fff; text-align: center; padding: 20px;"><div>Ο γιος σου μου Χρωστάει 350€</div><div style="margin-top: 10px; font-size: 14px; color: #aaa;">Κάντε κλικ για αναπαραγωγή</div></div>' + 
@@ -521,104 +584,92 @@
                 document.getElementById('playButtonFallback').addEventListener('click', startVideo);
             });
             
-            // Έλεγχος αν το βίντεο φορτώνεται
-            video.addEventListener('error', function(e) {
-                console.log('Σφάλμα φόρτωσης βίντεο:', e);
-                videoPoster.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff6b6b;">Σφάλμα φόρτωσης βίντεο</div>';
-            });
-            
-            // Έλεγχος για διαφημίσεις με fluid layout
-            function checkAds() {
-                // Έλεγχος για πλευρική διαφήμιση
-                setTimeout(function() {
-                    const sideAds = document.querySelectorAll('ins.adsbygoogle');
-                    let sideAdLoaded = false;
-                    
-                    sideAds.forEach(function(ad) {
-                        // Έλεγχος αν η διαφήμιση έχει φορτωθεί (fluid layout)
-                        if (ad.offsetHeight > 50 || 
-                            ad.innerHTML.trim().length > 10 || 
-                            ad.querySelector('iframe') ||
-                            ad.querySelector('img')) {
-                            sideAdLoaded = true;
+            // Ad Management System
+            function optimizeAds() {
+                // Επαναφόρτωση ads κάθε 30 δευτερόλεπτα για max revenue
+                setInterval(function() {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                            
+                            // Επιπλέον προσπάθεια για mobile
+                            if (window.innerWidth <= 768) {
+                                setTimeout(function() {
+                                    try {
+                                        adsbygoogle.push({});
+                                    } catch (e) {
+                                        console.log('Mobile ad refresh:', e);
+                                    }
+                                }, 1000);
+                            }
                         }
-                    });
-                    
-                    if (!sideAdLoaded) {
-                        sideAdPlaceholder.style.display = 'flex';
-                    } else {
-                        sideAdPlaceholder.style.display = 'none';
+                    } catch (e) {
+                        console.log('Ad optimization error:', e);
                     }
-                }, 1500);
+                }, 30000);
                 
-                // Έλεγχος για κάτω διαφήμιση
-                setTimeout(function() {
-                    const bottomAds = document.querySelectorAll('ins.adsbygoogle');
-                    let bottomAdLoaded = false;
-                    
-                    bottomAds.forEach(function(ad) {
-                        if (ad.offsetHeight > 30 || 
-                            ad.innerHTML.trim().length > 10 || 
-                            ad.querySelector('iframe') ||
-                            ad.querySelector('img')) {
-                            bottomAdLoaded = true;
+                // Προσαρμογή ads κατά το resize
+                window.addEventListener('resize', function() {
+                    setTimeout(function() {
+                        try {
+                            if (typeof adsbygoogle !== 'undefined') {
+                                adsbygoogle.push({});
+                            }
+                        } catch (e) {
+                            console.log('Resize ad refresh:', e);
                         }
-                    });
-                    
-                    if (!bottomAdLoaded) {
-                        bottomAdPlaceholder.style.display = 'flex';
-                    } else {
-                        bottomAdPlaceholder.style.display = 'none';
-                    }
-                }, 2000);
+                    }, 500);
+                });
             }
             
-            // Αρχικός έλεγχος διαφημίσεων
-            checkAds();
+            // Εκκίνηση του ad optimization system
+            setTimeout(optimizeAds, 3000);
             
-            // Προσπάθεια reload διαφημίσεων περιοδικά
-            setInterval(function() {
-                try {
-                    // Προσπάθεια ανανέωσης διαφημίσεων
-                    if (typeof adsbygoogle !== 'undefined' && Array.isArray(adsbygoogle)) {
-                        // Ελέγχουμε αν υπάρχουν διαφημίσεις που χρειάζονται ανανέωση
-                        const allAds = document.querySelectorAll('ins.adsbygoogle');
-                        allAds.forEach(function(ad) {
-                            if (ad.offsetHeight < 30) {
-                                // Προσπάθεια push για ad refresh
-                                try {
+            // Track video engagement for better ad targeting
+            let videoWatchTime = 0;
+            let videoProgressInterval;
+            
+            video.addEventListener('play', function() {
+                videoProgressInterval = setInterval(function() {
+                    if (!video.paused && !video.ended) {
+                        videoWatchTime += 1;
+                        
+                        // Προσπάθεια για "mid-roll" ad ανά 30 δευτερόλεπτα
+                        if (videoWatchTime % 30 === 0 && videoWatchTime > 0) {
+                            try {
+                                if (typeof adsbygoogle !== 'undefined') {
                                     adsbygoogle.push({});
-                                } catch (e) {
-                                    console.log('Ad refresh error:', e);
                                 }
+                            } catch (e) {
+                                console.log('Mid-roll ad attempt:', e);
                             }
-                        });
+                        }
                     }
-                } catch (e) {
-                    console.log('Ad reload system error:', e);
+                }, 1000);
+            });
+            
+            video.addEventListener('pause', function() {
+                clearInterval(videoProgressInterval);
+            });
+            
+            video.addEventListener('ended', function() {
+                clearInterval(videoProgressInterval);
+                videoWatchTime = 0;
+            });
+            
+            // Page visibility API για ad refresh όταν ο χρήστης επιστρέφει
+            document.addEventListener('visibilitychange', function() {
+                if (!document.hidden) {
+                    setTimeout(function() {
+                        try {
+                            if (typeof adsbygoogle !== 'undefined') {
+                                adsbygoogle.push({});
+                            }
+                        } catch (e) {
+                            console.log('Visibility change ad refresh:', e);
+                        }
+                    }, 1000);
                 }
-                
-                // Εκ νέου έλεγχος
-                checkAds();
-            }, 30000); // Κάθε 30 δευτερόλεπτα
-            
-            // Mobile touch optimizations για Safari και Chrome
-            let touchStartY = 0;
-            
-            document.addEventListener('touchstart', function(e) {
-                touchStartY = e.changedTouches[0].screenY;
-            }, { passive: true });
-            
-            // Προστασία από accidental refresh
-            document.addEventListener('touchmove', function(e) {
-                if (e.scale !== 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            // Force ad display on window resize (fluid layout adaptation)
-            window.addEventListener('resize', function() {
-                setTimeout(checkAds, 500);
             });
         });
     </script>
