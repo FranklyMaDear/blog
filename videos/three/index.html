@@ -123,7 +123,7 @@
             margin-top: 5px;
         }
         
-        /* FLOATING CORNER AD - ΣΤΗΝ ΚΑΤΩ ΔΕΞΙΑ ΓΩΝΙΑ */
+        /* FLOATING CORNER AD - ΕΤΑΙΡΕΙΕΣ ΜΕ ΦΩΤΟΓΡΑΦΙΕΣ */
         .corner-ad-overlay {
             position: fixed;
             bottom: 20px;
@@ -131,13 +131,13 @@
             width: 300px;
             height: 250px;
             background: rgba(0, 0, 0, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid #4CAF50;
             border-radius: 10px;
             z-index: 9999;
             display: none;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(10px);
         }
         
@@ -208,7 +208,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 15px;
             background: rgba(0, 0, 0, 0.7);
         }
         
@@ -216,34 +216,69 @@
             width: 100%;
             height: 100%;
             display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
         }
         
         .corner-ad-slot.active {
-            display: block;
+            display: flex;
         }
         
-        .adsbygoogle-corner {
-            width: 100% !important;
-            height: 100% !important;
-            display: block !important;
+        .company-logo {
+            width: 120px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 15px;
             border-radius: 5px;
-            overflow: hidden;
         }
         
-        /* ΔΙΑΚΡΙΤΙΚΗ ΜΠΑΡΑ ΔΕΥΤΕΡΟΛΕΠΤΩΝ (ΓΙΑ VIDEO RELOAD) */
+        .company-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.3);
+        }
+        
+        .company-slogan {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .company-website {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .company-website:hover {
+            background: #45a049;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* RELOAD TIMER BAR (ΑΦΑΙΡΕΜΕΝΟ ΑΠΟ ΤΗΝ ΟΘΟΝΗ) */
         .reload-timer-bar {
             position: fixed;
-            bottom: 0;
+            bottom: -10px; /* ΚΡΥΜΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗΝ ΟΘΟΝΗ */
             left: 0;
             width: 100%;
             height: 3px;
             background: rgba(255, 255, 255, 0.1);
-            z-index: 9998;
+            z-index: -1; /* ΚΡΥΜΕΝΟ */
             display: none;
-        }
-        
-        .reload-timer-bar.active {
-            display: block;
+            opacity: 0;
         }
         
         .reload-timer-progress {
@@ -258,7 +293,7 @@
         
         .reload-countdown {
             position: fixed;
-            bottom: 10px;
+            bottom: -50px; /* ΚΡΥΜΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗΝ ΟΘΟΝΗ */
             left: 10px;
             background: rgba(0, 0, 0, 0.7);
             color: white;
@@ -266,13 +301,10 @@
             border-radius: 15px;
             font-size: 11px;
             font-family: monospace;
-            z-index: 9999;
+            z-index: -1; /* ΚΡΥΜΕΝΟ */
             display: none;
+            opacity: 0;
             border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .reload-countdown.active {
-            display: block;
         }
         
         /* MAIN VIDEO CONTAINER */
@@ -464,9 +496,18 @@
             
             .corner-ad-overlay {
                 width: 250px;
-                height: 200px;
+                height: 220px;
                 bottom: 15px;
                 right: 15px;
+            }
+            
+            .company-logo {
+                width: 100px;
+                height: 50px;
+            }
+            
+            .company-name {
+                font-size: 16px;
             }
             
             .video-controls {
@@ -485,9 +526,22 @@
         @media (max-width: 480px) {
             .corner-ad-overlay {
                 width: 200px;
-                height: 150px;
+                height: 180px;
                 bottom: 10px;
                 right: 10px;
+            }
+            
+            .company-logo {
+                width: 80px;
+                height: 40px;
+            }
+            
+            .company-name {
+                font-size: 14px;
+            }
+            
+            .company-slogan {
+                font-size: 11px;
             }
             
             .corner-ad-header {
@@ -526,50 +580,56 @@
         </div>
     </div>
 
-    <!-- FLOATING CORNER AD - ΚΑΤΩ ΔΕΞΙΑ -->
+    <!-- FLOATING CORNER AD - ΕΤΑΙΡΕΙΕΣ ΜΕ ΦΩΤΟΓΡΑΦΙΕΣ -->
     <div class="corner-ad-overlay hidden" id="cornerAdOverlay">
         <div class="corner-ad-header">
             <div class="corner-ad-title">
-                <span>📢 Ad</span>
+                <span>📢 Εταιρική Διαφήμιση</span>
             </div>
             <div class="corner-ad-timer" id="cornerAdTimer">10</div>
             <button class="corner-ad-close" id="cornerAdClose">×</button>
         </div>
         
         <div class="corner-ad-content">
-            <!-- Corner Ad 1 -->
+            <!-- Εταιρεία 1 - Couture -->
             <div class="corner-ad-slot active" id="cornerAd1">
-                <ins class="adsbygoogle adsbygoogle-corner"
-                     style="display:block"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="5407828554"
-                     data-ad-format="rectangle"
-                     data-full-width-responsive="false"></ins>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/2560px-Adidas_Logo.svg.png" 
+                     alt="Couture Logo" class="company-logo">
+                <div class="company-name">Couture</div>
+                <div class="company-slogan">Premium Fashion & Luxury Apparel</div>
+                <a href="https://couture.com" target="_blank" class="company-website">Visit Website</a>
             </div>
             
-            <!-- Corner Ad 2 -->
+            <!-- Εταιρεία 2 - NINE WEST -->
             <div class="corner-ad-slot" id="cornerAd2">
-                <ins class="adsbygoogle adsbygoogle-corner"
-                     style="display:block"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="3969235710"
-                     data-ad-format="rectangle"
-                     data-full-width-responsive="false"></ins>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Nine_West_logo.svg/1200px-Nine_West_logo.svg.png" 
+                     alt="NINE WEST Logo" class="company-logo">
+                <div class="company-name">NINE WEST</div>
+                <div class="company-slogan">Stylish Footwear & Accessories</div>
+                <a href="https://ninewest.com" target="_blank" class="company-website">Visit Website</a>
             </div>
             
-            <!-- Corner Ad 3 -->
+            <!-- Εταιρεία 3 - G-STAR -->
             <div class="corner-ad-slot" id="cornerAd3">
-                <ins class="adsbygoogle adsbygoogle-corner"
-                     style="display:block"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="1234567890"
-                     data-ad-format="rectangle"
-                     data-full-width-responsive="false"></ins>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/G_Star_RAW_logo.svg/2560px-G_Star_RAW_logo.svg.png" 
+                     alt="G-STAR Logo" class="company-logo">
+                <div class="company-name">G-STAR RAW</div>
+                <div class="company-slogan">Denim Innovation & Urban Fashion</div>
+                <a href="https://g-star.com" target="_blank" class="company-website">Visit Website</a>
+            </div>
+            
+            <!-- Εταιρεία 4 - ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ -->
+            <div class="corner-ad-slot" id="cornerAd4">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Nike_logo.svg/2560px-Nike_logo.svg.png" 
+                     alt="ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ Logo" class="company-logo">
+                <div class="company-name">ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ</div>
+                <div class="company-slogan">Premium Greek Footwear Brand</div>
+                <a href="https://agiatapapoutsia.gr" target="_blank" class="company-website">Visit Website</a>
             </div>
         </div>
     </div>
 
-    <!-- RELOAD TIMER BAR -->
+    <!-- RELOAD TIMER BAR (ΚΡΥΜΕΝΟ) -->
     <div class="reload-timer-bar" id="reloadTimerBar">
         <div class="reload-timer-progress" id="reloadTimerProgress"></div>
     </div>
@@ -615,8 +675,9 @@
         const cornerAd1 = document.getElementById('cornerAd1');
         const cornerAd2 = document.getElementById('cornerAd2');
         const cornerAd3 = document.getElementById('cornerAd3');
+        const cornerAd4 = document.getElementById('cornerAd4');
         
-        // Reload Timer Elements
+        // Reload Timer Elements (hidden)
         const reloadTimerBar = document.getElementById('reloadTimerBar');
         const reloadTimerProgress = document.getElementById('reloadTimerProgress');
         const reloadCountdown = document.getElementById('reloadCountdown');
@@ -654,9 +715,34 @@
         let reloadTimerInterval;
         let reloadProgressInterval;
         
-        // AD CONFIGURATION
-        const cornerAds = [cornerAd1, cornerAd2, cornerAd3];
-        const cornerAdSlots = ["5407828554", "3969235710", "1234567890"];
+        // ΕΤΑΙΡΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ (με φωτογραφίες)
+        const cornerAds = [cornerAd1, cornerAd2, cornerAd3, cornerAd4];
+        const companies = [
+            {
+                name: "Couture",
+                slogan: "Premium Fashion & Luxury Apparel",
+                website: "https://couture.com",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/2560px-Adidas_Logo.svg.png"
+            },
+            {
+                name: "NINE WEST",
+                slogan: "Stylish Footwear & Accessories",
+                website: "https://ninewest.com",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Nine_West_logo.svg/1200px-Nine_West_logo.svg.png"
+            },
+            {
+                name: "G-STAR RAW",
+                slogan: "Denim Innovation & Urban Fashion",
+                website: "https://g-star.com",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/G_Star_RAW_logo.svg/2560px-G_Star_RAW_logo.svg.png"
+            },
+            {
+                name: "ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ",
+                slogan: "Premium Greek Footwear Brand",
+                website: "https://agiatapapoutsia.gr",
+                logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Nike_logo.svg/2560px-Nike_logo.svg.png"
+            }
+        ];
         
         // ================== ADSENSE FUNCTIONS ==================
         
@@ -668,25 +754,7 @@
             }
         }
         
-        function loadCornerAd(adElement, adSlot) {
-            if (!adElement) return;
-            try {
-                const adIns = adElement.querySelector('.adsbygoogle-corner');
-                if (!adIns) return;
-                
-                if (adSlot) {
-                    adIns.setAttribute('data-ad-slot', adSlot);
-                }
-                
-                if (typeof adsbygoogle !== 'undefined') {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                }
-            } catch (e) {
-                console.log('Ad load error:', e);
-            }
-        }
-        
-        // ================== AD SYSTEM FUNCTIONS ==================
+        // ================== ΕΤΑΙΡΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ ==================
         
         function startFirstAd() {
             console.log('Starting first ad (10 seconds)...');
@@ -728,7 +796,7 @@
                 // Start corner ads system
                 startCornerAdsSystem();
                 
-                // Start reload timer system
+                // Start hidden reload timer system
                 startReloadTimer();
                 
             }).catch(e => {
@@ -744,18 +812,18 @@
                 showNextCornerAd();
             }, 15000);
             
-            // Set up continuous rotation every 40 seconds (10s ad + 30s pause)
+            // Set up continuous rotation every 30 seconds (10s ad + 20s pause)
             cornerAdRotationInterval = setInterval(() => {
                 if (!isCornerAdShowing) {
                     showNextCornerAd();
                 }
-            }, 40000);
+            }, 30000);
         }
         
         function showNextCornerAd() {
             if (isCornerAdShowing) return;
             
-            console.log(`Showing corner ad ${currentCornerAdIndex + 1}...`);
+            console.log(`Showing company ad: ${companies[currentCornerAdIndex].name}`);
             isCornerAdShowing = true;
             
             // Hide all corner ads
@@ -766,10 +834,6 @@
             // Show current corner ad
             const currentAd = cornerAds[currentCornerAdIndex];
             currentAd.classList.add('active');
-            
-            // Load ad
-            const adSlot = cornerAdSlots[currentCornerAdIndex];
-            loadCornerAd(currentAd, adSlot);
             
             // Show corner ad with animation
             cornerAdOverlay.classList.remove('hidden');
@@ -789,7 +853,7 @@
                 }
             }, 1000);
             
-            // Rotate to next ad
+            // Rotate to next company
             currentCornerAdIndex = (currentCornerAdIndex + 1) % cornerAds.length;
         }
         
@@ -806,27 +870,21 @@
             }, 500);
         }
         
-        // ================== RELOAD TIMER FUNCTIONS ==================
+        // ================== HIDDEN RELOAD TIMER ==================
         
         function startReloadTimer() {
-            console.log('Starting 60-second reload timer...');
+            console.log('Starting hidden 60-second reload timer...');
             
             // Reset values
             reloadCountdownValue = 60;
             reloadTimerProgress.style.width = '0%';
             
-            // Show reload elements
-            reloadTimerBar.classList.add('active');
-            reloadCountdown.classList.add('active');
-            updateReloadDisplay();
-            
-            // Start countdown
+            // Start hidden countdown
             clearInterval(reloadTimerInterval);
             reloadTimerInterval = setInterval(() => {
                 reloadCountdownValue--;
-                updateReloadDisplay();
                 
-                // Update progress bar
+                // Update hidden progress bar
                 const progress = ((60 - reloadCountdownValue) / 60) * 100;
                 reloadTimerProgress.style.width = progress + '%';
                 
@@ -836,16 +894,8 @@
             }, 1000);
         }
         
-        function updateReloadDisplay() {
-            reloadCountdown.textContent = `Reload in: ${reloadCountdownValue}s`;
-        }
-        
         function reloadVideo() {
             console.log('Reloading video...');
-            
-            // Hide reload elements
-            reloadTimerBar.classList.remove('active');
-            reloadCountdown.classList.remove('active');
             
             // Pause video and reset
             mainVideo.pause();
@@ -994,8 +1044,12 @@
         
         // Initialize
         window.addEventListener('load', () => {
-            console.log('Page loaded - New Ad System');
+            console.log('Page loaded - Company Ads System');
             document.title = "Το Έψαξα Πάντως - FmD @FmD699";
+            console.log('Εταιρείες διαφήμισης:');
+            companies.forEach(company => {
+                console.log(`- ${company.name}: ${company.slogan}`);
+            });
         });
         
         // Auto-enable sound on first interaction
