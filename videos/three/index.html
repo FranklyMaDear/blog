@@ -46,6 +46,12 @@
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="no-referrer">
     
+    <!-- AD COOKIE COMPLIANCE - ΣΩΣΤΗ ΘΕΣΗ: ΣΤΗ ΒΑΣΗ ΤΗΣ ΣΕΛΙΔΑΣ -->
+    <div id="cookie-compliance" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(0,0,0,0.9); color: white; padding: 10px; z-index: 9998; text-align: center; font-size: 12px; border-top: 1px solid #333;">
+        <span>This site uses cookies for ads. <a href="#" style="color: #4CAF50; text-decoration: none;">Privacy Policy</a></span>
+        <button onclick="document.getElementById('cookie-compliance').style.display='none'" style="margin-left: 10px; background: #4CAF50; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer;">OK</button>
+    </div>
+    
     <style>
         * {
             margin: 0;
@@ -65,35 +71,31 @@
             user-select: none;
         }
         
-        /* FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ */
+        /* FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ - ΑΠΛΟΥΣΤΕΥΜΕΝΟ */
         .first-ad-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.95);
+            background: #000;
             z-index: 10000;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            transition: opacity 0.5s ease;
         }
         
         .first-ad-container {
             width: 95%;
             max-width: 400px;
             height: 70vh;
-            background: rgba(20, 20, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 15px;
+            background: #111;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-            position: relative;
             display: flex;
             flex-direction: column;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #333;
         }
         
         .first-ad-content {
@@ -102,76 +104,50 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            position: relative;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            background: #000;
         }
         
-        /* STYLE FOR FIRST AD */
         .first-ad {
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            border-radius: 8px;
+            border-radius: 5px;
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
+            background: #222;
         }
         
         .first-ad-footer {
-            padding: 12px 15px;
+            padding: 15px;
             text-align: center;
-            background: rgba(30, 30, 45, 0.9);
+            background: #111;
             color: #fff;
-            font-size: 16px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 10; /* ΒΑΖΩ Z-INDEX ΓΙΑ ΝΑ ΕΙΝΑΙ ΠΑΝΩ ΑΠΟ ΤΗΝ ΔΙΑΦΗΜΙΣΗ */
+            font-size: 14px;
+            border-top: 1px solid #333;
         }
         
-        .countdown-text {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        /* ΜΙΚΡΗ ΜΠΑΡΑ ΔΕΥΤΕΡΟΛΕΠΤΩΝ - ΚΑΘΑΡΗ ΕΜΦΑΝΙΣΗ */
         .countdown-timer {
             font-size: 16px;
             font-weight: bold;
-            color: #ffffff;
-            font-family: 'Courier New', monospace;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-            background: rgba(0, 0, 0, 0.6);
-            padding: 3px 8px;
-            border-radius: 5px;
-            min-width: 30px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #4CAF50;
+            font-family: monospace;
+            margin-top: 5px;
         }
         
-        /* BOTTOM SLIDE-UP AD - ΚΑΘΕ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ */
+        /* BOTTOM SLIDE-UP AD - ΣΩΣΤΗ ΕΚΔΟΣΗ */
         .bottom-slide-ad {
             position: fixed;
-            bottom: -35vh;
+            bottom: -200px; /* ΚΡΥΜΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗΝ ΟΘΟΝΗ */
             left: 0;
             width: 100%;
-            height: 35vh;
-            background: linear-gradient(145deg, #1a1a2e, #0a0a1a);
+            height: 200px;
+            background: #0a0a0a;
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            overflow: hidden;
-            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.8);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.7);
+            border-top: 2px solid #4CAF50;
+            transition: bottom 0.5s ease;
         }
         
         .bottom-slide-ad.visible {
@@ -179,62 +155,57 @@
         }
         
         .bottom-slide-ad.hidden {
-            bottom: -35vh;
+            bottom: -200px;
         }
         
         .bottom-ad-header {
             width: 100%;
-            padding: 8px 12px 5px;
+            padding: 8px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.7);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 10;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 1px solid #333;
         }
         
         .bottom-ad-title {
             font-size: 12px;
             font-weight: 600;
-            color: #ffcb2e;
+            color: #4CAF50;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
         
         .bottom-ad-timer {
-            background: linear-gradient(45deg, #ffcb2e, #ff9900);
-            color: #000;
+            background: #4CAF50;
+            color: white;
             font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-family: 'Courier New', monospace;
-            min-width: 28px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+            min-width: 35px;
             text-align: center;
         }
         
         .bottom-ad-close {
-            background: rgba(255, 255, 255, 0.1);
+            background: #333;
             color: white;
             border: none;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
+            transition: background 0.3s;
         }
         
-        .bottom-ad-close:hover,
-        .bottom-ad-close:active {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+        .bottom-ad-close:hover {
+            background: #555;
         }
         
         .bottom-ad-content {
@@ -244,7 +215,7 @@
             align-items: center;
             justify-content: center;
             padding: 10px;
-            position: relative;
+            background: rgba(0,0,0,0.5);
         }
         
         .bottom-ad-container {
@@ -254,18 +225,12 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
         }
         
-        /* BOTTOM AD STYLES */
         .bottom-ad-slot {
             width: 100%;
             height: 100%;
             display: none;
-            position: relative;
-            border-radius: 6px;
-            overflow: hidden;
         }
         
         .bottom-ad-slot.active {
@@ -276,28 +241,20 @@
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            border-radius: 6px;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
+            background: #1a1a1a;
         }
         
         .bottom-ad-footer {
             width: 100%;
-            padding: 5px 10px;
-            background: rgba(0, 0, 0, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px;
+            background: rgba(0,0,0,0.9);
             text-align: center;
-            position: relative;
-            z-index: 10;
+            font-size: 10px;
+            color: #888;
+            border-top: 1px solid #333;
         }
         
-        .bottom-ad-footer-text {
-            font-size: 9px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 500;
-        }
-        
-        /* MAIN VIDEO CONTAINER */
+        /* MAIN VIDEO CONTAINER - ΚΑΘΑΡΟΣ ΧΩΡΙΣ ΕΜΠΟΔΙΑ */
         .video-container {
             position: fixed;
             top: 0;
@@ -310,12 +267,6 @@
             align-items: center;
             overflow: hidden;
             z-index: 1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .video-container.active {
-            opacity: 1;
         }
         
         #mainVideo {
@@ -335,23 +286,21 @@
             transform: translate(-50%, -50%);
             width: 60px;
             height: 60px;
-            background: rgba(128, 128, 128, 0.25);
+            background: rgba(0,0,0,0.7);
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
             cursor: pointer;
             z-index: 10;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-            opacity: 0.7;
+            transition: all 0.3s;
+            opacity: 0.8;
         }
         
         .video-play-overlay:hover {
-            background: rgba(128, 128, 128, 0.4);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%) scale(1.05);
+            background: rgba(0,0,0,0.9);
+            transform: translate(-50%, -50%) scale(1.1);
         }
         
         .video-play-overlay::after {
@@ -360,13 +309,11 @@
             font-size: 24px;
             margin-left: 4px;
             font-weight: bold;
-            opacity: 0.8;
         }
         
         .video-play-overlay.hidden {
-            opacity: 0 !important;
-            pointer-events: none !important;
-            transform: translate(-50%, -50%) scale(0.5) !important;
+            opacity: 0;
+            pointer-events: none;
         }
         
         .loading-spinner {
@@ -376,8 +323,8 @@
             transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: #1d9bf0;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: #4CAF50;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             z-index: 6;
@@ -386,73 +333,63 @@
         
         .video-controls {
             position: absolute;
-            bottom: 15px;
-            left: 15px;
-            right: 15px;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(0, 0, 0, 0.7);
+            gap: 15px;
+            background: rgba(0,0,0,0.8);
             padding: 12px 20px;
-            border-radius: 25px;
-            backdrop-filter: blur(30px);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
             opacity: 0;
-            transition: opacity 0.3s, transform 0.3s;
+            transition: opacity 0.3s;
             z-index: 20;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-width: 300px;
+            justify-content: center;
         }
         
         .video-controls.visible {
             opacity: 1;
-            transform: translateY(0);
         }
         
         .control-btn {
-            background: none;
+            background: rgba(255,255,255,0.1);
             border: none;
             color: white;
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
-            padding: 8px;
+            padding: 10px;
             border-radius: 50%;
             transition: all 0.3s;
-            min-width: 45px;
-            min-height: 45px;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-            background: rgba(255, 255, 255, 0.1);
         }
         
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: scale(1.1);
+            background: rgba(255,255,255,0.2);
         }
         
         .time-display {
-            font-family: 'Courier New', monospace;
-            font-size: 16px;
-            color: rgba(255, 255, 255, 0.95);
+            font-family: monospace;
+            font-size: 14px;
+            color: white;
             font-weight: 600;
-            text-align: center;
-            flex: 1;
-            padding: 0 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 8px 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0 15px;
         }
         
         .video-progress-container {
             position: absolute;
-            bottom: 85px;
-            left: 15px;
-            right: 15px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
             z-index: 20;
             cursor: pointer;
             opacity: 0;
@@ -464,23 +401,10 @@
             left: 0;
             top: 0;
             height: 100%;
-            background: rgba(29, 155, 240, 0.7);
-            border-radius: 3px;
+            background: #4CAF50;
+            border-radius: 2px;
             width: 0%;
             transition: width 0.1s;
-        }
-        
-        .video-progress-handle {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 14px;
-            height: 14px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.3s;
-            border: 2px solid rgba(29, 155, 240, 0.8);
         }
         
         @keyframes spin {
@@ -495,65 +419,47 @@
                 max-width: 320px;
             }
             
-            .first-ad-content {
-                padding: 10px;
-            }
-            
-            .first-ad-footer {
-                padding: 10px 12px;
-                font-size: 14px;
-            }
-            
-            .countdown-timer {
-                font-size: 14px;
-                padding: 2px 6px;
-                min-width: 26px;
-            }
-            
             .bottom-slide-ad {
-                height: 30vh;
+                height: 180px;
+                bottom: -180px;
             }
             
             .bottom-slide-ad.hidden {
-                bottom: -30vh;
-            }
-            
-            .video-play-overlay {
-                width: 50px;
-                height: 50px;
-            }
-        }
-        
-        /* VERY SMALL SCREENS */
-        @media (max-width: 480px) {
-            .countdown-timer {
-                font-size: 12px;
-                padding: 2px 5px;
-                min-width: 22px;
-            }
-            
-            .bottom-ad-timer {
-                font-size: 9px;
-                padding: 1px 4px;
-                min-width: 20px;
-            }
-        }
-        
-        /* SAFARI SPECIFIC FIXES */
-        @supports (-webkit-touch-callout: none) {
-            .video-container {
-                height: -webkit-fill-available;
+                bottom: -180px;
             }
             
             .video-controls {
-                -webkit-backdrop-filter: blur(30px);
-                backdrop-filter: blur(30px);
+                min-width: 280px;
+                bottom: 15px;
+                padding: 10px 15px;
+            }
+            
+            .control-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .bottom-slide-ad {
+                height: 150px;
+                bottom: -150px;
+            }
+            
+            .bottom-slide-ad.hidden {
+                bottom: -150px;
+            }
+            
+            .video-controls {
+                min-width: 250px;
+                gap: 10px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ -->
+    <!-- FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΜΟΝΟ -->
     <div class="first-ad-overlay" id="firstAdOverlay">
         <div class="first-ad-container">
             <div class="first-ad-content">
@@ -566,21 +472,19 @@
                      data-full-width-responsive="true"></ins>
             </div>
             <div class="first-ad-footer">
-                <div class="countdown-text">
-                    <span id="waitText">Please wait, video is starting...</span>
-                    <div class="countdown-timer" id="countdownTimer">10</div>
-                </div>
+                <div>Video starts in</div>
+                <div class="countdown-timer" id="countdownTimer">10</div>
             </div>
         </div>
     </div>
 
     <!-- BOTTOM SLIDE-UP AD - ΚΑΘΕ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ -->
-    <div class="bottom-slide-ad" id="bottomSlideAd">
+    <div class="bottom-slide-ad hidden" id="bottomSlideAd">
         <div class="bottom-ad-header">
             <div class="bottom-ad-title">
                 <span>📢 Advertisement</span>
             </div>
-            <div class="bottom-ad-timer" id="bottomAdTimer">10s</div>
+            <div class="bottom-ad-timer" id="bottomAdTimer">10</div>
             <button class="bottom-ad-close" id="bottomAdClose">×</button>
         </div>
         
@@ -619,9 +523,7 @@
         </div>
         
         <div class="bottom-ad-footer">
-            <div class="bottom-ad-footer-text">
-                Advertisement - Thank you for supporting our content
-            </div>
+            Advertisement - Thank you for supporting our content
         </div>
     </div>
 
@@ -630,7 +532,7 @@
         <!-- Loading spinner -->
         <div class="loading-spinner" id="loadingSpinner"></div>
         
-        <!-- TRANSPARENT Play button overlay that disappears -->
+        <!-- Play button overlay -->
         <div class="video-play-overlay" id="videoPlayOverlay"></div>
         
         <!-- Main video -->
@@ -642,7 +544,6 @@
         <!-- Video Progress Bar -->
         <div class="video-progress-container" id="videoProgressContainer">
             <div class="video-progress-bar" id="videoProgressBar"></div>
-            <div class="video-progress-handle" id="videoProgressHandle"></div>
         </div>
         
         <!-- Video Controls -->
@@ -661,7 +562,6 @@
     <script>
         // DOM Elements
         const firstAdOverlay = document.getElementById('firstAdOverlay');
-        const waitText = document.getElementById('waitText');
         const countdownTimer = document.getElementById('countdownTimer');
         
         const bottomSlideAd = document.getElementById('bottomSlideAd');
@@ -684,7 +584,6 @@
         const fullscreenBtn = document.getElementById('fullscreenBtn');
         const videoProgressContainer = document.getElementById('videoProgressContainer');
         const videoProgressBar = document.getElementById('videoProgressBar');
-        const videoProgressHandle = document.getElementById('videoProgressHandle');
         
         // State
         let isPlaying = false;
@@ -692,11 +591,6 @@
         let videoDuration = 0;
         let controlsTimeout = null;
         let videoStarted = false;
-        let currentVolume = 1.0;
-        let isDraggingProgress = false;
-        
-        // Video Title
-        const VIDEO_TITLE = "Το Έψαξα Πάντως";
         
         // AD SYSTEM STATE
         let firstAdCountdown = 10;
@@ -706,65 +600,23 @@
         let bottomAdTimerInterval;
         let bottomAdRotationInterval;
         let videoStartTime = 0;
-        let adsInitialized = false;
         
         // AD CONFIGURATION
         const bottomAds = [bottomAd1, bottomAd2, bottomAd3];
         const bottomAdSlots = ["5407828554", "3969235710", "1234567890"];
         
-        // Language System
-        const languages = [
-            { 
-                code: 'en', 
-                text: 'Please wait, video is starting...',
-                banner: 'Advertisement - Thank you for supporting our content'
-            },
-            { 
-                code: 'el', 
-                text: 'Παρακαλώ περιμένετε, ξεκινάει το βίντεο...',
-                banner: 'Διαφήμιση - Ευχαριστούμε που υποστηρίζετε το περιεχόμενό μας'
-            },
-            { 
-                code: 'de', 
-                text: 'Bitte warten Sie, das Video startet...',
-                banner: 'Werbung - Vielen Dank für Ihre Unterstützung unseres Inhalts'
-            }
-        ];
-        let currentLangIndex = 0;
-        
         // ================== ADSENSE FUNCTIONS ==================
         
-        function initializeAdSense() {
-            if (adsInitialized) return;
-            
-            console.log('📢 Initializing AdSense ads...');
-            adsInitialized = true;
-            console.log('✅ AdSense ready for loading');
-        }
-        
         function loadFirstAd() {
-            console.log('📋 Loading first ad...');
-            
+            console.log('Loading first ad...');
             const firstAd = document.querySelector('.first-ad');
             if (firstAd && typeof adsbygoogle !== 'undefined') {
-                setTimeout(() => {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ First ad loaded with slot: 5407828554');
-                    
-                    // Check if ad is visible
-                    setTimeout(() => {
-                        if (firstAd.offsetParent === null) {
-                            console.log('⚠️ First ad retrying...');
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        }
-                    }, 1000);
-                }, 500);
+                (adsbygoogle = window.adsbygoogle || []).push({});
             }
         }
         
-        function loadBottomAd(adElement, adSlot = null) {
+        function loadBottomAd(adElement, adSlot) {
             if (!adElement) return;
-            
             try {
                 const adIns = adElement.querySelector('.adsbygoogle-bottom');
                 if (!adIns) return;
@@ -775,39 +627,17 @@
                 
                 if (typeof adsbygoogle !== 'undefined') {
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ Bottom ad loaded for slot: ' + adSlot);
-                    
-                    setTimeout(() => {
-                        if (adElement.offsetParent === null) {
-                            console.log('⚠️ Bottom ad retrying...');
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        }
-                    }, 1000);
-                } else {
-                    setTimeout(() => {
-                        if (typeof adsbygoogle !== 'undefined') {
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        }
-                    }, 1500);
                 }
             } catch (e) {
-                console.log('❌ Ad load error:', e);
+                console.log('Ad load error:', e);
             }
         }
         
         // ================== AD SYSTEM FUNCTIONS ==================
         
         function startFirstAd() {
-            console.log('📢 Starting first ad (10 seconds)...');
-            
-            initializeAdSense();
+            console.log('Starting first ad (10 seconds)...');
             loadFirstAd();
-            
-            // Set initial language
-            updateLanguageText();
-            
-            // Start language rotation every 2 seconds
-            setInterval(updateLanguageText, 2000);
             
             // Start 10-second countdown
             firstAdCountdown = 10;
@@ -824,51 +654,39 @@
             }, 1000);
         }
         
-        function updateLanguageText() {
-            if (currentLangIndex >= languages.length) currentLangIndex = 0;
-            waitText.textContent = languages[currentLangIndex].text;
-            currentLangIndex++;
-        }
-        
         function hideFirstAdAndStartVideo() {
-            console.log('🎬 First ad finished, starting video...');
-            
-            firstAdOverlay.style.opacity = '0';
-            firstAdOverlay.style.pointerEvents = 'none';
-            
-            setTimeout(() => {
-                videoContainer.classList.add('active');
-                startVideo();
-            }, 500);
+            console.log('First ad finished, starting video...');
+            firstAdOverlay.style.display = 'none';
+            startVideo();
         }
         
         function startVideo() {
-            console.log('▶️ Starting video...');
-            
+            console.log('Starting video...');
             videoPlayOverlay.classList.add('hidden');
             
-            const playPromise = mainVideo.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('✅ Video started playing');
-                    isPlaying = true;
-                    playPauseBtn.textContent = '⏸️';
-                    showControls();
-                    videoStarted = true;
-                    videoStartTime = Date.now();
-                    
-                    // Start bottom ads system - ΚΑΘΕ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ
-                    startBottomAdsSystem();
-                    
-                }).catch(e => {
-                    console.error('❌ Video play failed:', e);
-                });
-            }
+            mainVideo.play().then(() => {
+                console.log('Video started playing');
+                isPlaying = true;
+                playPauseBtn.textContent = '⏸️';
+                showControls();
+                videoStarted = true;
+                videoStartTime = Date.now();
+                
+                // Show cookie compliance message at bottom (NOT over video)
+                setTimeout(() => {
+                    document.getElementById('cookie-compliance').style.display = 'block';
+                }, 2000);
+                
+                // Start bottom ads system - ΚΑΘΕ 10 ΔΕΥΤΕΡΟΛΕΠΤΑ
+                startBottomAdsSystem();
+                
+            }).catch(e => {
+                console.error('Video play failed:', e);
+            });
         }
         
         function startBottomAdsSystem() {
-            console.log('🔄 Starting bottom ads system (every 10 seconds)...');
+            console.log('Starting bottom ads system (every 10 seconds)...');
             
             // Show first bottom ad after 10 seconds
             setTimeout(() => {
@@ -886,7 +704,7 @@
         function showNextBottomAd() {
             if (isBottomAdShowing) return;
             
-            console.log(`📢 Showing bottom ad ${currentBottomAdIndex + 1}...`);
+            console.log(`Showing bottom ad ${currentBottomAdIndex + 1}...`);
             isBottomAdShowing = true;
             
             // Hide all bottom ads
@@ -899,10 +717,8 @@
             currentAd.classList.add('active');
             
             // Load ad
-            setTimeout(() => {
-                const adSlot = bottomAdSlots[currentBottomAdIndex];
-                loadBottomAd(currentAd, adSlot);
-            }, 100);
+            const adSlot = bottomAdSlots[currentBottomAdIndex];
+            loadBottomAd(currentAd, adSlot);
             
             // Show bottom ad (slide-up animation)
             bottomSlideAd.classList.remove('hidden');
@@ -912,12 +728,12 @@
             
             // Start 10-second countdown
             bottomAdCountdown = 10;
-            bottomAdTimer.textContent = bottomAdCountdown + 's';
+            bottomAdTimer.textContent = bottomAdCountdown;
             
             clearInterval(bottomAdTimerInterval);
             bottomAdTimerInterval = setInterval(() => {
                 bottomAdCountdown--;
-                bottomAdTimer.textContent = bottomAdCountdown + 's';
+                bottomAdTimer.textContent = bottomAdCountdown;
                 
                 if (bottomAdCountdown <= 0) {
                     hideBottomAd();
@@ -929,15 +745,14 @@
         }
         
         function hideBottomAd() {
-            console.log('📢 Hiding bottom ad...');
+            console.log('Hiding bottom ad...');
             isBottomAdShowing = false;
-            
             clearInterval(bottomAdTimerInterval);
             
             bottomSlideAd.classList.remove('visible');
             setTimeout(() => {
                 bottomSlideAd.classList.add('hidden');
-            }, 400);
+            }, 500);
         }
         
         // ================== VIDEO SYSTEM FUNCTIONS ==================
@@ -956,7 +771,6 @@
         function updateProgressBar() {
             const progress = (mainVideo.currentTime / videoDuration) * 100;
             videoProgressBar.style.width = progress + '%';
-            videoProgressHandle.style.left = progress + '%';
         }
         
         function showControls() {
@@ -977,21 +791,13 @@
                     isPlaying = true;
                     playPauseBtn.textContent = '⏸️';
                     showControls();
-                    
-                    videoPlayOverlay.classList.remove('hidden');
-                    setTimeout(() => {
-                        if (isPlaying) {
-                            videoPlayOverlay.classList.add('hidden');
-                        }
-                    }, 800);
-                    
+                    videoPlayOverlay.classList.add('hidden');
                 });
             } else {
                 mainVideo.pause();
                 isPlaying = false;
                 playPauseBtn.textContent = '▶️';
                 showControls();
-                
                 videoPlayOverlay.classList.remove('hidden');
             }
         }
@@ -1006,7 +812,7 @@
         function toggleFullscreen() {
             if (!document.fullscreenElement) {
                 videoContainer.requestFullscreen().catch(err => {
-                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                    console.log(`Fullscreen error: ${err.message}`);
                 });
             } else {
                 document.exitFullscreen();
@@ -1028,29 +834,20 @@
         }
         
         function handleVideoEnd() {
-            console.log('🔄 Video ended - restarting...');
-            
             mainVideo.currentTime = 0;
-            
-            const playPromise = mainVideo.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(e => {
-                    console.log('⚠️ Auto-restart failed:', e);
-                });
-            }
+            mainVideo.play().catch(e => {
+                console.log('Auto-restart failed:', e);
+            });
         }
         
         // ================== EVENT LISTENERS ==================
         
         mainVideo.addEventListener('loadedmetadata', () => {
-            console.log('📊 Video metadata loaded');
+            console.log('Video metadata loaded');
             videoDuration = mainVideo.duration;
             updateTimeDisplay();
-            
             mainVideo.volume = 1.0;
             mainVideo.loop = true;
-            
-            // Start first ad immediately
             startFirstAd();
         });
         
@@ -1069,56 +866,15 @@
             loadingSpinner.style.display = 'none';
         });
         
-        mainVideo.addEventListener('seeked', () => {
-            loadingSpinner.style.display = 'none';
-        });
-        
         mainVideo.addEventListener('error', (e) => {
-            console.error('❌ Video error:', mainVideo.error);
+            console.error('Video error:', mainVideo.error);
             loadingSpinner.style.display = 'none';
-            
-            alert('Video error. Please reload the page.');
         });
         
         videoPlayOverlay.addEventListener('click', togglePlayPause);
-        mainVideo.addEventListener('click', (e) => {
-            if (e.target === mainVideo) {
-                togglePlayPause();
-            }
-        });
+        mainVideo.addEventListener('click', togglePlayPause);
         
         videoProgressContainer.addEventListener('click', handleProgressClick);
-        
-        videoProgressHandle.addEventListener('mousedown', (e) => {
-            isDraggingProgress = true;
-            e.preventDefault();
-        });
-        
-        document.addEventListener('mousemove', (e) => {
-            if (isDraggingProgress) {
-                handleProgressClick(e);
-            }
-        });
-        
-        document.addEventListener('mouseup', () => {
-            isDraggingProgress = false;
-        });
-        
-        videoProgressContainer.addEventListener('touchstart', (e) => {
-            isDraggingProgress = true;
-            handleProgressClick(e.touches[0]);
-            e.preventDefault();
-        });
-        
-        document.addEventListener('touchmove', (e) => {
-            if (isDraggingProgress) {
-                handleProgressClick(e.touches[0]);
-            }
-        });
-        
-        document.addEventListener('touchend', () => {
-            isDraggingProgress = false;
-        });
         
         playPauseBtn.addEventListener('click', togglePlayPause);
         muteBtn.addEventListener('click', toggleMute);
@@ -1130,70 +886,26 @@
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
+        // Initialize
         window.addEventListener('load', () => {
-            if (window.history.replaceState) {
-                window.history.replaceState(null, null, window.location.pathname);
-            }
-            
-            document.title = VIDEO_TITLE + " - FmD @FmD699";
-            
-            console.log('🚀 Page loaded - Fixed Ad System');
-            console.log('🎯 ΒΕΛΤΙΩΜΕΝΟ ΣΥΣΤΗΜΑ:');
-            console.log('  - Πρώτη διαφήμιση: Τα δευτερόλεπτα φαίνονται σωστά (z-index fix)');
-            console.log('  - Bottom Ads: 3 διαφορετικές διαφημίσεις φαίνονται');
-            console.log('  - Χρονοδιάγραμμα: Κάθε 10 δευτερόλεπτα εμφάνιση');
-            console.log('  - Script: Χρησιμοποιεί το ακριβές script που έστειλες');
-            console.log('  - Format: auto με full-width-responsive');
-            
-            document.addEventListener('touchstart', function(e) {
-                if (e.touches.length > 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
-            
-            if (/iPhone|iPad|iPod/.test(navigator.userAgent) && !window.MSStream) {
-                document.documentElement.style.height = '100%';
-                document.body.style.height = '100%';
-                videoContainer.style.height = '100%';
-            }
+            console.log('Page loaded - Fixed Ad System');
+            document.title = "Το Έψαξα Πάντως - FmD @FmD699";
         });
         
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        }, false);
-        
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                console.log('📺 Entered fullscreen mode');
-                if (isBottomAdShowing) hideBottomAd();
-            } else {
-                console.log('📺 Exited fullscreen mode');
-            }
-        });
-        
-        console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ Video Player with Fixed Ad System ready');
-        
+        // Auto-enable sound on first interaction
         document.addEventListener('click', function() {
             if (videoStarted && mainVideo.muted) {
-                console.log("🔊 Enabling sound via document click");
                 mainVideo.muted = false;
                 isMuted = false;
                 muteBtn.textContent = '🔊';
             }
         });
         
-        mainVideo.addEventListener('play', () => {
-            console.log('🎬 Video started playing');
+        // Fullscreen change handler
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement && isBottomAdShowing) {
+                hideBottomAd();
+            }
         });
     </script>
 </body>
