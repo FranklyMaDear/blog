@@ -60,14 +60,14 @@
             user-select: none;
         }
         
-        /* FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ */
-        .first-ad-overlay {
+        /* 5-SECOND CLICKABLE AD OVERLAY */
+        .clickable-ad-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100vh;
-            background: #000;
+            background: rgba(0, 0, 0, 0.95);
             z-index: 10000;
             display: flex;
             justify-content: center;
@@ -75,44 +75,80 @@
             flex-direction: column;
         }
         
-        .first-ad-container {
-            width: 95%;
-            max-width: 400px;
+        .clickable-ad-container {
+            width: 90%;
+            max-width: 500px;
             height: 70vh;
-            background: #111;
-            border-radius: 10px;
+            background: linear-gradient(145deg, #1a1a2e, #0a0a1a);
+            border-radius: 15px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border: 1px solid #333;
+            border: 2px solid #4CAF50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+            position: relative;
         }
         
-        .first-ad-content {
+        .ad-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .ad-close-btn:hover {
+            background: rgba(255, 0, 0, 1);
+            transform: scale(1.1);
+        }
+        
+        .ad-close-btn:disabled {
+            background: rgba(255, 0, 0, 0.4);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .clickable-ad-content {
             flex: 1;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 20px;
             background: #000;
         }
         
-        .first-ad {
+        .clickable-ad {
             width: 100% !important;
             height: 100% !important;
             display: block !important;
-            border-radius: 5px;
+            border-radius: 10px;
             overflow: hidden;
             background: #222;
         }
         
-        .first-ad-footer {
+        .clickable-ad-footer {
             padding: 15px;
             text-align: center;
-            background: #111;
+            background: rgba(0, 0, 0, 0.9);
             color: #fff;
             font-size: 14px;
             border-top: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
         .countdown-timer {
@@ -120,38 +156,49 @@
             font-weight: bold;
             color: #4CAF50;
             font-family: monospace;
-            margin-top: 5px;
         }
         
-        /* FLOATING CORNER AD - ΕΤΑΙΡΕΙΕΣ ΜΕ ΦΩΤΟΓΡΑΦΙΕΣ */
-        .corner-ad-overlay {
+        .countdown-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* IN-VIDEO ADS - ΔΥΟ ΔΙΑΦΗΜΙΣΕΙΣ */
+        .in-video-ad {
             position: fixed;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .in-video-ad.visible {
+            display: flex;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* AD 1 - ΚΑΝΩ ΔΕΞΙΑ */
+        .ad-position-1 {
             bottom: 20px;
             right: 20px;
             width: 300px;
             height: 250px;
-            background: rgba(0, 0, 0, 0.95);
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            z-index: 9999;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
         }
         
-        .corner-ad-overlay.visible {
-            display: flex;
-            animation: slideInRight 0.5s ease;
+        /* AD 2 - ΚΑΝΩ ΑΡΙΣΤΕΡΑ */
+        .ad-position-2 {
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            height: 250px;
         }
         
-        .corner-ad-overlay.hidden {
-            animation: slideOutRight 0.5s ease;
-            animation-fill-mode: forwards;
-        }
-        
-        .corner-ad-header {
+        .in-video-ad-header {
             width: 100%;
             padding: 8px 12px;
             display: flex;
@@ -161,7 +208,7 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .corner-ad-title {
+        .in-video-ad-title {
             font-size: 12px;
             font-weight: 600;
             color: #4CAF50;
@@ -170,7 +217,7 @@
             gap: 5px;
         }
         
-        .corner-ad-timer {
+        .in-video-ad-timer {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             font-weight: bold;
@@ -183,7 +230,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .corner-ad-close {
+        .in-video-ad-close {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
@@ -198,11 +245,11 @@
             transition: background 0.3s;
         }
         
-        .corner-ad-close:hover {
+        .in-video-ad-close:hover {
             background: rgba(255, 255, 255, 0.2);
         }
         
-        .corner-ad-content {
+        .in-video-ad-content {
             flex: 1;
             width: 100%;
             display: flex;
@@ -212,7 +259,7 @@
             background: rgba(0, 0, 0, 0.7);
         }
         
-        .corner-ad-slot {
+        .in-video-ad-slot {
             width: 100%;
             height: 100%;
             display: none;
@@ -223,7 +270,7 @@
             padding: 15px;
         }
         
-        .corner-ad-slot.active {
+        .in-video-ad-slot.active {
             display: flex;
         }
         
@@ -266,45 +313,6 @@
             background: #45a049;
             transform: scale(1.05);
             box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
-        }
-        
-        /* RELOAD TIMER BAR (ΑΦΑΙΡΕΜΕΝΟ ΑΠΟ ΤΗΝ ΟΘΟΝΗ) */
-        .reload-timer-bar {
-            position: fixed;
-            bottom: -10px; /* ΚΡΥΜΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗΝ ΟΘΟΝΗ */
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(255, 255, 255, 0.1);
-            z-index: -1; /* ΚΡΥΜΕΝΟ */
-            display: none;
-            opacity: 0;
-        }
-        
-        .reload-timer-progress {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 0%;
-            background: #4CAF50;
-            transition: width 1s linear;
-        }
-        
-        .reload-countdown {
-            position: fixed;
-            bottom: -50px; /* ΚΡΥΜΕΝΟ ΚΑΤΩ ΑΠΟ ΤΗΝ ΟΘΟΝΗ */
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-family: monospace;
-            z-index: -1; /* ΚΡΥΜΕΝΟ */
-            display: none;
-            opacity: 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         /* MAIN VIDEO CONTAINER */
@@ -464,41 +472,37 @@
             to { transform: translate(-50%, -50%) rotate(360deg); }
         }
         
-        @keyframes slideInRight {
+        @keyframes fadeIn {
             from {
-                transform: translateX(100%);
                 opacity: 0;
+                transform: translateY(20px);
             }
             to {
-                transform: translateX(0);
                 opacity: 1;
-            }
-        }
-        
-        @keyframes slideOutRight {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
+                transform: translateY(0);
             }
         }
         
         /* MOBILE OPTIMIZATIONS */
         @media (max-width: 768px) {
-            .first-ad-container {
-                width: 90%;
+            .clickable-ad-container {
+                width: 95%;
                 height: 60vh;
-                max-width: 320px;
+                max-width: 400px;
             }
             
-            .corner-ad-overlay {
+            .ad-position-1, .ad-position-2 {
                 width: 250px;
-                height: 220px;
+                height: 200px;
                 bottom: 15px;
+            }
+            
+            .ad-position-1 {
                 right: 15px;
+            }
+            
+            .ad-position-2 {
+                left: 15px;
             }
             
             .company-logo {
@@ -524,16 +528,27 @@
         }
         
         @media (max-width: 480px) {
-            .corner-ad-overlay {
-                width: 200px;
-                height: 180px;
+            .clickable-ad-container {
+                height: 55vh;
+            }
+            
+            .ad-position-1, .ad-position-2 {
+                width: 180px;
+                height: 150px;
                 bottom: 10px;
+            }
+            
+            .ad-position-1 {
                 right: 10px;
             }
             
+            .ad-position-2 {
+                left: 10px;
+            }
+            
             .company-logo {
-                width: 80px;
-                height: 40px;
+                width: 70px;
+                height: 35px;
             }
             
             .company-name {
@@ -541,14 +556,14 @@
             }
             
             .company-slogan {
-                font-size: 11px;
+                font-size: 10px;
             }
             
-            .corner-ad-header {
+            .in-video-ad-header {
                 padding: 6px 10px;
             }
             
-            .corner-ad-timer {
+            .in-video-ad-timer {
                 font-size: 10px;
                 padding: 2px 6px;
             }
@@ -561,38 +576,42 @@
     </style>
 </head>
 <body>
-    <!-- FIRST AD OVERLAY - 10 ΔΕΥΤΕΡΟΛΕΠΤΑ ΜΟΝΟ -->
-    <div class="first-ad-overlay" id="firstAdOverlay">
-        <div class="first-ad-container">
-            <div class="first-ad-content">
-                <!-- ΠΡΩΤΗ ΔΙΑΦΗΜΙΣΗ -->
-                <ins class="adsbygoogle first-ad"
+    <!-- 5-SECOND CLICKABLE AD OVERLAY -->
+    <div class="clickable-ad-overlay" id="clickableAdOverlay">
+        <div class="clickable-ad-container">
+            <button class="ad-close-btn" id="adCloseBtn" disabled>×</button>
+            
+            <div class="clickable-ad-content">
+                <!-- 5-ΔΕΥΤΕΡΟΛΕΠΤΗ ΔΙΑΦΗΜΙΣΗ -->
+                <ins class="adsbygoogle clickable-ad"
                      style="display:block"
                      data-ad-client="ca-pub-3186700611266549"
                      data-ad-slot="5407828554"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
             </div>
-            <div class="first-ad-footer">
-                <div>Video starts in</div>
-                <div class="countdown-timer" id="countdownTimer">10</div>
+            <div class="clickable-ad-footer">
+                <div class="countdown-timer" id="countdownTimer">5</div>
+                <div class="countdown-text">Video starts in <span id="secondsText">5</span> seconds</div>
             </div>
         </div>
     </div>
 
-    <!-- FLOATING CORNER AD - ΕΤΑΙΡΕΙΕΣ ΜΕ ΦΩΤΟΓΡΑΦΙΕΣ -->
-    <div class="corner-ad-overlay hidden" id="cornerAdOverlay">
-        <div class="corner-ad-header">
-            <div class="corner-ad-title">
-                <span>📢 Εταιρική Διαφήμιση</span>
+    <!-- IN-VIDEO ADS - ΔΥΟ ΘΕΣΕΙΣ -->
+    
+    <!-- AD 1 - ΚΑΤΩ ΔΕΞΙΑ -->
+    <div class="in-video-ad ad-position-1 hidden" id="inVideoAd1">
+        <div class="in-video-ad-header">
+            <div class="in-video-ad-title">
+                <span>📢 Advertisement 1</span>
             </div>
-            <div class="corner-ad-timer" id="cornerAdTimer">10</div>
-            <button class="corner-ad-close" id="cornerAdClose">×</button>
+            <div class="in-video-ad-timer" id="adTimer1">10</div>
+            <button class="in-video-ad-close" id="adClose1">×</button>
         </div>
         
-        <div class="corner-ad-content">
+        <div class="in-video-ad-content">
             <!-- Εταιρεία 1 - Couture -->
-            <div class="corner-ad-slot active" id="cornerAd1">
+            <div class="in-video-ad-slot active" id="adSlot1_1">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Adidas_Logo.svg/2560px-Adidas_Logo.svg.png" 
                      alt="Couture Logo" class="company-logo">
                 <div class="company-name">Couture</div>
@@ -601,16 +620,29 @@
             </div>
             
             <!-- Εταιρεία 2 - NINE WEST -->
-            <div class="corner-ad-slot" id="cornerAd2">
+            <div class="in-video-ad-slot" id="adSlot1_2">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Nine_West_logo.svg/1200px-Nine_West_logo.svg.png" 
                      alt="NINE WEST Logo" class="company-logo">
                 <div class="company-name">NINE WEST</div>
                 <div class="company-slogan">Stylish Footwear & Accessories</div>
                 <a href="https://ninewest.com" target="_blank" class="company-website">Visit Website</a>
             </div>
-            
+        </div>
+    </div>
+
+    <!-- AD 2 - ΚΑΤΩ ΑΡΙΣΤΕΡΑ -->
+    <div class="in-video-ad ad-position-2 hidden" id="inVideoAd2">
+        <div class="in-video-ad-header">
+            <div class="in-video-ad-title">
+                <span>📢 Advertisement 2</span>
+            </div>
+            <div class="in-video-ad-timer" id="adTimer2">10</div>
+            <button class="in-video-ad-close" id="adClose2">×</button>
+        </div>
+        
+        <div class="in-video-ad-content">
             <!-- Εταιρεία 3 - G-STAR -->
-            <div class="corner-ad-slot" id="cornerAd3">
+            <div class="in-video-ad-slot active" id="adSlot2_1">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/G_Star_RAW_logo.svg/2560px-G_Star_RAW_logo.svg.png" 
                      alt="G-STAR Logo" class="company-logo">
                 <div class="company-name">G-STAR RAW</div>
@@ -619,7 +651,7 @@
             </div>
             
             <!-- Εταιρεία 4 - ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ -->
-            <div class="corner-ad-slot" id="cornerAd4">
+            <div class="in-video-ad-slot" id="adSlot2_2">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Nike_logo.svg/2560px-Nike_logo.svg.png" 
                      alt="ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ Logo" class="company-logo">
                 <div class="company-name">ΑΓΙΑ ΤΑ ΠΑΠΟΥΤΣΙΑ</div>
@@ -628,13 +660,6 @@
             </div>
         </div>
     </div>
-
-    <!-- RELOAD TIMER BAR (ΚΡΥΜΕΝΟ) -->
-    <div class="reload-timer-bar" id="reloadTimerBar">
-        <div class="reload-timer-progress" id="reloadTimerProgress"></div>
-    </div>
-    
-    <div class="reload-countdown" id="reloadCountdown">Reload in: 60s</div>
 
     <!-- MAIN VIDEO CONTAINER -->
     <div class="video-container" id="videoContainer">
@@ -664,23 +689,24 @@
 
     <script>
         // DOM Elements
-        const firstAdOverlay = document.getElementById('firstAdOverlay');
+        const clickableAdOverlay = document.getElementById('clickableAdOverlay');
         const countdownTimer = document.getElementById('countdownTimer');
+        const secondsText = document.getElementById('secondsText');
+        const adCloseBtn = document.getElementById('adCloseBtn');
         
-        const cornerAdOverlay = document.getElementById('cornerAdOverlay');
-        const cornerAdTimer = document.getElementById('cornerAdTimer');
-        const cornerAdClose = document.getElementById('cornerAdClose');
+        // In-Video Ads
+        const inVideoAd1 = document.getElementById('inVideoAd1');
+        const inVideoAd2 = document.getElementById('inVideoAd2');
+        const adTimer1 = document.getElementById('adTimer1');
+        const adTimer2 = document.getElementById('adTimer2');
+        const adClose1 = document.getElementById('adClose1');
+        const adClose2 = document.getElementById('adClose2');
         
-        // Corner Ad Elements
-        const cornerAd1 = document.getElementById('cornerAd1');
-        const cornerAd2 = document.getElementById('cornerAd2');
-        const cornerAd3 = document.getElementById('cornerAd3');
-        const cornerAd4 = document.getElementById('cornerAd4');
-        
-        // Reload Timer Elements (hidden)
-        const reloadTimerBar = document.getElementById('reloadTimerBar');
-        const reloadTimerProgress = document.getElementById('reloadTimerProgress');
-        const reloadCountdown = document.getElementById('reloadCountdown');
+        // Ad Slots
+        const adSlots = {
+            ad1: ['adSlot1_1', 'adSlot1_2'],
+            ad2: ['adSlot2_1', 'adSlot2_2']
+        };
         
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
@@ -702,21 +728,19 @@
         let videoStarted = false;
         
         // AD SYSTEM STATE
-        let firstAdCountdown = 10;
-        let cornerAdCountdown = 10;
-        let currentCornerAdIndex = 0;
-        let isCornerAdShowing = false;
-        let cornerAdTimerInterval;
-        let cornerAdRotationInterval;
+        let clickableAdCountdown = 5;
+        let adTimerCountdown1 = 10;
+        let adTimerCountdown2 = 10;
+        let currentAdSlot1 = 0;
+        let currentAdSlot2 = 0;
+        let isAd1Showing = false;
+        let isAd2Showing = false;
+        let ad1TimerInterval;
+        let ad2TimerInterval;
+        let adRotationInterval;
         let videoStartTime = 0;
         
-        // RELOAD SYSTEM STATE
-        let reloadCountdownValue = 60; // 60 seconds
-        let reloadTimerInterval;
-        let reloadProgressInterval;
-        
-        // ΕΤΑΙΡΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ (με φωτογραφίες)
-        const cornerAds = [cornerAd1, cornerAd2, cornerAd3, cornerAd4];
+        // ΕΤΑΙΡΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ
         const companies = [
             {
                 name: "Couture",
@@ -746,40 +770,63 @@
         
         // ================== ADSENSE FUNCTIONS ==================
         
-        function loadFirstAd() {
-            console.log('Loading first ad...');
-            const firstAd = document.querySelector('.first-ad');
-            if (firstAd && typeof adsbygoogle !== 'undefined') {
+        function loadClickableAd() {
+            console.log('Loading 5-second clickable ad...');
+            const clickableAd = document.querySelector('.clickable-ad');
+            if (clickableAd && typeof adsbygoogle !== 'undefined') {
                 (adsbygoogle = window.adsbygoogle || []).push({});
             }
         }
         
-        // ================== ΕΤΑΙΡΙΚΕΣ ΔΙΑΦΗΜΙΣΕΙΣ ==================
+        // ================== 5-SECOND CLICKABLE AD ==================
         
-        function startFirstAd() {
-            console.log('Starting first ad (10 seconds)...');
-            loadFirstAd();
+        function startClickableAd() {
+            console.log('Starting 5-second clickable ad...');
+            loadClickableAd();
             
-            // Start 10-second countdown
-            firstAdCountdown = 10;
-            countdownTimer.textContent = firstAdCountdown;
+            // Reset countdown
+            clickableAdCountdown = 5;
+            countdownTimer.textContent = clickableAdCountdown;
+            secondsText.textContent = clickableAdCountdown;
             
-            const firstAdInterval = setInterval(() => {
-                firstAdCountdown--;
-                countdownTimer.textContent = firstAdCountdown;
+            // Disable close button initially
+            adCloseBtn.disabled = true;
+            adCloseBtn.style.background = 'rgba(255, 0, 0, 0.4)';
+            
+            // Enable close button after 2 seconds
+            setTimeout(() => {
+                adCloseBtn.disabled = false;
+                adCloseBtn.style.background = 'rgba(255, 0, 0, 0.8)';
+                console.log('Close button enabled');
+            }, 2000);
+            
+            const clickableAdInterval = setInterval(() => {
+                clickableAdCountdown--;
+                countdownTimer.textContent = clickableAdCountdown;
+                secondsText.textContent = clickableAdCountdown;
                 
-                if (firstAdCountdown <= 0) {
-                    clearInterval(firstAdInterval);
-                    hideFirstAdAndStartVideo();
+                if (clickableAdCountdown <= 0) {
+                    clearInterval(clickableAdInterval);
+                    hideClickableAdAndStartVideo();
                 }
             }, 1000);
         }
         
-        function hideFirstAdAndStartVideo() {
-            console.log('First ad finished, starting video...');
-            firstAdOverlay.style.display = 'none';
+        function hideClickableAdAndStartVideo() {
+            console.log('5-second ad finished, starting video...');
+            clickableAdOverlay.style.display = 'none';
             startVideo();
         }
+        
+        function closeAdManually() {
+            if (!adCloseBtn.disabled) {
+                console.log('User manually closed the ad');
+                clearTimeout(clickableAdCountdown);
+                hideClickableAdAndStartVideo();
+            }
+        }
+        
+        // ================== IN-VIDEO ADS SYSTEM ==================
         
         function startVideo() {
             console.log('Starting video...');
@@ -793,131 +840,138 @@
                 videoStarted = true;
                 videoStartTime = Date.now();
                 
-                // Start corner ads system
-                startCornerAdsSystem();
-                
-                // Start hidden reload timer system
-                startReloadTimer();
+                // Start in-video ads system
+                startInVideoAdsSystem();
                 
             }).catch(e => {
                 console.error('Video play failed:', e);
             });
         }
         
-        function startCornerAdsSystem() {
-            console.log('Starting corner ads system...');
+        function startInVideoAdsSystem() {
+            console.log('Starting in-video ads system...');
             
-            // Show first corner ad after 15 seconds
+            // Show first ad after 15 seconds
             setTimeout(() => {
-                showNextCornerAd();
+                showAd1();
             }, 15000);
             
-            // Set up continuous rotation every 30 seconds (10s ad + 20s pause)
-            cornerAdRotationInterval = setInterval(() => {
-                if (!isCornerAdShowing) {
-                    showNextCornerAd();
-                }
+            // Show second ad after 30 seconds
+            setTimeout(() => {
+                showAd2();
             }, 30000);
+            
+            // Set up continuous rotation every 45 seconds
+            adRotationInterval = setInterval(() => {
+                if (!isAd1Showing && !isAd2Showing) {
+                    // Randomly choose which ad to show
+                    if (Math.random() > 0.5) {
+                        showAd1();
+                    } else {
+                        showAd2();
+                    }
+                }
+            }, 45000);
         }
         
-        function showNextCornerAd() {
-            if (isCornerAdShowing) return;
+        function showAd1() {
+            if (isAd1Showing || isAd2Showing) return;
             
-            console.log(`Showing company ad: ${companies[currentCornerAdIndex].name}`);
-            isCornerAdShowing = true;
+            console.log('Showing Ad 1 (bottom right)...');
+            isAd1Showing = true;
             
-            // Hide all corner ads
-            cornerAds.forEach(ad => {
-                ad.classList.remove('active');
+            // Hide all slots in ad 1
+            adSlots.ad1.forEach(slotId => {
+                document.getElementById(slotId).classList.remove('active');
             });
             
-            // Show current corner ad
-            const currentAd = cornerAds[currentCornerAdIndex];
-            currentAd.classList.add('active');
+            // Show current slot
+            const currentSlot = document.getElementById(adSlots.ad1[currentAdSlot1]);
+            currentSlot.classList.add('active');
             
-            // Show corner ad with animation
-            cornerAdOverlay.classList.remove('hidden');
-            cornerAdOverlay.classList.add('visible');
+            // Show ad with animation
+            inVideoAd1.classList.remove('hidden');
+            inVideoAd1.classList.add('visible');
             
             // Start 10-second countdown
-            cornerAdCountdown = 10;
-            cornerAdTimer.textContent = cornerAdCountdown;
+            adTimerCountdown1 = 10;
+            adTimer1.textContent = adTimerCountdown1;
             
-            clearInterval(cornerAdTimerInterval);
-            cornerAdTimerInterval = setInterval(() => {
-                cornerAdCountdown--;
-                cornerAdTimer.textContent = cornerAdCountdown;
+            clearInterval(ad1TimerInterval);
+            ad1TimerInterval = setInterval(() => {
+                adTimerCountdown1--;
+                adTimer1.textContent = adTimerCountdown1;
                 
-                if (cornerAdCountdown <= 0) {
-                    hideCornerAd();
+                if (adTimerCountdown1 <= 0) {
+                    hideAd1();
                 }
             }, 1000);
             
-            // Rotate to next company
-            currentCornerAdIndex = (currentCornerAdIndex + 1) % cornerAds.length;
+            // Rotate to next slot
+            currentAdSlot1 = (currentAdSlot1 + 1) % adSlots.ad1.length;
         }
         
-        function hideCornerAd() {
-            console.log('Hiding corner ad...');
-            isCornerAdShowing = false;
-            clearInterval(cornerAdTimerInterval);
+        function showAd2() {
+            if (isAd2Showing || isAd1Showing) return;
             
-            cornerAdOverlay.classList.remove('visible');
-            cornerAdOverlay.classList.add('hidden');
+            console.log('Showing Ad 2 (bottom left)...');
+            isAd2Showing = true;
+            
+            // Hide all slots in ad 2
+            adSlots.ad2.forEach(slotId => {
+                document.getElementById(slotId).classList.remove('active');
+            });
+            
+            // Show current slot
+            const currentSlot = document.getElementById(adSlots.ad2[currentAdSlot2]);
+            currentSlot.classList.add('active');
+            
+            // Show ad with animation
+            inVideoAd2.classList.remove('hidden');
+            inVideoAd2.classList.add('visible');
+            
+            // Start 10-second countdown
+            adTimerCountdown2 = 10;
+            adTimer2.textContent = adTimerCountdown2;
+            
+            clearInterval(ad2TimerInterval);
+            ad2TimerInterval = setInterval(() => {
+                adTimerCountdown2--;
+                adTimer2.textContent = adTimerCountdown2;
+                
+                if (adTimerCountdown2 <= 0) {
+                    hideAd2();
+                }
+            }, 1000);
+            
+            // Rotate to next slot
+            currentAdSlot2 = (currentAdSlot2 + 1) % adSlots.ad2.length;
+        }
+        
+        function hideAd1() {
+            console.log('Hiding Ad 1...');
+            isAd1Showing = false;
+            clearInterval(ad1TimerInterval);
+            
+            inVideoAd1.classList.remove('visible');
+            inVideoAd1.classList.add('hidden');
             
             setTimeout(() => {
-                cornerAdOverlay.classList.remove('hidden');
+                inVideoAd1.classList.remove('hidden');
             }, 500);
         }
         
-        // ================== HIDDEN RELOAD TIMER ==================
-        
-        function startReloadTimer() {
-            console.log('Starting hidden 60-second reload timer...');
+        function hideAd2() {
+            console.log('Hiding Ad 2...');
+            isAd2Showing = false;
+            clearInterval(ad2TimerInterval);
             
-            // Reset values
-            reloadCountdownValue = 60;
-            reloadTimerProgress.style.width = '0%';
+            inVideoAd2.classList.remove('visible');
+            inVideoAd2.classList.add('hidden');
             
-            // Start hidden countdown
-            clearInterval(reloadTimerInterval);
-            reloadTimerInterval = setInterval(() => {
-                reloadCountdownValue--;
-                
-                // Update hidden progress bar
-                const progress = ((60 - reloadCountdownValue) / 60) * 100;
-                reloadTimerProgress.style.width = progress + '%';
-                
-                if (reloadCountdownValue <= 0) {
-                    reloadVideo();
-                }
-            }, 1000);
-        }
-        
-        function reloadVideo() {
-            console.log('Reloading video...');
-            
-            // Pause video and reset
-            mainVideo.pause();
-            mainVideo.currentTime = 0;
-            
-            // Hide corner ad if showing
-            if (isCornerAdShowing) {
-                hideCornerAd();
-            }
-            
-            // Show first ad again
-            firstAdOverlay.style.display = 'flex';
-            startFirstAd();
-            
-            // Reset state
-            videoStarted = false;
-            isPlaying = false;
-            playPauseBtn.textContent = '▶️';
-            
-            // Clear intervals
-            clearInterval(reloadTimerInterval);
-            clearInterval(cornerAdRotationInterval);
+            setTimeout(() => {
+                inVideoAd2.classList.remove('hidden');
+            }, 500);
         }
         
         // ================== VIDEO SYSTEM FUNCTIONS ==================
@@ -943,7 +997,7 @@
             videoProgressContainer.style.opacity = '1';
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
-                if (isPlaying && !isCornerAdShowing) {
+                if (isPlaying && !isAd1Showing && !isAd2Showing) {
                     videoControls.classList.remove('visible');
                     videoProgressContainer.style.opacity = '0';
                 }
@@ -1006,7 +1060,7 @@
             updateTimeDisplay();
             mainVideo.volume = 1.0;
             mainVideo.loop = true;
-            startFirstAd();
+            startClickableAd();
         });
         
         mainVideo.addEventListener('timeupdate', () => {
@@ -1027,6 +1081,11 @@
             loadingSpinner.style.display = 'none';
         });
         
+        // Close button events
+        adCloseBtn.addEventListener('click', closeAdManually);
+        adClose1.addEventListener('click', hideAd1);
+        adClose2.addEventListener('click', hideAd2);
+        
         videoPlayOverlay.addEventListener('click', togglePlayPause);
         mainVideo.addEventListener('click', togglePlayPause);
         
@@ -1036,20 +1095,17 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        // Close button for corner ad
-        cornerAdClose.addEventListener('click', hideCornerAd);
-        
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
         // Initialize
         window.addEventListener('load', () => {
-            console.log('Page loaded - Company Ads System');
+            console.log('Page loaded - New Ad System');
             document.title = "Το Έψαξα Πάντως - FmD @FmD699";
-            console.log('Εταιρείες διαφήμισης:');
-            companies.forEach(company => {
-                console.log(`- ${company.name}: ${company.slogan}`);
-            });
+            console.log('System ready:');
+            console.log('1. 5-second clickable ad (Χ button after 2s)');
+            console.log('2. Two in-video ad positions');
+            console.log('3. Auto rotation of company ads');
         });
         
         // Auto-enable sound on first interaction
