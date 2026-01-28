@@ -192,7 +192,7 @@
             border-top: 2px solid #ffcb2e;
         }
         
-        /* ========== MID-ROLL VIDEO AD (VIDEO INTERRUPTION) ========== */
+        /* ========== MID-ROLL VIDEO ADS (MULTIPLE INTERRUPTIONS) ========== */
         .midroll-video-ad {
             position: fixed;
             top: 0;
@@ -233,14 +233,9 @@
             z-index: 10;
         }
         
-        /* ========== VIDEO OVERLAY AD (NEW - RANDOM APPEARANCE) ========== */
+        /* ========== VIDEO OVERLAY ADS (MULTIPLE POSITIONS) ========== */
         .video-overlay-ad {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 250px;
             background: rgba(0, 0, 0, 0.9);
             border: 3px solid #ff3366;
             border-radius: 15px;
@@ -256,8 +251,8 @@
         }
         
         @keyframes slideInAd {
-            from { transform: translate(-50%, -30%); opacity: 0; }
-            to { transform: translate(-50%, -50%); opacity: 1; }
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
         
         .overlay-close {
@@ -291,17 +286,13 @@
             z-index: 10;
         }
         
-        /* ========== SIDE BANNER AD (NEW - CONTINUOUS) ========== */
+        /* ========== SIDE BANNER ADS (BOTH SIDES) ========== */
         .side-banner-ad {
             position: fixed;
             top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            width: 160px;
-            height: 600px;
             background: rgba(20, 20, 30, 0.9);
             z-index: 5000;
-            border-left: 3px solid #00cc88;
+            border: 3px solid #00cc88;
             display: none;
         }
         
@@ -330,6 +321,90 @@
             z-index: 10;
         }
         
+        /* ========== POP-UP AD (NEW - AGGRESSIVE) ========== */
+        .popup-ad {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 280px;
+            background: rgba(0, 0, 0, 0.95);
+            border: 4px solid #ffaa00;
+            border-radius: 20px;
+            z-index: 8500;
+            display: none;
+            box-shadow: 0 20px 60px rgba(255, 170, 0, 0.4);
+        }
+        
+        .popup-ad.visible {
+            display: block;
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes popIn {
+            0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+            70% { transform: translate(-50%, -50%) scale(1.05); }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 170, 0, 0.9);
+            color: black;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .popup-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(45deg, #ffaa00, #ff5500);
+            color: black;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+        }
+        
+        /* ========== TOP BANNER AD (NEW) ========== */
+        .top-banner-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(90deg, #ff3366, #ff9933);
+            z-index: 7500;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid #ffaa00;
+        }
+        
+        .top-banner-ad.visible {
+            display: flex;
+            animation: slideDown 0.4s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
         /* ========== MAIN VIDEO PLAYER ========== */
         .video-player-container {
             position: fixed;
@@ -356,7 +431,7 @@
         /* Video Controls */
         .video-controls {
             position: absolute;
-            bottom: 80px; /* Adjusted for bottom banner */
+            bottom: 80px;
             left: 20px;
             right: 20px;
             display: flex;
@@ -434,14 +509,13 @@
                 right: 15px;
             }
             
-            .video-overlay-ad {
-                width: 250px;
-                height: 200px;
+            .popup-ad {
+                width: 280px;
+                height: 240px;
             }
             
-            .side-banner-ad {
-                width: 120px;
-                height: 400px;
+            .top-banner-ad {
+                height: 60px;
             }
             
             .bottom-banner-ad {
@@ -459,15 +533,9 @@
                 height: 120px;
             }
             
-            .video-overlay-ad {
-                width: 200px;
-                height: 150px;
-            }
-            
-            .side-banner-ad {
-                width: 100px;
-                height: 300px;
-                display: none; /* Hide on very small screens */
+            .popup-ad {
+                width: 240px;
+                height: 200px;
             }
             
             .interstitial-container {
@@ -475,29 +543,10 @@
                 height: 60vh;
             }
         }
-        
-        @media (orientation: landscape) {
-            .floating-video-ad {
-                width: 140px;
-                height: 90px;
-                bottom: 10px;
-                right: 10px;
-            }
-            
-            .video-overlay-ad {
-                width: 250px;
-                height: 180px;
-            }
-            
-            .side-banner-ad {
-                width: 140px;
-                height: 400px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- ========== PRE-ROLL VIDEO AD (HIGHEST CPM - €8-15 CPM) ========== -->
+    <!-- ========== PRE-ROLL VIDEO AD (HIGHEST CPM) ========== -->
     <div class="preroll-video-ad" id="prerollAd">
         <div class="preroll-container">
             <div class="ad-container">
@@ -512,11 +561,11 @@
         </div>
     </div>
 
-    <!-- ========== INTERSTITIAL AD (SECOND HIGHEST CPM - €5-10 CPM) ========== -->
-    <div class="interstitial-ad" id="interstitialAd">
+    <!-- ========== INTERSTITIAL ADS (MULTIPLE) ========== -->
+    <div class="interstitial-ad" id="interstitialAd1">
         <div class="interstitial-container">
             <div class="ad-container">
-                <!-- INTERSTITIAL AD - AD SLOT 9660744818 -->
+                <!-- INTERSTITIAL AD 1 - AD SLOT 9660744818 -->
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -527,11 +576,11 @@
         </div>
     </div>
 
-    <!-- ========== FLOATING VIDEO AD (HIGH ENGAGEMENT - €4-8 CPM) ========== -->
-    <div class="floating-video-ad" id="floatingAd">
-        <button class="floating-close" id="floatingClose">×</button>
+    <!-- ========== FLOATING VIDEO ADS (MULTIPLE) ========== -->
+    <div class="floating-video-ad" id="floatingAd1">
+        <button class="floating-close" id="floatingClose1">×</button>
         <div class="ad-container">
-            <!-- FLOATING VIDEO AD - AD SLOT 9660744819 -->
+            <!-- FLOATING VIDEO AD 1 - AD SLOT 9660744819 -->
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-format="autorelaxed"
@@ -541,7 +590,7 @@
         <span class="revenue-badge">🎯 Premium</span>
     </div>
 
-    <!-- ========== BOTTOM BANNER AD (CONTINUOUS - €2-5 CPM) ========== -->
+    <!-- ========== BOTTOM BANNER AD ========== -->
     <div class="bottom-banner-ad" id="bottomBannerAd">
         <div class="ad-container">
             <!-- CONTINUOUS BANNER AD - AD SLOT 9660744820 -->
@@ -553,27 +602,27 @@
         </div>
     </div>
 
-    <!-- ========== MID-ROLL VIDEO AD (VIDEO INTERRUPTION - €6-12 CPM) ========== -->
-    <div class="midroll-video-ad" id="midrollAd">
+    <!-- ========== MID-ROLL VIDEO ADS (MULTIPLE) ========== -->
+    <div class="midroll-video-ad" id="midrollAd1">
         <div class="midroll-container">
             <div class="ad-container">
-                <!-- MID-ROLL VIDEO AD - AD SLOT 9660744821 -->
+                <!-- MID-ROLL VIDEO AD 1 - AD SLOT 9660744821 -->
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
                      data-ad-client="ca-pub-3186700611266549"
                      data-ad-slot="9660744821"></ins>
             </div>
-            <div class="midroll-countdown" id="midrollCountdown">15s</div>
+            <div class="midroll-countdown" id="midrollCountdown1">8s</div>
             <span class="revenue-badge">🔥 Hot Ad</span>
         </div>
     </div>
 
-    <!-- ========== VIDEO OVERLAY AD (NEW - EXTRA REVENUE) ========== -->
-    <div class="video-overlay-ad" id="videoOverlayAd">
-        <button class="overlay-close" id="overlayClose">×</button>
+    <!-- ========== VIDEO OVERLAY ADS (MULTIPLE POSITIONS) ========== -->
+    <div class="video-overlay-ad" id="overlayAd1" style="top: 20%; left: 10%; width: 200px; height: 150px;">
+        <button class="overlay-close" id="overlayClose1">×</button>
         <div class="ad-container">
-            <!-- OVERLAY AD - AD SLOT 6330498148 -->
+            <!-- OVERLAY AD 1 - AD SLOT 6330498148 -->
             <ins class="adsbygoogle"
                  style="display:block; text-align:center;"
                  data-ad-layout="in-article"
@@ -581,14 +630,42 @@
                  data-ad-client="ca-pub-3186700611266549"
                  data-ad-slot="6330498148"></ins>
         </div>
-        <span class="overlay-badge">🎁 Special Offer</span>
+        <span class="overlay-badge">🎁 Special</span>
     </div>
 
-    <!-- ========== SIDE BANNER AD (NEW - CONTINUOUS REVENUE) ========== -->
-    <div class="side-banner-ad" id="sideBannerAd">
-        <button class="side-close" id="sideClose">×</button>
+    <!-- ========== SIDE BANNER ADS (BOTH SIDES) ========== -->
+    <div class="side-banner-ad" id="sideBannerAdRight" style="right: 0; width: 140px; height: 400px;">
+        <button class="side-close" id="sideCloseRight">×</button>
         <div class="ad-container">
-            <!-- SIDE BANNER AD - AD SLOT 6330498148 (SECOND INSTANCE) -->
+            <!-- SIDE BANNER AD RIGHT - AD SLOT 6330498148 -->
+            <ins class="adsbygoogle"
+                 style="display:block; text-align:center;"
+                 data-ad-layout="in-article"
+                 data-ad-format="fluid"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="6330498148"></ins>
+        </div>
+    </div>
+
+    <!-- ========== POP-UP AD (AGGRESSIVE) ========== -->
+    <div class="popup-ad" id="popupAd">
+        <button class="popup-close" id="popupClose">×</button>
+        <div class="ad-container">
+            <!-- POP-UP AD - AD SLOT 6330498148 -->
+            <ins class="adsbygoogle"
+                 style="display:block; text-align:center;"
+                 data-ad-layout="in-article"
+                 data-ad-format="fluid"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="6330498148"></ins>
+        </div>
+        <span class="popup-badge">⚠️ IMPORTANT</span>
+    </div>
+
+    <!-- ========== TOP BANNER AD ========== -->
+    <div class="top-banner-ad" id="topBannerAd">
+        <div class="ad-container">
+            <!-- TOP BANNER AD - AD SLOT 6330498148 -->
             <ins class="adsbygoogle"
                  style="display:block; text-align:center;"
                  data-ad-layout="in-article"
@@ -613,46 +690,53 @@
         </div>
     </div>
 
-    <!-- ========== MAXIMUM REVENUE AD SYSTEM SCRIPT ========== -->
+    <!-- ========== ULTIMATE REVENUE SCRIPT FOR SHORT VIDEOS ========== -->
     <script>
-        // ========== REVENUE TRACKING SYSTEM ==========
-        class RevenueOptimizer {
+        // ========== AGGRESSIVE REVENUE OPTIMIZER ==========
+        class AggressiveRevenueOptimizer {
             constructor() {
                 this.revenueData = {
                     totalEarnings: 0,
                     adImpressions: 0,
-                    activeAdSlots: 7,
+                    activeAdSlots: 9,
                     estimatedCPM: {
-                        preroll: 12,    // €12 CPM (9660744817)
-                        interstitial: 8, // €8 CPM (9660744818)
-                        floating: 6,    // €6 CPM (9660744819)
-                        banner: 4,      // €4 CPM (9660744820)
-                        midroll: 10,    // €10 CPM (9660744821)
-                        overlay: 7,     // €7 CPM (6330498148)
-                        sidebanner: 5   // €5 CPM (6330498148 second instance)
+                        preroll: 15,     // €15 CPM (9660744817)
+                        interstitial: 10, // €10 CPM (9660744818)
+                        floating: 8,     // €8 CPM (9660744819)
+                        banner: 5,       // €5 CPM (9660744820)
+                        midroll: 12,     // €12 CPM (9660744821)
+                        overlay: 9,      // €9 CPM (6330498148)
+                        sidebanner: 6,   // €6 CPM (6330498148)
+                        popup: 14,       // €14 CPM (6330498148)
+                        topbanner: 4     // €4 CPM (6330498148)
                     }
                 };
                 
                 this.adSchedule = {
                     preroll: { duration: 5, active: true },
-                    interstitial: { interval: 60000, duration: 10, active: true },
-                    floating: { interval: 45000, duration: 20, active: true },
+                    interstitial: { interval: 20000, duration: 6, active: true },
+                    floating: { interval: 15000, duration: 10, active: true },
                     banner: { continuous: true, active: true },
-                    midroll: { triggers: [30, 90, 150], duration: 15, active: true },
-                    overlay: { interval: 30000, duration: 8, active: true },
-                    sidebanner: { interval: 90000, duration: 30, active: true }
+                    midroll: { triggers: [15, 40, 65], duration: 8, active: true },
+                    overlay: { positions: 3, interval: 10000, duration: 7, active: true },
+                    sidebanner: { side: 'right', interval: 12000, duration: 8, active: true },
+                    popup: { triggers: [10, 30, 50], duration: 6, active: true },
+                    topbanner: { interval: 25000, duration: 5, active: true }
                 };
             }
             
             calculateEarnings() {
                 let total = 0;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.preroll) / 1000;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.interstitial) / 2000;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.floating) / 1500;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.banner) / 100;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.midroll) / 3000;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.overlay) / 2500;
-                total += (this.revenueData.adImpressions * this.revenueData.estimatedCPM.sidebanner) / 3500;
+                // Συντόμευση για μικρά βίντεο - περισσότερες διαφημίσεις
+                total += (this.revenueData.adImpressions * 0.015); // Pre-roll
+                total += (this.revenueData.adImpressions * 0.010); // Interstitial
+                total += (this.revenueData.adImpressions * 0.008); // Floating
+                total += (this.revenueData.adImpressions * 0.005); // Banner
+                total += (this.revenueData.adImpressions * 0.012); // Mid-roll
+                total += (this.revenueData.adImpressions * 0.009); // Overlay
+                total += (this.revenueData.adImpressions * 0.006); // Side banner
+                total += (this.revenueData.adImpressions * 0.014); // Pop-up
+                total += (this.revenueData.adImpressions * 0.004); // Top banner
                 
                 this.revenueData.totalEarnings = total;
                 return total;
@@ -660,49 +744,60 @@
             
             logAdImpression(adType, adSlot) {
                 this.revenueData.adImpressions++;
-                console.log(`💰 Ad Impression: ${adType} | Slot: ${adSlot} | Total: ${this.revenueData.adImpressions}`);
-                console.log(`📈 Estimated Earnings: €${this.calculateEarnings().toFixed(2)}`);
+                console.log(`💰 AD: ${adType} | Slot: ${adSlot} | Total: ${this.revenueData.adImpressions}`);
+                console.log(`📈 Earnings: €${this.calculateEarnings().toFixed(2)}`);
             }
         }
 
-        // ========== AD SYSTEM INITIALIZATION ==========
-        const revenueOptimizer = new RevenueOptimizer();
+        // ========== SYSTEM INITIALIZATION ==========
+        const revenueOptimizer = new AggressiveRevenueOptimizer();
         
         // DOM Elements
-        const prerollAd = document.getElementById('prerollAd');
-        const prerollCountdown = document.getElementById('prerollCountdown');
-        
-        const interstitialAd = document.getElementById('interstitialAd');
-        const floatingAd = document.getElementById('floatingAd');
-        const floatingClose = document.getElementById('floatingClose');
-        const bottomBannerAd = document.getElementById('bottomBannerAd');
-        const midrollAd = document.getElementById('midrollAd');
-        const midrollCountdown = document.getElementById('midrollCountdown');
-        
-        // NEW AD ELEMENTS
-        const videoOverlayAd = document.getElementById('videoOverlayAd');
-        const overlayClose = document.getElementById('overlayClose');
-        const sideBannerAd = document.getElementById('sideBannerAd');
-        const sideClose = document.getElementById('sideClose');
-        
-        const videoPlayer = document.getElementById('videoPlayer');
-        const mainVideo = document.getElementById('mainVideo');
-        const videoControls = document.getElementById('videoControls');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const muteBtn = document.getElementById('muteBtn');
-        const timeDisplay = document.getElementById('timeDisplay');
-        const fullscreenBtn = document.getElementById('fullscreenBtn');
-        
+        const elements = {
+            prerollAd: document.getElementById('prerollAd'),
+            prerollCountdown: document.getElementById('prerollCountdown'),
+            
+            interstitialAd1: document.getElementById('interstitialAd1'),
+            
+            floatingAd1: document.getElementById('floatingAd1'),
+            floatingClose1: document.getElementById('floatingClose1'),
+            
+            bottomBannerAd: document.getElementById('bottomBannerAd'),
+            
+            midrollAd1: document.getElementById('midrollAd1'),
+            midrollCountdown1: document.getElementById('midrollCountdown1'),
+            
+            overlayAd1: document.getElementById('overlayAd1'),
+            overlayClose1: document.getElementById('overlayClose1'),
+            
+            sideBannerAdRight: document.getElementById('sideBannerAdRight'),
+            sideCloseRight: document.getElementById('sideCloseRight'),
+            
+            popupAd: document.getElementById('popupAd'),
+            popupClose: document.getElementById('popupClose'),
+            
+            topBannerAd: document.getElementById('topBannerAd'),
+            
+            videoPlayer: document.getElementById('videoPlayer'),
+            mainVideo: document.getElementById('mainVideo'),
+            videoControls: document.getElementById('videoControls'),
+            playPauseBtn: document.getElementById('playPauseBtn'),
+            muteBtn: document.getElementById('muteBtn'),
+            timeDisplay: document.getElementById('timeDisplay'),
+            fullscreenBtn: document.getElementById('fullscreenBtn')
+        };
+
         // State Variables
         let isPlaying = false;
         let isMuted = true;
         let videoDuration = 0;
-        let videoCurrentTime = 0;
         let controlsTimeout;
         let adTimers = {};
-        let midrollTriggers = [30, 90, 150];
         let currentMidrollIndex = 0;
-        let overlayActive = false;
+        let midrollTriggers = [15, 40, 65];
+        let popupTriggers = [10, 30, 50];
+        let currentPopupIndex = 0;
+        let activeOverlays = new Set();
         
         // ========== AD SLOT CONFIGURATION ==========
         const adSlots = {
@@ -712,93 +807,75 @@
             banner: '9660744820',
             midroll: '9660744821',
             overlay: '6330498148',
-            sidebanner: '6330498148'
+            sidebanner: '6330498148',
+            popup: '6330498148',
+            topbanner: '6330498148'
         };
         
-        // ========== AD LOADING SYSTEM ==========
+        // ========== AD LOADING ==========
         function loadAllAds() {
-            console.log('🚀 Loading all Google AdSense ads for maximum revenue...');
-            console.log('🎯 Ad Slots Configuration:');
-            console.log(`  1. Pre-roll: ${adSlots.preroll} (€12 CPM)`);
-            console.log(`  2. Interstitial: ${adSlots.interstitial} (€8 CPM)`);
-            console.log(`  3. Floating: ${adSlots.floating} (€6 CPM)`);
-            console.log(`  4. Banner: ${adSlots.banner} (€4 CPM)`);
-            console.log(`  5. Mid-roll: ${adSlots.midroll} (€10 CPM)`);
-            console.log(`  6. Overlay: ${adSlots.overlay} (€7 CPM)`);
-            console.log(`  7. Side Banner: ${adSlots.sidebanner} (€5 CPM)`);
+            console.log('🚀 LOADING AGGRESSIVE AD SYSTEM FOR SHORT VIDEOS');
+            console.log('🎯 9 AD SLOTS ACTIVATED');
             
-            // Load all Google AdSense ads
             (adsbygoogle = window.adsbygoogle || []).push({});
-            
-            console.log('✅ All Google AdSense ads loaded with optimal formats');
+            console.log('✅ All ads loaded');
         }
         
-        // ========== PRE-ROLL AD SYSTEM (HIGHEST CPM) ==========
+        // ========== PRE-ROLL AD ==========
         function startPreRollAd() {
-            console.log('🎬 Starting Pre-roll Video Ad');
-            console.log(`🎯 Ad Slot: ${adSlots.preroll} | Format: autorelaxed`);
+            console.log('🎬 PRE-ROLL AD STARTING');
             revenueOptimizer.logAdImpression('preroll', adSlots.preroll);
             
             let countdown = 5;
-            prerollCountdown.textContent = countdown + 's';
+            elements.prerollCountdown.textContent = countdown + 's';
             
             const timer = setInterval(() => {
                 countdown--;
-                prerollCountdown.textContent = countdown + 's';
-                
+                elements.prerollCountdown.textContent = countdown + 's';
                 if (countdown <= 0) {
                     clearInterval(timer);
                     hidePreRollAd();
                 }
             }, 1000);
-            
-            adTimers.preroll = timer;
         }
         
         function hidePreRollAd() {
-            prerollAd.style.opacity = '0';
+            elements.prerollAd.style.opacity = '0';
             setTimeout(() => {
-                prerollAd.style.display = 'none';
+                elements.prerollAd.style.display = 'none';
                 startVideoPlayback();
-                startAdSchedule();
+                startAggressiveAdSchedule();
             }, 500);
         }
         
-        // ========== INTERSTITIAL AD SYSTEM ==========
+        // ========== INTERSTITIAL AD ==========
         function showInterstitialAd() {
-            console.log('🔄 Showing Interstitial Ad');
-            console.log(`🎯 Ad Slot: ${adSlots.interstitial} | Format: autorelaxed`);
             revenueOptimizer.logAdImpression('interstitial', adSlots.interstitial);
-            
-            interstitialAd.classList.add('active');
+            elements.interstitialAd1.classList.add('active');
             
             setTimeout(() => {
-                interstitialAd.classList.remove('active');
+                elements.interstitialAd1.classList.remove('active');
+            }, 6000);
+        }
+        
+        // ========== FLOATING AD ==========
+        function showFloatingAd() {
+            revenueOptimizer.logAdImpression('floating', adSlots.floating);
+            elements.floatingAd1.classList.add('visible');
+            
+            setTimeout(() => {
+                elements.floatingAd1.classList.remove('visible');
             }, 10000);
         }
         
-        // ========== FLOATING VIDEO AD SYSTEM ==========
-        function showFloatingAd() {
-            console.log('🎯 Showing Floating Video Ad');
-            console.log(`🎯 Ad Slot: ${adSlots.floating} | Format: autorelaxed`);
-            revenueOptimizer.logAdImpression('floating', adSlots.floating);
-            
-            floatingAd.classList.add('visible');
-            
-            setTimeout(() => {
-                floatingAd.classList.remove('visible');
-            }, 20000);
-        }
-        
-        floatingClose.addEventListener('click', () => {
-            floatingAd.classList.remove('visible');
+        elements.floatingClose1.addEventListener('click', () => {
+            elements.floatingAd1.classList.remove('visible');
         });
         
-        // ========== MID-ROLL AD SYSTEM ==========
+        // ========== MID-ROLL ADS ==========
         function checkMidrollAds(currentTime) {
             if (currentMidrollIndex < midrollTriggers.length) {
                 const triggerTime = midrollTriggers[currentMidrollIndex];
-                
                 if (currentTime >= triggerTime && currentTime < triggerTime + 2) {
                     showMidrollAd();
                     currentMidrollIndex++;
@@ -807,20 +884,16 @@
         }
         
         function showMidrollAd() {
-            console.log('🔥 Showing Mid-roll Video Ad');
-            console.log(`🎯 Ad Slot: ${adSlots.midroll} | Format: autorelaxed`);
             revenueOptimizer.logAdImpression('midroll', adSlots.midroll);
+            elements.midrollAd1.classList.add('active');
+            elements.mainVideo.pause();
             
-            midrollAd.classList.add('active');
-            mainVideo.pause();
-            
-            let countdown = 15;
-            midrollCountdown.textContent = countdown + 's';
+            let countdown = 8;
+            elements.midrollCountdown1.textContent = countdown + 's';
             
             const timer = setInterval(() => {
                 countdown--;
-                midrollCountdown.textContent = countdown + 's';
-                
+                elements.midrollCountdown1.textContent = countdown + 's';
                 if (countdown <= 0) {
                     clearInterval(timer);
                     hideMidrollAd();
@@ -829,123 +902,145 @@
         }
         
         function hideMidrollAd() {
-            midrollAd.classList.remove('active');
-            mainVideo.play();
+            elements.midrollAd1.classList.remove('active');
+            elements.mainVideo.play();
         }
         
-        // ========== VIDEO OVERLAY AD SYSTEM (NEW) ==========
-        function showVideoOverlayAd() {
-            if (overlayActive) return;
+        // ========== OVERLAY ADS ==========
+        function showOverlayAd() {
+            if (activeOverlays.size >= 3) return;
             
-            console.log('🎁 Showing Video Overlay Ad');
-            console.log(`🎯 Ad Slot: ${adSlots.overlay} | Format: in-article fluid`);
             revenueOptimizer.logAdImpression('overlay', adSlots.overlay);
+            elements.overlayAd1.classList.add('visible');
+            activeOverlays.add('overlay1');
             
-            overlayActive = true;
-            videoOverlayAd.classList.add('visible');
+            // Random position
+            const top = 10 + Math.random() * 60;
+            const left = 5 + Math.random() * 70;
+            elements.overlayAd1.style.top = top + '%';
+            elements.overlayAd1.style.left = left + '%';
             
             setTimeout(() => {
-                hideVideoOverlayAd();
+                hideOverlayAd('overlay1');
+            }, 7000);
+        }
+        
+        function hideOverlayAd(id) {
+            elements.overlayAd1.classList.remove('visible');
+            activeOverlays.delete(id);
+        }
+        
+        elements.overlayClose1.addEventListener('click', () => hideOverlayAd('overlay1'));
+        
+        // ========== SIDE BANNER ==========
+        function showSideBanner() {
+            revenueOptimizer.logAdImpression('sidebanner', adSlots.sidebanner);
+            elements.sideBannerAdRight.classList.add('visible');
+            
+            setTimeout(() => {
+                elements.sideBannerAdRight.classList.remove('visible');
             }, 8000);
         }
         
-        function hideVideoOverlayAd() {
-            videoOverlayAd.classList.remove('visible');
-            overlayActive = false;
-            
-            // Schedule next overlay randomly between 25-40 seconds
-            setTimeout(() => {
-                if (isPlaying) showVideoOverlayAd();
-            }, 25000 + Math.random() * 15000);
-        }
-        
-        overlayClose.addEventListener('click', hideVideoOverlayAd);
-        
-        // ========== SIDE BANNER AD SYSTEM (NEW) ==========
-        function showSideBannerAd() {
-            console.log('📊 Showing Side Banner Ad');
-            console.log(`🎯 Ad Slot: ${adSlots.sidebanner} | Format: in-article fluid`);
-            revenueOptimizer.logAdImpression('sidebanner', adSlots.sidebanner);
-            
-            sideBannerAd.classList.add('visible');
-            
-            setTimeout(() => {
-                sideBannerAd.classList.remove('visible');
-                
-                // Schedule next side banner
-                setTimeout(() => {
-                    if (isPlaying) showSideBannerAd();
-                }, 90000);
-            }, 30000);
-        }
-        
-        sideClose.addEventListener('click', () => {
-            sideBannerAd.classList.remove('visible');
-            
-            // Reschedule
-            setTimeout(() => {
-                if (isPlaying) showSideBannerAd();
-            }, 90000);
+        elements.sideCloseRight.addEventListener('click', () => {
+            elements.sideBannerAdRight.classList.remove('visible');
         });
         
-        // ========== AD SCHEDULING SYSTEM ==========
-        function startAdSchedule() {
-            console.log('⏰ Starting optimized ad schedule for maximum revenue');
-            
-            // Interstitial ads every 60 seconds
-            setInterval(() => {
-                if (isPlaying) {
-                    showInterstitialAd();
+        // ========== POP-UP AD ==========
+        function checkPopupAds(currentTime) {
+            if (currentPopupIndex < popupTriggers.length) {
+                const triggerTime = popupTriggers[currentPopupIndex];
+                if (currentTime >= triggerTime && currentTime < triggerTime + 2) {
+                    showPopupAd();
+                    currentPopupIndex++;
                 }
-            }, 60000);
-            
-            // Floating ads every 45 seconds
-            setInterval(() => {
-                if (isPlaying) {
-                    showFloatingAd();
-                }
-            }, 45000);
-            
-            // First overlay ad after 20 seconds
-            setTimeout(() => {
-                if (isPlaying) showVideoOverlayAd();
-            }, 20000);
-            
-            // First side banner after 40 seconds
-            setTimeout(() => {
-                if (isPlaying) showSideBannerAd();
-            }, 40000);
-            
-            console.log('📊 Continuous ad rotation activated with 7 ad slots');
+            }
         }
         
-        // ========== VIDEO PLAYBACK SYSTEM ==========
+        function showPopupAd() {
+            revenueOptimizer.logAdImpression('popup', adSlots.popup);
+            elements.popupAd.classList.add('visible');
+            elements.mainVideo.pause();
+            
+            setTimeout(() => {
+                hidePopupAd();
+            }, 6000);
+        }
+        
+        function hidePopupAd() {
+            elements.popupAd.classList.remove('visible');
+            elements.mainVideo.play();
+        }
+        
+        elements.popupClose.addEventListener('click', hidePopupAd);
+        
+        // ========== TOP BANNER ==========
+        function showTopBanner() {
+            revenueOptimizer.logAdImpression('topbanner', adSlots.topbanner);
+            elements.topBannerAd.classList.add('visible');
+            
+            setTimeout(() => {
+                elements.topBannerAd.classList.remove('visible');
+            }, 5000);
+        }
+        
+        // ========== AGGRESSIVE AD SCHEDULE ==========
+        function startAggressiveAdSchedule() {
+            console.log('⏰ STARTING AGGRESSIVE AD SCHEDULE FOR 60-90s VIDEOS');
+            
+            // Interstitial every 20 seconds
+            setInterval(() => {
+                if (isPlaying) showInterstitialAd();
+            }, 20000);
+            
+            // Floating every 15 seconds
+            setInterval(() => {
+                if (isPlaying) showFloatingAd();
+            }, 15000);
+            
+            // Overlay every 10 seconds
+            setInterval(() => {
+                if (isPlaying) showOverlayAd();
+            }, 10000);
+            
+            // Side banner every 12 seconds
+            setInterval(() => {
+                if (isPlaying) showSideBanner();
+            }, 12000);
+            
+            // Top banner every 25 seconds
+            setInterval(() => {
+                if (isPlaying) showTopBanner();
+            }, 25000);
+            
+            console.log('📊 MAXIMUM AD DENSITY ACTIVATED');
+        }
+        
+        // ========== VIDEO PLAYBACK ==========
         function startVideoPlayback() {
-            console.log('▶️ Starting video with maximum revenue optimization');
+            console.log('▶️ STARTING SHORT VIDEO WITH MAXIMUM ADS');
             
-            videoPlayer.classList.add('active');
-            
-            mainVideo.muted = true;
-            mainVideo.volume = 1.0;
+            elements.videoPlayer.classList.add('active');
+            elements.mainVideo.muted = true;
+            elements.mainVideo.volume = 1.0;
             isMuted = true;
-            muteBtn.textContent = '🔇';
+            elements.muteBtn.textContent = '🔇';
             
-            const playPromise = mainVideo.play();
+            const playPromise = elements.mainVideo.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log('✅ Video started (muted for better ad viewability)');
+                    console.log('✅ Video playing (muted for ad optimization)');
                     isPlaying = true;
-                    playPauseBtn.textContent = '⏸️';
+                    elements.playPauseBtn.textContent = '⏸️';
                     showControls();
                     
                     // Enable sound on interaction
                     const enableSound = () => {
-                        console.log('🔊 Enabling sound (user interaction detected)');
-                        mainVideo.muted = false;
+                        console.log('🔊 Sound enabled');
+                        elements.mainVideo.muted = false;
                         isMuted = false;
-                        muteBtn.textContent = '🔊';
-                        
+                        elements.muteBtn.textContent = '🔊';
                         document.removeEventListener('click', enableSound);
                         document.removeEventListener('touchstart', enableSound);
                     };
@@ -963,124 +1058,119 @@
         }
         
         function updateTimeDisplay() {
-            timeDisplay.textContent = `${formatTime(mainVideo.currentTime)} / ${formatTime(videoDuration)}`;
-            videoCurrentTime = mainVideo.currentTime;
+            const currentTime = elements.mainVideo.currentTime;
+            elements.timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(videoDuration)}`;
             
-            checkMidrollAds(videoCurrentTime);
+            checkMidrollAds(currentTime);
+            checkPopupAds(currentTime);
         }
         
         function showControls() {
-            videoControls.classList.add('visible');
+            elements.videoControls.classList.add('visible');
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
                 if (isPlaying) {
-                    videoControls.classList.remove('visible');
+                    elements.videoControls.classList.remove('visible');
                 }
-            }, 3000);
+            }, 2000);
         }
         
         // ========== EVENT LISTENERS ==========
-        mainVideo.addEventListener('loadedmetadata', () => {
-            console.log('📊 Video metadata loaded');
-            videoDuration = mainVideo.duration;
+        elements.mainVideo.addEventListener('loadedmetadata', () => {
+            videoDuration = elements.mainVideo.duration;
+            console.log(`📊 Video duration: ${Math.round(videoDuration)}s`);
             updateTimeDisplay();
-            
-            // Load all ads
             loadAllAds();
             
-            // Start pre-roll ad (highest CPM)
             setTimeout(() => {
                 startPreRollAd();
             }, 1000);
         });
         
-        mainVideo.addEventListener('timeupdate', updateTimeDisplay);
+        elements.mainVideo.addEventListener('timeupdate', updateTimeDisplay);
         
-        mainVideo.addEventListener('ended', () => {
-            console.log('🔄 Video ended - restarting for continuous ad revenue');
-            mainVideo.currentTime = 0;
-            mainVideo.play();
+        elements.mainVideo.addEventListener('ended', () => {
+            console.log('🔄 Restarting video for continuous ad revenue');
+            elements.mainVideo.currentTime = 0;
+            elements.mainVideo.play();
             currentMidrollIndex = 0;
+            currentPopupIndex = 0;
         });
         
-        mainVideo.addEventListener('click', () => {
-            togglePlayPause();
-        });
-        
-        // Control buttons
-        playPauseBtn.addEventListener('click', togglePlayPause);
+        elements.mainVideo.addEventListener('click', togglePlayPause);
         
         function togglePlayPause() {
-            if (mainVideo.paused) {
-                mainVideo.play();
+            if (elements.mainVideo.paused) {
+                elements.mainVideo.play();
                 isPlaying = true;
-                playPauseBtn.textContent = '⏸️';
+                elements.playPauseBtn.textContent = '⏸️';
             } else {
-                mainVideo.pause();
+                elements.mainVideo.pause();
                 isPlaying = false;
-                playPauseBtn.textContent = '▶️';
+                elements.playPauseBtn.textContent = '▶️';
             }
             showControls();
         }
         
-        muteBtn.addEventListener('click', () => {
+        elements.playPauseBtn.addEventListener('click', togglePlayPause);
+        
+        elements.muteBtn.addEventListener('click', () => {
             isMuted = !isMuted;
-            mainVideo.muted = isMuted;
-            muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            elements.mainVideo.muted = isMuted;
+            elements.muteBtn.textContent = isMuted ? '🔇' : '🔊';
             showControls();
         });
         
-        fullscreenBtn.addEventListener('click', () => {
+        elements.fullscreenBtn.addEventListener('click', () => {
             if (!document.fullscreenElement) {
-                videoPlayer.requestFullscreen();
+                elements.videoPlayer.requestFullscreen();
             } else {
                 document.exitFullscreen();
             }
             showControls();
         });
         
-        // Show controls on movement
-        videoPlayer.addEventListener('mousemove', showControls);
-        videoPlayer.addEventListener('touchstart', showControls);
+        elements.videoPlayer.addEventListener('mousemove', showControls);
+        elements.videoPlayer.addEventListener('touchstart', showControls);
         
         // ========== INITIALIZATION ==========
         window.addEventListener('load', () => {
-            console.log('🚀 ULTIMATE REVENUE SYSTEM INITIALIZED');
-            console.log('=======================================');
-            console.log('💰 GOOGLE ADSENSE REVENUE OPTIMIZATION:');
-            console.log(`  • Pre-roll Ad: Slot ${adSlots.preroll} (€12 CPM)`);
-            console.log(`  • Interstitial: Slot ${adSlots.interstitial} (€8 CPM)`);
-            console.log(`  • Floating: Slot ${adSlots.floating} (€6 CPM)`);
-            console.log(`  • Banner: Slot ${adSlots.banner} (€4 CPM)`);
-            console.log(`  • Mid-roll: Slot ${adSlots.midroll} (€10 CPM)`);
-            console.log(`  • Overlay: Slot ${adSlots.overlay} (€7 CPM)`);
-            console.log(`  • Side Banner: Slot ${adSlots.sidebanner} (€5 CPM)`);
+            console.log('🚀 ULTIMATE REVENUE SYSTEM FOR SHORT VIDEOS (60-90s)');
+            console.log('====================================================');
+            console.log('💰 9 AGGRESSIVE AD SLOTS:');
+            console.log('  1. Pre-roll (5s) - €15 CPM');
+            console.log('  2. Interstitial (6s, every 20s) - €10 CPM');
+            console.log('  3. Floating (10s, every 15s) - €8 CPM');
+            console.log('  4. Bottom Banner (continuous) - €5 CPM');
+            console.log('  5. Mid-roll (8s, at 15s, 40s, 65s) - €12 CPM');
+            console.log('  6. Overlay (7s, every 10s) - €9 CPM');
+            console.log('  7. Side Banner (8s, every 12s) - €6 CPM');
+            console.log('  8. Pop-up (6s, at 10s, 30s, 50s) - €14 CPM');
+            console.log('  9. Top Banner (5s, every 25s) - €4 CPM');
             console.log('');
-            console.log('🎯 FORMATS: autorelaxed + in-article fluid');
-            console.log('');
-            console.log('📈 EXPECTED REVENUE PER 1000 VIEWS:');
-            console.log('  • Pre-roll: €12.00');
-            console.log('  • Interstitial (x2): €8.00');
-            console.log('  • Floating (x3): €12.00');
-            console.log('  • Banner (continuous): €40.00');
-            console.log('  • Mid-roll (x3): €10.00');
-            console.log('  • Overlay (x4): €28.00');
-            console.log('  • Side Banner (x2): €10.00');
+            console.log('📈 REVENUE PER 1000 VIEWS (60s video):');
+            console.log('  • Pre-roll: €15.00');
+            console.log('  • Interstitial (x3): €30.00');
+            console.log('  • Floating (x4): €32.00');
+            console.log('  • Banner: €50.00');
+            console.log('  • Mid-roll (x3): €36.00');
+            console.log('  • Overlay (x6): €54.00');
+            console.log('  • Side Banner (x5): €30.00');
+            console.log('  • Pop-up (x3): €42.00');
+            console.log('  • Top Banner (x2): €8.00');
             console.log('  --------------------');
-            console.log('  💰 TOTAL: €120.00 - €160.00');
+            console.log('  💰 TOTAL: €297.00 - €350.00');
             console.log('');
             console.log('🔥 FEATURES:');
-            console.log('  • 7 Premium AdSlots with optimal formats');
-            console.log('  • Overlay ads during video playback');
-            console.log('  • Side banner for continuous exposure');
-            console.log('  • Smart Ad Scheduling');
-            console.log('  • Real-time Revenue Tracking');
-            console.log('  • Mobile Optimized');
+            console.log('  • 9 AdSlots for maximum revenue');
+            console.log('  • Aggressive scheduling for short videos');
+            console.log('  • Multiple simultaneous ads');
+            console.log('  • Pop-up interrupts for high CPM');
+            console.log('  • Optimized for 60-90 second videos');
             
-            document.title = "Το Έψαξα Πάντως - Maximum Revenue System";
+            document.title = "Το Έψαξα Πάντως - Aggressive Revenue System";
         });
         
-        // Prevent context menu
         document.addEventListener('contextmenu', (e) => e.preventDefault());
     </script>
 </body>
