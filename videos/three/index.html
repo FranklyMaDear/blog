@@ -312,6 +312,52 @@
             justify-content: center;
         }
         
+        /* Video Bottom Ad Container - Νέο container για διαφήμιση κάτω από το βίντεο */
+        .video-bottom-ad {
+            width: 100%;
+            margin: 10px auto;
+            background-color: #111;
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 767px) {
+            .video-bottom-ad {
+                min-height: 100px;
+                max-height: 120px;
+                order: 2;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .video-bottom-ad {
+                max-width: 1400px;
+                min-height: 120px;
+                padding: 15px;
+                margin-top: 15px;
+            }
+        }
+        
+        .video-bottom-label {
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .video-bottom-content {
+            width: 100%;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         /* Mobile ad placeholder */
         .mobile-ad-placeholder {
             width: 100%;
@@ -444,6 +490,23 @@
         </div>
     </div>
     
+    <!-- Νέα Διαφήμιση Κάτω Από Το Βίντεο -->
+    <div class="video-bottom-ad">
+        <div class="video-bottom-label">Διαφήμιση</div>
+        <div class="video-bottom-content">
+            <!-- Video Bottom Ad -->
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-3186700611266549"
+                data-ad-slot="3092455087"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+    
     <div class="bottom-ad-container">
         <div class="bottom-ad-label">Διαφήμιση</div>
         <div class="bottom-ad-content">
@@ -551,6 +614,17 @@
                         console.log('Post-video ad push:', e);
                     }
                 }, 2000);
+                
+                // Ειδική προσπάθεια για διαφήμιση κάτω από βίντεο
+                setTimeout(function() {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                        }
+                    } catch (e) {
+                        console.log('Video bottom ad refresh:', e);
+                    }
+                }, 3000);
             });
             
             // Κάνε το βίντεο να παίξει όταν πατήθηκε play από τα controls
@@ -590,7 +664,17 @@
                 setInterval(function() {
                     try {
                         if (typeof adsbygoogle !== 'undefined') {
+                            // Επαναφόρτωση όλων των διαφημίσεων
                             adsbygoogle.push({});
+                            
+                            // Ειδική επαναφόρτωση για διαφήμιση κάτω από βίντεο
+                            setTimeout(function() {
+                                try {
+                                    adsbygoogle.push({});
+                                } catch (e) {
+                                    console.log('Video bottom ad refresh:', e);
+                                }
+                            }, 500);
                             
                             // Επιπλέον προσπάθεια για mobile
                             if (window.innerWidth <= 768) {
@@ -638,7 +722,17 @@
                         if (videoWatchTime % 30 === 0 && videoWatchTime > 0) {
                             try {
                                 if (typeof adsbygoogle !== 'undefined') {
+                                    // Ειδική προσπάθεια για διαφήμιση κάτω από βίντεο
                                     adsbygoogle.push({});
+                                    
+                                    // Χωριστή προσπάθεια για άλλες διαφημίσεις
+                                    setTimeout(function() {
+                                        try {
+                                            adsbygoogle.push({});
+                                        } catch (e) {
+                                            console.log('Mid-roll extra ad:', e);
+                                        }
+                                    }, 1000);
                                 }
                             } catch (e) {
                                 console.log('Mid-roll ad attempt:', e);
@@ -664,12 +758,43 @@
                         try {
                             if (typeof adsbygoogle !== 'undefined') {
                                 adsbygoogle.push({});
+                                
+                                // Ειδική προσπάθεια για διαφήμιση κάτω από βίντεο
+                                setTimeout(function() {
+                                    try {
+                                        adsbygoogle.push({});
+                                    } catch (e) {
+                                        console.log('Visibility video bottom ad:', e);
+                                    }
+                                }, 500);
                             }
                         } catch (e) {
                             console.log('Visibility change ad refresh:', e);
                         }
                     }, 1000);
                 }
+            });
+            
+            // Force ad display on page load
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    try {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            adsbygoogle.push({});
+                            
+                            // Ειδική προσπάθεια για διαφήμιση κάτω από βίντεο
+                            setTimeout(function() {
+                                try {
+                                    adsbygoogle.push({});
+                                } catch (e) {
+                                    console.log('Initial video bottom ad:', e);
+                                }
+                            }, 1000);
+                        }
+                    } catch (e) {
+                        console.log('Initial ad load:', e);
+                    }
+                }, 2000);
             });
         });
     </script>
