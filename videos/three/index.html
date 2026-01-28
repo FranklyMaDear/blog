@@ -65,7 +65,7 @@
             user-select: none;
         }
         
-        /* FIRST AD OVERLAY - ΜΕΤΑΚΙΝΗΜΕΝΟ ΣΤΗΝ ΚΑΤΩ ΔΕΞΙΑ ΓΩΝΙΑ */
+        /* FIRST AD OVERLAY - 1 ΣΤΑΘΕΡΗ ΔΙΑΦΗΜΙΣΗ */
         .first-ad-overlay {
             position: fixed;
             top: 0;
@@ -85,7 +85,7 @@
         .first-ad-container {
             width: 85%;
             max-width: 380px;
-            height: 65vh;
+            height: 60vh;
             background: rgba(20, 20, 30, 0.95);
             backdrop-filter: blur(25px);
             border-radius: 20px;
@@ -103,32 +103,19 @@
             flex: 1;
             width: 100%;
             display: flex;
-            flex-direction: column;
-            min-height: 0;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
             position: relative;
             background: rgba(0, 0, 0, 0.3);
             border-radius: 15px 15px 0 0;
         }
         
-        /* STYLES FOR STATIC ADS IN FIRST BANNER */
-        .first-ad-row {
-            flex: 1;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .first-ad-row:last-child {
-            border-bottom: none;
-        }
-        
+        /* STYLE FOR STATIC AD */
         .static-ad {
-            width: 100%;
-            height: 100%;
-            display: block;
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
             border-radius: 10px;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.05);
@@ -170,36 +157,38 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        /* BOTTOM SLIDE-UP AD - DURING VIDEO */
-        .bottom-slide-ad {
+        /* POP-UP BANNERS - ΚΕΝΤΡΙΚΑ ΣΤΗΝ ΟΘΟΝΗ */
+        .popup-banner {
             position: fixed;
-            bottom: -25vh;
-            left: 0;
-            width: 100%;
-            height: 25vh;
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
-            z-index: 9998;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            width: 90%;
+            max-width: 400px;
+            height: 60vh;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(25px);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.9);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        opacity 0.4s ease;
         }
         
-        .bottom-slide-ad.visible {
-            bottom: 0;
+        .popup-banner.active {
+            display: flex;
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
         
-        .bottom-slide-ad.hidden {
-            bottom: -25vh;
-        }
-        
-        .slide-header {
+        .popup-header {
             width: 100%;
-            padding: 10px 20px 6px;
+            padding: 15px 20px 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -207,36 +196,36 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .slide-title {
-            font-size: 14px;
+        .popup-title {
+            font-size: 16px;
             font-weight: 600;
             color: #ffcb2e;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
         
-        .slide-timer {
+        .popup-timer {
             background: linear-gradient(45deg, #ffcb2e, #ff9900);
             color: #000;
             font-weight: bold;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 12px;
-            font-size: 12px;
+            font-size: 14px;
             font-family: 'Courier New', monospace;
-            min-width: 40px;
+            min-width: 45px;
             text-align: center;
         }
         
-        .slide-close {
+        .popup-close {
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border: none;
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -244,59 +233,63 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        .slide-close:hover,
-        .slide-close:active {
+        .popup-close:hover,
+        .popup-close:active {
             background: rgba(255, 255, 255, 0.2);
             transform: scale(1.1);
         }
         
-        .slide-content {
+        .popup-content {
             flex: 1;
             width: 100%;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+            padding: 20px;
             position: relative;
+            background: rgba(0, 0, 0, 0.3);
         }
         
-        .slide-ad-container {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.03);
-        }
-        
-        /* STYLES FOR ROTATING ADS IN SLIDE BANNER */
-        .rotating-ad {
-            width: 100%;
-            height: 100%;
-            display: none;
+        .popup-ad {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
             border-radius: 10px;
             overflow: hidden;
             background: rgba(255, 255, 255, 0.05);
         }
         
-        .rotating-ad.active {
-            display: block;
-        }
-        
-        .slide-footer {
+        .popup-footer {
             width: 100%;
-            padding: 8px 15px;
+            padding: 12px 20px;
             background: rgba(0, 0, 0, 0.5);
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
         
-        .slide-footer-text {
-            font-size: 11px;
+        .popup-footer-text {
+            font-size: 12px;
             color: rgba(255, 255, 255, 0.7);
             font-weight: 500;
+        }
+        
+        /* OVERLAY FOR POPUP BACKGROUND */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 9998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .popup-overlay.active {
+            display: block;
+            opacity: 1;
         }
         
         /* MAIN VIDEO CONTAINER */
@@ -494,7 +487,7 @@
             .first-ad-container {
                 width: 80%;
                 max-width: 350px;
-                height: 60vh;
+                height: 55vh;
             }
             
             .first-ad-footer {
@@ -504,6 +497,11 @@
             
             .countdown-timer {
                 font-size: 22px;
+            }
+            
+            .popup-banner {
+                max-width: 380px;
+                height: 55vh;
             }
         }
         
@@ -516,13 +514,13 @@
             .first-ad-container {
                 width: 90%;
                 max-width: 300px;
-                height: 55vh;
+                height: 50vh;
                 margin-right: 0;
                 margin-bottom: 15px;
             }
             
-            .first-ad-row {
-                padding: 10px;
+            .first-ad-content {
+                padding: 15px;
             }
             
             .first-ad-footer {
@@ -532,6 +530,25 @@
             
             .countdown-timer {
                 font-size: 20px;
+            }
+            
+            .popup-banner {
+                width: 95%;
+                max-width: 320px;
+                height: 50vh;
+            }
+            
+            .popup-header {
+                padding: 12px 15px 8px;
+            }
+            
+            .popup-title {
+                font-size: 14px;
+            }
+            
+            .popup-timer {
+                font-size: 12px;
+                padding: 3px 8px;
             }
             
             .video-play-overlay {
@@ -554,9 +571,15 @@
             .first-ad-container {
                 width: 55%;
                 max-width: 280px;
-                height: 80vh;
+                height: 75vh;
                 margin-right: 10px;
                 margin-bottom: 10px;
+            }
+            
+            .popup-banner {
+                width: 70%;
+                max-width: 350px;
+                height: 70vh;
             }
         }
         
@@ -574,29 +597,17 @@
     </style>
 </head>
 <body>
-    <!-- FIRST AD OVERLAY - ΣΤΑΘΕΡΕΣ ΔΙΑΦΗΜΙΣΕΙΣ -->
+    <!-- FIRST AD OVERLAY - 1 ΣΤΑΘΕΡΗ ΔΙΑΦΗΜΙΣΗ -->
     <div class="first-ad-overlay" id="firstAdOverlay">
         <div class="first-ad-container">
             <div class="first-ad-content">
-                <!-- ΠΡΩΤΗ ΣΤΑΘΕΡΗ ΔΙΑΦΗΜΙΣΗ -->
-                <div class="first-ad-row">
-                    <ins class="adsbygoogle static-ad"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="3969235710"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <!-- ΔΕΥΤΕΡΗ ΣΤΑΘΕΡΗ ΔΙΑΦΗΜΙΣΗ -->
-                <div class="first-ad-row">
-                    <ins class="adsbygoogle static-ad"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="5407828554"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
+                <!-- ΜΟΝΟ 1 ΣΤΑΘΕΡΗ ΔΙΑΦΗΜΙΣΗ -->
+                <ins class="adsbygoogle static-ad"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3969235710"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
             </div>
             <div class="first-ad-footer">
                 <div class="countdown-text">
@@ -607,69 +618,86 @@
         </div>
     </div>
 
-    <!-- BOTTOM SLIDE-UP AD - ΠΕΡΙΣΤΡΕΦΟΜΕΝΕΣ ΔΙΑΦΗΜΙΣΕΙΣ -->
-    <div class="bottom-slide-ad" id="bottomSlideAd">
-        <div class="slide-header">
-            <div class="slide-title">
-                <span>📢 Advertisement</span>
+    <!-- POP-UP OVERLAY -->
+    <div class="popup-overlay" id="popupOverlay"></div>
+
+    <!-- POP-UP BANNER 1 -->
+    <div class="popup-banner" id="popupBanner1">
+        <div class="popup-header">
+            <div class="popup-title">
+                <span>📢 Advertisement 1</span>
             </div>
-            <div class="slide-timer" id="slideTimer">10s</div>
-            <button class="slide-close" id="slideClose">×</button>
+            <div class="popup-timer" id="popupTimer1">10s</div>
+            <button class="popup-close" onclick="hidePopupBanner(1)">×</button>
         </div>
         
-        <div class="slide-content">
-            <div class="slide-ad-container">
-                <!-- ΠΕΡΙΣΤΡΕΦΟΜΕΝΕΣ ΔΙΑΦΗΜΙΣΕΙΣ -->
-                <div class="rotating-ad active" id="slideAd1">
-                    <ins class="adsbygoogle rotating-ad-ins"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="3969235710"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <div class="rotating-ad" id="slideAd2">
-                    <ins class="adsbygoogle rotating-ad-ins"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="5407828554"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <div class="rotating-ad" id="slideAd3">
-                    <ins class="adsbygoogle rotating-ad-ins"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="1234567890"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <div class="rotating-ad" id="slideAd4">
-                    <ins class="adsbygoogle rotating-ad-ins"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="2345678901"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-                
-                <div class="rotating-ad" id="slideAd5">
-                    <ins class="adsbygoogle rotating-ad-ins"
-                         style="display:block"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="3456789012"
-                         data-ad-format="auto"
-                         data-full-width-responsive="true"></ins>
-                </div>
-            </div>
+        <div class="popup-content">
+            <!-- ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ 1 -->
+            <ins class="adsbygoogle popup-ad"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="5407828554"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
         </div>
         
-        <div class="slide-footer">
-            <div class="slide-footer-text" id="slideFooterText">
-                Advertisement - Thank you for supporting our content
+        <div class="popup-footer">
+            <div class="popup-footer-text">
+                Advertisement 1 - Thank you for supporting our content
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP BANNER 2 -->
+    <div class="popup-banner" id="popupBanner2">
+        <div class="popup-header">
+            <div class="popup-title">
+                <span>📢 Advertisement 2</span>
+            </div>
+            <div class="popup-timer" id="popupTimer2">10s</div>
+            <button class="popup-close" onclick="hidePopupBanner(2)">×</button>
+        </div>
+        
+        <div class="popup-content">
+            <!-- ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ 2 -->
+            <ins class="adsbygoogle popup-ad"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="1234567890"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        
+        <div class="popup-footer">
+            <div class="popup-footer-text">
+                Advertisement 2 - Thank you for supporting our content
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP BANNER 3 -->
+    <div class="popup-banner" id="popupBanner3">
+        <div class="popup-header">
+            <div class="popup-title">
+                <span>📢 Advertisement 3</span>
+            </div>
+            <div class="popup-timer" id="popupTimer3">10s</div>
+            <button class="popup-close" onclick="hidePopupBanner(3)">×</button>
+        </div>
+        
+        <div class="popup-content">
+            <!-- ΔΙΑΦΟΡΕΤΙΚΗ ΔΙΑΦΗΜΙΣΗ 3 -->
+            <ins class="adsbygoogle popup-ad"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="2345678901"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+        </div>
+        
+        <div class="popup-footer">
+            <div class="popup-footer-text">
+                Advertisement 3 - Thank you for supporting our content
             </div>
         </div>
     </div>
@@ -713,16 +741,13 @@
         const waitText = document.getElementById('waitText');
         const countdownTimer = document.getElementById('countdownTimer');
         
-        const bottomSlideAd = document.getElementById('bottomSlideAd');
-        const slideTimer = document.getElementById('slideTimer');
-        const slideClose = document.getElementById('slideClose');
-        const slideFooterText = document.getElementById('slideFooterText');
-        
-        const slideAd1 = document.getElementById('slideAd1');
-        const slideAd2 = document.getElementById('slideAd2');
-        const slideAd3 = document.getElementById('slideAd3');
-        const slideAd4 = document.getElementById('slideAd4');
-        const slideAd5 = document.getElementById('slideAd5');
+        const popupOverlay = document.getElementById('popupOverlay');
+        const popupBanner1 = document.getElementById('popupBanner1');
+        const popupBanner2 = document.getElementById('popupBanner2');
+        const popupBanner3 = document.getElementById('popupBanner3');
+        const popupTimer1 = document.getElementById('popupTimer1');
+        const popupTimer2 = document.getElementById('popupTimer2');
+        const popupTimer3 = document.getElementById('popupTimer3');
         
         const videoContainer = document.getElementById('videoContainer');
         const mainVideo = document.getElementById('mainVideo');
@@ -752,18 +777,20 @@
         // AD SYSTEM STATE
         let firstAdCountdown = 10;
         let firstAdInterval;
-        let slideAdCountdown = 10;
+        let popupAdCountdown = 10;
         
-        let currentSlideAdIndex = 0;
-        let isSlideShowing = false;
-        let slideTimerInterval;
-        let slideRotationInterval;
+        let currentPopupIndex = 0;
+        let isPopupShowing = false;
+        let popupTimerInterval;
+        let popupRotationInterval;
         let videoStartTime = 0;
         let adsInitialized = false;
         
-        // SLIDE ADS CONFIGURATION
-        const slideAds = [slideAd1, slideAd2, slideAd3, slideAd4, slideAd5];
-        const slideAdSlots = ["3969235710", "5407828554", "1234567890", "2345678901", "3456789012"];
+        // POPUP BANNERS CONFIGURATION
+        const popupBanners = [popupBanner1, popupBanner2, popupBanner3];
+        const popupTimers = [popupTimer1, popupTimer2, popupTimer3];
+        const popupAdSlots = ["5407828554", "1234567890", "2345678901"];
+        let popupUsed = [false, false, false]; // Για να ξέρουμε ποια έχουν χρησιμοποιηθεί
         
         // Language System
         const languages = [
@@ -792,58 +819,53 @@
             
             console.log('📢 Initializing AdSense ads...');
             
-            // Load static ads in first banner immediately
-            loadStaticAds();
+            // Load static ad in first banner immediately
+            loadStaticAd();
             
             adsInitialized = true;
             console.log('✅ AdSense ready for loading');
         }
         
-        function loadStaticAds() {
-            console.log('📋 Loading static ads for first banner...');
+        function loadStaticAd() {
+            console.log('📋 Loading static ad for first banner...');
             
-            // Load both static ads in first banner
-            const staticAdElements = document.querySelectorAll('.static-ad');
-            staticAdElements.forEach((adElement, index) => {
+            const staticAd = document.querySelector('.static-ad');
+            if (staticAd && typeof adsbygoogle !== 'undefined') {
                 setTimeout(() => {
-                    if (typeof adsbygoogle !== 'undefined') {
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                        console.log(`✅ Static ad ${index + 1} loaded`);
-                    }
-                }, index * 500); // Stagger loading
-            });
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log('✅ Static ad loaded');
+                }, 500);
+            }
         }
         
-        function loadRotatingAd(adElement, adSlot = null) {
+        function loadPopupAd(popupIndex) {
+            const popupBanner = popupBanners[popupIndex];
+            if (!popupBanner) return;
+            
+            const adElement = popupBanner.querySelector('.popup-ad');
             if (!adElement) return;
             
             try {
-                const adIns = adElement.querySelector('.rotating-ad-ins');
-                if (!adIns) return;
-                
+                // Set the ad slot for this specific popup
+                const adSlot = popupAdSlots[popupIndex];
                 if (adSlot) {
-                    adIns.setAttribute('data-ad-slot', adSlot);
+                    adElement.setAttribute('data-ad-slot', adSlot);
                 }
                 
                 if (typeof adsbygoogle !== 'undefined') {
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                    console.log('✅ Rotating ad loaded for slot: ' + (adSlot || 'default'));
+                    console.log(`✅ Popup ad ${popupIndex + 1} loaded for slot: ${adSlot}`);
                     
+                    // Retry if not visible
                     setTimeout(() => {
-                        if (adElement.offsetParent === null) {
-                            console.log('⚠️ Ad retrying...');
+                        if (popupBanner.offsetParent === null) {
+                            console.log('⚠️ Popup ad retrying...');
                             (adsbygoogle = window.adsbygoogle || []).push({});
                         }
                     }, 1000);
-                } else {
-                    setTimeout(() => {
-                        if (typeof adsbygoogle !== 'undefined') {
-                            (adsbygoogle = window.adsbygoogle || []).push({});
-                        }
-                    }, 1500);
                 }
             } catch (e) {
-                console.log('❌ Ad load error:', e);
+                console.log('❌ Popup ad load error:', e);
             }
         }
         
@@ -877,7 +899,6 @@
         function updateLanguageText() {
             if (currentLangIndex >= languages.length) currentLangIndex = 0;
             waitText.textContent = languages[currentLangIndex].text;
-            slideFooterText.textContent = languages[currentLangIndex].banner;
             currentLangIndex++;
         }
         
@@ -891,83 +912,91 @@
                 videoContainer.classList.add('active');
                 startVideoWithAudio();
                 
-                // Start slide ads after 5 seconds
+                // Start popup ads after 5 seconds
                 setTimeout(() => {
-                    startSlideAdSystem();
+                    startPopupAdSystem();
                 }, 5000);
                 
             }, 500);
         }
         
-        function startSlideAdSystem() {
-            console.log('🔄 Starting slide-up ad system...');
+        function startPopupAdSystem() {
+            console.log('🔄 Starting popup ad system...');
             
-            // Show first slide ad
-            showNextSlideAd();
+            // Show first popup ad
+            showNextPopupAd();
             
             // Set up rotation: 10 seconds ad, 5 seconds pause
-            slideRotationInterval = setInterval(() => {
-                if (!isSlideShowing) {
-                    showNextSlideAd();
+            popupRotationInterval = setInterval(() => {
+                if (!isPopupShowing) {
+                    showNextPopupAd();
                 }
             }, 15000); // 10s ad + 5s pause
         }
         
-        function showNextSlideAd() {
-            if (isSlideShowing) return;
+        function showNextPopupAd() {
+            if (isPopupShowing) return;
             
-            console.log(`📢 Showing slide ad ${currentSlideAdIndex + 1}...`);
-            isSlideShowing = true;
+            // Επιλογή επόμενου popup (χρησιμοποιούμε όλα τα 3 με τη σειρά)
+            currentPopupIndex = (currentPopupIndex + 1) % popupBanners.length;
             
-            // Hide all slide ads
-            slideAds.forEach(ad => {
-                ad.classList.remove('active');
-            });
+            console.log(`📢 Showing popup ad ${currentPopupIndex + 1}...`);
+            isPopupShowing = true;
             
-            // Show current ad
-            const currentAd = slideAds[currentSlideAdIndex];
-            currentAd.classList.add('active');
+            // Hide any active popups
+            hideAllPopups();
             
-            // Load ad
+            // Show selected popup
+            const currentPopup = popupBanners[currentPopupIndex];
+            const currentTimer = popupTimers[currentPopupIndex];
+            
+            // Load ad for this popup
+            loadPopupAd(currentPopupIndex);
+            
+            // Show overlay and popup
+            popupOverlay.classList.add('active');
             setTimeout(() => {
-                const adSlot = slideAdSlots[currentSlideAdIndex];
-                loadRotatingAd(currentAd, adSlot);
-            }, 100);
-            
-            // Show slide ad
-            bottomSlideAd.classList.remove('hidden');
-            setTimeout(() => {
-                bottomSlideAd.classList.add('visible');
+                currentPopup.classList.add('active');
             }, 10);
             
             // Start 10-second countdown
-            slideAdCountdown = 10;
-            slideTimer.textContent = slideAdCountdown + 's';
+            popupAdCountdown = 10;
+            currentTimer.textContent = popupAdCountdown + 's';
             
-            clearInterval(slideTimerInterval);
-            slideTimerInterval = setInterval(() => {
-                slideAdCountdown--;
-                slideTimer.textContent = slideAdCountdown + 's';
+            clearInterval(popupTimerInterval);
+            popupTimerInterval = setInterval(() => {
+                popupAdCountdown--;
+                currentTimer.textContent = popupAdCountdown + 's';
                 
-                if (slideAdCountdown <= 0) {
-                    hideSlideAd();
+                if (popupAdCountdown <= 0) {
+                    hidePopupBanner(currentPopupIndex + 1);
                 }
             }, 1000);
             
-            // Rotate to next ad
-            currentSlideAdIndex = (currentSlideAdIndex + 1) % slideAds.length;
+            // Mark this popup as used
+            popupUsed[currentPopupIndex] = true;
         }
         
-        function hideSlideAd() {
-            console.log('📢 Hiding slide ad...');
-            isSlideShowing = false;
+        function hidePopupBanner(popupNumber) {
+            console.log(`📢 Hiding popup ad ${popupNumber}...`);
+            isPopupShowing = false;
             
-            clearInterval(slideTimerInterval);
+            clearInterval(popupTimerInterval);
             
-            bottomSlideAd.classList.remove('visible');
+            const popupIndex = popupNumber - 1;
+            const currentPopup = popupBanners[popupIndex];
+            
+            currentPopup.classList.remove('active');
             setTimeout(() => {
-                bottomSlideAd.classList.add('hidden');
+                popupOverlay.classList.remove('active');
             }, 500);
+        }
+        
+        function hideAllPopups() {
+            popupBanners.forEach(popup => {
+                popup.classList.remove('active');
+            });
+            popupOverlay.classList.remove('active');
         }
         
         // ================== VIDEO SYSTEM FUNCTIONS ==================
@@ -1044,7 +1073,7 @@
             videoProgressContainer.style.opacity = '1';
             clearTimeout(controlsTimeout);
             controlsTimeout = setTimeout(() => {
-                if (isPlaying && !isSlideShowing) {
+                if (isPlaying && !isPopupShowing) {
                     videoControls.classList.remove('visible');
                     videoProgressContainer.style.opacity = '0';
                 }
@@ -1214,8 +1243,6 @@
         muteBtn.addEventListener('click', toggleMute);
         fullscreenBtn.addEventListener('click', toggleFullscreen);
         
-        slideClose.addEventListener('click', hideSlideAd);
-        
         videoContainer.addEventListener('mousemove', showControls);
         videoContainer.addEventListener('touchstart', showControls);
         
@@ -1226,13 +1253,14 @@
             
             document.title = VIDEO_TITLE + " - FmD @FmD699";
             
-            console.log('🚀 Page loaded - Enhanced Ad System');
-            console.log('🎯 ΒΕΛΤΙΩΜΕΝΟ ΣΥΣΤΗΜΑ:');
-            console.log('  - Πρώτο banner: 2 ΣΤΑΘΕΡΕΣ διαφημίσεις');
-            console.log('  - Slide banner: 5 περιστρεφόμενες διαφημίσεις');
+            console.log('🚀 Page loaded - Popup Ad System');
+            console.log('🎯 ΣΥΣΤΗΜΑ ΠΟΥ ΘΕΣ:');
+            console.log('  - Πρώτο banner: 1 ΣΤΑΘΕΡΗ διαφήμιση');
+            console.log('  - Popup banners: 3 διαφορετικά pop-up banners');
+            console.log('  - Κάθε popup: Διαφορετική διαφήμιση');
             console.log('  - Ad Schedule: 10s διαφήμιση → 5s παύση');
+            console.log('  - Τοποθεσία: Κέντρο οθόνης');
             console.log('  - Ad Format: "auto" με full-width-responsive');
-            console.log('  - Βίντεο: Καθαρή θέαση, banner σε γωνία');
             
             document.addEventListener('touchstart', function(e) {
                 if (e.touches.length > 1) {
@@ -1263,8 +1291,8 @@
         document.addEventListener('fullscreenchange', () => {
             if (document.fullscreenElement) {
                 console.log('📺 Entered fullscreen mode');
-                if (isSlideShowing) {
-                    hideSlideAd();
+                if (isPopupShowing) {
+                    hideAllPopups();
                 }
             } else {
                 console.log('📺 Exited fullscreen mode');
@@ -1272,7 +1300,7 @@
         });
         
         console.log('🎬 ' + VIDEO_TITLE);
-        console.log('✅ Enhanced Video Player with Static Ads ready');
+        console.log('✅ Video Player with Popup Ads ready');
         
         document.addEventListener('click', function() {
             if (videoStarted && mainVideo.muted) {
