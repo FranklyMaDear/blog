@@ -27,6 +27,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -94,7 +95,6 @@
             overflow: hidden;
             position: relative;
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            -webkit-tap-highlight-color: transparent;
         }
         
         video {
@@ -107,7 +107,7 @@
             user-select: none;
         }
         
-        /* Mobile-optimized video controls */
+        /* Mobile-optimized video controls for all browsers */
         video::-webkit-media-controls-panel {
             background-color: rgba(17, 17, 17, 0.95);
         }
@@ -132,7 +132,6 @@
             justify-content: center;
             align-items: center;
             z-index: 2;
-            -webkit-tap-highlight-color: transparent;
         }
         
         .video-poster img {
@@ -163,7 +162,6 @@
             justify-content: center;
             align-items: center;
             transition: all 0.3s;
-            -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
         }
         
@@ -182,7 +180,7 @@
             margin-left: 4px;
         }
         
-        /* Ad containers optimized for mobile */
+        /* Ad containers optimized for mobile with fluid layout */
         .ad-container {
             flex: 1;
             min-width: 0;
@@ -199,11 +197,13 @@
                 width: 100%;
                 min-height: 100px;
                 max-height: 250px;
+                order: 2;
             }
             
             .video-container {
                 height: 50vh;
                 min-height: 300px;
+                order: 1;
             }
         }
         
@@ -245,8 +245,8 @@
             min-height: 100px;
         }
         
-        /* Responsive ad slot */
-        .responsive-ad-slot {
+        /* Fluid ad slot container */
+        .fluid-ad-slot {
             width: 100%;
             height: 100%;
             min-height: 100px;
@@ -269,6 +269,8 @@
             .bottom-ad-container {
                 min-height: 100px;
                 max-height: 120px;
+                order: 3;
+                margin-top: 10px;
             }
         }
         
@@ -362,6 +364,14 @@
             }
         }
         
+        /* Chrome/Android optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .play-button {
+                min-width: 70px;
+                min-height: 70px;
+            }
+        }
+        
         /* Prevent text selection */
         .no-select {
             -webkit-user-select: none;
@@ -390,17 +400,16 @@
         <div class="ad-container">
             <div class="ad-label">Διαφήμιση</div>
             <div class="ad-content">
-                <div class="responsive-ad-slot">
-                    <!-- Πρώτη διαφήμιση - mobile optimized -->
+                <div class="fluid-ad-slot">
+                    <!-- Πρώτη διαφήμιση - Το συγκεκριμένο script που ζητήσατε -->
                     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
                         crossorigin="anonymous"></script>
-                    <!-- Mobile responsive ad unit -->
                     <ins class="adsbygoogle"
                         style="display:block"
+                        data-ad-format="fluid"
+                        data-ad-layout-key="-fb+5w+4e-db+86"
                         data-ad-client="ca-pub-3186700611266549"
-                        data-ad-slot="3969235710"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
+                        data-ad-slot="3969235710"></ins>
                     <script>
                         (adsbygoogle = window.adsbygoogle || []).push({});
                     </script>
@@ -417,16 +426,15 @@
     <div class="bottom-ad-container">
         <div class="bottom-ad-label">Διαφήμιση</div>
         <div class="bottom-ad-content">
-            <!-- Δεύτερη διαφήμιση - mobile optimized -->
+            <!-- Δεύτερη διαφήμιση - Το ίδιο script για συνοχή -->
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
                 crossorigin="anonymous"></script>
-            <!-- Bottom banner ad -->
             <ins class="adsbygoogle"
                 style="display:block"
                 data-ad-format="fluid"
                 data-ad-layout-key="-fb+5w+4e-db+86"
                 data-ad-client="ca-pub-3186700611266549"
-                data-ad-slot="4586034963"></ins>
+                data-ad-slot="3969235710"></ins>
             <script>
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
@@ -450,34 +458,42 @@
             // Προσθήκη ελέγχων στο βίντεο
             video.controls = true;
             
-            // Βελτιστοποίηση για mobile
+            // Βελτιστοποίηση για mobile (Safari & Chrome)
             video.setAttribute('playsinline', '');
             video.setAttribute('webkit-playsinline', '');
             
             // Συνάρτηση για να ξεκινήσει το βίντεο
             function startVideo() {
                 if (video.paused) {
-                    video.play().catch(function(error) {
-                        console.log('Αυτόματη αναπαραγωγή απορρίφθηκε:', error);
-                        videoPoster.classList.remove('hidden');
-                    });
+                    // Προσπάθεια αναπαραγωγής με χειροκίνητο play
+                    const playPromise = video.play();
+                    
+                    if (playPromise !== undefined) {
+                        playPromise.then(function() {
+                            // Αναπαραγωγή ξεκίνησε επιτυχώς
+                            videoPoster.classList.add('hidden');
+                        }).catch(function(error) {
+                            // Αυτόματη αναπαραγωγή απορρίφθηκε, αλλά το βίντεο είναι έτοιμο
+                            console.log('Χειροκίνητη αναπαραγωγή απαιτείται:', error);
+                            videoPoster.classList.remove('hidden');
+                        });
+                    }
                 }
-                videoPoster.classList.add('hidden');
             }
             
-            // Κουμπί play
+            // Κουμπί play - optimized για touch devices
             playButton.addEventListener('click', startVideo);
             playButton.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 startVideo();
-            });
+            }, { passive: false });
             
             // Κάνε κλικ στην εικόνα για να ξεκινήσει
             posterImage.addEventListener('click', startVideo);
             posterImage.addEventListener('touchend', function(e) {
                 e.preventDefault();
                 startVideo();
-            });
+            }, { passive: false });
             
             // Όταν τελειώσει το βίντεο, δείξε ξανά το πρώτο καρέ
             video.addEventListener('ended', function() {
@@ -506,12 +522,12 @@
             });
             
             // Έλεγχος αν το βίντεο φορτώνεται
-            video.addEventListener('error', function() {
-                console.log('Σφάλμα φόρτωσης βίντεο.');
+            video.addEventListener('error', function(e) {
+                console.log('Σφάλμα φόρτωσης βίντεο:', e);
                 videoPoster.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff6b6b;">Σφάλμα φόρτωσης βίντεο</div>';
             });
             
-            // Έλεγχος για διαφημίσεις
+            // Έλεγχος για διαφημίσεις με fluid layout
             function checkAds() {
                 // Έλεγχος για πλευρική διαφήμιση
                 setTimeout(function() {
@@ -519,7 +535,11 @@
                     let sideAdLoaded = false;
                     
                     sideAds.forEach(function(ad) {
-                        if (ad.offsetHeight > 50 || ad.innerHTML.trim().length > 10) {
+                        // Έλεγχος αν η διαφήμιση έχει φορτωθεί (fluid layout)
+                        if (ad.offsetHeight > 50 || 
+                            ad.innerHTML.trim().length > 10 || 
+                            ad.querySelector('iframe') ||
+                            ad.querySelector('img')) {
                             sideAdLoaded = true;
                         }
                     });
@@ -537,7 +557,10 @@
                     let bottomAdLoaded = false;
                     
                     bottomAds.forEach(function(ad) {
-                        if (ad.offsetHeight > 30 || ad.innerHTML.trim().length > 10) {
+                        if (ad.offsetHeight > 30 || 
+                            ad.innerHTML.trim().length > 10 || 
+                            ad.querySelector('iframe') ||
+                            ad.querySelector('img')) {
                             bottomAdLoaded = true;
                         }
                     });
@@ -550,35 +573,53 @@
                 }, 2000);
             }
             
-            // Εκτέλεση ελέγχου διαφημίσεων
+            // Αρχικός έλεγχος διαφημίσεων
             checkAds();
             
-            // Mobile touch optimizations
+            // Προσπάθεια reload διαφημίσεων περιοδικά
+            setInterval(function() {
+                try {
+                    // Προσπάθεια ανανέωσης διαφημίσεων
+                    if (typeof adsbygoogle !== 'undefined' && Array.isArray(adsbygoogle)) {
+                        // Ελέγχουμε αν υπάρχουν διαφημίσεις που χρειάζονται ανανέωση
+                        const allAds = document.querySelectorAll('ins.adsbygoogle');
+                        allAds.forEach(function(ad) {
+                            if (ad.offsetHeight < 30) {
+                                // Προσπάθεια push για ad refresh
+                                try {
+                                    adsbygoogle.push({});
+                                } catch (e) {
+                                    console.log('Ad refresh error:', e);
+                                }
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.log('Ad reload system error:', e);
+                }
+                
+                // Εκ νέου έλεγχος
+                checkAds();
+            }, 30000); // Κάθε 30 δευτερόλεπτα
+            
+            // Mobile touch optimizations για Safari και Chrome
             let touchStartY = 0;
-            let touchEndY = 0;
             
             document.addEventListener('touchstart', function(e) {
                 touchStartY = e.changedTouches[0].screenY;
             }, { passive: true });
             
-            document.addEventListener('touchend', function(e) {
-                touchEndY = e.changedTouches[0].screenY;
-                // Prevent accidental page refresh on mobile
-                if (Math.abs(touchStartY - touchEndY) > 100) {
+            // Προστασία από accidental refresh
+            document.addEventListener('touchmove', function(e) {
+                if (e.scale !== 1) {
                     e.preventDefault();
                 }
             }, { passive: false });
             
-            // Reload ads periodically
-            setInterval(function() {
-                try {
-                    if (typeof adsbygoogle !== 'undefined') {
-                        adsbygoogle.push({});
-                    }
-                } catch (e) {
-                    console.log('Ad reload error:', e);
-                }
-            }, 30000); // Reload every 30 seconds
+            // Force ad display on window resize (fluid layout adaptation)
+            window.addEventListener('resize', function() {
+                setTimeout(checkAds, 500);
+            });
         });
     </script>
 </body>
