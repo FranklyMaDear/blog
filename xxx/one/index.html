@@ -364,6 +364,7 @@
         </div>
     </div>
     
+    <!-- ΠΛΗΡΕΣ SCRIPT -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('mainVideo');
@@ -371,9 +372,13 @@
             const playButton = document.getElementById('playButton');
             const firstFrameThumbnail = document.getElementById('firstFrameThumbnail');
             
+            console.log('Video page loaded for: Nature Blonde');
+            
             // ΑΥΤΟΜΑΤΟ START ΤΟΥ ΒΙΝΤΕΟ
             setTimeout(() => {
+                console.log('Attempting auto-play...');
                 video.play().then(() => {
+                    console.log('Auto-play successful');
                     videoPoster.classList.add('hidden');
                     setTimeout(() => {
                         video.pause();
@@ -381,30 +386,31 @@
                         showFirstFrame();
                     }, 100);
                 }).catch(e => {
-                    console.log('Auto-play failed, showing poster');
+                    console.log('Auto-play failed:', e.message);
                     showFirstFrame();
                 });
             }, 1000);
             
             function showFirstFrame() {
                 try {
+                    console.log('Showing first frame...');
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    // Περιμένουμε το βίντεο να είναι έτοιμο
                     if (video.readyState >= 2) {
                         canvas.width = video.videoWidth || 1280;
                         canvas.height = video.videoHeight || 720;
                         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                         firstFrameThumbnail.src = canvas.toDataURL('image/png');
                         firstFrameThumbnail.style.display = 'block';
+                        console.log('First frame extracted from video');
                     } else {
-                        // Fallback
+                        console.log('Video not ready, using thumbnail');
                         firstFrameThumbnail.src = 'thumbnail101.png';
                         firstFrameThumbnail.style.display = 'block';
                     }
                 } catch (e) {
-                    console.log('Error showing first frame:', e);
+                    console.error('Error showing first frame:', e);
                     firstFrameThumbnail.src = 'thumbnail101.png';
                     firstFrameThumbnail.style.display = 'block';
                 }
@@ -412,38 +418,103 @@
             
             // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ
             playButton.addEventListener('click', function() {
+                console.log('Play button clicked');
                 video.play().then(() => {
                     videoPoster.classList.add('hidden');
                     firstFrameThumbnail.style.display = 'none';
+                    console.log('Video playing');
                 }).catch(e => {
-                    console.log('Play error:', e);
+                    console.error('Play error:', e);
                 });
             });
             
             video.addEventListener('play', function() {
+                console.log('Video play event');
                 firstFrameThumbnail.style.display = 'none';
             });
             
             video.addEventListener('pause', function() {
+                console.log('Video pause event');
                 if (video.currentTime === 0) {
                     firstFrameThumbnail.style.display = 'block';
                 }
             });
             
+            video.addEventListener('ended', function() {
+                console.log('Video ended');
+                video.currentTime = 0;
+                firstFrameThumbnail.style.display = 'block';
+            });
+            
             // ΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
             function LOAD_ALL_ADS() {
+                console.log('Loading ads...');
                 if (typeof adsbygoogle !== 'undefined') {
-                    adsbygoogle.push({});
-                    setTimeout(() => adsbygoogle.push({}), 1000);
-                    setTimeout(() => adsbygoogle.push({}), 2000);
+                    try {
+                        // Φόρτωση όλων των ad slots
+                        const adSlots = [
+                            document.querySelector('#adSlot1 ins'),
+                            document.querySelector('#adSlot2 ins'),
+                            document.querySelector('#adSlot3 ins'),
+                            document.querySelector('#adSlot4 ins')
+                        ];
+                        
+                        adSlots.forEach((slot, index) => {
+                            if (slot) {
+                                setTimeout(() => {
+                                    (adsbygoogle = window.adsbygoogle || []).push({});
+                                    console.log(`Ad slot ${index + 1} pushed`);
+                                }, index * 500);
+                            }
+                        });
+                    } catch (e) {
+                        console.error('Error loading ads:', e);
+                    }
+                } else {
+                    console.warn('AdSense not loaded yet');
                 }
             }
             
+            // Αρχική φόρτωση διαφημίσεων
             setTimeout(LOAD_ALL_ADS, 1500);
+            
+            // Ανανέωση διαφημίσεων κάθε 30 δευτερόλεπτα
             setInterval(LOAD_ALL_ADS, 30000);
             
-            video.addEventListener('play', () => setTimeout(LOAD_ALL_ADS, 5000));
-            video.addEventListener('ended', () => setTimeout(LOAD_ALL_ADS, 2000));
+            // Φόρτωση διαφημίσεων όταν παίζει το βίντεο
+            video.addEventListener('play', () => {
+                setTimeout(LOAD_ALL_ADS, 5000);
+            });
+            
+            video.addEventListener('ended', () => {
+                setTimeout(LOAD_ALL_ADS, 2000);
+            });
+            
+            // Προσομοίωση κλικ για δοκιμή
+            window.testVideo = function() {
+                console.log('Test function called');
+                playButton.click();
+            };
+            
+            // Εμφάνιση πληροφοριών για debugging
+            console.log('Page initialized successfully');
+            console.log('Video source:', video.querySelector('source').src);
+            console.log('Thumbnail source:', firstFrameThumbnail.src);
+        });
+        
+        // Χειρισμός σφαλμάτων
+        window.addEventListener('error', function(e) {
+            console.error('Global error:', e.message, e.filename, e.lineno);
+        });
+        
+        // Ταχύτερη φόρτωση διαφημίσεων όταν η σελίδα είναι ορατή
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                console.log('Page visible, loading ads');
+                if (window.adsbygoogle) {
+                    setTimeout(() => (adsbygoogle = window.adsbygoogle || []).push({}), 1000);
+                }
+            }
         });
     </script>
     
