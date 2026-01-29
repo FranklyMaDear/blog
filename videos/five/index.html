@@ -27,7 +27,7 @@
     <link rel="icon" type="image/png" href="thumbnail100.png">
     <link rel="apple-touch-icon" href="thumbnail100.png">
     
-    <!-- Google AdSense Script (ΜΟΝΟ ΜΙΑ ΦΟΡΑ ΣΤΟ HEAD) -->
+    <!-- Google AdSense Script -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
      crossorigin="anonymous"></script>
     
@@ -191,7 +191,7 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            aspect-ratio: 1 / 1; /* ΤΕΤΡΑΓΩΝΟ */
+            aspect-ratio: 1 / 1;
         }
         
         .ad-box-1 {
@@ -255,7 +255,6 @@
             padding: 10px;
         }
         
-        /* CUSTOM AD STYLES */
         .custom-ad-slot {
             width: 100%;
             height: 100%;
@@ -272,45 +271,52 @@
             max-height: 250px !important;
         }
         
-        /* FALLBACK AD */
-        .ad-fallback {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #222 0%, #1a1a1a 100%);
-            border: 2px dashed #444;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #888;
-            text-align: center;
-            padding: 15px;
-        }
-        
-        .ad-fallback-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #aaa;
-        }
-        
-        .ad-fallback-text {
-            font-size: 13px;
-            line-height: 1.4;
-            max-width: 200px;
-        }
-        
-        /* THUMBNAIL ΠΡΩΤΟΥ ΚΑΔΡΟΥ */
-        #firstFrameThumbnail {
+        /* ΒΙΝΤΕΟ ERROR MESSAGE */
+        .video-error {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            z-index: 1;
-            pointer-events: none;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .video-error.hidden {
+            display: none;
+        }
+        
+        .video-error h3 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .video-error p {
+            color: #aaa;
+            margin-bottom: 20px;
+            max-width: 500px;
+        }
+        
+        .retry-button {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .retry-button:hover {
+            background: #b71c1c;
         }
     </style>
 </head>
@@ -322,29 +328,41 @@
     <div class="main-container">
         <div class="video-section">
             <div class="video-container">
-                <!-- ΠΡΩΤΟ ΚΑΔΡΟ ΤΟΥ ΒΙΝΤΕΟ -->
+                <!-- ERROR MESSAGE -->
+                <div class="video-error hidden" id="videoError">
+                    <h3>Πρόβλημα με το βίντεο</h3>
+                    <p>Το βίντεο δεν μπορεί να φορτωθεί. Παρακαλώ ελέγξτε:</p>
+                    <p>1. Αν το αρχείο video100.mp4 υπάρχει στον ίδιο φάκελο</p>
+                    <p>2. Αν το αρχείο είναι σε σωστή μορφή MP4</p>
+                    <p>3. Αν ο server επιτρέπει την προβολή βίντεο</p>
+                    <button class="retry-button" id="retryButton">Δοκιμή ξανά</button>
+                </div>
+                
+                <!-- ΠΡΩΤΟ ΚΑΔΡΟ -->
                 <img id="firstFrameThumbnail" src="thumbnail100.png" alt="Πρώτο καδρο βίντεο" style="display: none;">
                 
+                <!-- POSTER -->
                 <div class="video-poster" id="videoPoster">
-                    <img src="thumbnail100.png" alt="Έξαλλοι πανηγυρισμοί στα αποδυτήρια των παικτών του Ολυμπιακού μετά την πρόκριση" id="posterImage" crossorigin="anonymous">
+                    <img src="thumbnail100.png" alt="Έξαλλοι πανηγυρισμοί" id="posterImage" crossorigin="anonymous">
                     <button class="play-button" id="playButton" aria-label="Play video"></button>
                 </div>
-                <!-- ΒΙΝΤΕΟ video100.mp4 -->
+                
+                <!-- ΒΙΝΤΕΟ -->
                 <video id="mainVideo" playsinline webkit-playsinline controls poster="thumbnail100.png">
                     <source src="video100.mp4" type="video/mp4">
+                    <source src="video100.mp4" type="video/mp4; codecs=avc1.42E01E,mp4a.40.2">
                     Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
                 </video>
             </div>
         </div>
         
-        <!-- 4 ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ ΜΕ ΤΑ SCRIPT ΣΟΥ -->
+        <!-- 4 ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ -->
         <div class="ads-container">
             <!-- ΠΛΑΙΣΙΟ 1 -->
             <div class="ad-box ad-box-1">
                 <div class="ad-title">🔵</div>
                 <div class="ad-content">
                     <div class="custom-ad-slot" id="adSlot1">
-                        <!-- SCRIPT 1: autorelaxed -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-format="autorelaxed"
@@ -359,7 +377,6 @@
                 <div class="ad-title">🟢</div>
                 <div class="ad-content">
                     <div class="custom-ad-slot" id="adSlot2">
-                        <!-- SCRIPT 2: video -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-client="ca-pub-3186700611266549"
@@ -375,7 +392,6 @@
                 <div class="ad-title">🟠</div>
                 <div class="ad-content">
                     <div class="custom-ad-slot" id="adSlot3">
-                        <!-- SCRIPT 3: in-article -->
                         <ins class="adsbygoogle"
                              style="display:block; text-align:center;"
                              data-ad-layout="in-article"
@@ -391,7 +407,6 @@
                 <div class="ad-title">🟣</div>
                 <div class="ad-content">
                     <div class="custom-ad-slot" id="adSlot4">
-                        <!-- SCRIPT 4: fluid layout -->
                         <ins class="adsbygoogle"
                              style="display:block"
                              data-ad-format="fluid"
@@ -410,153 +425,126 @@
             const videoPoster = document.getElementById('videoPoster');
             const playButton = document.getElementById('playButton');
             const firstFrameThumbnail = document.getElementById('firstFrameThumbnail');
+            const videoError = document.getElementById('videoError');
+            const retryButton = document.getElementById('retryButton');
             
-            // ΑΥΤΟΜΑΤΟ START ΤΟΥ ΒΙΝΤΕΟ
-            setTimeout(() => {
-                video.play().then(() => {
-                    videoPoster.classList.add('hidden');
-                    // Σταματάμε το βίντεο μετά από 0.1 δευτερόλεπτα για να πάρουμε το πρώτο καδρο
-                    setTimeout(() => {
-                        video.pause();
-                        video.currentTime = 0;
-                        
-                        try {
-                            // Δημιουργία canvas για πρώτο καδρο
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            canvas.width = video.videoWidth || 1280;
-                            canvas.height = video.videoHeight || 720;
+            // ΕΛΕΓΧΟΣ ΒΙΝΤΕΟ
+            function checkVideoStatus() {
+                console.log('Checking video status...');
+                
+                // Έλεγχος αν το βίντεο υπάρχει
+                fetch('video100.mp4', { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('Video file exists');
+                            videoError.classList.add('hidden');
                             
-                            if (video.videoWidth > 0 && video.videoHeight > 0) {
-                                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                                // Εμφάνιση πρώτου καδρου
-                                firstFrameThumbnail.src = canvas.toDataURL('image/png');
-                                firstFrameThumbnail.style.display = 'block';
-                            } else {
-                                // Fallback: χρήση του poster image
-                                firstFrameThumbnail.src = 'thumbnail100.png';
-                                firstFrameThumbnail.style.display = 'block';
-                            }
-                        } catch (e) {
-                            console.log('Canvas error:', e);
-                            firstFrameThumbnail.src = 'thumbnail100.png';
-                            firstFrameThumbnail.style.display = 'block';
+                            // Δοκιμή φόρτωσης βίντεο
+                            video.load();
+                            
+                            // Προσθήκη event listeners για σφάλματα
+                            video.addEventListener('error', function(e) {
+                                console.error('Video error:', e);
+                                showVideoError();
+                            });
+                            
+                            video.addEventListener('loadeddata', function() {
+                                console.log('Video loaded successfully');
+                                videoError.classList.add('hidden');
+                                
+                                // ΑΥΤΟΜΑΤΟ START ΜΕΤΑ ΑΠΟ 1 ΔΕΥΤΕΡΟΛΕΠΤΟ
+                                setTimeout(() => {
+                                    video.play().then(() => {
+                                        videoPoster.classList.add('hidden');
+                                        setTimeout(() => {
+                                            video.pause();
+                                            video.currentTime = 0;
+                                            showFirstFrame();
+                                        }, 100);
+                                    }).catch(e => {
+                                        console.log('Auto-play failed, showing poster');
+                                        videoError.classList.add('hidden');
+                                        showFirstFrame();
+                                    });
+                                }, 1000);
+                            });
+                            
+                        } else {
+                            console.error('Video file not found');
+                            showVideoError();
                         }
-                        
-                    }, 100);
-                }).catch(e => {
-                    console.log('Auto-play failed:', e);
-                    // Fallback: χρήση του poster image
+                    })
+                    .catch(error => {
+                        console.error('Error checking video:', error);
+                        showVideoError();
+                    });
+            }
+            
+            function showVideoError() {
+                videoError.classList.remove('hidden');
+                videoPoster.classList.add('hidden');
+                firstFrameThumbnail.style.display = 'none';
+            }
+            
+            function showFirstFrame() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = video.videoWidth || 1280;
+                    canvas.height = video.videoHeight || 720;
+                    
+                    if (video.readyState >= 2) { // HAVE_CURRENT_DATA
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        firstFrameThumbnail.src = canvas.toDataURL('image/png');
+                        firstFrameThumbnail.style.display = 'block';
+                    } else {
+                        // Fallback to poster
+                        firstFrameThumbnail.src = 'thumbnail100.png';
+                        firstFrameThumbnail.style.display = 'block';
+                    }
+                } catch (e) {
+                    console.log('Error showing first frame:', e);
                     firstFrameThumbnail.src = 'thumbnail100.png';
                     firstFrameThumbnail.style.display = 'block';
-                });
-            }, 1000);
+                }
+            }
+            
+            // ΕΚΚΙΝΗΣΗ ΕΛΕΓΧΟΥ
+            checkVideoStatus();
             
             // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ
             playButton.addEventListener('click', function() {
                 video.play().then(() => {
                     videoPoster.classList.add('hidden');
                     firstFrameThumbnail.style.display = 'none';
+                    videoError.classList.add('hidden');
                 }).catch(e => {
-                    console.log('Video error:', e);
+                    console.log('Play error:', e);
+                    showVideoError();
                 });
             });
             
-            video.addEventListener('play', function() {
-                firstFrameThumbnail.style.display = 'none';
+            // RETRY BUTTON
+            retryButton.addEventListener('click', function() {
+                videoError.classList.add('hidden');
+                videoPoster.classList.remove('hidden');
+                checkVideoStatus();
             });
             
-            video.addEventListener('pause', function() {
-                if (video.currentTime === 0) {
-                    firstFrameThumbnail.style.display = 'block';
-                }
-            });
-            
-            // ΦΟΡΤΩΣΗ ΚΑΙ ΕΠΑΝΑΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
+            // ΦΟΡΤΩΣΗ ΔΙΑΦΗΜΙΣΕΩΝ
             function LOAD_ALL_ADS() {
-                console.log('=== LOADING ALL ADS ===');
-                
-                // ΣΥΛΛΟΓΗ ΟΛΩΝ ΤΩΝ ADS
-                const adElements = document.querySelectorAll('.adsbygoogle');
-                
-                // ΑΝΑΓΚΑΣΤΙΚΗ ΦΟΡΤΩΣΗ
                 if (typeof adsbygoogle !== 'undefined') {
-                    // 1η ΦΟΡΤΩΣΗ
                     adsbygoogle.push({});
-                    console.log('First ad push');
-                    
-                    // 2η ΦΟΡΤΩΣΗ ΜΕ 1 ΔΕΥΤΕΡΟΛΕΠΤΟ ΔΙΑΦΟΡΑ
-                    setTimeout(() => {
-                        adsbygoogle.push({});
-                        console.log('Second ad push');
-                    }, 1000);
-                    
-                    // 3η ΦΟΡΤΩΣΗ ΜΕ 2 ΔΕΥΤΕΡΟΛΕΠΤΑ ΔΙΑΦΟΡΑ
-                    setTimeout(() => {
-                        adsbygoogle.push({});
-                        console.log('Third ad push');
-                    }, 2000);
-                    
-                    // ΕΛΕΓΧΟΣ ΜΕΤΑ ΑΠΟ 3 ΔΕΥΤΕΡΟΛΕΠΤΑ
-                    setTimeout(() => {
-                        adElements.forEach((ad, index) => {
-                            if (ad.offsetHeight < 50 || ad.innerHTML.trim() === '') {
-                                console.log(`Ad ${index + 1} not loaded properly`);
-                            } else {
-                                console.log(`Ad ${index + 1} loaded (height: ${ad.offsetHeight}px)`);
-                            }
-                        });
-                    }, 3000);
+                    setTimeout(() => adsbygoogle.push({}), 1000);
+                    setTimeout(() => adsbygoogle.push({}), 2000);
                 }
             }
             
-            // ΕΚΚΙΝΗΣΗ ΤΩΝ ADS
             setTimeout(LOAD_ALL_ADS, 1500);
-            
-            // ΑΝΑΝΕΩΣΗ ΚΑΘΕ 30 ΔΕΥΤΕΡΟΛΕΠΤΑ
             setInterval(LOAD_ALL_ADS, 30000);
             
-            // ΑΝΑΝΕΩΣΗ ΟΤΑΝ ΞΕΚΙΝΑΕΙ ΤΟ ΒΙΝΤΕΟ
-            video.addEventListener('play', function() {
-                setTimeout(LOAD_ALL_ADS, 5000);
-            });
-            
-            // ΑΝΑΝΕΩΣΗ ΟΤΑΝ ΤΕΛΕΙΩΝΕΙ ΤΟ ΒΙΝΤΕΟ
-            video.addEventListener('ended', function() {
-                setTimeout(LOAD_ALL_ADS, 2000);
-            });
-            
-            // ΑΝΑΝΕΩΣΗ ΜΕ CLICK
-            document.addEventListener('click', function() {
-                setTimeout(() => {
-                    if (typeof adsbygoogle !== 'undefined') {
-                        adsbygoogle.push({});
-                    }
-                }, 300);
-            });
-            
-            // TWITTER META TAGS
-            const metaTags = [
-                {property: 'twitter:image:width', content: '1200'},
-                {property: 'twitter:image:height', content: '630'},
-                {property: 'twitter:site', content: '@OlympiacosFC'},
-                {property: 'twitter:creator', content: '@OlympiacosFC'}
-            ];
-            
-            metaTags.forEach(tag => {
-                const meta = document.createElement('meta');
-                if (tag.property) meta.setAttribute('property', tag.property);
-                meta.content = tag.content;
-                document.head.appendChild(meta);
-            });
-            
-            // ΤΕΛΙΚΟ AD PUSH ΜΕΤΑ ΑΠΟ 5 ΔΕΥΤΕΡΟΛΕΠΤΑ
-            setTimeout(() => {
-                if (typeof adsbygoogle !== 'undefined') {
-                    adsbygoogle.push({});
-                    console.log('Final ad push');
-                }
-            }, 5000);
+            video.addEventListener('play', () => setTimeout(LOAD_ALL_ADS, 5000));
+            video.addEventListener('ended', () => setTimeout(LOAD_ALL_ADS, 2000));
         });
     </script>
 </body>
