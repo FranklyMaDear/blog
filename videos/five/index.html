@@ -17,6 +17,11 @@
     <meta name="twitter:title" content="Έξαλλοι πανηγυρισμοί στα αποδυτήρια των παικτών του Ολυμπιακού μετά την πρόκριση">
     <meta name="twitter:description" content="Δείτε το βίντεο με όλες τις λεπτομέρειες">
     <meta name="twitter:image" content="thumbnail100.png">
+    <meta name="twitter:image:src" content="thumbnail100.png">
+    <meta name="twitter:image:alt" content="Ολυμπιακός πανηγυρισμοί">
+    <meta name="twitter:player" content="https://blog.franklymadear.com/videos/five/video100.mp4">
+    <meta name="twitter:player:width" content="1280">
+    <meta name="twitter:player:height" content="720">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="thumbnail100.png">
@@ -158,30 +163,30 @@
             margin-left: 5px;
         }
         
-        /* ADS CONTAINER - 3 ADS ONLY */
+        /* ADS CONTAINER - ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ */
         .ads-container {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            gap: 15px;
             margin-top: 30px;
         }
         
         @media (max-width: 768px) {
             .ads-container {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 10px;
             }
         }
         
         .ad-box {
             background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
             border: 2px solid;
-            min-height: 250px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            aspect-ratio: 1 / 1; /* ΤΕΤΡΑΓΩΝΟ */
         }
         
         .ad-box-1 {
@@ -200,47 +205,57 @@
         }
         
         .ad-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             text-align: center;
-            padding-bottom: 12px;
+            padding: 12px 5px;
             border-bottom: 2px solid #444;
-        }
-        
-        .ad-box-1 .ad-title {
-            color: #4fc3f7;
-        }
-        
-        .ad-box-2 .ad-title {
-            color: #69f0ae;
-        }
-        
-        .ad-box-3 .ad-title {
-            color: #ff9800;
-        }
-        
-        .ad-content {
-            flex: 1;
-            width: 100%;
-            min-height: 180px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        /* FORCE AD DISPLAY */
+        .ad-box-1 .ad-title {
+            color: #4fc3f7;
+            background: linear-gradient(135deg, rgba(79, 195, 247, 0.1) 0%, transparent 100%);
+        }
+        
+        .ad-box-2 .ad-title {
+            color: #69f0ae;
+            background: linear-gradient(135deg, rgba(105, 240, 174, 0.1) 0%, transparent 100%);
+        }
+        
+        .ad-box-3 .ad-title {
+            color: #ff9800;
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, transparent 100%);
+        }
+        
+        .ad-content {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        /* FORCE AD DISPLAY - ΤΕΤΡΑΓΩΝΙΚΟ */
         .force-ad-display {
             width: 100%;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            min-height: 180px;
         }
         
         .force-ad-display ins {
             width: 100% !important;
+            height: 100% !important;
             min-height: 180px !important;
+            max-height: 250px !important;
         }
         
         /* FALLBACK AD (αν δεν φορτώσει το AdSense) */
@@ -256,20 +271,32 @@
             align-items: center;
             color: #888;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
         }
         
         .ad-fallback-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             margin-bottom: 10px;
             color: #aaa;
         }
         
         .ad-fallback-text {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.4;
-            max-width: 250px;
+            max-width: 200px;
+        }
+        
+        /* THUMBNAIL ΠΡΩΤΟΥ ΚΑΔΡΟΥ */
+        #firstFrameThumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
         }
     </style>
 </head>
@@ -281,18 +308,21 @@
     <div class="main-container">
         <div class="video-section">
             <div class="video-container">
+                <!-- ΘΕΛΩ ΤΟ ΠΡΩΤΟ ΚΑΔΡΟ ΤΟΥ ΒΙΝΤΕΟ ΝΑ ΦΑΙΝΕΤΕ Η ΕΙΚΟΝΑ thumbnail100 -->
+                <img id="firstFrameThumbnail" src="thumbnail100.png" alt="Πρώτο καδρο βίντεο" style="display: none;">
+                
                 <div class="video-poster" id="videoPoster">
                     <img src="thumbnail100.png" alt="Έξαλλοι πανηγυρισμοί στα αποδυτήρια των παικτών του Ολυμπιακού μετά την πρόκριση" id="posterImage" crossorigin="anonymous">
                     <button class="play-button" id="playButton" aria-label="Play video"></button>
                 </div>
-                <video id="mainVideo" playsinline webkit-playsinline controls>
+                <video id="mainVideo" playsinline webkit-playsinline controls poster="thumbnail100.png">
                     <source src="video100.mp4" type="video/mp4">
                     Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
                 </video>
             </div>
         </div>
         
-        <!-- 3 ΜΟΝΟ ΔΙΑΦΗΜΙΣΕΙΣ -->
+        <!-- 3 ΜΟΝΟ ΔΙΑΦΗΜΙΣΕΙΣ - ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ -->
         <div class="ads-container">
             <!-- ΔΙΑΦΗΜΙΣΗ 1 -->
             <div class="ad-box ad-box-1">
@@ -371,14 +401,55 @@
             const video = document.getElementById('mainVideo');
             const videoPoster = document.getElementById('videoPoster');
             const playButton = document.getElementById('playButton');
+            const firstFrameThumbnail = document.getElementById('firstFrameThumbnail');
+            
+            // ΑΥΤΟΜΑΤΟ START ΤΟΥ ΒΙΝΤΕΟ
+            setTimeout(() => {
+                video.play().then(() => {
+                    videoPoster.classList.add('hidden');
+                    // Σταματάμε το βίντεο μετά από 0.1 δευτερόλεπτα για να πάρουμε το πρώτο καδρο
+                    setTimeout(() => {
+                        video.pause();
+                        video.currentTime = 0;
+                        
+                        // Δημιουργία canvas για πρώτο καδρο
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        
+                        // Εμφάνιση πρώτου καδρου
+                        firstFrameThumbnail.src = canvas.toDataURL('image/png');
+                        firstFrameThumbnail.style.display = 'block';
+                        
+                    }, 100);
+                }).catch(e => {
+                    console.log('Auto-play failed:', e);
+                    // Fallback: χρήση του poster image
+                    firstFrameThumbnail.src = 'thumbnail100.png';
+                    firstFrameThumbnail.style.display = 'block';
+                });
+            }, 1000);
             
             // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ
             playButton.addEventListener('click', function() {
                 video.play().then(() => {
                     videoPoster.classList.add('hidden');
+                    firstFrameThumbnail.style.display = 'none';
                 }).catch(e => {
                     console.log('Video error:', e);
                 });
+            });
+            
+            video.addEventListener('play', function() {
+                firstFrameThumbnail.style.display = 'none';
+            });
+            
+            video.addEventListener('pause', function() {
+                if (video.currentTime === 0) {
+                    firstFrameThumbnail.style.display = 'block';
+                }
             });
             
             // ΕΙΔΙΚΟΣ ΚΩΔΙΚΑΣ ΓΙΑ ΝΑ ΦΑΙΝΟΝΤΑΙ ΟΙ 3 ΔΙΑΦΗΜΙΣΕΙΣ
@@ -499,6 +570,22 @@
                         }
                     } catch(e) {}
                 }, 300);
+            });
+            
+            // TWITTER SHARE PREVIEW OPTIMIZATION
+            // Προσθήκη παραπάνω Twitter meta tags για καλύτερο preview
+            const metaTags = [
+                {property: 'twitter:image:width', content: '1200'},
+                {property: 'twitter:image:height', content: '630'},
+                {property: 'twitter:site', content: '@OlympiacosFC'},
+                {property: 'twitter:creator', content: '@OlympiacosFC'}
+            ];
+            
+            metaTags.forEach(tag => {
+                const meta = document.createElement('meta');
+                if (tag.property) meta.setAttribute('property', tag.property);
+                meta.content = tag.content;
+                document.head.appendChild(meta);
             });
         });
     </script>
