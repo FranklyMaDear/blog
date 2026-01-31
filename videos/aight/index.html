@@ -383,7 +383,7 @@
                 
                 <!-- ΒΙΝΤΕΟ -->
                 <video id="mainVideo" playsinline webkit-playsinline controls preload="metadata" poster="thumbnail116.png" disablePictureInPicture controlsList="nodownload">
-                    <source src="video156.mp4" type="video/mp4">
+                    <source src="video116.mp4" type="video/mp4">
                     Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
                 </video>
             </div>
@@ -440,7 +440,6 @@
                 <div class="ad-title">🟣</div>
                 <div class="ad-content">
                     <div class="custom-ad-slot" id="adSlot4">
-                        <!-- ΕΔΩ ΠΡΟΣΤΕΘΗΚΕ ΤΟ ΝΕΟ SCRIPT -->
                         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
                             crossorigin="anonymous"></script>
                         <ins class="adsbygoogle"
@@ -480,13 +479,9 @@
                 lastTouchEnd = now;
             }, false);
             
-            // ΑΥΤΟΜΑΤΟ PRELOAD ΤΟΥ ΒΙΝΤΕΟ (ΧΩΡΙΣ ΑΥΤΟΜΑΤΟ PLAY)
+            // Προετοιμασία του βίντεο
             setTimeout(() => {
-                // Προετοιμασία του βίντεο - φόρτωση των πρώτων bytes
                 video.load();
-                
-                // Εμφάνιση του poster και του play button
-                videoPoster.classList.remove('hidden');
             }, 100);
             
             // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ - ΚΥΡΙΟ PLAY BUTTON
@@ -506,35 +501,41 @@
                 videoPoster.classList.add('hidden');
                 
                 // Προσπάθεια play
-                video.play().then(() => {
-                    console.log('Video playing successfully');
-                    
-                    // Σε κινητά, βεβαιώσου ότι το βίντεο είναι ορατό
-                    if ('ontouchstart' in window) {
-                        setTimeout(() => {
-                            video.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        }, 300);
-                    }
-                }).catch(e => {
-                    console.log('Play error:', e);
-                    // Fallback για iOS/Safari
-                    video.controls = true;
-                    video.muted = true;
-                    
-                    // Δεύτερη προσπάθεια με mute
-                    video.play().then(() => {
-                        console.log('Video playing with mute');
-                        // Ενεργοποίηση ήχου μετά από λίγο
-                        setTimeout(() => {
-                            video.muted = false;
-                        }, 1000);
-                    }).catch(e2 => {
-                        console.log('Second play attempt failed:', e2);
-                        // Εμφάνιση ελέγχων για χειροκίνητο play
-                        video.controls = true;
-                        videoPoster.classList.add('hidden');
+                const playPromise = video.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Video playing successfully');
+                        
+                        // Σε κινητά, βεβαιώσου ότι το βίντεο είναι ορατό
+                        if ('ontouchstart' in window) {
+                            setTimeout(() => {
+                                video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }, 300);
+                        }
+                    }).catch(e => {
+                        console.log('Play error:', e);
+                        
+                        // Αν αποτύχει λόγω αυστηρών περιορισμών, δοκίμασε με mute πρώτα
+                        if (e.name === 'NotAllowedError') {
+                            video.muted = true;
+                            video.play().then(() => {
+                                console.log('Video playing with mute');
+                                // Ενεργοποίηση ήχου μετά από λίγο
+                                setTimeout(() => {
+                                    video.muted = false;
+                                }, 1000);
+                            }).catch(e2 => {
+                                console.log('Second play attempt failed:', e2);
+                                // Εμφάνιση ελέγχων για χειροκίνητο play
+                                video.controls = true;
+                            });
+                        } else {
+                            // Για άλλα errors, εμφάνιση controls
+                            video.controls = true;
+                        }
                     });
-                });
+                }
             }
             
             // Ενεργοποίηση controls μετά από λίγο που παίζει το βίντεο
@@ -546,14 +547,6 @@
                 }, 2000);
             });
             
-            // Όταν παυθεί το βίντεο στην αρχή, εμφάνιση poster
-            video.addEventListener('pause', function() {
-                if (video.currentTime === 0 && !videoPoster.classList.contains('hidden')) {
-                    // Αν το βίντεο είναι στην αρχή και το poster είναι ορατό
-                    videoPoster.classList.remove('hidden');
-                }
-            });
-            
             // Όταν τελειώσει το βίντεο
             video.addEventListener('ended', function() {
                 video.controls = false;
@@ -561,10 +554,10 @@
                 videoPoster.classList.remove('hidden');
             });
             
-            // ΒΕΛΤΙΩΣΗ ΓΙΑ ΚΙΝΗΤΑ
-            video.addEventListener('fullscreenchange', function() {
-                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                    video.controls = true;
+            // Επανεμφάνιση poster όταν το βίντεο είναι paused στο πρώτο frame
+            video.addEventListener('pause', function() {
+                if (video.currentTime === 0) {
+                    videoPoster.classList.remove('hidden');
                 }
             });
             
@@ -594,17 +587,7 @@
             
             // Βελτιστοποίηση για κινητά
             if ('ontouchstart' in window) {
-                document.body.classList.add('touch-device');
                 video.preload = 'auto';
-                
-                // Προσθήκη ακόμα ενός play button listener για mobile
-                video.addEventListener('click', function() {
-                    if (video.paused) {
-                        video.play().catch(e => {
-                            video.controls = true;
-                        });
-                    }
-                });
             }
         });
         
