@@ -375,9 +375,6 @@
     <div class="main-container">
         <div class="video-section">
             <div class="video-container">
-                <!-- ΠΡΩΤΟ ΚΑΔΡΟ -->
-                <img id="firstFrameThumbnail" src="thumbnail116.png" alt="Πρώτο καδρο βίντεο" style="display: none;">
-                
                 <!-- POSTER -->
                 <div class="video-poster" id="videoPoster">
                     <img src="thumbnail116.png" alt="Η πραγματική «Όλγα» του «Ριφιφί» που έχασε το παιδί της" id="posterImage" crossorigin="anonymous" loading="eager">
@@ -466,7 +463,6 @@
             const video = document.getElementById('mainVideo');
             const videoPoster = document.getElementById('videoPoster');
             const playButton = document.getElementById('playButton');
-            const firstFrameThumbnail = document.getElementById('firstFrameThumbnail');
             
             // ΑΠΟΤΡΟΠΗ ZOOM ΣΕ IOS
             document.addEventListener('touchstart', function(event) {
@@ -484,83 +480,85 @@
                 lastTouchEnd = now;
             }, false);
             
-            // ΑΥΤΟΜΑΤΟ START ΤΟΥ ΒΙΝΤΕΟ (ΜΕ ΑΣΦΑΛΕΙΑ ΓΙΑ ΚΙΝΗΤΑ)
+            // ΑΥΤΟΜΑΤΟ PRELOAD ΤΟΥ ΒΙΝΤΕΟ (ΧΩΡΙΣ ΑΥΤΟΜΑΤΟ PLAY)
             setTimeout(() => {
-                if (window.innerWidth > 768) { // Αυτόματο play μόνο σε desktop
-                    video.play().then(() => {
-                        videoPoster.classList.add('hidden');
-                        setTimeout(() => {
-                            video.pause();
-                            video.currentTime = 0;
-                            showFirstFrame();
-                        }, 100);
-                    }).catch(e => {
-                        console.log('Auto-play failed, showing poster');
-                        showFirstFrame();
-                    });
-                } else {
-                    // Σε κινητά, απλά δείξε το πρώτο καρέ
-                    showFirstFrame();
-                }
-            }, 500);
+                // Προετοιμασία του βίντεο - φόρτωση των πρώτων bytes
+                video.load();
+                
+                // Εμφάνιση του poster και του play button
+                videoPoster.classList.remove('hidden');
+            }, 100);
             
-            function showFirstFrame() {
-                try {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    
-                    // Περιμένουμε το βίντεο να είναι έτοιμο
-                    if (video.readyState >= 2) {
-                        canvas.width = video.videoWidth || 1280;
-                        canvas.height = video.videoHeight || 720;
-                        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                        firstFrameThumbnail.src = canvas.toDataURL('image/png');
-                        firstFrameThumbnail.style.display = 'block';
-                    } else {
-                        // Fallback
-                        firstFrameThumbnail.src = 'thumbnail116.png';
-                        firstFrameThumbnail.style.display = 'block';
-                    }
-                } catch (e) {
-                    console.log('Error showing first frame:', e);
-                    firstFrameThumbnail.src = 'thumbnail116.png';
-                    firstFrameThumbnail.style.display = 'block';
-                }
-            }
-            
-            // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ
+            // ΒΙΝΤΕΟ ΛΕΙΤΟΥΡΓΙΑ - ΚΥΡΙΟ PLAY BUTTON
             playButton.addEventListener('click', function() {
+                playVideo();
+            });
+            
+            // Εναλλακτικός τρόπος play - κλικ στο poster
+            videoPoster.addEventListener('click', function(e) {
+                if (e.target !== playButton) {
+                    playVideo();
+                }
+            });
+            
+            function playVideo() {
+                // Απόκρυψη poster
+                videoPoster.classList.add('hidden');
+                
+                // Προσπάθεια play
                 video.play().then(() => {
-                    videoPoster.classList.add('hidden');
-                    firstFrameThumbnail.style.display = 'none';
+                    console.log('Video playing successfully');
                     
                     // Σε κινητά, βεβαιώσου ότι το βίντεο είναι ορατό
                     if ('ontouchstart' in window) {
-                        video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        setTimeout(() => {
+                            video.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 300);
                     }
                 }).catch(e => {
                     console.log('Play error:', e);
-                    // Fallback για iOS
-                    videoPoster.classList.add('hidden');
-                    firstFrameThumbnail.style.display = 'none';
+                    // Fallback για iOS/Safari
                     video.controls = true;
+                    video.muted = true;
+                    
+                    // Δεύτερη προσπάθεια με mute
+                    video.play().then(() => {
+                        console.log('Video playing with mute');
+                        // Ενεργοποίηση ήχου μετά από λίγο
+                        setTimeout(() => {
+                            video.muted = false;
+                        }, 1000);
+                    }).catch(e2 => {
+                        console.log('Second play attempt failed:', e2);
+                        // Εμφάνιση ελέγχων για χειροκίνητο play
+                        video.controls = true;
+                        videoPoster.classList.add('hidden');
+                    });
                 });
-            });
+            }
             
+            // Ενεργοποίηση controls μετά από λίγο που παίζει το βίντεο
             video.addEventListener('play', function() {
-                firstFrameThumbnail.style.display = 'none';
-                // Κλείσε τα controls μετά από λίγο για καλύτερη εμπειρία
                 setTimeout(() => {
                     if (!video.paused) {
                         video.controls = true;
                     }
-                }, 3000);
+                }, 2000);
             });
             
+            // Όταν παυθεί το βίντεο στην αρχή, εμφάνιση poster
             video.addEventListener('pause', function() {
-                if (video.currentTime === 0) {
-                    firstFrameThumbnail.style.display = 'block';
+                if (video.currentTime === 0 && !videoPoster.classList.contains('hidden')) {
+                    // Αν το βίντεο είναι στην αρχή και το poster είναι ορατό
+                    videoPoster.classList.remove('hidden');
                 }
+            });
+            
+            // Όταν τελειώσει το βίντεο
+            video.addEventListener('ended', function() {
+                video.controls = false;
+                video.currentTime = 0;
+                videoPoster.classList.remove('hidden');
             });
             
             // ΒΕΛΤΙΩΣΗ ΓΙΑ ΚΙΝΗΤΑ
@@ -587,19 +585,26 @@
                 }
             }
             
-            // Φόρτωση διαφημίσεων με καθυστέρηση για καλύτερη απόδοση
+            // Φόρτωση διαφημίσεων
             setTimeout(LOAD_ALL_ADS, 1500);
             setInterval(LOAD_ALL_ADS, 30000);
             
             video.addEventListener('play', () => setTimeout(LOAD_ALL_ADS, 5000));
             video.addEventListener('ended', () => setTimeout(LOAD_ALL_ADS, 2000));
             
-            // Βελτίωση απόδοσης για κινητά
+            // Βελτιστοποίηση για κινητά
             if ('ontouchstart' in window) {
                 document.body.classList.add('touch-device');
-                
-                // Βελτιστοποίηση για χαμηλές ταχύτητες internet
                 video.preload = 'auto';
+                
+                // Προσθήκη ακόμα ενός play button listener για mobile
+                video.addEventListener('click', function() {
+                    if (video.paused) {
+                        video.play().catch(e => {
+                            video.controls = true;
+                        });
+                    }
+                });
             }
         });
         
