@@ -32,7 +32,7 @@
     <link rel="icon" type="image/png" href="thumbnail200.png">
     <link rel="apple-touch-icon" href="thumbnail200.png">
     
-    <!-- Google AdSense Script -->
+    <!-- Google AdSense Script (κεντρικό) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
      crossorigin="anonymous"></script>
     
@@ -313,6 +313,15 @@
             transform: scale(1.1);
         }
         
+        .ad-container {
+            width: 100%;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
         /* ADS CONTAINER - ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ */
         .ads-container {
             display: grid;
@@ -342,6 +351,10 @@
             
             .ad-cta-button {
                 padding: 10px 25px;
+            }
+            
+            .ad-container {
+                min-height: 80px;
             }
         }
         
@@ -482,6 +495,16 @@
         <div class="ad-content-inner">
             <div class="ad-title-main">🎥 ΕΙΔΙΚΗ ΠΡΟΣΦΟΡΑ!</div>
             <div class="ad-description">Δες αποκλειστικά βίντεο και ενημερώσου πρώτος για όλα τα αθλητικά νέα!</div>
+            
+            <!-- AD SENSE AD -->
+            <div class="ad-container">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="autorelaxed"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="9660744817"></ins>
+            </div>
+            
             <a href="https://blog.franklymadear.com" class="ad-cta-button" target="_blank" rel="noopener">ΔΕΣ ΤΩΡΑ</a>
         </div>
     </div>
@@ -680,14 +703,34 @@
                 floatingAd.classList.remove('hide');
                 floatingAd.classList.add('show');
                 
-                // Αυτόματο κλείσιμο μετά από 5 δευτερόλεπτα
-                adTimer = setTimeout(hideFloatingAd, 5000);
+                // Εκκίνηση AdSense διαφήμισης
+                loadFloatingAd();
+                
+                // Αυτόματο κλείσιμο μετά από 10 δευτερόλεπτα
+                adTimer = setTimeout(hideFloatingAd, 10000);
                 
                 // Αποθήκευση στο localStorage ότι εμφανίστηκε για αυτή τη συνεδρία
                 try {
                     sessionStorage.setItem('adShown', 'true');
                 } catch (e) {
                     console.log('Session storage error:', e);
+                }
+            }
+            
+            // ΣΥΝΑΡΤΗΣΗ ΦΟΡΤΩΣΗΣ AD SENSE ΔΙΑΦΗΜΙΣΗΣ
+            function loadFloatingAd() {
+                try {
+                    if (typeof adsbygoogle !== 'undefined') {
+                        // Εκκίνηση AdSense για την floating διαφήμιση
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        console.log('Floating ad loaded');
+                    } else {
+                        console.log('AdSense not loaded yet');
+                        // Αν το AdSense δεν έχει φορτωθεί, προσπάθησε ξανά μετά από λίγο
+                        setTimeout(loadFloatingAd, 1000);
+                    }
+                } catch (e) {
+                    console.log('Error loading floating ad:', e);
                 }
             }
             
