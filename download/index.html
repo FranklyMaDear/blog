@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Video Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #010101 0%, #2d2d2d 100%);
+            color: #f1f1f1;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            color: #00f2fe;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .main-card {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        .input-label {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #ddd;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .url-input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 2px solid #444;
+            background: rgba(20, 20, 20, 0.8);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .url-input:focus {
+            outline: none;
+            border-color: #00f2fe;
+            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.2);
+        }
+        
+        .download-btn {
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            color: #000;
+            border: none;
+            border-radius: 12px;
+            padding: 0 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
+        
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        
+        .download-btn:disabled {
+            background: #555;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .instructions {
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #00f2fe;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background: #00f2fe;
+            color: #000;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .step-text {
+            color: #ccc;
+            line-height: 1.5;
+        }
+        
+        .video-preview {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .video-preview h3 {
+            margin-bottom: 15px;
+            color: #4facfe;
+        }
+        
+        .video-thumbnail {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #444;
+        }
+        
+        .video-info {
+            text-align: left;
+            background: rgba(40, 40, 40, 0.7);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+        
+        .video-info p {
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+        
+        .quality-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        
+        .quality-btn {
+            background: rgba(60, 60, 60, 0.8);
+            border: 1px solid #555;
+            color: #ddd;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quality-btn:hover {
+            background: rgba(80, 80, 80, 0.8);
+            border-color: #00f2fe;
+        }
+        
+        .quality-btn.selected {
+            background: linear-gradient(90deg, #00f2fe, #4facfe);
+            color: #000;
+            font-weight: 600;
+            border-color: #00f2fe;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #00f2fe;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .success-message {
+            display: none;
+            background: rgba(0, 200, 100, 0.2);
+            border: 1px solid #00c864;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .error-message {
+            display: none;
+            background: rgba(200, 0, 0, 0.2);
+            border: 1px solid #c80000;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #777;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature {
+            background: rgba(40, 40, 40, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .feature i {
+            font-size: 2rem;
+            color: #00f2fe;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-card {
+                padding: 20px;
+            }
+            
+            .input-container {
+                flex-direction: column;
+            }
+            
+            .download-btn {
+                padding: 15px;
+                justify-content: center;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fab fa-tiktok"></i>
+            </div>
+            <h1>TikTok Video Downloader</h1>
+            <p class="subtitle">Κατεβάστε τikTok βίντεο χωρίς υδατογράφημα, γρήγορα και δωρεάν</p>
+        </header>
+        
+        <main class="main-card">
+            <div class="input-section">
+                <label class="input-label" for="url-input">Εισαγάγετε το URL του TikTok βίντεο:</label>
+                <div class="input-container">
+                    <input type="text" id="url-input" class="url-input" placeholder="https://www.tiktok.com/@username/video/1234567890" value="https://www.tiktok.com/@tiktok/video/1234567890">
+                    <button id="download-btn" class="download-btn">
+                        <i class="fas fa-download"></i> Κατέβασμα
+                    </button>
+                </div>
+            </div>
+            
+            <div class="loader" id="loader">
+                <div class="spinner"></div>
+                <p>Ανάλυση του βίντεο...</p>
+            </div>
+            
+            <div class="video-preview" id="video-preview">
+                <h3>Προεπισκόπηση βίντεο</h3>
+                <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Προεπισκόπηση TikTok" class="video-thumbnail">
+                <div class="video-info">
+                    <p><strong>Χρήστης:</strong> @tiktok_user</p>
+                    <p><strong>Περιγραφή:</strong> Αυτό είναι ένα παράδειγμα βίντεο TikTok για κατέβασμα</p>
+                    <p><strong>Διάρκεια:</strong> 0:15</p>
+                </div>
+                
+                <h4 style="margin-top: 20px; color: #4facfe;">Επιλέξτε ποιότητα:</h4>
+                <div class="quality-options">
+                    <button class="quality-btn selected">HD (720p)</button>
+                    <button class="quality-btn">SD (480p)</button>
+                    <button class="quality-btn">Κανονική (360p)</button>
+                </div>
+                
+                <button id="download-final-btn" class="download-btn" style="margin-top: 25px; padding: 15px 30px;">
+                    <i class="fas fa-download"></i> Κατέβασμα βίντεο
+                </button>
+            </div>
+            
+            <div class="success-message" id="success-message">
+                <i class="fas fa-check-circle" style="font-size: 3rem; color: #00c864; margin-bottom: 15px;"></i>
+                <h3>Το βίντεο κατέβηκε με επιτυχία!</h3>
+                <p>Το αρχείο αποθηκεύτηκε στη συσκευή σας. Μπορείτε να το βρείτε στον φάκελο "Λήψεις".</p>
+            </div>
+            
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #ff4d4d; margin-bottom: 15px;"></i>
+                <h3>Σφάλμα κατά το κατέβασμα</h3>
+                <p id="error-text">Παρακαλώ ελέγξτε το URL και δοκιμάστε ξανά.</p>
+            </div>
+            
+            <div class="instructions">
+                <h3>Οδηγίες χρήσης:</h3>
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-text">Ανοίξτε την εφαρμογή TikTok και βρείτε το βίντεο που θέλετε να κατεβάσετε</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-text">Πατήστε το κουμπί "Κοινοποίηση" και αντιγράψτε το σύνδεσμο του βίντεο</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-text">Επικολλήστε τον σύνδεσμο παραπάνω και πατήστε "Κατέβασμα"</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-text">Επιλέξτε την ποιότητα και κατεβάστε το βίντεο στη συσκευή σας</div>
+                </div>
+            </div>
+        </main>
+        
+        <div class="features">
+            <div class="feature">
+                <i class="fas fa-bolt"></i>
+                <h3>Γρήγορο κατέβασμα</h3>
+                <p>Λήψη βίντεο σε δευτερόλεπτα χωρίς καθυστερήσεις</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Ασφαλές και ασφαλές</h3>
+                <p>Κανένα ιό ή κακόβουλο λογισμικό, 100% ασφαλές</p>
+            </div>
+            <div class="feature">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Συμβατό με κινητά</h3>
+                <p>Λειτουργεί σε όλες τις συσκευές και προγράμματα περιήγησης</p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Αυτό το εργαλείο είναι για προσωπική χρήση. Παρακαλούμε σεβαστείτε τα πνευματικά δικαιώματα.</p>
+            <p style="margin-top: 10px;">TikTok Downloader &copy; 2023</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlInput = document.getElementById('url-input');
+            const downloadBtn = document.getElementById('download-btn');
+            const downloadFinalBtn = document.getElementById('download-final-btn');
+            const loader = document.getElementById('loader');
+            const videoPreview = document.getElementById('video-preview');
+            const successMessage = document.getElementById('success-message');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const qualityButtons = document.querySelectorAll('.quality-btn');
+            
+            // Προσθήκη παραδειγμάτων URL για ευκολία
+            const exampleUrls = [
+                "https://www.tiktok.com/@example_user/video/1234567890",
+                "https://vm.tiktok.com/abcdefg/",
+                "https://www.tiktok.com/t/ZTd8JQ7Nn/"
+            ];
+            
+            // Τυχαία επιλογή παραδείγματος URL
+            urlInput.placeholder = exampleUrls[Math.floor(Math.random() * exampleUrls.length)];
+            
+            // Χειρισμός κλικ στο κουμπί κατεβάσματος
+            downloadBtn.addEventListener('click', function() {
+                const url = urlInput.value.trim();
+                
+                if (!url) {
+                    showError("Παρακαλώ εισάγετε ένα URL βίντεο TikTok");
+                    return;
+                }
+                
+                // Έλεγχος αν το URL περιέχει "tiktok"
+                if (!url.includes('tiktok') && !url.includes('vm.tiktok')) {
+                    showError("Παρακαλώ εισάγετε ένα έγκυρο URL βίντεο TikTok");
+                    return;
+                }
+                
+                // Προσομοίωση φόρτωσης
+                showLoader();
+                
+                // Καθυστέρηση για προσομοίωση ανάλυσης βίντεο
+                setTimeout(() => {
+                    hideLoader();
+                    showVideoPreview();
+                }, 1500);
+            });
+            
+            // Χειρισμός επιλογής ποιότητας
+            qualityButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    qualityButtons.forEach(btn => btn.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Χειρισμός τελικού κατεβάσματος
+            downloadFinalBtn.addEventListener('click', function() {
+                showLoader();
+                
+                // Προσομοίωση κατεβάσματος
+                setTimeout(() => {
+                    hideLoader();
+                    hideVideoPreview();
+                    showSuccess();
+                    
+                    // Σε πραγματική εφαρμογή, εδώ θα γινόταν redirect για κατέβασμα
+                    // ή θα εμφανιζόταν το αρχείο για κατέβασμα
+                    
+                    // Προσομοίωση λήψης αρχείου
+                    setTimeout(() => {
+                        // Αυτό είναι mockup για κατέβασμα
+                        // Σε πραγματική εφαρμογή θα χρησιμοποιούσαμε server-side λύση
+                        alert("Σε πραγματική εφαρμογή, το βίντεο θα κατεβαίνει τώρα.\n\nΓια αυτό το πρωτότυπο, χρησιμοποιούμε προσομοίωση.");
+                    }, 500);
+                }, 2000);
+            });
+            
+            // Λειτουργίες εμφάνισης/απόκρυψης
+            function showLoader() {
+                loader.style.display = 'block';
+                videoPreview.style.display = 'none';
+                successMessage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                downloadBtn.disabled = true;
+            }
+            
+            function hideLoader() {
+                loader.style.display = 'none';
+                downloadBtn.disabled = false;
+            }
+            
+            function showVideoPreview() {
+                videoPreview.style.display = 'block';
+            }
+            
+            function hideVideoPreview() {
+                videoPreview.style.display = 'none';
+            }
+            
+            function showSuccess() {
+                successMessage.style.display = 'block';
+            }
+            
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                
+                // Αυτόματη απόκρυψη του σφάλματος μετά από 5 δευτερόλεπτα
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Επιτρέψτε την χρήση του Enter για υποβολή
+            urlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    downloadBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
