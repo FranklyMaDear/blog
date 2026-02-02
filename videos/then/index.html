@@ -230,7 +230,7 @@
             right: 0;
             background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
             color: white;
-            padding: 20px 15px;
+            padding: 15px;
             text-align: center;
             z-index: 9999;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
@@ -255,39 +255,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            width: 100%;
+            min-height: 120px;
         }
         
-        .ad-title-main {
-            font-size: clamp(16px, 4vw, 22px);
-            font-weight: bold;
-            color: #ffeb3b;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        .ad-container {
+            width: 100%;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
-        .ad-description {
-            font-size: clamp(14px, 3vw, 18px);
-            margin-bottom: 10px;
-        }
-        
-        .ad-cta-button {
-            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: clamp(14px, 3vw, 18px);
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
-        }
-        
-        .ad-cta-button:hover, .ad-cta-button:active {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+        .ad-container ins {
+            width: 100% !important;
+            max-width: 728px !important;
+            min-height: 120px !important;
+            display: block !important;
+            margin: 0 auto !important;
         }
         
         .ad-close-button {
@@ -306,20 +292,12 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
+            z-index: 10000;
         }
         
         .ad-close-button:hover, .ad-close-button:active {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.1);
-        }
-        
-        .ad-container {
-            width: 100%;
-            min-height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 10px 0;
         }
         
         /* ADS CONTAINER - ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ */
@@ -346,15 +324,16 @@
             }
             
             .floating-ad-banner {
-                padding: 15px 10px;
-            }
-            
-            .ad-cta-button {
-                padding: 10px 25px;
+                padding: 10px;
             }
             
             .ad-container {
-                min-height: 80px;
+                min-height: 100px;
+            }
+            
+            .ad-container ins {
+                min-height: 100px !important;
+                max-width: 100% !important;
             }
         }
         
@@ -467,7 +446,7 @@
             }
             
             .floating-ad-banner {
-                padding-bottom: max(20px, env(safe-area-inset-bottom));
+                padding-bottom: max(15px, env(safe-area-inset-bottom));
             }
         }
         
@@ -482,7 +461,7 @@
                 transform: translate(-50%, -50%) scale(1);
             }
             
-            .ad-cta-button:hover, .ad-close-button:hover {
+            .ad-close-button:hover {
                 transform: none;
             }
         }
@@ -493,19 +472,13 @@
     <div class="floating-ad-banner" id="floatingAd">
         <button class="ad-close-button" id="closeAdBtn" aria-label="Κλείσιμο διαφήμισης">×</button>
         <div class="ad-content-inner">
-            <div class="ad-title-main">🎥 ΕΙΔΙΚΗ ΠΡΟΣΦΟΡΑ!</div>
-            <div class="ad-description">Δες αποκλειστικά βίντεο και ενημερώσου πρώτος για όλα τα αθλητικά νέα!</div>
-            
-            <!-- AD SENSE AD -->
-            <div class="ad-container">
+            <div class="ad-container" id="floatingAdContainer">
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
                      data-ad-client="ca-pub-3186700611266549"
                      data-ad-slot="9660744817"></ins>
             </div>
-            
-            <a href="https://blog.franklymadear.com" class="ad-cta-button" target="_blank" rel="noopener">ΔΕΣ ΤΩΡΑ</a>
         </div>
     </div>
     
@@ -605,9 +578,11 @@
             const playButton = document.getElementById('playButton');
             const floatingAd = document.getElementById('floatingAd');
             const closeAdBtn = document.getElementById('closeAdBtn');
+            const floatingAdContainer = document.getElementById('floatingAdContainer');
             
             let adTimer;
             let adShown = false;
+            let adLoaded = false;
             
             // ΑΠΟΤΡΟΠΗ ZOOM ΣΕ IOS
             document.addEventListener('touchstart', function(event) {
@@ -703,13 +678,16 @@
                 floatingAd.classList.remove('hide');
                 floatingAd.classList.add('show');
                 
-                // Εκκίνηση AdSense διαφήμισης
-                loadFloatingAd();
+                // Φόρτωση AdSense διαφήμισης αν δεν έχει φορτωθεί ήδη
+                if (!adLoaded) {
+                    loadFloatingAd();
+                    adLoaded = true;
+                }
                 
                 // Αυτόματο κλείσιμο μετά από 10 δευτερόλεπτα
                 adTimer = setTimeout(hideFloatingAd, 10000);
                 
-                // Αποθήκευση στο localStorage ότι εμφανίστηκε για αυτή τη συνεδρία
+                // Αποθήκευση στο sessionStorage ότι εμφανίστηκε για αυτή τη συνεδρία
                 try {
                     sessionStorage.setItem('adShown', 'true');
                 } catch (e) {
@@ -724,6 +702,15 @@
                         // Εκκίνηση AdSense για την floating διαφήμιση
                         (adsbygoogle = window.adsbygoogle || []).push({});
                         console.log('Floating ad loaded');
+                        
+                        // Αν δεν εμφανιστεί διαφήμιση σε 2 δευτερόλεπτα, δοκιμάζουμε ξανά
+                        setTimeout(function() {
+                            if (floatingAdContainer.innerHTML.indexOf('adsbygoogle') > -1 && 
+                                floatingAdContainer.offsetHeight < 50) {
+                                console.log('Ad not showing, trying to reload');
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                            }
+                        }, 2000);
                     } else {
                         console.log('AdSense not loaded yet');
                         // Αν το AdSense δεν έχει φορτωθεί, προσπάθησε ξανά μετά από λίγο
