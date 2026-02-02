@@ -222,82 +222,121 @@
             margin-left: 5px;
         }
         
-        /* ΚΙΝΟΥΜΕΝΗ ΔΙΑΦΗΜΙΣΗ ΑΠΟ ΚΑΤΩ ΠΡΟΣ ΤΑ ΕΠΑΝΩ */
-        .floating-ad-banner {
-            position: fixed;
-            bottom: -200px; /* Αρχικά κρυμμένη κάτω */
+        /* ΚΙΝΟΥΜΕΝΗ ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ (25% ΚΑΤΩ ΜΕΡΟΣ) */
+        .video-ad-overlay {
+            position: absolute;
+            bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            height: 25%; /* Καλύπτει το 25% του βίντεο */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(26, 35, 126, 0.95) 100%);
             color: white;
-            padding: 15px;
-            text-align: center;
-            z-index: 9999;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
-            border-top: 3px solid #ff9800;
-            transition: bottom 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            max-width: 100vw;
-            overflow: hidden;
-        }
-        
-        .floating-ad-banner.show {
-            bottom: 0; /* Εμφανίζεται */
-        }
-        
-        .floating-ad-banner.hide {
-            bottom: -200px; /* Εξαφανίζεται */
-            transition: bottom 0.5s ease-out;
-        }
-        
-        .ad-content-inner {
-            max-width: 800px;
-            margin: 0 auto;
+            z-index: 100;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            min-height: 120px;
-        }
-        
-        .ad-container {
-            width: 100%;
-            min-height: 120px;
-            display: flex;
             justify-content: center;
             align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+            border-top: 3px solid #ff9800;
+            padding: 15px 10px;
         }
         
-        .ad-container ins {
-            width: 100% !important;
-            max-width: 728px !important;
-            min-height: 120px !important;
-            display: block !important;
-            margin: 0 auto !important;
+        .video-ad-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .video-ad-overlay.hide {
+            opacity: 0;
+            visibility: hidden;
         }
         
         .ad-close-button {
             position: absolute;
             top: 10px;
             right: 15px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.3s;
-            z-index: 10000;
+            z-index: 101;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         
         .ad-close-button:hover, .ad-close-button:active {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.5);
             transform: scale(1.1);
+        }
+        
+        .ad-content-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        
+        .ad-container {
+            width: 100%;
+            max-width: 728px;
+            height: 100%;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        
+        .ad-container ins {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 90px !important;
+            display: block !important;
+            margin: 0 auto !important;
+        }
+        
+        @media (max-width: 768px) {
+            .video-ad-overlay {
+                height: 30%; /* Λίγο περισσότερο χώρο για κινητά */
+                padding: 10px 8px;
+            }
+            
+            .ad-container {
+                min-height: 80px;
+            }
+            
+            .ad-close-button {
+                width: 28px;
+                height: 28px;
+                font-size: 18px;
+                top: 8px;
+                right: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .video-ad-overlay {
+                height: 35%; /* Ακόμα περισσότερο χώρο για μικρές οθόνες */
+            }
+            
+            .ad-container {
+                min-height: 70px;
+            }
         }
         
         /* ADS CONTAINER - ΤΕΤΡΑΓΩΝΙΣΜΕΝΕΣ ΜΠΑΡΕΣ */
@@ -321,19 +360,6 @@
             .ads-container {
                 grid-template-columns: 1fr;
                 gap: 12px;
-            }
-            
-            .floating-ad-banner {
-                padding: 10px;
-            }
-            
-            .ad-container {
-                min-height: 100px;
-            }
-            
-            .ad-container ins {
-                min-height: 100px !important;
-                max-width: 100% !important;
             }
         }
         
@@ -444,10 +470,6 @@
             body {
                 min-height: -webkit-fill-available;
             }
-            
-            .floating-ad-banner {
-                padding-bottom: max(15px, env(safe-area-inset-bottom));
-            }
         }
         
         /* Αποτροπή zoom σε input fields για iOS */
@@ -468,20 +490,6 @@
     </style>
 </head>
 <body>
-    <!-- ΚΙΝΟΥΜΕΝΗ ΔΙΑΦΗΜΙΣΗ -->
-    <div class="floating-ad-banner" id="floatingAd">
-        <button class="ad-close-button" id="closeAdBtn" aria-label="Κλείσιμο διαφήμισης">×</button>
-        <div class="ad-content-inner">
-            <div class="ad-container" id="floatingAdContainer">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"></ins>
-            </div>
-        </div>
-    </div>
-    
     <div class="header">
         <h1>Έξαλλος ο πρόεδρος του παναθηναϊκού μετά την ήττα απο τον Άρη</h1>
     </div>
@@ -500,6 +508,20 @@
                     <source src="video200.mp4" type="video/mp4">
                     Το πρόγραμμα περιήγησής σας δεν υποστηρίζει βίντεο.
                 </video>
+                
+                <!-- ΔΙΑΦΗΜΙΣΗ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ -->
+                <div class="video-ad-overlay" id="videoAdOverlay">
+                    <button class="ad-close-button" id="closeVideoAdBtn" aria-label="Κλείσιμο διαφήμισης">×</button>
+                    <div class="ad-content-inner">
+                        <div class="ad-container" id="videoAdContainer">
+                            <ins class="adsbygoogle"
+                                 style="display:block"
+                                 data-ad-format="autorelaxed"
+                                 data-ad-client="ca-pub-3186700611266549"
+                                 data-ad-slot="9660744817"></ins>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -576,13 +598,14 @@
             const video = document.getElementById('mainVideo');
             const videoPoster = document.getElementById('videoPoster');
             const playButton = document.getElementById('playButton');
-            const floatingAd = document.getElementById('floatingAd');
-            const closeAdBtn = document.getElementById('closeAdBtn');
-            const floatingAdContainer = document.getElementById('floatingAdContainer');
+            const videoAdOverlay = document.getElementById('videoAdOverlay');
+            const closeVideoAdBtn = document.getElementById('closeVideoAdBtn');
+            const videoAdContainer = document.getElementById('videoAdContainer');
             
             let adTimer;
             let adShown = false;
             let adLoaded = false;
+            let videoPlaying = false;
             
             // ΑΠΟΤΡΟΠΗ ZOOM ΣΕ IOS
             document.addEventListener('touchstart', function(event) {
@@ -627,16 +650,10 @@
                 if (playPromise !== undefined) {
                     playPromise.then(() => {
                         console.log('Video playing successfully');
-                        
-                        // Σε κινητά, βεβαιώσου ότι το βίντεο είναι ορατό
-                        if ('ontouchstart' in window) {
-                            setTimeout(() => {
-                                video.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }, 300);
-                        }
+                        videoPlaying = true;
                         
                         // Εμφάνιση διαφήμισης μετά από 3 δευτερόλεπτα
-                        setTimeout(showFloatingAd, 3000);
+                        setTimeout(showVideoAd, 3000);
                         
                     }).catch(e => {
                         console.log('Play error:', e);
@@ -646,13 +663,15 @@
                             video.muted = true;
                             video.play().then(() => {
                                 console.log('Video playing with mute');
+                                videoPlaying = true;
+                                
                                 // Ενεργοποίηση ήχου μετά από λίγο
                                 setTimeout(() => {
                                     video.muted = false;
                                 }, 1000);
                                 
                                 // Εμφάνιση διαφήμισης μετά από 3 δευτερόλεπτα
-                                setTimeout(showFloatingAd, 3000);
+                                setTimeout(showVideoAd, 3000);
                                 
                             }).catch(e2 => {
                                 console.log('Second play attempt failed:', e2);
@@ -667,64 +686,64 @@
                 }
             }
             
-            // ΣΥΝΑΡΤΗΣΗ ΕΜΦΑΝΙΣΗΣ ΔΙΑΦΗΜΙΣΗΣ
-            function showFloatingAd() {
-                // Ελέγχουμε αν η διαφήμιση έχει ήδη εμφανιστεί
-                if (adShown) return;
+            // ΣΥΝΑΡΤΗΣΗ ΕΜΦΑΝΙΣΗΣ ΔΙΑΦΗΜΙΣΗΣ ΜΕΣΑ ΣΤΟ ΒΙΝΤΕΟ
+            function showVideoAd() {
+                // Ελέγχουμε αν η διαφήμιση έχει ήδη εμφανιστεί ή το βίντεο δεν παίζει
+                if (adShown || !videoPlaying) return;
                 
                 adShown = true;
                 
                 // Εμφανίζουμε την διαφήμιση
-                floatingAd.classList.remove('hide');
-                floatingAd.classList.add('show');
+                videoAdOverlay.classList.remove('hide');
+                videoAdOverlay.classList.add('show');
                 
                 // Φόρτωση AdSense διαφήμισης αν δεν έχει φορτωθεί ήδη
                 if (!adLoaded) {
-                    loadFloatingAd();
+                    loadVideoAd();
                     adLoaded = true;
                 }
                 
                 // Αυτόματο κλείσιμο μετά από 10 δευτερόλεπτα
-                adTimer = setTimeout(hideFloatingAd, 10000);
+                adTimer = setTimeout(hideVideoAd, 10000);
                 
                 // Αποθήκευση στο sessionStorage ότι εμφανίστηκε για αυτή τη συνεδρία
                 try {
-                    sessionStorage.setItem('adShown', 'true');
+                    sessionStorage.setItem('videoAdShown', 'true');
                 } catch (e) {
                     console.log('Session storage error:', e);
                 }
             }
             
             // ΣΥΝΑΡΤΗΣΗ ΦΟΡΤΩΣΗΣ AD SENSE ΔΙΑΦΗΜΙΣΗΣ
-            function loadFloatingAd() {
+            function loadVideoAd() {
                 try {
                     if (typeof adsbygoogle !== 'undefined') {
-                        // Εκκίνηση AdSense για την floating διαφήμιση
+                        // Εκκίνηση AdSense για την video overlay διαφήμιση
                         (adsbygoogle = window.adsbygoogle || []).push({});
-                        console.log('Floating ad loaded');
+                        console.log('Video overlay ad loaded');
                         
                         // Αν δεν εμφανιστεί διαφήμιση σε 2 δευτερόλεπτα, δοκιμάζουμε ξανά
                         setTimeout(function() {
-                            if (floatingAdContainer.innerHTML.indexOf('adsbygoogle') > -1 && 
-                                floatingAdContainer.offsetHeight < 50) {
-                                console.log('Ad not showing, trying to reload');
+                            if (videoAdContainer.innerHTML.indexOf('adsbygoogle') > -1 && 
+                                videoAdContainer.offsetHeight < 50) {
+                                console.log('Video ad not showing, trying to reload');
                                 (adsbygoogle = window.adsbygoogle || []).push({});
                             }
                         }, 2000);
                     } else {
-                        console.log('AdSense not loaded yet');
+                        console.log('AdSense not loaded yet for video overlay');
                         // Αν το AdSense δεν έχει φορτωθεί, προσπάθησε ξανά μετά από λίγο
-                        setTimeout(loadFloatingAd, 1000);
+                        setTimeout(loadVideoAd, 1000);
                     }
                 } catch (e) {
-                    console.log('Error loading floating ad:', e);
+                    console.log('Error loading video overlay ad:', e);
                 }
             }
             
             // ΣΥΝΑΡΤΗΣΗ ΚΛΕΙΣΙΜΟΥ ΔΙΑΦΗΜΙΣΗΣ
-            function hideFloatingAd() {
-                floatingAd.classList.remove('show');
-                floatingAd.classList.add('hide');
+            function hideVideoAd() {
+                videoAdOverlay.classList.remove('show');
+                videoAdOverlay.classList.add('hide');
                 
                 // Καθαρισμός timer
                 if (adTimer) {
@@ -733,10 +752,11 @@
             }
             
             // ΚΛΕΙΣΙΜΟ ΔΙΑΦΗΜΙΣΗΣ ΜΕ ΚΟΥΜΠΙ
-            closeAdBtn.addEventListener('click', hideFloatingAd);
+            closeVideoAdBtn.addEventListener('click', hideVideoAd);
             
             // Ενεργοποίηση controls μετά από λίγο που παίζει το βίντεο
             video.addEventListener('play', function() {
+                videoPlaying = true;
                 setTimeout(() => {
                     if (!video.paused) {
                         video.controls = true;
@@ -744,22 +764,31 @@
                 }, 2000);
             });
             
+            // Όταν γίνει pause το βίντεο
+            video.addEventListener('pause', function() {
+                videoPlaying = false;
+                
+                // Επανεμφάνιση poster όταν το βίντεο είναι paused στο πρώτο frame
+                if (video.currentTime === 0) {
+                    videoPoster.classList.remove('hidden');
+                }
+            });
+            
             // Όταν τελειώσει το βίντεο
             video.addEventListener('ended', function() {
+                videoPlaying = false;
                 video.controls = false;
                 video.currentTime = 0;
                 videoPoster.classList.remove('hidden');
                 
-                // Εμφάνιση διαφήμισης και στο τέλος του βίντεο (μόνο αν δεν έχει ήδη εμφανιστεί)
-                if (!adShown) {
-                    setTimeout(showFloatingAd, 1000);
-                }
+                // Κλείσιμο διαφήμισης όταν τελειώνει το βίντεο
+                hideVideoAd();
             });
             
-            // Επανεμφάνιση poster όταν το βίντεο είναι paused στο πρώτο frame
-            video.addEventListener('pause', function() {
-                if (video.currentTime === 0) {
-                    videoPoster.classList.remove('hidden');
+            // Απόκρυψη διαφήμισης όταν ο χρήστης πατάει πάνω στο βίντεο (εκτός από το κουμπί κλεισίματος)
+            videoAdOverlay.addEventListener('click', function(e) {
+                if (e.target === videoAdOverlay) {
+                    hideVideoAd();
                 }
             });
             
@@ -794,7 +823,7 @@
             
             // Ελέγχουμε αν η διαφήμιση έχει ήδη εμφανιστεί σε αυτή τη συνεδρία
             try {
-                if (sessionStorage.getItem('adShown') === 'true') {
+                if (sessionStorage.getItem('videoAdShown') === 'true') {
                     adShown = true;
                 }
             } catch (e) {
