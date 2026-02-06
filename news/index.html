@@ -74,6 +74,45 @@
             position: relative;
         }
         
+        /* TOP NAVIGATION LINKS */
+        .top-links {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d3436 100%);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .top-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .top-links a:hover {
+            background: rgba(52, 152, 219, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .top-links a:active {
+            transform: translateY(0);
+        }
+        
+        .top-links a i {
+            font-size: 14px;
+        }
+        
         .header {
             text-align: center;
             padding: 15px 10px;
@@ -182,6 +221,19 @@
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
+            .top-links {
+                padding: 8px 10px;
+                gap: 10px;
+            }
+            
+            .top-links a {
+                font-size: 14px;
+                padding: 6px 12px;
+                flex: 1;
+                justify-content: center;
+                text-align: center;
+            }
+            
             .news-section {
                 margin-bottom: 10px;
             }
@@ -206,6 +258,18 @@
         }
         
         @media (max-width: 480px) {
+            .top-links {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+            
+            .top-links a {
+                width: 100%;
+                padding: 10px;
+                font-size: 15px;
+            }
+            
             .news-section:first-child iframe {
                 height: 2000px !important;
             }
@@ -252,6 +316,16 @@
                 height: 1600px !important;
             }
             
+            .top-links {
+                flex-direction: row;
+                padding: 6px 10px;
+            }
+            
+            .top-links a {
+                font-size: 13px;
+                padding: 5px 10px;
+            }
+            
             .ad-container ins {
                 height: 180px !important;
             }
@@ -271,6 +345,11 @@
                 height: 250px !important;
                 max-width: 728px !important;
             }
+            
+            .top-links a {
+                font-size: 15px;
+                padding: 8px 15px;
+            }
         }
         
         /* Μεγαλύτερες διαφημίσεις για desktop */
@@ -281,8 +360,23 @@
             }
         }
     </style>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- TOP NAVIGATION LINKS -->
+    <div class="top-links">
+        <a href="https://blog.franklymadear.com/protoselida/index.html" target="_blank">
+            <i class="fas fa-newspaper"></i>
+            Πρωτοσέλιδα Εφημερίδων
+        </a>
+        <a href="https://blog.franklymadear.com/horoscope/index.html" target="_blank">
+            <i class="fas fa-star"></i>
+            Ωροσκόπιο
+        </a>
+    </div>
+    
     <div class="header">
         <h1>Ειδήσεις - Επικαιρότητα - Αθλητικά</h1>
     </div>
@@ -433,6 +527,20 @@
             
             // Ανανέωση διαφημίσεων κάθε 60 δευτερόλεπτα
             setInterval(loadAds, 60000);
+            
+            // Προσθήκη click tracking για τα top links
+            document.querySelectorAll('.top-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    console.log('Top link clicked:', this.href);
+                    // Μπορείς να προσθέσεις Google Analytics tracking εδώ
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'top_nav_click', {
+                            'event_category': 'navigation',
+                            'event_label': this.textContent.trim()
+                        });
+                    }
+                });
+            });
         });
     </script>
 </body>
