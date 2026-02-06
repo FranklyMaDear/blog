@@ -133,6 +133,7 @@
             width: 100%;
         }
         
+        /* ΒΕΛΤΙΩΜΕΝΑ STYLES ΓΙΑ ΔΙΑΦΗΜΙΣΕΙΣ */
         .ad-container {
             width: 100%;
             min-height: 280px; /* ΑΥΞΗΜΕΝΟ ΥΨΟΣ ΓΙΑ ΚΑΛΥΤΕΡΗ ΠΡΟΒΟΛΗ */
@@ -140,10 +141,56 @@
             justify-content: center;
             align-items: center;
             margin: 0 auto;
-            background: rgba(30, 30, 30, 0.8);
-            border-radius: 10px;
-            padding: 15px;
-            border: 2px solid #444;
+            background: rgba(20, 20, 20, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            border: 3px solid #3498db;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(52, 152, 219, 0.3);
+        }
+        
+        /* Ειδικό style για βιντεοδιαφημίσεις */
+        .ad-container.video-ad {
+            background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%);
+            border: 3px solid #ff9f43;
+            box-shadow: 0 8px 30px rgba(255, 159, 67, 0.4);
+        }
+        
+        /* Ειδικό style για φωτογραφικές διαφημίσεις */
+        .ad-container.photo-ad {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            border: 3px solid #00cec9;
+            box-shadow: 0 8px 30px rgba(0, 206, 201, 0.4);
+        }
+        
+        .ad-container::before {
+            content: 'ΔΙΑΦΗΜΙΣΗ';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .ad-container.video-ad::before {
+            content: 'ΒΙΝΤΕΟΔΙΑΦΗΜΙΣΗ';
+            background: rgba(255, 159, 67, 0.2);
+            color: #ff9f43;
+        }
+        
+        .ad-container.photo-ad::before {
+            content: 'ΦΩΤΟΓΡΑΦΙΚΗ ΔΙΑΦΗΜΙΣΗ';
+            background: rgba(0, 206, 201, 0.2);
+            color: #00cec9;
         }
         
         .ad-container ins {
@@ -154,6 +201,14 @@
             margin: 0 auto !important;
             border-radius: 8px;
             overflow: hidden;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .ad-container ins:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
         }
         
         /* Βελτίωση για iOS */
@@ -196,13 +251,19 @@
             }
             
             .ad-container {
-                min-height: 220px;
-                padding: 12px;
+                min-height: 250px;
+                padding: 15px;
+                border-radius: 10px;
             }
             
             .ad-container ins {
-                height: 220px !important;
+                height: 250px !important;
                 max-width: 728px !important;
+            }
+            
+            .ad-container::before {
+                font-size: 10px;
+                padding: 3px 8px;
             }
         }
         
@@ -220,12 +281,14 @@
             }
             
             .ad-container {
-                min-height: 180px;
-                padding: 10px;
+                min-height: 200px;
+                padding: 12px;
+                border-radius: 8px;
+                border-width: 2px;
             }
             
             .ad-container ins {
-                height: 180px !important;
+                height: 200px !important;
                 max-width: 320px !important;
             }
             
@@ -247,6 +310,14 @@
             .ad-below-news {
                 margin: 25px 0 35px 0;
             }
+            
+            .ad-container {
+                min-height: 220px;
+            }
+            
+            .ad-container ins {
+                height: 220px !important;
+            }
         }
         
         @media screen and (max-device-width: 812px) and (orientation: landscape) {
@@ -259,11 +330,11 @@
             }
             
             .ad-container {
-                min-height: 200px;
+                min-height: 180px;
             }
             
             .ad-container ins {
-                height: 200px !important;
+                height: 180px !important;
             }
         }
         
@@ -278,12 +349,59 @@
             }
             
             .ad-container {
-                min-height: 250px;
+                min-height: 280px;
             }
             
             .ad-container ins {
-                height: 250px !important;
+                height: 280px !important;
                 max-width: 728px !important;
+            }
+        }
+        
+        /* Animation για διαφημίσεις */
+        @keyframes pulse-border {
+            0% {
+                border-color: #3498db;
+                box-shadow: 0 8px 30px rgba(52, 152, 219, 0.3);
+            }
+            50% {
+                border-color: #2ecc71;
+                box-shadow: 0 8px 30px rgba(46, 204, 113, 0.4);
+            }
+            100% {
+                border-color: #3498db;
+                box-shadow: 0 8px 30px rgba(52, 152, 219, 0.3);
+            }
+        }
+        
+        .ad-container.video-ad {
+            animation: pulse-border 4s infinite;
+        }
+        
+        /* Loading indicator για διαφημίσεις */
+        .ad-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #aaa;
+            font-size: 14px;
+            gap: 10px;
+        }
+        
+        .ad-loading::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
     </style>
@@ -299,10 +417,11 @@
             <iframe width="100%" height="2400" src="https://rss.app/embed/v1/wall/1RVO3tCPeO1HNsFy" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΠΡΩΤΟ RSS FEED -->
+        <!-- ΒΙΝΤΕΟΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΠΡΩΤΟ RSS FEED -->
         <div class="ad-below-news">
             <div class="ad-spacer"></div>
-            <div class="ad-container">
+            <div class="ad-container video-ad">
+                <div class="ad-loading">Φόρτωση βιντεοδιαφημίσεων...</div>
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -319,10 +438,11 @@
             <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/DOprS9GrvOEVTzXH" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΔΕΥΤΕΡΟ RSS FEED -->
+        <!-- ΦΩΤΟΓΡΑΦΙΚΗ ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΔΕΥΤΕΡΟ RSS FEED -->
         <div class="ad-below-news">
             <div class="ad-spacer"></div>
-            <div class="ad-container">
+            <div class="ad-container photo-ad">
+                <div class="ad-loading">Φόρτωση φωτογραφικών διαφημίσεων...</div>
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -339,10 +459,11 @@
             <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/J3YjFO666qCcdXuh" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΤΡΙΤΟ RSS FEED -->
+        <!-- ΒΙΝΤΕΟΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΤΡΙΤΟ RSS FEED -->
         <div class="ad-below-news">
             <div class="ad-spacer"></div>
-            <div class="ad-container">
+            <div class="ad-container video-ad">
+                <div class="ad-loading">Φόρτωση βιντεοδιαφημίσεων...</div>
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -359,10 +480,11 @@
             <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/FI85RJoFgdsX9PMC" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΤΕΤΑΡΤΟ RSS FEED -->
+        <!-- ΦΩΤΟΓΡΑΦΙΚΗ ΔΙΑΦΗΜΙΣΗ ΚΑΤΩ ΑΠΟ ΤΕΤΑΡΤΟ RSS FEED -->
         <div class="ad-below-news">
             <div class="ad-spacer"></div>
-            <div class="ad-container">
+            <div class="ad-container photo-ad">
+                <div class="ad-loading">Φόρτωση φωτογραφικών διαφημίσεων...</div>
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -407,6 +529,12 @@
                 if (typeof adsbygoogle !== 'undefined') {
                     try {
                         adsbygoogle.push({});
+                        // Αφαίρεση loading indicator όταν φορτωθεί η διαφήμιση
+                        setTimeout(() => {
+                            document.querySelectorAll('.ad-loading').forEach(loader => {
+                                loader.style.display = 'none';
+                            });
+                        }, 2000);
                     } catch(e) {
                         console.log('Ad loading error:', e);
                     }
@@ -420,7 +548,7 @@
             // Επιπλέον φόρτωση όταν ο χρήστης φτάσει κοντά σε διαφήμιση
             const observerOptions = {
                 root: null,
-                rootMargin: '200px', // Φόρτωση πριν φτάσει ο χρήστης
+                rootMargin: '300px', // Περισσότερη απόσταση για προ-φόρτωση
                 threshold: 0.1
             };
             
@@ -428,6 +556,8 @@
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         loadAds();
+                        // Παύση παρατήρησης μετά τη φόρτωση
+                        observer.unobserve(entry.target);
                     }
                 });
             }, observerOptions);
@@ -435,6 +565,29 @@
             // Παρατήρηση όλων των διαφημίσεων
             document.querySelectorAll('.ad-container').forEach(ad => {
                 observer.observe(ad);
+            });
+            
+            // Ανανέωση διαφημίσεων κάθε 60 δευτερόλεπτα
+            setInterval(loadAds, 60000);
+            
+            // Προσθήκη τυχαίας κίνησης για βελτιωμένο visual appeal
+            const ads = document.querySelectorAll('.ad-container ins');
+            ads.forEach(ad => {
+                ad.addEventListener('mouseenter', () => {
+                    ad.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                ad.addEventListener('mouseleave', () => {
+                    ad.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Προσθήκη κλικ tracking (μη παρεμβατικό)
+            document.querySelectorAll('.ad-container').forEach(container => {
+                container.addEventListener('click', function() {
+                    console.log('Ad clicked');
+                    // Εδώ μπορείς να προσθέσεις Google Analytics ή άλλο tracking
+                });
             });
         });
     </script>
