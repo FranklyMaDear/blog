@@ -31,7 +31,7 @@
     <link rel="icon" type="image/png" href="thumbnail123.png">
     <link rel="apple-touch-icon" href="thumbnail123.png">
     
-    <!-- Google AdSense Script -->
+    <!-- Google AdSense Script (Βασικό) -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
      crossorigin="anonymous"></script>
     
@@ -163,6 +163,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .ad-container {
+            margin: 30px 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
         }
         
         /* Βελτίωση για iOS */
@@ -202,6 +213,7 @@
             .ticker-container {
                 width: 100%;
                 padding: 12px;
+                margin-bottom: 25px;
             }
             
             .ticker-container > div {
@@ -211,6 +223,11 @@
             .ticker-container iframe {
                 width: 100% !important;
                 max-width: 100%;
+            }
+            
+            .ad-container {
+                margin: 25px 0;
+                padding: 15px;
             }
         }
         
@@ -237,8 +254,8 @@
             Δείτε τα σημερινά πρωτοσέλιδα από ελληνικές εφημερίδες ανά κατηγορία. Ανανεώνεται καθημερινά με τα τελευταία νέα και τις σημαντικότερες ειδήσεις.
         </div>
         
+        <!-- Πολιτικές Εφημερίδες -->
         <div class="widgets-grid">
-            <!-- Πολιτικές Εφημερίδες -->
             <div class="widget-column">
                 <div class="category-title political-title">📰 Πολιτικές Εφημερίδες</div>
                 <div class="ticker-container">
@@ -253,8 +270,24 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Αθλητικές Εφημερίδες -->
+        </div>
+        
+        <!-- Διαφήμιση μετά από Πολιτικές Εφημερίδες -->
+        <div class="ad-container">
+            <!-- Βίντεο Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3092455087"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <!-- Αθλητικές Εφημερίδες -->
+        <div class="widgets-grid">
             <div class="widget-column">
                 <div class="category-title sports-title">⚽ Αθλητικές Εφημερίδες</div>
                 <div class="ticker-container">
@@ -269,8 +302,24 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Οικονομικές Εφημερίδες -->
+        </div>
+        
+        <!-- Διαφήμιση μετά από Αθλητικές Εφημερίδες -->
+        <div class="ad-container">
+            <!-- Βίντεο Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3092455087"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <!-- Οικονομικές Εφημερίδες -->
+        <div class="widgets-grid">
             <div class="widget-column">
                 <div class="category-title economy-title">💰 Οικονομικές Εφημερίδες</div>
                 <div class="ticker-container">
@@ -285,6 +334,20 @@
                     </div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Διαφήμιση στο τέλος -->
+        <div class="ad-container">
+            <!-- Βίντεο Ad -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3092455087"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
     </div>
     
@@ -335,9 +398,44 @@
                 });
             }
             
-            // Κάλεσε την function κατά το load και resize
+            // Function για να βεβαιωθούμε ότι φορτώνονται οι διαφημίσεις
+            function loadAds() {
+                // Περιμένουμε να φορτωθεί το AdSense script
+                setTimeout(function() {
+                    if (window.adsbygoogle) {
+                        // Επανεκκίνηση όλων των διαφημίσεων
+                        try {
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                            console.log('Google AdSense ads loaded');
+                        } catch (e) {
+                            console.error('Error loading ads:', e);
+                        }
+                    }
+                }, 1000);
+            }
+            
+            // Προσπάθεια φόρτωσης διαφημίσεων κατά το scroll
+            let adsLoaded = false;
+            window.addEventListener('scroll', function() {
+                if (!adsLoaded) {
+                    loadAds();
+                    adsLoaded = true;
+                }
+            });
+            
+            // Προσπάθεια φόρτωσης διαφημίσεων όταν ο χρήστης κάνει click
+            document.addEventListener('click', function() {
+                if (!adsLoaded) {
+                    loadAds();
+                }
+            });
+            
+            // Κάλεσε τις functions κατά το load
             adjustTickersWidth();
             window.addEventListener('resize', adjustTickersWidth);
+            
+            // Προσπάθησε να φορτώσεις τις διαφημίσεις
+            loadAds();
         });
     </script>
     
