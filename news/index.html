@@ -62,7 +62,7 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
             overflow-x: hidden;
             position: relative;
         }
@@ -125,13 +125,26 @@
             border-radius: 12px 12px 0 0;
         }
         
-        /* Widget Containers */
-        .widget-container {
-            margin: 25px 0;
+        /* Widget Containers στο κάτω μέρος */
+        .widgets-container {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #444;
+        }
+        
+        .widgets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .widget-box {
             background: #111;
             border-radius: 12px;
-            padding: 15px;
-            border: 2px solid #444;
+            padding: 20px;
+            border: 2px solid #3498db;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
         }
         
         .widget-title {
@@ -142,6 +155,47 @@
             text-align: center;
             padding-bottom: 10px;
             border-bottom: 2px solid #3498db;
+        }
+        
+        .widget-content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        /* Καιρός Widget */
+        .weather-widget {
+            background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+            color: white;
+        }
+        
+        .weather-widget .widget-title {
+            color: #fff;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+        
+        /* Ωροσκόπιο Widget */
+        .horoscope-widget {
+            background: linear-gradient(135deg, #8E2DE2 0%, #4A00E0 100%);
+            color: white;
+        }
+        
+        .horoscope-widget .widget-title {
+            color: #fff;
+            border-bottom-color: rgba(255,255,255,0.3);
+        }
+        
+        /* Πρόγραμμα TV Widget */
+        .tv-widget {
+            background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+            color: white;
+        }
+        
+        .tv-widget .widget-title {
+            color: #fff;
+            border-bottom-color: rgba(255,255,255,0.3);
         }
         
         /* Απλές διαφημίσεις χωρίς banners */
@@ -171,18 +225,6 @@
             margin: 0 auto !important;
         }
         
-        .ad-inline-medium {
-            min-height: 200px;
-        }
-        
-        .ad-inline-medium ins {
-            width: 100% !important;
-            max-width: 728px !important;
-            height: 200px !important;
-            display: block !important;
-            margin: 0 auto !important;
-        }
-        
         .ad-inline-small {
             min-height: 150px;
         }
@@ -193,35 +235,6 @@
             height: 150px !important;
             display: block !important;
             margin: 0 auto !important;
-        }
-        
-        /* Side ads */
-        .side-ads-simple {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 25px 0;
-            justify-content: center;
-        }
-        
-        .side-ad-simple {
-            flex: 1;
-            min-width: 300px;
-            max-width: 400px;
-        }
-        
-        .side-ad-content-simple {
-            width: 100%;
-            min-height: 250px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .side-ad-content-simple ins {
-            width: 100% !important;
-            height: 250px !important;
-            display: block !important;
         }
         
         /* Βελτίωση για iOS */
@@ -245,19 +258,19 @@
         
         /* Responsive adjustments */
         @media (max-width: 992px) {
-            .side-ads-simple {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .side-ad-simple {
-                max-width: 100%;
+            .widgets-grid {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             }
         }
         
         @media (max-width: 768px) {
             .news-section {
                 margin-bottom: 20px;
+            }
+            
+            /* Αυξημένο ύψος για πρώτο RSS feed */
+            .news-section:first-child iframe {
+                height: 2000px !important;
             }
             
             .news-section iframe {
@@ -273,15 +286,6 @@
                 max-width: 728px !important;
             }
             
-            .ad-inline-medium {
-                min-height: 150px;
-            }
-            
-            .ad-inline-medium ins {
-                height: 150px !important;
-                max-width: 468px !important;
-            }
-            
             .ad-inline-small {
                 min-height: 100px;
             }
@@ -291,16 +295,21 @@
                 max-width: 320px !important;
             }
             
-            .side-ad-content-simple {
-                min-height: 200px;
+            .widgets-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
             
-            .side-ad-content-simple ins {
-                height: 200px !important;
+            .widget-box {
+                padding: 15px;
             }
         }
         
         @media (max-width: 480px) {
+            .news-section:first-child iframe {
+                height: 1800px !important;
+            }
+            
             .news-section iframe {
                 height: 1400px !important;
             }
@@ -310,22 +319,49 @@
                 max-width: 320px !important;
             }
             
-            .ad-inline-medium ins {
-                height: 120px !important;
-                max-width: 300px !important;
-            }
-            
             .ad-inline-small ins {
                 height: 90px !important;
                 max-width: 300px !important;
             }
             
-            .side-ad-content-simple {
-                min-height: 150px;
+            .widget-box {
+                padding: 12px;
+            }
+        }
+        
+        /* iPhone & Android specific */
+        @media screen and (max-device-width: 812px) and (orientation: portrait) {
+            .header {
+                padding: 12px 8px;
             }
             
-            .side-ad-content-simple ins {
-                height: 150px !important;
+            .main-container {
+                padding: 15px 10px;
+            }
+        }
+        
+        @media screen and (max-device-width: 812px) and (orientation: landscape) {
+            .news-section:first-child iframe {
+                height: 1600px !important;
+            }
+            
+            .news-section iframe {
+                height: 1400px !important;
+            }
+        }
+        
+        /* Tablet specific */
+        @media screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+            .news-section:first-child iframe {
+                height: 2200px !important;
+            }
+            
+            .news-section iframe {
+                height: 1800px !important;
+            }
+            
+            .widgets-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -354,36 +390,15 @@
             </div>
         </div>
         
-        <!-- Widget Καιρού -->
-        <div class="widget-container">
-            <div class="widget-title">🌤️ Καιρός Αθήνα</div>
-            <div id="c_5f55e8a69debfc6502d68ca2fb0fb590" class="normal"><h2 style="color: #000000; margin: 0 0 3px; padding: 2px; font: bold 13px/1.2 Verdana; text-align: center; width=100%"><a href="https://www.okairos.gr/%CE%B1%CE%B8%CE%AE%CE%BD%CE%B1.html" style="color: #000000; text-decoration: none; font: bold 13px/1.2 Verdana;">καιρός Αθήνα</a></h2><div id="w_5f55e8a69debfc6502d68ca2fb0fb590" class="normal" style="height:100%"></div></div>
-            <script type="text/javascript" src="https://www.okairos.gr/widget/loader/5f55e8a69debfc6502d68ca2fb0fb590"></script>
-        </div>
-        
-        <!-- 2. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΟΝ ΚΑΙΡΟ -->
-        <div class="ad-simple">
-            <div class="ad-inline ad-inline-medium">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
-        
-        <!-- Πρώτο RSS Feed -->
+        <!-- Πρώτο RSS Feed - ΑΥΞΗΜΕΝΟ ΥΨΟΣ -->
         <div class="news-section">
             <div class="news-title">📰 Τελευταίες Ειδήσεις</div>
-            <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/1RVO3tCPeO1HNsFy" frameborder="0" style="border: 0;"></iframe>
+            <iframe width="100%" height="2400" src="https://rss.app/embed/v1/wall/1RVO3tCPeO1HNsFy" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- 3. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΑΠΟ ΠΡΩΤΕΣ ΕΙΔΗΣΕΙΣ -->
+        <!-- 2. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΙΣ ΠΡΩΤΕΣ ΕΙΔΗΣΕΙΣ -->
         <div class="ad-simple">
-            <div class="ad-inline ad-inline-medium">
+            <div class="ad-inline ad-inline-small">
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -392,35 +407,6 @@
                 <script>
                      (adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
-            </div>
-        </div>
-        
-        <!-- 4. ΔΙΠΛΕΣ ΔΙΑΦΗΜΙΣΕΙΣ -->
-        <div class="side-ads-simple">
-            <div class="side-ad-simple">
-                <div class="side-ad-content-simple">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            </div>
-            
-            <div class="side-ad-simple">
-                <div class="side-ad-content-simple">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
             </div>
         </div>
         
@@ -430,28 +416,7 @@
             <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/DOprS9GrvOEVTzXH" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- 5. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΗΝ ΕΠΙΚΑΙΡΟΤΗΤΑ -->
-        <div class="ad-simple">
-            <div class="ad-inline ad-inline-medium">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"></ins>
-                <script>
-                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        </div>
-        
-        <!-- Widget Ωροσκόπιο -->
-        <div class="widget-container">
-            <div class="widget-title">🔮 Ημερήσιο Ωροσκόπιο</div>
-            <div id="astroscope-horoscope" data-lang="auto" data-theme="light"></div>
-            <script src="https://astroscope-app.com/widget/astroscope-horoscope-widget.js"></script>
-        </div>
-        
-        <!-- 6. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΟ ΩΡΟΣΚΟΠΙΟ -->
+        <!-- 3. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΗΝ ΕΠΙΚΑΙΡΟΤΗΤΑ -->
         <div class="ad-simple">
             <div class="ad-inline ad-inline-small">
                 <ins class="adsbygoogle"
@@ -471,9 +436,9 @@
             <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/J3YjFO666qCcdXuh" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- 7. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΑ ΑΘΛΗΤΙΚΑ -->
+        <!-- 4. ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΑ ΑΘΛΗΤΙΚΑ -->
         <div class="ad-simple">
-            <div class="ad-inline ad-inline-medium">
+            <div class="ad-inline ad-inline-small">
                 <ins class="adsbygoogle"
                      style="display:block"
                      data-ad-format="autorelaxed"
@@ -491,7 +456,7 @@
             <iframe width="100%" height="1800" src="https://rss.app/embed/v1/wall/FI85RJoFgdsX9PMC" frameborder="0" style="border: 0;"></iframe>
         </div>
         
-        <!-- 8. ΤΕΛΙΚΗ ΜΕΓΑΛΗ ΔΙΑΦΗΜΙΣΗ -->
+        <!-- 5. ΤΕΛΙΚΗ ΜΕΓΑΛΗ ΔΙΑΦΗΜΙΣΗ -->
         <div class="ad-simple">
             <div class="ad-inline ad-inline-large">
                 <ins class="adsbygoogle"
@@ -505,50 +470,53 @@
             </div>
         </div>
         
-        <!-- 9. ΤΡΙΤΕΣ ΔΙΑΦΗΜΙΣΕΙΣ ΣΤΟ ΤΕΛΟΣ -->
-        <div class="side-ads-simple">
-            <div class="side-ad-simple">
-                <div class="side-ad-content-simple">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
-            </div>
+        <!-- WIDGETS ΣΤΟ ΚΑΤΩ ΜΕΡΟΣ -->
+        <div class="widgets-container">
+            <h2 style="color: #fff; text-align: center; margin-bottom: 20px; font-size: clamp(18px, 4vw, 22px);">📱 Χρήσιμα Widgets</h2>
             
-            <div class="side-ad-simple">
-                <div class="side-ad-content-simple">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+            <div class="widgets-grid">
+                <!-- Widget Καιρού -->
+                <div class="widget-box weather-widget">
+                    <div class="widget-title">🌤️ Καιρός Αθήνα</div>
+                    <div class="widget-content">
+                        <div id="c_5f55e8a69debfc6502d68ca2fb0fb590" class="normal">
+                            <h2 style="color: #fff; margin: 0 0 10px; padding: 0; font: bold 14px/1.2 Arial; text-align: center;">
+                                <a href="https://www.okairos.gr/%CE%B1%CE%B8%CE%AE%CE%BD%CE%B1.html" style="color: #fff; text-decoration: none; font: bold 14px/1.2 Arial;">
+                                    Καιρός Αθήνα
+                                </a>
+                            </h2>
+                            <div id="w_5f55e8a69debfc6502d68ca2fb0fb590" class="normal" style="height:100%; min-height: 200px;"></div>
+                        </div>
+                        <script type="text/javascript" src="https://www.okairos.gr/widget/loader/5f55e8a69debfc6502d68ca2fb0fb590"></script>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="side-ad-simple">
-                <div class="side-ad-content-simple">
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-format="autorelaxed"
-                         data-ad-client="ca-pub-3186700611266549"
-                         data-ad-slot="9660744817"></ins>
-                    <script>
-                         (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+                
+                <!-- Widget Ωροσκόπιο -->
+                <div class="widget-box horoscope-widget">
+                    <div class="widget-title">🔮 Ημερήσιο Ωροσκόπιο</div>
+                    <div class="widget-content">
+                        <div id="astroscope-horoscope" data-lang="auto" data-theme="light" style="width: 100%; min-height: 250px;"></div>
+                        <script src="https://astroscope-app.com/widget/astroscope-horoscope-widget.js"></script>
+                    </div>
+                </div>
+                
+                <!-- Widget Πρόγραμμα TV -->
+                <div class="widget-box tv-widget">
+                    <div class="widget-title">📺 Πρόγραμμα TV</div>
+                    <div class="widget-content">
+                        <div style="width:100%; text-align:center; line-height:11px; font-size:14px; background: white; border-radius: 8px; padding: 10px;">
+                            <iframe id="widget_frame" src="//programmatileorasis.gr/widget_horizontal_show.php?width=2" marginwidth="0" marginheight="0" frameborder="0" border="0" style="border:0;margin:0;padding:0;overflow:hidden; width:100%; min-height: 400px;" width="100%" height="439"></iframe>
+                            <div id="widget_footer" style="text-align:right; font-size:10px; background-color:#ddd; color:#666; line-height:18px; padding: 5px; border-radius: 0 0 8px 8px;">
+                                powered by <a style="color:#666" href="https://programmatileorasis.gr" target="_blank">Programma TV</a>&nbsp;
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <!-- 10. ΤΕΛΙΚΗ ΜΙΚΡΗ ΔΙΑΦΗΜΙΣΗ -->
-        <div class="ad-simple">
+        <!-- 6. ΤΕΛΙΚΗ ΜΙΚΡΗ ΔΙΑΦΗΜΙΣΗ ΜΕΤΑ ΤΑ WIDGETS -->
+        <div class="ad-simple" style="margin-top: 30px;">
             <div class="ad-inline ad-inline-small">
                 <ins class="adsbygoogle"
                      style="display:block"
@@ -628,6 +596,24 @@
                     }, 0);
                 }
             });
+            
+            // Βελτιστοποίηση για responsive
+            function adjustWidgetsForMobile() {
+                const isMobile = window.innerWidth <= 768;
+                const widgets = document.querySelectorAll('.widget-content');
+                
+                widgets.forEach(widget => {
+                    if (isMobile) {
+                        widget.style.minHeight = '200px';
+                    } else {
+                        widget.style.minHeight = '250px';
+                    }
+                });
+            }
+            
+            // Κάλεσε την function κατά το load και resize
+            adjustWidgetsForMobile();
+            window.addEventListener('resize', adjustWidgetsForMobile);
         });
     </script>
     
