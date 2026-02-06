@@ -125,6 +125,14 @@
             padding: 0 15px;
         }
         
+        .ticker-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            margin: 0 auto;
+        }
+        
         /* Βελτίωση για iOS */
         @supports (-webkit-touch-callout: none) {
             body {
@@ -138,18 +146,6 @@
         }
         
         /* Responsive adjustments */
-        @media (max-width: 800px) {
-            .frontpages-container > div {
-                width: 100% !important;
-            }
-            
-            .frontpages-container iframe {
-                width: 100% !important;
-                max-width: 100%;
-                height: 700px !important;
-            }
-        }
-        
         @media (max-width: 480px) {
             .header {
                 padding: 12px 8px;
@@ -159,8 +155,18 @@
                 padding: 15px 10px;
             }
             
-            .frontpages-container iframe {
-                height: 600px !important;
+            .frontpages-container > div {
+                width: 100% !important;
+            }
+            
+            .ticker-container {
+                width: 100%;
+                padding: 10px;
+            }
+            
+            .ticker-container iframe {
+                width: 100% !important;
+                max-width: 100%;
             }
         }
         
@@ -172,16 +178,6 @@
             
             .main-container {
                 padding: 15px 10px;
-            }
-            
-            .frontpages-container iframe {
-                height: 650px !important;
-            }
-        }
-        
-        @media screen and (max-device-width: 812px) and (orientation: landscape) {
-            .frontpages-container iframe {
-                height: 500px !important;
             }
         }
     </style>
@@ -201,13 +197,15 @@
         </div>
         
         <div class="frontpages-container">
-            <div style="width:780px;text-align:center;">
-                <iframe src="https://www.frontpages.gr/f/1/2" width="780" height="800" marginwidth=0 marginheight=0 frameborder=0 border=0 style="border:0;margin:0;padding:0;overflow-x: auto; overflow-y: scroll;"></iframe>
-                <br>
-                <div style="font-size:10px;">
-                    <a style="font-size:10px;color:#000;text-decoration:none;" href="https://www.frontpages.gr" target="_blank">Τα </a>
-                    <a style="font-size:10px;color:#000;text-decoration:none;" href="https://www.frontpages.gr" target="_blank">πρωτοσέλιδα</a>
-                    <a style="font-size:10px;color:#000;text-decoration:none;" href="https://www.frontpages.gr" target="_blank"> των εφημερίδων</a>
+            <div class="ticker-container">
+                <div style="width:400px;text-align:center;">
+                    <iframe src="https://www.frontpages.gr/ticker.php?category=2&c=F2F2F2&w=400&h=520&t=1&e=1" width="400" height="520" scrolling=no marginwidth=0 marginheight=0 frameborder=0 border=0 style="border:0;margin:0;padding:0;"></iframe>
+                    <br>
+                    <div style="font-size:10px;color:#000;">
+                        Τα <a href="https://www.frontpages.gr" target="_blank" style="font-size:10px;color:#000;text-decoration:none;">πρωτοσέλιδα </a>
+                        των <a href="https://www.frontpages.gr" target="_blank" style="font-size:10px;color:#000;text-decoration:none;">εφημερίδων </a>
+                        - <a href="https://www.frontpages.gr" target="_blank" style="font-size:10px;color:#000;text-decoration:none;">protoselida </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -240,25 +238,22 @@
                 }
             });
             
-            // Προσαρμογή ύψους iframe για κινητές συσκευές
-            function adjustIframeHeight() {
-                const iframe = document.querySelector('.frontpages-container iframe');
-                const isMobile = window.innerWidth <= 800;
+            // Προσαρμογή πλάτους ticker για κινητές συσκευές
+            function adjustTickerWidth() {
+                const tickerDiv = document.querySelector('.ticker-container > div');
+                const iframe = document.querySelector('.ticker-container iframe');
+                const isMobile = window.innerWidth <= 480;
                 
-                if (iframe && isMobile) {
-                    if (window.innerWidth <= 480) {
-                        iframe.style.height = '600px';
-                    } else if (window.innerWidth <= 768) {
-                        iframe.style.height = '700px';
-                    }
-                } else if (iframe) {
-                    iframe.style.height = '800px';
+                if (tickerDiv && iframe && isMobile) {
+                    tickerDiv.style.width = '100%';
+                    iframe.style.width = '100%';
+                    iframe.style.maxWidth = '100%';
                 }
             }
             
             // Κάλεσε την function κατά το load και resize
-            adjustIframeHeight();
-            window.addEventListener('resize', adjustIframeHeight);
+            adjustTickerWidth();
+            window.addEventListener('resize', adjustTickerWidth);
         });
     </script>
     
