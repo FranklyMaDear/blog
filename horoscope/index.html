@@ -98,7 +98,7 @@
         }
         
         .main-container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px 15px;
             width: 100%;
@@ -118,41 +118,6 @@
             padding: 0 15px;
         }
         
-        .widgets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .widget-column {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .category-title {
-            text-align: center;
-            margin-bottom: 15px;
-            color: #fff;
-            font-size: clamp(16px, 3vw, 20px);
-            font-weight: bold;
-            padding-bottom: 8px;
-            border-bottom: 2px solid;
-            width: 100%;
-        }
-        
-        .horoscope-title {
-            color: #9b59b6;
-            border-bottom-color: #9b59b6;
-        }
-        
-        .astrology-title {
-            color: #3498db;
-            border-bottom-color: #3498db;
-        }
-        
         .widget-container {
             background-color: #1a1a1a;
             border-radius: 12px;
@@ -161,12 +126,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
             width: 100%;
             min-height: 600px;
+            margin-top: 20px;
         }
         
-        #astroscope-horoscope, #astroscope-widget {
+        #astroscope-horoscope {
             width: 100%;
             min-height: 580px;
         }
@@ -184,14 +149,6 @@
         }
         
         /* Responsive adjustments */
-        @media (max-width: 900px) {
-            .widgets-grid {
-                grid-template-columns: 1fr;
-                max-width: 600px;
-                margin: 0 auto;
-            }
-        }
-        
         @media (max-width: 480px) {
             .header {
                 padding: 12px 8px;
@@ -201,16 +158,12 @@
                 padding: 15px 10px;
             }
             
-            .widgets-grid {
-                gap: 20px;
-            }
-            
             .widget-container {
                 padding: 15px;
                 min-height: 550px;
             }
             
-            #astroscope-horoscope, #astroscope-widget {
+            #astroscope-horoscope {
                 min-height: 530px;
             }
         }
@@ -238,75 +191,12 @@
             Δείτε τις καθημερινές αστρολογικές προβλέψεις για το ζώδιο σας. Προβλέψεις για αγάπη, καριέρα, υγεία και τυχερές στιγμές της ημέρας.
         </div>
         
-        <div class="widgets-grid">
-            <!-- Καθημερινό Ωροσκόπιο -->
-            <div class="widget-column">
-                <div class="category-title horoscope-title">✨ Καθημερινό Ωροσκόπιο</div>
-                <div class="widget-container">
-                    <!-- ΠΡΩΤΟ WIDGET -->
-                    <div id="astroscope-horoscope" data-lang="auto" data-theme="dark"></div>
-                    <script src="https://astroscope-app.com/widget/astroscope-horoscope-widget.js"></script>
-                </div>
-            </div>
-            
-            <!-- Επεκταμένες Αστρολογικές Προβλέψεις -->
-            <div class="widget-column">
-                <div class="category-title astrology-title">🔮 Επεκταμένες Προβλέψεις</div>
-                <div class="widget-container">
-                    <!-- ΔΕΥΤΕΡΟ WIDGET -->
-                    <div id="astroscope-widget" data-lang="auto" data-theme="dark"></div>
-                    <script src="https://astroscope-app.com/widget/astroscope-widget.js"></script>
-                </div>
-            </div>
+        <div class="widget-container">
+            <!-- ΜΟΝΟ ΕΝΑ WIDGET -->
+            <div id="astroscope-horoscope" data-lang="el" data-theme="dark"></div>
+            <script src="https://astroscope-app.com/widget/astroscope-horoscope-widget.js"></script>
         </div>
     </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ΑΠΟΤΡΟΠΗ ZOOM ΣΕ IOS
-            document.addEventListener('touchstart', function(event) {
-                if (event.touches.length > 1) {
-                    event.preventDefault();
-                }
-            }, { passive: false });
-            
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function(event) {
-                const now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
-            
-            // Αποτροπή αναδιάταξη λόγω πληκτρολογίου σε iOS
-            window.addEventListener('resize', function() {
-                if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
-                    window.setTimeout(function() {
-                        document.activeElement.scrollIntoView({ block: 'center' });
-                    }, 0);
-                }
-            });
-            
-            // Παρακολούθηση φόρτωσης των widgets
-            const checkWidgetsLoaded = setInterval(function() {
-                const horoscopeWidget = document.getElementById('astroscope-horoscope');
-                const astrologyWidget = document.getElementById('astroscope-widget');
-                
-                if (horoscopeWidget && astrologyWidget && 
-                    horoscopeWidget.children.length > 0 && 
-                    astrologyWidget.children.length > 0) {
-                    console.log('Both astrology widgets loaded successfully');
-                    clearInterval(checkWidgetsLoaded);
-                }
-            }, 1000);
-            
-            // Stop checking after 30 seconds
-            setTimeout(function() {
-                clearInterval(checkWidgetsLoaded);
-            }, 30000);
-        });
-    </script>
     
     <!-- Επιπλέον meta tags για social media -->
     <meta property="og:image:type" content="image/png">
