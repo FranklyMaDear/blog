@@ -31,11 +31,20 @@
     <link rel="icon" type="image/png" href="thumbnail123.png">
     <link rel="apple-touch-icon" href="thumbnail123.png">
     
+    <!-- AdSense Meta -->
+    <meta name="google-adsense-account" content="ca-pub-3186700611266549">
+    
     <!-- Prevent zoom on input focus for iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="format-detection" content="telephone=no">
     <meta name="mobile-web-app-capable" content="yes">
+    
+    <!-- Προσθήκη preconnect για AdSense -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com">
+    <link rel="preconnect" href="https://googleads.g.doubleclick.net">
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com">
+    <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net">
     
     <style>
         * {
@@ -170,6 +179,35 @@
             padding: 20px;
             background-color: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
+            min-height: 100px;
+        }
+        
+        /* Ειδικά για AdSense */
+        ins.adsbygoogle {
+            display: block !important;
+            width: 100%;
+            max-width: 728px;
+            min-height: 90px;
+        }
+        
+        /* Responsive AdSense */
+        @media (max-width: 768px) {
+            ins.adsbygoogle {
+                max-width: 320px;
+                min-height: 100px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            ins.adsbygoogle {
+                max-width: 300px;
+                min-height: 100px;
+            }
+            
+            .ad-container {
+                min-height: 100px;
+                padding: 15px;
+            }
         }
         
         /* Βελτίωση για iOS */
@@ -273,14 +311,17 @@
         
         <!-- Διαφήμιση μετά από Πολιτικές Εφημερίδες -->
         <div class="ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <div style="width:100%; text-align:center;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="9660744817"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
         </div>
         
         <div class="widgets-grid">
@@ -303,14 +344,17 @@
         
         <!-- Διαφήμιση μετά από Αθλητικές Εφημερίδες -->
         <div class="ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+            <div style="width:100%; text-align:center;">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="9660744817"></ins>
+                <script>
+                     (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
         </div>
         
         <div class="widgets-grid">
@@ -379,9 +423,38 @@
                 });
             }
             
-            // Κάλεσε την function κατά το load και resize
+            // Επανεμφάνιση διαφημίσεων για iOS/Chrome
+            function refreshAdsenseAds() {
+                // Περιμένουμε να φορτωθεί το AdSense script
+                setTimeout(function() {
+                    if (window.adsbygoogle) {
+                        // Επανεκκίνηση όλων των διαφημίσεων
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        console.log('AdSense ads refreshed');
+                    }
+                }, 2000);
+            }
+            
+            // Προσπάθεια φόρτωσης διαφημίσεων κατά το scroll
+            let adsLoaded = false;
+            window.addEventListener('scroll', function() {
+                if (!adsLoaded) {
+                    refreshAdsenseAds();
+                    adsLoaded = true;
+                }
+            });
+            
+            // Προσπάθεια φόρτωσης διαφημίσεων όταν ο χρήστης κάνει click
+            document.addEventListener('click', function() {
+                refreshAdsenseAds();
+            });
+            
+            // Κάλεσε τις functions κατά το load
             adjustTickersWidth();
             window.addEventListener('resize', adjustTickersWidth);
+            
+            // Προσπάθησε να φορτώσεις τις διαφημίσεις μετά από λίγο
+            setTimeout(refreshAdsenseAds, 1000);
         });
     </script>
     
