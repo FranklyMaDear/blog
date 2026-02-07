@@ -20,9 +20,9 @@ $html = curl_exec($ch);
 curl_close($ch);
 
 // Αφαίρεση X-Frame-Options headers από το αρχικό HTML
-$html = str_replace('X-Frame-Options: SAMEORIGIN', '', $html);
-$html = str_replace('x-frame-options: SAMEORIGIN', '', $html);
-$html = str_replace("Content-Security-Policy", "X-Content-Security-Policy", $html);
+$html = preg_replace('/X-Frame-Options[^\r\n]*/i', '', $html);
+$html = preg_replace('/x-frame-options[^\r\n]*/i', '', $html);
+$html = preg_replace('/Content-Security-Policy[^\r\n]*/i', 'X-Content-Security-Policy: none', $html);
 
 echo $html;
 ?>
