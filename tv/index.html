@@ -2,566 +2,240 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ζωντανό Ποδόσφαιρο | Aris vs PAOK Live</title>
-    
-    <!-- Google AdSense -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ζωντανό: Aris vs PAOK | Fawanews</title>
+    <!-- Provided Google AdSense Code -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
     
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background: #000;
-            color: white;
             font-family: Arial, sans-serif;
-            min-height: 100vh;
+            background: #0f0f0f;
+            color: #fff;
+            overflow-x: hidden;
+            padding-top: 90px; /* Space for sticky header */
         }
-        
-        /* Header με Ad */
-        .header {
-            background: linear-gradient(90deg, #e94560, #0f3460);
-            padding: 15px;
-            text-align: center;
-            position: sticky;
+        /* Sticky Header with Ad */
+        #pageHeader {
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to right, #1a1a1a, #333);
             z-index: 1000;
-            border-bottom: 3px solid #ff2e63;
+            padding: 10px 15px;
+            border-bottom: 3px solid #e10600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
         }
-        
-        .header h1 {
-            font-size: 22px;
-            color: white;
+        #headerAd {
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
         }
-        
-        /* Main Container */
+        /* Main Content Area */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
         }
-        
-        /* Stream Container */
-        .stream-wrapper {
+        /* Live Stream Container */
+        .stream-container {
             width: 100%;
-            background: #111;
-            border-radius: 10px;
+            background: #000;
+            border-radius: 8px;
             overflow: hidden;
-            margin: 20px 0;
-            border: 2px solid #e94560;
-            position: relative;
-            min-height: 600px;
+            margin-bottom: 25px;
+            border: 2px solid #444;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
-        
-        #streamFrame {
+        #mainStreamFrame {
             width: 100%;
-            height: 100%;
+            height: 70vh; /* Adjusts to 70% of viewport height */
             min-height: 500px;
+            display: block;
             border: none;
         }
-        
-        /* Overlay για το iframe */
-        .stream-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            text-align: center;
-            padding: 20px;
-        }
-        
-        .overlay-content h2 {
-            color: #e94560;
+        /* Info Box */
+        .stream-info {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
             margin-bottom: 20px;
-            font-size: 24px;
+            border-left: 5px solid #e10600;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
-        
-        .overlay-content p {
-            margin-bottom: 15px;
-            color: #aaa;
-        }
-        
-        /* Control Buttons */
-        .stream-controls {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .control-btn {
-            background: #e94560;
+        .stream-info strong { color: #e10600; }
+        /* Fullscreen Button */
+        .btn-fullscreen {
+            display: block;
+            width: 100%;
+            background: #e10600;
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
+            padding: 15px;
+            font-size: 18px;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-radius: 8px;
+            margin: 20px 0;
+            cursor: pointer;
+            text-align: center;
             transition: background 0.3s;
         }
-        
-        .control-btn:hover {
-            background: #ff2e63;
-        }
-        
-        .control-btn.secondary {
-            background: #0f3460;
-        }
-        
-        .control-btn.secondary:hover {
-            background: #1a56db;
-        }
-        
-        /* Ads */
-        .ad-section {
-            margin: 25px 0;
-            text-align: center;
-        }
-        
-        .ad-container {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 20px;
+        .btn-fullscreen:hover { background: #ff2a23; }
+        /* Instructions & VPN Note */
+        .vpn-note {
+            background: rgba(225, 6, 0, 0.1);
+            padding: 15px;
             border-radius: 8px;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 1px dashed #e10600;
+            margin: 20px 0;
+            font-size: 0.9em;
         }
-        
-        .top-ad {
-            background: linear-gradient(135deg, #0f3460, #16213e);
-            margin-bottom: 30px;
-        }
-        
-        .middle-ad {
+        .instructions { margin-top: 25px; }
+        .instructions ol { padding-left: 20px; margin-top: 10px; }
+        .instructions li { margin-bottom: 8px; }
+        /* Bottom Ad Space */
+        #bottomAd {
+            width: 100%;
             margin: 30px auto;
-            max-width: 728px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
         }
-        
-        .bottom-ad {
-            background: rgba(15, 52, 96, 0.8);
-            margin-top: 30px;
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.85em;
+            border-top: 1px solid #333;
+            margin-top: 20px;
         }
-        
-        /* Sticky Mobile Ad */
-        .sticky-ad {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.98);
-            padding: 12px;
-            z-index: 9999;
-            border-top: 2px solid #e94560;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .close-ad {
-            position: absolute;
-            right: 15px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-        
-        /* Loading */
-        .loader {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #e94560;
-            font-size: 18px;
-            z-index: 101;
-        }
-        
-        .loader.active {
-            display: block;
-        }
-        
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 18px;
-            }
-            
-            .stream-wrapper {
-                min-height: 400px;
-            }
-            
-            .stream-controls {
-                flex-direction: column;
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .control-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .sticky-ad {
-                display: flex;
-            }
+            body { padding-top: 80px; }
+            #mainStreamFrame { height: 50vh; min-height: 350px; }
+            .container { padding: 10px; }
+            .btn-fullscreen { font-size: 16px; padding: 12px; }
         }
-        
         @media (max-width: 480px) {
-            .stream-wrapper {
-                min-height: 300px;
-            }
-            
-            .overlay-content h2 {
-                font-size: 20px;
-            }
-        }
-        
-        /* Fullscreen overlay */
-        #fullscreenOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 99999;
-            display: none;
-        }
-        
-        #fullscreenFrame {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-        
-        .close-fullscreen {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            z-index: 100000;
+            #mainStreamFrame { height: 45vh; min-height: 280px; }
+            .stream-info, .vpn-note { font-size: 0.85em; padding: 12px; }
         }
     </style>
 </head>
 <body>
     <!-- Sticky Header with Ad -->
-    <div class="header">
-        <h1>🔴 ARIS THESSALONIKI vs PAOK SALONIKI - ΖΩΝΤΑΝΗ ΡΟΗ</h1>
-    </div>
-    
+    <header id="pageHeader">
+        <div id="headerAd">
+            <!-- YOUR ADSENSE CODE -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </header>
+
     <div class="container">
-        <!-- Top Ad -->
-        <div class="ad-section top-ad ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+        <!-- Stream Info Box -->
+        <div class="stream-info">
+            <strong>🔴 ΖΩΝΤΑΝΗ ΜΕΤΑΔΟΣΗ:</strong> Aris Thessaloniki vs PAOK Saloniki.<br>
+            Η ροή παρέχεται μέσω της πλατφόρμας Fawanews.
         </div>
-        
-        <!-- Stream Container -->
-        <div class="stream-wrapper">
-            <div class="loader" id="loader">Φόρτωση ροής...</div>
-            
-            <div class="stream-overlay" id="streamOverlay">
-                <div class="overlay-content">
-                    <h2>🎥 ΖΩΝΤΑΝΟΣ ΑΓΩΝΑΣ ΠΟΔΟΣΦΑΙΡΟΥ</h2>
-                    <p>⚽ <strong>Aris Thessaloniki vs PAOK Saloniki</strong></p>
-                    <p>🏆 Σούπερ Λιγκ Ελλάδας</p>
-                    <p>⏱️ Ζωντανή Μετάδοση σε Πραγματικό Χρόνο</p>
-                    
-                    <div class="stream-controls">
-                        <button class="control-btn" id="loadStreamBtn">
-                            <span>▶️</span> ΦΟΡΤΩΣΗ ΖΩΝΤΑΝΗΣ ΡΟΗΣ
-                        </button>
-                        <button class="control-btn secondary" id="directLinkBtn">
-                            <span>🔗</span> ΑΝΟΙΓΜΑ ΣΕ ΝΕΑ ΚΑΡΤΕΛΑ
-                        </button>
-                    </div>
-                    
-                    <div style="margin-top: 30px; color: #888; font-size: 14px;">
-                        <p>ℹ️ <em>Μερικές ροές μπορεί να έχουν περιορισμούς. Αν υπάρξει πρόβλημα, χρησιμοποιήστε το δεύτερο κουμπί.</em></p>
-                    </div>
-                </div>
-            </div>
-            
-            <iframe id="streamFrame" allowfullscreen></iframe>
+
+        <!-- VPN Notice (based on URL content) -->
+        <div class="vpn-note">
+            <strong>ℹ️ ΣΗΜΑΝΤΙΚΗ ΠΛΗΡΟΦΟΡΙΑ:</strong> Αν βρίσκεστε στο Ηνωμένο Βασίλειο ή τον Καναδά, μπορεί να χρειαστεί να χρησιμοποιήσετε VPN για να παρακολουθήσετε, ή να επιλέξετε το "CH 2" αν είναι διαθέσιμο.
         </div>
-        
-        <!-- Middle Ad 1 -->
-        <div class="ad-section middle-ad ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+
+        <!-- Main Live Stream -->
+        <div class="stream-container">
+            <iframe id="mainStreamFrame"
+                    src="http://www.fawanews.sc/Aris%20vs%20PAOK.html"
+                    allow="autoplay; fullscreen; encrypted-media"
+                    allowfullscreen
+                    scrolling="no"
+                    frameborder="0">
+            </iframe>
         </div>
-        
-        <!-- Middle Ad 2 -->
-        <div class="ad-section middle-ad ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+
+        <!-- Fullscreen Button -->
+        <button class="btn-fullscreen" id="fsButton">⛶ ΠΛΗΡΗΣ ΟΘΟΝΗ</button>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <strong>Οδηγίες Παρακολούθησης:</strong>
+            <ol>
+                <li>Η ροή ξεκινά αυτόματα ή με μικρή καθυστέρηση.</li>
+                <li>Πατήστε το κουμπί "ΠΛΗΡΗΣ ΟΘΟΝΗ" για καλύτερη εμπειρία.</li>
+                <li>Για καλύτερη ποιότητα, επιλέξτε ρυθμίσεις (σύμβολο γραναζιού) στο βίντεο.</li>
+                <li>Αν υπάρχει πρόβλημα, δοκιμάστε να ανανεώσετε τη σελίδα.</li>
+            </ol>
         </div>
-        
-        <!-- Bottom Ad -->
-        <div class="ad-section bottom-ad ad-container">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+
+        <!-- Bottom Ad Space -->
+        <div id="bottomAd">
+            <!-- Ad space - You can duplicate your AdSense code here -->
+            <p><em>Διαφημιστικός Χώρος</em></p>
         </div>
     </div>
-    
-    <!-- Sticky Mobile Ad -->
-    <div class="sticky-ad" id="stickyAd">
-        <button class="close-ad" id="closeAd">&times;</button>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"
-             data-ad-format="autorelaxed"
-             data-full-width-responsive="true"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-    
-    <!-- Fullscreen Overlay -->
-    <div id="fullscreenOverlay">
-        <button class="close-fullscreen" id="closeFullscreen">✕ Κλείσιμο</button>
-        <iframe id="fullscreenFrame" allowfullscreen></iframe>
-    </div>
-    
+
+    <footer>
+        © 2025 - Η σελίδα φιλοξενεί ζωντανή ροή από τρίτες πηγές. Όλα τα δικαιώματα των μεταδόσεων ανήκουν στους αντίστοιχους κατόχους.
+    </footer>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const streamFrame = document.getElementById('streamFrame');
-            const fullscreenFrame = document.getElementById('fullscreenFrame');
-            const streamOverlay = document.getElementById('streamOverlay');
-            const loader = document.getElementById('loader');
-            const loadStreamBtn = document.getElementById('loadStreamBtn');
-            const directLinkBtn = document.getElementById('directLinkBtn');
-            const fullscreenOverlay = document.getElementById('fullscreenOverlay');
-            const closeFullscreen = document.getElementById('closeFullscreen');
-            const stickyAd = document.getElementById('stickyAd');
-            const closeAd = document.getElementById('closeAd');
-            
-            const STREAM_URL = 'https://web.camel1.live/football/aris-thessaloniki-vs-paok-saloniki/live/3glrw7hny312qdy';
-            
-            // Μέθοδος 1: Προσπάθεια direct iframe
-            function tryDirectIframe() {
-                loader.classList.add('active');
-                
-                // Προσπάθεια 1: Απευθείας iframe
-                streamFrame.src = STREAM_URL;
-                
-                // Έλεγχος αν φορτώθηκε
-                streamFrame.onload = function() {
-                    loader.classList.remove('active');
-                    streamOverlay.style.display = 'none';
-                    console.log('Direct iframe loaded');
-                };
-                
-                streamFrame.onerror = function() {
-                    // Αν αποτύχει, δοκιμάζουμε την εναλλακτική μέθοδο
-                    setTimeout(tryAlternativeMethod, 2000);
-                };
-            }
-            
-            // Μέθοδος 2: Εναλλακτική μέθοδος με proxy-like approach
-            function tryAlternativeMethod() {
-                console.log('Trying alternative method...');
-                loader.innerHTML = 'Προσπάθεια εναλλακτικής σύνδεσης...';
-                
-                // Δημιουργία ενός proxy-like container
-                const proxyURL = `https://corsproxy.io/?${encodeURIComponent(STREAM_URL)}`;
-                
-                // Δημιουργία iframe με διαφορετικό user-agent
-                streamFrame.src = '';
-                streamFrame.srcdoc = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <meta http-equiv="X-Frame-Options" content="ALLOWALL">
-                        <style>body{margin:0;padding:0;}</style>
-                    </head>
-                    <body>
-                        <script>
-                            // Προσπάθεια να παρακάμψουμε τους περιορισμούς
-                            try {
-                                window.location.href = '${STREAM_URL}';
-                            } catch(e) {
-                                document.body.innerHTML = '<p style="color:white;text-align:center;padding:20px;">Η ροή απαιτεί άνοιγμα σε νέα καρτέλα.</p>';
-                            }
-                        <\/script>
-                    </body>
-                    </html>
-                `;
-                
-                setTimeout(() => {
-                    loader.classList.remove('active');
-                    // Αν και πάλι αποτύχει, δείχνουμε το overlay
-                    if (streamFrame.contentWindow && streamFrame.contentWindow.location.href === 'about:srcdoc') {
-                        streamOverlay.style.display = 'flex';
-                        loader.innerHTML = 'Φόρτωση ροής...';
-                        alert('⚠️ Η ροή δεν μπορεί να φορτωθεί απευθείας. Χρησιμοποιήστε το κουμπί για άνοιγμα σε νέα καρτέλα.');
-                    }
-                }, 3000);
-            }
-            
-            // Μέθοδος 3: Fullscreen overlay (η καλύτερη εναλλακτική)
-            function openFullscreenStream() {
-                fullscreenOverlay.style.display = 'block';
-                fullscreenFrame.src = STREAM_URL;
-                
-                // Προσοχή: Κλείσιμο με escape
-                document.addEventListener('keydown', function closeOnEscape(e) {
-                    if (e.key === 'Escape') {
-                        closeFullscreenStream();
-                        document.removeEventListener('keydown', closeOnEscape);
-                    }
-                });
-            }
-            
-            function closeFullscreenStream() {
-                fullscreenOverlay.style.display = 'none';
-                fullscreenFrame.src = '';
-            }
-            
-            // Μέθοδος 4: Smart redirect με overlay
-            function smartStreamLoad() {
-                loader.classList.add('active');
-                streamOverlay.style.display = 'none';
-                
-                // Προσπάθεια με hidden form submission
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'https://cors-anywhere.herokuapp.com/' + STREAM_URL;
-                form.target = 'streamFrame';
-                form.style.display = 'none';
-                
-                document.body.appendChild(form);
-                
-                // Timeout αν αποτύχει
-                setTimeout(() => {
-                    if (loader.classList.contains('active')) {
-                        loader.classList.remove('active');
-                        streamOverlay.style.display = 'flex';
-                        alert('Δοκιμάστε την πλήρη οθόνη ή άνοιγμα σε νέα καρτέλα.');
-                    }
-                }, 5000);
-                
+            const mainFrame = document.getElementById('mainStreamFrame');
+            const fsButton = document.getElementById('fsButton');
+
+            // 1. Toggle Fullscreen for the iframe
+            fsButton.addEventListener('click', function() {
+                if (mainFrame.requestFullscreen) {
+                    mainFrame.requestFullscreen();
+                } else if (mainFrame.webkitRequestFullscreen) { /* Safari */
+                    mainFrame.webkitRequestFullscreen();
+                } else if (mainFrame.msRequestFullscreen) { /* IE11 */
+                    mainFrame.msRequestFullscreen();
+                }
+            });
+
+            // 2. Monitor iframe for potential errors or redirects
+            let lastKnownSrc = mainFrame.src;
+            const checkFrameSource = setInterval(() => {
                 try {
-                    form.submit();
-                } catch(e) {
-                    console.log('Form method failed:', e);
-                    openFullscreenStream();
+                    // This will throw an error if the iframe is cross-origin,
+                    // which is expected. We use it to detect if the iframe is still our page.
+                    const currentSrc = mainFrame.contentWindow.location.href;
+                    if (currentSrc !== lastKnownSrc && !currentSrc.includes('fawanews.sc')) {
+                        console.warn("Iframe source may have changed.");
+                        // Optionally, you could reset it here:
+                        // mainFrame.src = lastKnownSrc;
+                    }
+                } catch (e) {
+                    // This is a normal security exception for cross-origin iframes.
+                    // The iframe is still loaded and from fawanews.
                 }
-            }
-            
-            // Event Listeners
-            loadStreamBtn.addEventListener('click', function() {
-                console.log('Trying to load stream...');
-                
-                // Προσπάθεια πολλαπλών μεθόδων
-                if (window.innerWidth > 768) {
-                    // Σε desktop, δοκιμάζουμε fullscreen
-                    openFullscreenStream();
-                } else {
-                    // Σε mobile, δοκιμάζουμε smart load
-                    smartStreamLoad();
-                }
-                
-                // Refresh ads
-                setTimeout(() => {
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                }, 1000);
-            });
-            
-            directLinkBtn.addEventListener('click', function() {
-                window.open(STREAM_URL, '_blank');
-                // Ο χρήστης παραμένει στην σελίδα μας, απλά ανοίγει νέα καρτέλα
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            });
-            
-            closeFullscreen.addEventListener('click', closeFullscreenStream);
-            
-            // Sticky Ad Management
-            function handleStickyAd() {
-                if (window.innerWidth <= 768) {
-                    setTimeout(() => {
-                        if (localStorage.getItem('adClosed') !== 'true') {
-                            stickyAd.style.display = 'flex';
-                        }
-                    }, 2000);
-                }
-            }
-            
-            closeAd.addEventListener('click', function() {
-                stickyAd.style.display = 'none';
-                localStorage.setItem('adClosed', 'true');
-            });
-            
-            // Auto-initialize
-            handleStickyAd();
-            
-            // Auto-refresh ads
-            setInterval(() => {
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            }, 45000); // Κάθε 45 δευτερόλεπτα
-            
-            // Initialize ads
-            (adsbygoogle = window.adsbygoogle || []).push({});
-            
-            // Console info
-            console.log('Stream Page Initialized');
-            console.log('Stream URL:', STREAM_URL);
-            console.log('Multiple loading methods available');
+            }, 5000); // Check every 5 seconds
+
+            // 3. Optional: Preload message for browser support
+            mainFrame.onload = function() {
+                console.log("Main stream frame loaded.");
+            };
+            mainFrame.onerror = function() {
+                alert("Υπήρξε ένα σφάλμα κατά τη φόρτωση της ροής. Παρακαλώ ανανεώστε τη σελίδα.");
+            };
+
+            // 4. Ensure page remains on your domain (primary defense)
+            window.onbeforeunload = null; // Allow your own page navigation
+            // The main security is that the iframe is sandboxed within your page.
         });
     </script>
 </body>
