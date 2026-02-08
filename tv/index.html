@@ -2,240 +2,292 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Ζωντανό: Aris vs PAOK | Fawanews</title>
-    <!-- Provided Google AdSense Code -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIVE: Aris vs PAOK | Πίνακας & Ροή</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial, sans-serif;
-            background: #0f0f0f;
+            background: #111;
             color: #fff;
-            overflow-x: hidden;
-            padding-top: 90px; /* Space for sticky header */
+            min-height: 100vh;
+            padding: 20px;
         }
-        /* Sticky Header with Ad */
-        #pageHeader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: linear-gradient(to right, #1a1a1a, #333);
-            z-index: 1000;
-            padding: 10px 15px;
-            border-bottom: 3px solid #e10600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
-        }
-        #headerAd {
-            width: 100%;
-            margin: 0 auto;
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* Ads */
+        .ad-slot {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 20px;
             text-align: center;
+            margin: 25px 0;
+            border: 1px dashed #444;
         }
-        /* Main Content Area */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        
+        /* Stream Overlay - THE KEY ELEMENT */
+        .stream-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 9999;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+        }
+        .overlay-header {
+            background: #222;
             padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #e10600;
         }
-        /* Live Stream Container */
-        .stream-container {
-            width: 100%;
-            background: #000;
+        .overlay-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        #streamWindow {
+            width: 90%;
+            height: 85%;
+            border: 3px solid #333;
             border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 25px;
-            border: 2px solid #444;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(225, 6, 0, 0.3);
         }
-        #mainStreamFrame {
-            width: 100%;
-            height: 70vh; /* Adjusts to 70% of viewport height */
-            min-height: 500px;
-            display: block;
-            border: none;
-        }
-        /* Info Box */
-        .stream-info {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            border-left: 5px solid #e10600;
-            font-size: 0.95em;
-            line-height: 1.5;
-        }
-        .stream-info strong { color: #e10600; }
-        /* Fullscreen Button */
-        .btn-fullscreen {
-            display: block;
-            width: 100%;
+        .close-btn {
             background: #e10600;
             color: white;
             border: none;
-            padding: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 8px;
-            margin: 20px 0;
+            padding: 10px 25px;
+            border-radius: 5px;
             cursor: pointer;
-            text-align: center;
-            transition: background 0.3s;
+            font-weight: bold;
         }
-        .btn-fullscreen:hover { background: #ff2a23; }
-        /* Instructions & VPN Note */
-        .vpn-note {
-            background: rgba(225, 6, 0, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px dashed #e10600;
+        
+        /* Match Info */
+        .match-card {
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+            border: 2px solid #444;
+        }
+        .match-title {
+            font-size: 2.2em;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .match-teams {
+            font-size: 2.8em;
+            font-weight: bold;
             margin: 20px 0;
-            font-size: 0.9em;
+            color: #e10600;
         }
-        .instructions { margin-top: 25px; }
-        .instructions ol { padding-left: 20px; margin-top: 10px; }
-        .instructions li { margin-bottom: 8px; }
-        /* Bottom Ad Space */
-        #bottomAd {
-            width: 100%;
-            margin: 30px auto;
-            text-align: center;
+        .watch-btn {
+            background: #e10600;
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 25px 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(225, 6, 0, 0.4);
+        }
+        .watch-btn:hover {
+            background: #ff2a23;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(225, 6, 0, 0.6);
+        }
+        
+        /* Instructions & VPN */
+        .instructions {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #e10600;
+        }
+        .vpn-warning {
+            background: rgba(225, 6, 0, 0.15);
+            border: 2px dashed #e10600;
             padding: 20px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
+            border-radius: 10px;
+            margin: 20px 0;
         }
+        
         /* Footer */
         footer {
             text-align: center;
-            padding: 20px;
+            margin-top: 40px;
             color: #888;
-            font-size: 0.85em;
+            padding: 20px;
             border-top: 1px solid #333;
-            margin-top: 20px;
-        }
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body { padding-top: 80px; }
-            #mainStreamFrame { height: 50vh; min-height: 350px; }
-            .container { padding: 10px; }
-            .btn-fullscreen { font-size: 16px; padding: 12px; }
-        }
-        @media (max-width: 480px) {
-            #mainStreamFrame { height: 45vh; min-height: 280px; }
-            .stream-info, .vpn-note { font-size: 0.85em; padding: 12px; }
         }
     </style>
 </head>
 <body>
-    <!-- Sticky Header with Ad -->
-    <header id="pageHeader">
-        <div id="headerAd">
-            <!-- YOUR ADSENSE CODE -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    </header>
-
     <div class="container">
-        <!-- Stream Info Box -->
-        <div class="stream-info">
-            <strong>🔴 ΖΩΝΤΑΝΗ ΜΕΤΑΔΟΣΗ:</strong> Aris Thessaloniki vs PAOK Saloniki.<br>
-            Η ροή παρέχεται μέσω της πλατφόρμας Fawanews.
+        <!-- Top Ad -->
+        <div class="ad-slot" id="topAd">
+            <!-- Your AdSense code will be injected here -->
         </div>
-
-        <!-- VPN Notice (based on URL content) -->
-        <div class="vpn-note">
-            <strong>ℹ️ ΣΗΜΑΝΤΙΚΗ ΠΛΗΡΟΦΟΡΙΑ:</strong> Αν βρίσκεστε στο Ηνωμένο Βασίλειο ή τον Καναδά, μπορεί να χρειαστεί να χρησιμοποιήσετε VPN για να παρακολουθήσετε, ή να επιλέξετε το "CH 2" αν είναι διαθέσιμο.
+        
+        <!-- Match Information -->
+        <div class="match-card">
+            <h1 class="match-title">🔴 ΖΩΝΤΑΝΗ ΜΕΤΑΔΟΣΗ ΠΟΔΟΣΦΑΙΡΟΥ</h1>
+            <div class="match-teams">ARIS vs PAOK</div>
+            <p>🏆 Super League Greece | ⏱️ Live Now</p>
+            
+            <!-- Main Watch Button -->
+            <button class="watch-btn" id="openStreamBtn">
+                ▶️ ΠΑΡΑΚΟΛΟΥΘΗΣΗ ΖΩΝΤΑΝΑ (PLAY LIVE)
+            </button>
+            
+            <p style="margin-top: 15px; color: #aaa;">
+                Η ροή θα ανοίξει σε overlay πάνω από αυτή τη σελίδα
+            </p>
         </div>
-
-        <!-- Main Live Stream -->
-        <div class="stream-container">
-            <iframe id="mainStreamFrame"
-                    src="http://www.fawanews.sc/Aris%20vs%20PAOK.html"
-                    allow="autoplay; fullscreen; encrypted-media"
-                    allowfullscreen
-                    scrolling="no"
-                    frameborder="0">
-            </iframe>
+        
+        <!-- Middle Ad -->
+        <div class="ad-slot" id="middleAd">
+            <!-- Ad space -->
         </div>
-
-        <!-- Fullscreen Button -->
-        <button class="btn-fullscreen" id="fsButton">⛶ ΠΛΗΡΗΣ ΟΘΟΝΗ</button>
-
+        
+        <!-- VPN Warning -->
+        <div class="vpn-warning">
+            <strong>⚠️ ΣΗΜΑΝΤΙΚΟ:</strong> Χρήστες από Ηνωμένο Βασίλειο ή Καναδά μπορεί να χρειαστεί VPN ή να επιλέξουν "CH 2".
+        </div>
+        
         <!-- Instructions -->
         <div class="instructions">
-            <strong>Οδηγίες Παρακολούθησης:</strong>
-            <ol>
-                <li>Η ροή ξεκινά αυτόματα ή με μικρή καθυστέρηση.</li>
-                <li>Πατήστε το κουμπί "ΠΛΗΡΗΣ ΟΘΟΝΗ" για καλύτερη εμπειρία.</li>
-                <li>Για καλύτερη ποιότητα, επιλέξτε ρυθμίσεις (σύμβολο γραναζιού) στο βίντεο.</li>
-                <li>Αν υπάρχει πρόβλημα, δοκιμάστε να ανανεώσετε τη σελίδα.</li>
-            </ol>
+            <h3>📋 Οδηγίες:</h3>
+            <p>1. Πατήστε το κουμπί "ΠΑΡΑΚΟΛΟΥΘΗΣΗ ΖΩΝΤΑΝΑ" παραπάνω</p>
+            <p>2. Η ζωντανή ροή θα εμφανιστεί σε overlay <strong>πάνο πάνω από αυτή τη σελίδα</strong></p>
+            <p>3. Μπορείτε να κλείσετε το overlay οποτεδήποτε με το κόκκινο κουμπί</p>
+            <p>4. Οι διαφημίσεις παραμένουν ορατές και ενεργές</p>
         </div>
-
-        <!-- Bottom Ad Space -->
-        <div id="bottomAd">
-            <!-- Ad space - You can duplicate your AdSense code here -->
-            <p><em>Διαφημιστικός Χώρος</em></p>
+        
+        <!-- Bottom Ad -->
+        <div class="ad-slot" id="bottomAd">
+            <!-- Ad space -->
         </div>
     </div>
-
+    
+    <!-- Stream Overlay (initially hidden) -->
+    <div class="stream-overlay" id="streamOverlay">
+        <div class="overlay-header">
+            <h2>🎥 Ζωντανή Ροή: Aris vs PAOK</h2>
+            <button class="close-btn" id="closeStreamBtn">✕ Κλείσιμο Ροής</button>
+        </div>
+        <div class="overlay-content">
+            <iframe 
+                id="streamWindow"
+                src=""
+                allowfullscreen
+                sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+                scrolling="no"
+                frameborder="0">
+            </iframe>
+        </div>
+    </div>
+    
     <footer>
-        © 2025 - Η σελίδα φιλοξενεί ζωντανή ροή από τρίτες πηγές. Όλα τα δικαιώματα των μεταδόσεων ανήκουν στους αντίστοιχους κατόχους.
+        © 2025 - Αυτή η σελίδα χρησιμοποιεί υπηρεσίες τρίτων για ζωντανή ροή.
     </footer>
 
+    <!-- Your AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const mainFrame = document.getElementById('mainStreamFrame');
-            const fsButton = document.getElementById('fsButton');
-
-            // 1. Toggle Fullscreen for the iframe
-            fsButton.addEventListener('click', function() {
-                if (mainFrame.requestFullscreen) {
-                    mainFrame.requestFullscreen();
-                } else if (mainFrame.webkitRequestFullscreen) { /* Safari */
-                    mainFrame.webkitRequestFullscreen();
-                } else if (mainFrame.msRequestFullscreen) { /* IE11 */
-                    mainFrame.msRequestFullscreen();
+            const STREAM_URL = "http://www.fawanews.sc/Aris%20vs%20PAOK.html";
+            const overlay = document.getElementById('streamOverlay');
+            const streamWindow = document.getElementById('streamWindow');
+            const openBtn = document.getElementById('openStreamBtn');
+            const closeBtn = document.getElementById('closeStreamBtn');
+            
+            // 1. Initialize AdSense ads in all slots
+            function initializeAds() {
+                const adSlots = ['topAd', 'middleAd', 'bottomAd'];
+                adSlots.forEach(slotId => {
+                    const slot = document.getElementById(slotId);
+                    slot.innerHTML = `
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-format="autorelaxed"
+                             data-ad-client="ca-pub-3186700611266549"
+                             data-ad-slot="9660744817"></ins>
+                    `;
+                    if (window.adsbygoogle) {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                });
+            }
+            
+            // 2. Open Stream in Overlay
+            openBtn.addEventListener('click', function() {
+                console.log("Opening stream overlay...");
+                
+                // Load the stream URL into the iframe
+                streamWindow.src = STREAM_URL;
+                
+                // Show the overlay (fullscreen-like experience)
+                overlay.style.display = 'flex';
+                
+                // Lock body scroll
+                document.body.style.overflow = 'hidden';
+                
+                // Refresh ads after a moment (user engagement)
+                setTimeout(() => {
+                    if (window.adsbygoogle) {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                }, 1000);
+                
+                // Console info
+                console.log("Stream URL loaded:", STREAM_URL);
+                console.log("Overlay displayed. User remains on our page.");
+            });
+            
+            // 3. Close Stream Overlay
+            closeBtn.addEventListener('click', function() {
+                overlay.style.display = 'none';
+                streamWindow.src = ""; // Unload the iframe
+                document.body.style.overflow = 'auto';
+                
+                // Refresh ads when returning to main page
+                setTimeout(() => {
+                    if (window.adsbygoogle) {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                }, 500);
+            });
+            
+            // 4. Also close overlay with Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.style.display === 'flex') {
+                    closeBtn.click();
                 }
             });
-
-            // 2. Monitor iframe for potential errors or redirects
-            let lastKnownSrc = mainFrame.src;
-            const checkFrameSource = setInterval(() => {
-                try {
-                    // This will throw an error if the iframe is cross-origin,
-                    // which is expected. We use it to detect if the iframe is still our page.
-                    const currentSrc = mainFrame.contentWindow.location.href;
-                    if (currentSrc !== lastKnownSrc && !currentSrc.includes('fawanews.sc')) {
-                        console.warn("Iframe source may have changed.");
-                        // Optionally, you could reset it here:
-                        // mainFrame.src = lastKnownSrc;
-                    }
-                } catch (e) {
-                    // This is a normal security exception for cross-origin iframes.
-                    // The iframe is still loaded and from fawanews.
+            
+            // 5. Auto-refresh ads every 45 seconds
+            setInterval(() => {
+                if (window.adsbygoogle) {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    console.log("Ads refreshed automatically");
                 }
-            }, 5000); // Check every 5 seconds
-
-            // 3. Optional: Preload message for browser support
-            mainFrame.onload = function() {
-                console.log("Main stream frame loaded.");
-            };
-            mainFrame.onerror = function() {
-                alert("Υπήρξε ένα σφάλμα κατά τη φόρτωση της ροής. Παρακαλώ ανανεώστε τη σελίδα.");
-            };
-
-            // 4. Ensure page remains on your domain (primary defense)
-            window.onbeforeunload = null; // Allow your own page navigation
-            // The main security is that the iframe is sandboxed within your page.
+            }, 45000);
+            
+            // 6. Initialize everything
+            initializeAds();
+            
+            console.log("Page loaded successfully. Stream URL set to:", STREAM_URL);
         });
     </script>
 </body>
