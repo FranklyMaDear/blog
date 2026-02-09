@@ -13,6 +13,11 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549"
             crossorigin="anonymous"></script>
     
+    <!-- Firebase App (for AdMob) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -121,6 +126,337 @@
             border-radius: 10px;
             overflow: hidden;
         }
+
+        /* MOBILE APP PROMOTION BANNER */
+        .mobile-app-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            padding: 15px 20px;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+            border-top: 3px solid #FFD700;
+        }
+
+        .mobile-app-banner.show {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .app-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a237e;
+        }
+
+        .app-text h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .app-text p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .app-banner-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-app {
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-app-store {
+            background: #000;
+            color: white;
+        }
+
+        .btn-play-store {
+            background: linear-gradient(135deg, #0F9D58 0%, #1E8E3E 100%);
+            color: white;
+        }
+
+        .btn-close-banner {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .btn-app:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-close-banner:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* INTERSTITIAL AD OVERLAY */
+        .interstitial-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .interstitial-ad.show {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .interstitial-content {
+            max-width: 500px;
+            width: 90%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .interstitial-header {
+            background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .interstitial-header h3 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .interstitial-body {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .interstitial-body p {
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .interstitial-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-interstitial {
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 140px;
+        }
+
+        .btn-watch-ad {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+        }
+
+        .btn-skip-ad {
+            background: #f5f5f5;
+            color: #666;
+            border: 1px solid #ddd;
+        }
+
+        .btn-interstitial:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* NATIVE AD STYLE */
+        .native-ad {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            border: 1px solid #dee2e6;
+            display: none;
+        }
+
+        .native-ad.show {
+            display: block;
+        }
+
+        .native-ad-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .native-ad-badge {
+            background: #FF5722;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .native-ad-title {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .native-ad-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .native-ad-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .native-ad-text h4 {
+            margin: 0 0 8px 0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .native-ad-text p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .native-ad-button {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .native-ad-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        /* MOBILE SPECIFIC STYLES */
+        @media (max-width: 768px) {
+            .mobile-app-banner {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+            }
+
+            .app-banner-content {
+                margin-bottom: 15px;
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .app-banner-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-app {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .btn-close-banner {
+                align-self: flex-end;
+                margin-top: 10px;
+            }
+
+            .interstitial-content {
+                width: 95%;
+            }
+
+            .interstitial-buttons {
+                flex-direction: column;
+            }
+
+            .btn-interstitial {
+                width: 100%;
+            }
+
+            .native-ad-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .mobile-app-banner {
+                padding: 15px 30px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -144,6 +480,22 @@
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
+            </div>
+
+            <!-- Native Ad for Mobile -->
+            <div class="native-ad" id="nativeAd">
+                <div class="native-ad-header">
+                    <span class="native-ad-badge">ΔΙΑΦΗΜΙΣΗ</span>
+                    <p class="native-ad-title">Χορηγούμενη Προσφορά</p>
+                </div>
+                <div class="native-ad-content">
+                    <div class="native-ad-icon">📱</div>
+                    <div class="native-ad-text">
+                        <h4>Κατεβάστε την Εφαρμογή μας!</h4>
+                        <p>Αποκτήστε πρόσβαση σε όλο το περιεχόμενο χωρίς διαφημίσεις, με ειδικές προσφορές και ειδοποιήσεις!</p>
+                        <button class="native-ad-button" onclick="redirectToAppStore()">Κατέβασμα Δωρεάν</button>
+                    </div>
+                </div>
             </div>
 
             <div class="category-grid">
@@ -213,6 +565,22 @@
                 </script>
             </div>
 
+            <!-- Another Native Ad -->
+            <div class="native-ad" id="nativeAd2">
+                <div class="native-ad-header">
+                    <span class="native-ad-badge">ΠΡΟΤΕΙΝΟΜΕΝΟ</span>
+                    <p class="native-ad-title">Για Κινητά</p>
+                </div>
+                <div class="native-ad-content">
+                    <div class="native-ad-icon">⚡</div>
+                    <div class="native-ad-text">
+                        <h4>Ταχύτερη Εμπειρία</h4>
+                        <p>Η εφαρμογή μας φορτώνει 3x πιο γρήγορα και εξοικονομεί δεδομένα!</p>
+                        <button class="native-ad-button" onclick="showInterstitialAd()">Δείτε Περισσότερα</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="featured-section">
                 <h2>🌟 Δημοφιλή Απόσπασμα</h2>
                 <div class="featured-card">
@@ -237,9 +605,279 @@
         </footer>
     </div>
 
+    <!-- MOBILE APP PROMOTION BANNER -->
+    <div class="mobile-app-banner" id="mobileAppBanner">
+        <div class="app-banner-content">
+            <div class="app-icon">FMD</div>
+            <div class="app-text">
+                <h4>Κατεβάστε την Εφαρμογή!</h4>
+                <p>Αποκτήστε πλήρη πρόσβαση χωρίς διαφημίσεις</p>
+            </div>
+        </div>
+        <div class="app-banner-buttons">
+            <button class="btn-app btn-app-store" onclick="redirectToAppStore('ios')">
+                <span>📱 App Store</span>
+            </button>
+            <button class="btn-app btn-play-store" onclick="redirectToAppStore('android')">
+                <span>🤖 Play Store</span>
+            </button>
+            <button class="btn-close-banner" onclick="closeAppBanner()">
+                ✕ Κλείσιμο
+            </button>
+        </div>
+    </div>
+
+    <!-- INTERSTITIAL AD OVERLAY -->
+    <div class="interstitial-ad" id="interstitialAd">
+        <div class="interstitial-content">
+            <div class="interstitial-header">
+                <h3>🎁 Ειδική Προσφορά!</h3>
+            </div>
+            <div class="interstitial-body">
+                <p>Για να συνεχίσετε χωρίς διαφημίσεις, παρακαλούμε δείτε μια σύντομη διαφήμιση ή κατεβάστε την εφαρμογή μας για πλήρη πρόσβαση!</p>
+                <div class="interstitial-buttons">
+                    <button class="btn-interstitial btn-watch-ad" onclick="watchRewardedAd()">
+                        👁️ Δείτε Διαφήμιση
+                    </button>
+                    <button class="btn-interstitial btn-skip-ad" onclick="closeInterstitialAd()">
+                        ⏭️ Παράβλεψη
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Buy Me a Coffee Widget -->
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-message="" data-color="#5F7FFF" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
 
+    <script>
+        // Mobile Detection and Ad System
+        const mobileAppBanner = document.getElementById('mobileAppBanner');
+        const interstitialAd = document.getElementById('interstitialAd');
+        const nativeAd = document.getElementById('nativeAd');
+        const nativeAd2 = document.getElementById('nativeAd2');
+        
+        // Firebase Configuration (AdMob)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKeyForFirebaseConfig123456",
+            authDomain: "franklymadear-blog.firebaseapp.com",
+            projectId: "franklymadear-blog",
+            storageBucket: "franklymadear-blog.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890",
+            measurementId: "G-ABCDEF1234"
+        };
+
+        // Initialize Firebase (commented out for safety - uncomment with real config)
+        /*
+        try {
+            firebase.initializeApp(firebaseConfig);
+            const analytics = firebase.analytics();
+            console.log("Firebase initialized for mobile ads");
+        } catch (error) {
+            console.log("Firebase initialization error:", error);
+        }
+        */
+
+        // Device Detection
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        function isIOS() {
+            return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        }
+
+        function isAndroid() {
+            return /Android/i.test(navigator.userAgent);
+        }
+
+        // App Promotion Functions
+        function showMobileAppBanner() {
+            if (isMobileDevice() && !isInStandaloneMode()) {
+                // Show after 5 seconds
+                setTimeout(() => {
+                    mobileAppBanner.classList.add('show');
+                    // Hide after 30 seconds
+                    setTimeout(() => {
+                        mobileAppBanner.classList.remove('show');
+                    }, 30000);
+                }, 5000);
+            }
+        }
+
+        function closeAppBanner() {
+            mobileAppBanner.classList.remove('show');
+            // Remember user preference for 7 days
+            localStorage.setItem('hideAppBanner', 'true');
+            localStorage.setItem('hideAppBannerDate', Date.now());
+        }
+
+        function isInStandaloneMode() {
+            return (window.matchMedia('(display-mode: standalone)').matches) || 
+                   (window.navigator.standalone) || 
+                   (document.referrer.includes('android-app://'));
+        }
+
+        function redirectToAppStore(platform = 'auto') {
+            if (platform === 'auto') {
+                if (isIOS()) {
+                    window.location.href = 'https://apps.apple.com/gr/app/your-app-id';
+                } else if (isAndroid()) {
+                    window.location.href = 'https://play.google.com/store/apps/details?id=com.your.app';
+                } else {
+                    window.open('https://franklymadear.com/app', '_blank');
+                }
+            } else if (platform === 'ios') {
+                window.open('https://apps.apple.com/gr/app/your-app-id', '_blank');
+            } else if (platform === 'android') {
+                window.open('https://play.google.com/store/apps/details?id=com.your.app', '_blank');
+            }
+            
+            // Track click
+            trackEvent('app_download_click', { platform: platform });
+        }
+
+        // Interstitial Ad Functions
+        function showInterstitialAd() {
+            if (isMobileDevice()) {
+                interstitialAd.classList.add('show');
+                trackEvent('interstitial_ad_shown');
+            } else {
+                // For desktop, redirect to app page
+                window.open('https://franklymadear.com/app', '_blank');
+            }
+        }
+
+        function closeInterstitialAd() {
+            interstitialAd.classList.remove('show');
+            trackEvent('interstitial_ad_skipped');
+        }
+
+        function watchRewardedAd() {
+            // Simulate watching an ad
+            trackEvent('rewarded_ad_watched');
+            
+            // Show success message
+            alert('Ευχαριστούμε! Έχετε πλέον πρόσβαση χωρίς διαφημίσεις για 1 ώρα!');
+            
+            // Close interstitial
+            closeInterstitialAd();
+            
+            // Set no-ads period (1 hour)
+            localStorage.setItem('noAdsUntil', Date.now() + 3600000);
+        }
+
+        // Native Ads Display
+        function showNativeAds() {
+            if (isMobileDevice()) {
+                // Show first native ad after 3 seconds
+                setTimeout(() => {
+                    nativeAd.classList.add('show');
+                }, 3000);
+                
+                // Show second native ad after scrolling
+                window.addEventListener('scroll', function() {
+                    if (window.scrollY > 800 && !nativeAd2.classList.contains('show')) {
+                        nativeAd2.classList.add('show');
+                    }
+                });
+            }
+        }
+
+        // Analytics Tracking
+        function trackEvent(eventName, eventParams = {}) {
+            eventParams.timestamp = new Date().toISOString();
+            eventParams.userAgent = navigator.userAgent;
+            eventParams.platform = isIOS() ? 'ios' : isAndroid() ? 'android' : 'desktop';
+            
+            console.log(`Event Tracked: ${eventName}`, eventParams);
+            
+            // Send to analytics if Firebase is initialized
+            /*
+            if (typeof firebase !== 'undefined' && firebase.analytics) {
+                firebase.analytics().logEvent(eventName, eventParams);
+            }
+            */
+        }
+
+        // Ad Frequency Control
+        function shouldShowAds() {
+            const noAdsUntil = localStorage.getItem('noAdsUntil');
+            if (noAdsUntil && Date.now() < parseInt(noAdsUntil)) {
+                return false;
+            }
+            
+            // Check if user has hidden banner recently
+            const hideBanner = localStorage.getItem('hideAppBanner');
+            const hideBannerDate = localStorage.getItem('hideAppBannerDate');
+            if (hideBanner === 'true' && hideBannerDate) {
+                const sevenDays = 7 * 24 * 60 * 60 * 1000;
+                if (Date.now() - parseInt(hideBannerDate) < sevenDays) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Initialize Mobile Ad System
+        function initMobileAdSystem() {
+            if (!isMobileDevice() || !shouldShowAds()) {
+                return;
+            }
+            
+            // Show app banner
+            showMobileAppBanner();
+            
+            // Show native ads
+            showNativeAds();
+            
+            // Show interstitial after 3rd click or page view
+            let clickCount = 0;
+            document.addEventListener('click', function() {
+                clickCount++;
+                if (clickCount === 3) {
+                    setTimeout(showInterstitialAd, 2000);
+                }
+            });
+            
+            // Track page view
+            trackEvent('page_view', {
+                page_title: document.title,
+                page_location: window.location.href
+            });
+        }
+
+        // Initialize when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            // Initialize AdSense ads
+            (adsbygoogle = window.adsbygoogle || []).push({});
+            
+            // Initialize mobile ad system
+            initMobileAdSystem();
+            
+            // Track session start
+            trackEvent('session_start');
+        });
+
+        // Track page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                trackEvent('app_background');
+            } else {
+                trackEvent('app_foreground');
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            trackEvent('session_end', {
+                session_duration: Date.now() - performance.timing.navigationStart
+            });
+        });
+    </script>
+    
     <script src="script.js"></script>
 </body>
 </html>
