@@ -17,6 +17,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     
     <style>
+        /* Home Button Styling */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        
+        .home-button a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .home-button a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .home-button .home-icon {
+            font-size: 1.3rem;
+        }
+        
+        /* Container positioning */
+        .container {
+            position: relative;
+        }
+
         /* Styling για το Support Card */
         .support-card {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
@@ -102,9 +141,53 @@
             color: white;
         }
 
+        /* Coffee Card Styling */
+        .coffee-card {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coffee-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .coffee-card > * {
+            position: relative;
+            z-index: 2;
+            color: white !important;
+        }
+
+        .coffee-card h3,
+        .coffee-card p {
+            color: white !important;
+        }
+
+        .coffee-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(210, 105, 30, 0.3);
+        }
+
+        /* Digital Card Styling */
+        .digital-card {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
         /* Κοινό hover effect για όλες τις κάρτες */
         .category-card:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             cursor: pointer;
         }
 
@@ -112,7 +195,7 @@
         .simple-ad-container {
             margin: 30px auto;
             text-align: center;
-            max-width: 400px; /* Περιορισμός πλάτους για τετράγωνο σχήμα */
+            max-width: 400px;
             width: 100%;
             padding: 0 15px;
         }
@@ -123,18 +206,133 @@
             display: block;
             width: 100%;
             height: auto;
-            min-height: 300px; /* Ελάχιστο ύψος για τετράγωνο */
+            min-height: 300px;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .category-card {
+            text-decoration: none;
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 200px;
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .category-card h3 {
+            margin: 10px 0;
+            font-size: 1.5rem;
+        }
+
+        .category-card p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .card-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .featured-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .featured-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            margin: 20px auto;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 20px; /* Added space for home button */
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .home-button {
+                top: 10px;
+                left: 10px;
+            }
+            
+            .home-button a {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .header {
+                padding-top: 60px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Home Button - Αρχική Οθόνη -->
+        <div class="home-button">
+            <a href="https://franklymadear.com/" target="_blank" rel="noopener noreferrer">
+                <span class="home-icon">🏠</span>
+                <span>Αρχική Οθόνη</span>
+            </a>
+        </div>
+
         <header class="header">
             <div class="logo">
                 <h1>🎨 FranklyMaDear Blog</h1>
                 <div class="animated-emoji">✨</div>
             </div>
-            <p class="tagline">Ανακαλύψτε Ψηφιακά Βιβλία,Digital Products Δωρεάν!</p>
+            <p class="tagline">Ανακαλύψτε Ψηφιακά Βιβλία, Digital Products Δωρεάν!</p>
         </header>
 
         <main class="main-content">
@@ -151,15 +349,15 @@
             </div>
 
             <div class="category-grid">
-                <!-- DIGITAL BOOKS - ΠΡΩΤΗ ΘΕΣΗ -->
+                <!-- DIGITAL BOOKS -->
                 <a href="digital-products.html" class="category-card digital-card">
                     <div class="card-icon">📚</div>
                     <h3>Digital Books</h3>
-                    <p>Ηλεκτρονικά βιβλία</p>
+                    <p>Ηλεκτρονικά βιβλία και Activity Books</p>
                     <div class="card-badge">Νέο Activity Book!</div>
                 </a>
 
-                <!-- Στηρίξτε μας Card - ΤΩΡΑ ΠΑΝΩ ΠΑΝΩ -->
+                <!-- Στηρίξτε μας Card -->
                 <a href="support.html" class="category-card support-card">
                     <div class="card-icon">⭐</div>
                     <h3>Στηρίξτε μας</h3>
@@ -175,25 +373,12 @@
                     <div class="card-badge">Νέο!</div>
                 </a>
 
-                <!-- Computer/Calculator Card - ΠΑΝΩ ΠΑΝΩ -->
+                <!-- Υπολογιστής Card -->
                 <a href="http://franklymadear.com/calculator/index.html" class="category-card computer-card">
                     <div class="card-icon">💻</div>
                     <h3>Υπολογιστής</h3>
                     <p>Χρησιμοποιήστε τον υπολογιστή μας για γρήγορους υπολογισμούς</p>
                     <div class="card-badge">Νέο!</div>
-                </a>
-
-                <a href="facebook/stories.html" class="category-card article-card">
-                    <div class="card-icon">📚</div>
-                    <h3>Stories</h3>
-                    <p>Δείτε τα καλύτερα Stories</p>
-                    <div class="card-badge"> 2 νέα</div>
-                </a>
-                <a href="fmd/video.html" class="category-card video-card">
-                    <div class="card-icon">🎬</div>
-                    <h3>Βίντεο</h3>
-                    <p>Παρακολουθήστε εκπαιδευτικά βίντεο και tutorials</p>
-                    <div class="card-badge">8 νέα</div>
                 </a>
 
                 <!-- Digital Products -->
