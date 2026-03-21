@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Άλλα λέει η Θειαμ</title>
     
     <link rel="icon" type="image/png" href="index.png">
@@ -21,11 +21,8 @@
     <meta name="twitter:description" content="Δες το βίντεο και ανακάλυψε τι άλλα λέει η Θειαμ!">
     <meta name="twitter:image" content="https://blog.franklymadear.com/download/photo.png">
     
-    <!-- Google AdSense -->
+    <!-- Google AdSense - Mobile Optimized -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-    
-    <!-- Google Ad Manager (για video ads υψηλής αξίας) -->
-    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -35,6 +32,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
         
         body {
@@ -44,8 +42,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 12px;
-            padding-bottom: 100px;
+            padding: 10px;
+            padding-bottom: 85px;
         }
         
         .container {
@@ -54,32 +52,35 @@
             margin: 0 auto;
         }
         
-        /* Title */
+        /* Title - Mobile optimized */
         .page-title {
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         
         .page-title h1 {
-            font-size: 2rem;
+            font-size: clamp(1.4rem, 6vw, 2rem);
             font-weight: 800;
             background: linear-gradient(145deg, #ffb6c1, #ff69b4, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 15px #ff99cc;
+            padding: 0 10px;
         }
         
-        /* Reels video - 9:16 */
+        /* Reels video - 9:16 with touch optimization */
         .video-reels {
             position: relative;
             width: 100%;
             aspect-ratio: 9 / 16;
             background: #000;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(255, 200, 100, 0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 200, 100, 0.6);
             margin: 0 auto;
+            cursor: pointer;
         }
         
         .video-reels video {
@@ -90,89 +91,97 @@
             background: #000;
         }
         
-        /* Video controls */
+        /* Video controls - Touch friendly */
         .video-controls {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding: 20px 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            padding: 15px 16px 20px;
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 30px;
             opacity: 0;
             transition: opacity 0.3s ease;
         }
         
+        .video-reels:active .video-controls,
         .video-reels:hover .video-controls {
             opacity: 1;
         }
         
         .video-controls button {
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(10px);
-            border: none;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
-            font-size: 1.4rem;
-            width: 48px;
-            height: 48px;
+            font-size: 1.3rem;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .video-controls button:active {
             transform: scale(0.92);
+            background: rgba(255,255,255,0.3);
         }
         
-        /* Ad boxes */
-        .ad-box {
-            margin: 16px auto;
+        /* Ad containers - Mobile first responsive */
+        .ad-container {
+            margin: 14px auto;
             width: 100%;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-            border: 2px solid #fcba5c;
-            background: #181e34;
-            animation: fadeIn 0.5s ease-out;
+            background: transparent;
+            text-align: center;
         }
         
-        .ad-box ins {
+        /* Responsive ad boxes */
+        .ad-box {
+            width: 100%;
+            min-height: 80px;
+            background: rgba(24, 30, 52, 0.6);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-box ins,
+        .ad-box .ad-slot {
             display: block;
             width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
         }
         
-        /* Video ad container */
-        .video-ad-container {
-            margin: 16px auto;
-            width: 100%;
-            border-radius: 24px;
-            overflow: hidden;
-            border: 2px solid #ff69b4;
-            background: #0a0c1a;
-            min-height: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        /* Mobile optimized ad spacing */
+        .ad-spacing {
+            margin: 12px 0;
         }
         
-        /* Sticky bottom ad */
+        /* Sticky bottom ad - Mobile friendly */
         .sticky-ad {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(10, 12, 26, 0.98);
             border-top: 3px solid #ffd700;
             z-index: 1000;
             transform: translateY(0);
-            transition: transform 0.3s;
-            max-height: 100px;
-            overflow: hidden;
+            transition: transform 0.3s ease;
+            padding: 8px 10px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
         }
         
         .sticky-ad.collapsed {
@@ -181,8 +190,8 @@
         
         .close-sticky {
             position: absolute;
-            top: -30px;
-            right: 10px;
+            top: -32px;
+            right: 12px;
             background: #ff4444;
             color: white;
             border: none;
@@ -190,42 +199,102 @@
             width: 28px;
             height: 28px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1001;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .close-sticky:active {
+            transform: scale(0.92);
         }
         
+        /* In-feed ad container */
+        .in-feed-ad {
+            width: 100%;
+            margin: 14px 0;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #181e34;
+            border: 1px solid rgba(255, 200, 100, 0.4);
+        }
+        
+        /* Tablet optimization */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            body {
+                padding: 16px;
+                padding-bottom: 100px;
+            }
+            .container {
+                max-width: 600px;
+            }
+            .video-reels {
+                border-radius: 24px;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            .ad-box {
+                min-height: 100px;
+            }
+            .video-controls button {
+                width: 55px;
+                height: 55px;
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* Large tablets landscape */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 500px;
+            }
+        }
+        
+        /* Small phones */
         @media (max-width: 480px) {
             body {
                 padding: 8px;
-                padding-bottom: 110px;
-            }
-            .page-title h1 {
-                font-size: 1.6rem;
+                padding-bottom: 90px;
             }
             .video-reels {
-                border-radius: 20px;
+                border-radius: 18px;
+                border-width: 1.5px;
             }
             .video-controls button {
-                width: 42px;
-                height: 42px;
+                width: 44px;
+                height: 44px;
                 font-size: 1.2rem;
             }
-            .ad-box {
-                border-radius: 18px;
-                margin: 12px auto;
+            .ad-container {
+                margin: 10px auto;
             }
-            .video-ad-container {
-                border-radius: 18px;
-                min-height: 250px;
+            .sticky-ad {
+                padding: 6px 8px;
             }
+            .close-sticky {
+                top: -28px;
+                right: 8px;
+                width: 26px;
+                height: 26px;
+                font-size: 16px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .ad-container {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        /* Prevent content shift */
+        img, video, ins, iframe {
+            max-width: 100%;
         }
     </style>
 </head>
@@ -237,86 +306,104 @@
         <h1>Άλλα λέει η Θειαμ</h1>
     </div>
     
-    <!-- AD 1 - TOP (autorelaxed) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-    
-    <!-- VIDEO REELS -->
-    <div class="video-reels">
-        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline autoplay muted>
-            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
-        </video>
-        <div class="video-controls">
-            <button id="playPauseBtn"><i class="fas fa-play"></i></button>
-            <button id="muteBtn"><i class="fas fa-volume-mute"></i></button>
+    <!-- AD 1 - TOP (Responsive Autorelaxed) -->
+    <div class="ad-container">
+        <div class="ad-box">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
     
-    <!-- AD 2 - AFTER VIDEO (autorelaxed) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- VIDEO REELS SECTION -->
+    <div class="video-reels">
+        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline autoplay muted webkit-playsinline>
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+            Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την προβολή βίντεο.
+        </video>
+        <div class="video-controls">
+            <button id="playPauseBtn" aria-label="Play/Pause">
+                <i class="fas fa-play"></i>
+            </button>
+            <button id="muteBtn" aria-label="Mute/Unmute">
+                <i class="fas fa-volume-mute"></i>
+            </button>
+        </div>
     </div>
     
-    <!-- VIDEO AD (GPT - high CPM) -->
-    <div class="video-ad-container">
-        <div id="gpt-video-ad" style="min-height: 250px; width: 100%;"></div>
+    <!-- AD 2 - AFTER VIDEO (Responsive Autorelaxed) -->
+    <div class="ad-container">
+        <div class="ad-box">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
     
-    <!-- AD 3 - MIDDLE (autorelaxed) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- AD 3 - MIDDLE (Responsive Autorelaxed) -->
+    <div class="ad-container">
+        <div class="ad-box">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
     
-    <!-- AD 4 - MIDDLE 2 (autorelaxed) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- AD 4 - MIDDLE 2 (Responsive Autorelaxed) -->
+    <div class="ad-container">
+        <div class="ad-box">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
     
-    <!-- AD 5 - BOTTOM (autorelaxed) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- AD 5 - BOTTOM (Responsive Autorelaxed) -->
+    <div class="ad-container">
+        <div class="ad-box">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
     
-    <!-- AD 6 - EXTRA (autorelaxed) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="autorelaxed"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9660744817"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- AD 6 - EXTRA (Responsive Autorelaxed) -->
+    <div class="ad-container">
+        <div class="ad-box">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
 </div>
 
-<!-- STICKY BOTTOM AD -->
+<!-- STICKY BOTTOM AD - Mobile Optimized -->
 <div class="sticky-ad" id="stickyAd">
-    <button class="close-sticky" id="closeStickyBtn">×</button>
+    <button class="close-sticky" id="closeStickyBtn" aria-label="Κλείσιμο διαφήμισης">×</button>
     <ins class="adsbygoogle"
          style="display:block"
          data-ad-format="autorelaxed"
@@ -327,13 +414,17 @@
 </div>
 
 <script>
-    // ========== VIDEO PLAYER (with sound attempt) ==========
+    // ========== VIDEO PLAYER (Touch Optimized) ==========
     const video = document.getElementById('mainVideo');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
     
     function updatePlayIcon() {
-        playPauseBtn.innerHTML = video.paused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
+        if (video.paused) {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
     }
     
     function togglePlayPause() {
@@ -347,87 +438,143 @@
     
     function toggleMute() {
         video.muted = !video.muted;
-        muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        if (video.muted) {
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        } else {
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }
     }
     
-    playPauseBtn.addEventListener('click', togglePlayPause);
-    muteBtn.addEventListener('click', toggleMute);
+    playPauseBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        togglePlayPause();
+    });
+    
+    muteBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMute();
+    });
+    
     video.addEventListener('play', updatePlayIcon);
     video.addEventListener('pause', updatePlayIcon);
     
-    // Try to unmute on first user interaction
-    document.body.addEventListener('click', function unmuteOnce() {
-        video.muted = false;
-        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-        document.body.removeEventListener('click', unmuteOnce);
-    }, { once: true });
-    
-    // Tap video to play/pause
-    document.querySelector('.video-reels').addEventListener('click', function(e) {
+    // Touch-friendly: tap video to play/pause
+    const videoContainer = document.querySelector('.video-reels');
+    videoContainer.addEventListener('click', function(e) {
         if (e.target.closest('button')) return;
         togglePlayPause();
     });
     
-    // ========== GPT VIDEO AD (High CPM) ==========
-    window.googletag = window.googletag || {cmd: []};
-    googletag.cmd.push(function() {
-        var videoAdSlot = googletag.defineSlot('/63554191/Travel/Europe/France/Paris', [300, 250], 'gpt-video-ad')
-            .addService(googletag.pubads());
-        googletag.pubads().enableSingleRequest();
-        googletag.enableServices();
-        googletag.display('gpt-video-ad');
-    });
+    // Try to enable sound on first user interaction (better mobile UX)
+    let soundEnabled = false;
+    function enableSound() {
+        if (!soundEnabled) {
+            video.muted = false;
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            soundEnabled = true;
+            document.removeEventListener('click', enableSound);
+            document.removeEventListener('touchstart', enableSound);
+        }
+    }
+    document.addEventListener('click', enableSound);
+    document.addEventListener('touchstart', enableSound);
     
-    // ========== STICKY AD ==========
+    // ========== STICKY AD (Mobile Friendly) ==========
     const stickyAd = document.getElementById('stickyAd');
-    document.getElementById('closeStickyBtn').addEventListener('click', function() {
+    const closeStickyBtn = document.getElementById('closeStickyBtn');
+    
+    closeStickyBtn.addEventListener('click', function(e) {
+        e.preventDefault();
         stickyAd.classList.add('collapsed');
     });
     
-    // Show sticky ad after 3 seconds
-    setTimeout(() => stickyAd.classList.remove('collapsed'), 3000);
+    // Show sticky ad after 4 seconds
+    setTimeout(() => {
+        stickyAd.classList.remove('collapsed');
+    }, 4000);
     
-    // ========== AD REFRESH ON SCROLL ==========
+    // ========== AD REFRESH ON SCROLL (Mobile Optimized) ==========
     let refreshTimeout;
+    let refreshCount = 0;
+    const MAX_REFRESH = 2;
+    
     window.addEventListener('scroll', function() {
+        if (refreshCount >= MAX_REFRESH) return;
         clearTimeout(refreshTimeout);
         refreshTimeout = setTimeout(() => {
             if (typeof adsbygoogle !== 'undefined') {
-                document.querySelectorAll('.ad-box ins.adsbygoogle').forEach(() => {
-                    try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-                });
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    refreshCount++;
+                } catch(e) {}
             }
-        }, 3000);
+        }, 4000);
     });
     
     // Refresh on video end
-    video.addEventListener('ended', () => {
+    video.addEventListener('ended', function() {
         setTimeout(() => {
-            if (typeof adsbygoogle !== 'undefined') {
-                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            if (typeof adsbygoogle !== 'undefined' && refreshCount < MAX_REFRESH) {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                    refreshCount++;
+                } catch(e) {}
             }
         }, 2000);
     });
     
-    // Load extra invisible ad
+    // ========== EXTRA AD LOADING (Background) ==========
     setTimeout(() => {
-        const extra = document.createElement('div');
-        extra.style.cssText = 'position:absolute;left:-9999px;top:-9999px';
-        extra.innerHTML = `<ins class="adsbygoogle" style="display:block" data-ad-format="autorelaxed" data-ad-client="ca-pub-3186700611266549" data-ad-slot="9660744817"></ins>`;
-        document.body.appendChild(extra);
-        if (typeof adsbygoogle !== 'undefined') (adsbygoogle = window.adsbygoogle || []).push({});
-        setTimeout(() => extra.remove(), 5000);
-    }, 5000);
-    
-    // Final ad push on load
-    window.addEventListener('load', () => {
+        const extraAdDiv = document.createElement('div');
+        extraAdDiv.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden';
+        extraAdDiv.innerHTML = `
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"></ins>
+        `;
+        document.body.appendChild(extraAdDiv);
         if (typeof adsbygoogle !== 'undefined') {
             try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
         }
-        if (window.googletag?.cmd) {
-            googletag.cmd.push(() => googletag.pubads().refresh());
+        setTimeout(() => extraAdDiv.remove(), 8000);
+    }, 6000);
+    
+    // ========== INITIALIZE ALL ADS ==========
+    window.addEventListener('load', function() {
+        if (typeof adsbygoogle !== 'undefined') {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {}
+        }
+        
+        // Force viewport check for mobile
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll('.ad-box ins').forEach(ad => {
+                ad.setAttribute('data-full-width-responsive', 'true');
+            });
         }
     });
+    
+    // Handle orientation change (tablet/phone rotation)
+    window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+            if (typeof adsbygoogle !== 'undefined') {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+        }, 300);
+    });
+    
+    // Prevent accidental zoom on double tap (better UX for mobile)
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(e) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, false);
 </script>
 </body>
 </html>
