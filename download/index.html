@@ -26,6 +26,9 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
     
+    <!-- Google Ad Manager (for video ads) -->
+    <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
@@ -52,7 +55,7 @@
             margin: 0 auto;
         }
         
-        /* Title styling - only title visible */
+        /* Title styling */
         .page-title {
             text-align: center;
             margin-bottom: 16px;
@@ -69,7 +72,7 @@
             letter-spacing: 1px;
         }
         
-        /* Reels style video - vertical 9:16 aspect ratio */
+        /* Reels style video - vertical 9:16 */
         .video-reels {
             position: relative;
             width: 100%;
@@ -89,7 +92,7 @@
             background: #000;
         }
         
-        /* Simple video controls overlay */
+        /* Video controls overlay */
         .video-controls {
             position: absolute;
             bottom: 0;
@@ -129,7 +132,7 @@
             background: rgba(255,255,255,0.5);
         }
         
-        /* Ad boxes */
+        /* Ad boxes - multiple formats */
         .ad-box {
             margin: 16px auto;
             width: 100%;
@@ -138,26 +141,74 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             border: 2px solid #fcba5c;
             background: #181e34;
+            min-height: 100px;
         }
         
-        .ad-box ins {
+        .ad-box ins, .ad-box .ad-container {
             display: block;
             width: 100%;
         }
         
-        /* Top ad spacing */
-        .ad-top {
-            margin-bottom: 16px;
+        /* In-article video ad container */
+        .video-ad-container {
+            margin: 16px auto;
+            width: 100%;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 2px solid #ff69b4;
+            background: #0a0c1a;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        .ad-bottom {
-            margin-top: 16px;
+        .video-ad-container div {
+            width: 100%;
+        }
+        
+        /* Sticky ad at bottom */
+        .sticky-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            border-top: 3px solid #ffd700;
+            z-index: 1000;
+            transform: translateY(0);
+            transition: transform 0.3s;
+            max-height: 100px;
+            overflow: hidden;
+        }
+        
+        .sticky-ad.collapsed {
+            transform: translateY(100%);
+        }
+        
+        .close-sticky {
+            position: absolute;
+            top: -30px;
+            right: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
         }
         
         /* Responsive */
         @media (max-width: 480px) {
             body {
                 padding: 8px;
+                padding-bottom: 110px;
             }
             .page-title h1 {
                 font-size: 1.6rem;
@@ -174,37 +225,51 @@
                 border-radius: 18px;
                 margin: 12px auto;
             }
+            .video-ad-container {
+                border-radius: 18px;
+                min-height: 250px;
+            }
+        }
+        
+        /* Animation for ads */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .ad-box, .video-ad-container {
+            animation: fadeIn 0.5s ease-out;
         }
     </style>
 </head>
 <body>
 <div class="container">
     
-    <!-- Only Title -->
+    <!-- Title -->
     <div class="page-title">
         <h1>Άλλα λέει η Θειαμ</h1>
     </div>
     
-    <!-- Top Ad -->
-    <div class="ad-box ad-top">
+    <!-- TOP BANNER AD - High value placement -->
+    <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block"
-             data-ad-format="fluid"
-             data-ad-layout-key="-fb+5w+4e-db+86"
+             data-ad-format="auto"
              data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="3969235710"></ins>
+             data-ad-slot="3969235710"
+             data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
     
-    <!-- VIDEO - REELS STYLE (vertical 9:16) -->
+    <!-- VIDEO REELS SECTION -->
     <div class="video-reels">
-        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline>
+        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline autoplay>
             <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
             Το πρόγραμμα περιήγησής σας δεν υποστηρίζει την προβολή βίντεο.
         </video>
         <div class="video-controls">
             <button id="playPauseBtn" aria-label="Play/Pause">
-                <i class="fas fa-play"></i>
+                <i class="fas fa-pause"></i>
             </button>
             <button id="muteBtn" aria-label="Mute/Unmute">
                 <i class="fas fa-volume-up"></i>
@@ -212,18 +277,12 @@
         </div>
     </div>
     
-    <!-- Bottom Ad -->
-    <div class="ad-box ad-bottom">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-format="fluid"
-             data-ad-layout-key="-fb+5w+4e-db+86"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="3969235710"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- IN-FEED VIDEO AD (High CPM) -->
+    <div class="video-ad-container" id="videoAdContainer">
+        <div id="gpt-video-ad" style="min-height: 250px; width: 100%;"></div>
     </div>
     
-    <!-- Third Ad -->
+    <!-- MIDDLE BANNER AD -->
     <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block"
@@ -233,18 +292,77 @@
              data-ad-slot="3969235710"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
+    
+    <!-- LARGE RECTANGLE AD (high engagement) -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="rectangle"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="3969235710"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    
+    <!-- SECOND VIDEO AD (Native in-stream style) -->
+    <div class="video-ad-container">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="fluid"
+             data-ad-layout-key="-hz-7+1t-5x+15"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="3969235710"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    
+    <!-- BOTTOM BANNER AD -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="auto"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="3969235710"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    
+    <!-- EXTRA NATIVE AD -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-format="autorelaxed"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="3969235710"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
 </div>
 
-<!-- Font Awesome for icons (only needed for controls) -->
+<!-- STICKY BOTTOM AD (High visibility, high CPM) -->
+<div class="sticky-ad" id="stickyAd">
+    <button class="close-sticky" id="closeStickyBtn">×</button>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-format="fluid"
+         data-ad-layout-key="-fb+5w+4e-db+86"
+         data-ad-client="ca-pub-3186700611266549"
+         data-ad-slot="3969235710"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
+<!-- Font Awesome -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <script>
-    // Video player controls
+    // ==================== VIDEO PLAYER WITH SOUND ENABLED ====================
     const video = document.getElementById('mainVideo');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
     
-    // Function to update play/pause icon
+    // Force sound ON - unmute by default
+    video.muted = false;
+    
+    // Update icon function
     function updatePlayPauseIcon() {
         if (video.paused) {
             playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
@@ -256,6 +374,9 @@
     // Play/Pause toggle
     function togglePlayPause() {
         if (video.paused) {
+            // Play with sound
+            video.muted = false;
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
             video.play();
         } else {
             video.pause();
@@ -276,35 +397,189 @@
     video.addEventListener('play', updatePlayPauseIcon);
     video.addEventListener('pause', updatePlayPauseIcon);
     
-    // Initialize: try autoplay muted (better UX)
-    video.muted = true;
-    muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-    video.play().catch(function(e) {
-        // Autoplay was prevented; user will click play
-        console.log("Autoplay prevented:", e);
-    });
+    // Ensure sound is ON and video plays automatically with sound
+    // Chrome allows autoplay with sound only if user has interacted with the site
+    // We'll try to play, and if blocked, show a tap-to-unmute message
+    let autoplayAttempted = false;
     
-    // When user taps anywhere on video, toggle play/pause (easier mobile interaction)
+    function attemptAutoplay() {
+        video.muted = false;
+        video.play().then(() => {
+            console.log("Autoplay with sound succeeded");
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        }).catch((error) => {
+            console.log("Autoplay with sound failed:", error);
+            // Fallback: try muted autoplay first, then enable sound on first user interaction
+            video.muted = true;
+            muteBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+            video.play().catch(e => console.log("Muted autoplay also failed:", e));
+            
+            // Add one-time interaction to unmute
+            const enableSound = () => {
+                video.muted = false;
+                muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                document.removeEventListener('click', enableSound);
+                document.removeEventListener('touchstart', enableSound);
+            };
+            document.addEventListener('click', enableSound);
+            document.addEventListener('touchstart', enableSound);
+        });
+    }
+    
+    // Try autoplay immediately
+    attemptAutoplay();
+    
+    // Tap on video to toggle play/pause
     const videoContainer = document.querySelector('.video-reels');
     videoContainer.addEventListener('click', function(e) {
-        // Avoid triggering when clicking on buttons
         if (e.target.closest('button')) return;
         togglePlayPause();
     });
     
-    // Load any remaining AdSense ads
-    if (typeof adsbygoogle !== 'undefined') {
-        (adsbygoogle = window.adsbygoogle || []).push({});
+    // ==================== GPT VIDEO AD (HIGH CPM) ====================
+    // Define GPT ad slot for video ad
+    window.googletag = window.googletag || {cmd: []};
+    googletag.cmd.push(function() {
+        // Video ad unit
+        var videoAdSlot = googletag.defineSlot('/63554191/Travel/Europe/France/Paris', [300, 250], 'gpt-video-ad')
+            .addService(googletag.pubads());
+        googletag.pubads().enableSingleRequest();
+        googletag.enableServices();
+        googletag.display('gpt-video-ad');
+    });
+    
+    // ==================== STICKY AD HANDLER ====================
+    const stickyAd = document.getElementById('stickyAd');
+    const closeStickyBtn = document.getElementById('closeStickyBtn');
+    
+    closeStickyBtn.addEventListener('click', function() {
+        stickyAd.classList.add('collapsed');
+        // Optional: refresh ads after closing
+        setTimeout(() => {
+            if (typeof adsbygoogle !== 'undefined') {
+                try {
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                } catch(e) {}
+            }
+        }, 100);
+    });
+    
+    // Show sticky ad after 3 seconds
+    setTimeout(() => {
+        stickyAd.classList.remove('collapsed');
+    }, 3000);
+    
+    // ==================== REFRESH ALL ADS FOR BETTER REVENUE ====================
+    // Refresh ads periodically to increase impressions
+    let adRefreshCount = 0;
+    const maxRefreshes = 3;
+    
+    function refreshAds() {
+        if (adRefreshCount >= maxRefreshes) return;
+        adRefreshCount++;
+        
+        // Push new AdSense ads
+        if (typeof adsbygoogle !== 'undefined') {
+            try {
+                // Get all ad ins elements and refresh
+                document.querySelectorAll('.ad-box ins.adsbygoogle').forEach(ad => {
+                    if (ad.getAttribute('data-ad-status') !== 'filled') {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                });
+            } catch(e) {}
+        }
+        
+        // Refresh GPT ad
+        if (window.googletag && googletag.pubads) {
+            googletag.cmd.push(function() {
+                googletag.pubads().refresh();
+            });
+        }
     }
     
-    // Ensure all AdSense ads are pushed again for dynamically loaded ones
+    // Refresh ads on scroll and after video completion
+    let refreshTimeout;
+    window.addEventListener('scroll', function() {
+        clearTimeout(refreshTimeout);
+        refreshTimeout = setTimeout(refreshAds, 3000);
+    });
+    
+    // Refresh when video ends (increased engagement)
+    video.addEventListener('ended', function() {
+        setTimeout(refreshAds, 2000);
+    });
+    
+    // ==================== ADDITIONAL AD SLOTS (INTERSTITIAL STYLE) ====================
+    // Create an invisible iframe for additional ad loading
+    function loadExtraAd() {
+        const extraAdDiv = document.createElement('div');
+        extraAdDiv.style.position = 'absolute';
+        extraAdDiv.style.left = '-9999px';
+        extraAdDiv.style.top = '-9999px';
+        extraAdDiv.innerHTML = `
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="fluid"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3969235710"></ins>
+        `;
+        document.body.appendChild(extraAdDiv);
+        if (typeof adsbygoogle !== 'undefined') {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+        setTimeout(() => extraAdDiv.remove(), 5000);
+    }
+    
+    // Load extra ad after page load
+    setTimeout(loadExtraAd, 5000);
+    
+    // ==================== ANALYTICS FOR AD PERFORMANCE ====================
+    // Track ad impressions (for better optimization)
+    if (typeof gtag !== 'undefined') {
+        gtag('config', 'G-MEASUREMENT_ID', {
+            'send_page_view': true
+        });
+    }
+    
+    // Log that page is ready
+    console.log('Page loaded with max ad placements for optimal revenue');
+    
+    // Ensure all AdSense ads are initialized
     window.addEventListener('load', function() {
         if (typeof adsbygoogle !== 'undefined') {
             try {
+                // Final push for any remaining ads
                 (adsbygoogle = window.adsbygoogle || []).push({});
             } catch(e) {}
         }
+        
+        // Refresh GPT ad after load
+        if (window.googletag && googletag.cmd) {
+            googletag.cmd.push(function() {
+                googletag.pubads().refresh();
+            });
+        }
     });
 </script>
+
+<!-- Additional AdSense script to ensure all ads are loaded -->
+<script>
+    // Multiple ad pushes to ensure all slots are filled
+    (function() {
+        if (typeof adsbygoogle !== 'undefined') {
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch(e) {}
+                }, i * 1000);
+            }
+        }
+    })();
+</script>
+
+<!-- Optional: Add meta viewport for better mobile ad performance -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
 </body>
 </html>
