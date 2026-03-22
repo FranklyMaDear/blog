@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Άλλα λέει η Θειαμ</title>
     
-    <!-- ========== FAVICON - Εμφανίζεται σε όλα τα προγράμματα περιήγησης ========== -->
+    <!-- ========== FAVICON ========== -->
     <link rel="icon" type="image/png" href="photo.png">
     <link rel="shortcut icon" type="image/png" href="photo.png">
     <link rel="apple-touch-icon" href="photo.png">
     <link rel="apple-touch-icon-precomposed" href="photo.png">
     
-    <!-- ========== OPEN GRAPH (Facebook, WhatsApp, LinkedIn, Telegram) ========== -->
+    <!-- ========== OPEN GRAPH (Facebook, WhatsApp, LinkedIn, Telegram) - ΒΕΛΤΙΩΜΕΝΟ ========== -->
     <meta property="og:title" content="Άλλα λέει η Θειαμ">
     <meta property="og:description" content="Δες το βίντεο και ανακάλυψε το κατάστημά μας στο Amazon! Πάτα για να δεις το βίντεο!">
     <meta property="og:image" content="https://blog.franklymadear.com/download/photo.png">
@@ -19,10 +19,15 @@
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Άλλα λέει η Θειαμ - Δες το βίντεο">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://blog.franklymadear.com/download/index.html">
     <meta property="og:site_name" content="Άλλα λέει η Θειαμ">
     <meta property="og:locale" content="el_GR">
+    
+    <!-- ========== FACEBOOK SPECIFIC - ΕΞΑΣΦΑΛΙΖΕΙ ΤΗΝ ΕΜΦΑΝΙΣΗ ========== -->
+    <meta property="fb:app_id" content="9660744817">
+    <meta property="article:author" content="Άλλα λέει η Θειαμ">
     
     <!-- ========== TWITTER CARD (X/Twitter) ========== -->
     <meta name="twitter:card" content="summary_large_image">
@@ -30,7 +35,6 @@
     <meta name="twitter:description" content="Δες το βίντεο και ανακάλυψε το κατάστημά μας στο Amazon!">
     <meta name="twitter:image" content="https://blog.franklymadear.com/download/photo.png">
     <meta name="twitter:image:alt" content="Άλλα λέει η Θειαμ - Δες το βίντεο">
-    <meta name="twitter:site" content="@yourhandle">
     
     <!-- ========== INSTALL TO HOME SCREEN (PWA) ========== -->
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -41,15 +45,12 @@
     <meta name="msapplication-TileImage" content="photo.png">
     <meta name="msapplication-TileColor" content="#0a0a1a">
     
-    <!-- ========== ANDROID CHROME ICONS ========== -->
+    <!-- ========== ICONS ========== -->
     <link rel="icon" sizes="192x192" href="photo.png">
     <link rel="icon" sizes="512x512" href="photo.png">
     <link rel="apple-touch-icon" sizes="180x180" href="photo.png">
     <link rel="apple-touch-icon" sizes="152x152" href="photo.png">
     <link rel="apple-touch-icon" sizes="120x120" href="photo.png">
-    
-    <!-- ========== MANIFEST FOR HOME SCREEN INSTALLATION ========== -->
-    <link rel="manifest" href="data:application/manifest+json,{}" id="manifest-placeholder">
     
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
@@ -129,7 +130,7 @@
             margin-top: 8px;
         }
         
-        /* Install Prompt for Home Screen */
+        /* Install Prompt */
         .install-prompt {
             background: linear-gradient(135deg, rgba(255,153,0,0.2), rgba(255,105,180,0.2));
             border-radius: 20px;
@@ -222,7 +223,7 @@
             object-fit: cover;
         }
         
-        /* Single Play Button - Centered */
+        /* Single Play Button */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -495,6 +496,11 @@
         html {
             scroll-behavior: smooth;
         }
+        
+        /* Facebook Debugger Helper */
+        .fb-debug-info {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -502,7 +508,7 @@
 <div class="main-container">
     <div class="content-wrapper">
         
-        <!-- Install to Home Screen Prompt (iOS/Android) -->
+        <!-- Install to Home Screen Prompt -->
         <div class="install-prompt hidden" id="installPrompt">
             <div class="install-text">
                 <i class="fas fa-plus-circle"></i>
@@ -530,7 +536,7 @@
             </div>
         </div>
         
-        <!-- Video Section with Single Play Button -->
+        <!-- Video Section -->
         <div class="video-wrapper">
             <div class="video-container" id="videoContainer">
                 <video id="mainVideo" poster="photo.png" playsinline webkit-playsinline preload="metadata">
@@ -547,7 +553,7 @@
             </div>
         </div>
         
-        <!-- AD 1: After Video -->
+        <!-- AD 1 -->
         <div class="ad-card">
             <div class="ad-card-label">
                 <i class="fas fa-video"></i> Διαφήμιση
@@ -583,7 +589,7 @@
             </div>
         </a>
         
-        <!-- AD 2: Mid Content -->
+        <!-- AD 2 -->
         <div class="ad-card">
             <div class="ad-card-label">
                 <i class="fas fa-ad"></i> Χορηγός
@@ -600,7 +606,7 @@
             </div>
         </div>
         
-        <!-- AD 3: Before Footer -->
+        <!-- AD 3 -->
         <div class="ad-card">
             <div class="ad-card-label">
                 <i class="fas fa-star"></i> Προτεινόμενο
@@ -673,14 +679,12 @@
             playOverlay.classList.remove('hidden');
         });
         
-        // ========== INSTALL TO HOME SCREEN PROMPT ==========
+        // ========== INSTALL TO HOME SCREEN ==========
         const installPrompt = document.getElementById('installPrompt');
         const installBtn = document.getElementById('installBtn');
         const closeInstallBtn = document.getElementById('closeInstallBtn');
         
-        // Check if already installed or prompt was dismissed
         if (!sessionStorage.getItem('installPromptClosed')) {
-            // Show prompt after 2 seconds
             setTimeout(() => {
                 installPrompt.classList.remove('hidden');
             }, 2000);
@@ -692,7 +696,6 @@
         });
         
         installBtn.addEventListener('click', () => {
-            // Show instructions for adding to home screen
             let message = '';
             if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
                 message = 'Πάτα το κουμπί "Share" (τετράγωνο με βέλος) και μετά "Προσθήκη στην Αρχική Οθόνη"';
@@ -706,7 +709,7 @@
             sessionStorage.setItem('installPromptClosed', 'true');
         });
         
-        // ========== STICKY AD LOGIC ==========
+        // ========== STICKY AD ==========
         const stickyAd = document.getElementById('stickyAd');
         const closeStickyBtn = document.getElementById('closeStickyBtn');
         let stickyShown = false;
@@ -770,12 +773,14 @@
             }
         });
         
-        console.log('Page Loaded - Social Media Sharing Ready');
-        console.log('- Facebook: photo.png θα εμφανίζεται ως preview');
-        console.log('- Twitter/X: photo.png θα εμφανίζεται ως large card');
-        console.log('- WhatsApp/Telegram: photo.png preview');
-        console.log('- Favicon: photo.png');
-        console.log('- Home Screen Icon: photo.png');
+        console.log('Page Loaded - Facebook Sharing Ready');
+        console.log('Image URL: https://blog.franklymadear.com/download/photo.png');
+        console.log('');
+        console.log('⚠️ ΓΙΑ ΤΟ FACEBOOK:');
+        console.log('1. Πήγαινε στο: https://developers.facebook.com/tools/debug/');
+        console.log('2. Βάλε το URL: https://blog.franklymadear.com/download/index.html');
+        console.log('3. Πάτα "Scrape Again" για να ενημερωθεί η cache του Facebook');
+        console.log('4. Η εικόνα photo.png θα εμφανιστεί στα previews');
     })();
 </script>
 </body>
