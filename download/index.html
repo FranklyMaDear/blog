@@ -67,7 +67,100 @@
             background-clip: text;
         }
         
-        /* Reels video */
+        /* ========== PRE-ROLL AD (Fast loading, can be closed with X) ========== */
+        .pre-roll-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 16px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #0a0c1a;
+            border: 2px solid #ffb347;
+            animation: fadeIn 0.3s ease;
+            transition: all 0.3s ease;
+        }
+        
+        .pre-roll-container.closed {
+            display: none;
+        }
+        
+        .pre-roll-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #2a1e4a, #1a0f30);
+            border-bottom: 1px solid rgba(255, 180, 70, 0.3);
+        }
+        
+        .ad-badge {
+            font-size: 0.7rem;
+            color: #ffb347;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .ad-badge i {
+            font-size: 0.65rem;
+        }
+        
+        .close-pre-roll {
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .close-pre-roll:active {
+            transform: scale(0.95);
+            background: #ff4444;
+        }
+        
+        .pre-roll-content {
+            padding: 12px;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #181e34;
+        }
+        
+        .pre-roll-content ins {
+            display: block;
+            width: 100%;
+        }
+        
+        /* Loading indicator for fast perception */
+        .ad-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            padding: 20px;
+        }
+        
+        .ad-loading i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Reels video - starts only on user click */
         .video-reels {
             position: relative;
             width: 100%;
@@ -88,7 +181,63 @@
             object-fit: cover;
         }
         
-        /* Video controls - subtle but accessible */
+        /* Play button overlay (user must click to start) */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        
+        .play-overlay.hidden {
+            display: none;
+        }
+        
+        .play-button-large {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 215, 0, 0.8);
+            transition: all 0.2s;
+        }
+        
+        .play-button-large i {
+            font-size: 2.5rem;
+            color: white;
+            margin-left: 5px;
+        }
+        
+        .play-button-large:active {
+            transform: scale(0.95);
+            background: rgba(255, 215, 0, 0.5);
+        }
+        
+        .play-text {
+            margin-top: 15px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(0,0,0,0.6);
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+        
+        /* Video controls - appears after video starts */
         .video-controls {
             position: absolute;
             bottom: 0;
@@ -101,6 +250,7 @@
             gap: 25px;
             opacity: 0;
             transition: opacity 0.3s;
+            z-index: 15;
         }
         
         .video-reels:hover .video-controls,
@@ -125,36 +275,26 @@
             transform: scale(0.92);
         }
         
-        /* ========== FRIENDLY AD SYSTEM ========== */
-        /* Non-intrusive ad containers */
+        /* Regular ad cards */
         .ad-wrapper {
             margin: 16px 0;
             width: 100%;
-            transition: all 0.3s ease;
+            animation: fadeIn 0.4s ease-out;
         }
         
-        /* Subtle ad styling - blends with design */
         .ad-card {
             background: rgba(30, 35, 60, 0.7);
             border-radius: 20px;
             overflow: hidden;
             border: 1px solid rgba(255, 200, 100, 0.3);
             transition: all 0.2s;
-            backdrop-filter: blur(2px);
         }
         
-        .ad-card:hover {
-            border-color: rgba(255, 200, 100, 0.6);
-            background: rgba(35, 40, 70, 0.8);
-        }
-        
-        /* Small ad label - transparent but informative */
         .ad-label {
             font-size: 0.65rem;
             color: rgba(255, 255, 255, 0.4);
             text-align: center;
             padding: 6px 0 2px;
-            letter-spacing: 0.5px;
         }
         
         .ad-label i {
@@ -162,13 +302,13 @@
             margin-right: 4px;
         }
         
-        /* Ad content */
         .ad-content {
             width: 100%;
             min-height: 90px;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 8px;
         }
         
         .ad-content ins {
@@ -176,26 +316,7 @@
             width: 100%;
         }
         
-        /* In-feed ad - natural placement */
-        .in-feed-ad {
-            margin: 20px 0;
-        }
-        
-        /* Optional video ad (non-intrusive, loads only if user scrolls) */
-        .optional-video-ad {
-            margin: 16px 0;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #1a1f3a;
-            border: 1px solid rgba(255, 180, 100, 0.3);
-            transition: all 0.3s;
-        }
-        
-        .optional-video-ad .ad-content {
-            min-height: 250px;
-        }
-        
-        /* Sticky footer ad - small and non-intrusive */
+        /* Smart sticky ad */
         .smart-sticky {
             position: fixed;
             bottom: 0;
@@ -218,7 +339,6 @@
             border: 1px solid rgba(255, 200, 100, 0.4);
             overflow: hidden;
             pointer-events: auto;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.3);
         }
         
         .smart-sticky.collapsed {
@@ -238,55 +358,44 @@
             border-radius: 20px;
             padding: 4px 12px;
             font-size: 0.7rem;
-            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .close-sticky:active {
-            transform: scale(0.95);
         }
         
         .sticky-ad-content {
             padding: 8px 12px 12px;
         }
         
-        /* Lazy load indicator */
-        .lazy-placeholder {
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(255,255,255,0.3);
-            font-size: 0.8rem;
-        }
-        
-        /* User-friendly spacing */
+        /* Content divider */
         .content-divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255,200,100,0.3), transparent);
             margin: 20px 0 10px;
         }
         
-        /* Responsive */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         @media (max-width: 480px) {
             body {
-                padding: 10px;
+                padding: 8px;
                 padding-bottom: 85px;
+            }
+            .play-button-large {
+                width: 65px;
+                height: 65px;
+            }
+            .play-button-large i {
+                font-size: 2rem;
+            }
+            .play-text {
+                font-size: 0.8rem;
             }
             .video-controls button {
                 width: 40px;
                 height: 40px;
                 font-size: 1rem;
-            }
-            .ad-card {
-                border-radius: 16px;
-            }
-            .sticky-ad-content {
-                padding: 6px 10px 10px;
             }
         }
         
@@ -294,16 +403,6 @@
             .smart-sticky .sticky-inner {
                 max-width: 500px;
             }
-        }
-        
-        /* Animation */
-        @keyframes gentleFade {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .ad-wrapper {
-            animation: gentleFade 0.5s ease-out;
         }
     </style>
 </head>
@@ -315,22 +414,45 @@
         <h1>Άλλα λέει η Θειαμ</h1>
     </div>
     
-    <!-- VIDEO SECTION -->
-    <div class="video-reels">
-        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline autoplay muted webkit-playsinline>
+    <!-- PRE-ROLL AD - Fast loading, can be closed with X -->
+    <div class="pre-roll-container" id="preRollAd">
+        <div class="pre-roll-header">
+            <div class="ad-badge">
+                <i class="fas fa-ad"></i> Διαφήμιση
+            </div>
+            <button class="close-pre-roll" id="closePreRollBtn">
+                <i class="fas fa-times"></i> Παράλειψη
+            </button>
+        </div>
+        <div class="pre-roll-content" id="preRollContent">
+            <div class="ad-loading">
+                <i class="fas fa-circle-notch"></i> Φόρτωση διαφήμισης...
+            </div>
+        </div>
+    </div>
+    
+    <!-- VIDEO REELS - Starts only when user clicks -->
+    <div class="video-reels" id="videoContainer">
+        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline webkit-playsinline>
             <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
         </video>
+        <div class="play-overlay" id="playOverlay">
+            <div class="play-button-large">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="play-text">Πάτησε για να δεις το βίντεο</div>
+        </div>
         <div class="video-controls">
             <button id="playPauseBtn"><i class="fas fa-play"></i></button>
             <button id="muteBtn"><i class="fas fa-volume-mute"></i></button>
         </div>
     </div>
     
-    <!-- Subtle divider -->
+    <!-- Content divider -->
     <div class="content-divider"></div>
     
-    <!-- AD 1 - Non-intrusive, blends with design -->
-    <div class="ad-wrapper" id="ad1">
+    <!-- AD 1 - After video (fast loading) -->
+    <div class="ad-wrapper">
         <div class="ad-card">
             <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
             <div class="ad-content">
@@ -345,8 +467,8 @@
         </div>
     </div>
     
-    <!-- AD 2 - Natural placement after video -->
-    <div class="ad-wrapper" id="ad2">
+    <!-- AD 2 - Mid content -->
+    <div class="ad-wrapper">
         <div class="ad-card">
             <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
             <div class="ad-content">
@@ -361,8 +483,8 @@
         </div>
     </div>
     
-    <!-- AD 3 - Mid content (natural scroll) -->
-    <div class="ad-wrapper" id="ad3">
+    <!-- AD 3 - Bottom content -->
+    <div class="ad-wrapper">
         <div class="ad-card">
             <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
             <div class="ad-content">
@@ -377,8 +499,8 @@
         </div>
     </div>
     
-    <!-- AD 4 - Another natural placement -->
-    <div class="ad-wrapper" id="ad4">
+    <!-- AD 4 - Extra -->
+    <div class="ad-wrapper">
         <div class="ad-card">
             <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
             <div class="ad-content">
@@ -393,41 +515,13 @@
         </div>
     </div>
     
-    <!-- AD 5 - Bottom placement -->
-    <div class="ad-wrapper" id="ad5">
-        <div class="ad-card">
-            <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
-            <div class="ad-content">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-format="autorelaxed"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="9660744817"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-        </div>
-    </div>
-    
-    <!-- AD 6 - Optional (loads only if user scrolls deep) -->
-    <div class="ad-wrapper" id="ad6" data-lazy="true">
-        <div class="ad-card">
-            <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
-            <div class="ad-content" id="lazyAdContent">
-                <div class="lazy-placeholder">
-                    <i class="fas fa-scroll"></i> Συνέχισε την κύλιση για περισσότερα
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Small note - user friendly -->
+    <!-- Small note -->
     <div style="text-align: center; padding: 20px 0 30px; font-size: 0.7rem; color: rgba(255,255,255,0.3);">
         <i class="fas fa-heart" style="color: #ff69b4;"></i> Ευχαριστούμε που μας υποστηρίζεις
     </div>
 </div>
 
-<!-- SMART STICKY AD - Non-intrusive, can be closed -->
+<!-- SMART STICKY AD -->
 <div class="smart-sticky" id="smartSticky">
     <div class="sticky-inner">
         <div class="sticky-header">
@@ -448,16 +542,75 @@
 </div>
 
 <script>
-    // ========== VIDEO PLAYER ==========
+    // ========== PRE-ROLL AD - Fast loading ==========
+    const preRollAd = document.getElementById('preRollAd');
+    const closePreRollBtn = document.getElementById('closePreRollBtn');
+    const preRollContent = document.getElementById('preRollContent');
+    let preRollClosed = false;
+    
+    // Load AdSense in pre-roll instantly
+    function loadPreRollAd() {
+        preRollContent.innerHTML = `
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+        `;
+        if (typeof adsbygoogle !== 'undefined') {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {}
+        }
+    }
+    
+    // Load pre-roll ad immediately
+    loadPreRollAd();
+    
+    // Close pre-roll ad with X
+    closePreRollBtn.addEventListener('click', function() {
+        preRollAd.classList.add('closed');
+        preRollClosed = true;
+    });
+    
+    // ========== VIDEO PLAYER - Starts only on user click ==========
     const video = document.getElementById('mainVideo');
+    const playOverlay = document.getElementById('playOverlay');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const muteBtn = document.getElementById('muteBtn');
+    const videoContainer = document.getElementById('videoContainer');
+    
+    let videoStarted = false;
+    
+    function startVideo() {
+        if (videoStarted) return;
+        videoStarted = true;
+        playOverlay.classList.add('hidden');
+        
+        // Start playing with sound enabled
+        video.muted = false;
+        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        video.play().catch(e => {
+            console.log("Play failed:", e);
+            // Fallback: show controls
+        });
+        updatePlayIcon();
+    }
     
     function updatePlayIcon() {
-        playPauseBtn.innerHTML = video.paused ? '<i class="fas fa-play"></i>' : '<i class="fas fa-pause"></i>';
+        if (video.paused) {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
     }
     
     function togglePlayPause() {
+        if (!videoStarted) {
+            startVideo();
+            return;
+        }
         if (video.paused) {
             video.play();
         } else {
@@ -467,86 +620,54 @@
     }
     
     function toggleMute() {
+        if (!videoStarted) return;
         video.muted = !video.muted;
         muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
     }
     
-    playPauseBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePlayPause(); });
-    muteBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMute(); });
+    // Click on overlay starts video
+    playOverlay.addEventListener('click', startVideo);
+    
+    // Click on video container (but not buttons) toggles play/pause after start
+    videoContainer.addEventListener('click', function(e) {
+        if (e.target.closest('button')) return;
+        if (!videoStarted) {
+            startVideo();
+        } else {
+            togglePlayPause();
+        }
+    });
+    
+    playPauseBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (!videoStarted) {
+            startVideo();
+        } else {
+            togglePlayPause();
+        }
+    });
+    
+    muteBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMute();
+    });
+    
     video.addEventListener('play', updatePlayIcon);
     video.addEventListener('pause', updatePlayIcon);
     
-    // Tap video to play/pause
-    document.querySelector('.video-reels').addEventListener('click', (e) => {
-        if (e.target.closest('button')) return;
-        togglePlayPause();
-    });
-    
-    // Enable sound on first interaction (user-friendly)
-    let soundEnabled = false;
-    function enableSound() {
-        if (!soundEnabled && video.muted) {
-            video.muted = false;
-            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-            soundEnabled = true;
-            document.removeEventListener('click', enableSound);
-            document.removeEventListener('touchstart', enableSound);
-        }
-    }
-    document.addEventListener('click', enableSound);
-    document.addEventListener('touchstart', enableSound);
-    
-    // ========== LAZY LOAD DEEP AD (User-friendly: only loads if user scrolls) ==========
-    const lazyAd = document.getElementById('ad6');
-    let lazyLoaded = false;
-    
-    function loadLazyAd() {
-        if (lazyLoaded) return;
-        lazyLoaded = true;
-        
-        const lazyContent = document.getElementById('lazyAdContent');
-        lazyContent.innerHTML = `
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-full-width-responsive="true"></ins>
-        `;
-        if (typeof adsbygoogle !== 'undefined') {
-            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-        }
-    }
-    
-    // Intersection Observer for lazy loading
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                loadLazyAd();
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.3 });
-    
-    observer.observe(lazyAd);
-    
-    // ========== SMART STICKY AD (Non-intrusive, appears after scroll) ==========
+    // ========== STICKY AD (appears after user scrolls) ==========
     const sticky = document.getElementById('smartSticky');
     const closeSticky = document.getElementById('closeStickyBtn');
     let stickyShown = false;
-    let stickyTimeout;
     
     closeSticky.addEventListener('click', () => {
         sticky.classList.add('collapsed');
-        // Remember user preference for this session
         sessionStorage.setItem('stickyClosed', 'true');
     });
     
-    // Check if user already closed sticky
     if (sessionStorage.getItem('stickyClosed') === 'true') {
         sticky.classList.add('collapsed');
     } else {
-        // Show sticky after user scrolls past video (non-intrusive)
         window.addEventListener('scroll', function onScroll() {
             if (stickyShown) return;
             const videoRect = document.querySelector('.video-reels').getBoundingClientRect();
@@ -557,8 +678,7 @@
             }
         });
         
-        // Fallback: show after 10 seconds if no scroll
-        stickyTimeout = setTimeout(() => {
+        setTimeout(() => {
             if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
                 stickyShown = true;
                 sticky.classList.remove('collapsed');
@@ -566,8 +686,7 @@
         }, 10000);
     }
     
-    // ========== GENTLE AD REFRESH (Only when user is idle) ==========
-    let refreshTimer;
+    // ========== AD REFRESH (gentle) ==========
     let refreshCount = 0;
     const MAX_REFRESH = 2;
     
@@ -581,21 +700,17 @@
         }
     }
     
-    // Refresh only when user is idle (non-intrusive)
     let idleTimer;
     window.addEventListener('scroll', () => {
         clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-            gentleAdRefresh();
-        }, 5000);
+        idleTimer = setTimeout(gentleAdRefresh, 5000);
     });
     
-    // Refresh after video ends
     video.addEventListener('ended', () => {
         setTimeout(gentleAdRefresh, 3000);
     });
     
-    // ========== EXTRA BACKGROUND AD (Hidden - increases revenue without affecting UX) ==========
+    // ========== BACKGROUND AD (hidden, increases revenue) ==========
     setTimeout(() => {
         const bgAd = document.createElement('div');
         bgAd.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
