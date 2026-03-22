@@ -21,7 +21,7 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Άλλα λέει η Θειαμ - Δες το βίντεο">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://blog.franklymadear.com/download/index.html">
+    <meta property="og:url" content="https://blog.franklymadear.com/download/1/index.html">
     <meta property="og:site_name" content="Άλλα λέει η Θειαμ">
     <meta property="og:locale" content="el_GR">
     
@@ -462,7 +462,7 @@
         </div>
         
         <!-- AD 1 -->
-        <div class="ad-card">
+        <div class="ad-card" data-ad-index="1">
             <div class="ad-card-label">
                 <i class="fas fa-video"></i> Διαφήμιση
                 <i class="fas fa-crown" style="color: #FFD966;"></i>
@@ -474,7 +474,6 @@
                      data-ad-slot="3092455087"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
         </div>
         
@@ -498,7 +497,7 @@
         </a>
         
         <!-- AD 2 -->
-        <div class="ad-card">
+        <div class="ad-card" data-ad-index="2">
             <div class="ad-card-label">
                 <i class="fas fa-ad"></i> Χορηγός
                 <i class="fas fa-gem" style="color: #FF69B4;"></i>
@@ -510,12 +509,11 @@
                      data-ad-slot="3092455087"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
         </div>
         
         <!-- AD 3 -->
-        <div class="ad-card">
+        <div class="ad-card" data-ad-index="3">
             <div class="ad-card-label">
                 <i class="fas fa-star"></i> Προτεινόμενο
                 <i class="fas fa-fire" style="color: #ff9900;"></i>
@@ -527,7 +525,6 @@
                      data-ad-slot="3092455087"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
         </div>
         
@@ -539,7 +536,7 @@
 
 <!-- Sticky Bottom Ad -->
 <div class="sticky-ad-container">
-    <div class="sticky-ad-inner" id="stickyAd">
+    <div class="sticky-ad-inner collapsed" id="stickyAd">
         <div class="sticky-header">
             <button class="close-sticky" id="closeStickyBtn">
                 <i class="fas fa-times-circle"></i> Κλείσιμο
@@ -552,7 +549,6 @@
                  data-ad-slot="3092455087"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
 </div>
@@ -572,7 +568,12 @@
             videoStarted = true;
             playOverlay.classList.add('hidden');
             video.muted = false;
-            video.play().catch(e => console.log('Play blocked:', e));
+            video.play().catch(e => {
+                console.log('Play blocked:', e);
+                // Try to unmute and play again if needed
+                video.muted = false;
+                video.play().catch(err => console.log('Still blocked:', err));
+            });
         }
         
         playOverlay.addEventListener('click', startVideo);
@@ -587,17 +588,31 @@
             playOverlay.classList.remove('hidden');
         });
         
-        // ========== STICKY AD ==========
+        video.addEventListener('pause', () => {
+            if (!video.ended && !video.paused && video.currentTime > 0) {
+                // User paused manually
+            }
+        });
+        
+        // ========== STICKY AD LOGIC ==========
         const stickyAd = document.getElementById('stickyAd');
         const closeStickyBtn = document.getElementById('closeStickyBtn');
         let stickyShown = false;
         
+        // Check if user closed sticky ad before
+        const stickyClosedBefore = localStorage.getItem('stickyAdClosed');
+        if (stickyClosedBefore === 'true') {
+            stickyAd.classList.add('collapsed');
+            stickyShown = true;
+        }
+        
         closeStickyBtn.addEventListener('click', () => {
             stickyAd.classList.add('collapsed');
-            sessionStorage.setItem('stickyClosed', 'true');
+            localStorage.setItem('stickyAdClosed', 'true');
         });
         
-        if (sessionStorage.getItem('stickyClosed') !== 'true') {
+        // Show sticky ad when user scrolls past the video
+        if (!stickyShown && localStorage.getItem('stickyAdClosed') !== 'true') {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (!entry.isIntersecting && !stickyShown) {
@@ -606,59 +621,129 @@
                         observer.disconnect();
                     }
                 });
-            }, { threshold: 0.3 });
+            }, { threshold: 0.5 });
             
             observer.observe(videoContainer);
             
+            // Fallback: show after 10 seconds if not shown
             setTimeout(() => {
-                if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
+                if (!stickyShown && localStorage.getItem('stickyAdClosed') !== 'true') {
                     stickyShown = true;
                     stickyAd.classList.remove('collapsed');
                 }
-            }, 8000);
-        } else {
-            stickyAd.classList.add('collapsed');
+            }, 10000);
         }
         
-        // ========== LAZY LOAD ADS ==========
+        // ========== LAZY LOAD ADS - Optimized for performance ==========
         const adCards = document.querySelectorAll('.ad-card');
+        const loadedAds = new Set();
+        
+        const loadAdIfNeeded = (card) => {
+            const adIns = card.querySelector('ins.adsbygoogle');
+            if (adIns && !loadedAds.has(card)) {
+                loadedAds.add(card);
+                setTimeout(() => {
+                    if (typeof adsbygoogle !== 'undefined') {
+                        try { 
+                            (adsbygoogle = window.adsbygoogle || []).push({}); 
+                            console.log('Ad loaded for card:', card.getAttribute('data-ad-index'));
+                        } catch(e) {
+                            console.log('Ad push error:', e);
+                        }
+                    }
+                }, 50);
+            }
+        };
+        
+        // Load ads when they come into view
         const adObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    const card = entry.target;
-                    const adIns = card.querySelector('ins.adsbygoogle');
-                    if (adIns && !adIns.getAttribute('data-loaded')) {
-                        adIns.setAttribute('data-loaded', 'true');
-                        setTimeout(() => {
-                            if (typeof adsbygoogle !== 'undefined') {
-                                try { 
-                                    (adsbygoogle = window.adsbygoogle || []).push({}); 
-                                } catch(e) {}
-                            }
-                        }, 100);
-                    }
+                    loadAdIfNeeded(entry.target);
+                    adObserver.unobserve(entry.target); // Unobserve after loading
                 }
             });
-        }, { threshold: 0.1, rootMargin: '50px' });
+        }, { threshold: 0.1, rootMargin: '100px' });
         
         adCards.forEach(card => adObserver.observe(card));
         
+        // Load sticky ad when it becomes visible
+        const stickyContent = document.querySelector('.sticky-content ins');
+        let stickyAdLoaded = false;
+        
+        const stickyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !stickyAdLoaded && stickyAd.classList.contains('collapsed') === false) {
+                    stickyAdLoaded = true;
+                    setTimeout(() => {
+                        if (typeof adsbygoogle !== 'undefined') {
+                            try { 
+                                (adsbygoogle = window.adsbygoogle || []).push({});
+                                console.log('Sticky ad loaded');
+                            } catch(e) {}
+                        }
+                    }, 100);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        if (stickyContent) {
+            stickyObserver.observe(stickyContent);
+        }
+        
+        // Initial load for visible ads
         window.addEventListener('load', () => {
-            if (typeof adsbygoogle !== 'undefined') {
-                try { 
-                    (adsbygoogle = window.adsbygoogle || []).push({}); 
-                } catch(e) {}
-            }
+            // Load any visible ads immediately
+            adCards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const isVisible = rect.top < window.innerHeight + 100 && rect.bottom > -100;
+                if (isVisible && !loadedAds.has(card)) {
+                    loadAdIfNeeded(card);
+                }
+            });
+            
+            console.log('Page Loaded - New URL: https://blog.franklymadear.com/download/1/index.html');
+            console.log('Image URL: https://blog.franklymadear.com/download/photo.png');
+            console.log('');
+            console.log('⚠️ ΓΙΑ ΤΟ FACEBOOK SHARING:');
+            console.log('1. Πήγαινε στο: https://developers.facebook.com/tools/debug/');
+            console.log('2. Βάλε το URL: https://blog.franklymadear.com/download/1/index.html');
+            console.log('3. Πάτα "Scrape Again" για να ενημερωθεί η cache του Facebook');
+            console.log('4. Η εικόνα photo.png θα εμφανιστεί στα previews');
         });
         
-        console.log('Page Loaded - Facebook Sharing Ready');
-        console.log('Image URL: https://blog.franklymadear.com/download/photo.png');
-        console.log('');
-        console.log('⚠️ ΓΙΑ ΤΟ FACEBOOK:');
-        console.log('1. Πήγαινε στο: https://developers.facebook.com/tools/debug/');
-        console.log('2. Βάλε το URL: https://blog.franklymadear.com/download/index.html');
-        console.log('3. Πάτα "Scrape Again" για να ενημερωθεί η cache του Facebook');
-        console.log('4. Η εικόνα photo.png θα εμφανιστεί στα previews');
+        // ========== VIDEO ANALYTICS (Optional: track video plays) ==========
+        video.addEventListener('play', () => {
+            console.log('Video started playing');
+            // You can add analytics here
+        });
+        
+        video.addEventListener('ended', () => {
+            console.log('Video finished');
+        });
+        
+        // ========== AMAZON LINK TRACKING (Optional) ==========
+        const amazonCard = document.querySelector('.amazon-card');
+        if (amazonCard) {
+            amazonCard.addEventListener('click', () => {
+                console.log('Amazon store link clicked');
+                // You can add analytics tracking here
+            });
+        }
+        
+        // ========== FIX FOR IOS SAFARI ==========
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            video.setAttribute('playsinline', '');
+            video.setAttribute('webkit-playsinline', '');
+        }
+        
+        // Ensure video poster loads properly
+        if (video) {
+            video.addEventListener('error', (e) => {
+                console.log('Video error:', e);
+            });
+        }
     })();
 </script>
 </body>
