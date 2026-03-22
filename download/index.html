@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Άλλα λέει η Θειαμ</title>
+    
+    <link rel="icon" type="image/png" href="index.png">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Άλλα λέει η Θειαμ">
+    <meta property="og:description" content="Δες το βίντεο και ανακάλυψε τι άλλα λέει η Θειαμ!">
+    <meta property="og:image" content="https://blog.franklymadear.com/download/photo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blog.franklymadear.com/download/index.html">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Άλλα λέει η Θειαμ">
+    <meta name="twitter:description" content="Δες το βίντεο και ανακάλυψε τι άλλα λέει η Θειαμ!">
+    <meta name="twitter:image" content="https://blog.franklymadear.com/download/photo.png">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(145deg, #0f0c1f, #1e1a35);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px;
+            padding-bottom: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .page-title h1 {
+            font-size: clamp(1.4rem, 6vw, 2rem);
+            font-weight: 800;
+            background: linear-gradient(145deg, #ffb6c1, #ff69b4, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* ========== PRE-ROLL AD - FULLY RESPONSIVE (Mobile/Tablet/Desktop) ========== */
+        .pre-roll-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 16px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #0a0c1a;
+            border: 2px solid #ffb347;
+            animation: fadeIn 0.3s ease;
+            transition: all 0.3s ease;
+        }
+        
+        .pre-roll-container.closed {
+            display: none;
+        }
+        
+        .pre-roll-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #2a1e4a, #1a0f30);
+            border-bottom: 1px solid rgba(255, 180, 70, 0.3);
+        }
+        
+        .ad-badge {
+            font-size: 0.7rem;
+            color: #ffb347;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .ad-badge i {
+            font-size: 0.65rem;
+        }
+        
+        .close-pre-roll {
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .close-pre-roll:active {
+            transform: scale(0.95);
+            background: #ff4444;
+        }
+        
+        .pre-roll-content {
+            padding: 12px;
+            min-height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #181e34;
+        }
+        
+        /* Responsive ad container - adapts to device */
+        .responsive-ad-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Mobile-first ad styling */
+        .responsive-ad-container ins {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Loading indicator */
+        .ad-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            padding: 20px;
+        }
+        
+        .ad-loading i {
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Reels video - starts only on user click */
+        .video-reels {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 200, 100, 0.5);
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        
+        .video-reels video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        
+        /* Play button overlay */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        
+        .play-overlay.hidden {
+            display: none;
+        }
+        
+        .play-button-large {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 215, 0, 0.8);
+            transition: all 0.2s;
+        }
+        
+        .play-button-large i {
+            font-size: 2.5rem;
+            color: white;
+            margin-left: 5px;
+        }
+        
+        .play-button-large:active {
+            transform: scale(0.95);
+            background: rgba(255, 215, 0, 0.5);
+        }
+        
+        .play-text {
+            margin-top: 15px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: rgba(0,0,0,0.6);
+            padding: 6px 16px;
+            border-radius: 30px;
+        }
+        
+        /* Video controls */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 15;
+        }
+        
+        .video-reels:hover .video-controls,
+        .video-reels:active .video-controls {
+            opacity: 1;
+        }
+        
+        .video-controls button {
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 1.2rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .video-controls button:active {
+            transform: scale(0.92);
+        }
+        
+        /* Ad cards - responsive */
+        .ad-wrapper {
+            margin: 16px 0;
+            width: 100%;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        .ad-card {
+            background: rgba(30, 35, 60, 0.7);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 200, 100, 0.3);
+            transition: all 0.2s;
+        }
+        
+        .ad-label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding: 6px 0 2px;
+        }
+        
+        .ad-label i {
+            font-size: 0.6rem;
+            margin-right: 4px;
+        }
+        
+        .ad-content {
+            width: 100%;
+            min-height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 8px;
+        }
+        
+        .ad-content ins {
+            display: block;
+            width: 100%;
+        }
+        
+        /* Smart sticky ad */
+        .smart-sticky {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #0f0c1f, transparent);
+            padding: 10px 12px 8px;
+            z-index: 999;
+            transform: translateY(0);
+            transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            pointer-events: none;
+        }
+        
+        .smart-sticky .sticky-inner {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(20, 25, 45, 0.95);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 200, 100, 0.4);
+            overflow: hidden;
+            pointer-events: auto;
+        }
+        
+        .smart-sticky.collapsed {
+            transform: translateY(100%);
+        }
+        
+        .sticky-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 6px 10px 0;
+        }
+        
+        .close-sticky {
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.7rem;
+            cursor: pointer;
+        }
+        
+        .sticky-ad-content {
+            padding: 8px 12px 12px;
+        }
+        
+        /* Content divider */
+        .content-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,200,100,0.3), transparent);
+            margin: 20px 0 10px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* ========== DEVICE-SPECIFIC STYLES ========== */
+        /* Mobile (up to 480px) */
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+                padding-bottom: 85px;
+            }
+            .play-button-large {
+                width: 65px;
+                height: 65px;
+            }
+            .play-button-large i {
+                font-size: 2rem;
+            }
+            .play-text {
+                font-size: 0.8rem;
+            }
+            .video-controls button {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            .pre-roll-content {
+                padding: 8px;
+            }
+        }
+        
+        /* Tablet (481px - 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            body {
+                padding: 12px;
+                padding-bottom: 90px;
+            }
+            .container {
+                max-width: 550px;
+            }
+            .play-button-large {
+                width: 85px;
+                height: 85px;
+            }
+            .play-button-large i {
+                font-size: 2.8rem;
+            }
+            .pre-roll-content {
+                padding: 12px;
+            }
+        }
+        
+        /* Desktop (769px and above) */
+        @media (min-width: 769px) {
+            body {
+                padding: 20px;
+                padding-bottom: 100px;
+            }
+            .container {
+                max-width: 500px;
+            }
+            .play-button-large {
+                width: 90px;
+                height: 90px;
+            }
+            .play-button-large i {
+                font-size: 3rem;
+            }
+            .pre-roll-content {
+                padding: 16px;
+            }
+        }
+        
+        /* Large tablets landscape */
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 550px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    
+    <!-- TITLE -->
+    <div class="page-title">
+        <h1>Άλλα λέει η Θειαμ</h1>
+    </div>
+    
+    <!-- PRE-ROLL AD - FULLY RESPONSIVE (adapts to mobile/tablet/desktop) -->
+    <div class="pre-roll-container" id="preRollAd">
+        <div class="pre-roll-header">
+            <div class="ad-badge">
+                <i class="fas fa-ad"></i> Διαφήμιση
+            </div>
+            <button class="close-pre-roll" id="closePreRollBtn">
+                <i class="fas fa-times"></i> Παράλειψη
+            </button>
+        </div>
+        <div class="pre-roll-content" id="preRollContent">
+            <div class="ad-loading">
+                <i class="fas fa-circle-notch"></i> Φόρτωση διαφήμισης...
+            </div>
+        </div>
+    </div>
+    
+    <!-- VIDEO REELS - Starts only when user clicks -->
+    <div class="video-reels" id="videoContainer">
+        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline webkit-playsinline>
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+        </video>
+        <div class="play-overlay" id="playOverlay">
+            <div class="play-button-large">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="play-text">Πάτησε για να δεις το βίντεο</div>
+        </div>
+        <div class="video-controls">
+            <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+            <button id="muteBtn"><i class="fas fa-volume-mute"></i></button>
+        </div>
+    </div>
+    
+    <!-- Content divider -->
+    <div class="content-divider"></div>
+    
+    <!-- AD 1 - TYPE 2: Video ad (data-ad-slot="3092455087") - Responsive -->
+    <div class="ad-wrapper">
+        <div class="ad-card">
+            <div class="ad-label"><i class="fas fa-video"></i> Διαφήμιση Βίντεο</div>
+            <div class="ad-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3092455087"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AD 2 - TYPE 3: fluid ad (data-ad-slot="3969235710") - Responsive -->
+    <div class="ad-wrapper">
+        <div class="ad-card">
+            <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
+            <div class="ad-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3969235710"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AD 3 - TYPE 1: autorelaxed (additional) - Responsive -->
+    <div class="ad-wrapper">
+        <div class="ad-card">
+            <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
+            <div class="ad-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="autorelaxed"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="9660744817"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AD 4 - TYPE 2: video ad (additional) - Responsive -->
+    <div class="ad-wrapper">
+        <div class="ad-card">
+            <div class="ad-label"><i class="fas fa-video"></i> Διαφήμιση Βίντεο</div>
+            <div class="ad-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3092455087"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+    
+    <!-- AD 5 - TYPE 3: fluid ad (additional) - Responsive -->
+    <div class="ad-wrapper">
+        <div class="ad-card">
+            <div class="ad-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
+            <div class="ad-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="fluid"
+                     data-ad-layout-key="-fb+5w+4e-db+86"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3969235710"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Small note -->
+    <div style="text-align: center; padding: 20px 0 30px; font-size: 0.7rem; color: rgba(255,255,255,0.3);">
+        <i class="fas fa-heart" style="color: #ff69b4;"></i> Ευχαριστούμε που μας υποστηρίζεις
+    </div>
+</div>
+
+<!-- SMART STICKY AD - TYPE 1: autorelaxed -->
+<div class="smart-sticky" id="smartSticky">
+    <div class="sticky-inner">
+        <div class="sticky-header">
+            <button class="close-sticky" id="closeStickyBtn">
+                <i class="fas fa-times"></i> Κλείσιμο
+            </button>
+        </div>
+        <div class="sticky-ad-content">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== DEVICE DETECTION FOR OPTIMIZED AD LOADING ==========
+    function getDeviceType() {
+        const ua = navigator.userAgent;
+        const width = window.innerWidth;
+        
+        if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua)) {
+            if (width <= 480) return 'mobile';
+            if (width <= 768) return 'tablet';
+            return 'mobile';
+        }
+        return 'desktop';
+    }
+    
+    const deviceType = getDeviceType();
+    console.log('Device detected:', deviceType);
+    
+    // ========== PRE-ROLL AD - Responsive loading based on device ==========
+    const preRollAd = document.getElementById('preRollAd');
+    const closePreRollBtn = document.getElementById('closePreRollBtn');
+    const preRollContent = document.getElementById('preRollContent');
+    
+    // Load appropriate ad format based on device
+    function loadPreRollAd() {
+        let adHtml = '';
+        
+        // Different ad configurations for different devices
+        if (deviceType === 'mobile') {
+            // Mobile-optimized ad (autorelaxed works well on mobile)
+            adHtml = `
+                <div class="responsive-ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; width:100%; max-width:100%"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            `;
+        } else if (deviceType === 'tablet') {
+            // Tablet-optimized ad
+            adHtml = `
+                <div class="responsive-ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; width:100%"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            `;
+        } else {
+            // Desktop-optimized ad
+            adHtml = `
+                <div class="responsive-ad-container">
+                    <ins class="adsbygoogle"
+                         style="display:block; width:100%"
+                         data-ad-format="autorelaxed"
+                         data-ad-client="ca-pub-3186700611266549"
+                         data-ad-slot="9660744817"
+                         data-full-width-responsive="true"></ins>
+                </div>
+            `;
+        }
+        
+        preRollContent.innerHTML = adHtml;
+        
+        if (typeof adsbygoogle !== 'undefined') {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch(e) {}
+        }
+    }
+    
+    // Load pre-roll ad immediately
+    loadPreRollAd();
+    
+    // Close pre-roll ad with X
+    closePreRollBtn.addEventListener('click', function() {
+        preRollAd.classList.add('closed');
+    });
+    
+    // ========== VIDEO PLAYER - Starts only on user click ==========
+    const video = document.getElementById('mainVideo');
+    const playOverlay = document.getElementById('playOverlay');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const videoContainer = document.getElementById('videoContainer');
+    
+    let videoStarted = false;
+    
+    function startVideo() {
+        if (videoStarted) return;
+        videoStarted = true;
+        playOverlay.classList.add('hidden');
+        
+        // Start playing with sound enabled
+        video.muted = false;
+        muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+        video.play().catch(e => {
+            console.log("Play failed:", e);
+        });
+        updatePlayIcon();
+    }
+    
+    function updatePlayIcon() {
+        if (video.paused) {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        } else {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+    }
+    
+    function togglePlayPause() {
+        if (!videoStarted) {
+            startVideo();
+            return;
+        }
+        if (video.paused) {
+            video.play();
+        } else {
+            video.pause();
+        }
+        updatePlayIcon();
+    }
+    
+    function toggleMute() {
+        if (!videoStarted) return;
+        video.muted = !video.muted;
+        muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+    }
+    
+    // Click on overlay starts video
+    playOverlay.addEventListener('click', startVideo);
+    
+    // Click on video container toggles play/pause after start
+    videoContainer.addEventListener('click', function(e) {
+        if (e.target.closest('button')) return;
+        if (!videoStarted) {
+            startVideo();
+        } else {
+            togglePlayPause();
+        }
+    });
+    
+    playPauseBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        if (!videoStarted) {
+            startVideo();
+        } else {
+            togglePlayPause();
+        }
+    });
+    
+    muteBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleMute();
+    });
+    
+    video.addEventListener('play', updatePlayIcon);
+    video.addEventListener('pause', updatePlayIcon);
+    
+    // ========== STICKY AD ==========
+    const sticky = document.getElementById('smartSticky');
+    const closeSticky = document.getElementById('closeStickyBtn');
+    let stickyShown = false;
+    
+    closeSticky.addEventListener('click', () => {
+        sticky.classList.add('collapsed');
+        sessionStorage.setItem('stickyClosed', 'true');
+    });
+    
+    if (sessionStorage.getItem('stickyClosed') === 'true') {
+        sticky.classList.add('collapsed');
+    } else {
+        window.addEventListener('scroll', function onScroll() {
+            if (stickyShown) return;
+            const videoRect = document.querySelector('.video-reels').getBoundingClientRect();
+            if (videoRect.bottom < 100) {
+                stickyShown = true;
+                sticky.classList.remove('collapsed');
+                window.removeEventListener('scroll', onScroll);
+            }
+        });
+        
+        setTimeout(() => {
+            if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
+                stickyShown = true;
+                sticky.classList.remove('collapsed');
+            }
+        }, 10000);
+    }
+    
+    // ========== AD REFRESH ==========
+    let refreshCount = 0;
+    const MAX_REFRESH = 2;
+    
+    function gentleAdRefresh() {
+        if (refreshCount >= MAX_REFRESH) return;
+        if (typeof adsbygoogle !== 'undefined') {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                refreshCount++;
+            } catch(e) {}
+        }
+    }
+    
+    let idleTimer;
+    window.addEventListener('scroll', () => {
+        clearTimeout(idleTimer);
+        idleTimer = setTimeout(gentleAdRefresh, 5000);
+    });
+    
+    video.addEventListener('ended', () => {
+        setTimeout(gentleAdRefresh, 3000);
+    });
+    
+    // ========== BACKGROUND AD (hidden, increases revenue) ==========
+    setTimeout(() => {
+        const bgAd = document.createElement('div');
+        bgAd.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
+        bgAd.innerHTML = `
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+        `;
+        document.body.appendChild(bgAd);
+        if (typeof adsbygoogle !== 'undefined') {
+            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+        }
+        setTimeout(() => bgAd.remove(), 10000);
+    }, 8000);
+    
+    // ========== INITIALIZE ALL ADS ==========
+    window.addEventListener('load', () => {
+        if (typeof adsbygoogle !== 'undefined') {
+            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+        }
+        
+        // Log device for debugging
+        console.log('Page loaded on:', deviceType, 'Viewport:', window.innerWidth);
+    });
+    
+    // Handle orientation change (reload ads appropriately)
+    window.addEventListener('orientationchange', function() {
+        setTimeout(() => {
+            if (typeof adsbygoogle !== 'undefined') {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+        }, 500);
+    });
+    
+    // Handle resize for responsive ad adjustment
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (typeof adsbygoogle !== 'undefined') {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+        }, 1000);
+    });
+</script>
+</body>
+</html>
