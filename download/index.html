@@ -368,6 +368,77 @@
             transition: all 0.2s;
         }
         
+        /* ========== STICKY BOTTOM AD - SMALLER 50% FOR MOBILE ========== */
+        .sticky-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #0a0a1a, transparent);
+            padding: 6px 10px;
+            z-index: 1000;
+            transform: translateY(0);
+            transition: transform 0.4s ease;
+            pointer-events: none;
+        }
+        
+        .sticky-ad.collapsed {
+            transform: translateY(100%);
+        }
+        
+        .sticky-inner {
+            max-width: 450px;
+            width: 95%;
+            margin: 0 auto;
+            background: rgba(18, 22, 45, 0.98);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 200, 100, 0.4);
+            overflow: hidden;
+            pointer-events: auto;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .sticky-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 6px 10px 0;
+        }
+        
+        .close-sticky {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+        
+        .close-sticky i {
+            font-size: 0.7rem;
+        }
+        
+        .close-sticky:active {
+            transform: scale(0.94);
+            background: #ff6666;
+        }
+        
+        .sticky-content {
+            padding: 8px 12px 12px;
+        }
+        
+        .sticky-content ins {
+            display: block;
+            width: 100%;
+        }
+        
         /* Content Cards for Ads */
         .content-card {
             background: rgba(18, 22, 45, 0.8);
@@ -398,61 +469,6 @@
             width: 100%;
         }
         
-        /* Sticky Bottom Ad */
-        .sticky-ad {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, #0a0a1a, transparent);
-            padding: 8px 12px;
-            z-index: 1000;
-            transform: translateY(0);
-            transition: transform 0.4s ease;
-            pointer-events: none;
-        }
-        
-        .sticky-ad.collapsed {
-            transform: translateY(100%);
-        }
-        
-        .sticky-inner {
-            max-width: 500px;
-            margin: 0 auto;
-            background: rgba(18, 22, 45, 0.98);
-            backdrop-filter: blur(16px);
-            border-radius: 18px;
-            border: 1px solid rgba(255, 200, 100, 0.35);
-            overflow: hidden;
-            pointer-events: auto;
-        }
-        
-        .sticky-header {
-            display: flex;
-            justify-content: flex-end;
-            padding: 6px 10px 0;
-        }
-        
-        .close-sticky {
-            background: rgba(255, 68, 68, 0.9);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            padding: 3px 10px;
-            font-size: 0.6rem;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .sticky-content {
-            padding: 6px 10px 10px;
-        }
-        
-        .sticky-content ins {
-            display: block;
-            width: 100%;
-        }
-        
         .footer-note {
             text-align: center;
             padding: 20px 0 20px;
@@ -470,8 +486,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
+        /* iPhone & Mobile Optimizations */
         @media (max-width: 480px) {
-            body { padding: 12px; padding-bottom: 85px; }
+            body { 
+                padding: 12px; 
+                padding-bottom: 80px; 
+            }
             .play-btn { width: 65px; height: 65px; }
             .play-btn i { font-size: 2rem; }
             .play-text { font-size: 0.75rem; }
@@ -479,12 +499,55 @@
             .countdown-timer { padding: 4px 10px; font-size: 0.75rem; }
             .countdown-number { font-size: 0.9rem; min-width: 35px; padding: 1px 8px; }
             .skip-button { padding: 8px 16px; font-size: 0.75rem; }
+            
+            /* Sticky ad smaller for iPhone */
+            .sticky-ad {
+                padding: 4px 8px;
+            }
+            .sticky-inner {
+                width: 96%;
+                border-radius: 14px;
+            }
+            .sticky-header {
+                padding: 5px 8px 0;
+            }
+            .close-sticky {
+                padding: 5px 12px;
+                font-size: 0.65rem;
+            }
+            .close-sticky i {
+                font-size: 0.6rem;
+            }
+            .sticky-content {
+                padding: 6px 10px 10px;
+            }
+        }
+        
+        /* Small iPhones (SE, 12 mini, etc) */
+        @media (max-width: 380px) {
+            .sticky-inner {
+                width: 98%;
+            }
+            .close-sticky {
+                padding: 4px 10px;
+                font-size: 0.6rem;
+            }
+            .sticky-content {
+                padding: 4px 8px 8px;
+            }
+        }
+        
+        /* iPad & Tablets */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .sticky-inner {
+                max-width: 500px;
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- FULLSCREEN PRE-ROLL AD WITH 5-SECOND COUNTDOWN (ONLY ONE) -->
+<!-- FULLSCREEN PRE-ROLL AD WITH 5-SECOND COUNTDOWN -->
 <div class="fullscreen-ad" id="fullscreenAd">
     <div class="ad-content-wrapper">
         <div class="ad-header-full">
@@ -607,12 +670,12 @@
     </div>
 </div>
 
-<!-- STICKY BOTTOM AD -->
+<!-- STICKY BOTTOM AD - 50% SMALLER WITH VISIBLE X BUTTON -->
 <div class="sticky-ad" id="stickyAd">
     <div class="sticky-inner">
         <div class="sticky-header">
             <button class="close-sticky" id="closeStickyBtn">
-                <i class="fas fa-times"></i> Κλείσιμο
+                <i class="fas fa-times-circle"></i> Κλείσιμο
             </button>
         </div>
         <div class="sticky-content">
@@ -808,7 +871,7 @@
             }
         });
         
-        console.log('Page loaded - Fullscreen ad with 5s countdown');
+        console.log('Page loaded - Sticky ad reduced by 50% for mobile');
     })();
 </script>
 </body>
