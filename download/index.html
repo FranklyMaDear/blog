@@ -46,10 +46,128 @@
             padding-bottom: 90px;
         }
         
+        /* ========== FULLSCREEN PRE-ROLL AD WITH COUNTDOWN ========== */
+        .fullscreen-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+        
+        .fullscreen-ad.closed {
+            display: none;
+        }
+        
+        .ad-content-wrapper {
+            max-width: 500px;
+            width: 90%;
+            background: rgba(18, 22, 45, 0.98);
+            border-radius: 32px;
+            border: 2px solid rgba(255, 200, 100, 0.5);
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+            animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .ad-header-full {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #2a1e4a, #1a0f30);
+            border-bottom: 1px solid rgba(255, 200, 100, 0.3);
+        }
+        
+        .ad-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #FFB347;
+        }
+        
+        .countdown-timer {
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .countdown-number {
+            background: white;
+            color: #ff4444;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 1.2rem;
+            min-width: 50px;
+            text-align: center;
+        }
+        
+        .ad-body-full {
+            padding: 30px 20px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1e3a, #12152f);
+        }
+        
+        .ad-body-full ins {
+            display: block;
+            width: 100%;
+        }
+        
+        .skip-button {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 200, 100, 0.5);
+            color: #FFB347;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .skip-button:active {
+            transform: scale(0.96);
+            background: rgba(255, 200, 100, 0.2);
+        }
+        
+        .ad-footer {
+            padding: 16px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.4);
+        }
+        
         .container {
             max-width: 500px;
             width: 100%;
             margin: 0 auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .container.visible {
+            opacity: 1;
         }
         
         /* Title */
@@ -65,72 +183,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-        
-        /* ========== COMPACT PRE-ROLL AD - DOES NOT BLOCK PAGE ========== */
-        .compact-ad {
-            background: rgba(18, 22, 45, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255, 200, 100, 0.3);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .compact-ad.closed {
-            display: none;
-        }
-        
-        .compact-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 14px;
-            background: rgba(0, 0, 0, 0.3);
-            border-bottom: 1px solid rgba(255, 200, 100, 0.2);
-        }
-        
-        .compact-badge {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.65rem;
-            font-weight: 500;
-            color: #FFB347;
-        }
-        
-        .compact-skip {
-            background: rgba(255, 68, 68, 0.85);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 4px 12px;
-            font-size: 0.65rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.2s;
-        }
-        
-        .compact-skip:active {
-            transform: scale(0.95);
-        }
-        
-        .compact-body {
-            padding: 12px;
-            min-height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1a1e3a, #12152f);
-        }
-        
-        .compact-body ins {
-            display: block;
-            width: 100%;
         }
         
         /* Video Container */
@@ -242,10 +294,6 @@
             transition: all 0.2s;
         }
         
-        .video-controls button:active {
-            transform: scale(0.92);
-        }
-        
         /* Amazon Store Card */
         .amazon-store {
             background: linear-gradient(135deg, #232f3e, #1a2532);
@@ -336,7 +384,7 @@
             width: 100%;
         }
         
-        /* Sticky Bottom Ad - Small and Non-intrusive */
+        /* Sticky Bottom Ad */
         .sticky-ad {
             position: fixed;
             bottom: 0;
@@ -380,18 +428,10 @@
             font-size: 0.6rem;
             font-weight: 600;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
         
         .sticky-content {
             padding: 6px 10px 10px;
-        }
-        
-        .sticky-content ins {
-            display: block;
-            width: 100%;
         }
         
         .footer-note {
@@ -401,46 +441,44 @@
             color: rgba(255,255,255,0.3);
         }
         
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         @media (max-width: 480px) {
             body { padding: 12px; padding-bottom: 85px; }
             .play-btn { width: 65px; height: 65px; }
             .play-btn i { font-size: 2rem; }
-            .play-text { font-size: 0.75rem; padding: 5px 14px; }
-            .video-controls button { width: 38px; height: 38px; font-size: 0.9rem; }
-            .amazon-header span { font-size: 0.9rem; }
-            .amazon-btn { padding: 8px 18px; font-size: 0.8rem; }
-            .compact-body { padding: 10px; min-height: 70px; }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .compact-ad, .video-container, .amazon-store, .content-card {
-            animation: fadeIn 0.4s ease-out;
+            .play-text { font-size: 0.75rem; }
+            .ad-header-full { padding: 12px 16px; }
+            .countdown-number { font-size: 1rem; min-width: 45px; }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    
-    <!-- Title -->
-    <div class="page-title">
-        <h1>Άλλα λέει η Θειαμ</h1>
-    </div>
-    
-    <!-- COMPACT PRE-ROLL AD - SMALL, DOES NOT BLOCK CONTENT -->
-    <div class="compact-ad" id="preRollAd">
-        <div class="compact-header">
-            <div class="compact-badge">
-                <i class="fas fa-bullhorn"></i> Διαφήμιση
+
+<!-- FULLSCREEN PRE-ROLL AD WITH 5-SECOND COUNTDOWN -->
+<div class="fullscreen-ad" id="fullscreenAd">
+    <div class="ad-content-wrapper">
+        <div class="ad-header-full">
+            <div class="ad-logo">
+                <i class="fas fa-bullhorn"></i>
+                <span>Χορηγός</span>
             </div>
-            <button class="compact-skip" id="closePreRollBtn">
-                <i class="fas fa-times"></i> Παράλειψη
-            </button>
+            <div class="countdown-timer">
+                <i class="fas fa-hourglass-half"></i>
+                <span>Συνεχίζεται σε</span>
+                <span class="countdown-number" id="countdownNumber">5</span>
+                <span>δλ</span>
+            </div>
         </div>
-        <div class="compact-body" id="preRollBody">
+        <div class="ad-body-full" id="fullscreenAdBody">
             <ins class="adsbygoogle"
                  style="display:block"
                  data-ad-format="autorelaxed"
@@ -449,6 +487,20 @@
                  data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
+        <button class="skip-button" id="skipAdBtn">
+            <i class="fas fa-forward"></i> Παράλειψη τώρα
+        </button>
+        <div class="ad-footer">
+            Η διαφήμιση θα κλείσει αυτόματα σε λίγα δευτερόλεπτα
+        </div>
+    </div>
+</div>
+
+<div class="container" id="mainContent">
+    
+    <!-- Title -->
+    <div class="page-title">
+        <h1>Άλλα λέει η Θειαμ</h1>
     </div>
     
     <!-- VIDEO - Starts on user click -->
@@ -535,7 +587,7 @@
     </div>
 </div>
 
-<!-- STICKY BOTTOM AD - SMALL -->
+<!-- STICKY BOTTOM AD -->
 <div class="sticky-ad" id="stickyAd">
     <div class="sticky-inner">
         <div class="sticky-header">
@@ -559,13 +611,34 @@
     (function() {
         'use strict';
         
-        // ========== COMPACT PRE-ROLL AD - CAN BE CLOSED ==========
-        const closePreRoll = document.getElementById('closePreRollBtn');
-        const preRollAd = document.getElementById('preRollAd');
+        // ========== FULLSCREEN AD WITH 5-SECOND COUNTDOWN ==========
+        const fullscreenAd = document.getElementById('fullscreenAd');
+        const mainContent = document.getElementById('mainContent');
+        const countdownSpan = document.getElementById('countdownNumber');
+        const skipBtn = document.getElementById('skipAdBtn');
         
-        closePreRoll.addEventListener('click', () => {
-            preRollAd.classList.add('closed');
-        });
+        let countdown = 5;
+        let countdownInterval;
+        
+        function closeAd() {
+            fullscreenAd.classList.add('closed');
+            mainContent.classList.add('visible');
+            if (countdownInterval) clearInterval(countdownInterval);
+        }
+        
+        function updateCountdown() {
+            countdownSpan.textContent = countdown;
+            if (countdown <= 0) {
+                closeAd();
+            }
+            countdown--;
+        }
+        
+        // Start countdown
+        countdownInterval = setInterval(updateCountdown, 1000);
+        
+        // Skip button
+        skipBtn.addEventListener('click', closeAd);
         
         // ========== VIDEO PLAYER - STARTS ONLY ON USER CLICK ==========
         const video = document.getElementById('mainVideo');
@@ -715,7 +788,7 @@
             }
         });
         
-        console.log('Page loaded - Compact ads, no blocking');
+        console.log('Page loaded - Fullscreen ad with 5s countdown');
     })();
 </script>
 </body>
