@@ -21,6 +21,9 @@
     <meta name="twitter:description" content="Δες το βίντεο και ανακάλυψε το κατάστημά μας στο Amazon!">
     <meta name="twitter:image" content="https://blog.franklymadear.com/download/photo.png">
     
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -180,6 +183,42 @@
             letter-spacing: 0.5px;
         }
         
+        /* Ad Cards - Premium Style for Better User Experience */
+        .ad-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 200, 100, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .ad-card-label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-align: center;
+            padding: 10px 0 4px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .ad-card-content {
+            padding: 12px 16px 16px;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ad-card-content ins {
+            display: block;
+            width: 100%;
+        }
+        
         /* Amazon Store Card - Premium Style */
         .amazon-card {
             background: linear-gradient(135deg, rgba(35, 47, 62, 0.95), rgba(26, 37, 50, 0.95));
@@ -251,10 +290,86 @@
             color: rgba(255,255,255,0.3);
         }
         
+        /* Sticky Bottom Ad - Non-intrusive for better revenue */
+        .sticky-ad-container {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        
+        .sticky-ad-inner {
+            max-width: 450px;
+            width: 90%;
+            background: rgba(18, 22, 45, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 200, 100, 0.3);
+            overflow: hidden;
+            pointer-events: auto;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transform: translateY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .sticky-ad-inner.collapsed {
+            transform: translateY(150%);
+        }
+        
+        .sticky-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 8px 12px 0;
+        }
+        
+        .close-sticky {
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.2s;
+        }
+        
+        .close-sticky:active {
+            transform: scale(0.94);
+        }
+        
+        .sticky-content {
+            padding: 10px 14px 14px;
+        }
+        
+        /* Animation for ads */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .ad-card {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        
         /* iPhone Optimizations */
         @media (max-width: 480px) {
             body {
                 padding: 12px;
+                padding-bottom: 100px;
             }
             .play-btn {
                 width: 80px;
@@ -270,11 +385,30 @@
             .content-wrapper {
                 padding: 16px 16px 24px;
             }
+            .sticky-ad-inner {
+                width: 95%;
+                bottom: 10px;
+            }
         }
         
         /* Smooth Scrolling */
         html {
             scroll-behavior: smooth;
+        }
+        
+        /* Loading animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #ff9900;
+            animation: spin 0.6s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -316,7 +450,24 @@
             </div>
         </div>
         
-        <!-- Amazon Store Card - Only Store -->
+        <!-- AD 1: After Video - High Visibility for Maximum Revenue -->
+        <div class="ad-card" id="adAfterVideo">
+            <div class="ad-card-label">
+                <i class="fas fa-video"></i> Διαφήμιση
+                <i class="fas fa-crown" style="color: #FFD966;"></i>
+            </div>
+            <div class="ad-card-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3092455087"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+        
+        <!-- Amazon Store Card -->
         <a href="https://www.amazon.de/shop/exoumethemata/list/28PPEU66U03KT?ref_=cm_sw_r_cp_ud_aipsflist_3S3RRSGE6FTD34XN7AFR" 
            target="_blank" 
            rel="noopener noreferrer" 
@@ -335,8 +486,62 @@
             </div>
         </a>
         
+        <!-- AD 2: Mid Content - Additional Revenue Opportunity -->
+        <div class="ad-card" id="adMidContent">
+            <div class="ad-card-label">
+                <i class="fas fa-ad"></i> Χορηγός
+                <i class="fas fa-gem" style="color: #FF69B4;"></i>
+            </div>
+            <div class="ad-card-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3092455087"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+        
+        <!-- AD 3: Before Footer - Final Impression -->
+        <div class="ad-card" id="adBeforeFooter">
+            <div class="ad-card-label">
+                <i class="fas fa-star"></i> Προτεινόμενο
+                <i class="fas fa-fire" style="color: #ff9900;"></i>
+            </div>
+            <div class="ad-card-content">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="3092455087"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+        
         <div class="footer-credit">
             <i class="fas fa-heart" style="color: #ff69b4;"></i> Ευχαριστούμε που μας υποστηρίζεις
+        </div>
+    </div>
+</div>
+
+<!-- Sticky Bottom Ad - Non-intrusive, High CTR -->
+<div class="sticky-ad-container">
+    <div class="sticky-ad-inner" id="stickyAd">
+        <div class="sticky-header">
+            <button class="close-sticky" id="closeStickyBtn">
+                <i class="fas fa-times-circle"></i> Κλείσιμο
+            </button>
+        </div>
+        <div class="sticky-content">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3092455087"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
 </div>
@@ -360,22 +565,97 @@
             video.play().catch(e => console.log('Play blocked:', e));
         }
         
-        // Start video when clicking the play button or video container
         playOverlay.addEventListener('click', startVideo);
         videoContainer.addEventListener('click', startVideo);
         
-        // Auto-hide overlay when video starts playing
         video.addEventListener('play', () => {
             playOverlay.classList.add('hidden');
         });
         
-        // Optional: Show overlay again if video ends (user can replay)
         video.addEventListener('ended', () => {
             videoStarted = false;
             playOverlay.classList.remove('hidden');
         });
         
-        console.log('Page Loaded - Single Play Button, Amazon Store Only');
+        // Sticky Ad with Smart Display Logic
+        const stickyAd = document.getElementById('stickyAd');
+        const closeStickyBtn = document.getElementById('closeStickyBtn');
+        let stickyShown = false;
+        
+        closeStickyBtn.addEventListener('click', () => {
+            stickyAd.classList.add('collapsed');
+            sessionStorage.setItem('stickyClosed', 'true');
+        });
+        
+        // Show sticky ad after user scrolls past video (better UX, higher engagement)
+        if (sessionStorage.getItem('stickyClosed') !== 'true') {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting && !stickyShown) {
+                        stickyShown = true;
+                        stickyAd.classList.remove('collapsed');
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.3 });
+            
+            observer.observe(videoContainer);
+            
+            // Fallback: show after 8 seconds if not closed
+            setTimeout(() => {
+                if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
+                    stickyShown = true;
+                    stickyAd.classList.remove('collapsed');
+                }
+            }, 8000);
+        } else {
+            stickyAd.classList.add('collapsed');
+        }
+        
+        // Lazy Load Ads for Better Performance
+        const adCards = document.querySelectorAll('.ad-card');
+        const adObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const adIns = card.querySelector('ins.adsbygoogle');
+                    if (adIns && !adIns.getAttribute('data-loaded')) {
+                        adIns.setAttribute('data-loaded', 'true');
+                        // Small delay for better performance
+                        setTimeout(() => {
+                            if (typeof adsbygoogle !== 'undefined') {
+                                try { 
+                                    (adsbygoogle = window.adsbygoogle || []).push({}); 
+                                } catch(e) {}
+                            }
+                        }, 100);
+                    }
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '50px' });
+        
+        adCards.forEach(card => adObserver.observe(card));
+        
+        // Force initial ads to load
+        window.addEventListener('load', () => {
+            if (typeof adsbygoogle !== 'undefined') {
+                try { 
+                    (adsbygoogle = window.adsbygoogle || []).push({}); 
+                } catch(e) {}
+            }
+        });
+        
+        // Refresh ads on visibility change (user returns to tab)
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && typeof adsbygoogle !== 'undefined') {
+                try { 
+                    (adsbygoogle = window.adsbygoogle || []).push({}); 
+                } catch(e) {}
+            }
+        });
+        
+        console.log('Ad Campaign Active - Optimized for Maximum Revenue & User Experience');
+        console.log('Ad Placements: After Video, Mid Content, Before Footer, Sticky Bottom');
     })();
 </script>
 </body>
