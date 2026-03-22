@@ -46,116 +46,158 @@
             padding-bottom: 90px;
         }
         
-        /* ========== FULLSCREEN PRE-ROLL AD WITH COUNTDOWN ========== */
-        .fullscreen-ad {
+        /* ========== PRE-ROLL VIDEO AD (5 SECONDS) ========== */
+        .preroll-video-ad {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
-            z-index: 9999;
+            background: #000;
+            z-index: 10000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s ease;
-            backdrop-filter: blur(8px);
         }
         
-        .fullscreen-ad.closed {
+        .preroll-video-ad.closed {
             display: none;
         }
         
-        .ad-content-wrapper {
+        .preroll-container {
+            position: relative;
+            width: 100%;
             max-width: 500px;
-            width: 90%;
-            background: rgba(18, 22, 45, 0.98);
-            border-radius: 32px;
-            border: 2px solid rgba(255, 200, 100, 0.5);
+            background: #000;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
-            animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.6);
         }
         
-        .ad-header-full {
+        .preroll-video {
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .preroll-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px;
-            background: linear-gradient(135deg, #2a1e4a, #1a0f30);
-            border-bottom: 1px solid rgba(255, 200, 100, 0.3);
         }
         
-        .ad-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 700;
-            color: #FFB347;
-        }
-        
-        .countdown-timer {
+        .preroll-countdown {
             background: rgba(255, 68, 68, 0.9);
             color: white;
-            padding: 6px 14px;
+            padding: 8px 16px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 0.9rem;
         }
         
-        .countdown-number {
-            background: white;
-            color: #ff4444;
-            padding: 2px 10px;
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 800;
-            min-width: 40px;
-            text-align: center;
-        }
-        
-        .ad-body-full {
-            padding: 30px 20px;
-            min-height: 280px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #1a1e3a, #12152f);
-        }
-        
-        .skip-button {
-            margin-top: 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 200, 100, 0.5);
+        .preroll-skip {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 200, 100, 0.6);
             color: #FFB347;
-            padding: 10px 20px;
+            padding: 8px 20px;
             border-radius: 50px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 0.85rem;
-            display: inline-flex;
+        }
+        
+        .preroll-skip:active {
+            transform: scale(0.95);
+        }
+        
+        /* ========== ROLL-UP BANNER (Από πάνω προς τα κάτω) ========== */
+        .rollup-banner {
+            position: fixed;
+            top: -200px;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            transition: top 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            pointer-events: none;
+        }
+        
+        .rollup-banner.active {
+            top: 0;
+        }
+        
+        .banner-content {
+            max-width: 500px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #1e2a3a, #0f172a);
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255, 200, 100, 0.4);
+            pointer-events: auto;
+        }
+        
+        .banner-header {
+            background: linear-gradient(135deg, #ff9900, #ff7700);
+            padding: 10px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .banner-title {
+            display: flex;
             align-items: center;
             gap: 8px;
+            font-weight: 700;
+            color: #1a1a2e;
+            font-size: 0.85rem;
         }
         
-        .skip-button:active {
-            transform: scale(0.96);
+        .banner-close {
+            background: rgba(0,0,0,0.3);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
         }
         
-        .ad-footer {
+        .banner-close:active {
+            transform: scale(0.9);
+        }
+        
+        .banner-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background: #000;
+        }
+        
+        .banner-body {
             padding: 12px;
             text-align: center;
-            background: rgba(0,0,0,0.3);
-            font-size: 0.65rem;
-            color: rgba(255,255,255,0.4);
+            background: rgba(0,0,0,0.5);
         }
         
+        .banner-body p {
+            font-size: 0.75rem;
+            color: #ddd;
+        }
+        
+        /* ========== MAIN CONTENT ========== */
         .container {
             max-width: 500px;
             width: 100%;
@@ -168,7 +210,6 @@
             opacity: 1;
         }
         
-        /* Title */
         .page-title {
             text-align: center;
             margin-bottom: 20px;
@@ -202,7 +243,6 @@
             object-fit: cover;
         }
         
-        /* CENTRAL PLAY OVERLAY */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -233,11 +273,6 @@
             align-items: center;
             justify-content: center;
             border: 2px solid rgba(255, 215, 0, 0.9);
-            transition: all 0.2s;
-        }
-        
-        .play-btn:active {
-            transform: scale(0.92);
         }
         
         .play-btn i {
@@ -256,7 +291,6 @@
             border-radius: 40px;
         }
         
-        /* Video Controls */
         .video-controls {
             position: absolute;
             bottom: 0;
@@ -266,14 +300,12 @@
             padding: 15px 18px;
             display: flex;
             justify-content: center;
-            gap: 25px;
             opacity: 0;
             transition: opacity 0.3s;
             z-index: 15;
         }
         
-        .video-container:hover .video-controls,
-        .video-container:active .video-controls {
+        .video-container:hover .video-controls {
             opacity: 1;
         }
         
@@ -282,29 +314,21 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.25);
             color: white;
-            font-size: 1.1rem;
             width: 44px;
             height: 44px;
             border-radius: 50%;
             cursor: pointer;
-            transition: all 0.2s;
         }
         
-        /* Amazon Store Card */
+        /* Amazon Store */
         .amazon-store {
             background: linear-gradient(135deg, #232f3e, #1a2532);
             border-radius: 24px;
             margin: 16px 0;
             border: 1px solid rgba(255, 153, 0, 0.5);
             overflow: hidden;
-            transition: all 0.2s;
-            cursor: pointer;
             text-decoration: none;
             display: block;
-        }
-        
-        .amazon-store:active {
-            transform: scale(0.98);
         }
         
         .amazon-header {
@@ -316,15 +340,12 @@
             gap: 10px;
         }
         
-        .amazon-header i {
-            font-size: 1.5rem;
+        .amazon-header i, .amazon-header span {
             color: #232f3e;
         }
         
         .amazon-header span {
-            font-size: 1rem;
             font-weight: 800;
-            color: #232f3e;
         }
         
         .amazon-body {
@@ -335,7 +356,6 @@
         .amazon-body p {
             color: #ddd;
             margin-bottom: 12px;
-            font-size: 0.85rem;
         }
         
         .amazon-btn {
@@ -344,96 +364,75 @@
             gap: 8px;
             background: #ff9900;
             color: #232f3e;
-            text-decoration: none;
             padding: 10px 22px;
             border-radius: 50px;
             font-weight: 700;
-            font-size: 0.9rem;
         }
         
-        /* ========== ROLL-UP ADS (Αναδιπλούμενες Διαφημίσεις) ========== */
-        .rollup-ad {
+        /* Video Ad Cards */
+        .video-ad-card {
             background: linear-gradient(135deg, #1a1e3a, #12152f);
             border-radius: 20px;
             margin: 16px 0;
             border: 1px solid rgba(255, 200, 100, 0.3);
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            max-height: 0;
-            opacity: 0;
-            padding: 0;
-            transform: translateY(-20px);
-            pointer-events: none;
         }
         
-        .rollup-ad.active {
-            max-height: 400px;
-            opacity: 1;
-            padding: 0;
-            transform: translateY(0);
-            pointer-events: auto;
-            margin: 16px 0;
-        }
-        
-        .rollup-ad-header {
-            background: linear-gradient(135deg, #ff9900, #ff7700);
+        .video-ad-header {
+            background: linear-gradient(135deg, #ff6b6b, #ff4757);
             padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        
-        .rollup-ad-title {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 700;
-            color: #1a1a2e;
+        }
+        
+        .video-ad-header i {
+            color: white;
+        }
+        
+        .video-ad-header span {
+            color: white;
+            font-weight: 600;
             font-size: 0.85rem;
         }
         
-        .rollup-ad-title i {
-            font-size: 1rem;
-        }
-        
-        .rollup-toggle {
-            background: rgba(0,0,0,0.2);
-            border: none;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: all 0.2s;
-        }
-        
-        .rollup-toggle:active {
-            transform: scale(0.9);
-        }
-        
-        .rollup-ad-content {
-            padding: 16px;
-            background: rgba(18, 22, 45, 0.9);
-        }
-        
-        .rollup-ad-content ins {
-            display: block;
+        .video-ad-video {
             width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            background: #000;
         }
         
-        /* Different styles for roll-up ads */
-        .rollup-ad-1 {
-            border-left: 3px solid #ff6b6b;
+        .video-ad-footer {
+            padding: 8px;
+            text-align: center;
+            background: rgba(0,0,0,0.4);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
         }
         
-        .rollup-ad-2 {
-            border-left: 3px solid #4ecdc4;
+        /* Regular Ad Cards */
+        .content-card {
+            background: rgba(18, 22, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 14px 0;
+            border: 1px solid rgba(255, 200, 100, 0.2);
         }
         
-        .rollup-ad-3 {
-            border-left: 3px solid #ffe66d;
+        .card-label {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.45);
+            text-align: center;
+            padding: 6px 0 3px;
+        }
+        
+        .card-content {
+            padding: 10px 14px 14px;
+            min-height: 85px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         /* Sticky Bottom Ad */
@@ -442,7 +441,6 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, #0a0a1a, transparent);
             padding: 6px 10px;
             z-index: 1000;
             transform: translateY(0);
@@ -462,9 +460,7 @@
             backdrop-filter: blur(16px);
             border-radius: 16px;
             border: 1px solid rgba(255, 200, 100, 0.4);
-            overflow: hidden;
             pointer-events: auto;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
         }
         
         .sticky-header {
@@ -482,47 +478,15 @@
             font-size: 0.7rem;
             font-weight: 700;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .close-sticky:active {
-            transform: scale(0.94);
         }
         
         .sticky-content {
             padding: 8px 12px 12px;
         }
         
-        /* Regular content cards */
-        .content-card {
-            background: rgba(18, 22, 45, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            margin: 14px 0;
-            border: 1px solid rgba(255, 200, 100, 0.2);
-            overflow: hidden;
-        }
-        
-        .card-label {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.45);
-            text-align: center;
-            padding: 6px 0 3px;
-        }
-        
-        .card-content {
-            padding: 10px 14px 14px;
-            min-height: 85px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
         .footer-note {
             text-align: center;
-            padding: 20px 0 20px;
+            padding: 20px 0;
             font-size: 0.65rem;
             color: rgba(255,255,255,0.3);
         }
@@ -532,51 +496,43 @@
             to { opacity: 1; }
         }
         
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         @media (max-width: 480px) {
             body { padding: 12px; padding-bottom: 80px; }
             .play-btn { width: 65px; height: 65px; }
             .play-btn i { font-size: 2rem; }
-            .rollup-ad.active { max-height: 380px; }
-            .rollup-ad-content { padding: 12px; }
         }
     </style>
 </head>
 <body>
 
-<!-- FULLSCREEN PRE-ROLL AD -->
-<div class="fullscreen-ad" id="fullscreenAd">
-    <div class="ad-content-wrapper">
-        <div class="ad-header-full">
-            <div class="ad-logo">
-                <i class="fas fa-bullhorn"></i>
-                <span>Χορηγός</span>
-            </div>
-            <div class="countdown-timer">
-                <i class="fas fa-hourglass-half"></i>
-                <span>σε</span>
-                <span class="countdown-number" id="countdownNumber">5</span>
-                <span>δλ</span>
-            </div>
+<!-- PRE-ROLL VIDEO AD (5 SECONDS) -->
+<div class="preroll-video-ad" id="prerollAd">
+    <div class="preroll-container">
+        <video id="prerollVideo" class="preroll-video" playsinline autoplay muted>
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+        </video>
+        <div class="preroll-overlay">
+            <div class="preroll-countdown" id="prerollCountdown">5 δευτ.</div>
+            <button class="preroll-skip" id="skipPrerollBtn">Παράλειψη</button>
         </div>
-        <div class="ad-body-full">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+</div>
+
+<!-- ROLL-UP BANNER (Από πάνω προς τα κάτω) -->
+<div class="rollup-banner" id="rollupBanner">
+    <div class="banner-content">
+        <div class="banner-header">
+            <div class="banner-title">
+                <i class="fas fa-fire"></i>
+                <span>✨ ΠΡΟΣΦΟΡΑ ΕΒΔΟΜΑΔΑΣ ✨</span>
+            </div>
+            <button class="banner-close" id="closeBannerBtn"><i class="fas fa-times"></i></button>
         </div>
-        <button class="skip-button" id="skipAdBtn">
-            <i class="fas fa-forward"></i> Παράλειψη τώρα
-        </button>
-        <div class="ad-footer">
-            Η διαφήμιση θα κλείσει αυτόματα σε λίγα δευτερόλεπτα
+        <video id="bannerVideo" class="banner-video" playsinline muted loop>
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+        </video>
+        <div class="banner-body">
+            <p><i class="fas fa-tag"></i> Έως και -50% σε επιλεγμένα προϊόντα!</p>
         </div>
     </div>
 </div>
@@ -586,7 +542,7 @@
         <h1>Άλλα λέει η Θειαμ</h1>
     </div>
     
-    <!-- VIDEO -->
+    <!-- MAIN VIDEO -->
     <div class="video-container" id="videoContainer">
         <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline webkit-playsinline preload="metadata">
             <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
@@ -604,9 +560,7 @@
     
     <!-- AMAZON STORE -->
     <a href="https://www.amazon.de/shop/exoumethemata/list/28PPEU66U03KT?ref_=cm_sw_r_cp_ud_aipsflist_3S3RRSGE6FTD34XN7AFR" 
-       target="_blank" 
-       rel="noopener noreferrer" 
-       class="amazon-store">
+       target="_blank" rel="noopener noreferrer" class="amazon-store">
         <div class="amazon-header">
             <i class="fab fa-amazon"></i>
             <span>Το κατάστημά μας στο Amazon</span>
@@ -621,77 +575,45 @@
         </div>
     </a>
     
-    <!-- ROLL-UP AD 1 - Εμφανίζεται με scroll -->
-    <div class="rollup-ad rollup-ad-1" id="rollupAd1">
-        <div class="rollup-ad-header">
-            <div class="rollup-ad-title">
-                <i class="fas fa-chart-line"></i>
-                <span>🔥 Προτεινόμενη Προσφορά</span>
-            </div>
-            <button class="rollup-toggle" data-target="rollupAd1">−</button>
+    <!-- VIDEO AD 1 - Εμπορικό βίντεο -->
+    <div class="video-ad-card">
+        <div class="video-ad-header">
+            <i class="fas fa-play-circle"></i>
+            <span>🎬 Διαφημιστικό Σποτ - Ανακάλυψε περισσότερα</span>
         </div>
-        <div class="rollup-ad-content">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="autorelaxed"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="9660744817"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <video class="video-ad-video" playsinline muted loop>
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+        </video>
+        <div class="video-ad-footer">
+            <i class="fas fa-music"></i> Διαφήμιση | Πατήστε για ήχο
         </div>
     </div>
     
-    <!-- ROLL-UP AD 2 - Εμφανίζεται μετά το video -->
-    <div class="rollup-ad rollup-ad-2" id="rollupAd2">
-        <div class="rollup-ad-header">
-            <div class="rollup-ad-title">
-                <i class="fas fa-gem"></i>
-                <span>✨ Ειδική Έκπτωση - Μόνο Σήμερα</span>
-            </div>
-            <button class="rollup-toggle" data-target="rollupAd2">−</button>
-        </div>
-        <div class="rollup-ad-content">
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-format="fluid"
-                 data-ad-layout-key="-fb+5w+4e-db+86"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="3969235710"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-    </div>
-    
-    <!-- Regular Ad Cards -->
+    <!-- AdSense Card -->
     <div class="content-card">
-        <div class="card-label"><i class="fas fa-video"></i> Διαφήμιση Βίντεο</div>
+        <div class="card-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
         <div class="card-content">
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-3186700611266549"
-                 data-ad-slot="3092455087"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        </div>
-    </div>
-    
-    <!-- ROLL-UP AD 3 - Εμφανίζεται κοντά στο τέλος -->
-    <div class="rollup-ad rollup-ad-3" id="rollupAd3">
-        <div class="rollup-ad-header">
-            <div class="rollup-ad-title">
-                <i class="fas fa-trophy"></i>
-                <span>🎯 Προσφορές που αγαπήσατε</span>
-            </div>
-            <button class="rollup-toggle" data-target="rollupAd3">−</button>
-        </div>
-        <div class="rollup-ad-content">
-            <ins class="adsbygoogle"
-                 style="display:block"
                  data-ad-format="autorelaxed"
                  data-ad-client="ca-pub-3186700611266549"
                  data-ad-slot="9660744817"
                  data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+    
+    <!-- VIDEO AD 2 - Δεύτερο εμπορικό βίντεο -->
+    <div class="video-ad-card">
+        <div class="video-ad-header">
+            <i class="fas fa-video"></i>
+            <span>🔥 Προσφορά περιορισμένου χρόνου</span>
+        </div>
+        <video class="video-ad-video" playsinline muted loop>
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+        </video>
+        <div class="video-ad-footer">
+            <i class="fas fa-clock"></i> Μόνο για σήμερα!
         </div>
     </div>
     
@@ -724,164 +646,156 @@
     (function() {
         'use strict';
         
-        // ========== FULLSCREEN AD ==========
-        const fullscreenAd = document.getElementById('fullscreenAd');
+        // ========== PRE-ROLL VIDEO AD (5 SECONDS) ==========
+        const prerollAd = document.getElementById('prerollAd');
+        const prerollVideo = document.getElementById('prerollVideo');
+        const prerollCountdown = document.getElementById('prerollCountdown');
+        const skipPrerollBtn = document.getElementById('skipPrerollBtn');
         const mainContent = document.getElementById('mainContent');
-        const countdownSpan = document.getElementById('countdownNumber');
-        const skipBtn = document.getElementById('skipAdBtn');
-        let countdown = 5;
+        
+        let prerollTimer = 5;
         let countdownInterval;
         
-        function closeAd() {
-            fullscreenAd.classList.add('closed');
-            mainContent.classList.add('visible');
+        function closePreroll() {
             if (countdownInterval) clearInterval(countdownInterval);
+            prerollAd.classList.add('closed');
+            mainContent.classList.add('visible');
+            // Start playing main video automatically after pre-roll?
+            prerollVideo.pause();
         }
         
-        function updateCountdown() {
-            countdownSpan.textContent = countdown;
-            if (countdown <= 0) closeAd();
-            countdown--;
+        function updatePrerollCountdown() {
+            prerollCountdown.textContent = prerollTimer + ' δευτ.';
+            if (prerollTimer <= 0) {
+                closePreroll();
+            }
+            prerollTimer--;
         }
         
-        countdownInterval = setInterval(updateCountdown, 1000);
-        skipBtn.addEventListener('click', closeAd);
+        // Start countdown when video starts playing
+        prerollVideo.addEventListener('play', () => {
+            if (!countdownInterval) {
+                countdownInterval = setInterval(updatePrerollCountdown, 1000);
+            }
+        });
         
-        // ========== VIDEO PLAYER ==========
-        const video = document.getElementById('mainVideo');
+        // If video ends, close automatically
+        prerollVideo.addEventListener('ended', () => {
+            closePreroll();
+        });
+        
+        skipPrerollBtn.addEventListener('click', closePreroll);
+        
+        // ========== ROLL-UP BANNER (Slides down from top) ==========
+        const rollupBanner = document.getElementById('rollupBanner');
+        const closeBannerBtn = document.getElementById('closeBannerBtn');
+        const bannerVideo = document.getElementById('bannerVideo');
+        let bannerShown = false;
+        
+        function showRollupBanner() {
+            if (bannerShown) return;
+            bannerShown = true;
+            rollupBanner.classList.add('active');
+            // Play banner video
+            bannerVideo.play().catch(e => console.log('Banner video autoplay blocked'));
+        }
+        
+        function hideRollupBanner() {
+            rollupBanner.classList.remove('active');
+            bannerVideo.pause();
+        }
+        
+        closeBannerBtn.addEventListener('click', hideRollupBanner);
+        
+        // Show banner after pre-roll closes
+        const observerForPreload = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class' && prerollAd.classList.contains('closed')) {
+                    setTimeout(showRollupBanner, 1000);
+                    observerForPreload.disconnect();
+                }
+            });
+        });
+        observerForPreload.observe(prerollAd, { attributes: true });
+        
+        // Also show after scroll as fallback
+        setTimeout(() => {
+            if (!bannerShown && prerollAd.classList.contains('closed')) {
+                showRollupBanner();
+            }
+        }, 5000);
+        
+        // ========== MAIN VIDEO PLAYER ==========
+        const mainVideo = document.getElementById('mainVideo');
         const playOverlay = document.getElementById('playOverlay');
         const muteBtn = document.getElementById('muteBtn');
         let videoStarted = false;
         
-        function startVideo() {
+        function startMainVideo() {
             if (videoStarted) return;
             videoStarted = true;
             playOverlay.classList.add('hidden');
-            video.muted = false;
+            mainVideo.muted = false;
             muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-            video.play().catch(e => console.log('Play blocked:', e));
+            mainVideo.play().catch(e => console.log('Play blocked:', e));
         }
         
         function toggleMute() {
             if (!videoStarted) return;
-            video.muted = !video.muted;
-            muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+            mainVideo.muted = !mainVideo.muted;
+            muteBtn.innerHTML = mainVideo.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
         }
         
-        playOverlay.addEventListener('click', startVideo);
+        playOverlay.addEventListener('click', startMainVideo);
         muteBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMute(); });
         
-        // ========== ROLL-UP ADS FUNCTIONALITY ==========
-        // Function to activate a roll-up ad (expand it)
-        function activateRollupAd(adId) {
-            const ad = document.getElementById(adId);
-            if (ad && !ad.classList.contains('active')) {
-                ad.classList.add('active');
-                // Load AdSense ad when expanded
-                const adIns = ad.querySelector('ins.adsbygoogle');
-                if (adIns && !adIns.getAttribute('data-loaded')) {
-                    adIns.setAttribute('data-loaded', 'true');
-                    if (typeof adsbygoogle !== 'undefined') {
-                        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-                    }
-                }
-            }
-        }
-        
-        // Toggle functionality for roll-up ads (close/open)
-        const toggleButtons = document.querySelectorAll('.rollup-toggle');
-        toggleButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const targetId = btn.getAttribute('data-target');
-                const ad = document.getElementById(targetId);
-                if (ad) {
-                    if (ad.classList.contains('active')) {
-                        ad.classList.remove('active');
-                        btn.textContent = '+';
-                    } else {
-                        ad.classList.add('active');
-                        btn.textContent = '−';
-                        // Load ad when opening
-                        const adIns = ad.querySelector('ins.adsbygoogle');
-                        if (adIns && !adIns.getAttribute('data-loaded')) {
-                            adIns.setAttribute('data-loaded', 'true');
-                            if (typeof adsbygoogle !== 'undefined') {
-                                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+        // ========== VIDEO ADS WITH SOUND TOGGLE ==========
+        const videoAds = document.querySelectorAll('.video-ad-video');
+        videoAds.forEach((adVideo, index) => {
+            let isMuted = true;
+            adVideo.muted = true;
+            
+            // Add click handler to toggle sound
+            const parentCard = adVideo.closest('.video-ad-card');
+            if (parentCard) {
+                parentCard.addEventListener('click', (e) => {
+                    if (e.target === adVideo || parentCard.contains(e.target)) {
+                        isMuted = !isMuted;
+                        adVideo.muted = isMuted;
+                        // Visual feedback
+                        const footer = parentCard.querySelector('.video-ad-footer');
+                        if (footer) {
+                            if (!isMuted) {
+                                footer.innerHTML = '<i class="fas fa-volume-up"></i> Ήχος ενεργός | Πατήστε για σίγαση';
+                                setTimeout(() => {
+                                    if (footer.innerHTML.includes('Ήχος ενεργός')) {
+                                        footer.innerHTML = '<i class="fas fa-music"></i> Διαφήμιση | Πατήστε για ήχο';
+                                    }
+                                }, 2000);
+                            } else {
+                                footer.innerHTML = '<i class="fas fa-volume-mute"></i> Σίγαση | Πατήστε για ήχο';
+                                setTimeout(() => {
+                                    if (footer.innerHTML.includes('Σίγαση')) {
+                                        footer.innerHTML = '<i class="fas fa-music"></i> Διαφήμιση | Πατήστε για ήχο';
+                                    }
+                                }, 2000);
                             }
                         }
                     }
-                }
-            });
-            // Set initial button text
-            btn.textContent = '+';
-        });
-        
-        // ========== SCROLL TRIGGER FOR ROLL-UP ADS ==========
-        let rollup1Triggered = false;
-        let rollup2Triggered = false;
-        let rollup3Triggered = false;
-        
-        function checkScrollForRollups() {
-            const scrollY = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const documentHeight = document.documentElement.scrollHeight;
-            
-            // Roll-up Ad 1: When user scrolls past 30% of the page
-            if (!rollup1Triggered && scrollY > windowHeight * 0.3) {
-                rollup1Triggered = true;
-                activateRollupAd('rollupAd1');
-                // Set button to minus
-                const btn1 = document.querySelector('[data-target="rollupAd1"]');
-                if (btn1) btn1.textContent = '−';
+                });
             }
             
-            // Roll-up Ad 2: After video starts playing or after scrolling past video
-            if (!rollup2Triggered && videoStarted && scrollY > windowHeight * 0.8) {
-                rollup2Triggered = true;
-                activateRollupAd('rollupAd2');
-                const btn2 = document.querySelector('[data-target="rollupAd2"]');
-                if (btn2) btn2.textContent = '−';
-            }
-            
-            // Alternative trigger for Ad2 if video never starts
-            if (!rollup2Triggered && !videoStarted && scrollY > windowHeight * 1.2) {
-                rollup2Triggered = true;
-                activateRollupAd('rollupAd2');
-                const btn2 = document.querySelector('[data-target="rollupAd2"]');
-                if (btn2) btn2.textContent = '−';
-            }
-            
-            // Roll-up Ad 3: Near the end of page (85% scroll)
-            if (!rollup3Triggered && scrollY + windowHeight > documentHeight * 0.85) {
-                rollup3Triggered = true;
-                activateRollupAd('rollupAd3');
-                const btn3 = document.querySelector('[data-target="rollupAd3"]');
-                if (btn3) btn3.textContent = '−';
-            }
-        }
-        
-        // Also trigger Ad2 when video starts playing
-        video.addEventListener('play', () => {
-            if (!rollup2Triggered && videoStarted) {
-                // Check if we should show it immediately or wait for scroll
-                setTimeout(() => {
-                    if (!rollup2Triggered) {
-                        const scrollY = window.scrollY;
-                        if (scrollY > window.innerHeight * 0.5) {
-                            rollup2Triggered = true;
-                            activateRollupAd('rollupAd2');
-                            const btn2 = document.querySelector('[data-target="rollupAd2"]');
-                            if (btn2) btn2.textContent = '−';
-                        }
+            // Play when visible
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        adVideo.play().catch(e => console.log('Video ad autoplay blocked'));
+                    } else {
+                        adVideo.pause();
                     }
-                }, 2000);
-            }
-        });
-        
-        window.addEventListener('scroll', checkScrollForRollups);
-        window.addEventListener('load', () => {
-            setTimeout(checkScrollForRollups, 1000);
+                });
+            }, { threshold: 0.3 });
+            observer.observe(adVideo);
         });
         
         // ========== STICKY AD ==========
@@ -897,16 +811,16 @@
         if (sessionStorage.getItem('stickyClosed') === 'true') {
             stickyAd.classList.add('collapsed');
         } else {
-            const observer = new IntersectionObserver((entries) => {
+            const stickyObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (!entry.isIntersecting && !stickyShown) {
                         stickyShown = true;
                         stickyAd.classList.remove('collapsed');
-                        observer.disconnect();
+                        stickyObserver.disconnect();
                     }
                 });
             }, { threshold: 0.5 });
-            observer.observe(document.getElementById('videoContainer'));
+            stickyObserver.observe(document.getElementById('videoContainer'));
             setTimeout(() => {
                 if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
                     stickyShown = true;
@@ -915,7 +829,7 @@
             }, 8000);
         }
         
-        // ========== LAZY LOAD REGULAR ADS ==========
+        // ========== ADSENSE LAZY LOAD ==========
         const contentCards = document.querySelectorAll('.content-card');
         const adObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -951,7 +865,7 @@
             }
         });
         
-        console.log('Roll-up ads integrated - appear as user scrolls');
+        console.log('Pre-roll video ad, roll-up banner, and video ads loaded');
     })();
 </script>
 </body>
