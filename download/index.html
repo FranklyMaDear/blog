@@ -203,7 +203,6 @@
             overflow: hidden;
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 200, 100, 0.3);
             margin: 0 auto 20px;
-            cursor: pointer;
         }
         
         .video-container video {
@@ -213,7 +212,7 @@
             object-fit: cover;
         }
         
-        /* Play Overlay */
+        /* CENTRAL PLAY OVERLAY - ONLY ONE */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -228,6 +227,7 @@
             cursor: pointer;
             z-index: 10;
             backdrop-filter: blur(3px);
+            transition: opacity 0.3s ease;
         }
         
         .play-overlay.hidden {
@@ -268,7 +268,7 @@
             border-radius: 40px;
         }
         
-        /* Video Controls */
+        /* Video Controls - Removed duplicate play button */
         .video-controls {
             position: absolute;
             bottom: 0;
@@ -368,7 +368,100 @@
             transition: all 0.2s;
         }
         
-        /* ========== STICKY BOTTOM AD - SMALLER 50% FOR MOBILE ========== */
+        /* ========== POPUP AD STYLES ========== */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .popup-ad {
+            max-width: 340px;
+            width: 85%;
+            background: linear-gradient(135deg, #1e1a3a, #0f0d25);
+            border-radius: 32px;
+            border: 2px solid rgba(255, 180, 70, 0.6);
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.6);
+            animation: popIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+            cursor: default;
+        }
+        
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        
+        .popup-header {
+            background: linear-gradient(135deg, #ff9900, #ff7700);
+            padding: 14px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .popup-header h3 {
+            color: #1a1a2e;
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .popup-close {
+            background: rgba(0,0,0,0.3);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .popup-close:active {
+            transform: scale(0.9);
+            background: rgba(0,0,0,0.5);
+        }
+        
+        .popup-body {
+            padding: 24px 20px;
+            text-align: center;
+        }
+        
+        .popup-body ins {
+            display: block;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .popup-footer {
+            padding: 12px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
+        }
+        
+        /* Sticky Ad */
         .sticky-ad {
             position: fixed;
             bottom: 0;
@@ -421,13 +514,8 @@
             transition: all 0.2s;
         }
         
-        .close-sticky i {
-            font-size: 0.7rem;
-        }
-        
         .close-sticky:active {
             transform: scale(0.94);
-            background: #ff6666;
         }
         
         .sticky-content {
@@ -439,7 +527,7 @@
             width: 100%;
         }
         
-        /* Content Cards for Ads */
+        /* Content Cards */
         .content-card {
             background: rgba(18, 22, 45, 0.8);
             backdrop-filter: blur(10px);
@@ -486,62 +574,19 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* iPhone & Mobile Optimizations */
+        /* Mobile Optimizations */
         @media (max-width: 480px) {
-            body { 
-                padding: 12px; 
-                padding-bottom: 80px; 
-            }
+            body { padding: 12px; padding-bottom: 80px; }
             .play-btn { width: 65px; height: 65px; }
             .play-btn i { font-size: 2rem; }
             .play-text { font-size: 0.75rem; }
-            .ad-header-full { padding: 12px 16px; }
-            .countdown-timer { padding: 4px 10px; font-size: 0.75rem; }
-            .countdown-number { font-size: 0.9rem; min-width: 35px; padding: 1px 8px; }
-            .skip-button { padding: 8px 16px; font-size: 0.75rem; }
-            
-            /* Sticky ad smaller for iPhone */
-            .sticky-ad {
-                padding: 4px 8px;
-            }
-            .sticky-inner {
-                width: 96%;
-                border-radius: 14px;
-            }
-            .sticky-header {
-                padding: 5px 8px 0;
-            }
-            .close-sticky {
-                padding: 5px 12px;
-                font-size: 0.65rem;
-            }
-            .close-sticky i {
-                font-size: 0.6rem;
-            }
-            .sticky-content {
-                padding: 6px 10px 10px;
-            }
+            .popup-ad { max-width: 300px; }
+            .popup-body { padding: 20px 16px; }
         }
         
-        /* Small iPhones (SE, 12 mini, etc) */
         @media (max-width: 380px) {
-            .sticky-inner {
-                width: 98%;
-            }
-            .close-sticky {
-                padding: 4px 10px;
-                font-size: 0.6rem;
-            }
-            .sticky-content {
-                padding: 4px 8px 8px;
-            }
-        }
-        
-        /* iPad & Tablets */
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .sticky-inner {
-                max-width: 500px;
-            }
+            .sticky-inner { width: 98%; }
+            .popup-ad { max-width: 280px; }
         }
     </style>
 </head>
@@ -581,30 +626,29 @@
 </div>
 
 <div class="container" id="mainContent">
-    
-    <!-- Title -->
     <div class="page-title">
         <h1>Άλλα λέει η Θειαμ</h1>
     </div>
     
-    <!-- VIDEO - Starts on user click -->
+    <!-- VIDEO - Single central play button -->
     <div class="video-container" id="videoContainer">
         <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline webkit-playsinline preload="metadata">
             <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
         </video>
+        <!-- SINGLE CENTRAL PLAY OVERLAY -->
         <div class="play-overlay" id="playOverlay">
             <div class="play-btn">
                 <i class="fas fa-play"></i>
             </div>
             <div class="play-text">Πάτησε για να δεις το βίντεο</div>
         </div>
+        <!-- Video controls - NO PLAY BUTTON, only mute and other controls -->
         <div class="video-controls">
-            <button id="playPauseBtn"><i class="fas fa-play"></i></button>
             <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
         </div>
     </div>
     
-    <!-- AMAZON STORE - Your Affiliate Store -->
+    <!-- AMAZON STORE -->
     <a href="https://www.amazon.de/shop/exoumethemata/list/28PPEU66U03KT?ref_=cm_sw_r_cp_ud_aipsflist_3S3RRSGE6FTD34XN7AFR" 
        target="_blank" 
        rel="noopener noreferrer" 
@@ -670,8 +714,8 @@
     </div>
 </div>
 
-<!-- STICKY BOTTOM AD - 50% SMALLER WITH VISIBLE X BUTTON -->
-<div class="sticky-ad" id="stickyAd">
+<!-- STICKY BOTTOM AD -->
+<div class="sticky-ad collapsed" id="stickyAd">
     <div class="sticky-inner">
         <div class="sticky-header">
             <button class="close-sticky" id="closeStickyBtn">
@@ -717,28 +761,16 @@
             countdown--;
         }
         
-        // Start countdown
         countdownInterval = setInterval(updateCountdown, 1000);
-        
-        // Skip button
         skipBtn.addEventListener('click', closeAd);
         
-        // ========== VIDEO PLAYER - STARTS ONLY ON USER CLICK ==========
+        // ========== VIDEO PLAYER - SINGLE CENTRAL PLAY BUTTON ==========
         const video = document.getElementById('mainVideo');
         const playOverlay = document.getElementById('playOverlay');
-        const playPauseBtn = document.getElementById('playPauseBtn');
         const muteBtn = document.getElementById('muteBtn');
         const videoContainer = document.getElementById('videoContainer');
         
         let videoStarted = false;
-        
-        function updatePlayIcon() {
-            if (video.paused) {
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            } else {
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }
-        }
         
         function startVideo() {
             if (videoStarted) return;
@@ -747,20 +779,6 @@
             video.muted = false;
             muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
             video.play().catch(e => console.log('Play blocked:', e));
-            updatePlayIcon();
-        }
-        
-        function togglePlayPause() {
-            if (!videoStarted) {
-                startVideo();
-                return;
-            }
-            if (video.paused) {
-                video.play();
-            } else {
-                video.pause();
-            }
-            updatePlayIcon();
         }
         
         function toggleMute() {
@@ -769,20 +787,15 @@
             muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
         }
         
+        // Click on overlay starts video
         playOverlay.addEventListener('click', startVideo);
         
+        // Click on video container (but not on buttons) does nothing - only overlay starts video
         videoContainer.addEventListener('click', (e) => {
             if (e.target.closest('button')) return;
             if (!videoStarted) {
                 startVideo();
-            } else {
-                togglePlayPause();
             }
-        });
-        
-        playPauseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlayPause();
         });
         
         muteBtn.addEventListener('click', (e) => {
@@ -790,10 +803,115 @@
             toggleMute();
         });
         
-        video.addEventListener('play', updatePlayIcon);
-        video.addEventListener('pause', updatePlayIcon);
+        // ========== POPUP ADS - Appear at specific moments ==========
+        function showPopupAd() {
+            // Check if popup already exists
+            if (document.querySelector('.popup-overlay')) return;
+            
+            const popupOverlay = document.createElement('div');
+            popupOverlay.className = 'popup-overlay';
+            popupOverlay.innerHTML = `
+                <div class="popup-ad">
+                    <div class="popup-header">
+                        <h3><i class="fas fa-gift"></i> Ειδική Προσφορά</h3>
+                        <button class="popup-close" id="popupCloseBtn"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="popup-body">
+                        <ins class="adsbygoogle"
+                             style="display:block; width:100%;"
+                             data-ad-format="autorelaxed"
+                             data-ad-client="ca-pub-3186700611266549"
+                             data-ad-slot="9660744817"
+                             data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});<\/script>
+                    </div>
+                    <div class="popup-footer">
+                        Διαφήμιση - Κλείστε για να συνεχίσετε
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(popupOverlay);
+            
+            const popupClose = document.getElementById('popupCloseBtn');
+            const closePopup = () => {
+                popupOverlay.remove();
+            };
+            popupClose.addEventListener('click', closePopup);
+            popupOverlay.addEventListener('click', (e) => {
+                if (e.target === popupOverlay) closePopup();
+            });
+        }
         
-        // ========== STICKY AD WITH SCROLL DETECTION ==========
+        // Show popup ad when video starts
+        function showVideoStartPopup() {
+            setTimeout(() => {
+                if (!document.querySelector('.popup-overlay')) {
+                    showPopupAd();
+                }
+            }, 800);
+        }
+        
+        // Show popup ad when user scrolls past video
+        function setupScrollPopup() {
+            let popupShown = false;
+            window.addEventListener('scroll', () => {
+                if (!popupShown && window.scrollY > 300) {
+                    popupShown = true;
+                    setTimeout(() => {
+                        if (!document.querySelector('.popup-overlay')) {
+                            showPopupAd();
+                        }
+                    }, 500);
+                }
+            });
+        }
+        
+        // Show popup after 15 seconds of page interaction
+        function setupTimedPopup() {
+            setTimeout(() => {
+                if (!document.querySelector('.popup-overlay')) {
+                    showPopupAd();
+                }
+            }, 18000);
+        }
+        
+        // Show popup when clicking on Amazon store (exit intent style)
+        const amazonStore = document.querySelector('.amazon-store');
+        if (amazonStore) {
+            amazonStore.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (!document.querySelector('.popup-overlay')) {
+                        showPopupAd();
+                    }
+                }, 100);
+            });
+        }
+        
+        // ========== TRIGGER POPUPS ON VIDEO START ==========
+        const originalStartVideo = startVideo;
+        window.startVideo = startVideo;
+        
+        // Override startVideo to also trigger popup
+        video.addEventListener('play', () => {
+            if (videoStarted) {
+                showVideoStartPopup();
+            }
+        });
+        
+        // Also trigger on first user interaction with video
+        const observerForVideoStart = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === 'class') {
+                    if (playOverlay.classList.contains('hidden') && !videoStarted) {
+                        videoStarted = true;
+                        showVideoStartPopup();
+                    }
+                }
+            });
+        });
+        observerForVideoStart.observe(playOverlay, { attributes: true });
+        
+        // ========== STICKY AD ==========
         const stickyAd = document.getElementById('stickyAd');
         const closeSticky = document.getElementById('closeStickyBtn');
         let stickyShown = false;
@@ -815,9 +933,7 @@
                     }
                 });
             }, { threshold: 0.5 });
-            
             observer.observe(videoContainer);
-            
             setTimeout(() => {
                 if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
                     stickyShown = true;
@@ -826,7 +942,7 @@
             }, 8000);
         }
         
-        // ========== LAZY LOAD DEEP ADS ==========
+        // ========== LAZY LOAD ADS ==========
         const contentCards = document.querySelectorAll('.content-card');
         const adObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -842,10 +958,25 @@
                 }
             });
         }, { threshold: 0.1, rootMargin: '100px' });
-        
         contentCards.forEach(card => adObserver.observe(card));
         
-        // ========== BACKGROUND AD FOR EXTRA REVENUE ==========
+        // ========== EXTRA POPUP TRIGGERS ==========
+        setupScrollPopup();
+        setupTimedPopup();
+        
+        // Additional popup when user clicks on any content card
+        const contentCardsClick = document.querySelectorAll('.content-card');
+        contentCardsClick.forEach(card => {
+            card.addEventListener('click', () => {
+                setTimeout(() => {
+                    if (!document.querySelector('.popup-overlay')) {
+                        showPopupAd();
+                    }
+                }, 200);
+            });
+        });
+        
+        // ========== BACKGROUND AD ==========
         setTimeout(() => {
             const bgAd = document.createElement('div');
             bgAd.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
@@ -864,14 +995,13 @@
             setTimeout(() => bgAd.remove(), 12000);
         }, 5000);
         
-        // ========== FINAL AD PUSH ==========
         window.addEventListener('load', () => {
             if (typeof adsbygoogle !== 'undefined') {
                 try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
             }
         });
         
-        console.log('Page loaded - Sticky ad reduced by 50% for mobile');
+        console.log('Page loaded - Single play button, popup ads integrated');
     })();
 </script>
 </body>
