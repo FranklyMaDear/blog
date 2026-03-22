@@ -121,8 +121,8 @@
             object-fit: cover;
         }
         
-        /* Premium Play Button - Centered */
-        .premium-play-overlay {
+        /* Single Play Button - Centered */
+        .play-overlay {
             position: absolute;
             top: 0;
             left: 0;
@@ -139,11 +139,11 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .premium-play-overlay.hidden {
+        .play-overlay.hidden {
             display: none;
         }
         
-        .premium-play-btn {
+        .play-btn {
             width: 100px;
             height: 100px;
             background: linear-gradient(135deg, rgba(255,255,255,0.25), rgba(255,255,255,0.1));
@@ -157,18 +157,18 @@
             box-shadow: 0 0 30px rgba(255,215,0,0.3);
         }
         
-        .premium-play-btn:active {
+        .play-btn:active {
             transform: scale(0.92);
         }
         
-        .premium-play-btn i {
+        .play-btn i {
             font-size: 3rem;
             color: white;
             margin-left: 8px;
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
         }
         
-        .play-text-premium {
+        .play-text {
             margin-top: 20px;
             color: white;
             font-size: 0.9rem;
@@ -178,45 +178,6 @@
             padding: 8px 20px;
             border-radius: 40px;
             letter-spacing: 0.5px;
-        }
-        
-        /* Video Controls */
-        .ios-video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 20px 20px 16px;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 15;
-        }
-        
-        .video-container:hover .ios-video-controls,
-        .video-container:active .ios-video-controls {
-            opacity: 1;
-        }
-        
-        .control-btn {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            font-size: 1.2rem;
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .control-btn:active {
-            transform: scale(0.92);
-            background: rgba(255,255,255,0.3);
         }
         
         /* Amazon Store Card - Premium Style */
@@ -295,14 +256,14 @@
             body {
                 padding: 12px;
             }
-            .premium-play-btn {
+            .play-btn {
                 width: 80px;
                 height: 80px;
             }
-            .premium-play-btn i {
+            .play-btn i {
                 font-size: 2.5rem;
             }
-            .play-text-premium {
+            .play-text {
                 font-size: 0.8rem;
                 padding: 6px 16px;
             }
@@ -338,23 +299,19 @@
             </div>
         </div>
         
-        <!-- Video Section with Premium Play Button -->
+        <!-- Video Section with Single Play Button -->
         <div class="video-wrapper">
             <div class="video-container" id="videoContainer">
                 <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline webkit-playsinline preload="metadata">
                     <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
                 </video>
-                <div class="premium-play-overlay" id="playOverlay">
-                    <div class="premium-play-btn">
+                <div class="play-overlay" id="playOverlay">
+                    <div class="play-btn">
                         <i class="fas fa-play"></i>
                     </div>
-                    <div class="play-text-premium">
+                    <div class="play-text">
                         <i class="fas fa-hand-pointer"></i> Πάτα για αναπαραγωγή
                     </div>
-                </div>
-                <div class="ios-video-controls">
-                    <button class="control-btn" id="playPauseBtn"><i class="fas fa-play"></i></button>
-                    <button class="control-btn" id="muteBtn"><i class="fas fa-volume-up"></i></button>
                 </div>
             </div>
         </div>
@@ -388,77 +345,37 @@
     (function() {
         'use strict';
         
-        // Video Player - Premium Play Button
+        // Video Player - Single Play Button
         const video = document.getElementById('mainVideo');
         const playOverlay = document.getElementById('playOverlay');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const muteBtn = document.getElementById('muteBtn');
         const videoContainer = document.getElementById('videoContainer');
         
         let videoStarted = false;
-        
-        function updatePlayIcon() {
-            if (video.paused) {
-                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            } else {
-                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            }
-        }
         
         function startVideo() {
             if (videoStarted) return;
             videoStarted = true;
             playOverlay.classList.add('hidden');
             video.muted = false;
-            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
             video.play().catch(e => console.log('Play blocked:', e));
-            updatePlayIcon();
         }
         
-        function togglePlayPause() {
-            if (!videoStarted) {
-                startVideo();
-                return;
-            }
-            if (video.paused) {
-                video.play();
-            } else {
-                video.pause();
-            }
-            updatePlayIcon();
-        }
-        
-        function toggleMute() {
-            if (!videoStarted) return;
-            video.muted = !video.muted;
-            muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-        }
-        
+        // Start video when clicking the play button or video container
         playOverlay.addEventListener('click', startVideo);
+        videoContainer.addEventListener('click', startVideo);
         
-        videoContainer.addEventListener('click', (e) => {
-            if (e.target.closest('button')) return;
-            if (!videoStarted) {
-                startVideo();
-            } else {
-                togglePlayPause();
-            }
+        // Auto-hide overlay when video starts playing
+        video.addEventListener('play', () => {
+            playOverlay.classList.add('hidden');
         });
         
-        playPauseBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            togglePlayPause();
+        // Optional: Show overlay again if video ends (user can replay)
+        video.addEventListener('ended', () => {
+            videoStarted = false;
+            playOverlay.classList.remove('hidden');
         });
         
-        muteBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMute();
-        });
-        
-        video.addEventListener('play', updatePlayIcon);
-        video.addEventListener('pause', updatePlayIcon);
-        
-        console.log('Page Loaded - Amazon Store Only, No Ads');
+        console.log('Page Loaded - Single Play Button, Amazon Store Only');
     })();
 </script>
 </body>
