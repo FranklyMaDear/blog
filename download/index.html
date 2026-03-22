@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="photo.png">
     <link rel="apple-touch-icon-precomposed" href="photo.png">
     
-    <!-- ========== OPEN GRAPH (Facebook, WhatsApp, LinkedIn, Telegram) - ΒΕΛΤΙΩΜΕΝΟ ========== -->
+    <!-- ========== OPEN GRAPH (Facebook, WhatsApp, LinkedIn, Telegram) ========== -->
     <meta property="og:title" content="Άλλα λέει η Θειαμ">
     <meta property="og:description" content="Δες το βίντεο και ανακάλυψε το κατάστημά μας στο Amazon! Πάτα για να δεις το βίντεο!">
     <meta property="og:image" content="https://blog.franklymadear.com/download/photo.png">
@@ -25,9 +25,8 @@
     <meta property="og:site_name" content="Άλλα λέει η Θειαμ">
     <meta property="og:locale" content="el_GR">
     
-    <!-- ========== FACEBOOK SPECIFIC - ΕΞΑΣΦΑΛΙΖΕΙ ΤΗΝ ΕΜΦΑΝΙΣΗ ========== -->
+    <!-- ========== FACEBOOK SPECIFIC ========== -->
     <meta property="fb:app_id" content="9660744817">
-    <meta property="article:author" content="Άλλα λέει η Θειαμ">
     
     <!-- ========== TWITTER CARD (X/Twitter) ========== -->
     <meta name="twitter:card" content="summary_large_image">
@@ -36,7 +35,7 @@
     <meta name="twitter:image" content="https://blog.franklymadear.com/download/photo.png">
     <meta name="twitter:image:alt" content="Άλλα λέει η Θειαμ - Δες το βίντεο">
     
-    <!-- ========== INSTALL TO HOME SCREEN (PWA) ========== -->
+    <!-- ========== HOME SCREEN ICONS ========== -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Άλλα λέει η Θειαμ">
@@ -93,7 +92,7 @@
             position: relative;
         }
         
-        /* Premium Title Section */
+        /* Title Section */
         .title-section {
             text-align: center;
             margin-bottom: 24px;
@@ -128,74 +127,6 @@
             color: rgba(255,255,255,0.6);
             font-size: 0.85rem;
             margin-top: 8px;
-        }
-        
-        /* Install Prompt */
-        .install-prompt {
-            background: linear-gradient(135deg, rgba(255,153,0,0.2), rgba(255,105,180,0.2));
-            border-radius: 20px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border: 1px solid rgba(255,200,100,0.3);
-            backdrop-filter: blur(10px);
-            animation: slideDown 0.5s ease;
-        }
-        
-        .install-prompt.hidden {
-            display: none;
-        }
-        
-        .install-text {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-size: 0.85rem;
-        }
-        
-        .install-text i {
-            font-size: 1.5rem;
-            color: #FFB347;
-        }
-        
-        .install-btn {
-            background: #FFB347;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .install-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .close-install {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
         
         /* Video Container */
@@ -485,21 +416,10 @@
             .sticky-ad-inner {
                 width: 95%;
             }
-            .install-prompt {
-                padding: 10px 12px;
-            }
-            .install-text {
-                font-size: 0.75rem;
-            }
         }
         
         html {
             scroll-behavior: smooth;
-        }
-        
-        /* Facebook Debugger Helper */
-        .fb-debug-info {
-            display: none;
         }
     </style>
 </head>
@@ -507,18 +427,6 @@
 
 <div class="main-container">
     <div class="content-wrapper">
-        
-        <!-- Install to Home Screen Prompt -->
-        <div class="install-prompt hidden" id="installPrompt">
-            <div class="install-text">
-                <i class="fas fa-plus-circle"></i>
-                <span>Πρόσθεσε στην αρχική οθόνη για γρήγορη πρόσβαση!</span>
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="install-btn" id="installBtn">Προσθήκη</button>
-                <button class="close-install" id="closeInstallBtn">✕</button>
-            </div>
-        </div>
         
         <!-- Title Section -->
         <div class="title-section">
@@ -677,36 +585,6 @@
         video.addEventListener('ended', () => {
             videoStarted = false;
             playOverlay.classList.remove('hidden');
-        });
-        
-        // ========== INSTALL TO HOME SCREEN ==========
-        const installPrompt = document.getElementById('installPrompt');
-        const installBtn = document.getElementById('installBtn');
-        const closeInstallBtn = document.getElementById('closeInstallBtn');
-        
-        if (!sessionStorage.getItem('installPromptClosed')) {
-            setTimeout(() => {
-                installPrompt.classList.remove('hidden');
-            }, 2000);
-        }
-        
-        closeInstallBtn.addEventListener('click', () => {
-            installPrompt.classList.add('hidden');
-            sessionStorage.setItem('installPromptClosed', 'true');
-        });
-        
-        installBtn.addEventListener('click', () => {
-            let message = '';
-            if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
-                message = 'Πάτα το κουμπί "Share" (τετράγωνο με βέλος) και μετά "Προσθήκη στην Αρχική Οθόνη"';
-            } else if (navigator.userAgent.includes('Android')) {
-                message = 'Πάτα το μενού (⋮) και μετά "Προσθήκη στην αρχική οθόνη"';
-            } else {
-                message = 'Από το μενού του browser σου, επέλεξε "Προσθήκη στην αρχική οθόνη"';
-            }
-            alert(message);
-            installPrompt.classList.add('hidden');
-            sessionStorage.setItem('installPromptClosed', 'true');
         });
         
         // ========== STICKY AD ==========
