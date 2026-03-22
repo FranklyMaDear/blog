@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Άλλα λέει η Θειαμ</title>
+    
+    <link rel="icon" type="image/png" href="index.png">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Άλλα λέει η Θειαμ">
+    <meta property="og:description" content="Δες το βίντεο και ανακάλυψε το κατάστημά μας στο Amazon!">
+    <meta property="og:image" content="https://blog.franklymadear.com/download/photo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://blog.franklymadear.com/download/index.html">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Άλλα λέει η Θειαμ">
+    <meta name="twitter:description" content="Δες το βίντεο και ανακάλυψε το κατάστημά μας στο Amazon!">
+    <meta name="twitter:image" content="https://blog.franklymadear.com/download/photo.png">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a1a 0%, #12122e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+            padding-bottom: 90px;
+        }
+        
+        /* ========== FULLSCREEN PRE-ROLL AD WITH COUNTDOWN ========== */
+        .fullscreen-ad {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(8px);
+        }
+        
+        .fullscreen-ad.closed {
+            display: none;
+        }
+        
+        .ad-content-wrapper {
+            max-width: 500px;
+            width: 90%;
+            background: rgba(18, 22, 45, 0.98);
+            border-radius: 32px;
+            border: 2px solid rgba(255, 200, 100, 0.5);
+            overflow: hidden;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+            animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        
+        .ad-header-full {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #2a1e4a, #1a0f30);
+            border-bottom: 1px solid rgba(255, 200, 100, 0.3);
+        }
+        
+        .ad-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: #FFB347;
+        }
+        
+        .countdown-timer {
+            background: rgba(255, 68, 68, 0.9);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .countdown-timer i {
+            font-size: 0.75rem;
+        }
+        
+        .countdown-number {
+            background: white;
+            color: #ff4444;
+            padding: 2px 10px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 800;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .ad-body-full {
+            padding: 30px 20px;
+            min-height: 280px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1e3a, #12152f);
+        }
+        
+        .ad-body-full ins {
+            display: block;
+            width: 100%;
+        }
+        
+        .skip-button {
+            margin-top: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 200, 100, 0.5);
+            color: #FFB347;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .skip-button:active {
+            transform: scale(0.96);
+            background: rgba(255, 200, 100, 0.2);
+        }
+        
+        .ad-footer {
+            padding: 12px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.4);
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .container.visible {
+            opacity: 1;
+        }
+        
+        /* Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .page-title h1 {
+            font-size: clamp(1.6rem, 7vw, 2.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #FFB6C1, #FF69B4, #FFD966);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Video Container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9 / 16;
+            background: #000;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 200, 100, 0.3);
+            margin: 0 auto 20px;
+            cursor: pointer;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+        
+        /* Play Overlay */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            backdrop-filter: blur(3px);
+        }
+        
+        .play-overlay.hidden {
+            display: none;
+        }
+        
+        .play-btn {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(12px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 215, 0, 0.9);
+            transition: all 0.2s;
+        }
+        
+        .play-btn:active {
+            transform: scale(0.92);
+        }
+        
+        .play-btn i {
+            font-size: 2.5rem;
+            color: white;
+            margin-left: 5px;
+        }
+        
+        .play-text {
+            margin-top: 15px;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+        
+        /* Video Controls */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+            padding: 15px 18px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 15;
+        }
+        
+        .video-container:hover .video-controls,
+        .video-container:active .video-controls {
+            opacity: 1;
+        }
+        
+        .video-controls button {
+            background: rgba(0,0,0,0.65);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            font-size: 1.1rem;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .video-controls button:active {
+            transform: scale(0.92);
+        }
+        
+        /* Amazon Store Card */
+        .amazon-store {
+            background: linear-gradient(135deg, #232f3e, #1a2532);
+            border-radius: 24px;
+            margin: 16px 0;
+            border: 1px solid rgba(255, 153, 0, 0.5);
+            overflow: hidden;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+        }
+        
+        .amazon-store:active {
+            transform: scale(0.98);
+        }
+        
+        .amazon-header {
+            background: #ff9900;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .amazon-header i {
+            font-size: 1.5rem;
+            color: #232f3e;
+        }
+        
+        .amazon-header span {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #232f3e;
+        }
+        
+        .amazon-body {
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .amazon-body p {
+            color: #ddd;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+        
+        .amazon-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ff9900;
+            color: #232f3e;
+            text-decoration: none;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        /* ========== STICKY BOTTOM AD - SMALLER 50% FOR MOBILE ========== */
+        .sticky-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #0a0a1a, transparent);
+            padding: 6px 10px;
+            z-index: 1000;
+            transform: translateY(0);
+            transition: transform 0.4s ease;
+            pointer-events: none;
+        }
+        
+        .sticky-ad.collapsed {
+            transform: translateY(100%);
+        }
+        
+        .sticky-inner {
+            max-width: 450px;
+            width: 95%;
+            margin: 0 auto;
+            background: rgba(18, 22, 45, 0.98);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 200, 100, 0.4);
+            overflow: hidden;
+            pointer-events: auto;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .sticky-header {
+            display: flex;
+            justify-content: flex-end;
+            padding: 6px 10px 0;
+        }
+        
+        .close-sticky {
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            transition: all 0.2s;
+        }
+        
+        .close-sticky i {
+            font-size: 0.7rem;
+        }
+        
+        .close-sticky:active {
+            transform: scale(0.94);
+            background: #ff6666;
+        }
+        
+        .sticky-content {
+            padding: 8px 12px 12px;
+        }
+        
+        .sticky-content ins {
+            display: block;
+            width: 100%;
+        }
+        
+        /* Content Cards for Ads */
+        .content-card {
+            background: rgba(18, 22, 45, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin: 14px 0;
+            border: 1px solid rgba(255, 200, 100, 0.2);
+            overflow: hidden;
+        }
+        
+        .card-label {
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.45);
+            text-align: center;
+            padding: 6px 0 3px;
+        }
+        
+        .card-content {
+            padding: 10px 14px 14px;
+            min-height: 85px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card-content ins {
+            display: block;
+            width: 100%;
+        }
+        
+        .footer-note {
+            text-align: center;
+            padding: 20px 0 20px;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* iPhone & Mobile Optimizations */
+        @media (max-width: 480px) {
+            body { 
+                padding: 12px; 
+                padding-bottom: 80px; 
+            }
+            .play-btn { width: 65px; height: 65px; }
+            .play-btn i { font-size: 2rem; }
+            .play-text { font-size: 0.75rem; }
+            .ad-header-full { padding: 12px 16px; }
+            .countdown-timer { padding: 4px 10px; font-size: 0.75rem; }
+            .countdown-number { font-size: 0.9rem; min-width: 35px; padding: 1px 8px; }
+            .skip-button { padding: 8px 16px; font-size: 0.75rem; }
+            
+            /* Sticky ad smaller for iPhone */
+            .sticky-ad {
+                padding: 4px 8px;
+            }
+            .sticky-inner {
+                width: 96%;
+                border-radius: 14px;
+            }
+            .sticky-header {
+                padding: 5px 8px 0;
+            }
+            .close-sticky {
+                padding: 5px 12px;
+                font-size: 0.65rem;
+            }
+            .close-sticky i {
+                font-size: 0.6rem;
+            }
+            .sticky-content {
+                padding: 6px 10px 10px;
+            }
+        }
+        
+        /* Small iPhones (SE, 12 mini, etc) */
+        @media (max-width: 380px) {
+            .sticky-inner {
+                width: 98%;
+            }
+            .close-sticky {
+                padding: 4px 10px;
+                font-size: 0.6rem;
+            }
+            .sticky-content {
+                padding: 4px 8px 8px;
+            }
+        }
+        
+        /* iPad & Tablets */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .sticky-inner {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- FULLSCREEN PRE-ROLL AD WITH 5-SECOND COUNTDOWN -->
+<div class="fullscreen-ad" id="fullscreenAd">
+    <div class="ad-content-wrapper">
+        <div class="ad-header-full">
+            <div class="ad-logo">
+                <i class="fas fa-bullhorn"></i>
+                <span>Χορηγός</span>
+            </div>
+            <div class="countdown-timer">
+                <i class="fas fa-hourglass-half"></i>
+                <span>σε</span>
+                <span class="countdown-number" id="countdownNumber">5</span>
+                <span>δλ</span>
+            </div>
+        </div>
+        <div class="ad-body-full" id="fullscreenAdBody">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+        <button class="skip-button" id="skipAdBtn">
+            <i class="fas fa-forward"></i> Παράλειψη τώρα
+        </button>
+        <div class="ad-footer">
+            Η διαφήμιση θα κλείσει αυτόματα σε λίγα δευτερόλεπτα
+        </div>
+    </div>
+</div>
+
+<div class="container" id="mainContent">
+    
+    <!-- Title -->
+    <div class="page-title">
+        <h1>Άλλα λέει η Θειαμ</h1>
+    </div>
+    
+    <!-- VIDEO - Starts on user click -->
+    <div class="video-container" id="videoContainer">
+        <video id="mainVideo" poster="https://blog.franklymadear.com/download/photo.png" playsinline webkit-playsinline preload="metadata">
+            <source src="https://blog.franklymadear.com/download/video.mp4" type="video/mp4">
+        </video>
+        <div class="play-overlay" id="playOverlay">
+            <div class="play-btn">
+                <i class="fas fa-play"></i>
+            </div>
+            <div class="play-text">Πάτησε για να δεις το βίντεο</div>
+        </div>
+        <div class="video-controls">
+            <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+            <button id="muteBtn"><i class="fas fa-volume-up"></i></button>
+        </div>
+    </div>
+    
+    <!-- AMAZON STORE - Your Affiliate Store -->
+    <a href="https://www.amazon.de/shop/exoumethemata/list/28PPEU66U03KT?ref_=cm_sw_r_cp_ud_aipsflist_3S3RRSGE6FTD34XN7AFR" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="amazon-store">
+        <div class="amazon-header">
+            <i class="fab fa-amazon"></i>
+            <span>Το κατάστημά μας στο Amazon</span>
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <div class="amazon-body">
+            <p>✨ Ανακάλυψε τα προϊόντα που αγαπάμε και προτείνουμε! ✨</p>
+            <div class="amazon-btn">
+                <i class="fas fa-store"></i> Επισκέψου το κατάστημα
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </div>
+    </a>
+    
+    <!-- AD 1 - Video Ad Slot -->
+    <div class="content-card">
+        <div class="card-label"><i class="fas fa-video"></i> Διαφήμιση Βίντεο</div>
+        <div class="card-content">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3092455087"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+    
+    <!-- AD 2 - Fluid Ad -->
+    <div class="content-card">
+        <div class="card-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
+        <div class="card-content">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="fluid"
+                 data-ad-layout-key="-fb+5w+4e-db+86"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="3969235710"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+    
+    <!-- AD 3 - Autorelaxed -->
+    <div class="content-card">
+        <div class="card-label"><i class="fas fa-ad"></i> Διαφήμιση</div>
+        <div class="card-content">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+    
+    <div class="footer-note">
+        <i class="fas fa-heart" style="color: #ff69b4;"></i> Ευχαριστούμε που μας υποστηρίζεις
+    </div>
+</div>
+
+<!-- STICKY BOTTOM AD - 50% SMALLER WITH VISIBLE X BUTTON -->
+<div class="sticky-ad" id="stickyAd">
+    <div class="sticky-inner">
+        <div class="sticky-header">
+            <button class="close-sticky" id="closeStickyBtn">
+                <i class="fas fa-times-circle"></i> Κλείσιμο
+            </button>
+        </div>
+        <div class="sticky-content">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-format="autorelaxed"
+                 data-ad-client="ca-pub-3186700611266549"
+                 data-ad-slot="9660744817"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+        
+        // ========== FULLSCREEN AD WITH 5-SECOND COUNTDOWN ==========
+        const fullscreenAd = document.getElementById('fullscreenAd');
+        const mainContent = document.getElementById('mainContent');
+        const countdownSpan = document.getElementById('countdownNumber');
+        const skipBtn = document.getElementById('skipAdBtn');
+        
+        let countdown = 5;
+        let countdownInterval;
+        
+        function closeAd() {
+            fullscreenAd.classList.add('closed');
+            mainContent.classList.add('visible');
+            if (countdownInterval) clearInterval(countdownInterval);
+        }
+        
+        function updateCountdown() {
+            countdownSpan.textContent = countdown;
+            if (countdown <= 0) {
+                closeAd();
+            }
+            countdown--;
+        }
+        
+        // Start countdown
+        countdownInterval = setInterval(updateCountdown, 1000);
+        
+        // Skip button
+        skipBtn.addEventListener('click', closeAd);
+        
+        // ========== VIDEO PLAYER - STARTS ONLY ON USER CLICK ==========
+        const video = document.getElementById('mainVideo');
+        const playOverlay = document.getElementById('playOverlay');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const videoContainer = document.getElementById('videoContainer');
+        
+        let videoStarted = false;
+        
+        function updatePlayIcon() {
+            if (video.paused) {
+                playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            } else {
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+        }
+        
+        function startVideo() {
+            if (videoStarted) return;
+            videoStarted = true;
+            playOverlay.classList.add('hidden');
+            video.muted = false;
+            muteBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            video.play().catch(e => console.log('Play blocked:', e));
+            updatePlayIcon();
+        }
+        
+        function togglePlayPause() {
+            if (!videoStarted) {
+                startVideo();
+                return;
+            }
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+            updatePlayIcon();
+        }
+        
+        function toggleMute() {
+            if (!videoStarted) return;
+            video.muted = !video.muted;
+            muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        }
+        
+        playOverlay.addEventListener('click', startVideo);
+        
+        videoContainer.addEventListener('click', (e) => {
+            if (e.target.closest('button')) return;
+            if (!videoStarted) {
+                startVideo();
+            } else {
+                togglePlayPause();
+            }
+        });
+        
+        playPauseBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            togglePlayPause();
+        });
+        
+        muteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMute();
+        });
+        
+        video.addEventListener('play', updatePlayIcon);
+        video.addEventListener('pause', updatePlayIcon);
+        
+        // ========== STICKY AD WITH SCROLL DETECTION ==========
+        const stickyAd = document.getElementById('stickyAd');
+        const closeSticky = document.getElementById('closeStickyBtn');
+        let stickyShown = false;
+        
+        closeSticky.addEventListener('click', () => {
+            stickyAd.classList.add('collapsed');
+            sessionStorage.setItem('stickyClosed', 'true');
+        });
+        
+        if (sessionStorage.getItem('stickyClosed') === 'true') {
+            stickyAd.classList.add('collapsed');
+        } else {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting && !stickyShown) {
+                        stickyShown = true;
+                        stickyAd.classList.remove('collapsed');
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            observer.observe(videoContainer);
+            
+            setTimeout(() => {
+                if (!stickyShown && sessionStorage.getItem('stickyClosed') !== 'true') {
+                    stickyShown = true;
+                    stickyAd.classList.remove('collapsed');
+                }
+            }, 8000);
+        }
+        
+        // ========== LAZY LOAD DEEP ADS ==========
+        const contentCards = document.querySelectorAll('.content-card');
+        const adObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const card = entry.target;
+                    const adIns = card.querySelector('ins.adsbygoogle');
+                    if (adIns && !adIns.getAttribute('data-loaded')) {
+                        adIns.setAttribute('data-loaded', 'true');
+                        if (typeof adsbygoogle !== 'undefined') {
+                            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '100px' });
+        
+        contentCards.forEach(card => adObserver.observe(card));
+        
+        // ========== BACKGROUND AD FOR EXTRA REVENUE ==========
+        setTimeout(() => {
+            const bgAd = document.createElement('div');
+            bgAd.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
+            bgAd.innerHTML = `
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-format="autorelaxed"
+                     data-ad-client="ca-pub-3186700611266549"
+                     data-ad-slot="9660744817"
+                     data-full-width-responsive="true"></ins>
+            `;
+            document.body.appendChild(bgAd);
+            if (typeof adsbygoogle !== 'undefined') {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+            setTimeout(() => bgAd.remove(), 12000);
+        }, 5000);
+        
+        // ========== FINAL AD PUSH ==========
+        window.addEventListener('load', () => {
+            if (typeof adsbygoogle !== 'undefined') {
+                try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+            }
+        });
+        
+        console.log('Page loaded - Sticky ad reduced by 50% for mobile');
+    })();
+</script>
+</body>
+</html>
