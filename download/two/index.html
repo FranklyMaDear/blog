@@ -127,6 +127,7 @@
             object-fit: cover;
         }
         
+        /* ========== AD CONTAINER ========== */
         .ad-container {
             display: flex;
             justify-content: center;
@@ -166,6 +167,7 @@
             color: rgba(255,255,255,0.3);
         }
         
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 480px) {
             body {
                 padding: 12px;
@@ -185,7 +187,23 @@
 <body>
 
 <div class="main-container">
-    <!-- Title Section -->
+    <!-- ========================================== -->
+    <!-- 📢 AD 1: ΣΤΗΝ ΑΡΧΗ ΤΗΣ ΟΘΟΝΗΣ (ΠΡΙΝ ΤΟ ΒΙΝΤΕΟ) -->
+    <!-- ========================================== -->
+    <div class="ad-label">
+        <i class="fas fa-video"></i> Διαφήμιση <i class="fas fa-crown" style="color: #FFD966;"></i>
+    </div>
+    <div class="ad-container">
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:360px;height:800px"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="8243966497"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+
+    <!-- ========== TITLE SECTION ========== -->
     <div class="title-section">
         <div class="badge">
             <i class="fas fa-play-circle"></i>
@@ -201,7 +219,7 @@
         </div>
     </div>
     
-    <!-- Video Section (Autoplay) -->
+    <!-- ========== VIDEO SECTION ========== -->
     <div class="video-wrapper">
         <div class="video-container">
             <video id="mainVideo" src="https://blog.franklymadear.com/download/two/video2.mp4" poster="https://blog.franklymadear.com/download/two/photo2.png" playsinline webkit-playsinline preload="auto" autoplay muted loop>
@@ -210,21 +228,9 @@
         </div>
     </div>
     
-    <!-- ===== AD 1 ===== -->
-    <div class="ad-label">
-        <i class="fas fa-video"></i> Διαφήμιση <i class="fas fa-crown" style="color: #FFD966;"></i>
-    </div>
-    <div class="ad-container">
-        <ins class="adsbygoogle"
-             style="display:inline-block;width:360px;height:800px"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="8243966497"></ins>
-        <script>
-             (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
-    
-    <!-- ===== AD 2 ===== -->
+    <!-- ========================================== -->
+    <!-- 📢 AD 2: ΜΕΤΑ ΤΟ ΒΙΝΤΕΟ -->
+    <!-- ========================================== -->
     <div class="ad-label">
         <i class="fas fa-ad"></i> Χορηγός <i class="fas fa-gem" style="color: #FF69B4;"></i>
     </div>
@@ -238,7 +244,9 @@
         </script>
     </div>
     
-    <!-- ===== AD 3 ===== -->
+    <!-- ========================================== -->
+    <!-- 📢 AD 3: ΣΤΟ ΤΕΛΟΣ -->
+    <!-- ========================================== -->
     <div class="ad-label">
         <i class="fas fa-star"></i> Προτεινόμενο <i class="fas fa-fire" style="color: #ff9900;"></i>
     </div>
@@ -264,23 +272,20 @@
         const video = document.getElementById('mainVideo');
         
         // Force autoplay on load
-        video.muted = true; // Required for autoplay
+        video.muted = true;
         video.loop = true;
         video.autoplay = true;
         
-        // Try to play
         const playPromise = video.play();
         
         if (playPromise !== undefined) {
             playPromise.then(() => {
                 console.log('✅ Video autoplay started');
-                // Unmute after user interaction
                 document.addEventListener('click', () => {
                     video.muted = false;
                 }, { once: true });
             }).catch(error => {
                 console.log('❌ Autoplay blocked, waiting for interaction', error);
-                // Try again on any click
                 document.addEventListener('click', () => {
                     video.muted = false;
                     video.play().catch(e => console.log('Still blocked:', e));
@@ -289,6 +294,16 @@
         }
         
         console.log('✅ Page Loaded');
+        
+        // ===== ADSENSE: ΦΟΡΤΩΣΗ ΟΛΩΝ ΤΩΝ ADS =====
+        if (window.adsbygoogle) {
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                console.log('✅ All AdSense ads pushed');
+            } catch (e) {
+                console.log('⚠️ AdSense push error:', e);
+            }
+        }
     })();
 </script>
 
