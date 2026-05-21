@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" href="https://blog.franklymadear.com/download/two/photo2.png">
     <link rel="apple-touch-icon-precomposed" href="https://blog.franklymadear.com/download/two/photo2.png">
     
-    <!-- ========== OPEN GRAPH (Facebook, WhatsApp, Viber, κλπ.) ========== -->
+    <!-- ========== OPEN GRAPH (Facebook, WhatsApp, Viber) ========== -->
     <meta property="og:title" content="LIVE: Η Ίδρυση του Κόμματος της Μ. Καρυστιάνου">
     <meta property="og:description" content="Παρακολουθήστε ζωντανά την ίδρυση του νέου κόμματος! 🔴">
     <meta property="og:image" content="https://blog.franklymadear.com/download/two/photo2.png">
@@ -44,7 +44,7 @@
     <meta name="theme-color" content="#0a0a1a">
     
     <!-- Google Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
@@ -54,35 +54,140 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #12122e;
+            --accent-gold: #FFB347;
+            --accent-pink: #FF6584;
+            --accent-purple: #6C63FF;
+            --accent-cyan: #00D4FF;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255,255,255,0.7);
+            --text-muted: rgba(255,255,255,0.4);
+            --glass-bg: rgba(255,255,255,0.03);
+            --glass-border: rgba(255,255,255,0.08);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
+            --shadow-md: 0 8px 32px rgba(0,0,0,0.3);
+            --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+            --shadow-glow-gold: 0 0 30px rgba(255,179,71,0.3);
+            --shadow-glow-pink: 0 0 30px rgba(255,101,132,0.3);
+            --shadow-glow-purple: 0 0 30px rgba(108,99,255,0.3);
+            --shadow-glow-cyan: 0 0 30px rgba(0,212,255,0.3);
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0a0a1a 0%, #12122e 100%);
+            background: linear-gradient(135deg, #0a0a1a 0%, #12122e 50%, #1a0a2e 100%);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             padding: 20px;
+        }
+        
+        /* ========== ANIMATED BACKGROUND PARTICLES ========== */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .bg-particle {
+            position: absolute;
+            border-radius: 50%;
+            animation: floatParticle linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.5) rotate(720deg);
+                opacity: 0;
+            }
         }
         
         .main-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            background: linear-gradient(135deg, #0a0a1a 0%, #12122e 100%);
-            border-radius: 44px;
-            overflow: hidden;
-            padding: 20px 20px 30px;
             position: relative;
+            z-index: 1;
+        }
+        
+        /* ========== LIVE BADGE ========== */
+        .live-badge-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 0, 0, 0.15);
+            backdrop-filter: blur(20px);
+            padding: 8px 20px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            animation: livePulse 2s ease-in-out infinite;
+        }
+        
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: #ff0000;
+            border-radius: 50%;
+            animation: liveDotBlink 1s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(255,0,0,0.8);
+        }
+        
+        .live-text {
+            color: #ff4444;
+            font-weight: 700;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        @keyframes livePulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(255,0,0,0.2); }
+            50% { box-shadow: 0 0 30px rgba(255,0,0,0.4); }
+        }
+        
+        @keyframes liveDotBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
         
         /* ========== VIDEO SECTION ========== */
         .video-wrapper {
             position: relative;
-            margin: 0 0 20px;
-            border-radius: 28px;
+            border-radius: 24px;
             overflow: hidden;
             background: #000;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,200,100,0.2);
+            box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255,255,255,0.1);
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .video-wrapper:hover {
+            box-shadow: var(--shadow-lg), 0 0 40px rgba(108,99,255,0.2);
         }
         
         .video-container {
@@ -99,95 +204,288 @@
             border: none;
         }
         
-        /* ========== SPONSORED LINK (ΔΙΑΚΡΙΤΙΚΟ) ========== */
-        .sponsored-section {
-            margin: 16px 0;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.03);
+        /* ========== ACTION BUTTONS (ΠΑΝΩ ΑΠΟ ΤΟ ΒΙΝΤΕΟ) ========== */
+        .top-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        /* ========== ACTION BUTTONS (ΚΑΤΩ ΑΠΟ ΤΟ ΒΙΝΤΕΟ) ========== */
+        .bottom-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        
+        /* ========== BUTTON STYLES ========== */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
             border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            text-align: center;
-        }
-        
-        .sponsored-label {
-            font-size: 0.6rem;
-            color: rgba(255, 255, 255, 0.35);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        
-        .sponsored-link {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.75rem;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
             text-decoration: none;
-            transition: color 0.3s ease;
-            word-break: break-all;
+            border: none;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.3px;
+            backdrop-filter: blur(10px);
         }
         
-        .sponsored-link:hover {
+        .btn-action::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+        
+        .btn-action span, .btn-action i {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-4px) scale(1.03);
+        }
+        
+        .btn-action:active {
+            transform: scale(0.95) !important;
+            transition: transform 0.1s ease;
+        }
+        
+        /* Gold Button */
+        .btn-gold {
+            background: linear-gradient(135deg, rgba(255,179,71,0.2), rgba(255,140,0,0.2));
             color: #FFB347;
+            border: 1px solid rgba(255,179,71,0.4);
+            box-shadow: 0 4px 20px rgba(255,179,71,0.15);
         }
         
-        /* ========== FOOTER LINK (ΤΕΛΟΣ ΣΕΛΙΔΑΣ) ========== */
-        .footer-links {
+        .btn-gold::before {
+            background: rgba(255,179,71,0.2);
+        }
+        
+        .btn-gold:hover {
+            background: linear-gradient(135deg, rgba(255,179,71,0.35), rgba(255,140,0,0.35));
+            box-shadow: var(--shadow-glow-gold), 0 8px 30px rgba(255,179,71,0.3);
+            border-color: rgba(255,179,71,0.7);
+            color: #FFD700;
+        }
+        
+        .btn-gold:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        /* Pink Button */
+        .btn-pink {
+            background: linear-gradient(135deg, rgba(255,101,132,0.2), rgba(255,20,147,0.2));
+            color: #FF6584;
+            border: 1px solid rgba(255,101,132,0.4);
+            box-shadow: 0 4px 20px rgba(255,101,132,0.15);
+        }
+        
+        .btn-pink::before {
+            background: rgba(255,101,132,0.2);
+        }
+        
+        .btn-pink:hover {
+            background: linear-gradient(135deg, rgba(255,101,132,0.35), rgba(255,20,147,0.35));
+            box-shadow: var(--shadow-glow-pink), 0 8px 30px rgba(255,101,132,0.3);
+            border-color: rgba(255,101,132,0.7);
+            color: #FF85A1;
+        }
+        
+        .btn-pink:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        /* Purple Button */
+        .btn-purple {
+            background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(138,43,226,0.2));
+            color: #8B7FFF;
+            border: 1px solid rgba(108,99,255,0.4);
+            box-shadow: 0 4px 20px rgba(108,99,255,0.15);
+        }
+        
+        .btn-purple::before {
+            background: rgba(108,99,255,0.2);
+        }
+        
+        .btn-purple:hover {
+            background: linear-gradient(135deg, rgba(108,99,255,0.35), rgba(138,43,226,0.35));
+            box-shadow: var(--shadow-glow-purple), 0 8px 30px rgba(108,99,255,0.3);
+            border-color: rgba(108,99,255,0.7);
+            color: #A99FFF;
+        }
+        
+        .btn-purple:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        /* Cyan Button */
+        .btn-cyan {
+            background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(0,180,255,0.2));
+            color: #00D4FF;
+            border: 1px solid rgba(0,212,255,0.4);
+            box-shadow: 0 4px 20px rgba(0,212,255,0.15);
+        }
+        
+        .btn-cyan::before {
+            background: rgba(0,212,255,0.2);
+        }
+        
+        .btn-cyan:hover {
+            background: linear-gradient(135deg, rgba(0,212,255,0.35), rgba(0,180,255,0.35));
+            box-shadow: var(--shadow-glow-cyan), 0 8px 30px rgba(0,212,255,0.3);
+            border-color: rgba(0,212,255,0.7);
+            color: #40E0FF;
+        }
+        
+        .btn-cyan:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        /* ========== BUTTON ICON ANIMATIONS ========== */
+        .btn-action i {
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-action:hover i {
+            animation: iconBounce 0.6s ease-in-out;
+        }
+        
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            30% { transform: translateY(-8px) scale(1.2); }
+            60% { transform: translateY(-4px) scale(0.9); }
+        }
+        
+        /* ========== FOOTER ========== */
+        .footer-section {
             text-align: center;
             padding: 20px 0 10px;
+        }
+        
+        .footer-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 0 auto 12px;
+        }
+        
+        .footer-text {
             font-size: 0.7rem;
-            color: rgba(255,255,255,0.3);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .footer-links a {
-            color: rgba(255,255,255,0.3);
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-size: 0.65rem;
-        }
-        
-        .footer-links a:hover {
-            color: rgba(255,255,255,0.6);
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
         }
         
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             body {
-                padding: 12px;
+                padding: 16px;
             }
             
-            .main-container {
-                padding: 12px 12px 20px;
+            .btn-action {
+                padding: 12px 20px;
+                font-size: 0.8rem;
+                border-radius: 14px;
+                gap: 8px;
             }
             
-            .video-container {
-                aspect-ratio: 16 / 9;
+            .top-actions, .bottom-actions {
+                gap: 8px;
+            }
+            
+            .video-wrapper {
+                border-radius: 18px;
             }
         }
         
         @media (max-width: 480px) {
-            .main-container {
-                border-radius: 24px;
+            body {
+                padding: 10px;
+            }
+            
+            .btn-action {
+                padding: 10px 16px;
+                font-size: 0.75rem;
+                border-radius: 12px;
+                gap: 6px;
+            }
+            
+            .top-actions, .bottom-actions {
+                gap: 6px;
             }
             
             .video-wrapper {
-                border-radius: 16px;
+                border-radius: 14px;
+            }
+            
+            .live-badge {
+                padding: 6px 14px;
+            }
+            
+            .live-text {
+                font-size: 0.7rem;
+                letter-spacing: 1px;
             }
         }
     </style>
 </head>
 <body>
 
+<!-- ========== BACKGROUND PARTICLES ========== -->
+<div class="bg-particles" id="bgParticles"></div>
+
 <div class="main-container">
+    <!-- ========== LIVE BADGE ========== -->
+    <div class="live-badge-container">
+        <div class="live-badge">
+            <div class="live-dot"></div>
+            <span class="live-text">Ζωντανά</span>
+        </div>
+    </div>
+    
     <!-- ========================================== -->
-    <!-- 🎬 YOUTUBE ΒΙΝΤΕΟ -->
+    <!-- 🔘 ΚΟΥΜΠΙΑ ΠΑΝΩ ΑΠΟ ΤΟ ΒΙΝΤΕΟ -->
+    <!-- ========================================== -->
+    <div class="top-actions">
+        <a href="https://omg10.com/4/10274068" target="_blank" rel="nofollow sponsored noopener" class="btn-action btn-gold">
+            <i class="fas fa-play-circle"></i>
+            <span>Δείτε Περισσότερα</span>
+        </a>
+        <a href="https://omg10.com/4/10274068" target="_blank" rel="nofollow sponsored noopener" class="btn-action btn-purple">
+            <i class="fas fa-star"></i>
+            <span>Αποκλειστικό</span>
+        </a>
+    </div>
+    
+    <!-- ========================================== -->
+    <!-- 🎬 YOUTUBE ΒΙΝΤΕΟ (ΣΤΟ ΚΕΝΤΡΟ) -->
     <!-- ========================================== -->
     <div class="video-wrapper">
         <div class="video-container">
             <iframe 
-                src="https://www.youtube.com/embed/hnSjJUvwDqQ?si=bfvIarwq8lcSm35L" 
+                src="https://www.youtube.com/embed/hnSjJUvwDqQ?si=bfvIarwq8lcSm35L&autoplay=1&mute=1" 
                 title="LIVE: Η Ίδρυση του Κόμματος της Μ. Καρυστιάνου" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
@@ -198,45 +496,84 @@
     </div>
     
     <!-- ========================================== -->
-    <!-- 🔗 SPONSORED LINK (ΔΙΑΚΡΙΤΙΚΑ ΚΑΤΩ ΑΠΟ ΤΟ ΒΙΝΤΕΟ) -->
+    <!-- 🔘 ΚΟΥΜΠΙΑ ΚΑΤΩ ΑΠΟ ΤΟ ΒΙΝΤΕΟ -->
     <!-- ========================================== -->
-    <div class="sponsored-section">
-        <div class="sponsored-label">Χορηγός</div>
-        <a href="https://omg10.com/4/10274068" class="sponsored-link" target="_blank" rel="nofollow sponsored noopener">
-            https://omg10.com/4/10274068
+    <div class="bottom-actions">
+        <a href="https://omg10.com/4/10274068" target="_blank" rel="nofollow sponsored noopener" class="btn-action btn-pink">
+            <i class="fas fa-fire"></i>
+            <span>Προτεινόμενο</span>
+        </a>
+        <a href="https://omg10.com/4/10274068" target="_blank" rel="nofollow sponsored noopener" class="btn-action btn-cyan">
+            <i class="fas fa-gem"></i>
+            <span>Μάθετε Περισσότερα</span>
+        </a>
+        <a href="https://omg10.com/4/10274068" target="_blank" rel="nofollow sponsored noopener" class="btn-action btn-gold">
+            <i class="fas fa-arrow-right"></i>
+            <span>Επισκεφθείτε</span>
         </a>
     </div>
     
-    <!-- ========================================== -->
-    <!-- 🔗 FOOTER -->
-    <!-- ========================================== -->
-    <div class="footer-links">
-        <a href="https://omg10.com/4/10274068" target="_blank" rel="nofollow sponsored noopener">
-            <i class="fas fa-external-link-alt"></i> Επισκεφθείτε τον χορηγό μας
-        </a>
-        <span>© 2026 FranklyMaDear</span>
+    <!-- ========== FOOTER ========== -->
+    <div class="footer-section">
+        <div class="footer-divider"></div>
+        <p class="footer-text">© 2026 FranklyMaDear</p>
     </div>
 </div>
 
 <!-- ========================================== -->
-<!-- 📡 VIGNETTE SCRIPT (ΣΤΟ ΤΕΛΟΣ ΤΟΥ BODY) -->
+<!-- 📡 VIGNETTE SCRIPT (ΕΚΚΙΝΕΙ ΜΕΤΑ ΑΠΟ 5 ΔΕΥΤΕΡΟΛΕΠΤΑ) -->
 <!-- ========================================== -->
 <script>
-    (function(s){
-        s.dataset.zone='10021677',
-        s.src='https://n6wxm.com/vignette.min.js'
-    })(
-        [document.documentElement, document.body]
-            .filter(Boolean)
-            .pop()
-            .appendChild(document.createElement('script'))
-    );
+    setTimeout(function() {
+        (function(s){
+            s.dataset.zone='10021677',
+            s.src='https://n6wxm.com/vignette.min.js'
+        })(
+            [document.documentElement, document.body]
+                .filter(Boolean)
+                .pop()
+                .appendChild(document.createElement('script'))
+        );
+        console.log('📡 Vignette script loaded after 5 seconds');
+    }, 5000);
 </script>
 
 <script>
     (function() {
         'use strict';
-        console.log('✅ Page Loaded - YouTube Video Ready');
+        
+        // ===== BACKGROUND PARTICLES =====
+        function createBgParticles() {
+            const container = document.getElementById('bgParticles');
+            const colors = ['#FFB347', '#FF6584', '#6C63FF', '#00D4FF', '#FFD700'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('bg-particle');
+                
+                const size = Math.random() * 4 + 2;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * 15;
+                
+                particle.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: ${color};
+                    left: ${left}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: ${delay}s;
+                    box-shadow: 0 0 ${size * 3}px ${color};
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        createBgParticles();
+        
+        console.log('✅ Page Loaded - Professional Layout Ready');
     })();
 </script>
 
