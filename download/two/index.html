@@ -53,6 +53,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            padding-bottom: 100px; /* Χώρος για το Roll-up */
         }
         
         .main-container {
@@ -61,13 +62,15 @@
             margin: 0 auto;
             background: linear-gradient(135deg, #0a0a1a 0%, #12122e 100%);
             border-radius: 44px;
-            overflow: hidden;
+            overflow: visible;
             padding: 20px 20px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
         
+        /* Τίτλος */
         .title-section {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 12px;
             padding-top: 20px;
         }
         
@@ -101,6 +104,35 @@
             margin-top: 8px;
         }
         
+        /* Ετικέτα διαφήμισης */
+        .ad-label {
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+            padding: 4px 0;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        /* Κορυφαίο Banner */
+        .top-banner-ad {
+            width: 100%;
+            margin: 10px 0 16px;
+            text-align: center;
+            min-height: 90px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255,200,100,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        /* Βίντεο */
         .video-wrapper {
             position: relative;
             margin: 16px 0 20px;
@@ -124,49 +156,6 @@
             object-fit: cover;
         }
         
-        .ad-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 16px 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 200, 100, 0.2);
-            padding: 12px 0;
-            min-height: 250px;
-            overflow: hidden;
-        }
-        
-        .ad-label {
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
-            padding: 8px 0 4px;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        .referral-btn {
-            display: inline-block;
-            padding: 14px 32px;
-            background: linear-gradient(135deg, #FFB347, #FF69B4);
-            color: #fff;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.95rem;
-            box-shadow: 0 8px 20px rgba(255,105,180,0.3);
-            transition: transform 0.2s ease;
-        }
-        
-        .referral-btn:hover {
-            transform: scale(1.03);
-        }
-        
         .footer-credit {
             text-align: center;
             padding: 20px 0 10px;
@@ -174,13 +163,133 @@
             color: rgba(255,255,255,0.3);
         }
         
+        /* ========== POP‑UP MODAL (Banner) ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: linear-gradient(145deg, #1e1e32, #12122e);
+            border-radius: 28px;
+            padding: 24px 16px 16px;
+            max-width: 380px;
+            width: 90%;
+            position: relative;
+            border: 1px solid rgba(255,200,100,0.4);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            text-align: center;
+        }
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .modal-content p i {
+            color: #FFB347;
+        }
+        
+        /* ========== ROLL‑UP (Sticky Bottom) ========== */
+        .rollup-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(0deg, #0f0f23, #1a1a2e);
+            border-top: 2px solid rgba(255,105,180,0.4);
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.7);
+            z-index: 999;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 14px 20px;
+            text-align: center;
+        }
+        .rollup-container.active {
+            transform: translateY(0);
+        }
+        .rollup-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 12px;
+        }
+        .rollup-text {
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .rollup-text i {
+            color: #FF69B4;
+            font-size: 1.2rem;
+        }
+        .rollup-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+        .rollup-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #FFB347, #FF69B4);
+            color: #fff;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 8px 20px rgba(255,105,180,0.4);
+            transition: transform 0.2s ease;
+            white-space: nowrap;
+        }
+        .rollup-btn:hover {
+            transform: scale(1.05);
+        }
+        
         @media (max-width: 480px) {
             body {
                 padding: 12px;
             }
-            .ad-container {
-                min-height: 200px;
-                padding: 8px 0;
+            .top-banner-ad {
+                min-height: 60px;
+            }
+            .rollup-content {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
@@ -204,7 +313,15 @@
         </div>
     </div>
     
-    <!-- Βίντεο (autoplay) -->
+    <!-- ===== ΕΠΑΝΩ BANNER (Script 29448441) ===== -->
+    <div class="ad-label">
+        <i class="fas fa-ad"></i> Διαφήμιση <i class="fas fa-ad"></i>
+    </div>
+    <div class="top-banner-ad">
+        <script src="https://pl29548940.effectivecpmnetwork.com/44/66/2e/44662e831e8b6926a31372620fc67755.js"></script>
+    </div>
+    
+    <!-- Βίντεο -->
     <div class="video-wrapper">
         <div class="video-container">
             <video 
@@ -225,39 +342,41 @@
         </div>
     </div>
     
-    <!-- Διαφήμιση 1: Native Banner (Adsterra key 28075034) -->
-    <div class="ad-label">
-        <i class="fas fa-video"></i> Διαφήμιση <i class="fas fa-crown" style="color: #FFD966;"></i>
-    </div>
-    <div class="ad-container">
-        <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
-        <div id="container-c79577cec8af7a06daf7720949a65143"></div>
-    </div>
-    
-    <!-- Διαφήμιση 2: Νέο script (29448441) – Social Bar / Native -->
-    <div class="ad-label">
-        <i class="fas fa-share-alt"></i> Προτεινόμενο <i class="fas fa-fire" style="color: #ff9900;"></i>
-    </div>
-    <div class="ad-container">
-        <script src="https://pl29548940.effectivecpmnetwork.com/44/66/2e/44662e831e8b6926a31372620fc67755.js"></script>
-    </div>
-    
-    <!-- Διαφήμιση 3: Affiliate / Referral (εφεδρική, μπορείς να την αντικαταστήσεις με νέο native key) -->
-    <div class="ad-label">
-        <i class="fas fa-ad"></i> Χορηγός <i class="fas fa-gem" style="color: #FF69B4;"></i>
-    </div>
-    <div class="ad-container">
-        <a href="#" class="referral-btn" onclick="window.open('https://www.effectivecpmnetwork.com/y3bcu9i9mk?key=79f1679701be594556ee4c5402d56788','_blank'); return false;">
-            <i class="fas fa-external-link-alt"></i> Μάθε περισσότερα
-        </a>
-    </div>
-    
     <div class="footer-credit">
         <i class="fas fa-heart" style="color: #ff69b4;"></i> Ευχαριστούμε που μας υποστηρίζεις
     </div>
 </div>
 
-<!-- ========== POPUNDER SCRIPT (Adsterra key 28083391) ========== -->
+<!-- ========== POP‑UP MODAL (Περιέχει το Native Banner 28075034) ========== -->
+<div class="modal-overlay" id="popupModal">
+    <div class="modal-content">
+        <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
+        <p style="color: #FFB347; font-weight:700; margin-bottom:15px; font-size:1rem;">
+            <i class="fas fa-crown"></i> ΑΠΟΚΛΕΙΣΤΙΚΗ ΠΡΟΣΦΟΡΑ <i class="fas fa-crown"></i>
+        </p>
+        <!-- Adsterra Native Banner Key 28075034 -->
+        <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
+        <div id="container-c79577cec8af7a06daf7720949a65143"></div>
+        <p style="color: rgba(255,255,255,0.5); font-size:0.7rem; margin-top:10px;">
+            Κάνε κλικ για να μάθεις περισσότερα
+        </p>
+    </div>
+</div>
+
+<!-- ========== ROLL‑UP (Sticky Bottom, Affiliate/Referral) ========== -->
+<div class="rollup-container" id="rollupAd">
+    <div class="rollup-content">
+        <span class="rollup-text">
+            <i class="fas fa-gem"></i> Θες επιπλέον έσοδα;
+        </span>
+        <a href="#" class="rollup-btn" onclick="window.open('https://www.effectivecpmnetwork.com/y3bcu9i9mk?key=79f1679701be594556ee4c5402d56788','_blank'); return false;">
+            Μάθε πώς
+        </a>
+        <button class="rollup-close" id="closeRollupBtn"><i class="fas fa-times"></i></button>
+    </div>
+</div>
+
+<!-- ========== POPUNDER SCRIPT (Key 28083391) ========== -->
 <script>
     var popunderOpened = false;
     function openPopunder() {
@@ -269,55 +388,56 @@
             window.focus();
         }
     }
-    // Ενεργοποίηση μετά από 5 δευτερόλεπτα ή στο πρώτο κλικ
     setTimeout(openPopunder, 5000);
     document.addEventListener('click', openPopunder, { once: true });
 </script>
 
-<!-- ========== VIDEO AUTOPLAY ========== -->
+<!-- ========== VIDEO AUTOPLAY (Ενισχυμένο) ========== -->
 <script>
     (function() {
-        'use strict';
-        
         const video = document.getElementById('mainVideo');
-        
         function forcePlay() {
             video.muted = true;
             video.loop = true;
             video.autoplay = true;
-            
-            const promise = video.play();
-            if (promise !== undefined) {
-                promise.then(() => {
-                    console.log('✅ Αυτόματη αναπαραγωγή επιτυχής');
-                    document.addEventListener('click', function unmute() {
-                        video.muted = false;
-                        document.removeEventListener('click', unmute);
-                    });
-                }).catch(err => {
-                    console.log('⚠️ Autoplay blocked, retry on click');
-                    document.addEventListener('click', function retry() {
-                        video.muted = false;
-                        video.play().catch(e => console.log('Still blocked'));
-                        document.removeEventListener('click', retry);
-                    });
-                });
-            }
+            video.play().then(() => {
+                document.addEventListener('click', () => { video.muted = false; }, { once: true });
+            }).catch(() => {
+                document.addEventListener('click', () => { video.muted = false; video.play(); }, { once: true });
+            });
         }
-        
-        window.addEventListener('load', function() {
+        window.addEventListener('load', () => {
             setTimeout(forcePlay, 100);
             setTimeout(forcePlay, 300);
-            setTimeout(forcePlay, 600);
         });
-        
-        document.addEventListener('click', function() {
-            video.muted = false;
-            video.play().catch(() => {});
-        }, { once: true });
-        
-        console.log('✅ Σελίδα φόρτωσε - Βίντεο θα ξεκινήσει αυτόματα');
     })();
+</script>
+
+<!-- ========== ΛΕΙΤΟΥΡΓΙΑ POP‑UP & ROLL‑UP ========== -->
+<script>
+    // Pop-up Modal (Εμφάνιση μετά από 3 δευτ.)
+    const modal = document.getElementById('popupModal');
+    const closeModal = document.getElementById('closeModalBtn');
+    
+    setTimeout(() => {
+        modal.classList.add('active');
+    }, 3000);
+    
+    closeModal.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    // Roll-up Sticky (Εμφάνιση μετά από 10 δευτ.)
+    const rollup = document.getElementById('rollupAd');
+    const closeRollup = document.getElementById('closeRollupBtn');
+    
+    setTimeout(() => {
+        rollup.classList.add('active');
+    }, 10000);
+    
+    closeRollup.addEventListener('click', () => {
+        rollup.classList.remove('active');
+    });
 </script>
 
 </body>
