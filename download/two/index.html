@@ -95,7 +95,7 @@
             z-index: 1;
         }
         
-        /* Κουμπί Play */
+        /* Κουμπί Play - φαίνεται το πρώτο πλάνο από κάτω */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -105,7 +105,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0,0,0,0.25);
             z-index: 10;
             transition: opacity 0.4s ease;
             pointer-events: auto;
@@ -116,10 +116,10 @@
             pointer-events: none;
         }
         .play-btn-circle {
-            width: 80px;
-            height: 80px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.9);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -135,9 +135,9 @@
             transform: scale(0.95);
         }
         .play-btn-circle i {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #0a0a1a;
-            margin-left: 4px;
+            margin-left: 3px;
         }
         
         .footer-credit {
@@ -265,11 +265,11 @@
                 padding: 12px;
             }
             .play-btn-circle {
-                width: 65px;
-                height: 65px;
+                width: 60px;
+                height: 60px;
             }
             .play-btn-circle i {
-                font-size: 1.6rem;
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -278,7 +278,7 @@
 
 <div class="main-container">
     
-    <!-- Βίντεο (Manual Play) -->
+    <!-- Βίντεο (ΑΥΤΟΜΑΤΟ PLAY με εμφανές πρώτο πλάνο) -->
     <div class="video-wrapper" id="videoWrapper">
         <div class="video-container" id="videoContainer">
             <video 
@@ -288,13 +288,16 @@
                 playsinline 
                 webkit-playsinline 
                 preload="auto"
+                autoplay
+                muted
+                loop
                 x-webkit-airplay="allow"
                 x5-video-player-type="h5"
                 x5-video-player-fullscreen="true">
                 <source src="https://blog.franklymadear.com/download/three/video2.mp4" type="video/mp4">
                 Ο περιηγητής σας δεν υποστηρίζει το βίντεο.
             </video>
-            <!-- Play Overlay -->
+            <!-- Play Overlay (φαίνεται το πρώτο πλάνο από κάτω) -->
             <div class="play-overlay" id="playOverlay">
                 <div class="play-btn-circle" id="playBtn">
                     <i class="fas fa-play"></i>
@@ -313,8 +316,8 @@
     <button class="slideup-close" id="closeSlideupBtn"><i class="fas fa-times"></i></button>
     <div class="slideup-content">
         <p class="slideup-label"><i class="fas fa-gift"></i> ΠΡΟΣΦΟΡΑ <i class="fas fa-gift"></i></p>
-        <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
-        <div id="container-c79577cec8af7a06daf7720949a65143"></div>
+        <script async="async" data-cfasync="false" src="https://pl29550089.effectivecpmnetwork.com/c60166d7a3e2bef5c7c1861562455f8e/invoke.js"></script>
+        <div id="container-c60166d7a3e2bef5c7c1861562455f8e"></div>
     </div>
 </div>
 
@@ -323,45 +326,67 @@
     <button class="slidedown-close" id="closeSlidedownBtn"><i class="fas fa-times"></i></button>
     <div class="slidedown-content">
         <p class="slidedown-label"><i class="fas fa-star"></i> ΠΡΟΤΕΙΝΟΜΕΝΟ <i class="fas fa-star"></i></p>
-        <script src="https://pl29549950.effectivecpmnetwork.com/c3/68/1a/c3681a76931db05f82a18a872b7d838c.js"></script>
+        <script async="async" data-cfasync="false" src="https://pl29550089.effectivecpmnetwork.com/c60166d7a3e2bef5c7c1861562455f8e/invoke.js"></script>
+        <div id="container-c60166d7a3e2bef5c7c1861562455f8e-2"></div>
     </div>
 </div>
 
-<!-- ========== VIDEO PLAY SCRIPT ========== -->
+<!-- ========== ΙΣΧΥΡΟ AUTOPLAY + MANUAL PLAY SCRIPT ========== -->
 <script>
     (function() {
         const video = document.getElementById('mainVideo');
         const playOverlay = document.getElementById('playOverlay');
         const playBtn = document.getElementById('playBtn');
         
+        // Προσπάθεια αυτόματης αναπαραγωγής
+        function tryAutoplay() {
+            video.muted = true;
+            video.loop = true;
+            
+            const promise = video.play();
+            if (promise !== undefined) {
+                promise.then(() => {
+                    console.log('✅ Autoplay επιτυχές - Το βίντεο παίζει');
+                    playOverlay.classList.add('hidden');
+                    
+                    // Ενεργοποίηση ήχου με κλικ
+                    document.addEventListener('click', function enableSound() {
+                        video.muted = false;
+                        console.log('🔊 Ήχος ενεργοποιήθηκε');
+                        document.removeEventListener('click', enableSound);
+                    }, { once: true });
+                    
+                }).catch(() => {
+                    console.log('⚠️ Autoplay μπλοκαρίστηκε - Θα παίξει με κλικ');
+                    // Το overlay μένει ορατό για manual play
+                });
+            }
+        }
+        
+        // Manual play με κλικ
         function startVideo(e) {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
             
-            video.load();
-            
-            const playPromise = video.play();
-            
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    console.log('✅ Βίντεο ξεκίνησε');
+            video.muted = false;
+            video.play().then(() => {
+                console.log('✅ Manual play επιτυχές');
+                playOverlay.classList.add('hidden');
+            }).catch(err => {
+                console.log('⚠️ Δοκιμή με mute...');
+                video.muted = true;
+                video.play().then(() => {
+                    console.log('✅ Έπαιξε με mute');
                     playOverlay.classList.add('hidden');
-                    video.muted = false;
-                }).catch(err => {
-                    console.log('⚠️ Δοκιμή με mute...');
-                    video.muted = true;
-                    video.play().then(() => {
-                        console.log('✅ Βίντεο ξεκίνησε (muted)');
-                        playOverlay.classList.add('hidden');
-                    }).catch(err2 => {
-                        console.error('❌ Σφάλμα:', err2);
-                    });
+                }).catch(err2 => {
+                    console.error('❌ Σφάλμα:', err2);
                 });
-            }
+            });
         }
         
+        // Events
         playBtn.addEventListener('click', startVideo);
         playOverlay.addEventListener('click', startVideo);
         
@@ -379,7 +404,34 @@
             playOverlay.classList.remove('hidden');
         });
         
-        console.log('✅ Σελίδα έτοιμη - Περιμένει κλικ για play');
+        video.addEventListener('playing', () => {
+            playOverlay.classList.add('hidden');
+        });
+        
+        video.addEventListener('pause', () => {
+            if (video.paused && !video.ended) {
+                playOverlay.classList.remove('hidden');
+            }
+        });
+        
+        // Έναρξη - Προσπάθεια autoplay
+        window.addEventListener('load', () => {
+            setTimeout(tryAutoplay, 100);
+            setTimeout(tryAutoplay, 400);
+            setTimeout(tryAutoplay, 800);
+        });
+        
+        // Έκτακτη ανάγκη: κλικ οπουδήποτε στη σελίδα
+        document.addEventListener('click', () => {
+            if (video.paused) {
+                video.muted = true;
+                video.play().then(() => {
+                    playOverlay.classList.add('hidden');
+                }).catch(() => {});
+            }
+        }, { once: true });
+        
+        console.log('✅ Σελίδα έτοιμη - Προσπάθεια autoplay...');
     })();
 </script>
 
