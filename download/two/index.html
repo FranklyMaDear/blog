@@ -52,7 +52,6 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            padding-bottom: 20px;
         }
         
         .main-container {
@@ -64,34 +63,6 @@
             overflow: visible;
             padding: 20px 20px 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-        }
-        
-        /* Ετικέτα διαφήμισης */
-        .ad-label {
-            font-size: 0.65rem;
-            color: rgba(255, 255, 255, 0.4);
-            text-align: center;
-            padding: 4px 0;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-        
-        /* Κορυφαίο Banner */
-        .top-banner-ad {
-            width: 100%;
-            margin: 10px 0 16px;
-            text-align: center;
-            min-height: 90px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255,200,100,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
         }
         
         /* Βίντεο */
@@ -167,63 +138,13 @@
             color: rgba(255,255,255,0.3);
         }
         
-        /* ========== POP‑UP MODAL (Banner) ========== */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.4s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-content {
-            background: linear-gradient(145deg, #1e1e32, #12122e);
-            border-radius: 28px;
-            padding: 24px 16px 16px;
-            max-width: 380px;
-            width: 90%;
-            position: relative;
-            border: 1px solid rgba(255,200,100,0.4);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            text-align: center;
-        }
-        .modal-close {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-        .modal-close:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
         /* ========== SLIDE‑UP ΔΙΑΦΗΜΙΣΗ (30% οθόνης από κάτω) ========== */
         .slideup-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 30vh; /* 30% της οθόνης */
+            height: 30vh;
             background: linear-gradient(0deg, #0f0f23, #1a1a2e);
             border-top: 3px solid rgba(255,105,180,0.5);
             box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
@@ -256,15 +177,73 @@
             justify-content: center;
             z-index: 5;
         }
+        .slideup-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
         .slideup-content {
             width: 100%;
             max-width: 400px;
             text-align: center;
         }
-        .slideup-content p {
+        .slideup-label {
             color: #FFB347;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            margin-bottom: 8px;
+        }
+        
+        /* ========== SLIDE‑DOWN ΔΙΑΦΗΜΙΣΗ (30% οθόνης από πάνω) ========== */
+        .slidedown-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 30vh;
+            background: linear-gradient(180deg, #0f0f23, #1a1a2e);
+            border-bottom: 3px solid rgba(255,105,180,0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+            z-index: 998;
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        .slidedown-container.active {
+            transform: translateY(0);
+        }
+        .slidedown-close {
+            position: absolute;
+            bottom: 8px;
+            right: 12px;
+            background: rgba(255,255,255,0.15);
+            border: none;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+        .slidedown-close:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .slidedown-content {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .slidedown-label {
+            color: #FFB347;
+            font-weight: 600;
+            font-size: 0.8rem;
             margin-bottom: 8px;
         }
         
@@ -272,22 +251,12 @@
             body {
                 padding: 12px;
             }
-            .top-banner-ad {
-                min-height: 60px;
-            }
         }
     </style>
 </head>
 <body>
 
 <div class="main-container">
-    <!-- ===== ΕΠΑΝΩ BANNER (Script 29448441) ===== -->
-    <div class="ad-label">
-        <i class="fas fa-ad"></i> Διαφήμιση <i class="fas fa-ad"></i>
-    </div>
-    <div class="top-banner-ad">
-        <script src="https://pl29548940.effectivecpmnetwork.com/44/66/2e/44662e831e8b6926a31372620fc67755.js"></script>
-    </div>
     
     <!-- Βίντεο (Manual Play) -->
     <div class="video-wrapper" id="videoWrapper">
@@ -318,48 +287,27 @@
     </div>
 </div>
 
-<!-- ========== POP‑UP MODAL (Key 28075034) ========== -->
-<div class="modal-overlay" id="popupModal">
-    <div class="modal-content">
-        <button class="modal-close" id="closeModalBtn"><i class="fas fa-times"></i></button>
-        <p style="color: #FFB347; font-weight:700; margin-bottom:15px; font-size:1rem;">
-            <i class="fas fa-crown"></i> ΑΠΟΚΛΕΙΣΤΙΚΗ ΠΡΟΣΦΟΡΑ <i class="fas fa-crown"></i>
-        </p>
-        <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
-        <div id="container-c79577cec8af7a06daf7720949a65143"></div>
-        <p style="color: rgba(255,255,255,0.5); font-size:0.7rem; margin-top:10px;">
-            Κάνε κλικ για να μάθεις περισσότερα
-        </p>
-    </div>
-</div>
-
-<!-- ========== SLIDE‑UP ΔΙΑΦΗΜΙΣΗ (30% οθόνης - Νέο Script) ========== -->
+<!-- ========== SLIDE‑UP ΔΙΑΦΗΜΙΣΗ (30% από κάτω) ========== -->
 <div class="slideup-container" id="slideupAd">
     <button class="slideup-close" id="closeSlideupBtn"><i class="fas fa-times"></i></button>
     <div class="slideup-content">
-        <p><i class="fas fa-gift"></i> ΕΙΔΙΚΗ ΠΡΟΣΦΟΡΑ <i class="fas fa-gift"></i></p>
+        <p class="slideup-label"><i class="fas fa-gift"></i> ΠΡΟΣΦΟΡΑ <i class="fas fa-gift"></i></p>
+        <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
+        <div id="container-c79577cec8af7a06daf7720949a65143"></div>
+    </div>
+</div>
+
+<!-- ========== SLIDE‑DOWN ΔΙΑΦΗΜΙΣΗ (30% από πάνω) ========== -->
+<div class="slidedown-container" id="slidedownAd">
+    <button class="slidedown-close" id="closeSlidedownBtn"><i class="fas fa-times"></i></button>
+    <div class="slidedown-content">
+        <p class="slidedown-label"><i class="fas fa-star"></i> ΠΡΟΤΕΙΝΟΜΕΝΟ <i class="fas fa-star"></i></p>
         <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
         <div id="container-c79577cec8af7a06daf7720949a65143-2"></div>
     </div>
 </div>
 
-<!-- ========== POPUNDER SCRIPT (Key 28083391) ========== -->
-<script>
-    var popunderOpened = false;
-    function openPopunder() {
-        if (popunderOpened) return;
-        popunderOpened = true;
-        var w = window.open('https://www.effectivecpmnetwork.com/y3bcu9i9mk?key=79f1679701be594556ee4c5402d56788', '_blank');
-        if (w) {
-            w.blur();
-            window.focus();
-        }
-    }
-    setTimeout(openPopunder, 5000);
-    document.addEventListener('click', openPopunder, { once: true });
-</script>
-
-<!-- ========== MANUAL PLAY SCRIPT (Πατάει play ο χρήστης) ========== -->
+<!-- ========== MANUAL PLAY SCRIPT ========== -->
 <script>
     (function() {
         const video = document.getElementById('mainVideo');
@@ -369,22 +317,18 @@
         function startVideo() {
             video.play().then(() => {
                 playOverlay.classList.add('hidden');
-                console.log('✅ Βίντεο ξεκίνησε από τον χρήστη');
             }).catch(err => {
                 console.log('⚠️ Play error:', err);
             });
         }
         
-        // Κλικ στο κουμπί play
         playBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             startVideo();
         });
         
-        // Κλικ οπουδήποτε στο overlay
         playOverlay.addEventListener('click', startVideo);
         
-        // Αν ο χρήστης κάνει κλικ στο ίδιο το βίντεο (πέφτει πάνω του)
         video.addEventListener('click', () => {
             if (video.paused) {
                 startVideo();
@@ -394,46 +338,36 @@
             }
         });
         
-        // Όταν τελειώσει το βίντεο, δείξε ξανά το overlay
         video.addEventListener('ended', () => {
             playOverlay.classList.remove('hidden');
         });
-        
-        console.log('✅ Σελίδα έτοιμη - Ο χρήστης πρέπει να πατήσει play');
     })();
 </script>
 
-<!-- ========== ΛΕΙΤΟΥΡΓΙΑ POP‑UP & SLIDE‑UP ========== -->
+<!-- ========== ΛΕΙΤΟΥΡΓΙΑ SLIDE‑UP & SLIDE‑DOWN ========== -->
 <script>
-    // Pop-up Modal (Εμφάνιση μετά από 3 δευτ.)
-    const modal = document.getElementById('popupModal');
-    const closeModal = document.getElementById('closeModalBtn');
-    
-    setTimeout(() => {
-        modal.classList.add('active');
-    }, 3000);
-    
-    closeModal.addEventListener('click', () => {
-        modal.classList.remove('active');
-    });
-    
-    // Κλείσιμο modal με κλικ έξω από αυτό
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('active');
-        }
-    });
-
-    // Slide-up από κάτω (Εμφάνιση μετά από 8 δευτ.)
+    // Slide-up από κάτω (εμφάνιση μετά από 5 δευτ.)
     const slideup = document.getElementById('slideupAd');
     const closeSlideup = document.getElementById('closeSlideupBtn');
     
     setTimeout(() => {
         slideup.classList.add('active');
-    }, 8000);
+    }, 5000);
     
     closeSlideup.addEventListener('click', () => {
         slideup.classList.remove('active');
+    });
+
+    // Slide-down από πάνω (εμφάνιση μετά από 10 δευτ.)
+    const slidedown = document.getElementById('slidedownAd');
+    const closeSlidedown = document.getElementById('closeSlidedownBtn');
+    
+    setTimeout(() => {
+        slidedown.classList.add('active');
+    }, 10000);
+    
+    closeSlidedown.addEventListener('click', () => {
+        slidedown.classList.remove('active');
     });
 </script>
 
