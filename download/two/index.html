@@ -80,7 +80,6 @@
             width: 100%;
             aspect-ratio: 9 / 16;
             background: #000;
-            /* Fallback background image σε περίπτωση που το poster δεν φορτώσει */
             background-image: url('https://blog.franklymadear.com/download/three/photo2.png');
             background-size: cover;
             background-position: center;
@@ -96,7 +95,7 @@
             z-index: 1;
         }
         
-        /* Κουμπί Play (overlay) */
+        /* Κουμπί Play */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -148,7 +147,7 @@
             color: rgba(255,255,255,0.3);
         }
         
-        /* ========== SLIDE‑UP ΔΙΑΦΗΜΙΣΗ (30% οθόνης από κάτω) ========== */
+        /* ========== SLIDE‑UP ΔΙΑΦΗΜΙΣΗ (30% από κάτω) ========== */
         .slideup-container {
             position: fixed;
             bottom: 0;
@@ -204,7 +203,7 @@
             margin-bottom: 8px;
         }
         
-        /* ========== SLIDE‑DOWN ΔΙΑΦΗΜΙΣΗ (30% οθόνης από πάνω) ========== */
+        /* ========== SLIDE‑DOWN ΔΙΑΦΗΜΙΣΗ (30% από πάνω) ========== */
         .slidedown-container {
             position: fixed;
             top: 0;
@@ -279,12 +278,12 @@
 
 <div class="main-container">
     
-    <!-- Βίντεο (Manual Play με εμφανές poster) -->
+    <!-- Βίντεο (Manual Play) -->
     <div class="video-wrapper" id="videoWrapper">
         <div class="video-container" id="videoContainer">
             <video 
                 id="mainVideo" 
-                src="https://blog.franklymadear.com/download/three/video.mp4" 
+                src="https://blog.franklymadear.com/download/three/video2.mp4" 
                 poster="https://blog.franklymadear.com/download/three/photo2.png" 
                 playsinline 
                 webkit-playsinline 
@@ -292,10 +291,10 @@
                 x-webkit-airplay="allow"
                 x5-video-player-type="h5"
                 x5-video-player-fullscreen="true">
-                <source src="https://blog.franklymadear.com/download/three/video.mp4" type="video/mp4">
+                <source src="https://blog.franklymadear.com/download/three/video2.mp4" type="video/mp4">
                 Ο περιηγητής σας δεν υποστηρίζει το βίντεο.
             </video>
-            <!-- Play Overlay (ημιδιάφανο, φαίνεται η εικόνα από κάτω) -->
+            <!-- Play Overlay -->
             <div class="play-overlay" id="playOverlay">
                 <div class="play-btn-circle" id="playBtn">
                     <i class="fas fa-play"></i>
@@ -324,66 +323,48 @@
     <button class="slidedown-close" id="closeSlidedownBtn"><i class="fas fa-times"></i></button>
     <div class="slidedown-content">
         <p class="slidedown-label"><i class="fas fa-star"></i> ΠΡΟΤΕΙΝΟΜΕΝΟ <i class="fas fa-star"></i></p>
-        <script async="async" data-cfasync="false" src="https://pl28175533.effectivecpmnetwork.com/c79577cec8af7a06daf7720949a65143/invoke.js"></script>
-        <div id="container-c79577cec8af7a06daf7720949a65143-2"></div>
+        <script src="https://pl29549950.effectivecpmnetwork.com/c3/68/1a/c3681a76931db05f82a18a872b7d838c.js"></script>
     </div>
 </div>
 
-<!-- ========== ΕΝΙΣΧΥΜΕΝΟ MANUAL PLAY SCRIPT ========== -->
+<!-- ========== VIDEO PLAY SCRIPT ========== -->
 <script>
     (function() {
         const video = document.getElementById('mainVideo');
         const playOverlay = document.getElementById('playOverlay');
         const playBtn = document.getElementById('playBtn');
-        const videoContainer = document.getElementById('videoContainer');
         
-        // Έλεγχος αν το βίντεο και η πηγή υπάρχουν
-        console.log('🎬 Video element:', video);
-        console.log('📷 Poster URL:', video.poster);
-        console.log('🎥 Video src:', video.currentSrc || video.src);
-        
-        // Συνάρτηση αναπαραγωγής
         function startVideo(e) {
             if (e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
             
-            console.log('▶️ Προσπάθεια αναπαραγωγής...');
-            
-            // Φόρτωσε το βίντεο αν δεν έχει φορτώσει
             video.load();
             
-            // Προσπάθησε να παίξει
             const playPromise = video.play();
             
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    console.log('✅ Το βίντεο ξεκίνησε επιτυχώς');
+                    console.log('✅ Βίντεο ξεκίνησε');
                     playOverlay.classList.add('hidden');
-                    // Ενεργοποίηση ήχου μετά το play
                     video.muted = false;
                 }).catch(err => {
-                    console.error('❌ Σφάλμα αναπαραγωγής:', err);
-                    // Δοκίμασε με muted πρώτα (πολλοί browsers το απαιτούν)
+                    console.log('⚠️ Δοκιμή με mute...');
                     video.muted = true;
                     video.play().then(() => {
-                        console.log('✅ Το βίντεο ξεκίνησε με mute');
+                        console.log('✅ Βίντεο ξεκίνησε (muted)');
                         playOverlay.classList.add('hidden');
-                        // Ο χρήστης μπορεί να ενεργοποιήσει τον ήχο από τα controls
                     }).catch(err2 => {
-                        console.error('❌ Δεύτερο σφάλμα:', err2);
-                        alert('Το βίντεο δεν μπόρεσε να ξεκινήσει. Παρακαλώ δοκιμάστε ξανά.');
+                        console.error('❌ Σφάλμα:', err2);
                     });
                 });
             }
         }
         
-        // Event listeners
         playBtn.addEventListener('click', startVideo);
         playOverlay.addEventListener('click', startVideo);
         
-        // Κλικ στο βίντεο: play/pause toggle
         video.addEventListener('click', (e) => {
             e.stopPropagation();
             if (video.paused) {
@@ -391,67 +372,41 @@
             } else {
                 video.pause();
                 playOverlay.classList.remove('hidden');
-                console.log('⏸️ Βίντεο σε παύση');
             }
         });
         
-        // Όταν τελειώσει το βίντεο
         video.addEventListener('ended', () => {
             playOverlay.classList.remove('hidden');
-            console.log('🏁 Βίντεο τελείωσε');
         });
         
-        // Έλεγχος φόρτωσης
-        video.addEventListener('loadeddata', () => {
-            console.log('📦 Το βίντεο φορτώθηκε και είναι έτοιμο');
-        });
-        
-        video.addEventListener('error', (e) => {
-            console.error('⚠️ Σφάλμα φόρτωσης βίντεο:', e);
-        });
-        
-        // Έλεγχος φόρτωσης poster
-        const testImg = new Image();
-        testImg.onload = () => {
-            console.log('🖼️ Το poster φορτώθηκε επιτυχώς');
-        };
-        testImg.onerror = () => {
-            console.error('❌ Το poster ΔΕΝ φορτώθηκε - έλεγξε το URL:', video.poster);
-        };
-        testImg.src = video.poster;
-        
-        console.log('✅ Σελίδα έτοιμη - Περιμένει κλικ από τον χρήστη');
+        console.log('✅ Σελίδα έτοιμη - Περιμένει κλικ για play');
     })();
 </script>
 
-<!-- ========== ΛΕΙΤΟΥΡΓΙΑ SLIDE‑UP & SLIDE‑DOWN ========== -->
+<!-- ========== SLIDE SCRIPTS ========== -->
 <script>
-    // Slide-up από κάτω (εμφάνιση μετά από 5 δευτ.)
+    // Slide-up από κάτω (5 δευτ.)
     const slideup = document.getElementById('slideupAd');
     const closeSlideup = document.getElementById('closeSlideupBtn');
     
     setTimeout(() => {
         slideup.classList.add('active');
-        console.log('📤 Slide-up εμφανίστηκε');
     }, 5000);
     
     closeSlideup.addEventListener('click', () => {
         slideup.classList.remove('active');
-        console.log('❌ Slide-up έκλεισε');
     });
 
-    // Slide-down από πάνω (εμφάνιση μετά από 10 δευτ.)
+    // Slide-down από πάνω (10 δευτ.)
     const slidedown = document.getElementById('slidedownAd');
     const closeSlidedown = document.getElementById('closeSlidedownBtn');
     
     setTimeout(() => {
         slidedown.classList.add('active');
-        console.log('📥 Slide-down εμφανίστηκε');
     }, 10000);
     
     closeSlidedown.addEventListener('click', () => {
         slidedown.classList.remove('active');
-        console.log('❌ Slide-down έκλεισε');
     });
 </script>
 
