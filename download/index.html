@@ -380,6 +380,7 @@
         
         .sticky-content {
             padding: 10px 14px 14px;
+            min-height: 60px;
         }
         
         /* ========== FLYING BALLOON (Amazon My Store) ========== */
@@ -690,7 +691,6 @@
         // ========== FLYING BALLOON ANIMATION & POSITIONING ==========
         const balloon = document.getElementById('flyingBalloon');
         
-        // Set random starting position (within safe boundaries)
         function setRandomBalloonPosition() {
             const windowWidth = window.innerWidth;
             const windowHeight = window.innerHeight;
@@ -699,7 +699,6 @@
             const isMobile = window.innerWidth <= 600;
             const size = isMobile ? mobileSize : balloonSize;
             
-            // Random position: avoid edges and keep within view
             const left = Math.random() * (windowWidth - size - 20) + 10;
             const top = Math.random() * (windowHeight - size - 100) + 50;
             
@@ -710,10 +709,8 @@
             balloon.style.bottom = 'auto';
         }
         
-        // Initialize random position
         setRandomBalloonPosition();
         
-        // Optional: Smoothly move balloon to new random position every 15 seconds
         let moveInterval = setInterval(() => {
             if (balloon) {
                 const windowWidth = window.innerWidth;
@@ -727,21 +724,14 @@
                 balloon.style.left = newLeft + 'px';
                 balloon.style.top = newTop + 'px';
                 
-                // Remove transition after animation to avoid interfering with float animation
                 setTimeout(() => {
                     if (balloon) balloon.style.transition = '';
                 }, 800);
             }
         }, 15000);
         
-        // Reposition on window resize
         window.addEventListener('resize', () => {
             setRandomBalloonPosition();
-        });
-        
-        // Optional: Add click tracking for balloon
-        balloon.addEventListener('click', () => {
-            console.log('Flying balloon clicked - Amazon My Store');
         });
         
         // ========== VIDEO PLAYER ==========
@@ -754,13 +744,11 @@
             if (videoStarted) return;
             videoStarted = true;
             playOverlay.classList.add('hidden');
-            // Try to play with sound
             video.muted = false;
             video.play().then(() => {
                 console.log('Video playing with sound');
             }).catch(e => {
                 console.log('Autoplay with sound blocked, trying muted first:', e);
-                // If blocked, try muted then unmute
                 video.muted = true;
                 video.play().then(() => {
                     video.muted = false;
@@ -780,38 +768,48 @@
         video.addEventListener('ended', () => {
             videoStarted = false;
             playOverlay.classList.remove('hidden');
-            // Reset video to beginning for replay
             video.currentTime = 0;
         });
         
-        video.addEventListener('pause', () => {
-            if (!video.ended && !video.paused) {
-                // Do nothing
-            }
-        });
-        
-        // ========== STICKY AD LOGIC ==========
+        // ========== STICKY AD LOGIC & LAZY LOAD ==========
         const stickyAd = document.getElementById('stickyAd');
         const closeStickyBtn = document.getElementById('closeStickyBtn');
         let stickyShown = false;
+        let stickyAdLoaded = false;
         
-        const stickyClosedBefore = localStorage.getItem('stickyAdClosed');
-        if (stickyClosedBefore === 'true') {
-            stickyAd.classList.add('collapsed');
+        const loadStickyAd = () => {
+            if (stickyAdLoaded) return;
+            stickyAdLoaded = true;
+            setTimeout(() => {
+                if (typeof adsbygoogle !== 'undefined') {
+                    try { 
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                        console.log('Sticky ad initialization pushed successfully.');
+                    } catch(e) {
+                        console.log('Sticky ad push error:', e);
+                    }
+                }
+            }, 150);
+        };
+
+        const showStickyContainer = () => {
+            if (stickyShown || localStorage.getItem('stickyAdClosed') === 'true') return;
             stickyShown = true;
-        }
+            stickyAd.classList.remove('collapsed');
+            // Φόρτωση της διαφήμισης αφού εμφανιστεί το container
+            loadStickyAd(); 
+        };
         
         closeStickyBtn.addEventListener('click', () => {
             stickyAd.classList.add('collapsed');
             localStorage.setItem('stickyAdClosed', 'true');
         });
         
-        if (!stickyShown && localStorage.getItem('stickyAdClosed') !== 'true') {
+        if (localStorage.getItem('stickyAdClosed') !== 'true') {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (!entry.isIntersecting && !stickyShown) {
-                        stickyShown = true;
-                        stickyAd.classList.remove('collapsed');
+                    if (!entry.isIntersecting) {
+                        showStickyContainer();
                         observer.disconnect();
                     }
                 });
@@ -820,14 +818,11 @@
             observer.observe(videoContainer);
             
             setTimeout(() => {
-                if (!stickyShown && localStorage.getItem('stickyAdClosed') !== 'true') {
-                    stickyShown = true;
-                    stickyAd.classList.remove('collapsed');
-                }
+                showStickyContainer();
             }, 10000);
         }
         
-        // ========== LAZY LOAD ADS ==========
+        // ========== LAZY LOAD IN-LINE ADS ==========
         const adCards = document.querySelectorAll('.ad-card');
         const loadedAds = new Set();
         
@@ -855,46 +850,18 @@
                     adObserver.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.1, rootMargin: '100px' });
+        }, { threshold: 0.1, rootMargin: '150px' });
         
         adCards.forEach(card => adObserver.observe(card));
-        
-        const stickyContent = document.querySelector('.sticky-content ins');
-        let stickyAdLoaded = false;
-        
-        const stickyObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !stickyAdLoaded && stickyAd.classList.contains('collapsed') === false) {
-                    stickyAdLoaded = true;
-                    setTimeout(() => {
-                        if (typeof adsbygoogle !== 'undefined') {
-                            try { 
-                                (adsbygoogle = window.adsbygoogle || []).push({});
-                                console.log('Sticky ad loaded');
-                            } catch(e) {}
-                        }
-                    }, 100);
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        if (stickyContent) {
-            stickyObserver.observe(stickyContent);
-        }
         
         window.addEventListener('load', () => {
             adCards.forEach(card => {
                 const rect = card.getBoundingClientRect();
-                const isVisible = rect.top < window.innerHeight + 100 && rect.bottom > -100;
+                const isVisible = rect.top < window.innerHeight + 150 && rect.bottom > -150;
                 if (isVisible && !loadedAds.has(card)) {
                     loadAdIfNeeded(card);
                 }
             });
-            
-            console.log('Page Loaded - URL: https://blog.franklymadear.com/download/index.html');
-            console.log('Video URL: https://blog.franklymadear.com/download/video.mp4');
-            console.log('Image URL: https://blog.franklymadear.com/download/photo.png');
-            console.log('✨ Flying Balloon "Amazon My Store" is active! ✨');
         });
         
         // ========== IOS FIX ==========
@@ -904,12 +871,10 @@
             video.setAttribute('webkit-playsinline', '');
         }
         
-        // Cleanup interval on page unload
         window.addEventListener('beforeunload', () => {
             if (moveInterval) clearInterval(moveInterval);
         });
         
-        // Fix for video poster not showing on some devices
         if (video.poster) {
             video.load();
         }
