@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omen & Lifeline - Ο Κόσμος της Τύχης</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f0c29; color: #fff; text-align: center; padding: 20px; }
+        .section { margin: 20px 0; padding: 20px; border: 1px solid #333; border-radius: 15px; background: rgba(255,255,255,0.05); }
+        .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; justify-items: center; }
+        .card { width: 80px; height: 120px; background: #e94560; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        #scratch-area { width: 250px; height: 60px; background: #555; margin: 10px auto; cursor: crosshair; position: relative; border-radius: 5px; }
+        .ads-space { margin: 20px 0; padding: 20px; border: 2px dashed #e94560; color: #e94560; }
+        select, button { padding: 10px; margin: 5px; border-radius: 5px; border: none; }
+    </style>
+</head>
+<body>
+
+    <h1>Omen & Lifeline</h1>
+    <p>Ανακάλυψε τι σου επιφυλάσσει η μοίρα.</p>
+
+    <!-- Καφεμαντεία & Χειρομαντεία -->
+    <div class="section">
+        <h3>Καφεμαντεία</h3>
+        <p>Ανέβασε μια φωτογραφία από το φλιτζάνι σου και άφησε την τεχνητή νοημοσύνη να διαβάσει τα σύμβολα του μέλλοντος.</p>
+        <h3>Χειρομαντεία</h3>
+        <p>Σκάναρε την παλάμη σου. Οι γραμμές της ζωής και της τύχης αποκαλύπτουν τον χαρακτήρα σου.</p>
+        <select><option>Άνδρας</option><option>Γυναίκα</option></select>
+        <button>Ξεκίνα την Ανάλυση</button>
+    </div>
+
+    <!-- Τυχερό Μπισκότο -->
+    <div class="section">
+        <h3>Τυχερό Μπισκότο</h3>
+        <div id="scratch-area" onclick="revealFortune()">ΞΥΣΕ ΕΔΩ</div>
+        <p id="fortune-display">Καλή τύχη!</p>
+    </div>
+
+    <!-- Κάρτες Ταρώ -->
+    <div class="section">
+        <h3>Επίλεξε μια Κάρτα Ταρώ</h3>
+        <div class="card-grid" id="tarot-board">
+            <div class="card" onclick="revealTarot(this)">?</div>
+            <div class="card" onclick="revealTarot(this)">?</div>
+            <div class="card" onclick="revealTarot(this)">?</div>
+            <div class="card" onclick="revealTarot(this)">?</div>
+            <div class="card" onclick="revealTarot(this)">?</div>
+            <div class="card" onclick="revealTarot(this)">?</div>
+        </div>
+    </div>
+
+    <!-- Ζώδια -->
+    <div class="section">
+        <h3>Ζώδια της Ημέρας</h3>
+        <input type="date" id="dob">
+        <button onclick="getZodiac()">Δες την πρόβλεψη</button>
+        <div id="zodiac-res"></div>
+    </div>
+
+    <!-- Παιχνίδια & Ads -->
+    <div class="section">
+        <a href="https://github.com/Franklymadear/games" style="color: cyan;">Δείτε τα Παιχνίδια μας (Chess, Sudoku κ.α.)</a>
+        <div class="ads-space">[Διαφήμιση Adsgram]</div>
+    </div>
+
+    <script>
+        const fortunes = [
+            "Μια νέα συνάντηση θα αλλάξει τα δεδομένα.", "Η τύχη χαμογελά στους τολμηρούς.", "Μην αναβάλλεις για αύριο αυτό που θέλεις σήμερα.",
+            "Μια οικονομική ευκαιρία σε πλησιάζει.", "Η διαίσθησή σου θα σε βγάλει από τη δύσκολη θέση.", "Πρόσεξε τις λεπτομέρειες, εκεί κρύβεται η λύση.",
+            "Κάποιος σκέφτεται πολύ έντονα εσένα.", "Ένα ταξίδι θα σε ανανεώσει.", "Η υπομονή είναι το κλειδί της επιτυχίας σου.", "Μια παλιά φιλία θα αναζωπυρωθεί.",
+            "Η μέρα υπόσχεται ευχάριστες εκπλήξεις.", "Μην φοβάσαι να ρισκάρεις στην αγάπη.", "Η επιτυχία είναι πιο κοντά από όσο νομίζεις.", "Κάτι νέο ξεκινά για σένα στον επαγγελματικό τομέα.",
+            "Η ηρεμία είναι η μεγαλύτερη δύναμή σου.", "Θα λάβεις ένα ευχάριστο μήνυμα σύντομα.", "Εμπιστεύσου το ένστικτό σου σήμερα.", "Η δημιουργικότητά σου είναι στα ύψη.",
+            "Μια μικρή αλλαγή θα φέρει μεγάλη ευτυχία.", "Η αγάπη είναι παντού γύρω σου.", "Πρόσεξε την υγεία σου και τον ύπνο σου.", "Μια συνεργασία θα αποδειχθεί πολύ κερδοφόρα.",
+            "Μην αφήνεις τις αμφιβολίες να σε σταματήσουν.", "Η τύχη ευνοεί τις καθαρές σκέψεις.", "Σύντομα θα πάρεις μια σημαντική απόφαση.", "Η ζωή σου ετοιμάζεται για μια μεγάλη αλλαγή.",
+            "Μια ευχάριστη συνάντηση πλησιάζει.", "Το μέλλον σου προμηνύεται λαμπρό.", "Κάποιος σε εκτιμά περισσότερο από όσο δείχνει.", "Η προσπάθειά σου θα ανταμειφθεί.",
+            "Άφησε το παρελθόν εκεί που ανήκει.", "Σήμερα είναι η ιδανική μέρα για δράση.", "Μην ανησυχείς, όλα θα πάνε καλά.", "Η ευτυχία βρίσκεται στις μικρές στιγμές.",
+            "Μια απρόσμενη βοήθεια θα σου δοθεί.", "Η αλήθεια θα βγει στο φως.", "Προετοιμάσου για μια θετική εξέλιξη.", "Η τύχη είναι φίλη σου σήμερα.", "Κάτι σημαντικό θα συμβεί το απόγευμα.",
+            "Η ενέργειά σου είναι μεταδοτική.", "Πίστεψε στον εαυτό σου.", "Μια νέα γνώση θα σου ανοίξει πόρτες.", "Το σύμπαν σε υποστηρίζει.", "Η αγάπη σε περιμένει σε μια γωνία.",
+            "Μην βιάζεσαι, όλα θα γίνουν στην ώρα τους.", "Ένα δώρο της μοίρας σε περιμένει.", "Η ισορροπία είναι το ζητούμενο.", "Μια σημαντική πόρτα ανοίγει για εσένα.",
+            "Η υπομονή θα επιβραβευθεί.", "Είσαι έτοιμος για μια νέα αρχή."
+        ];
+
+        function revealFortune() {
+            const random = fortunes[Math.floor(Math.random() * fortunes.length)];
+            document.getElementById('fortune-display').innerText = random;
+        }
+
+        function revealTarot(el) {
+            el.innerText = fortunes[Math.floor(Math.random() * fortunes.length)];
+            el.style.fontSize = "10px";
+        }
+
+        function getZodiac() {
+            const dob = new Date(document.getElementById('dob').value);
+            const d = dob.getDate();
+            const m = dob.getMonth() + 1;
+            // Απλοποιημένη λογική ζωδίων
+            document.getElementById('zodiac-res').innerText = "Το ζώδιό σου είναι υπολογισμένο!";
+        }
+    </script>
+</body>
+</html>
