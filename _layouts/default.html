@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FranklyMaDear Blog</title>
+    <link rel="icon" type="image/png" href="/index.png">
+    <link rel="apple-touch-icon" href="/index.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    
+    <!-- Google AdSense Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Γενικές ρυθμίσεις */
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Nunito', sans-serif; background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        
+        .container {
+            position: relative;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Home Button */
+        .home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+        .home-button a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .home-button a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.7);
+            background: linear-gradient(135deg, #ff8e53 0%, #ff6b6b 100%);
+        }
+        .home-button .home-icon { font-size: 1.4rem; }
+
+        /* Header & Footer */
+        .header {
+            text-align: center;
+            padding: 50px 20px;
+            margin-top: 30px;
+            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
+            border-radius: 0 0 30px 30px;
+        }
+        .logo h1 {
+            font-size: 3rem;
+            background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .tagline { font-size: 1.3rem; color: #333; font-weight: 600; }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            margin-top: 50px;
+            border-top: 3px solid rgba(255,255,255,0.3);
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white !important;
+        }
+
+        /* Category Cards */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 30px;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .category-card {
+            text-decoration: none;
+            color: white !important;
+            padding: 30px 25px;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 240px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .category-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+            border-color: white;
+        }
+        .card-icon { font-size: 3rem; margin-bottom: 15px; }
+        .category-card h3 { margin: 10px 0; font-size: 1.8rem; font-weight: 800; }
+        .category-card p { margin: 5px 0; font-size: 1rem; opacity: 0.95; }
+        .card-badge {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 6px 15px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .support-card { background: linear-gradient(135deg, #ff0844 0%, #ff6b6b 40%, #ffb199 100%); border: 3px solid rgba(255, 255, 255, 0.3); position: relative; overflow: hidden; }
+        .support-card::before {
+            content: "";
+            position: absolute; top: -50%; left: -50%; right: -50%; bottom: -50%;
+            background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.3) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 60%, rgba(255, 215, 0, 0.3) 0%, transparent 40%);
+            animation: shimmer 8s infinite linear; z-index: 1;
+        }
+        @keyframes shimmer { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .support-card > *, .digital-card > * { position: relative; z-index: 2; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        
+        .digital-card { background: linear-gradient(135deg, #1e3c72 0%, #2a5298 40%, #4b6cb0 70%, #182848 100%); border: 3px solid #6dd5ed; }
+        
+        .support-card .bmc-image img { height: 50px; border-radius: 10px; margin-top: 15px; }
+
+        /* Ads */
+        .simple-ad-container {
+            margin: 30px auto;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .home-button { top: 10px; left: 10px; }
+            .header { padding-top: 70px; }
+            .category-card h3 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="home-button">
+            <a href="https://franklymadear.com/" target="_blank">
+                <span class="home-icon">🏠</span><span>Αρχική Οθόνη</span>
+            </a>
+        </div>
+
+        <header class="header">
+            <div class="logo"><h1>🎨 FranklyMaDear Blog</h1></div>
+            <p class="tagline">Ανακαλύψτε Ψηφιακά Βιβλία, Digital Products Δωρεάν!</p>
+        </header>
+
+        <main class="main-content">
+            {{ content }}
+            
+            <div class="simple-ad-container">
+                <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-ad-client="ca-pub-3186700611266549" data-ad-slot="9660744817"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="simple-ad-container">
+                <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-ad-client="ca-pub-3186700611266549" data-ad-slot="9660744817"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            <p>Made with ❤️ by FranklyMaDear</p>
+        </footer>
+    </div>
+
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-color="#FF6B6B" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+</body>
+</html>
