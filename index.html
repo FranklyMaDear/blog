@@ -1,363 +1,41 @@
-<!DOCTYPE html>
-<html lang="el">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FranklyMaDear Blog</title>
-    <link rel="icon" type="image/png" href="index.png">
-    <link rel="apple-touch-icon" href="index.png">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    
-    <!-- Google AdSense Script -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-    
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        /* Home Button */
-        .home-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 100;
-        }
-        
-        .home-button a {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
-            color: white;
-            text-decoration: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 1rem;
-            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5);
-            transition: all 0.3s ease;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .home-button a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.7);
-            background: linear-gradient(135deg, #ff8e53 0%, #ff6b6b 100%);
-        }
-        .home-button .home-icon { font-size: 1.4rem; }
-
-        /* Container */
-        .container {
-            position: relative;
-            max-width: 1400px;
-            margin: 0 auto;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        }
-
-        /* --- ΝΕΟ: Στυλ για το Feed των Άρθρων (ΚΕΝΤΡΟ) --- */
-        .posts-feed {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
-        .posts-feed h2 {
-            text-align: center;
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: #333;
-        }
-        .post-item {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            transition: transform 0.2s;
-            border-left: 5px solid #ff6b6b;
-        }
-        .post-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-        }
-        .post-item h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.6rem;
-        }
-        .post-item h3 a {
-            text-decoration: none;
-            color: #2c3e50;
-        }
-        .post-item h3 a:hover {
-            color: #ff6b6b;
-        }
-        .post-item .post-date {
-            font-size: 0.9rem;
-            color: #888;
-            margin-bottom: 10px;
-            display: block;
-        }
-        .post-item .post-excerpt {
-            color: #555;
-            line-height: 1.6;
-        }
-        .post-item .read-more {
-            display: inline-block;
-            margin-top: 15px;
-            color: #ff6b6b;
-            font-weight: 700;
-            text-decoration: none;
-        }
-        .post-item .read-more:hover {
-            text-decoration: underline;
-        }
-
-        /* --- Οι υπόλοιπες κάρτες σου (ΚΑΤΩ από το feed) --- */
-        .support-card {
-            background: linear-gradient(135deg, #ff0844 0%, #ff6b6b 40%, #ffb199 100%);
-            color: white !important;
-            position: relative;
-            overflow: hidden;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-        }
-        .support-card::before {
-            content: "";
-            position: absolute;
-            top: -50%; left: -50%; right: -50%; bottom: -50%;
-            background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.3) 0%, transparent 40%),
-                        radial-gradient(circle at 70% 60%, rgba(255, 215, 0, 0.3) 0%, transparent 40%);
-            animation: shimmer 8s infinite linear;
-            z-index: 1;
-        }
-        @keyframes shimmer {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .support-card > *, .computer-card > *, .coffee-card > *, .digital-card > * {
-            position: relative;
-            z-index: 2;
-            color: white !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        .computer-card {
-            background: linear-gradient(135deg, #0f2027 0%, #203a43 30%, #2c5364 100%);
-            border: 3px solid #4facfe;
-        }
-        .coffee-card {
-            background: linear-gradient(135deg, #c04848 0%, #f0a07c 50%, #ffb347 100%);
-            border: 3px solid #ffd700;
-        }
-        .digital-card {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 40%, #4b6cb0 70%, #182848 100%);
-            border: 3px solid #6dd5ed;
-        }
-        .category-card {
-            text-decoration: none;
-            color: white !important;
-            padding: 30px 25px;
-            border-radius: 20px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            min-height: 240px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-        .category-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 20px 35px rgba(0,0,0,0.3);
-            border-color: white;
-        }
-        .card-icon { font-size: 3rem; margin-bottom: 15px; }
-        .category-card h3 { margin: 10px 0; font-size: 1.8rem; font-weight: 800; }
-        .category-card p { margin: 5px 0; font-size: 1rem; opacity: 0.95; }
-        .card-badge {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 6px 15px;
-            border-radius: 25px;
-            font-size: 0.85rem;
-            margin-top: 15px;
-            font-weight: bold;
-            border: 2px solid rgba(255, 255, 255, 0.4);
-        }
-        .support-card .bmc-image {
-            margin-top: 15px;
-            opacity: 0.95;
-            transition: all 0.3s ease;
-        }
-        .support-card:hover .bmc-image { transform: scale(1.05); }
-        .support-card .bmc-image img { height: 50px; border-radius: 10px; }
-
-        /* Ad Container */
-        .simple-ad-container {
-            margin: 30px auto;
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            padding: 0 15px;
-        }
-
-        /* Grid for cards */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            padding: 30px;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            padding: 50px 20px;
-            margin-top: 30px;
-            background: linear-gradient(135deg, #ffdde1 0%, #ee9ca7 100%);
-            border-radius: 0 0 30px 30px;
-        }
-        .logo h1 {
-            font-size: 3rem;
-            background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .tagline { font-size: 1.3rem; color: #333; font-weight: 600; }
-        .footer {
-            text-align: center;
-            padding: 40px;
-            margin-top: 50px;
-            border-top: 3px solid rgba(255,255,255,0.3);
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white !important;
-        }
-
-        @media (max-width: 768px) {
-            .home-button { top: 10px; left: 10px; }
-            .header { padding-top: 70px; }
-            .category-card h3 { font-size: 1.5rem; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="home-button">
-            <a href="https://franklymadear.com/" target="_blank">
-                <span class="home-icon">🏠</span><span>Αρχική Οθόνη</span>
-            </a>
+---
+layout: default
+---
+<section class="posts-feed" style="max-width: 800px; margin: 0 auto; padding: 30px 20px;">
+    <h2 style="text-align: center; font-size: 2rem; color: #333;">📝 Τελευταία Άρθρα</h2>
+    <div id="posts-container">
+        {% for post in site.posts limit:10 %}
+        <div class="post-item" style="background: white; border-radius: 20px; padding: 25px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); border-left: 5px solid #ff6b6b; transition: transform 0.2s;">
+            
+            <h3 style="margin: 0 0 10px 0; font-size: 1.6rem;">
+                <a href="{{ post.url }}" style="text-decoration: none; color: #2c3e50;">{{ post.title }}</a>
+            </h3>
+            <span class="post-date" style="font-size: 0.9rem; color: #888; display: block; margin-bottom: 10px;">📅 {{ post.date | date: "%d/%m/%Y" }}</span>
+            
+            {% if post.cover_image %}
+            <img src="{{ post.cover_image }}" style="width: 120px; height: auto; border-radius: 10px; float: right; margin-left: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            {% endif %}
+            
+            <p class="post-excerpt" style="color: #555; line-height: 1.6;">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+            <a href="{{ post.url }}" class="read-more" style="display: inline-block; margin-top: 15px; color: #ff6b6b; font-weight: 700; text-decoration: none;">Διαβάστε περισσότερα →</a>
         </div>
-
-        <header class="header">
-            <div class="logo"><h1>🎨 FranklyMaDear Blog</h1></div>
-            <p class="tagline">Ανακαλύψτε Ψηφιακά Βιβλία, Digital Products Δωρεάν!</p>
-        </header>
-
-        <main class="main-content">
-            <!-- 1. Feed με τα άρθρα (ΚΕΝΤΡΟ) -->
-            <section class="posts-feed" id="posts-feed">
-                <h2>📝 Τελευταία Άρθρα</h2>
-                <div id="posts-container"></div> <!-- Εδώ θα μπουν με JavaScript -->
-            </section>
-
-            <!-- 2. Διαφήμιση -->
-            <div class="simple-ad-container">
-                <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-ad-client="ca-pub-3186700611266549" data-ad-slot="9660744817"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-
-            <!-- 3. Οι κάρτες σου (ΚΑΤΩ από τα άρθρα) -->
-            <div class="category-grid">
-                <a href="digital-products.html" class="category-card digital-card">
-                    <div class="card-icon">📚</div><h3>Digital Books</h3>
-                    <p>Ηλεκτρονικά βιβλία και Activity Books</p><div class="card-badge">Νέο Activity Book!</div>
-                </a>
-                <a href="https://www.buymeacoffee.com/franklymadear" target="_blank" class="category-card support-card">
-                    <div class="card-icon">⭐</div><h3>Στηρίξτε μας</h3>
-                    <p>Βοηθήστε μας να συνεχίσουμε</p><div class="card-badge">Κάντε κλικ!</div>
-                    <div class="bmc-image"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee"></div>
-                </a>
-                <a href="https://franklymadear.com/cafedium/index.html" class="category-card coffee-card">
-                    <div class="card-icon">☕</div><h3>Coffeetime</h3>
-                    <p>Ανακαλύψτε μια μοναδική εμπειρία</p><div class="card-badge">Νέο!</div>
-                </a>
-                <a href="http://franklymadear.com/calculator/index.html" class="category-card computer-card">
-                    <div class="card-icon">🧮</div><h3>Αριθμομηχανή</h3>
-                    <p>Γρήγοροι υπολογισμοί</p><div class="card-badge">Νέο!</div>
-                </a>
-                <a href="digital-products.html" class="category-card digital-card">
-                    <div class="card-icon">🛒</div><h3>Digital Products</h3>
-                    <p>Templates & resources</p><div class="card-badge">7 νέα</div>
-                </a>
-            </div>
-
-            <!-- Διαφήμιση Footer -->
-            <div class="simple-ad-container">
-                <ins class="adsbygoogle" style="display:block" data-ad-format="auto" data-ad-client="ca-pub-3186700611266549" data-ad-slot="9660744817"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p>Made with ❤️ by FranklyMaDear</p>
-        </footer>
+        {% endfor %}
     </div>
+</section>
 
-    <!-- Buy Me a Coffee Widget -->
-    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="franklymadear" data-description="Support me on Buy me a coffee!" data-color="#FF6B6B" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
-
-    <!-- ★ ΝΕΟ: JavaScript που φορτώνει τα άρθρα από το φάκελο "posts/" ★ -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const container = document.getElementById('posts-container');
-            
-            // Εδώ θα βάλουμε τα άρθρα. Επειδή το GitHub Pages δεν μπορεί να διαβάσει
-            // φακέλους με JavaScript, πρέπει να φτιάξουμε ένα αρχείο posts.json.
-            // Για αρχή, βάζω μερικά ψεύτικα άρθρα για να δεις το design.
-            // Αφού ανεβάσεις το πρώτο σου άρθρο με το CMS, θα πρέπει να φτιάξεις
-            // το posts.json (ή να χρησιμοποιήσεις Jekyll).
-            
-            const samplePosts = [
-                {
-                    title: "Πώς να ξεκινήσεις με το Decap CMS",
-                    date: "22 Ιουνίου 2026",
-                    excerpt: "Ένας οδηγός βήμα-βήμα για να στήσεις το δικό σου πάνελ διαχείρισης στο GitHub Pages.",
-                    link: "#"
-                },
-                {
-                    title: "Τα καλύτερα Digital Products για το 2026",
-                    date: "20 Ιουνίου 2026",
-                    excerpt: "Ανακαλύψτε τα πιο χρήσιμα templates και εργαλεία για να ανεβάσετε την παραγωγικότητά σας.",
-                    link: "#"
-                }
-            ];
-
-            // Πραγματική φόρτωση (όταν έχεις posts.json θα το αλλάξεις αυτό)
-            // fetch('posts.json')
-            //   .then(res => res.json())
-            //   .then(posts => renderPosts(posts))
-            
-            // Προς το παρόν δείχνουμε τα δείγματα
-            renderPosts(samplePosts);
-
-            function renderPosts(posts) {
-                if (posts.length === 0) {
-                    container.innerHTML = '<p style="text-align:center; color:#888;">Δεν υπάρχουν ακόμα αναρτήσεις.</p>';
-                    return;
-                }
-                let html = '';
-                posts.forEach(post => {
-                    html += `
-                        <div class="post-item">
-                            <h3><a href="${post.link}">${post.title}</a></h3>
-                            <span class="post-date">📅 ${post.date}</span>
-                            <p class="post-excerpt">${post.excerpt}</p>
-                            <a href="${post.link}" class="read-more">Διαβάστε περισσότερα →</a>
-                        </div>
-                    `;
-                });
-                container.innerHTML = html;
-            }
-        });
-    </script>
-</body>
-</html>
+<!-- Οι κάρτες σου (ΚΑΤΩ από τα άρθρα) -->
+<div class="category-grid">
+    <a href="digital-products.html" class="category-card digital-card">
+        <div class="card-icon">📚</div><h3>Digital Books</h3>
+        <p>Ηλεκτρονικά βιβλία και Activity Books</p><div class="card-badge">Νέο Activity Book!</div>
+    </a>
+    <a href="https://www.buymeacoffee.com/franklymadear" target="_blank" class="category-card support-card">
+        <div class="card-icon">⭐</div><h3>Στηρίξτε μας</h3>
+        <p>Βοηθήστε μας να συνεχίσουμε</p><div class="card-badge">Κάντε κλικ!</div>
+        <div class="bmc-image"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee"></div>
+    </a>
+    <a href="digital-products.html" class="category-card digital-card">
+        <div class="card-icon">🛒</div><h3>Digital Products</h3>
+        <p>Templates & resources</p><div class="card-badge">7 νέα</div>
+    </a>
+</div>
