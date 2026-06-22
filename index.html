@@ -4,52 +4,206 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FranklyMaDear Blog</title>
+    
+    <!-- Εισαγωγή ωραίας γραμματοσειράς από την Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; margin: 0; background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        :root {
+            --primary-color: #6c5ce7; /* Μωβ χρώμα */
+            --secondary-color: #dfe6e9;
+            --text-color: #2d3436;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        
+        /* HEADER / ΜΕΝΟΥ */
+        header {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+        
         .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
-        header { background: #fff; padding: 20px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; font-weight: 700; color: #222; }
-        .menu a { text-decoration: none; color: #555; margin-left: 20px; font-weight: 500; }
-        .menu a:hover { color: #d63384; }
-        .hero { padding: 50px 0; text-align: center; }
-        .hero h1 { font-size: 34px; margin: 0 0 10px; }
-        .posts-grid { display: flex; flex-direction: column; gap: 30px; margin-bottom: 60px; }
-        .post-card { background: #fff; border-radius: 16px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: 0.3s; }
-        .post-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        .post-title { font-size: 24px; margin: 0 0 10px; }
-        .post-title a { text-decoration: none; color: #212529; }
-        .post-title a:hover { color: #d63384; }
-        .post-meta { font-size: 14px; color: #868e96; margin-bottom: 15px; }
-        .read-more { display: inline-block; color: #d63384; font-weight: 600; text-decoration: none; }
-        footer { text-align: center; padding: 30px 0; color: #868e96; border-top: 1px solid #e9ecef; }
-        @media (max-width: 600px) { .nav { flex-direction: column; gap: 10px; } }
+        .logo { font-size: 26px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .menu a { font-weight: 500; color: #636e72; margin-left: 25px; font-size: 15px; position: relative; }
+        .menu a:hover { color: #6c5ce7; }
+        
+        /* HERO SECTION (Το πάνω μέρος με το κεντρικό title) */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 50px;
+            background: radial-gradient(circle at 30% 30%, #dfe6e9 0%, #ffffff 70%);
+            border-bottom: 1px solid #eee;
+            margin-bottom: 40px;
+        }
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin: 0 0 10px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #2d3436 0%, #6c5ce7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #636e72;
+            margin: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        /* ΛΙΣΤΑ ΑΡΘΡΩΝ (Dynamic Jekyll Loop) */
+        .posts-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding-bottom: 60px;
+        }
+
+        .post-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px 35px;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.8);
+            animation: fadeInUp 0.6s ease-out both;
+        }
+        /* Hover εφέ στην κάρτα (Ανεβαίνει και αλλάζει σκιά) */
+        .post-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(108, 92, 231, 0.12), 0 5px 15px rgba(0,0,0,0.05);
+            border-color: rgba(108, 92, 231, 0.2);
+        }
+
+        .post-card h2 {
+            margin: 0 0 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .post-card h2 a {
+            color: var(--text-color);
+            transition: 0.3s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 2px;
+        }
+        /* Εφέ στον τίτλο όταν περνάς το ποντίκι */
+        .post-card:hover h2 a {
+            color: #6c5ce7;
+            border-bottom-color: #6c5ce7;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: #b2bec3;
+            margin-bottom: 15px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .post-excerpt {
+            color: #636e72;
+            font-size: 16px;
+            margin: 0 0 20px;
+            line-height: 1.6;
+        }
+
+        .read-more {
+            display: inline-block;
+            font-weight: 700;
+            color: #6c5ce7;
+            font-size: 15px;
+            position: relative;
+        }
+        .read-more:hover {
+            padding-right: 8px; /* Κουνιέται λίγο προς τα δεξιά */
+        }
+
+        /* FOOTER */
+        footer {
+            background: #fff;
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid #eee;
+            color: #b2bec3;
+            font-size: 14px;
+        }
+
+        /* ΕΦΕ (Animations) */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .nav { flex-direction: column; gap: 15px; }
+            .hero h1 { font-size: 32px; }
+            .post-card { padding: 20px; }
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container nav">
             <div class="logo">FranklyMaDear</div>
-            <div class="menu"><a href="/">Αρχική</a></div>
+            <div class="menu">
+                <a href="/">Αρχική</a>
+                <a href="#">Σχετικά</a>
+            </div>
         </div>
     </header>
 
     <div class="container">
         <section class="hero">
-            <h1>Τελευταία Άρθρα</h1>
+            <h1>Ψηφιακός Κόσμος & Ιστορίες</h1>
+            <p>Ανακαλύψτε τα τελευταία άρθρα και νέα</p>
         </section>
 
         <section class="posts-grid">
-            <article class="post-card">
-                <!-- ΕΔΩ ΕΙΝΑΙ ΤΟ LINK ΠΟΥ ΘΑ ΑΝΟΙΓΕΙ ΤΟ ΑΡΘΡΟ -->
-                <h2 class="post-title"><a href="/stavroula.html">Ερωτήματα για τη δολοφονία της Σταυρούλας Λεβεντάκη</a></h2>
-                <div class="post-meta">22/06/2026</div>
-                <p>Σε πλήρη εξέλιξη βρίσκονται οι έρευνες της ΕΛ.ΑΣ. για τη στυγερή δολοφονία της 45χρονης στα Χανιά...</p>
-                <a href="/stavroula.html" class="read-more">Διαβάστε περισσότερα →</a>
+            <!-- ΑΥΤΟ ΕΙΝΑΙ ΤΟ MAGIC ΤΟΥ JEKYLL. ΔΕΝ ΧΡΕΙΑΖΕΤΑΙ ΝΑ ΓΡΑΨΕΙΣ ΤΙΠΟΤΑ ΑΛΛΟ -->
+            {% for post in site.posts %}
+            <article class="post-card" style="animation-delay: {{ forloop.index | times: 0.1 }}s;">
+                <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+                <span class="post-meta">{{ post.date | date_to_long_string: "ordinal" }}</span>
+                <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 35 }}</p>
+                <a href="{{ post.url }}" class="read-more">Διαβάστε περισσότερα &rarr;</a>
             </article>
+            {% endfor %}
         </section>
     </div>
 
-    <footer><div class="container">© 2026 FranklyMaDear Blog</div></footer>
+    <footer>
+        <div class="container">
+            &copy; 2026 FranklyMaDear Blog. Powered by GitHub Pages & Jekyll.
+        </div>
+    </footer>
 </body>
 </html>
