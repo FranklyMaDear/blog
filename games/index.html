@@ -43,107 +43,19 @@
             z-index: 0;
         }
 
-        /* Εκπαιδευτικό Tutorial Overlay */
-        #tutorialOverlay {
-            position: fixed;
-            inset: 0;
-            z-index: 50;
-            background: rgba(11, 12, 16, 0.85);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-backdrop-filter: blur(6px);
-            backdrop-filter: blur(6px);
-            transition: opacity 0.4s ease;
-        }
-        #tutorialOverlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-        .tutorial-card {
-            background: var(--cream);
-            border: 4px solid var(--panel-deep);
-            border-radius: 32px;
-            padding: 30px 28px;
-            width: min(420px, 90vw);
-            text-align: center;
-            box-shadow: 0 12px 0 rgba(0, 0, 0, 0.4);
-            animation: pop .4s cubic-bezier(.34, 1.56, .64, 1);
-        }
-        .tutorial-card h2 {
-            font-size: 28px;
-            color: var(--panel-deep);
-            margin-bottom: 10px;
-        }
-        .tutorial-card p {
-            font-size: 18px;
-            margin: 10px 0;
-            line-height: 1.5;
-        }
-        .tutorial-step {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: #E4D7BC;
-            padding: 12px 16px;
-            border-radius: 16px;
-            margin: 12px 0;
-            text-align: left;
-            border: 2px solid #8C6A4F;
-        }
-        .tutorial-step .icon {
-            font-size: 28px;
-            width: 44px;
-            height: 44px;
-            background: var(--panel-deep);
-            color: var(--cream);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .tutorial-step span {
-            font-weight: 700;
-        }
-        .btn-start-game {
-            margin-top: 18px;
-            width: 100%;
-            padding: 14px;
-            background: var(--accent);
-            border: none;
-            border-radius: 16px;
-            font-family: inherit;
-            font-weight: 800;
-            font-size: 20px;
-            color: #fff;
-            box-shadow: 0 6px 0 #b8742a;
-            cursor: pointer;
-            transition: transform .08s;
-        }
-        .btn-start-game:active {
-            transform: translateY(3px);
-            box-shadow: 0 3px 0 #b8742a;
-        }
-
-        /* Βελτιωμένος Game Control Indicator */
+        /* Game Control Indicator - Φωτεινή ένδειξη που δείχνει πού θα πέσει ο κύβος */
         #dropIndicator {
             position: fixed;
             bottom: 12%;
             left: 0;
-            height: 16px;
+            height: 12px;
             z-index: 15;
-            background: linear-gradient(90deg, #fff, #ffeb3b, #fff);
+            background: #ffffff;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 235, 59, 0.8), 0 0 40px rgba(255, 235, 59, 0.4), 0 4px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.7), 0 0 60px rgba(255, 255, 255, 0.4);
             width: 20%;
             pointer-events: none;
-            transition: left 0.12s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: indicatorPulse 1.5s ease-in-out infinite;
-        }
-        @keyframes indicatorPulse {
-            0%, 100% { opacity: 0.8; transform: scaleY(1); }
-            50% { opacity: 1; transform: scaleY(1.2); }
+            transition: left 0.08s cubic-bezier(0.0, 0.0, 0.2, 1), width 0.08s cubic-bezier(0.0, 0.0, 0.2, 1);
         }
 
         /* Mission panel - σταθερό αριστερά */
@@ -229,8 +141,13 @@
         }
 
         @keyframes shopPulse {
-            0%, 100% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.04); }
+            0%,
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+            50% {
+                transform: translateX(-50%) scale(1.04);
+            }
         }
 
         .rollup-tab {
@@ -393,8 +310,13 @@
             animation: btnShimmer 2s infinite ease-in-out;
         }
         @keyframes btnShimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
         }
         .shop-panel .hud-btn:active {
             transform: translateY(3px);
@@ -498,8 +420,13 @@
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.08);
+            }
         }
         .spacer {
             flex: 1;
@@ -826,28 +753,8 @@
 </head>
 <body>
     <canvas id="game"></canvas>
-
-    <!-- Εκπαιδευτικό Tutorial Overlay (μόνο την 1η φορά) -->
-    <div id="tutorialOverlay">
-        <div class="tutorial-card">
-            <h2>🧸 How to Play</h2>
-            <div class="tutorial-step">
-                <div class="icon">👆</div>
-                <div><span>Drag left & right</span><br>to move the cube above the column</div>
-            </div>
-            <div class="tutorial-step">
-                <div class="icon">👇</div>
-                <div><span>Release to Drop</span><br>it will merge with matching numbers!</div>
-            </div>
-            <div class="tutorial-step">
-                <div class="icon">🎯</div>
-                <div><span>Follow the glowing bar</span><br>it shows exactly where your cube will land</div>
-            </div>
-            <button class="btn-start-game" id="btnDismissTutorial">▶️ Let's Play!</button>
-        </div>
-    </div>
-
-    <!-- Βελτιωμένος οπτικός δείκτης στόχευσης -->
+    
+    <!-- Βελτιωμένος οπτικός δείκτης στόχευσης (πιο χοντρός και φωτεινός) -->
     <div id="dropIndicator"></div>
 
     <!-- Mission Panel - σταθερό αριστερά -->
@@ -2334,107 +2241,63 @@
                 document.getElementById("loseText").innerHTML = TT().lose_text(score);
                 document.getElementById("loseModal").classList.remove("hidden"); }
 
-            // === ΝΕΟ ΣΥΣΤΗΜΑ DRAG-AND-DROP CONTROL ===
-            let isDragging = false;
-            let lastPointerX = 0;
-
-            function onPointerDown(e) {
+            function onTap(e) { 
                 if (document.querySelector(".overlay:not(.hidden)")) return;
-                lastActionTime = performance.now();
-                isDragging = true;
+                lastActionTime = performance.now(); 
                 const cx = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
-                lastPointerX = cx;
-
-                // Αν πατήσει στο κορίτσι, μίλα
-                const cy = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY;
+                const cy = (e.touches && e.touches[0]) ? e.touches[0].clientY : e.clientY; 
                 const x = cx / innerWidth * 2 - 1;
                 const y = -(cy / innerHeight * 2 - 1);
+                
                 pointer.set(x, y);
-                raycaster.setFromCamera(pointer, camera);
-                if (girl) {
-                    const hits = raycaster.intersectObject(girl, true);
-                    if (hits.length > 0 && winTime <= 0) {
+                raycaster.setFromCamera(pointer, camera); 
+
+                if (girl) { 
+                    const hits = raycaster.intersectObject(girl, true); 
+                    if (hits.length > 0 && winTime <= 0) { 
                         giggleSFX();
-                        reactionTime = 1.0;
-                        const greetings = TT().greetings;
+                        reactionTime = 1.0; 
+                        const greetings = TT().greetings; 
                         const pick = greetings[Math.floor(Math.random() * greetings.length)];
                         showSpeech(pick, 1800);
-                        speak(pick.replace(/[^Ͱ-Ͽἀ-῿a-zA-Z' ;!?]/g, '').trim());
-                        isDragging = false; // Μην κάνεις drop αν πάτησε στη girl
-                        return;
-                    }
-                }
-            }
+                        speak(pick.replace(/[^Ͱ-Ͽἀ-῿a-zA-Z' ;!?]/g, '').trim()); 
+                        return; 
+                    } 
+                } 
+                
+                const boardNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(boardGroup.quaternion);
+                const plane = new THREE.Plane();
+                plane.setFromNormalAndCoplanarPoint(boardNormal, boardGroup.position);
+                const hit = new THREE.Vector3();
+                raycaster.ray.intersectPlane(plane, hit);
+                
+                boardGroup.worldToLocal(hit); 
+                
+                const c = Math.max(0, Math.min(COLS - 1, Math.round((hit.x + BOARD_W / 2) / (CELL + GAP) - 0.5)));
+                const r = Math.round((BOARD_H / 2 - hit.y) / (CELL + GAP) - 0.5); 
 
-            function onPointerMove(e) {
-                if (!isDragging || busy || !currentCube) return;
-                const cx = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
-                const deltaX = cx - lastPointerX;
-                lastPointerX = cx;
-
-                // Κίνηση του κύβου σε πραγματικό χρόνο ακολουθώντας το δάχτυλο
-                currentCube.position.x += deltaX * 0.035;
-                // Οριοθέτηση του κύβου εντός του ταμπλό
-                const minX = cellPos(0, 0).x;
-                const maxX = cellPos(COLS - 1, 0).x;
-                if (currentCube.position.x < minX) currentCube.position.x = minX;
-                if (currentCube.position.x > maxX) currentCube.position.x = maxX;
-
-                // Υπολογισμός της στήλης που στοχεύει
-                const colWidth = window.innerWidth / COLS;
-                let col = Math.floor(cx / colWidth);
-                col = Math.max(0, Math.min(COLS - 1, col));
-                aimCol = col;
-                updateDropIndicator(aimCol);
-
-                // Haptic feedback σε κινητά όταν αλλάζει στήλη (προαιρετικό για Android/Chrome)
-                try {
-                    if (navigator.vibrate) navigator.vibrate(8);
-                } catch (e) {}
-            }
-
-            function onPointerUp(e) {
-                if (!isDragging) return;
-                isDragging = false;
-
-                // Αν ο κύβος βρίσκεται εκτός ορίων ή το παιχνίδι είναι απασχολημένο, μην κάνεις τίποτα
-                if (busy || !currentCube) return;
-
-                // Λογική του Hammer Mode αν είναι ενεργό
-                const cx = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX : e.clientX;
-                const cy = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY : e.clientY;
-                const x = cx / innerWidth * 2 - 1;
-                const y = -(cy / innerHeight * 2 - 1);
-                pointer.set(x, y);
-                raycaster.setFromCamera(pointer, camera);
-
-                if (hammerMode) {
-                    const boardNormal = new THREE.Vector3(0, 0, 1).applyQuaternion(boardGroup.quaternion);
-                    const plane = new THREE.Plane();
-                    plane.setFromNormalAndCoplanarPoint(boardNormal, boardGroup.position);
-                    const hit = new THREE.Vector3();
-                    raycaster.ray.intersectPlane(plane, hit);
-                    boardGroup.worldToLocal(hit);
-                    const c = Math.max(0, Math.min(COLS - 1, Math.round((hit.x + BOARD_W / 2) / (CELL + GAP) - 0.5)));
-                    const r = Math.round((BOARD_H / 2 - hit.y) / (CELL + GAP) - 0.5);
-
-                    if (r >= 0 && r < ROWS && grid[c][r]) {
-                        hammerMode = false;
+                if (hammerMode) { 
+                    if (r >= 0 && r < ROWS && grid[c][r]) { 
+                        hammerMode = false; 
                         const m = grid[c][r].mesh;
                         grid[c][r] = null;
                         tween(m.scale, { x: .01, y: .01, z: .01 }, 0.18, null, function() { boardGroup.remove(m); });
                         busy = true;
-                        setTimeout(function() { resolveMerges([]).then(function() { busy = false; updateHUD(); persist(); }); }, 180);
-                        playSound('hammer');
-                    } else {
+                        setTimeout(function() { resolveMerges([]).then(function() { busy = false;
+                                updateHUD();
+                                persist(); }); }, 180);
+                        playSound('hammer'); 
+                    } else { 
                         hammerMode = false;
-                        updateHUD();
-                    }
+                        updateHUD(); 
+                    } 
                     return;
                 }
-
-                // Ρίξιμο του κύβου στο άφημα (Release to Drop)
-                launch();
+                
+                if(r < ROWS && r >= 0) {
+                    setAim(c, true);
+                    launch(); 
+                }
             }
 
             let adCallback = null;
@@ -2886,14 +2749,15 @@
                 equipProp(save.equippedProps || 'prop_none');
 
                 const cvs = document.getElementById("game");
-                cvs.addEventListener("pointerdown", onPointerDown);
-                cvs.addEventListener("pointermove", onPointerMove);
-                cvs.addEventListener("pointerup", onPointerUp);
-                if (!window.PointerEvent) {
-                    cvs.addEventListener("touchstart", onPointerDown, { passive: true });
-                    cvs.addEventListener("touchmove", onPointerMove, { passive: true });
-                    cvs.addEventListener("touchend", onPointerUp, { passive: true });
-                }
+                cvs.addEventListener("pointermove", function(e) { 
+                    if (busy || !currentCube) return; 
+                    const cx = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX; 
+                    const colWidth = window.innerWidth / COLS;
+                    let col = Math.floor(cx / colWidth);
+                    col = Math.max(0, Math.min(COLS - 1, col));
+                    setAim(col); 
+                });
+                cvs.addEventListener("pointerdown", onTap); if (!window.PointerEvent) { cvs.addEventListener("touchstart", onTap, { passive: true }); }
 
                 document.getElementById("btnNext").onclick = function() {
                     showAd(function() {
@@ -2952,18 +2816,6 @@
                         setAim(aimCol);
                         updateHUD();
                     }, 400);
-                }
-
-                // ===== Tutorial =====
-                const tutorialOverlay = document.getElementById('tutorialOverlay');
-                const seenTutorial = localStorage.getItem('drop4096-tutorial');
-                if (seenTutorial) {
-                    tutorialOverlay.classList.add('hidden');
-                } else {
-                    document.getElementById('btnDismissTutorial').addEventListener('click', function() {
-                        tutorialOverlay.classList.add('hidden');
-                        localStorage.setItem('drop4096-tutorial', 'true');
-                    });
                 }
             })();
 
