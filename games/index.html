@@ -43,19 +43,25 @@
             z-index: 0;
         }
 
-        /* Game Control Indicator - Φωτεινή ένδειξη που δείχνει πού θα πέσει ο κύβος */
+        /* --- ΑΛΛΑΓΕΣ: Δείκτης πτώσης τώρα με χρώματα και δυναμική θέση --- */
+        @keyframes rainbowIndicator {
+            0% { background: #ff0000; box-shadow: 0 0 10px #ff0000, 0 0 20px rgba(255,0,0,0.5); }
+            16% { background: #ff8800; box-shadow: 0 0 10px #ff8800, 0 0 20px rgba(255,136,0,0.5); }
+            33% { background: #ffff00; box-shadow: 0 0 10px #ffff00, 0 0 20px rgba(255,255,0,0.5); }
+            50% { background: #00ff00; box-shadow: 0 0 10px #00ff00, 0 0 20px rgba(0,255,0,0.5); }
+            66% { background: #0088ff; box-shadow: 0 0 10px #0088ff, 0 0 20px rgba(0,136,255,0.5); }
+            83% { background: #8800ff; box-shadow: 0 0 10px #8800ff, 0 0 20px rgba(136,0,255,0.5); }
+            100% { background: #ff0000; box-shadow: 0 0 10px #ff0000, 0 0 20px rgba(255,0,0,0.5); }
+        }
         #dropIndicator {
             position: fixed;
-            bottom: 12%;
-            left: 0;
-            height: 12px;
+            height: 14px;
             z-index: 15;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 30px rgba(255, 255, 255, 0.7), 0 0 60px rgba(255, 255, 255, 0.4);
-            width: 20%;
+            border-radius: 10px;
             pointer-events: none;
-            transition: left 0.08s cubic-bezier(0.0, 0.0, 0.2, 1), width 0.08s cubic-bezier(0.0, 0.0, 0.2, 1);
+            /* Οι διαστάσεις (left, width, top) αλλάζουν δυναμικά με JS */
+            transition: left 0.1s cubic-bezier(0.0, 0.0, 0.2, 1), top 0.1s cubic-bezier(0.0, 0.0, 0.2, 1), width 0.1s cubic-bezier(0.0, 0.0, 0.2, 1);
+            animation: rainbowIndicator 1.2s infinite linear;
         }
 
         /* Mission panel - σταθερό αριστερά */
@@ -754,7 +760,7 @@
 <body>
     <canvas id="game"></canvas>
     
-    <!-- Βελτιωμένος οπτικός δείκτης στόχευσης (πιο χοντρός και φωτεινός) -->
+    <!-- Βελτιωμένος οπτικός δείκτης στόχευσης (αλλάζει χρώματα και είναι ακριβώς κάτω από τον κύβο) -->
     <div id="dropIndicator"></div>
 
     <!-- Mission Panel - σταθερό αριστερά -->
@@ -839,6 +845,21 @@
             <div class="ad-progress"><div class="ad-bar" id="adBar"></div></div>
             <button class="btn" id="btnStartAd">▶️ Watch Ad</button>
             <button class="btn cancel-btn" id="btnCancelAd">Cancel</button>
+        </div>
+    </div>
+
+    <!-- --- ΠΡΟΣΘΗΚΗ: Tutorial Αρχικής Οθόνης --- -->
+    <div class="overlay hidden" id="tutorialModal">
+        <div class="card" style="max-width:420px;">
+            <div style="font-size:60px; margin-bottom:8px;">🎲</div>
+            <h2 id="tutorialTitle" style="font-size:32px; margin:0 0 10px;">DROP 4096</h2>
+            <div id="tutorialText" style="font-size:16px; line-height:1.5;">
+                <p style="margin-bottom:15px; color:#4A3423;">
+                    <strong>🎯 Στόχος:</strong> Ένωσε κύβους με τον ίδιο αριθμό για να δημιουργήσεις τον κύβο-στόχο!<br><br>
+                    <strong>🕹️ Πώς παίζεται:</strong> Πάτησε και κράτησε πατημένο το δάχτυλό σου στην οθόνη. Κούνησέ το αριστερά ή δεξιά για να στοχεύσεις. Άφησέ το για να ρίξεις τον κύβο!
+                </p>
+            </div>
+            <button class="btn" id="btnStartTutorial" style="margin-top:0;">🎮 Ξεκινήστε!</button>
         </div>
     </div>
 
@@ -1029,7 +1050,7 @@
             let currentPetSubTab = 'pet_hair';
 
             const DEFAULT_SAVE = {
-                coins: 100, level: 0, best: 0, score: 0, lang: 'en', muted: false,
+                coins: 100, level: 0, best: 0, score: 0, lang: 'en', muted: false, tutorialSeen: false, // Προσθήκη tutorialSeen
                 ownedCubes: ['wood'], equippedCube: 'wood',
                 ownedBoards: ['board_wood'], equippedBoard: 'board_wood',
                 ownedEffects: ['eff_none'], equippedEffect: 'eff_none',
@@ -1439,7 +1460,6 @@
                 return group;
             }
 
-            // Ρεαλιστικά λουλούδια: μαργαρίτα, τουλίπα, παπαρούνα, τριαντάφυλλο, ηλιοτρόπιο
             function createDynamicFlower(index) {
                 const fGroup = new THREE.Group();
                 const stemMat = new THREE.MeshLambertMaterial({ color: 0x3E7C3A });
@@ -1465,7 +1485,6 @@
 
                 const type = index % 5;
                 if (type === 0) {
-                    // Μαργαρίτα
                     const pMat = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
                     for (let i = 0; i < 12; i++) {
                         const petal = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), pMat);
@@ -1481,7 +1500,6 @@
                     center.position.y = 0.015;
                     head.add(center);
                 } else if (type === 1) {
-                    // Τουλίπα
                     const tulipColors = [0xE53935, 0xFFB300, 0xAB47BC, 0xF06292];
                     const pMat = new THREE.MeshLambertMaterial({ color: tulipColors[index % tulipColors.length] });
                     for (let i = 0; i < 6; i++) {
@@ -1495,7 +1513,6 @@
                         head.add(petal);
                     }
                 } else if (type === 2) {
-                    // Παπαρούνα
                     const pMat = new THREE.MeshLambertMaterial({ color: 0xD32F2F });
                     for (let i = 0; i < 5; i++) {
                         const petal = new THREE.Mesh(new THREE.SphereGeometry(0.11, 8, 6), pMat);
@@ -1510,7 +1527,6 @@
                     center.position.y = 0.02;
                     head.add(center);
                 } else if (type === 3) {
-                    // Τριαντάφυλλο
                     const roseColors = [0xE91E63, 0xC2185B, 0xF48FB1];
                     const pMat = new THREE.MeshLambertMaterial({ color: roseColors[index % roseColors.length] });
                     const bud = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), pMat);
@@ -1531,7 +1547,6 @@
                         }
                     }
                 } else {
-                    // Ηλιοτρόπιο
                     const pMat = new THREE.MeshLambertMaterial({ color: 0xFFC107 });
                     for (let i = 0; i < 14; i++) {
                         const petal = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), pMat);
@@ -2148,12 +2163,34 @@
                 updateDropIndicator(aimCol);
             }
             
+            // ----- Ενημερωμένη συνάρτηση για δυναμική τοποθέτηση της γραμμής -----
             function updateDropIndicator(col) {
                 const elem = document.getElementById('dropIndicator');
                 if(!elem) return;
+                
+                // Υπολογισμός της 3D θέσης (είτε του τρέχοντος κύβου, είτε του σημείου πτώσης)
+                const targetPos = new THREE.Vector3();
+                if (currentCube && !busy) {
+                    currentCube.getWorldPosition(targetPos);
+                } else {
+                    const p = cellPos(col, 0);
+                    targetPos.set(p.x, launchY, 0.1);
+                    boardGroup.localToWorld(targetPos);
+                }
+                
+                // Προβολή 3D θέσης σε 2D συντεταγμένες οθόνης
+                targetPos.project(camera);
+                const x = (targetPos.x * .5 + .5) * window.innerWidth;
+                const y = (-targetPos.y * .5 + .5) * window.innerHeight;
+                
+                // Διαστάσεις: το πλάτος του κύβου (λίγο μικρότερο από το κελί)
                 const colWidth = window.innerWidth / COLS;
-                elem.style.width = (colWidth - 8) + 'px';
-                elem.style.left = (col * colWidth + 4) + 'px';
+                const pxWidth = colWidth - 8;
+                
+                // Ενημέρωση CSS: Τοποθέτηση ακριβώς κάτω από τον κύβο (+ 12 pixels)
+                elem.style.width = pxWidth + 'px';
+                elem.style.left = (x - pxWidth / 2) + 'px';
+                elem.style.top = (y + 12) + 'px';
             }
 
             function launch() { if (busy || !currentCube) return; const c = aimCol; const h = colHeight(c); if (h >= ROWS) { gameOver(); return; }
@@ -2817,6 +2854,19 @@
                         updateHUD();
                     }, 400);
                 }
+
+                // --- ΠΡΟΣΘΗΚΗ: Έλεγχος για εμφάνιση tutorial ---
+                if (!save.tutorialSeen) {
+                    document.getElementById('tutorialModal').classList.remove('hidden');
+                    // Απενεργοποίηση του interaction του background όσο είναι ανοιχτό
+                }
+                document.getElementById('btnStartTutorial').onclick = function() {
+                    save.tutorialSeen = true;
+                    persist();
+                    document.getElementById('tutorialModal').classList.add('hidden');
+                    // Ξεκινάμε τη μουσική αν δεν έχει ξεκινήσει λόγω interaction
+                    if (!musicStarted) startMusic();
+                };
             })();
 
             function handlePause() {
