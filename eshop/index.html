@@ -44,6 +44,8 @@
             display: flex;
             flex-direction: column;
         }
+        body.no-scroll { overflow: hidden; } /* ★ Κλείδωμα Scroll */
+        
         h1,h2,h3 { font-family: 'Literata', serif; }
         .awning {
             height: 14px;
@@ -72,7 +74,8 @@
         
         /* ★ Μπάρα προσφορών */
         .offers { max-width: 1100px; margin: 0 auto; padding: 4px 16px; }
-        .offers-inner { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+        .offers-inner { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .offers-inner::-webkit-scrollbar { display: none; }
         .offer-card { flex: 1; min-width: 110px; background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 10px; text-align: center; }
         .offer-card .o-big { font-family: 'Literata', serif; font-weight: 900; color: var(--mocha); font-size: 1rem; white-space: nowrap; }
         .offer-card .o-small { font-size: 0.7rem; color: #4d4336; margin-top: 2px; }
@@ -129,8 +132,11 @@
         .pl-foot { padding: 10px 16px; border-top: 1px solid var(--line); text-align: center; font-size: 0.75rem; color: #4d4336; background: var(--soft); border-radius: 0 0 10px 10px; }
         
         .cats { position: sticky; top: 52px; z-index: 40; background: var(--paper); border-bottom: 1px solid var(--line); padding: 8px 0; }
-        .cats-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; display: flex; gap: 6px; overflow-x: auto; scroll-behavior: smooth; }
-        .chip { border: 1.5px solid var(--mocha); background: var(--card); color: var(--mocha); padding: 6px 14px; border-radius: 999px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 6px rgba(92, 58, 33, 0.05); }
+        /* ★ Βελτιωμένο Scroll για Κατηγορίες */
+        .cats-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; display: flex; gap: 6px; overflow-x: auto; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+        .cats-inner::-webkit-scrollbar { display: none; }
+        
+        .chip { flex-shrink: 0; border: 1.5px solid var(--mocha); background: var(--card); color: var(--mocha); padding: 6px 14px; border-radius: 999px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 6px rgba(92, 58, 33, 0.05); }
         .chip.active { background: var(--mocha); color: #fff; border-color: var(--mocha); box-shadow: 0 4px 10px rgba(92, 58, 33, 0.2); }
         
         main { max-width: 1100px; margin: 0 auto; padding: 16px; flex: 1; }
@@ -225,7 +231,7 @@
     <div class="pl-box">
         <div class="pl-head">
             <h2>Καφέ <em>Βόλτα</em> — Τιμοκατάλογος</h2>
-            <button class="pl-close" id="closePricelist">&times;</button>
+            <button class="pl-close" onclick="closeModal('plOverlay')">&times;</button>
         </div>
         <div class="pl-body" id="plBody"></div>
         <div class="pl-foot">📞 2431052032 · ⏰ 06:00 – 22:00 · Φήκη Τρικάλων</div>
@@ -237,7 +243,7 @@
     <div class="pl-box">
         <div class="pl-head">
             <h2>📣 <em>Προσφορές</em> & Πόντοι</h2>
-            <button class="pl-close" id="closeOffers">&times;</button>
+            <button class="pl-close" onclick="closeModal('offersOverlay')">&times;</button>
         </div>
         <div class="pl-body">
             <div class="ev-sec">
@@ -261,10 +267,15 @@
             </div>
 
             <div class="ev-sec">
-                <h3 style="color:var(--mocha); font-family:'Literata', serif; font-size:1rem; margin-bottom:6px;">🥞 Προσφορά Κρέπας (3+1 ΔΩΡΟ)</h3>
-                <p class="ev-text">Παράγγειλε 3 κρέπες της επιλογής σου και πάρε αυτόματα <strong>ΔΩΡΟ 1 κρέπα σοκολάτα-μπισκότο</strong>!</p>
+                <h3 style="color:var(--mocha); font-family:'Literata', serif; font-size:1rem; margin-bottom:6px;">🎁 Προσφορές Εβδομάδας</h3>
+                <p class="ev-text">Ισχύουν αυτόματα προσθέτοντας τα προϊόντα στο καλάθι!</p>
+                <ul style="font-size: 0.85rem; margin-left: 18px; margin-top: 6px; color: #4d4336; line-height: 1.6;">
+                    <li><strong>3+1 Κρέπες:</strong> Στις 3 κρέπες, ΔΩΡΟ 1 κρέπα Σοκολάτα-Μπισκότο.</li>
+                    <li><strong>2+1 Ροφήματα:</strong> Στις 2 Γρανίτες η 3η δωρεάν.</li>
+                    <li><strong>2+1 Milkshake:</strong> Στα 2 Milkshake το 3ο δωρεάν.</li>
+                </ul>
                 <div style="background:#fff3e0; border:1px dashed #ff9800; padding:10px; border-radius:8px; text-align:center; font-weight:700; font-size:0.85rem; color:#e65100; margin-top:10px;">
-                    ⏳ Η προσφορά λήγει την Κυριακή στις 22:00<br>
+                    ⏳ Λήξη προσφορών την Κυριακή στις 22:00<br>
                     <span id="crepeTimer" style="font-size:1.2rem; display:block; margin-top:4px;">--:--:--</span>
                 </div>
             </div>
@@ -288,12 +299,8 @@
             <div class="o-small">1 Δωρεάν ρόφημα</div>
         </div>
         <div class="offer-card">
-            <div class="o-big">25 ⭐ = ☕☕</div>
-            <div class="o-small">2 Δωρεάν ροφήματα</div>
-        </div>
-        <div class="offer-card">
-            <div class="o-big">3 🥞 = +1</div>
-            <div class="o-small">Έως Κυρ. 22:00</div>
+            <div class="o-big">2+1 & 3+1</div>
+            <div class="o-small">Κρέπες & Ροφήματα</div>
         </div>
     </div>
 </section>
@@ -313,15 +320,15 @@
     </div>
 </section>
 
-<!-- ★ Emojis & Αγαπημένα στο Category Nav -->
+<!-- ★ Emojis, Αγαπημένα & Νέα Κατηγορία "Ροφήματα" -->
 <nav class="cats">
     <div class="cats-inner" id="categoryNav">
         <div class="chip" data-cat="favorites">❤️ Αγαπημένα</div>
         <div class="chip active" data-cat="coffee">☕ Καφέδες</div>
+        <div class="chip" data-cat="rofimata">🥤 Ροφήματα</div>
         <div class="chip" data-cat="soft">🥤 Αναψυκτικά</div>
         <div class="chip" data-cat="icetea">🧃 Ice Tea</div>
         <div class="chip" data-cat="juice">🍊 Χυμοί Κλιάφα</div>
-        <div class="chip" data-cat="granita">🍧 Γρανίτες</div>
         <div class="chip" data-cat="crepe">🥞 Κρέπες</div>
         <div class="chip" data-cat="icecream">🍦 Παγωτό</div>
     </div>
@@ -341,7 +348,7 @@
     <div class="pl-box">
         <div class="pl-head">
             <h2>🎉 Εκδηλώσεις στο Καφέ <em>Βόλτα</em></h2>
-            <button class="pl-close" id="closeEvents">&times;</button>
+            <button class="pl-close" onclick="closeModal('evOverlay')">&times;</button>
         </div>
         <div class="pl-body">
             <p class="ev-intro">Ο ιδανικός χώρος για τις στιγμές σας! Προσεγμένος <strong>στεγασμένος χώρος 50 ατόμων</strong> και μεγάλη καταπράσινη αυλή — συνολικά άνετη φιλοξενία <strong>80+ ατόμων</strong>.</p>
@@ -398,7 +405,7 @@
     <div class="pl-box">
         <div class="pl-head">
             <h2>📝 Αίτημα <em>Κράτησης</em></h2>
-            <button class="pl-close" id="closeBooking">&times;</button>
+            <button class="pl-close" onclick="closeModal('bkOverlay')">&times;</button>
         </div>
         <div class="pl-body" id="bkBody">
             <div class="form-group bk-form">
@@ -456,7 +463,7 @@
 
 <div class="overlay" id="overlay"></div>
 <aside class="drawer" id="drawer">
-    <div class="drawer-head"><h2>Το καλάθι σου</h2><button id="closeCart">&times;</button></div>
+    <div class="drawer-head"><h2>Το καλάθι σου</h2><button onclick="closeModal('drawer', true)">&times;</button></div>
     <div class="drawer-body" id="cartBody"></div>
     <div class="drawer-foot">
 
@@ -464,6 +471,7 @@
         <div id="rewardsArea"></div>
 
         <div class="discount-line" id="discountLine" style="display:none;"><span>🎁 Έκπτωση δώρου</span><span id="discountValue"></span></div>
+        <div class="discount-line" id="extraDiscountLine" style="display:none; color:#e65100;"><span>🎁 Προσφορά 2+1</span><span id="extraDiscountValue"></span></div>
         <div class="totals"><span>Σύνολο</span><span id="cartTotal">0,00 €</span></div>
 
         <div class="reward-note" id="rewardNote" style="display:none; font-size: 0.8rem; margin-bottom: 10px; color: #4d4336;">🎁 Θα κερδίσεις <strong id="earnedPoints">0</strong> πόντους</div>
@@ -503,6 +511,11 @@
         { id: 'freddocap', n: "Freddo Cappuccino", p: 2.00, cat: 'coffee', sugar: true },
         { id: 'latte', n: "Latte", p: 2.00, cat: 'coffee', sugar: true },
         { id: 'sokolatavien', n: "Σοκολάτα Βιεννουά", p: 2.20, cat: 'coffee', sugar: true },
+        
+        // ★ Νέα: Ροφήματα (Γρανίτα & Milkshake με γεύσεις)
+        { id: 'granita', n: "Γρανίτα", p: 1.50, cat: 'rofimata', isDrinkFlavors: true, flavList: ['Φράουλα', 'Καρπούζι', 'Λεμόνι'] },
+        { id: 'milkshake', n: "Milkshake", p: 2.00, cat: 'rofimata', isDrinkFlavors: true, flavList: ['Βανίλια', 'Σοκολάτα', 'Φράουλα'] },
+
         // Αναψυκτικά
         { id: 'cola', n: "Coca Cola", p: 1.50, cat: 'soft' },
         { id: 'portokalada', n: "Πορτοκαλάδα", p: 1.50, cat: 'soft' },
@@ -518,11 +531,7 @@
         { id: 'xymos-rodakino', n: "Χυμός Ροδάκινο", p: 1.50, cat: 'juice' },
         { id: 'xymos-anameiktos', n: "Χυμός Ανάμεικτος", p: 1.50, cat: 'juice' },
         { id: 'xymos-vyssino', n: "Χυμός Βύσσινο", p: 1.50, cat: 'juice' },
-        // Γρανίτα
-        { id: 'granita-fraoula', n: "Γρανίτα Φράουλα", p: 1.50, cat: 'granita' },
-        { id: 'granita-karpouzi', n: "Γρανίτα Καρπούζι", p: 1.50, cat: 'granita' },
-        { id: 'granita-lemoni', n: "Γρανίτα Λεμόνι", p: 1.50, cat: 'granita' },
-        // Κρέπα (βάση 2,70€ · +0,50€ μπισκότο · +0,50€ μπάλα παγωτό)
+        // Κρέπα
         { id: 'crepa-sok', n: "Κρέπα Σοκολάτα", p: 2.70, cat: 'crepe', crepe: true },
         { id: 'crepa-fraoula', n: "Κρέπα Φράουλα", p: 2.70, cat: 'crepe', crepe: true },
         { id: 'crepa-bueno', n: "Κρέπα Bueno", p: 2.70, cat: 'crepe', crepe: true },
@@ -530,18 +539,19 @@
         { id: 'icecone', n: "Παγωτό Χωνάκι (🍦)", p: 1.50, cat: 'icecream' },
         { id: 'icecup', n: "Παγωτό Κύπελλο (🍧)", p: 1.50, cat: 'icecream' }
     ];
+    
     const CAT_NAMES = {
         coffee: 'Καφές & Ροφήματα',
+        rofimata: 'Ροφήματα (Γρανίτες/Milkshake)',
         soft: 'Αναψυκτικά',
         icetea: 'Ice Tea',
         juice: 'Χυμοί Κλιάφα',
-        granita: 'Γρανίτες',
         crepe: 'Κρέπες',
         icecream: 'Παγωτό'
     };
     const FLAVORS = ['Βανίλια', 'Σοκολάτα', 'Φράουλα', 'Μπανάνα', 'Στρατσιατέλα', 'Καϊμάκι'];
 
-    // ★ Νέα Δώρα (Εβδομαδιαία)
+    // ★ Δώρα (Εβδομαδιαία)
     const REWARDS = [
         { id: 'gift-drink1', name: '1 Δωρεάν ρόφημα (☕)', cost: 15, value: 2.20 },
         { id: 'gift-drink2', name: '2 Δωρεάν ροφήματα (☕☕)', cost: 25, value: 4.40 }
@@ -566,6 +576,25 @@
     const cart = new Map();
 
     const LS_NAME = 'kv_name', LS_PHONE = 'kv_phone', LS_POINTS = 'kv_points', LS_FAVS = 'kv_favs';
+
+    // ★ Σύστημα Modal & Scroll Lock
+    function openModal(id, isDrawer = false) {
+        document.getElementById(id).classList.add('open');
+        if (isDrawer) document.getElementById('overlay').classList.add('open');
+        document.body.classList.add('no-scroll');
+    }
+    window.closeModal = function(id, isDrawer = false) {
+        document.getElementById(id).classList.remove('open');
+        if (isDrawer) document.getElementById('overlay').classList.remove('open');
+        document.body.classList.remove('no-scroll');
+    };
+
+    // Close overlays by clicking outside
+    ['plOverlay', 'offersOverlay', 'evOverlay', 'bkOverlay'].forEach(id => {
+        const el = document.getElementById(id);
+        el.addEventListener('click', e => { if (e.target === el) closeModal(id); });
+    });
+    document.getElementById('overlay').addEventListener('click', () => closeModal('drawer', true));
 
     // ★ Αγαπημένα Προϊόντα
     function getFavs() { return JSON.parse(localStorage.getItem(LS_FAVS) || '[]'); }
@@ -661,7 +690,7 @@
 
     // ★ Τιμοκατάλογος
     function buildPricelist() {
-        const order = ['coffee', 'soft', 'icetea', 'juice', 'granita', 'crepe', 'icecream'];
+        const order = ['coffee', 'rofimata', 'soft', 'icetea', 'juice', 'crepe', 'icecream'];
         let html = '';
         order.forEach(cat => {
             const items = PRODUCTS.filter(p => p.cat === cat);
@@ -673,31 +702,17 @@
             if (cat === 'coffee') html += `<div class="pl-note">Όλα τα ροφήματα: σκέτο, μέτριο ή γλυκό</div>`;
             if (cat === 'crepe') html += `<div class="pl-note">+0,50€ μπισκότο · +0,50€ μπάλα παγωτό (σοκολάτα ή βανίλια)</div>`;
             if (cat === 'icecream') html += `<div class="pl-note">Γεύσεις: ${FLAVORS.join(', ')}</div>`;
+            if (cat === 'rofimata') html += `<div class="pl-note">Επιλογή γεύσης κατά την παραγγελία</div>`;
         });
         document.getElementById('plBody').innerHTML = html;
     }
-    const plOverlay = document.getElementById('plOverlay');
-    document.getElementById('openPricelist').onclick = () => { buildPricelist(); plOverlay.classList.add('open'); };
-    document.getElementById('closePricelist').onclick = () => plOverlay.classList.remove('open');
-    plOverlay.addEventListener('click', e => { if (e.target === plOverlay) plOverlay.classList.remove('open'); });
-
-    // ★ Παράθυρο Προσφορών
-    const offersOverlay = document.getElementById('offersOverlay');
-    document.getElementById('openOffers').onclick = () => offersOverlay.classList.add('open');
-    document.getElementById('closeOffers').onclick = () => offersOverlay.classList.remove('open');
-    offersOverlay.addEventListener('click', e => { if (e.target === offersOverlay) offersOverlay.classList.remove('open'); });
-
-    // ★ Παράθυρο Εκδηλώσεων
-    const evOverlay = document.getElementById('evOverlay');
-    document.getElementById('openEvents').onclick = () => evOverlay.classList.add('open');
-    document.getElementById('closeEvents').onclick = () => evOverlay.classList.remove('open');
-    evOverlay.addEventListener('click', e => { if (e.target === evOverlay) evOverlay.classList.remove('open'); });
-
-    // ★ Φόρμα Αιτήματος Κράτησης
-    const bkOverlay = document.getElementById('bkOverlay');
-    document.getElementById('openBooking').onclick = () => { evOverlay.classList.remove('open'); bkOverlay.classList.add('open'); };
-    document.getElementById('closeBooking').onclick = () => bkOverlay.classList.remove('open');
-    bkOverlay.addEventListener('click', e => { if (e.target === bkOverlay) bkOverlay.classList.remove('open'); });
+    
+    // Bind Buttons to Open Modals
+    document.getElementById('openPricelist').onclick = () => { buildPricelist(); openModal('plOverlay'); };
+    document.getElementById('openOffers').onclick = () => openModal('offersOverlay');
+    document.getElementById('openEvents').onclick = () => openModal('evOverlay');
+    document.getElementById('openCart').onclick = () => openModal('drawer', true);
+    document.getElementById('openBooking').onclick = () => { closeModal('evOverlay'); openModal('bkOverlay'); };
 
     document.getElementById('bkType').addEventListener('change', function () {
         const isTalk = this.value.startsWith('Ομιλία');
@@ -766,15 +781,19 @@
             const isFav = favs.includes(p.id);
             
             let opts = '';
-            if (p.sugar) opts = `<div class="p-options"><select class="sugar"><option value="σκέτο">Σκέτο</option><option value="μέτριο" selected>Μέτριο</option><option value="γλυκό">Γλυκό</option></select></div>`;
-            else if (p.crepe) {
+            if (p.sugar) {
+                opts = `<div class="p-options"><select class="sugar"><option value="σκέτο">Σκέτο</option><option value="μέτριο" selected>Μέτριο</option><option value="γλυκό">Γλυκό</option></select></div>`;
+            } else if (p.isDrinkFlavors) {
+                // Νέο: Ροφήματα με λίστα γεύσεων
+                const fl = p.flavList.map(f => `<option value="${f}">${f}</option>`).join('');
+                opts = `<div class="p-options"><select class="drink-flav">${fl}</select></div>`;
+            } else if (p.crepe) {
                 opts = `<div class="p-options">
                     <div class="flavor-row">
                         <select class="crx-bisc"><option value="no">Χωρίς μπισκότο</option><option value="yes">+ Μπισκότο (0,50€)</option></select>
                         <select class="crx-ice"><option value="no">Χωρίς παγωτό</option><option value="Σοκολάτα">+ Παγωτό Σοκολάτα (0,50€)</option><option value="Βανίλια">+ Παγωτό Βανίλια (0,50€)</option></select>
                     </div></div>`;
-            }
-            else if (p.cat === 'icecream') {
+            } else if (p.cat === 'icecream') {
                 const fl = FLAVORS.map(f => `<option>${f}</option>`).join('');
                 opts = `<div class="p-options"><div class="flavor-row"><select class="flv1">${fl}</select><select class="flv2">${fl}</select></div></div>`;
             }
@@ -804,6 +823,7 @@
         const prodName = card.querySelector('.p-name').textContent;
         const prod = PRODUCTS.find(p => p.n === prodName);
         if (!prod) return;
+        
         if (prod.crepe) {
             const bisc = card.querySelector('.crx-bisc').value === 'yes';
             const ice = card.querySelector('.crx-ice').value;
@@ -815,12 +835,18 @@
             const key = `${prod.id}::${bisc ? 'b' : ''}${ice}`;
             const existing = cart.get(key);
             if (existing) existing.qty++; else cart.set(key, { qty: 1, prod, extra, extrasDesc });
+        } else if (prod.isDrinkFlavors) {
+            // Προσθήκη για Γρανίτα & Milkshake
+            const flav = card.querySelector('.drink-flav').value;
+            const key = `${prod.id}::${flav}`;
+            const existing = cart.get(key);
+            if (existing) existing.qty++; else cart.set(key, { qty: 1, prod, desc: `Γεύση: ${flav}` });
         } else if (prod.cat === 'icecream') {
             const f1 = card.querySelector('.flv1').value;
             const f2 = card.querySelector('.flv2').value;
             const key = `${prod.id}::${f1},${f2}`;
             const existing = cart.get(key);
-            if (existing) existing.qty++; else cart.set(key, { qty: 1, prod, flavors: [f1, f2] });
+            if (existing) existing.qty++; else cart.set(key, { qty: 1, prod, desc: `Γεύσεις: ${f1}, ${f2}` });
         } else {
             const sugar = card.querySelector('.sugar')?.value || null;
             const key = `${prod.id}::${sugar || 'nosugar'}`;
@@ -833,21 +859,31 @@
         setTimeout(() => { btn.classList.remove('added'); btn.textContent = '+'; }, 800);
     });
 
-    const drawer = document.getElementById('drawer'), overlay = document.getElementById('overlay');
-    document.getElementById('openCart').onclick = () => { drawer.classList.add('open'); overlay.classList.add('open'); };
-    document.getElementById('closeCart').onclick = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
-    overlay.onclick = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
-
     function itemPrice(v) { return v.prod.p + (v.extra || 0); }
     function getSubtotal() {
         let s = 0; cart.forEach(v => s += v.qty * itemPrice(v)); return s;
     }
+    
+    // ★ Προσφορές
     function freeCrepes() {
         let n = 0; cart.forEach(v => { if (v.prod.cat === 'crepe') n += v.qty; });
         return Math.floor(n / 3);
     }
-    function getDiscount() {
-        return Math.min(redeemedValueTotal(), getSubtotal());
+    
+    // Προσφορά 2+1 (Αφαιρείται η αξία του 3ου προϊόντος)
+    function getExtraDiscount() {
+        let countGranita = 0, countMilkshake = 0;
+        cart.forEach(v => {
+            if (v.prod.id === 'granita') countGranita += v.qty;
+            if (v.prod.id === 'milkshake') countMilkshake += v.qty;
+        });
+        const freeGranitas = Math.floor(countGranita / 3);
+        const freeMilkshakes = Math.floor(countMilkshake / 3);
+        return (freeGranitas * 1.50) + (freeMilkshakes * 2.00);
+    }
+
+    function getRewardDiscount() {
+        return Math.min(redeemedValueTotal(), getSubtotal() - getExtraDiscount());
     }
 
     function renderRewards() {
@@ -907,9 +943,11 @@
     function updateCart() {
         let count = 0;
         cart.forEach(v => { count += v.qty; });
+        
         const subtotal = getSubtotal();
-        const discount = getDiscount();
-        const total = subtotal - discount;
+        const extraDiscount = getExtraDiscount(); 
+        const rewardDiscount = getRewardDiscount();
+        const total = subtotal - extraDiscount - rewardDiscount;
 
         document.getElementById('cartCount').textContent = count;
         document.getElementById('cartTotal').textContent = euro(total);
@@ -917,13 +955,21 @@
         checkoutBtn.disabled = count === 0 || !isOpen();
         checkoutBtn.textContent = isOpen() ? 'Ολοκλήρωση παραγγελίας' : 'Κλειστά τώρα (06:00–22:00)';
 
+        // Reward Discount UI
         const dLine = document.getElementById('discountLine');
-        if (discount > 0) {
+        if (rewardDiscount > 0) {
             dLine.style.display = 'flex';
-            document.getElementById('discountValue').textContent = '−' + euro(discount);
+            document.getElementById('discountValue').textContent = '−' + euro(rewardDiscount);
         } else dLine.style.display = 'none';
 
-        const earned = Math.floor(total);
+        // Extra Discount 2+1 UI
+        const exLine = document.getElementById('extraDiscountLine');
+        if (extraDiscount > 0) {
+            exLine.style.display = 'flex';
+            document.getElementById('extraDiscountValue').textContent = '−' + euro(extraDiscount);
+        } else exLine.style.display = 'none';
+
+        const earned = Math.max(0, Math.floor(total));
         document.getElementById('earnedPoints').textContent = earned;
         document.getElementById('rewardNote').style.display = (count && earned) ? 'block' : 'none';
 
@@ -933,10 +979,10 @@
         if (!count) { cartBody.innerHTML = '<div class="empty">Το καλάθι είναι άδειο.</div>'; return; }
         cartBody.innerHTML = '';
         cart.forEach((v, key) => {
-            let desc = v.sugar ? `Ζάχαρη: ${v.sugar}` : (v.flavors ? `Γεύσεις: ${v.flavors.join(', ')}` : (v.extrasDesc || ''));
+            let details = v.sugar ? `Ζάχαρη: ${v.sugar}` : (v.desc || v.extrasDesc || '');
             cartBody.innerHTML += `
                 <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed #ddd;">
-                    <div style="flex:1"><strong>${v.prod.n}</strong>${desc ? `<br><small>${desc}</small>` : ''}</div>
+                    <div style="flex:1"><strong>${v.prod.n}</strong>${details ? `<br><small>${details}</small>` : ''}</div>
                     <div style="display:flex;align-items:center;gap:4px;">
                         <button onclick="changeQty('${key}', -1)" style="padding:4px 8px;border:1px solid #ccc;border-radius:4px;background:#fff;">−</button>
                         <span>${v.qty}</span>
@@ -954,6 +1000,7 @@
                 </div>`;
         }
     }
+    
     window.changeQty = (key, step) => {
         const entry = cart.get(key);
         if (!entry) return;
@@ -988,9 +1035,11 @@
         saveData();
 
         const subtotal = getSubtotal();
-        const discount = getDiscount();
-        const totalAmount = subtotal - discount;
-        const earned = Math.floor(totalAmount);
+        const extraDiscount = getExtraDiscount();
+        const rewardDiscount = getRewardDiscount();
+        const totalAmount = subtotal - extraDiscount - rewardDiscount;
+        
+        const earned = Math.max(0, Math.floor(totalAmount));
         const redeemedCost = redeemedCostTotal();
         const gifts = redeemedList();
 
@@ -1003,14 +1052,17 @@
         let contactLink = tgUser ? (tgUser.username ? `\n💬 @${tgUser.username}` : `\n💬 <a href="tg://user?id=${tgUser.id}">Στείλε μήνυμα</a>`) : '';
         let itemsText = '';
         cart.forEach(v => {
-            let details = v.sugar ? `(Ζάχαρη: ${v.sugar})` : (v.flavors ? `(Γεύσεις: ${v.flavors.join(', ')})` : (v.extrasDesc ? `(${v.extrasDesc})` : ''));
+            let details = v.sugar ? `(Ζάχαρη: ${v.sugar})` : (v.desc || v.extrasDesc ? `(${v.desc || v.extrasDesc})` : '');
             itemsText += `- ${v.qty}x ${v.prod.n} ${details}\n`;
         });
+        
         const fcCheckout = freeCrepes();
         if (fcCheckout > 0) itemsText += `- ${fcCheckout}x Κρέπα Σοκολάτα + Μπισκότο 🥞 (ΔΩΡΟ 3+1)\n`;
+        
+        if (extraDiscount > 0) itemsText += `🎁 Έκπτωση 2+1: -${euro(extraDiscount)}\n`;
 
         let rewardText = gifts.length
-            ? `\n🎁 <b>Δώρα:</b> ${gifts.map(g => `${g.qty}x ${g.name}`).join(', ')} (−${euro(discount)}, −${redeemedCost} πόντοι)`
+            ? `\n🎁 <b>Δώρα Πόντων:</b> ${gifts.map(g => `${g.qty}x ${g.name}`).join(', ')} (−${euro(rewardDiscount)}, −${redeemedCost} πόντοι)`
             : '';
 
         const newTotalPoints = getPoints() - redeemedCost + earned;
@@ -1018,7 +1070,7 @@
         const fullOrderMessage = `🚨 <b>ΝΕΑ ΠΑΡΑΓΓΕΛΙΑ</b>\n👤 ${customerName}${contactLink}\n📞 ${phone}\n📝 ${comment || '-'}\n⏰ ${time}${rewardText}\n💰 Σύνολο: <b>${euro(totalAmount)}</b>\n\n📦 <b>Αναλυτικά:</b>\n${itemsText}\n\n⭐ <b>Πόντοι:</b>\n🔹 Κέρδισε: +${earned}${redeemedCost ? `\n🔻 Εξαργύρωσε: −${redeemedCost}` : ''}\n💰 Σύνολο πόντων συσκευής: <b>${newTotalPoints}</b>`;
 
         const hasGreek = [...cart.values()].some(v => v.prod.id === 'ellinikos' || v.prod.id === 'ellinikos2');
-        const receipt = `✅ <b>Καφέ Βόλτα — Επιβεβαίωση παραγγελίας</b>\n⏰ Παραλαβή: ${time}\n\n📦 <b>Η παραγγελία σου:</b>\n${itemsText}${gifts.length ? `🎁 Δώρα: ${gifts.map(g => `${g.qty}x ${g.name}`).join(', ')}\n` : ''}💰 Σύνολο: <b>${euro(totalAmount)}</b>\n\n⭐ Κέρδισες <b>+${earned}</b> πόντους${redeemedCost ? ` (εξαργύρωσες ${redeemedCost})` : ''}\n💰 Σύνολο πόντων σου: <b>{POINTS}</b>${hasGreek ? '\n\n🔮 Ήπιες τον ελληνικό σου; Δες τι λέει το φλιτζάνι → @omenread_bot' : ''}\n\n📣 Προσφορές & νέα μας → t.me/kafevolta\nΣε ευχαριστούμε! ☕`;
+        const receipt = `✅ <b>Καφέ Βόλτα — Επιβεβαίωση παραγγελίας</b>\n⏰ Παραλαβή: ${time}\n\n📦 <b>Η παραγγελία σου:</b>\n${itemsText}${gifts.length ? `🎁 Δώρα Πόντων: ${gifts.map(g => `${g.qty}x ${g.name}`).join(', ')}\n` : ''}💰 Σύνολο: <b>${euro(totalAmount)}</b>\n\n⭐ Κέρδισες <b>+${earned}</b> πόντους${redeemedCost ? ` (εξαργύρωσες ${redeemedCost})` : ''}\n💰 Σύνολο πόντων σου: <b>{POINTS}</b>${hasGreek ? '\n\n🔮 Ήπιες τον ελληνικό σου; Δες τι λέει το φλιτζάνι → @omenread_bot' : ''}\n\n📣 Προσφορές & νέα μας → t.me/kafevolta\nΣε ευχαριστούμε! ☕`;
 
         const groupResult = await sendOrder({
             text: fullOrderMessage,
@@ -1078,7 +1130,7 @@
             || new URLSearchParams(location.search).get('tgWebAppStartParam')
             || (location.hash ? location.hash.slice(1) : '');
         if (['events', 'party', 'ekdiloseis'].includes((startParam || '').toLowerCase())) {
-            evOverlay.classList.add('open');
+            openModal('evOverlay');
         }
     })();
 
