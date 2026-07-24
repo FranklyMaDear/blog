@@ -129,7 +129,7 @@
         .pl-foot { padding: 10px 16px; border-top: 1px solid var(--line); text-align: center; font-size: 0.75rem; color: #4d4336; background: var(--soft); border-radius: 0 0 10px 10px; }
         
         .cats { position: sticky; top: 52px; z-index: 40; background: var(--paper); border-bottom: 1px solid var(--line); padding: 8px 0; }
-        .cats-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; display: flex; gap: 6px; overflow-x: auto; }
+        .cats-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; display: flex; gap: 6px; overflow-x: auto; scroll-behavior: smooth; }
         .chip { border: 1.5px solid var(--mocha); background: var(--card); color: var(--mocha); padding: 6px 14px; border-radius: 999px; font-weight: 600; font-size: 0.85rem; cursor: pointer; white-space: nowrap; transition: 0.2s; box-shadow: 0 2px 6px rgba(92, 58, 33, 0.05); }
         .chip.active { background: var(--mocha); color: #fff; border-color: var(--mocha); box-shadow: 0 4px 10px rgba(92, 58, 33, 0.2); }
         
@@ -138,7 +138,10 @@
         
         /* ★ Αναβαθμισμένες Κάρτες Προϊόντων */
         .product { background: var(--card); border: none; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 6px; box-shadow: 0 4px 12px rgba(92, 58, 33, 0.08); transition: transform 0.2s; }
+        .p-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 4px; }
         .p-name { font-family: 'Literata', serif; font-weight: 700; font-size: 0.9rem; }
+        .fav-btn { background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0; line-height: 1; outline: none; -webkit-tap-highlight-color: transparent; }
+        
         .p-options select, .flavor-row select { font-size: 0.75rem; padding: 6px; border-radius: 6px; border: 1px solid var(--line); width: 100%; background: var(--soft); color: var(--ink); }
         .flavor-row { display: flex; gap: 4px; }
         .p-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
@@ -178,7 +181,7 @@
         .totals { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 8px; font-size: 1.05rem; color: var(--ink); }
         .discount-line { display: flex; justify-content: space-between; color: #2e7d32; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; }
         
-        /* Media Queries για Offers Layout */
+        /* Media Queries */
         @media (max-width: 560px) {
             .hero-btns { flex-wrap: nowrap; gap: 6px; }
             .hero-btns .pricelist-btn { flex: 1; font-size: 0.75rem; padding: 8px 4px; text-align: center; }
@@ -310,9 +313,10 @@
     </div>
 </section>
 
-<!-- ★ Emojis στο Category Nav -->
+<!-- ★ Emojis & Αγαπημένα στο Category Nav -->
 <nav class="cats">
     <div class="cats-inner" id="categoryNav">
+        <div class="chip" data-cat="favorites">❤️ Αγαπημένα</div>
         <div class="chip active" data-cat="coffee">☕ Καφέδες</div>
         <div class="chip" data-cat="soft">🥤 Αναψυκτικά</div>
         <div class="chip" data-cat="icetea">🧃 Ice Tea</div>
@@ -472,6 +476,7 @@
                 <option value="Σε 10 λεπτά" selected>Παραλαβή σε 10'</option>
                 <option value="Σε 15 λεπτά">Παραλαβή σε 15'</option>
                 <option value="Σε 20 λεπτά">Παραλαβή σε 20'</option>
+                <option value="Σε 30 λεπτά">Παραλαβή σε 30'</option>
             </select>
         </div>
         <div class="tg-note" id="tgNote" style="display:none;">💡 Θες επιβεβαίωση παραγγελίας στο κινητό σου και πόντους που δεν χάνονται; <a href="https://t.me/coffeevolta_bot" target="_blank">Παράγγειλε μέσα από το Telegram</a></div>
@@ -542,7 +547,6 @@
         { id: 'gift-drink2', name: '2 Δωρεάν ροφήματα (☕☕)', cost: 25, value: 4.40 }
     ];
     
-    // ★ Εξαργυρώσεις: id → ποσότητα (μπορεί πολλά δώρα μαζί, όσα φτάνουν οι πόντοι)
     const redeemed = new Map();
     function redeemedCostTotal() {
         let c = 0; redeemed.forEach((qty, id) => { const r = REWARDS.find(x => x.id === id); if (r) c += r.cost * qty; });
@@ -561,7 +565,16 @@
     const euro = v => v.toFixed(2).replace('.', ',') + ' €';
     const cart = new Map();
 
-    const LS_NAME = 'kv_name', LS_PHONE = 'kv_phone', LS_POINTS = 'kv_points';
+    const LS_NAME = 'kv_name', LS_PHONE = 'kv_phone', LS_POINTS = 'kv_points', LS_FAVS = 'kv_favs';
+
+    // ★ Αγαπημένα Προϊόντα
+    function getFavs() { return JSON.parse(localStorage.getItem(LS_FAVS) || '[]'); }
+    function toggleFav(id) {
+        let favs = getFavs();
+        if (favs.includes(id)) favs = favs.filter(x => x !== id);
+        else favs.push(id);
+        localStorage.setItem(LS_FAVS, JSON.stringify(favs));
+    }
 
     // ★ Λογική εύρεσης επόμενης Κυριακής
     function getNextSunday(hours, minutes, seconds) {
@@ -571,7 +584,6 @@
         const diff = day === 0 ? 0 : 7 - day;
         next.setDate(now.getDate() + diff);
         next.setHours(hours, minutes, seconds, 0);
-        // Αν είναι ήδη Κυριακή αλλά έχει περάσει η ώρα, πήγαινε στην επόμενη εβδομάδα
         if (day === 0 && now.getTime() > next.getTime()) {
             next.setDate(next.getDate() + 7);
         }
@@ -606,7 +618,7 @@
         const currentResetTime = parseInt(localStorage.getItem('kv_reset_time') || '0');
         
         if (now > currentResetTime && currentResetTime !== 0) {
-            localStorage.setItem(LS_POINTS, '0'); // Μηδενισμός πόντων!
+            localStorage.setItem(LS_POINTS, '0');
             localStorage.setItem('kv_reset_time', weeklyResetDate.getTime().toString());
         } else if (currentResetTime === 0) {
             localStorage.setItem('kv_reset_time', weeklyResetDate.getTime().toString());
@@ -636,7 +648,6 @@
         document.getElementById('pointsValue').textContent = pts;
         document.getElementById('pointsDisplay').style.display = pts > 0 ? 'flex' : 'none';
 
-        // Συγχρονισμός με το Modal Προσφορών
         const modalPts = document.getElementById('modalPointsVal');
         const bar = document.getElementById('pointsProgressBar');
         if (modalPts) modalPts.textContent = pts;
@@ -738,9 +749,22 @@
     const grid = document.getElementById('productsGrid');
     function renderProducts() {
         grid.innerHTML = '';
-        PRODUCTS.filter(p => p.cat === currentCat).forEach(p => {
+        const favs = getFavs();
+        
+        let itemsToRender = currentCat === 'favorites' 
+            ? PRODUCTS.filter(p => favs.includes(p.id)) 
+            : PRODUCTS.filter(p => p.cat === currentCat);
+            
+        if (currentCat === 'favorites' && itemsToRender.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px 10px; color: #6b5d4d; font-size: 0.95rem;">Δεν έχεις προσθέσει ακόμα αγαπημένα προϊόντα.<br><br>Πάτα την καρδούλα 🤍 δίπλα από τον καφέ σου για να τον βρίσκεις αμέσως την επόμενη φορά!</div>`;
+            return;
+        }
+            
+        itemsToRender.forEach(p => {
             const card = document.createElement('div');
             card.className = 'product';
+            const isFav = favs.includes(p.id);
+            
             let opts = '';
             if (p.sugar) opts = `<div class="p-options"><select class="sugar"><option value="σκέτο">Σκέτο</option><option value="μέτριο" selected>Μέτριο</option><option value="γλυκό">Γλυκό</option></select></div>`;
             else if (p.crepe) {
@@ -754,12 +778,26 @@
                 const fl = FLAVORS.map(f => `<option>${f}</option>`).join('');
                 opts = `<div class="p-options"><div class="flavor-row"><select class="flv1">${fl}</select><select class="flv2">${fl}</select></div></div>`;
             }
-            card.innerHTML = `<div class="p-name">${p.n}</div>${opts}<div class="p-foot"><div class="p-price">${euro(p.p)}</div><button class="add">+</button></div>`;
+            
+            card.innerHTML = `
+                <div class="p-header">
+                    <div class="p-name">${p.n}</div>
+                    <button class="fav-btn" data-id="${p.id}" title="Προσθήκη στα αγαπημένα">${isFav ? '❤️' : '🤍'}</button>
+                </div>
+                ${opts}
+                <div class="p-foot"><div class="p-price">${euro(p.p)}</div><button class="add">+</button></div>`;
             grid.appendChild(card);
         });
     }
 
     grid.addEventListener('click', e => {
+        const favBtn = e.target.closest('.fav-btn');
+        if (favBtn) {
+            toggleFav(favBtn.dataset.id);
+            renderProducts();
+            return;
+        }
+
         const btn = e.target.closest('.add');
         if (!btn) return;
         const card = btn.closest('.product');
@@ -768,7 +806,7 @@
         if (!prod) return;
         if (prod.crepe) {
             const bisc = card.querySelector('.crx-bisc').value === 'yes';
-            const ice = card.querySelector('.crx-ice').value; // 'no' | 'Σοκολάτα' | 'Βανίλια'
+            const ice = card.querySelector('.crx-ice').value;
             const extra = (bisc ? 0.50 : 0) + (ice !== 'no' ? 0.50 : 0);
             const parts = [];
             if (bisc) parts.push('Μπισκότο');
@@ -800,12 +838,10 @@
     document.getElementById('closeCart').onclick = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
     overlay.onclick = () => { drawer.classList.remove('open'); overlay.classList.remove('open'); };
 
-    // ★ Τιμή γραμμής (βάση + έξτρα κρέπας)
     function itemPrice(v) { return v.prod.p + (v.extra || 0); }
     function getSubtotal() {
         let s = 0; cart.forEach(v => s += v.qty * itemPrice(v)); return s;
     }
-    // ★ Προσφορά 3+1
     function freeCrepes() {
         let n = 0; cart.forEach(v => { if (v.prod.cat === 'crepe') n += v.qty; });
         return Math.floor(n / 3);
@@ -814,7 +850,6 @@
         return Math.min(redeemedValueTotal(), getSubtotal());
     }
 
-    // ★ Εμφάνιση δώρων στο καλάθι
     function renderRewards() {
         const area = document.getElementById('rewardsArea');
         const pts = getPoints();
