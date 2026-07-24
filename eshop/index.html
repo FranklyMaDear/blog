@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Καφέ Βόλτα — Online Παραγγελίες</title>
-    <meta name="description" content="Παράγγειλε online & παρέλαβε χωρίς αναμονή! ⭐ 1€ = 1 πόντος · 15⭐ δωρεάν παγωτό · 25⭐ δωρεάν ρόφημα · 🥞 3 κρέπες = +1 ΔΩΡΟ. Φήκη Τρικάλων · 06:00–22:00">
+    <meta name="description" content="Παράγγειλε online & παρέλαβε χωρίς αναμονή! ⭐ 1€ = 1 πόντος · Εβδομαδιαίες προσφορές · 🥞 3 κρέπες = +1 ΔΩΡΟ. Φήκη Τρικάλων · 06:00–22:00">
     <meta property="og:title" content="Καφέ Βόλτα ☕ Online Παραγγελίες & Πόντοι">
-    <meta property="og:description" content="Ο καφές σου έτοιμος πριν φτάσεις! ⭐ 1€ = 1 πόντος · 15⭐ δωρεάν παγωτό · 25⭐ δωρεάν ρόφημα · 🥞 3 κρέπες = +1 ΔΩΡΟ · 🔮 Καφεμαντεία & 🎮 παιχνίδια με κληρώσεις! Φήκη Τρικάλων · 06:00–22:00">
+    <meta property="og:description" content="Ο καφές σου έτοιμος πριν φτάσεις! Μάζεψε πόντους κάθε εβδομάδα. 15⭐= 1 ρόφημα · 25⭐= 2 ροφήματα · 🥞 3 κρέπες = +1 ΔΩΡΟ · 🔮 Καφεμαντεία & 🎮 παιχνίδια! Φήκη Τρικάλων · 06:00–22:00">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://volta.franklygames.com/">
     <meta property="og:image" content="https://volta.franklygames.com/photo.png">
@@ -14,7 +14,7 @@
     <meta property="og:site_name" content="Καφέ Βόλτα">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Καφέ Βόλτα ☕ Online Παραγγελίες & Πόντοι">
-    <meta name="twitter:description" content="Παράγγειλε online & κέρδισε πόντους! 15⭐ παγωτό · 25⭐ ρόφημα · 3 κρέπες = +1 ΔΩΡΟ">
+    <meta name="twitter:description" content="Παράγγειλε online & κέρδισε πόντους! 15⭐= 1 ρόφημα · 25⭐= 2 ροφήματα · 3 κρέπες = +1 ΔΩΡΟ">
     <meta name="twitter:image" content="https://volta.franklygames.com/photo.png">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#5C3A21">
@@ -207,13 +207,13 @@
     <button class="a2hs-close" id="a2hsClose">&times;</button>
 </div>
 
-<!-- ★ Hero Section (Αποσυμφορημένο) -->
+<!-- ★ Hero Section -->
 <section class="hero">
     <h1>Ο τέλειος καφές, <span class="stroll">έτοιμος πριν φτάσεις.</span></h1>
     <p>Παράγγειλε online και παρέλαβε χωρίς αναμονή.</p>
     <div class="hero-btns">
         <button class="pricelist-btn" id="openPricelist">📋 Τιμοκατάλογος</button>
-        <a class="pricelist-btn" href="https://t.me/kafevolta" target="_blank">📣 Νέα & Προσφορές</a>
+        <button class="pricelist-btn" id="openOffers">📣 Προσφορές</button>
     </div>
 </section>
 
@@ -229,6 +229,46 @@
     </div>
 </div>
 
+<!-- ★ Αναδυόμενο παράθυρο Προσφορών -->
+<div class="pl-overlay" id="offersOverlay">
+    <div class="pl-box">
+        <div class="pl-head">
+            <h2>📣 <em>Προσφορές</em> & Πόντοι</h2>
+            <button class="pl-close" id="closeOffers">&times;</button>
+        </div>
+        <div class="pl-body">
+            <div class="ev-sec">
+                <h3 style="color:var(--mocha); font-family:'Literata', serif; font-size:1rem; margin-bottom:6px;">⭐ Εβδομαδιαίοι Πόντοι</h3>
+                <p class="ev-text">Μάζεψε πόντους με κάθε παραγγελία (1€ = 1⭐). Οι πόντοι μηδενίζονται κάθε Κυριακή βράδυ!</p>
+                
+                <div style="background:var(--soft); padding:12px; border-radius:8px; margin:10px 0; border: 1px solid var(--line);">
+                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:700; margin-bottom:6px;">
+                        <span>Οι πόντοι σου: <span id="modalPointsVal" style="color:var(--mocha);">0</span></span>
+                        <span>Λήξη σε: <span id="weeklyTimer" style="color:#d32f2f;">--:--:--</span></span>
+                    </div>
+                    <div style="background:#e6d5c3; height:10px; border-radius:999px; overflow:hidden;">
+                        <div id="pointsProgressBar" style="background:var(--mocha); height:100%; width:0%; transition:width 0.4s ease;"></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:0.7rem; margin-top:4px; color:var(--mocha-dark); font-weight:600;">
+                        <span>0</span>
+                        <span>15 (1 ρόφημα)</span>
+                        <span>25 (2 ροφήματα)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ev-sec">
+                <h3 style="color:var(--mocha); font-family:'Literata', serif; font-size:1rem; margin-bottom:6px;">🥞 Προσφορά Κρέπας (3+1 ΔΩΡΟ)</h3>
+                <p class="ev-text">Παράγγειλε 3 κρέπες της επιλογής σου και πάρε αυτόματα <strong>ΔΩΡΟ 1 κρέπα σοκολάτα-μπισκότο</strong>!</p>
+                <div style="background:#fff3e0; border:1px dashed #ff9800; padding:10px; border-radius:8px; text-align:center; font-weight:700; font-size:0.85rem; color:#e65100; margin-top:10px;">
+                    ⏳ Η προσφορά λήγει την Κυριακή στις 22:00<br>
+                    <span id="crepeTimer" style="font-size:1.2rem; display:block; margin-top:4px;">--:--:--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="closed-banner" id="closedBanner" style="display:none;">
     <div class="closed-banner-inner">🌙 Είμαστε κλειστά αυτή τη στιγμή. Ωράριο παραγγελιών: 06:00 – 22:00. Μπορείς να δεις τον κατάλογο — οι παραγγελίες ενεργοποιούνται όταν ανοίξουμε!</div>
 </div>
@@ -241,16 +281,16 @@
             <div class="o-small">Κάθε παραγγελία μαζεύει πόντους</div>
         </div>
         <div class="offer-card">
-            <div class="o-big">15 ⭐ = 🍦</div>
-            <div class="o-small">Δωρεάν Παγωτό Χωνάκι ή Κύπελλο</div>
+            <div class="o-big">15 ⭐ = ☕</div>
+            <div class="o-small">1 Δωρεάν ρόφημα</div>
         </div>
         <div class="offer-card">
-            <div class="o-big">25 ⭐ = ☕</div>
-            <div class="o-small">Δωρεάν ρόφημα</div>
+            <div class="o-big">25 ⭐ = ☕☕</div>
+            <div class="o-small">2 Δωρεάν ροφήματα</div>
         </div>
         <div class="offer-card">
             <div class="o-big">3 🥞 = +1</div>
-            <div class="o-small">3 κρέπες = ΔΩΡΟ κρέπα με σοκολάτα-μπισκότο</div>
+            <div class="o-small">Έως Κυρ. 22:00</div>
         </div>
     </div>
 </section>
@@ -262,11 +302,11 @@
     <a class="ent-card full" href="https://t.me/Franklygames_bot/games" target="_blank">🎮 Games & Εβδομαδιαίες Κληρώσεις</a>
 </section>
 
-<!-- ★ Προτροπή Telegram (φαίνεται μόνο εκτός Telegram) -->
+<!-- ★ Προτροπή Telegram -->
 <section class="tg-banner" id="tgBanner" style="display:none;">
     <div class="tg-banner-inner">
         <span>💡 Παράγγειλε μέσα από το <strong>Telegram</strong> για να λαμβάνεις επιβεβαίωση παραγγελίας και να μαζεύεις πόντους σε κάθε συσκευή!</span>
-        <a class="tg-btn" href="https://t.me/coffeevolta_bot" target="_blank">Άνοιξε το @coffeevolta_bot</a>
+        <a class="tg-btn" href="https://t.me/coffeevolta_bot/app" target="_blank">Άνοιξε το eShop στο Telegram</a>
     </div>
 </section>
 
@@ -496,11 +536,12 @@
     };
     const FLAVORS = ['Βανίλια', 'Σοκολάτα', 'Φράουλα', 'Μπανάνα', 'Στρατσιατέλα', 'Καϊμάκι'];
 
-    // ★ Δώρα: ένα ανά παραγγελία. value = μέγιστη έκπτωση σε €.
+    // ★ Νέα Δώρα (Εβδομαδιαία)
     const REWARDS = [
-        { id: 'gift-ice', name: 'Δωρεάν παγωτό (🍦)', cost: 15, value: 1.50 },
-        { id: 'gift-drink', name: 'Δωρεάν ρόφημα (🥤)', cost: 25, value: 2.20 }
+        { id: 'gift-drink1', name: '1 Δωρεάν ρόφημα (☕)', cost: 15, value: 2.20 },
+        { id: 'gift-drink2', name: '2 Δωρεάν ροφήματα (☕☕)', cost: 25, value: 4.40 }
     ];
+    
     // ★ Εξαργυρώσεις: id → ποσότητα (μπορεί πολλά δώρα μαζί, όσα φτάνουν οι πόντοι)
     const redeemed = new Map();
     function redeemedCostTotal() {
@@ -522,7 +563,58 @@
 
     const LS_NAME = 'kv_name', LS_PHONE = 'kv_phone', LS_POINTS = 'kv_points';
 
+    // ★ Λογική εύρεσης επόμενης Κυριακής
+    function getNextSunday(hours, minutes, seconds) {
+        const now = new Date();
+        const next = new Date(now);
+        const day = now.getDay();
+        const diff = day === 0 ? 0 : 7 - day;
+        next.setDate(now.getDate() + diff);
+        next.setHours(hours, minutes, seconds, 0);
+        // Αν είναι ήδη Κυριακή αλλά έχει περάσει η ώρα, πήγαινε στην επόμενη εβδομάδα
+        if (day === 0 && now.getTime() > next.getTime()) {
+            next.setDate(next.getDate() + 7);
+        }
+        return next;
+    }
+
+    const weeklyResetDate = getNextSunday(23, 59, 59);
+    const crepeEndDate = getNextSunday(22, 0, 0);
+
+    function formatTimeDiff(ms) {
+        if (ms <= 0) return "Έληξε";
+        const d = Math.floor(ms / (1000 * 60 * 60 * 24));
+        const h = Math.floor((ms / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((ms / 1000 / 60) % 60);
+        const s = Math.floor((ms / 1000) % 60);
+        return (d > 0 ? d + "μ " : "") + h.toString().padStart(2, '0') + ":" + m.toString().padStart(2, '0') + ":" + s.toString().padStart(2, '0');
+    }
+
+    function updateTimers() {
+        const now = new Date().getTime();
+        const wTimer = document.getElementById('weeklyTimer');
+        const cTimer = document.getElementById('crepeTimer');
+        if (wTimer) wTimer.textContent = formatTimeDiff(weeklyResetDate.getTime() - now);
+        if (cTimer) cTimer.textContent = formatTimeDiff(crepeEndDate.getTime() - now);
+    }
+    setInterval(updateTimers, 1000);
+    updateTimers();
+
+    // ★ Μηδενισμός πόντων τέλος εβδομάδας
+    function checkWeeklyReset() {
+        const now = new Date().getTime();
+        const currentResetTime = parseInt(localStorage.getItem('kv_reset_time') || '0');
+        
+        if (now > currentResetTime && currentResetTime !== 0) {
+            localStorage.setItem(LS_POINTS, '0'); // Μηδενισμός πόντων!
+            localStorage.setItem('kv_reset_time', weeklyResetDate.getTime().toString());
+        } else if (currentResetTime === 0) {
+            localStorage.setItem('kv_reset_time', weeklyResetDate.getTime().toString());
+        }
+    }
+
     function loadData() {
+        checkWeeklyReset();
         document.getElementById('nameField').value = localStorage.getItem(LS_NAME) || '';
         document.getElementById('phoneField').value = localStorage.getItem(LS_PHONE) || '';
         updatePointsDisplay();
@@ -537,15 +629,26 @@
     function getPoints() { return parseInt(localStorage.getItem(LS_POINTS) || '0'); }
     function setPoints(v) { localStorage.setItem(LS_POINTS, Math.max(0, v)); updatePointsDisplay(); }
     function addPoints(pts) { setPoints(getPoints() + pts); }
+    
     function updatePointsDisplay() {
+        checkWeeklyReset();
         const pts = getPoints();
         document.getElementById('pointsValue').textContent = pts;
         document.getElementById('pointsDisplay').style.display = pts > 0 ? 'flex' : 'none';
+
+        // Συγχρονισμός με το Modal Προσφορών
+        const modalPts = document.getElementById('modalPointsVal');
+        const bar = document.getElementById('pointsProgressBar');
+        if (modalPts) modalPts.textContent = pts;
+        if (bar) {
+            const pct = Math.min(100, (pts / 25) * 100);
+            bar.style.width = pct + '%';
+        }
     }
 
     let currentCat = 'coffee';
 
-    // ★ Τιμοκατάλογος: χτίζεται αυτόματα από τη λίστα προϊόντων
+    // ★ Τιμοκατάλογος
     function buildPricelist() {
         const order = ['coffee', 'soft', 'icetea', 'juice', 'granita', 'crepe', 'icecream'];
         let html = '';
@@ -557,7 +660,7 @@
                 html += `<div class="pl-row"><span>${p.n}</span><span class="dots"></span><span class="price">${euro(p.p)}</span></div>`;
             });
             if (cat === 'coffee') html += `<div class="pl-note">Όλα τα ροφήματα: σκέτο, μέτριο ή γλυκό</div>`;
-            if (cat === 'crepe') html += `<div class="pl-note">+0,50€ μπισκότο · +0,50€ μπάλα παγωτό (σοκολάτα ή βανίλια) · Προσφορά: 3 κρέπες = ΔΩΡΟ 1 κρέπα σοκολάτα-μπισκότο!</div>`;
+            if (cat === 'crepe') html += `<div class="pl-note">+0,50€ μπισκότο · +0,50€ μπάλα παγωτό (σοκολάτα ή βανίλια)</div>`;
             if (cat === 'icecream') html += `<div class="pl-note">Γεύσεις: ${FLAVORS.join(', ')}</div>`;
         });
         document.getElementById('plBody').innerHTML = html;
@@ -566,6 +669,12 @@
     document.getElementById('openPricelist').onclick = () => { buildPricelist(); plOverlay.classList.add('open'); };
     document.getElementById('closePricelist').onclick = () => plOverlay.classList.remove('open');
     plOverlay.addEventListener('click', e => { if (e.target === plOverlay) plOverlay.classList.remove('open'); });
+
+    // ★ Παράθυρο Προσφορών
+    const offersOverlay = document.getElementById('offersOverlay');
+    document.getElementById('openOffers').onclick = () => offersOverlay.classList.add('open');
+    document.getElementById('closeOffers').onclick = () => offersOverlay.classList.remove('open');
+    offersOverlay.addEventListener('click', e => { if (e.target === offersOverlay) offersOverlay.classList.remove('open'); });
 
     // ★ Παράθυρο Εκδηλώσεων
     const evOverlay = document.getElementById('evOverlay');
@@ -579,7 +688,6 @@
     document.getElementById('closeBooking').onclick = () => bkOverlay.classList.remove('open');
     bkOverlay.addEventListener('click', e => { if (e.target === bkOverlay) bkOverlay.classList.remove('open'); });
 
-    // Εναλλαγή πεδίων ανάλογα με το είδος εκδήλωσης
     document.getElementById('bkType').addEventListener('change', function () {
         const isTalk = this.value.startsWith('Ομιλία');
         document.getElementById('bkMenuWrap').style.display = isTalk ? 'none' : 'flex';
@@ -697,7 +805,7 @@
     function getSubtotal() {
         let s = 0; cart.forEach(v => s += v.qty * itemPrice(v)); return s;
     }
-    // ★ Προσφορά 3+1: κάθε 3 κρέπες → δώρο 1 Κρέπα Σοκολάτα + Μπισκότο
+    // ★ Προσφορά 3+1
     function freeCrepes() {
         let n = 0; cart.forEach(v => { if (v.prod.cat === 'crepe') n += v.qty; });
         return Math.floor(n / 3);
@@ -706,7 +814,7 @@
         return Math.min(redeemedValueTotal(), getSubtotal());
     }
 
-    // ★ Εμφάνιση δώρων στο καλάθι (με +/− για πολλαπλές εξαργυρώσεις)
+    // ★ Εμφάνιση δώρων στο καλάθι
     function renderRewards() {
         const area = document.getElementById('rewardsArea');
         const pts = getPoints();
@@ -753,7 +861,6 @@
         updateCart();
     };
 
-    // ★ Ωράριο καταστήματος: 06:00 – 22:00
     function isOpen() {
         const h = new Date().getHours();
         return h >= 6 && h < 22;
@@ -820,7 +927,6 @@
         updateCart();
     };
 
-    // ★ Αποστολή παραγγελίας μέσω Cloudflare Worker
     const WORKER_URL = "https://coffee.kafevolta.workers.dev";
 
     async function sendOrder(payload) {
@@ -1000,7 +1106,7 @@
                 setPoints(d.points);
                 updateCart();
             }
-        } catch (e) { /* offline: μένουν οι τοπικοί πόντοι */ }
+        } catch (e) { /* offline */ }
     })();
 </script>
 </body>
