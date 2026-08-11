@@ -69,19 +69,18 @@
         }
         .yt-cta a:hover { transform: scale(1.04); }
 
-        /* Σχόλια - ΕΔΩ ΕΙΝΑΙ Η ΔΙΟΡΘΩΣΗ */
+        /* Σχόλια - ΔΙΟΡΘΩΜΕΝΟ ΥΨΟΣ */
         .comments-section {
             margin: 20px 0; background: rgba(255, 255, 255, 0.04);
             border-radius: 24px; padding: 20px 15px;
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            min-height: 250px; /* Δίνουμε χώρο στο iframe να φορτώσει */
+            min-height: 350px; /* Επαρκής χώρος για να φορτώσει το widget */
         }
         .comments-section h3 { color: #FFF; font-size: 1rem; font-weight: 700; margin-bottom: 15px; text-align: center; }
         
-        /* Διόρθωση για το iframe που θα φτιάξει το Facebook SDK */
-        .fb-comments, .fb-comments iframe, .fb-comments span { width: 100% !important; }
-        .fb-comments { background: transparent !important; }
+        .fb-comments { width: 100% !important; background: transparent !important; }
+        .fb-comments iframe { width: 100% !important; min-height: 300px !important; }
         
         /* Παιχνίδια */
         .games-section { margin-top: 20px; margin-bottom: 20px; background: rgba(255, 255, 255, 0.04); padding: 16px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.08); text-align: center; }
@@ -121,17 +120,15 @@
         </div>
 
         <!-- ============================================== -->
-        <!-- ΣΧΟΛΙΑ FACEBOOK (ΔΥΝΑΜΙΚΟ URL)                 -->
+        <!-- ΣΧΟΛΙΑ FACEBOOK                                 -->
         <!-- ============================================== -->
         <div class="comments-section">
             <h3>💬 Σχολίασε με το Facebook</h3>
-            <!-- Το data-href θα μπει αυτόματα από το script πιο κάτω -->
             <div class="fb-comments" 
-                 data-href="https://blog.franklymadear.com/download/one/index.html" 
+                 data-href="" 
                  data-width="100%" 
                  data-numposts="10" 
-                 data-order-by="reverse_time"
-                 data-lazy="false">
+                 data-order-by="reverse_time">
             </div>
         </div>
 
@@ -170,31 +167,27 @@
 </div>
 
 <!-- ============================================== -->
-<!-- FACEBOOK SDK & ΔΥΝΑΜΙΚΟ URL FIX                 -->
+<!-- FACEBOOK SDK & ΔΥΝΑΜΙΚΟ URL SCRIPT              -->
 <!-- ============================================== -->
 <div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/el_GR/sdk.js#xfbml=1&version=v21.0&appId=9660744817"></script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/el_GR/sdk.js#xfbml=1&version=v21.0"></script>
 
 <script>
-    // Αυτό το script είναι το "μαγικό" που θα λειτουργήσει τα σχόλια
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '9660744817',
-            xfbml      : true,
-            version    : 'v21.0'
-        });
-        
-        // Βρίσκουμε το div των σχολίων
+    window.addEventListener('DOMContentLoaded', (event) => {
         var fbComments = document.querySelector('.fb-comments');
         if (fbComments) {
-            // Αφαιρούμε το #google_vignette από το URL για να μην κολλάει το Facebook
-            var cleanUrl = window.location.href.split('#')[0];
+            // Καθαρισμός URL από τυχόν parameters/fragments (π.χ. #google_vignette)
+            var cleanUrl = window.location.href.split('#')[0].split('?')[0];
             fbComments.setAttribute('data-href', cleanUrl);
-            
-            // Το ξαναφορτώνουμε για σιγουριά
-            FB.XFBML.parse();
         }
-    };
+        
+        // Αν το SDK έχει ήδη φορτώσει, εκτελούμε parsing
+        setTimeout(function() {
+            if (typeof FB !== 'undefined') {
+                FB.XFBML.parse();
+            }
+        }, 500);
+    });
 </script>
 
 </body>
