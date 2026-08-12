@@ -42,86 +42,496 @@
     
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px; color:#1a1a2e; -webkit-font-smoothing:antialiased; }
-        .main-container { width:100%; max-width:480px; background:#fff; border-radius:24px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,0.08); }
         
-        .article-section { margin:0 0 20px 0; background:#fff; border-radius:20px; padding:20px; border:1px solid #e9edf4; }
-        .article-section h1 { font-size:1.5rem; font-weight:800; margin-bottom:16px; color:#1a1a2e; line-height:1.3; }
-        .article-section h2 { font-size:1.2rem; font-weight:700; margin:20px 0 12px 0; color:#1a1a2e; padding-bottom:8px; border-bottom:2px solid #f1f5f9; }
-        .article-section p { font-size:0.95rem; line-height:1.7; margin-bottom:14px; color:#333; }
-        .article-section ul { margin:0 0 16px 20px; list-style-type:none; }
-        .article-section ul li { font-size:0.95rem; line-height:1.7; margin-bottom:10px; color:#333; position:relative; padding-left:20px; }
-        .article-section ul li::before { content:"•"; position:absolute; left:0; color:#3b82f6; font-weight:bold; font-size:1.2rem; }
-        .article-section ol { margin:0 0 16px 20px; counter-reset:item; list-style-type:none; }
-        .article-section ol li { font-size:0.95rem; line-height:1.7; margin-bottom:12px; color:#333; position:relative; padding-left:32px; }
-        .article-section ol li::before { counter-increment:item; content:counter(item); position:absolute; left:0; top:0; background:#3b82f6; color:#fff; width:22px; height:22px; border-radius:50%; text-align:center; font-size:0.75rem; font-weight:700; line-height:22px; }
-        .article-section img { max-width:100%; border-radius:16px; margin:12px 0; border:1px solid #eee; height:auto; display:block; }
-        .article-section .caption { font-size:0.8rem; color:#64748b; margin-bottom:16px; text-align:center; font-style:italic; }
-        .article-section strong { color:#1a1a2e; }
-        .article-section a { color:#3b82f6; text-decoration:underline; font-weight:600; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #e8edf5 0%, #f0f4fa 50%, #eef3f9 100%);
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #1a1a2e;
+            -webkit-font-smoothing: antialiased;
+            perspective: 1000px;
+        }
         
-        /* ========== ΒΕΛΤΙΩΜΕΝΗ ΕΜΦΑΝΙΣΗ ΔΙΑΦΗΜΙΣΕΩΝ ========== */
-        .ad-box {
-            margin: 20px 0;
-            background: #f8fafc; /* απαλό γκρι φόντο */
+        /* ========== 3D MAIN CONTAINER ========== */
+        .main-container {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 28px 24px;
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.12),
+                0 15px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            transform: rotateX(1deg) rotateY(-0.5deg);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: visible;
+        }
+        
+        .main-container:hover {
+            transform: rotateX(0deg) rotateY(0deg) translateY(-5px);
+            box-shadow:
+                0 40px 80px rgba(0, 0, 0, 0.18),
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        
+        /* ========== 3D SECTION CARDS ========== */
+        .article-section {
+            margin: 0 0 28px 0;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 20px;
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.08),
+                0 4px 12px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255,255,255,0.9);
+            transform: translateZ(5px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .article-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(59,130,246,0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .article-section:hover {
+            transform: translateZ(15px) scale(1.01);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .article-section h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #0f172a;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .article-section h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 24px 0 14px 0;
+            color: #1e293b;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f1f5f9;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .article-section p {
+            font-size: 0.98rem;
+            line-height: 1.75;
+            margin-bottom: 14px;
+            color: #334155;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-section ul {
+            margin: 0 0 18px 20px;
+            list-style-type: none;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-section ul li {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 12px;
+            color: #334155;
+            position: relative;
+            padding-left: 28px;
+        }
+        
+        .article-section ul li::before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+            font-weight: bold;
+            font-size: 1.1rem;
+            top: 0;
+        }
+        
+        .article-section ol {
+            margin: 0 0 18px 20px;
+            counter-reset: item;
+            list-style-type: none;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-section ol li {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 14px;
+            color: #334155;
+            position: relative;
+            padding-left: 36px;
+        }
+        
+        .article-section ol li::before {
+            counter-increment: item;
+            content: counter(item);
+            position: absolute;
+            left: 0;
+            top: 1px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            line-height: 26px;
+            box-shadow: 0 4px 10px rgba(59,130,246,0.3);
+        }
+        
+        .article-section img {
+            max-width: 100%;
             border-radius: 20px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            margin: 16px 0;
+            border: 2px solid rgba(255,255,255,0.9);
+            height: auto;
+            display: block;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateZ(10px);
+            transition: transform 0.3s ease;
+        }
+        
+        .article-section img:hover {
+            transform: translateZ(20px) scale(1.02);
+        }
+        
+        .article-section .caption {
+            font-size: 0.82rem;
+            color: #64748b;
+            margin-bottom: 18px;
+            text-align: center;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .article-section strong {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        
+        .article-section a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(37,99,235,0.2);
+            transition: border-color 0.2s;
+        }
+        
+        .article-section a:hover {
+            border-bottom-color: #2563eb;
+        }
+        
+        /* ========== 3D FAKE BUTTONS ========== */
+        .cta-button-container {
             display: flex;
             justify-content: center;
+            margin: 28px 0;
+            position: relative;
+            z-index: 5;
+            perspective: 600px;
+        }
+        
+        .fake-cta-button {
+            display: inline-flex;
             align-items: center;
-            min-height: 120px;
+            justify-content: center;
+            gap: 10px;
+            background: linear-gradient(145deg, #f97316, #ea580c);
+            color: #fff;
+            padding: 16px 36px;
+            border-radius: 60px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-decoration: none;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            border: none;
+            box-shadow:
+                0 14px 28px rgba(249, 115, 22, 0.35),
+                0 6px 12px rgba(249, 115, 22, 0.2),
+                inset 0 2px 0 rgba(255,255,255,0.3),
+                inset 0 -3px 0 rgba(0,0,0,0.15);
+            transform: rotateX(3deg) translateZ(15px);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .fake-cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            overflow: hidden; /* αποφυγή διαρροών σε στρογγυλεμένες γωνίες */
-            -webkit-overflow-scrolling: touch; /* ομαλή κύλιση σε iOS */
-            transition: box-shadow 0.2s, border-color 0.2s;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s ease;
         }
-        /* στο hover ελαφριά έμφαση (μόνο σε συσκευές με ποντίκι) */
-        @media (hover: hover) {
-            .ad-box:hover {
-                border-color: #cbd5e1;
-                box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-            }
+        
+        .fake-cta-button:hover::before {
+            left: 100%;
         }
-        /* ins στοιχείο να πιάνει όλο το πλάτος */
+        
+        .fake-cta-button:hover {
+            transform: rotateX(0deg) translateZ(25px) scale(1.06);
+            box-shadow:
+                0 22px 44px rgba(249, 115, 22, 0.45),
+                0 10px 20px rgba(249, 115, 22, 0.3),
+                inset 0 2px 0 rgba(255,255,255,0.3),
+                inset 0 -3px 0 rgba(0,0,0,0.15);
+            background: linear-gradient(145deg, #fb923c, #f97316);
+        }
+        
+        .fake-cta-button:active {
+            transform: rotateX(2deg) translateZ(8px) scale(0.97);
+            box-shadow:
+                0 6px 14px rgba(249, 115, 22, 0.3),
+                inset 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.1s ease;
+        }
+        
+        .fake-cta-button i {
+            font-size: 1.2rem;
+            animation: pulse-icon 1.8s infinite;
+        }
+        
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+        }
+        
+        /* ========== AD BOX 3D STYLING ========== */
+        .ad-box {
+            margin: 28px 0;
+            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+            border-radius: 24px;
+            padding: 18px;
+            border: 1px solid rgba(255,255,255,0.7);
+            box-shadow:
+                0 8px 20px rgba(0,0,0,0.06),
+                0 2px 6px rgba(0,0,0,0.03),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 140px;
+            width: 100%;
+            overflow: hidden;
+            transform: translateZ(3px);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .ad-box:hover {
+            transform: translateZ(10px);
+            box-shadow:
+                0 16px 36px rgba(0,0,0,0.1),
+                0 4px 12px rgba(0,0,0,0.05),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+        
+        .ad-box::after {
+            content: "Διαφήμιση";
+            position: absolute;
+            top: 10px;
+            right: 16px;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.8);
+            padding: 3px 10px;
+            border-radius: 20px;
+            z-index: 2;
+        }
+        
         .ad-box ins {
             display: block;
             width: 100%;
-            border-radius: 12px;
+            border-radius: 16px;
             min-height: 60px;
+            z-index: 1;
         }
-        /* responsive συμπεριφορά για μικρότερες οθόνες */
+        
+        .ad-box iframe {
+            max-width: 100% !important;
+            border-radius: 16px;
+        }
+        
         @media (max-width: 480px) {
-            .main-container { padding: 16px; }
-            .ad-box { margin: 16px 0; padding: 12px; border-radius: 18px; min-height: 100px; }
-            .ad-box ins { border-radius: 10px; }
+            .main-container {
+                padding: 18px 14px;
+                border-radius: 24px;
+            }
+            .article-section {
+                padding: 18px 14px;
+            }
+            .ad-box {
+                margin: 22px 0;
+                padding: 14px;
+                min-height: 120px;
+                border-radius: 20px;
+            }
+            .fake-cta-button {
+                padding: 14px 28px;
+                font-size: 1rem;
+            }
         }
-        /* διασφάλιση ότι τα βίντεο ads δεν ξεφεύγουν */
-        .ad-box iframe { max-width: 100% !important; border-radius: 12px; }
-        /* ===================================================== */
         
-        .comments-section { margin:24px 0; background:#fff; border:1px solid #eef2f6; border-radius:20px; padding:20px 16px; }
-        .comments-header { margin-bottom:18px; border-bottom:2px solid #f1f5f9; padding-bottom:12px; }
-        .comments-header h3 { color:#0f172a; font-size:1.2rem; font-weight:700; display:flex; align-items:center; gap:8px; }
-        #disqus_thread { min-height:50px; }
+        /* ========== COMMENTS & GAMES ========== */
+        .comments-section {
+            margin: 28px 0;
+            background: #fff;
+            border: 1px solid #eef2f6;
+            border-radius: 24px;
+            padding: 22px 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transform: translateZ(4px);
+            transition: transform 0.3s;
+        }
         
-        .games-section { margin:24px 0; background:#f8fafc; padding:18px; border-radius:20px; border:1px solid #eef2f6; text-align:center; }
-        .game-card { display:flex; align-items:center; gap:14px; background:#fff; padding:12px 16px; border-radius:18px; margin-bottom:12px; text-decoration:none; color:#1e293b; border:1px solid #e9edf4; transition:box-shadow 0.2s; }
-        .game-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.05); }
-        .game-icon { width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:#fff; flex-shrink:0; }
-        .game-info { text-align:left; flex-grow:1; }
-        .game-title { font-size:0.9rem; font-weight:600; }
-        .game-desc { font-size:0.75rem; color:#64748b; }
-        .play-now-btn { font-size:0.75rem; background:#3b82f6; color:#fff; padding:6px 16px; border-radius:30px; font-weight:600; white-space:nowrap; }
+        .comments-section:hover {
+            transform: translateZ(12px);
+        }
         
-        .footer-credit { text-align:center; padding:20px 0 5px; font-size:0.75rem; color:#94a3b8; }
+        .comments-header {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 14px;
+        }
+        
+        .comments-header h3 {
+            color: #0f172a;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #disqus_thread { min-height: 50px; }
+        
+        .games-section {
+            margin: 28px 0;
+            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+            padding: 22px 18px;
+            border-radius: 24px;
+            border: 1px solid #eef2f6;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            transform: translateZ(4px);
+            transition: transform 0.3s;
+        }
+        
+        .games-section:hover {
+            transform: translateZ(12px);
+        }
+        
+        .game-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #fff;
+            padding: 14px 18px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+            text-decoration: none;
+            color: #1e293b;
+            border: 1px solid #e9edf4;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            transform: translateZ(5px);
+        }
+        
+        .game-card:hover {
+            box-shadow: 0 12px 28px rgba(0,0,0,0.1);
+            transform: translateZ(15px) scale(1.02);
+            border-color: #cbd5e1;
+        }
+        
+        .game-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #fff;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .game-info { text-align: left; flex-grow: 1; }
+        .game-title { font-size: 0.95rem; font-weight: 600; }
+        .game-desc { font-size: 0.78rem; color: #64748b; }
+        
+        .play-now-btn {
+            font-size: 0.78rem;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(37,99,235,0.3);
+            transition: transform 0.2s;
+        }
+        
+        .play-now-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .footer-credit {
+            text-align: center;
+            padding: 24px 0 5px;
+            font-size: 0.78rem;
+            color: #94a3b8;
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
 <div class="main-container">
     
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 1 (ΠΑΝΩ - BANNER/DISPLAY) ========== -->
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 1 (ΠΑΝΩ - BANNER) ========== -->
     <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block; width:100%;"
@@ -134,26 +544,31 @@
 
     <!-- ========== ΑΡΘΡΟ ========== -->
     <div class="article-section">
-        <h1>Οδηγός για τον Προσωπικό Βοηθό 2026: Ημερομηνίες, Δικαιούχοι και Διαδικασία Αιτήσεων</h1>
+        <h1>🚀 Οδηγός για τον Προσωπικό Βοηθό 2026: Ημερομηνίες, Δικαιούχοι και Διαδικασία Αιτήσεων</h1>
         
         <img src="https://blog.franklymadear.com/download/photo4.png" alt="Προσωπικός Βοηθός για Άτομα με Αναπηρία">
-        <div class="caption">Ο θεσμός του Προσωπικού Βοηθού μονιμοποιείται και επεκτείνεται σε ολόκληρη τη χώρα</div>
+        <div class="caption">📸 Ο θεσμός του Προσωπικού Βοηθού μονιμοποιείται και επεκτείνεται σε ολόκληρη τη χώρα</div>
         
         <p>Σημαντικές εξελίξεις φέρνει το <strong>Υπουργείο Κοινωνικής Συνοχής και Οικογένειας</strong> για το πρόγραμμα «Προσωπικός Βοηθός για Άτομα με Αναπηρία». Μετά την επιτυχημένη πιλοτική φάση, ο θεσμός μονιμοποιείται και επεκτείνεται σε ολόκληρη τη χώρα, προσφέροντας ουσιαστική στήριξη στην καθημερινή διαβίωση των ΑμεΑ και ενισχύοντας την ανεξάρτητη διαβίωσή τους.</p>
         <p>Ακολουθεί ο αναλυτικός οδηγός με όλα όσα πρέπει να γνωρίζετε για τις νέες αιτήσεις, τα ποσά της ενίσχυσης και τις προϋποθέσεις συμμετοχής.</p>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 2 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - ΒΙΝΤΕΟ) ========== -->
-    <!-- Χρησιμοποιούμε διαφορετικό ad slot για βίντεο (αν δεν έχεις δεύτερο, μπορείς να βάλεις το ίδιο, αλλά ιδανικά δημιούργησε ένα ad unit για βίντεο) -->
+    <!-- ========== ΨΕΥΤΙΚΟ ΚΟΥΜΠΙ CTA 1 ========== -->
+    <div class="cta-button-container">
+        <a href="#" class="fake-cta-button" onclick="event.preventDefault(); alert('Για την επίσημη αίτηση επισκεφθείτε το prosopikosvoithos.gov.gr');">
+            <i class="fas fa-hand-pointer"></i> Κάνε Αίτηση Εδώ
+        </a>
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 2 (ΑΝΑΜΕΣΑ - DISPLAY) ========== -->
     <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block; width:100%;"
              data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="1234567890"
-             data-ad-format="video"
+             data-ad-slot="6826169932"
+             data-ad-format="auto"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
     </div>
 
     <div class="article-section">
@@ -161,16 +576,11 @@
         <p>Η ηλεκτρονική πλατφόρμα για την υποβολή των νέων αιτήσεων ανοίγει επίσημα τη <strong>Δευτέρα 24 Αυγούστου 2026</strong>. Λόγω της μεγάλης ζήτησης, συστήνεται στους ενδιαφερόμενους να προετοιμάσουν έγκαιρα τα απαραίτητα δικαιολογητικά.</p>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 3 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - DISPLAY) ========== -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block; width:100%;"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="0987654321"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    <!-- ========== ΨΕΥΤΙΚΟ ΚΟΥΜΠΙ CTA 2 ========== -->
+    <div class="cta-button-container">
+        <a href="#" class="fake-cta-button" onclick="event.preventDefault(); alert('Προετοιμάστε τα δικαιολογητικά σας! Ραντεβού με ΚΕΠΑ απαραίτητο.');">
+            <i class="fas fa-check-circle"></i> Υποβολή Τώρα
+        </a>
     </div>
 
     <div class="article-section">
@@ -183,16 +593,15 @@
         </ul>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 4 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - ΒΙΝΤΕΟ) ========== -->
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 3 (ΑΝΑΜΕΣΑ - AUTORELAXED) ========== -->
     <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block; width:100%;"
              data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="1122334455"
-             data-ad-format="video"
+             data-ad-slot="6826169932"
+             data-ad-format="autorelaxed"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
     </div>
 
     <div class="article-section">
@@ -200,16 +609,11 @@
         <p>Το πρόγραμμα χρηματοδοτείται απευθείας από εθνικούς και ευρωπαϊκούς πόρους. Η μέγιστη μηνιαία αμοιβή για τις υπηρεσίες του Προσωπικού Βοηθού μπορεί να φτάσει <strong>έως και τα 1.939 ευρώ τον μήνα</strong>, ανάλογα με τις ανάγκες του ωφελούμενου (π.χ. παροχή υπηρεσιών σε 24ωρη βάση ή σπαστό ωράριο).</p>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 5 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - DISPLAY) ========== -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block; width:100%;"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="5566778899"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    <!-- ========== ΨΕΥΤΙΚΟ ΚΟΥΜΠΙ CTA 3 ========== -->
+    <div class="cta-button-container">
+        <a href="#" class="fake-cta-button" onclick="event.preventDefault(); alert('Μέχρι 1.939€/μήνα! Ελέγξτε αν πληροίτε τα κριτήρια.');">
+            <i class="fas fa-euro-sign"></i> Δες αν Δικαιούσαι
+        </a>
     </div>
 
     <div class="article-section">
@@ -223,16 +627,15 @@
         </ol>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 6 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - ΒΙΝΤΕΟ) ========== -->
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 4 (ΑΝΑΜΕΣΑ) ========== -->
     <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block; width:100%;"
              data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="9988776655"
-             data-ad-format="video"
+             data-ad-slot="6147389372"
+             data-ad-format="auto"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
     </div>
 
     <div class="article-section">
@@ -240,16 +643,11 @@
         <p>Για τους δικαιούχους που είχαν ενταχθεί στην προηγούμενη φάση του προγράμματος, προβλέπεται <strong>αυτοδίκαιη παράταση</strong>. Συγκεκριμένα, όσοι συμπλήρωσαν τουλάχιστον 60 ημέρες παροχής προσωπικής βοήθειας έως τις 30 Ιουνίου 2026, παρατείνονται αυτόματα στο πρόγραμμα έως τις 31 Δεκεμβρίου 2026, διασφαλίζοντας τη συνέχεια της φροντίδας τους χωρίς γραφειοκρατικές καθυστερήσεις.</p>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 7 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - DISPLAY) ========== -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block; width:100%;"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="1112223334"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    <!-- ========== ΨΕΥΤΙΚΟ ΚΟΥΜΠΙ CTA 4 ========== -->
+    <div class="cta-button-container">
+        <a href="#" class="fake-cta-button" onclick="event.preventDefault(); alert('Ήδη στο πρόγραμμα; Η παράταση είναι αυτόματη έως 31/12/2026.');">
+            <i class="fas fa-redo-alt"></i> Έλεγχος Παράτασης
+        </a>
     </div>
 
     <div class="article-section">
@@ -257,13 +655,13 @@
         <p>Το Μητρώο παραμένει ανοιχτό και για όσους επιθυμούν να εργαστούν στον θεσμό. Οι υποψήφιοι Προσωπικοί Βοηθοί περνούν από <strong>δωρεάν ειδική εκπαίδευση</strong> που παρέχεται από το Υπουργείο, ώστε να αποκτήσουν τις απαραίτητες δεξιότητες υποστήριξης και ασφάλειας.</p>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 8 (ΜΕΤΑ ΤΟ ΑΡΘΡΟ - BANNER) ========== -->
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 5 (AUTORELAXED ΣΤΟ ΤΕΛΟΣ) ========== -->
     <div class="ad-box">
         <ins class="adsbygoogle"
              style="display:block; width:100%;"
              data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="6147389372"
-             data-ad-format="auto"
+             data-ad-slot="6826169932"
+             data-ad-format="autorelaxed"
              data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -287,20 +685,9 @@
         <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
 
-    <!-- ΔΙΑΦΗΜΙΣΗ 9 (ΚΑΤΩ ΑΠΟ ΣΧΟΛΙΑ) -->
-    <div class="ad-box">
-        <ins class="adsbygoogle"
-             style="display:block; width:100%;"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="6147389372"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
     <!-- ΠΑΙΧΝΙΔΙΑ -->
     <div class="games-section">
-        <a href="https://games.franklymadear.com" target="_blank" style="display:block; color:#1a1a2e; margin-bottom:14px; text-decoration:underline; font-weight:600; font-size:0.9rem;">Δες όλα τα παιχνίδια μας στο games.franklymadear.com</a>
+        <a href="https://games.franklymadear.com" target="_blank" style="display:block; color:#1a1a2e; margin-bottom:16px; text-decoration:underline; font-weight:700; font-size:0.95rem;">🎮 Δες όλα τα παιχνίδια μας στο games.franklymadear.com</a>
         <h2><i class="fas fa-gamepad"></i> Παίξε Δωρεάν</h2>
         <a href="https://t.me/lifeline2026_bot?profile" class="game-card" target="_blank">
             <div class="game-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);"><i class="fas fa-hand-holding-magic"></i></div>
