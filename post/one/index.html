@@ -42,13 +42,12 @@
     
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter', sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px; color:#1a1a2e; }
+        body { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px; color:#1a1a2e; -webkit-font-smoothing:antialiased; }
         .main-container { width:100%; max-width:480px; background:#fff; border-radius:24px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,0.08); }
         
         .article-section { margin:0 0 20px 0; background:#fff; border-radius:20px; padding:20px; border:1px solid #e9edf4; }
         .article-section h1 { font-size:1.5rem; font-weight:800; margin-bottom:16px; color:#1a1a2e; line-height:1.3; }
         .article-section h2 { font-size:1.2rem; font-weight:700; margin:20px 0 12px 0; color:#1a1a2e; padding-bottom:8px; border-bottom:2px solid #f1f5f9; }
-        .article-section h3 { font-size:1.05rem; font-weight:700; margin:16px 0 8px 0; color:#1e293b; }
         .article-section p { font-size:0.95rem; line-height:1.7; margin-bottom:14px; color:#333; }
         .article-section ul { margin:0 0 16px 20px; list-style-type:none; }
         .article-section ul li { font-size:0.95rem; line-height:1.7; margin-bottom:10px; color:#333; position:relative; padding-left:20px; }
@@ -56,10 +55,51 @@
         .article-section ol { margin:0 0 16px 20px; counter-reset:item; list-style-type:none; }
         .article-section ol li { font-size:0.95rem; line-height:1.7; margin-bottom:12px; color:#333; position:relative; padding-left:32px; }
         .article-section ol li::before { counter-increment:item; content:counter(item); position:absolute; left:0; top:0; background:#3b82f6; color:#fff; width:22px; height:22px; border-radius:50%; text-align:center; font-size:0.75rem; font-weight:700; line-height:22px; }
-        .article-section img { max-width:100%; border-radius:16px; margin:12px 0; border:1px solid #eee; }
+        .article-section img { max-width:100%; border-radius:16px; margin:12px 0; border:1px solid #eee; height:auto; display:block; }
         .article-section .caption { font-size:0.8rem; color:#64748b; margin-bottom:16px; text-align:center; font-style:italic; }
         .article-section strong { color:#1a1a2e; }
         .article-section a { color:#3b82f6; text-decoration:underline; font-weight:600; }
+        
+        /* ========== ΒΕΛΤΙΩΜΕΝΗ ΕΜΦΑΝΙΣΗ ΔΙΑΦΗΜΙΣΕΩΝ ========== */
+        .ad-box {
+            margin: 20px 0;
+            background: #f8fafc; /* απαλό γκρι φόντο */
+            border-radius: 20px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            width: 100%;
+            overflow: hidden; /* αποφυγή διαρροών σε στρογγυλεμένες γωνίες */
+            -webkit-overflow-scrolling: touch; /* ομαλή κύλιση σε iOS */
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        /* στο hover ελαφριά έμφαση (μόνο σε συσκευές με ποντίκι) */
+        @media (hover: hover) {
+            .ad-box:hover {
+                border-color: #cbd5e1;
+                box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            }
+        }
+        /* ins στοιχείο να πιάνει όλο το πλάτος */
+        .ad-box ins {
+            display: block;
+            width: 100%;
+            border-radius: 12px;
+            min-height: 60px;
+        }
+        /* responsive συμπεριφορά για μικρότερες οθόνες */
+        @media (max-width: 480px) {
+            .main-container { padding: 16px; }
+            .ad-box { margin: 16px 0; padding: 12px; border-radius: 18px; min-height: 100px; }
+            .ad-box ins { border-radius: 10px; }
+        }
+        /* διασφάλιση ότι τα βίντεο ads δεν ξεφεύγουν */
+        .ad-box iframe { max-width: 100% !important; border-radius: 12px; }
+        /* ===================================================== */
         
         .comments-section { margin:24px 0; background:#fff; border:1px solid #eef2f6; border-radius:20px; padding:20px 16px; }
         .comments-header { margin-bottom:18px; border-bottom:2px solid #f1f5f9; padding-bottom:12px; }
@@ -67,28 +107,28 @@
         #disqus_thread { min-height:50px; }
         
         .games-section { margin:24px 0; background:#f8fafc; padding:18px; border-radius:20px; border:1px solid #eef2f6; text-align:center; }
-        .game-card { display:flex; align-items:center; gap:14px; background:#fff; padding:12px 16px; border-radius:18px; margin-bottom:12px; text-decoration:none; color:#1e293b; border:1px solid #e9edf4; }
-        .game-icon { width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:#fff; }
+        .game-card { display:flex; align-items:center; gap:14px; background:#fff; padding:12px 16px; border-radius:18px; margin-bottom:12px; text-decoration:none; color:#1e293b; border:1px solid #e9edf4; transition:box-shadow 0.2s; }
+        .game-card:hover { box-shadow:0 4px 12px rgba(0,0,0,0.05); }
+        .game-icon { width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:#fff; flex-shrink:0; }
         .game-info { text-align:left; flex-grow:1; }
         .game-title { font-size:0.9rem; font-weight:600; }
         .game-desc { font-size:0.75rem; color:#64748b; }
-        .play-now-btn { font-size:0.75rem; background:#3b82f6; color:#fff; padding:6px 16px; border-radius:30px; font-weight:600; }
+        .play-now-btn { font-size:0.75rem; background:#3b82f6; color:#fff; padding:6px 16px; border-radius:30px; font-weight:600; white-space:nowrap; }
         
         .footer-credit { text-align:center; padding:20px 0 5px; font-size:0.75rem; color:#94a3b8; }
-        .ad-box {
-            margin: 20px 0; background: rgba(0,0,0,0.02); border-radius:24px; padding:15px;
-            border:1px solid rgba(0,0,0,0.05); box-shadow:0 4px 20px rgba(0,0,0,0.04);
-            display:flex; justify-content:center; align-items:center; min-height:150px; width:100%;
-        }
-        .ad-responsive { width:100%; height:auto; }
     </style>
 </head>
 <body>
 <div class="main-container">
     
-    <!-- ΔΙΑΦΗΜΙΣΗ 1 -->
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 1 (ΠΑΝΩ - BANNER/DISPLAY) ========== -->
     <div class="ad-box">
-        <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="6147389372"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
@@ -101,10 +141,39 @@
         
         <p>Σημαντικές εξελίξεις φέρνει το <strong>Υπουργείο Κοινωνικής Συνοχής και Οικογένειας</strong> για το πρόγραμμα «Προσωπικός Βοηθός για Άτομα με Αναπηρία». Μετά την επιτυχημένη πιλοτική φάση, ο θεσμός μονιμοποιείται και επεκτείνεται σε ολόκληρη τη χώρα, προσφέροντας ουσιαστική στήριξη στην καθημερινή διαβίωση των ΑμεΑ και ενισχύοντας την ανεξάρτητη διαβίωσή τους.</p>
         <p>Ακολουθεί ο αναλυτικός οδηγός με όλα όσα πρέπει να γνωρίζετε για τις νέες αιτήσεις, τα ποσά της ενίσχυσης και τις προϋποθέσεις συμμετοχής.</p>
-        
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 2 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - ΒΙΝΤΕΟ) ========== -->
+    <!-- Χρησιμοποιούμε διαφορετικό ad slot για βίντεο (αν δεν έχεις δεύτερο, μπορείς να βάλεις το ίδιο, αλλά ιδανικά δημιούργησε ένα ad unit για βίντεο) -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="1234567890"
+             data-ad-format="video"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    </div>
+
+    <div class="article-section">
         <h2>📅 Πότε ξεκινούν οι αιτήσεις;</h2>
         <p>Η ηλεκτρονική πλατφόρμα για την υποβολή των νέων αιτήσεων ανοίγει επίσημα τη <strong>Δευτέρα 24 Αυγούστου 2026</strong>. Λόγω της μεγάλης ζήτησης, συστήνεται στους ενδιαφερόμενους να προετοιμάσουν έγκαιρα τα απαραίτητα δικαιολογητικά.</p>
-        
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 3 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - DISPLAY) ========== -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="0987654321"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    </div>
+
+    <div class="article-section">
         <h2>👥 Ποιοι δικαιούνται να υποβάλουν αίτηση;</h2>
         <p>Για να ενταχθεί ένας πολίτης στο πρόγραμμα ως ωφελούμενος, πρέπει να πληροί σωρευτικά τα εξής κριτήρια:</p>
         <ul>
@@ -112,10 +181,38 @@
             <li><strong>Ποσοστό Αναπηρίας:</strong> Να διαθέτει πιστοποίηση αναπηρίας με συνολικό ποσοστό 67% και άνω.</li>
             <li><strong>Εισοδηματικό Κριτήριο:</strong> Το ετήσιο ατομικό εισόδημα του AμεΑ δεν πρέπει να ξεπερνά τις 60.000 ευρώ.</li>
         </ul>
-        
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 4 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - ΒΙΝΤΕΟ) ========== -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="1122334455"
+             data-ad-format="video"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    </div>
+
+    <div class="article-section">
         <h2>💰 Ύψος Οικονομικής Ενίσχυσης</h2>
         <p>Το πρόγραμμα χρηματοδοτείται απευθείας από εθνικούς και ευρωπαϊκούς πόρους. Η μέγιστη μηνιαία αμοιβή για τις υπηρεσίες του Προσωπικού Βοηθού μπορεί να φτάσει <strong>έως και τα 1.939 ευρώ τον μήνα</strong>, ανάλογα με τις ανάγκες του ωφελούμενου (π.χ. παροχή υπηρεσιών σε 24ωρη βάση ή σπαστό ωράριο).</p>
-        
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 5 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - DISPLAY) ========== -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="5566778899"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    </div>
+
+    <div class="article-section">
         <h2>📝 Η Διαδικασία της Αίτησης βήμα-βήμα</h2>
         <p>Η διαδικασία υλοποιείται ψηφιακά και περιλαμβάνει τα εξής στάδια:</p>
         <ol>
@@ -124,18 +221,50 @@
             <li><strong>Κατ' Οίκον Αξιολόγηση:</strong> Μετά την επεξεργασία της αίτησης, μια ειδική Διεπιστημονική Επιτροπή (αποτελούμενη από κοινωνικό λειτουργό, εργοθεραπεύτη και ψυχολόγο) επισκέπτεται τον αιτούντα στο σπίτι του. Σκοπός είναι η εξατομικευμένη καταγραφή των αναγκών και του περιβάλλοντος διαβίωσης.</li>
             <li><strong>Έκδοση Απόφασης & Επιλογή:</strong> Μετά την έγκριση, ο ωφελούμενος λαμβάνει το «διαβατήριο» χρηματοδότησης και μπορεί να επιλέξει τον βοηθό του μέσα από το επίσημο Μητρώο Προσωπικών Βοηθών.</li>
         </ol>
-        
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 6 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - ΒΙΝΤΕΟ) ========== -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="9988776655"
+             data-ad-format="video"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    </div>
+
+    <div class="article-section">
         <h2>🔄 Τι ισχύει για όσους συμμετέχουν ήδη στο πρόγραμμα;</h2>
         <p>Για τους δικαιούχους που είχαν ενταχθεί στην προηγούμενη φάση του προγράμματος, προβλέπεται <strong>αυτοδίκαιη παράταση</strong>. Συγκεκριμένα, όσοι συμπλήρωσαν τουλάχιστον 60 ημέρες παροχής προσωπικής βοήθειας έως τις 30 Ιουνίου 2026, παρατείνονται αυτόματα στο πρόγραμμα έως τις 31 Δεκεμβρίου 2026, διασφαλίζοντας τη συνέχεια της φροντίδας τους χωρίς γραφειοκρατικές καθυστερήσεις.</p>
-        
+    </div>
+
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 7 (ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ - DISPLAY) ========== -->
+    <div class="ad-box">
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="1112223334"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        <small style="display:block; text-align:center; margin-top:6px; font-size:0.7rem; color:#94a3b8;">Διαφήμιση</small>
+    </div>
+
+    <div class="article-section">
         <h2>💼 Θέλετε να εργαστείτε ως Προσωπικός Βοηθός;</h2>
         <p>Το Μητρώο παραμένει ανοιχτό και για όσους επιθυμούν να εργαστούν στον θεσμό. Οι υποψήφιοι Προσωπικοί Βοηθοί περνούν από <strong>δωρεάν ειδική εκπαίδευση</strong> που παρέχεται από το Υπουργείο, ώστε να αποκτήσουν τις απαραίτητες δεξιότητες υποστήριξης και ασφάλειας.</p>
     </div>
-    <!-- ========================== -->
 
-    <!-- ΔΙΑΦΗΜΙΣΗ 2 -->
+    <!-- ========== ΔΙΑΦΗΜΙΣΗ 8 (ΜΕΤΑ ΤΟ ΑΡΘΡΟ - BANNER) ========== -->
     <div class="ad-box">
-        <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="6147389372"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
@@ -158,9 +287,14 @@
         <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
 
-    <!-- ΔΙΑΦΗΜΙΣΗ 3 -->
+    <!-- ΔΙΑΦΗΜΙΣΗ 9 (ΚΑΤΩ ΑΠΟ ΣΧΟΛΙΑ) -->
     <div class="ad-box">
-        <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <ins class="adsbygoogle"
+             style="display:block; width:100%;"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="6147389372"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
