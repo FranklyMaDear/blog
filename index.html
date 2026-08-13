@@ -54,7 +54,6 @@
         .hero h1 { font-size: 42px; font-weight: 800; background: linear-gradient(135deg, #2d3436 0%, #6c5ce7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { font-size: 18px; color: #636e72; }
 
-        /* Λίστα Άρθρων (Δυναμική) */
         .posts-grid { display: flex; flex-direction: column; gap: 30px; padding-bottom: 40px; }
         .post-card {
             background: var(--card-bg);
@@ -171,31 +170,67 @@
         </section>
 
         <section class="posts-grid">
-            <!-- ============================================== -->
-            <!-- ΑΥΤΟΜΑΤΗ ΛΙΣΤΑ ΑΡΘΡΩΝ (Ενημερώνεται με κάθε push) -->
-            <!-- ============================================== -->
+
+            <!-- =============================================== -->
+            <!-- 1. ΔΥΝΑΜΙΚΗ ΛΙΣΤΑ (Νέα άρθρα - ΠΡΩΤΑ στην οθόνη) -->
+            <!-- =============================================== -->
             {% for post in site.posts %}
-            <article class="post-card">
-                <img src="{{ post.image | default: 'https://blog.franklymadear.com/images/default.jpg' }}" alt="{{ post.title }}">
-                <div class="post-content">
-                    <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-                    <span class="post-meta"><i class="far fa-calendar-alt"></i> {{ post.date | date_to_long_string: "ordinal" }}</span>
-                    <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 35 }}</p>
-                    <a href="{{ post.url }}" class="read-more">Διαβάστε περισσότερα &rarr;</a>
-                </div>
-            </article>
-            
-            <!-- Διαφήμιση ανάμεσα στα άρθρα (π.χ. μετά το 2ο) -->
-            {% if forloop.index == 2 %}
+                {% unless post.url contains '/post/one/' or post.url contains '/post/two/' or post.url contains '/post/three/' %}
+                <article class="post-card">
+                    <img src="{{ post.image | default: 'https://blog.franklymadear.com/images/default.jpg' }}" alt="{{ post.title }}">
+                    <div class="post-content">
+                        <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
+                        <span class="post-meta"><i class="far fa-calendar-alt"></i> {{ post.date | date_to_long_string: "ordinal" }}</span>
+                        <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 35 }}</p>
+                        <a href="{{ post.url }}" class="read-more">Διαβάστε περισσότερα &rarr;</a>
+                    </div>
+                </article>
+                {% endunless %}
+            {% endfor %}
+
+            <!-- ΔΙΑΦΗΜΙΣΗ (Ανάμεσα στα νέα και τα 3 παλιά) -->
             <div class="ad-container">
                 <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
-            {% endif %}
-            {% endfor %}
+
+            <!-- ========================================== -->
+            <!-- 2. ΣΤΑΤΙΚΑ ΑΡΘΡΑ (3 παλιά - όπως ακριβώς ήταν) -->
+            <!-- ========================================== -->
+            
+            <article class="post-card">
+                <img src="https://blog.franklymadear.com/post/one/photo4.png" alt="Προσωπικός Βοηθός">
+                <div class="post-content">
+                    <h2><a href="/post/one/index.html">Έως 1.939 ευρώ τον μήνα για τον Προσωπικό Βοηθό</a></h2>
+                    <span class="post-meta"><i class="far fa-calendar-alt"></i> 12 Αυγούστου 2026</span>
+                    <p class="post-excerpt">Σημαντικές εξελίξεις φέρνει το Υπουργείο Κοινωνικής Συνοχής για το πρόγραμμα «Προσωπικός Βοηθός για Άτομα με Αναπηρία».</p>
+                    <a href="/post/one/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <img src="https://blog.franklymadear.com/post/two/photo5.png" alt="Πυρκαγιά στην Ελλάδα">
+                <div class="post-content">
+                    <h2><a href="/post/two/index.html">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται – Στο «κόκκινο» 5 περιοχές</a></h2>
+                    <span class="post-meta"><i class="far fa-calendar-alt"></i> 11 Αυγούστου 2026</span>
+                    <p class="post-excerpt">Οι φόβοι επιβεβαιώνονται. Οι πύρινες φλόγες καταπίνουν τα πάντα. Δείτε ποιες περιοχές βρίσκονται σε Κατηγορία 5.</p>
+                    <a href="/post/two/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
+                </div>
+            </article>
+
+            <article class="post-card">
+                <img src="https://blog.franklymadear.com/post/three/photo6.png" alt="Σεισμοί στη Λατινική Αμερική">
+                <div class="post-content">
+                    <h2><a href="/post/three/index.html">Η Θεωρία του Σοκ στον Εγκέλαδο: Σεισμοί 2026 & Γεωπολιτικά Σχέδια</a></h2>
+                    <span class="post-meta"><i class="far fa-calendar-alt"></i> 10 Αυγούστου 2026</span>
+                    <p class="post-excerpt">Η χρονική και γεωγραφική σύμπτωση των φονικών σεισμών με τις ραγδαίες πολιτικές ανατροπές στη Λατινική Αμερική.</p>
+                    <a href="/post/three/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
+                </div>
+            </article>
+
         </section>
 
-        <!-- ΧΟΡΗΓΟΥΜΕΝΟ ΠΛΑΙΣΙΟ (Κάτω από τα άρθρα, πριν το footer) -->
+        <!-- ΧΟΡΗΓΟΥΜΕΝΟ ΠΛΑΙΣΙΟ (Κάτω από όλα τα άρθρα) -->
         <div class="ad-container">
             <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
