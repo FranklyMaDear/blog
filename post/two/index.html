@@ -5,17 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται – Στο «κόκκινο» 5 περιοχές</title>
     
-    <!-- ========== ΕΙΚΟΝΑ & ΦΑΒΙΚΟΝ ========== -->
-    <link rel="icon" type="image/png" href="https://blog.franklymadear.com/post/two/photo5.png">
-    <link rel="apple-touch-icon" href="https://blog.franklymadear.com/post/two/photo5.png">
-    
     <!-- ========== SOCIAL MEDIA META TAGS ========== -->
     <meta property="og:type" content="article">
     <meta property="og:title" content="🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται – Στο «κόκκινο» της απόλυτης καταστροφής 5 περιοχές">
     <meta property="og:description" content="Οι φόβοι επιβεβαιώνονται. Οι πύρινες φλόγες καταπίνουν τα πάντα. Δείτε ποιες περιοχές βρίσκονται σε Κατηγορία 5 και τις οδηγίες εκκένωσης.">
     <meta property="og:image" content="https://blog.franklymadear.com/post/two/photo5.png">
     <meta property="og:url" content="https://blog.franklymadear.com/post/two/index.html">
-    
     <meta name="theme-color" content="#1e293b">
     
     <!-- ========== SCRIPTS & FONTS ========== -->
@@ -30,13 +25,14 @@
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #e2e8f0 0%, #f8fafc 100%);
-            background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 25px 15px;
+            padding: 25px 15px 120px 15px; /* Κενό στο κάτω μέρος για τις διαφημίσεις */
             color: #334155;
             -webkit-font-smoothing: antialiased;
+            /* Κλειδωμένο scroll αρχικά, ξεκλειδώνει με JS */
+            overflow: hidden; 
         }
         
         .main-container {
@@ -45,260 +41,187 @@
             background: #ffffff;
             border-radius: 24px;
             padding: 30px 25px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0,0,0,0.05);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
             position: relative;
-            overflow: hidden;
         }
+
+        /* ========== ΑΝΑΔΥΟΜΕΝΟ ΠΑΡΑΘΥΡΟ ΕΙΣΟΔΟΥ (ENTRY MODAL) ========== */
+        .entry-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100000;
+            padding: 20px;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .entry-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .entry-modal {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            transform: scale(1);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .entry-overlay.hidden .entry-modal { transform: scale(0.8); }
+        .entry-modal h2 { color: #e11d48; font-size: 1.6rem; font-weight: 900; margin-bottom: 15px; }
+        .entry-modal p { font-size: 1.05rem; margin-bottom: 25px; color: #334155; }
 
         /* ========== ΤΙΤΛΟΣ ΣΕ 2 ΣΕΙΡΕΣ ========== */
-        .article-header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid #f1f5f9;
-        }
-
-        .title-line-1 {
-            display: block;
-            font-size: 1.7rem;
-            font-weight: 900;
-            color: #0f172a;
-            text-transform: uppercase;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-            margin-bottom: 8px;
-        }
-
-        .title-line-2 {
-            display: block;
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: #e11d48; /* Επαγγελματικό Κόκκινο */
-            line-height: 1.3;
-        }
+        .article-header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 3px solid #f1f5f9; }
+        .title-line-1 { display: block; font-size: 1.7rem; font-weight: 900; color: #0f172a; text-transform: uppercase; line-height: 1.2; margin-bottom: 8px; }
+        .title-line-2 { display: block; font-size: 1.25rem; font-weight: 800; color: #e11d48; line-height: 1.3; }
 
         /* ========== ΠΕΡΙΕΧΟΜΕΝΟ ΑΡΘΡΟΥ ========== */
-        .article-section p { 
-            font-size: 1.05rem; 
-            line-height: 1.8; 
-            margin-bottom: 18px; 
-            color: #334155; 
-        }
-        
-        .article-section h2 { 
-            font-size: 1.3rem; 
-            font-weight: 800; 
-            margin: 30px 0 15px 0; 
-            color: #1e293b; 
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
-        }
-
+        .article-section p { font-size: 1.05rem; line-height: 1.8; margin-bottom: 18px; }
+        .article-section h2 { font-size: 1.3rem; font-weight: 800; margin: 30px 0 15px 0; color: #1e293b; display: flex; align-items: center; gap: 10px;}
         .article-section ul { margin: 0 0 20px 20px; list-style-type: none; }
-        .article-section ul li { 
-            font-size: 1rem; 
-            line-height: 1.7; 
-            margin-bottom: 12px; 
-            position: relative; 
-            padding-left: 30px; 
-            font-weight: 600;
-        }
-        .article-section ul li::before { 
-            content: "\f101"; /* FontAwesome arrow */
-            font-family: "Font Awesome 5 Free";
-            font-weight: 900;
-            position: absolute; 
-            left: 0; 
-            color: #e11d48; 
-            font-size: 1.1rem; 
-            top: 2px; 
-        }
+        .article-section ul li { font-size: 1rem; line-height: 1.7; margin-bottom: 12px; position: relative; padding-left: 30px; font-weight: 600;}
+        .article-section ul li::before { content: "\f101"; font-family: "Font Awesome 5 Free"; font-weight: 900; position: absolute; left: 0; color: #e11d48; font-size: 1.1rem; top: 2px; }
         
-        .hero-img { 
-            width: 100%; 
-            border-radius: 16px; 
-            margin-bottom: 15px; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15); 
-        }
+        .hero-img { width: 100%; border-radius: 16px; margin-bottom: 15px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15); }
         .caption { font-size: 0.85rem; color: #64748b; margin-bottom: 25px; text-align: center; font-weight: 600; }
         
         /* ========== 3D BUTTONS ========== */
         .btn-3d {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 320px;
-            margin: 30px auto;
-            padding: 18px 24px;
-            font-size: 1.15rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-transform: uppercase;
-            text-decoration: none;
-            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            width: 100%; max-width: 320px; margin: 20px auto; padding: 18px 24px;
+            font-size: 1.15rem; font-weight: 900; color: #ffffff; text-transform: uppercase;
+            text-decoration: none; border-radius: 16px; border: none; cursor: pointer;
             background: linear-gradient(145deg, #f43f5e, #e11d48);
-            /* Το μυστικό για 3D: Σκιά στο κάτω μέρος (solid) + Blur σκιά */
             box-shadow: 0 8px 0 #be123c, 0 15px 20px rgba(225, 29, 72, 0.4);
             transition: all 0.15s ease;
-            border: none;
-            cursor: pointer;
-            letter-spacing: 0.5px;
         }
+        .btn-3d:active { transform: translateY(8px); box-shadow: 0 0px 0 #be123c, 0 5px 10px rgba(225, 29, 72, 0.4); }
 
-        .btn-3d i { font-size: 1.3rem; }
-
-        /* Το εφέ όταν πατιέται το 3D κουμπί */
-        .btn-3d:active {
-            transform: translateY(8px);
-            box-shadow: 0 0px 0 #be123c, 0 5px 10px rgba(225, 29, 72, 0.4);
-        }
-
-        /* 3D Share Buttons */
-        .share-section {
-            margin-top: 40px;
-            padding: 25px;
-            background: #f8fafc;
-            border-radius: 20px;
-            border: 2px dashed #cbd5e1;
+        /* ========== IN-ARTICLE VIDEO ADS ========== */
+        .video-ad-container {
+            margin: 35px 0;
+            width: 100%;
+            background: #000; /* Μαύρο φόντο για να θυμίζει video player */
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 15px 30px -10px rgba(0,0,0,0.3);
             text-align: center;
-        }
-        
-        .share-title { font-weight: 800; font-size: 1.2rem; color: #0f172a; margin-bottom: 20px; }
-        
-        .share-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 15px;
-        }
-
-        .share-btn-3d {
+            border: 2px solid #334155;
+            /* Αναλογία 16:9 περίπου για Video format */
+            min-height: 250px; 
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 14px 10px;
-            border-radius: 12px;
-            font-weight: 800;
-            font-size: 0.95rem;
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.15s ease;
         }
-
-        .share-facebook { background: #3b5998; box-shadow: 0 6px 0 #2d4373, 0 10px 15px rgba(59,89,152,0.3); }
-        .share-facebook:active { transform: translateY(6px); box-shadow: 0 0px 0 #2d4373, 0 4px 8px rgba(59,89,152,0.3); }
-
-        .share-twitter { background: #000000; box-shadow: 0 6px 0 #333333, 0 10px 15px rgba(0,0,0,0.3); }
-        .share-twitter:active { transform: translateY(6px); box-shadow: 0 0px 0 #333333, 0 4px 8px rgba(0,0,0,0.3); }
-
-        .share-viber { background: #7360f2; box-shadow: 0 6px 0 #5748b8, 0 10px 15px rgba(115,96,242,0.3); }
-        .share-viber:active { transform: translateY(6px); box-shadow: 0 0px 0 #5748b8, 0 4px 8px rgba(115,96,242,0.3); }
-
-        /* ========== ANIMATED ADS (Pop-up & Roll-up) ========== */
-        .in-article-ad {
-            margin: 30px 0;
-            width: 100%;
-            position: relative;
-            opacity: 0;
-            background: #f1f5f9;
-            border-radius: 16px;
-            padding: 15px;
-            border: 1px solid #e2e8f0;
-            text-align: center;
-        }
-
-        .in-article-ad::before {
-            content: "ΧΟΡΗΓΟΥΜΕΝΟ";
-            display: block;
-            font-size: 0.7rem;
-            color: #64748b;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
-        }
-
-        .ad-close-btn {
+        
+        .video-ad-container::before {
+            content: "ΧΟΡΗΓΟΥΜΕΝΟ ΒΙΝΤΕΟ / ΔΙΑΦΗΜΙΣΗ";
             position: absolute;
-            top: -10px;
-            right: -10px;
+            top: 5px; left: 10px;
+            font-size: 0.65rem; color: rgba(255,255,255,0.7);
+            font-weight: 700; z-index: 1;
+        }
+
+        /* ========== TOP & BOTTOM ROLL-UP ADS ========== */
+        .sticky-ad {
+            position: fixed;
+            left: 50%;
+            width: 100%;
+            max-width: 728px; /* Standard banner size width */
             background: #fff;
-            border: 2px solid #e2e8f0;
-            color: #64748b;
+            padding: 10px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            z-index: 9999;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Top Roll-down */
+        .sticky-top {
+            top: 0;
+            transform: translateX(-50%) translateY(-100%);
+            border-radius: 0 0 20px 20px;
+            border-bottom: 4px solid #e11d48;
+        }
+        .sticky-top.show { transform: translateX(-50%) translateY(0); }
+
+        /* Bottom Roll-up */
+        .sticky-bottom {
+            bottom: 0;
+            transform: translateX(-50%) translateY(100%);
+            border-radius: 20px 20px 0 0;
+            border-top: 4px solid #e11d48;
+        }
+        .sticky-bottom.show { transform: translateX(-50%) translateY(0); }
+
+        .sticky-close {
+            position: absolute;
+            background: #0f172a;
+            color: #fff;
+            border: none;
             width: 30px; height: 30px;
             border-radius: 50%;
             font-size: 14px;
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             z-index: 10;
         }
+        .sticky-top .sticky-close { bottom: -15px; right: 20px; }
+        .sticky-bottom .sticky-close { top: -15px; right: 20px; }
 
-        .ad-effect-popup.is-visible { animation: popUpAnim 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        @keyframes popUpAnim { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
-
-        .ad-effect-rollup.is-visible { animation: rollUpAnim 0.7s ease-out forwards; }
-        @keyframes rollUpAnim { 0% { opacity: 0; transform: translateY(50px); } 100% { opacity: 1; transform: translateY(0); } }
-
-        /* Sticky Bottom Roll-up Ad */
-        .sticky-rollup-ad {
-            position: fixed;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(120%);
-            width: 100%;
-            max-width: 540px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 24px 24px 0 0;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
-            z-index: 9999;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            text-align: center;
-            border-top: 4px solid #e11d48;
-        }
-        .sticky-rollup-ad.show { transform: translateX(-50%) translateY(0); }
-        .sticky-close {
-            position: absolute;
-            top: -18px;
-            right: 20px;
-            background: #0f172a;
-            color: #fff;
-            border: none;
-            width: 36px; height: 36px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
     </style>
 </head>
 <body>
 
+<!-- ========== MODAL ΕΙΣΟΔΟΥ ========== -->
+<div class="entry-overlay" id="entryOverlay">
+    <div class="entry-modal">
+        <h2>🚨 ΕΚΤΑΚΤΗ ΕΙΔΗΣΗ</h2>
+        <p>Η Ελλάδα βρίσκεται σε πύρινο κλοιό. Ενημερωθείτε τώρα για τις περιοχές που εκκενώνονται και τον χάρτη κινδύνου.</p>
+        <button class="btn-3d" onclick="enterArticle()">
+            <i class="fas fa-book-open"></i> ΔΙΑΒΑΣΤΕ ΤΟ ΑΡΘΡΟ
+        </button>
+    </div>
+</div>
+
+<!-- ========== TOP ROLL-DOWN AD ========== -->
+<div class="sticky-ad sticky-top" id="topAd">
+    <button class="sticky-close" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
+    <ins class="adsbygoogle" style="display:inline-block; width:320px; height:100px;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+
 <div class="main-container">
 
-    <!-- ΕΙΚΟΝΑ ΚΑΙ ΤΙΤΛΟΣ -->
     <img src="https://blog.franklymadear.com/post/two/photo5.png" class="hero-img" alt="Πυρκαγιά στην Ελλάδα">
     <div class="caption"><i class="fas fa-camera"></i> Συναγερμός για 5 περιοχές στο «κόκκινο»</div>
     
     <div class="article-header">
         <h1 class="main-title">
-            <!-- Εδώ ο τίτλος σπάει σε 2 σειρές με διαφορετικό στυλ -->
             <span class="title-line-1">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται</span>
             <span class="title-line-2">Στο «κόκκινο» της απόλυτης καταστροφής 5 περιοχές</span>
         </h1>
     </div>
 
-    <!-- ΑΡΘΡΟ -->
     <div class="article-section">
-        
         <p>Οι φόβοι επιβεβαιώνονται με τον πιο σκληρό τρόπο. Η χώρα ζει ξανά στιγμές αγωνίας. Οι πύρινες φλόγες καταπίνουν τα πάντα στο πέρασμά τους, την ώρα που οι άνεμοι-τρομοκράτες των 8 μποφόρ σαρώνουν τα πάντα και κάνουν το έργο των πυροσβεστών σχεδόν αδύνατο.</p>
         
-        <!-- 1η ΔΙΑΦΗΜΙΣΗ: ROLL-UP ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ -->
-        <div class="in-article-ad ad-effect-rollup">
-            <button class="ad-close-btn" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
-            <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6826169932" data-ad-format="autorelaxed" data-auto-format="mcrspv" data-full-width-responsive="true"></ins>
+        <!-- 1η ΔΙΑΦΗΜΙΣΗ: IN-ARTICLE / ΜΟΡΦΗ VIDEO 16:9 -->
+        <div class="video-ad-container">
+            <!-- Εδώ βάζουμε format auto/fluid για να προσαρμοστεί στο 16:9 κουτί. Αν η Google έχει Video, θα παίξει εδώ. -->
+            <ins class="adsbygoogle" style="display:block; width:100%; height:100%;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6826169932" data-ad-format="fluid" data-layout="in-article"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
@@ -312,68 +235,55 @@
             <li><strong>Λέσβος:</strong> Το Αιγαίο εκπέμπει SOS.</li>
         </ul>
         
-        <!-- 2η ΔΙΑΦΗΜΙΣΗ: POP-UP ΑΝΑΜΕΣΑ ΣΤΙΣ ΠΑΡΑΓΡΑΦΟΥΣ -->
-        <div class="in-article-ad ad-effect-popup">
-            <button class="ad-close-btn" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
-            <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <!-- 2η ΔΙΑΦΗΜΙΣΗ: IN-ARTICLE / ΜΟΡΦΗ VIDEO 16:9 (Διαφορετική Μορφοποίηση) -->
+        <div class="video-ad-container" style="border-color: #e11d48;">
+            <ins class="adsbygoogle" style="display:block; width:100%; height:100%;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
         <h2><i class="fas fa-fire-extinguisher" style="color: #e11d48;"></i> Το λάθος κοστίζει ζωές</h2>
         <p>Μία και μόνο σπίθα αρκεί για να γραφτεί η επόμενη εθνική τραγωδία. Ένα αναμμένο τσιγάρο, ένα μπάρμπεκιου, μια απρόσεκτη εργασία στην αυλή μπορεί να αποβούν μοιραία.</p>
         
-        <!-- ΕΝΤΥΠΩΣΙΑΚΟ 3D ΚΟΥΜΠΙ -->
         <a href="#" class="btn-3d" onclick="event.preventDefault(); alert('Καλέστε άμεσα το 199 ή το 112 για αναφορά πυρκαγιάς');">
             <i class="fas fa-phone-alt"></i> ΚΑΛΕΣΤΕ ΤΟ 112
         </a>
-        
-        <ul>
-            <li><strong>Καλέστε αμέσως το 199 ή το 112.</strong></li>
-            <li><strong>Αν έρθει μήνυμα εκκένωσης, φύγετε αμέσως.</strong> Τα ντουβάρια ξαναχτίζονται, οι ζωές όχι.</li>
-        </ul>
     </div>
-
-    <!-- 3D SHARE BUTTONS -->
-    <div class="share-section">
-        <div class="share-title"><i class="fas fa-share-nodes"></i> Μοιραστείτε το άμεσα</div>
-        <div class="share-grid">
-            <a href="#" class="share-btn-3d share-facebook"><i class="fab fa-facebook-f"></i> Facebook</a>
-            <a href="#" class="share-btn-3d share-twitter"><i class="fab fa-x-twitter"></i> X (Twitter)</a>
-            <a href="#" class="share-btn-3d share-viber"><i class="fab fa-viber"></i> Viber</a>
-        </div>
-    </div>
-    
 </div>
 
-<!-- 3η ΔΙΑΦΗΜΙΣΗ: STICKY BOTTOM ROLL-UP -->
-<div class="sticky-rollup-ad" id="stickyAd">
-    <button class="sticky-close" onclick="document.getElementById('stickyAd').classList.remove('show');"><i class="fas fa-times"></i></button>
-    <div style="font-size: 0.75rem; color: #64748b; font-weight: 800; margin-bottom: 8px;">ΧΟΡΗΓΟΥΜΕΝΟ</div>
-    <ins class="adsbygoogle" style="display:block; width:100%; height: 90px;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372"></ins>
+<!-- ========== BOTTOM ROLL-UP AD ========== -->
+<div class="sticky-ad sticky-bottom" id="bottomAd">
+    <button class="sticky-close" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
+    <ins class="adsbygoogle" style="display:inline-block; width:320px; height:100px;" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
 
-<!-- SCRIPTS ΓΙΑ ΤΑ ΕΦΕ ANIMATION ΣΤΟ ΣΚΡΟΛ -->
+<!-- ========== JAVASCRIPT ΓΙΑ ΤΙΣ ΛΕΙΤΟΥΡΓΙΕΣ ========== -->
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    const adObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target); 
-            }
-        });
-    }, { threshold: 0.15 });
+    // Συνάρτηση που τρέχει όταν ο χρήστης πατήσει "ΔΙΑΒΑΣΤΕ ΤΟ ΑΡΘΡΟ"
+    function enterArticle() {
+        const overlay = document.getElementById('entryOverlay');
+        
+        // Κρύβει το Modal
+        overlay.classList.add('hidden');
+        
+        // Ξεκλειδώνει το σκρολάρισμα της σελίδας
+        document.body.style.overflow = 'auto';
 
-    document.querySelectorAll('.in-article-ad').forEach(ad => {
-        adObserver.observe(ad);
-    });
+        // Αφαιρεί το Modal από το DOM μετά το animation για να μην ενοχλεί
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 500);
 
-    setTimeout(() => {
-        const stickyAd = document.getElementById('stickyAd');
-        if(stickyAd) stickyAd.classList.add('show');
-    }, 2000);
-});
+        // Εμφάνιση του Top Roll-down μετά από 1.5 δευτερόλεπτο
+        setTimeout(() => {
+            document.getElementById('topAd').classList.add('show');
+        }, 1500);
+
+        // Εμφάνιση του Bottom Roll-up μετά από 3 δευτερόλεπτα
+        setTimeout(() => {
+            document.getElementById('bottomAd').classList.add('show');
+        }, 3000);
+    }
 </script>
 
 </body>
