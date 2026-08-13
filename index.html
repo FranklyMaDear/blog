@@ -96,8 +96,15 @@
         .read-more { display: inline-block; font-weight: 700; color: #6c5ce7; margin-top: 10px; }
 
         /* ========== ΒΙΝΤΕΟ ΚΑΡΤΕΣ ========== */
-        .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-bottom: 40px; }
-        @media (max-width: 600px) { .video-grid { grid-template-columns: 1fr; } }
+        .video-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 20px; 
+            padding-bottom: 40px; 
+        }
+        @media (max-width: 600px) { 
+            .video-grid { grid-template-columns: 1fr; } 
+        }
         .video-card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -119,12 +126,17 @@
             padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 14px;
         }
 
-        /* ========== ADS ========== */
+        /* ========== ADS (Διαφημίσεις) ========== */
         .ad-container {
             margin: 25px 0; width: 100%; background: #ffffff;
             border-radius: 16px; overflow: hidden; text-align: center;
             border: 1px solid #f1f5f9; padding: 15px; min-height: 80px;
             display: flex; justify-content: center; align-items: center;
+        }
+        /* Διαφήμιση πλήρους πλάτους μέσα στο Grid των Βίντεο */
+        .video-grid .ad-container {
+            grid-column: 1 / -1; /* Καταλαμβάνει και τις 2 στήλες */
+            margin: 0; /* Μηδενίζουμε το margin για να ταιριάζει με το grid gap */
         }
         
         /* ========== MODAL & STICKY ADS ========== */
@@ -280,7 +292,7 @@
             {% endfor %}
         </section>
 
-        <!-- ΔΙΑΦΗΜΙΣΗ ΑΝΑΜΕΣΑ ΣΕ ΝΕΑ & ΒΙΝΤΕΟ -->
+        <!-- ΔΙΑΦΗΜΙΣΗ ΑΝΑΜΕΣΑ ΣΤΙΣ 2 ΕΝΟΤΗΤΕΣ -->
         <div class="ad-container">
             <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -292,44 +304,47 @@
         <h2 class="section-title"><i class="fas fa-video"></i> Τα τελευταία Βίντεο</h2>
         <section class="video-grid">
             
-            <!-- 1. 4ο ΒΙΝΤΕΟ (Βυτιοφόρο) -->
+            <!-- 1. ΒΙΝΤΕΟ: Βυτιοφόρο -->
             <a href="/download/four/index.html" class="video-card">
                 <img src="https://blog.franklymadear.com/download/four/photo4.png" alt="Βυτιοφόρο">
                 <span class="video-title">«Δολοφόνος» οδηγός βυτιοφόρου προσπερνάει σε στροφή</span>
                 <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
             </a>
             
-            <!-- 2. 1ο ΒΙΝΤΕΟ (Θειαμ) -->
+            <!-- 2. ΒΙΝΤΕΟ: Θειαμ (με τη φωτογραφία που έστειλες) -->
             <a href="/download/one/index.html" class="video-card">
                 <img src="https://blog.franklymadear.com/download/photo1.png" alt="Θειαμ">
                 <span class="video-title">Άλλα λέει η Θειαμ: Δουλεύω όλο το χρόνο για 4 μέρες διακοπές</span>
                 <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
             </a>
 
-            <!-- 3. 3ο ΒΙΝΤΕΟ (Λατινοπούλου) -->
+            <!-- ΔΙΑΦΗΜΙΣΗ ΑΝΑΜΕΣΑ ΣΤΑ 3 ΣΤΑΤΙΚΑ ΒΙΝΤΕΟ (ΜΕΤΑΞΥ 1ου & 2ου) -->
+            <div class="ad-container">
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- 3. ΒΙΝΤΕΟ: Λατινοπούλου (με τη φωτογραφία που έστειλες) -->
             <a href="/download/three/index.html" class="video-card">
                 <img src="https://blog.franklymadear.com/download/photo3.png" alt="Λατινοπούλου">
                 <span class="video-title">Η Λατινοπούλου αποκάλεσε έναν Ρομά γύφτο</span>
                 <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
             </a>
 
-            <!-- 4. 2ο ΒΙΝΤΕΟ (Γαυράκια) -->
-            <a href="/download/two/index.html" class="video-card">
-                <img src="https://blog.franklymadear.com/download/photo2.png" alt="Γαυράκια">
-                <span class="video-title">Να πούμε μία καλημέρα στα Γαυράκια</span>
-                <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
-            </a>
-
-            <!-- ===================================================== -->
-            <!-- ΔΥΝΑΜΙΚΟΣ ΒΡΟΧΟΣ ΓΙΑ ΝΕΑ ΒΙΝΤΕΟ (site.videos)         -->
-            <!-- Όταν ανεβάσεις νέο βίντεο, θα εμφανίζεται ΑΥΤΟΜΑΤΑ ΕΔΩ -->
-            <!-- ===================================================== -->
+            <!-- ΔΥΝΑΜΙΚΟΣ ΒΡΟΧΟΣ ΓΙΑ ΝΕΑ ΒΙΝΤΕΟ (site.videos) -->
             {% for video in site.videos %}
             <a href="{{ video.video_url }}" class="video-card">
                 <img src="{{ video.image }}" alt="{{ video.title }}">
                 <span class="video-title">{{ video.title }}</span>
                 <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
             </a>
+            <!-- ΔΙΑΦΗΜΙΣΗ ΑΝΑΜΕΣΑ ΣΤΑ ΔΥΝΑΜΙΚΑ ΒΙΝΤΕΟ -->
+            {% unless forloop.last %}
+            <div class="ad-container">
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            {% endunless %}
             {% endfor %}
 
         </section>
