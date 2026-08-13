@@ -19,7 +19,6 @@
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --shadow: 0 10px 30px -10px rgba(0,0,0,0.08);
-            --danger-color: #e11d48;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -27,12 +26,11 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
-            overflow: hidden; /* Κλειδώνει το scroll μέχρι να κλείσει το modal */
+            overflow: hidden; 
         }
         body.unlocked { overflow: auto; }
         a { text-decoration: none; color: inherit; transition: 0.3s; }
         
-        /* ========== 3D TITLE ========== */
         header {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
@@ -40,17 +38,13 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            border-bottom: 1px solid rgba(255,255,255,0.5);
         }
         .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
         .nav { display: flex; justify-content: space-between; align-items: center; }
         .logo { 
-            font-size: 26px; 
-            font-weight: 900; 
+            font-size: 26px; font-weight: 900; 
             background: linear-gradient(135deg, #6c5ce7, #a29bfe); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 4px 0 #3b2b8a, 0 6px 10px rgba(0,0,0,0.2);
             transform: perspective(500px) rotateX(5deg);
             display: inline-block;
@@ -58,7 +52,6 @@
         .menu a { font-weight: 500; color: #636e72; margin-left: 25px; }
         .menu a:hover { color: #6c5ce7; }
         
-        /* ========== HERO ========== */
         .hero {
             text-align: center;
             padding: 60px 20px 40px;
@@ -67,19 +60,17 @@
             margin-bottom: 30px;
         }
         .hero h1 { 
-            font-size: 42px; 
-            font-weight: 900; 
+            font-size: 42px; font-weight: 900; 
             background: linear-gradient(135deg, #2d3436 0%, #6c5ce7 100%); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             text-shadow: 0 4px 0 #1e1e1e, 0 6px 10px rgba(0,0,0,0.2);
             transform: perspective(500px) rotateX(5deg) scale(1.02);
             margin-bottom: 10px;
         }
         .hero p { font-size: 18px; color: #636e72; }
 
-        /* ========== POST GRID ========== */
-        .posts-grid { display: flex; flex-direction: column; gap: 30px; padding-bottom: 40px; }
+        /* ========== POSTS ========== */
+        .posts-grid { display: flex; flex-direction: column; gap: 25px; padding-bottom: 40px; }
         .post-card {
             background: var(--card-bg);
             border-radius: 16px;
@@ -87,10 +78,7 @@
             box-shadow: var(--shadow);
             transition: all 0.4s;
             border: 1px solid rgba(255,255,255,0.8);
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            align-items: center;
+            display: flex; gap: 20px; align-items: center;
         }
         .post-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(108, 92, 231, 0.12); }
         .post-card img { width: 120px; height: 80px; object-fit: cover; border-radius: 12px; flex-shrink: 0; }
@@ -101,108 +89,65 @@
         .post-meta { font-size: 14px; color: #b2bec3; display: block; margin-bottom: 10px; font-weight: 500; }
         .post-excerpt { color: #636e72; font-size: 15px; margin: 0; line-height: 1.5; }
         .read-more { display: inline-block; font-weight: 700; color: #6c5ce7; margin-top: 10px; }
-        .read-more:hover { padding-right: 8px; }
 
-        /* ========== MODAL (Αναδυόμενο Παράθυρο) ========== */
+        /* ========== ADS (Χωρίς το 'ΧΟΡΗΓΟΥΜΕΝΟ') ========== */
+        .ad-container {
+            margin: 15px 0;
+            width: 100%;
+            background: #ffffff; 
+            border-radius: 16px;
+            overflow: hidden;
+            text-align: center;
+            border: 1px solid #f1f5f9;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* ========== MODAL & STICKY ADS ========== */
         .entry-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.9);
             backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100000;
-            padding: 15px;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100000; padding: 15px;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
-        .entry-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-            transform: scale(0.95);
-        }
+        .entry-overlay.hidden { opacity: 0; visibility: hidden; transform: scale(0.95); }
         .entry-modal {
-            background: #fff;
-            padding: 30px 20px;
-            border-radius: 24px;
-            text-align: center;
-            max-width: 420px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
+            background: #fff; padding: 30px 20px; border-radius: 24px;
+            text-align: center; max-width: 420px; width: 100%;
             box-shadow: 0 25px 50px rgba(0,0,0,0.3);
             transform: scale(1) rotateX(5deg);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .entry-modal h2 { color: #6c5ce7; font-size: 1.5rem; font-weight: 900; margin-bottom: 20px; }
         
-        /* 3D Button */
         .btn-3d {
             display: flex; align-items: center; justify-content: center; gap: 12px;
             width: 100%; max-width: 320px; margin: 20px auto; padding: 18px 24px;
-            font-size: 1.1rem; font-weight: 900; color: #ffffff; text-transform: uppercase;
-            text-decoration: none; border-radius: 16px; border: none; cursor: pointer;
+            font-size: 1.1rem; font-weight: 900; color: #ffffff;
+            border-radius: 16px; border: none; cursor: pointer;
             background: linear-gradient(145deg, #6c5ce7, #5a4bd1);
             box-shadow: 0 8px 0 #3b2b8a, 0 15px 20px rgba(108, 92, 231, 0.4);
             transition: all 0.15s ease;
         }
-        .btn-3d:active { transform: translateY(8px); box-shadow: 0 0px 0 #3b2b8a, 0 5px 10px rgba(108, 92, 231, 0.4); }
-
-        /* ========== ADS ========== */
-        .ad-container {
-            margin: 30px 0;
-            width: 100%;
-            background: #f8fafc; 
-            border-radius: 16px;
-            overflow: hidden;
-            text-align: center;
-            border: 2px dashed #cbd5e1;
-            padding: 15px;
-            min-height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        .ad-container::before {
-            content: "ΧΟΡΗΓΟΥΜΕΝΟ";
-            display: block;
-            font-size: 0.65rem; color: #64748b;
-            font-weight: 700; margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
+        .btn-3d:active { transform: translateY(8px); box-shadow: 0 0px 0 #3b2b8a; }
         
         .sticky-ad {
-            position: fixed;
-            left: 50%;
-            width: 100%;
-            max-width: 728px;
-            background: #fff;
-            padding: 5px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.2);
-            z-index: 9999;
-            text-align: center;
+            position: fixed; left: 50%; width: 100%; max-width: 728px;
+            background: #fff; padding: 5px; box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            z-index: 9999; text-align: center;
             transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-            min-height: 80px;
-            display: none; /* Κρύβεται αρχικά */
+            min-height: 80px; display: none;
         }
         .sticky-ad.show { display: flex; justify-content: center; align-items: center; }
         .sticky-top { top: 0; transform: translateX(-50%) translateY(-100%); border-radius: 0 0 20px 20px; border-bottom: 4px solid #6c5ce7; }
         .sticky-top.show { transform: translateX(-50%) translateY(0); }
         .sticky-bottom { bottom: 0; transform: translateX(-50%) translateY(100%); border-radius: 20px 20px 0 0; border-top: 4px solid #6c5ce7; }
         .sticky-bottom.show { transform: translateX(-50%) translateY(0); }
-        .sticky-close {
-            position: absolute;
-            background: #0f172a;
-            color: #fff;
-            border: none;
-            width: 28px; height: 28px;
-            border-radius: 50%;
-            font-size: 13px;
-            cursor: pointer;
-            z-index: 10;
-        }
+        .sticky-close { position: absolute; background: #0f172a; color: #fff; border: none; width: 28px; height: 28px; border-radius: 50%; font-size: 13px; cursor: pointer; z-index: 10; }
         .sticky-top .sticky-close { bottom: -12px; right: 20px; }
         .sticky-bottom .sticky-close { top: -12px; right: 20px; }
 
@@ -221,138 +166,128 @@
 </head>
 <body>
 
-    <!-- ========== MODAL ΕΙΣΟΔΟΥ ========== -->
+    <!-- MODAL ΕΙΣΟΔΟΥ -->
     <div class="entry-overlay" id="entryOverlay">
         <div class="entry-modal">
             <h2>🚀 Franklymadear News</h2>
-            
-            <!-- ΔΙΑΦΗΜΙΣΗ IN-ARTICLE (Όπως στο threeindex.html) -->
             <div style="min-height: 200px; margin-bottom: 15px;">
-                <ins class="adsbygoogle"
-                     style="display:block; text-align:center;"
-                     data-ad-layout="in-article"
-                     data-ad-format="fluid"
-                     data-ad-client="ca-pub-3186700611266549"
-                     data-ad-slot="5220069446"></ins>
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
-
-            <button class="btn-3d" onclick="enterArticle()">
-                <i class="fas fa-book-open"></i> ΜΠΕΙΤΕ ΣΤΟ BLOG
-            </button>
+            <button class="btn-3d" onclick="enterArticle()"><i class="fas fa-book-open"></i> ΜΠΕΙΤΕ ΣΤΟ BLOG</button>
         </div>
     </div>
 
-    <!-- ========== STICKY ADS (Κρυμμένες μέχρι να κλείσει το Modal) ========== -->
+    <!-- STICKY ADS -->
     <div class="sticky-ad sticky-top" id="topAd">
         <button class="sticky-close" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
         <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- ========== HEADER ========== -->
     <header>
         <div class="container nav">
             <div class="logo">Franklymadear News</div>
-            <div class="menu"><a href="/">Αρχική</a><a href="#">Σχετικά</a></div>
+            <div class="menu"><a href="/">Αρχική</a></div>
         </div>
     </header>
 
     <div class="container">
         <section class="hero">
             <h1>Franklymadear News</h1>
-            <p>Ειδήσεις & Ενημέρωση - Τα πιο καυτά θέματα της επικαιρότητας</p>
+            <p>Ειδήσεις & Ενημέρωση</p>
         </section>
 
         <section class="posts-grid">
 
-            <!-- ========================================== -->
-            <!-- 1. ΣΤΑΤΙΚΑ ΑΡΘΡΑ (3 ΠΑΛΙΑ)                 -->
-            <!-- ========================================== -->
+            <!-- ===== 1ο ΣΤΑΤΙΚΟ ΑΡΘΡΟ ===== -->
             <article class="post-card">
                 <img src="https://blog.franklymadear.com/post/one/photo4.png" alt="Προσωπικός Βοηθός">
                 <div class="post-content">
                     <h2><a href="/post/one/index.html">Έως 1.939 ευρώ τον μήνα για τον Προσωπικό Βοηθό</a></h2>
-                    <span class="post-meta"><i class="far fa-calendar-alt"></i> 12 Αυγούστου 2026</span>
+                    <span class="post-meta">12 Αυγούστου 2026</span>
                     <p class="post-excerpt">Σημαντικές εξελίξεις φέρνει το Υπουργείο Κοινωνικής Συνοχής για το πρόγραμμα «Προσωπικός Βοηθός για Άτομα με Αναπηρία».</p>
                     <a href="/post/one/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
                 </div>
             </article>
-
-            <article class="post-card">
-                <img src="https://blog.franklymadear.com/post/two/photo5.png" alt="Πυρκαγιά στην Ελλάδα">
-                <div class="post-content">
-                    <h2><a href="/post/two/index.html">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται – Στο «κόκκινο» 5 περιοχές</a></h2>
-                    <span class="post-meta"><i class="far fa-calendar-alt"></i> 11 Αυγούστου 2026</span>
-                    <p class="post-excerpt">Οι φόβοι επιβεβαιώνονται. Οι πύρινες φλόγες καταπίνουν τα πάντα. Δείτε ποιες περιοχές βρίσκονται σε Κατηγορία 5.</p>
-                    <a href="/post/two/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
-                </div>
-            </article>
-
-            <article class="post-card">
-                <img src="https://blog.franklymadear.com/post/three/photo6.png" alt="Σεισμοί στη Λατινική Αμερική">
-                <div class="post-content">
-                    <h2><a href="/post/three/index.html">Η Θεωρία του Σοκ στον Εγκέλαδο: Σεισμοί 2026 & Γεωπολιτικά Σχέδια</a></h2>
-                    <span class="post-meta"><i class="far fa-calendar-alt"></i> 10 Αυγούστου 2026</span>
-                    <p class="post-excerpt">Η χρονική και γεωγραφική σύμπτωση των φονικών σεισμών με τις ραγδαίες πολιτικές ανατροπές στη Λατινική Αμερική.</p>
-                    <a href="/post/three/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
-                </div>
-            </article>
-
-            <!-- ΔΙΑΦΗΜΙΣΗ (Ανάμεσα στα παλιά και τα καινούργια) -->
+            <!-- Διαφήμιση μετά το 1ο -->
             <div class="ad-container">
                 <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
 
-            <!-- ========================================== -->
-            <!-- 2. ΔΥΝΑΜΙΚΗ ΛΙΣΤΑ (offset:3 - Αόρατη τώρα) -->
-            <!-- ========================================== -->
+            <!-- ===== 2ο ΣΤΑΤΙΚΟ ΑΡΘΡΟ ===== -->
+            <article class="post-card">
+                <img src="https://blog.franklymadear.com/post/two/photo5.png" alt="Πυρκαγιά">
+                <div class="post-content">
+                    <h2><a href="/post/two/index.html">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται – Στο «κόκκινο» 5 περιοχές</a></h2>
+                    <span class="post-meta">11 Αυγούστου 2026</span>
+                    <p class="post-excerpt">Οι φόβοι επιβεβαιώνονται. Οι πύρινες φλόγες καταπίνουν τα πάντα. Δείτε ποιες περιοχές βρίσκονται σε Κατηγορία 5.</p>
+                    <a href="/post/two/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
+                </div>
+            </article>
+            <!-- Διαφήμιση μετά το 2ο -->
+            <div class="ad-container">
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- ===== 3ο ΣΤΑΤΙΚΟ ΑΡΘΡΟ ===== -->
+            <article class="post-card">
+                <img src="https://blog.franklymadear.com/post/three/photo6.png" alt="Σεισμοί">
+                <div class="post-content">
+                    <h2><a href="/post/three/index.html">Η Θεωρία του Σοκ στον Εγκέλαδο: Σεισμοί 2026 & Γεωπολιτικά Σχέδια</a></h2>
+                    <span class="post-meta">10 Αυγούστου 2026</span>
+                    <p class="post-excerpt">Η χρονική και γεωγραφική σύμπτωση των φονικών σεισμών με τις ραγδαίες πολιτικές ανατροπές στη Λατινική Αμερική.</p>
+                    <a href="/post/three/index.html" class="read-more">Διαβάστε περισσότερα &rarr;</a>
+                </div>
+            </article>
+            <!-- Διαφήμιση μετά το 3ο -->
+            <div class="ad-container">
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- ============================================== -->
+            <!-- ΔΥΝΑΜΙΚΟΣ ΒΡΟΧΟΣ (Για νέα άρθρα που θα βγάλεις) -->
+            <!-- ============================================== -->
             {% for post in site.posts offset:3 %}
             <article class="post-card">
                 <img src="{{ post.image | default: 'https://blog.franklymadear.com/images/default.jpg' }}" alt="{{ post.title }}">
                 <div class="post-content">
                     <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-                    <span class="post-meta"><i class="far fa-calendar-alt"></i> {{ post.date | date_to_long_string: "ordinal" }}</span>
+                    <span class="post-meta">{{ post.date | date_to_long_string: "ordinal" }}</span>
                     <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 35 }}</p>
                     <a href="{{ post.url }}" class="read-more">Διαβάστε περισσότερα &rarr;</a>
                 </div>
             </article>
+            <!-- Διαφήμιση ανάμεσα σε κάθε νέο άρθρο (εκτός από το τελευταίο) -->
+            {% unless forloop.last %}
+            <div class="ad-container">
+                <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+            {% endunless %}
             {% endfor %}
 
         </section>
     </div>
 
-    <!-- ========== STICKY BOTTOM AD ========== -->
+    <!-- STICKY BOTTOM AD -->
     <div class="sticky-ad sticky-bottom" id="bottomAd">
         <button class="sticky-close" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
         <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <footer>
-        <div class="container">
-            &copy; 2026 Franklymadear News.
-        </div>
-    </footer>
+    <footer><div class="container">&copy; 2026 Franklymadear News.</div></footer>
 
-    <!-- ========== JAVASCRIPT ========== -->
     <script>
         function enterArticle() {
             const overlay = document.getElementById('entryOverlay');
-            
-            // Κλείνει το Modal με ομαλό εφέ
             overlay.classList.add('hidden');
-            
-            // Ξεκλειδώνει το σκρολάρισμα
             document.body.classList.add('unlocked');
-
-            // Αφαιρεί το Modal μετά το animation
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 500);
-
-            // Εμφανίζει τις κολλητές διαφημίσεις μετά από 2 δευτερόλεπτα
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
             setTimeout(() => {
                 document.getElementById('topAd').classList.add('show');
                 document.getElementById('bottomAd').classList.add('show');
