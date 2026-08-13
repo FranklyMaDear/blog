@@ -61,7 +61,7 @@
     
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter', sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px; color:#1a1a2e; }
+        body { font-family:'Inter', sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px 20px 100px 20px; color:#1a1a2e; } /* Προστέθηκε padding-bottom για να μη κρύβει περιεχόμενο το pop-up */
         .main-container { width:100%; max-width:480px; background:#fff; border-radius:24px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,0.08); }
         .video-section { margin:0 0 20px 0; background:#f8fafc; border-radius:20px; border:1px solid #e9edf4; overflow:hidden; }
         .video-wrapper { position:relative; width:100%; aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; }
@@ -97,26 +97,51 @@
         .play-now-btn { font-size:0.75rem; background:#3b82f6; color:#fff; padding:6px 16px; border-radius:30px; font-weight:600; }
         .footer-credit { text-align:center; padding:20px 0 5px; font-size:0.75rem; color:#94a3b8; }
 
-        .ad-box {
-            margin: 20px 0; background: rgba(0, 0, 0, 0.02);
-            border-radius: 24px; padding: 15px; border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04); display: flex; justify-content: center;
-            align-items: center; min-height: 150px; width: 100%;
+        /* STICKY POP-UP AD STYLING */
+        .popup-ad-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            padding: 15px 10px 10px;
+            transform: translateY(100%);
+            animation: slideUpAd 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 1s; /* Εμφανίζεται 1 δευτερόλεπτο μετά τη φόρτωση */
         }
-        .ad-box ins { display: block; width: 100%; border-radius: 12px; }
-        .ad-responsive { width: 100%; height: auto; }
+        .popup-ad-close {
+            position: absolute;
+            top: -40px;
+            right: 15px;
+            background: #fff;
+            color: #333;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .popup-ad-close:hover { background: #f1f5f9; }
+        @keyframes slideUpAd {
+            to { transform: translateY(0); }
+        }
+        .ad-container-inner { width: 100%; max-width: 480px; text-align: center; }
     </style>
 </head>
 <body>
 <div class="main-container">
     
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 1 (ΠΑΝΩ) ========== -->
-    <div class="ad-box">
-        <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-    <!-- ========================================== -->
-
+    <!-- ============ ΒΙΝΤΕΟ ΣΤΗΝ ΚΟΡΥΦΗ (ΧΩΡΙΣ SCROLL) ============ -->
     <div class="video-section">
         <div class="video-wrapper">
             <iframe src="https://www.youtube.com/embed/xQzRDv_Ce5k" allowfullscreen loading="lazy"></iframe>
@@ -173,13 +198,6 @@
     </div>
     <!-- ========================================== -->
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 2 (ΑΝΑΜΕΣΑ) ========== -->
-    <div class="ad-box">
-        <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-    <!-- ========================================== -->
-
     <div class="games-section">
         <a href="https://games.franklymadear.com" target="_blank" style="display:block; color:#1a1a2e; margin-bottom:14px; text-decoration:underline; font-weight:600; font-size:0.9rem;">Δες όλα τα παιχνίδια μας στο games.franklymadear.com</a>
         
@@ -196,15 +214,20 @@
         </a>
     </div>
 
-    <!-- ========== ΔΙΑΦΗΜΙΣΗ 3 (ΚΑΤΩ) ========== -->
-    <div class="ad-box">
+    <div class="footer-credit">© FranklyMadeAr Games</div>
+</div>
+
+<!-- ============ POP-UP ΔΙΑΦΗΜΙΣΗ ΜΕ ΚΟΥΜΠΙ ΚΛΕΙΣΙΜΑΤΟΣ ============ -->
+<div class="popup-ad-wrapper" id="sticky-ad">
+    <button class="popup-ad-close" onclick="document.getElementById('sticky-ad').style.display='none'" title="Κλείσιμο διαφήμισης">
+        <i class="fas fa-times"></i>
+    </button>
+    <div class="ad-container-inner">
         <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
-    <!-- ========================================== -->
-
-    <div class="footer-credit">© FranklyMadeAr Games</div>
 </div>
+<!-- =============================================================== -->
 
 <!-- ============ DISQUS COMMENT COUNTER ============ -->
 <script id="dsq-count-scr" src="//franklymadear.disqus.com/count.js" async></script>
