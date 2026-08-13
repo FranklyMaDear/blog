@@ -16,7 +16,7 @@
     <style>
         :root { 
             --primary-color: #0f172a; 
-            --accent-color: #dc2626; /* Κόκκινο για news αίσθηση */
+            --accent-color: #dc2626; 
             --text-color: #334155; 
             --text-muted: #64748b;
             --bg-color: #f8fafc; 
@@ -53,7 +53,7 @@
         /* Articles Grid */
         .posts-grid { display: flex; flex-direction: column; gap: 25px; margin-bottom: 40px; }
         .post-card { display: flex; gap: 20px; align-items: flex-start; padding-bottom: 25px; border-bottom: 1px solid var(--border-color); }
-        .post-card:last-child { border-bottom: none; }
+        .post-card:last-child { border-bottom: none; padding-bottom: 0; }
         .post-card img { width: 220px; height: 140px; object-fit: cover; border-radius: 6px; box-shadow: var(--shadow-sm); }
         .post-content { flex: 1; }
         .post-meta { font-size: 12px; color: var(--accent-color); display: block; margin-bottom: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -68,17 +68,17 @@
         .video-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: transform 0.2s ease, box-shadow 0.2s ease; display: flex; flex-direction: column; }
         .video-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
         .video-card img { width: 100%; height: 180px; object-fit: cover; border-bottom: 3px solid var(--accent-color); }
-        .video-title { padding: 15px; font-weight: 800; font-size: 16px; color: var(--primary-color); line-height: 1.4; flex-grow: 1; }
+        .video-title { padding: 15px; font-weight: 800; font-size: 16px; color: var(--primary-color); line-height: 1.4; flex-grow: 1; display: block; }
         .play-btn { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 15px 15px; background: var(--primary-color); color: #ffffff; padding: 10px; border-radius: 6px; font-weight: 700; font-size: 13px; text-transform: uppercase; }
-        .video-card:hover .play-btn { background: var(--accent-color); }
+        .video-card:hover .play-btn { background: var(--accent-color); color: #fff; }
 
         /* Ads Styling */
-        .ad-container { margin: 10px 0 25px; width: 100%; background: #f1f5f9; border-radius: 8px; overflow: hidden; text-align: center; border: 1px dashed #cbd5e1; padding: 15px; display: flex; justify-content: center; align-items: center; flex-direction: column; position: relative; }
+        .ad-container { margin: 5px 0 25px; width: 100%; background: #f1f5f9; border-radius: 8px; overflow: hidden; text-align: center; border: 1px dashed #cbd5e1; padding: 15px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .ad-container::before { content: 'ΔΙΑΦΗΜΙΣΗ'; font-size: 10px; color: #94a3b8; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; display: block; }
         .video-grid .ad-container { grid-column: 1 / -1; margin-bottom: 0; }
         
-        /* Entry Overlay Modal */
-        .entry-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 20px; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        /* Entry Overlay Modal (Roll Up) */
+        .entry-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 20px; transition: opacity 0.4s ease, visibility 0.4s ease; }
         .entry-overlay.hidden { opacity: 0; visibility: hidden; }
         .entry-modal { background: var(--card-bg); padding: 25px; border-radius: 12px; text-align: center; max-width: 400px; width: 100%; box-shadow: var(--shadow-lg); border-top: 4px solid var(--accent-color); }
         .entry-modal h2 { color: var(--primary-color); font-size: 22px; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; }
@@ -105,22 +105,23 @@
     </style>
 </head>
 <body>
-    <!-- Roll-up / Entry Ad -->
+    <!-- Roll-up / Entry Overlay Ad -->
     <div class="entry-overlay" id="entryOverlay">
         <div class="entry-modal">
             <h2>Franklymadear <span>News</span></h2>
             <div style="min-height: 250px; background:#f8fafc; border:1px dashed #cbd5e1; margin-bottom: 15px; border-radius: 4px; display:flex; align-items:center; justify-content:center;">
-                <!-- Η διαφήμιση AdSense -->
+                <!-- Διαφήμιση AdSense (Είσοδος) -->
                 <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
-            <button class="btn-3d" onclick="enterArticle()">Συνεχεια στην Ενημερωση <i class="fas fa-chevron-right"></i></button>
+            <button class="btn-3d" onclick="enterArticle()">Συνεχεια στο Blog <i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
     <!-- Sticky Top Ad -->
     <div class="sticky-ad sticky-top" id="topAd">
         <button class="sticky-close" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
+        <!-- Διαφήμιση AdSense (Πάνω μέρος) -->
         <ins class="adsbygoogle" style="display:block; text-align:center; width:100%; height:50px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
@@ -134,14 +135,14 @@
 
     <section class="hero">
         <div class="container">
-            <h1>Έγκυρη Ενημέρωση, Κάθε Στιγμή.</h1>
-            <p>Αναλύσεις, ρεπορτάζ και αποκλειστικά βίντεο που πρέπει να γνωρίζετε σήμερα.</p>
+            <h1>Η Ενημέρωση Αλλιώς</h1>
+            <p>Ειδήσεις, Αναλύσεις & Αποκλειστικά Βίντεο</p>
         </div>
     </section>
 
     <div class="container">
-        <!-- ΕΝΟΤΗΤΑ 1: ΤΕΛΕΥΤΑΙΑ ΝΕΑ -->
-        <h2 class="section-title"><i class="fas fa-bolt"></i> Ροη Ειδησεων</h2>
+        <!-- ΕΝΟΤΗΤΑ 1: ΤΕΛΕΥΤΑΙΑ ΝΕΑ (POST -> AD -> POST) -->
+        <h2 class="section-title"><i class="far fa-newspaper"></i> Τελευταία Νέα</h2>
         <section class="posts-grid">
             {% for article in site.data.articles %}
             <article class="post-card">
@@ -150,37 +151,39 @@
                     <span class="post-meta">{{ article.date }}</span>
                     <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
                     <p class="post-excerpt">{{ article.excerpt }}</p>
-                    <a href="{{ article.url }}" class="read-more">Διαβαστε το αρθρο <i class="fas fa-arrow-right"></i></a>
+                    <a href="{{ article.url }}" class="read-more">Διαβάστε περισσότερα <i class="fas fa-arrow-right"></i></a>
                 </div>
             </article>
             
             {% unless forloop.last %}
-            <!-- Διαφήμιση ανάμεσα στα άρθρα -->
+            <!-- Διαφήμιση AdSense (Ανάμεσα σε κάθε άρθρο) -->
             <div class="ad-container">
                 <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
             {% endunless %}
+            
             {% endfor %}
         </section>
 
-        <!-- ΕΝΟΤΗΤΑ 2: ΒΙΝΤΕΟ -->
-        <h2 class="section-title"><i class="fas fa-play-circle"></i> Web TV</h2>
+        <!-- ΕΝΟΤΗΤΑ 2: ΒΙΝΤΕΟ (VIDEO -> AD -> VIDEO) -->
+        <h2 class="section-title"><i class="far fa-play-circle"></i> Τελευταία Βίντεο</h2>
         <section class="video-grid">
             {% for video in site.data.videos %}
             <a href="{{ video.url }}" class="video-card">
                 <img src="{{ video.image }}" alt="{{ video.title }}">
                 <span class="video-title">{{ video.title }}</span>
-                <span class="play-btn"><i class="fas fa-play"></i> Αναπαραγωγη</span>
+                <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
             </a>
             
             {% unless forloop.last %}
-            <!-- Διαφήμιση ανάμεσα στα βίντεο -->
+            <!-- Διαφήμιση AdSense (Ανάμεσα σε κάθε βίντεο) -->
             <div class="ad-container">
                 <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
             {% endunless %}
+            
             {% endfor %}
         </section>
     </div>
@@ -188,12 +191,13 @@
     <!-- Sticky Bottom Ad -->
     <div class="sticky-ad sticky-bottom" id="bottomAd">
         <button class="sticky-close" onclick="this.parentElement.style.display='none'"><i class="fas fa-times"></i></button>
+        <!-- Διαφήμιση AdSense (Κάτω μέρος) -->
         <ins class="adsbygoogle" style="display:block; text-align:center; width:100%; height:50px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
     <footer>
-        <div class="container">&copy; 2026 <span>Franklymadear News</span>. All rights reserved.</div>
+        <div class="container">&copy; 2026 <span>Franklymadear News</span>. Όλα τα δικαιώματα διατηρούνται.</div>
     </footer>
 
     <script>
@@ -206,7 +210,7 @@
                 overlay.style.display = 'none'; 
             }, 400);
             
-            // Εμφάνιση των sticky ads (πάνω/κάτω) με μικρή καθυστέρηση μετά την είσοδο
+            // Εμφάνιση των sticky ads μόλις ο χρήστης μπει στη σελίδα
             setTimeout(() => {
                 document.getElementById('topAd').classList.add('show');
                 document.getElementById('bottomAd').classList.add('show');
