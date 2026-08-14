@@ -6,8 +6,28 @@ title: Αρχική
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Franklymadear News</title>
     
+    <!-- Βασικά SEO Meta Tags -->
+    <title>Franklymadear News | Η Ενημέρωση Αλλιώς</title>
+    <meta name="description" content="Η Ενημέρωση Αλλιώς. Διαβάστε τις τελευταίες ειδήσεις και παρακολουθήστε αποκλειστικά βίντεο.">
+    <link rel="canonical" href="https://franklymadear.com/"> <!-- Αντικατέστησε με το πραγματικό URL σου -->
+    
+    <!-- Open Graph Tags (Facebook, Telegram κτλ) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://franklymadear.com/">
+    <meta property="og:title" content="Franklymadear News">
+    <meta property="og:description" content="Η Ενημέρωση Αλλιώς. Ειδήσεις & Αποκλειστικά Βίντεο">
+    <!-- Σημαντικό: Τα Open Graph images πρέπει να έχουν απόλυτο URL (με https://) -->
+    <meta property="og:image" content="https://franklymadear.com/index.png"> 
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Franklymadear News">
+    <meta name="twitter:description" content="Η Ενημέρωση Αλλιώς. Ειδήσεις & Αποκλειστικά Βίντεο">
+    <meta name="twitter:image" content="https://franklymadear.com/index.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -79,7 +99,7 @@ title: Αρχική
         .lead-card { border-left: 4px solid var(--accent-news); }
         .lead-card .post-image-wrap img { aspect-ratio: 16/9; height: auto; width: 100%; }
         .lead-card .post-content { padding: 30px 20px 18px; }
-        .lead-card h2 { font-size: 24px; }
+        .lead-card h3 { font-size: 24px; }
         .lead-card .post-excerpt { font-size: 14.5px; -webkit-line-clamp: 3; }
         .lead-card .post-avatar { width: 52px; height: 52px; font-size: 20px; bottom: -22px; }
         .lead-card .source-name { font-size: 14px; }
@@ -88,8 +108,10 @@ title: Αρχική
         .post-card img { width: 100%; aspect-ratio: 16/9; height: auto; object-fit: cover; display: block; }
         .post-avatar { position: absolute; left: 14px; bottom: -18px; width: 44px; height: 44px; border-radius: 50%; background: var(--accent-news); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; border: 3px solid var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
         .post-content { padding: 26px 16px 16px; }
-        .post-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 4px; line-height: 1.32; color: var(--primary); }
-        .post-card h2 a:hover { color: var(--accent-news); }
+        
+        /* Άλλαξα το h2 σε h3 για σωστή δομή SEO */
+        .post-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 4px; line-height: 1.32; color: var(--primary); }
+        .post-card h3 a:hover { color: var(--accent-news); }
         .post-excerpt { font-size: 13.5px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 14px; }
         .post-footer-row { display: flex; align-items: center; justify-content: space-between; padding-top: 10px; border-top: 1px solid var(--border); }
         .post-source { display: flex; align-items: center; gap: 8px; }
@@ -202,14 +224,14 @@ title: Αρχική
         <!-- ΕΝΟΤΗΤΑ 1: ΑΡΘΡΑ -->
         <h2 class="section-title"><i class="far fa-newspaper"></i> Τελευταία Νέα</h2>
         <section class="posts-grid">
-            <!-- Άρθρο 1 -->
+            <!-- Άρθρο 1 (Lead - Eager Loading) -->
             <article class="post-card lead-card">
                 <div class="post-image-wrap">
-                    <img src="/post/four/photo7.png" alt="SHOWBIZ">
+                    <img src="/post/four/photo7.png" alt="SHOWBIZ" width="800" height="450" loading="eager">
                     <div class="post-avatar">F</div>
                 </div>
                 <div class="post-content">
-                    <h2><a href="/post/four/index.html">💥 SHOWBIZ EXPLOSION</a></h2>
+                    <h3><a href="/post/four/index.html">💥 SHOWBIZ EXPLOSION</a></h3>
                     <p class="post-excerpt">10 Σοκαριστικές Αλήθειες & Ανατροπές που Συμβαίνουν Τώρα!</p>
                     <div class="post-footer-row">
                         <div class="post-source">
@@ -229,14 +251,14 @@ title: Αρχική
             <!-- Διαφήμιση 1 -->
             <div class="ad-container"><ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
 
-            <!-- Άρθρο 2 -->
+            <!-- Άρθρο 2 (Lazy Loading) -->
             <article class="post-card">
                 <div class="post-image-wrap">
-                    <img src="/post/one/photo4.png" alt="Προσωπικός Βοηθός">
+                    <img src="/post/one/photo4.png" alt="Προσωπικός Βοηθός" width="400" height="225" loading="lazy">
                     <div class="post-avatar">F</div>
                 </div>
                 <div class="post-content">
-                    <h2><a href="/post/one/index.html">Έως 1.939 ευρώ τον μήνα για τον Προσωπικό Βοηθό</a></h2>
+                    <h3><a href="/post/one/index.html">Έως 1.939 ευρώ τον μήνα για τον Προσωπικό Βοηθό</a></h3>
                     <p class="post-excerpt">Σημαντικές εξελίξεις φέρνει το Υπουργείο Κοινωνικής Συνοχής.</p>
                     <div class="post-footer-row">
                         <div class="post-source">
@@ -256,14 +278,14 @@ title: Αρχική
             <!-- Διαφήμιση 2 -->
             <div class="ad-container"><ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
 
-            <!-- Άρθρο 3 -->
+            <!-- Άρθρο 3 (Lazy Loading) -->
             <article class="post-card">
                 <div class="post-image-wrap">
-                    <img src="/post/two/photo5.png" alt="Πυρκαγιές">
+                    <img src="/post/two/photo5.png" alt="Πυρκαγιές" width="400" height="225" loading="lazy">
                     <div class="post-avatar">F</div>
                 </div>
                 <div class="post-content">
-                    <h2><a href="/post/two/index.html">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται</a></h2>
+                    <h3><a href="/post/two/index.html">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται</a></h3>
                     <p class="post-excerpt">Οι πύρινες φλόγες καταπίνουν τα πάντα. Κατηγορία 5.</p>
                     <div class="post-footer-row">
                         <div class="post-source">
@@ -283,14 +305,14 @@ title: Αρχική
             <!-- Διαφήμιση 3 -->
             <div class="ad-container"><ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
 
-            <!-- Άρθρο 4 -->
+            <!-- Άρθρο 4 (Lazy Loading) -->
             <article class="post-card">
                 <div class="post-image-wrap">
-                    <img src="/post/three/photo6.png" alt="Σεισμοί">
+                    <img src="/post/three/photo6.png" alt="Σεισμοί" width="400" height="225" loading="lazy">
                     <div class="post-avatar">F</div>
                 </div>
                 <div class="post-content">
-                    <h2><a href="/post/three/index.html">Η θεωρία του Σοκ στον Εγκέλαδο</a></h2>
+                    <h3><a href="/post/three/index.html">Η θεωρία του Σοκ στον Εγκέλαδο</a></h3>
                     <p class="post-excerpt">Η χρονική και γεωγραφική σύμπτωση των φονικών σεισμών.</p>
                     <div class="post-footer-row">
                         <div class="post-source">
@@ -320,7 +342,8 @@ title: Αρχική
             {% for video in site.data.videos %}
             <a href="{{ video.url }}" class="video-card">
                 <div class="video-thumb">
-                    <img src="{{ video.image }}" alt="{{ video.title }}">
+                    <!-- Προσθήκη loading="lazy" και διαστάσεων στα βίντεο -->
+                    <img src="{{ video.image }}" alt="{{ video.title }}" width="300" height="300" loading="lazy">
                     <span class="video-play-overlay"><i class="fas fa-play"></i></span>
                     {% if video.duration %}
                     <span class="duration-badge">{{ video.duration }}</span>
@@ -377,4 +400,4 @@ title: Αρχική
         }
     </script>
 </body>
-</html>
+</html> 
