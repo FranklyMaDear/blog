@@ -1,7 +1,7 @@
 ---
-layout: default
 title: Αρχική
 ---
+
 <!DOCTYPE html>
 <html lang="el">
 <head>
@@ -67,7 +67,7 @@ title: Αρχική
         .read-more { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; font-size: 13px; color: var(--primary-color); text-transform: uppercase; }
         .read-more:hover { color: var(--accent-color); }
 
-        /* Videos Grid */
+        /* Videos Grid (Δυναμικό) */
         .video-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .video-card { background: var(--card-bg); border-radius: 8px; overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); transition: transform 0.2s ease, box-shadow 0.2s ease; display: flex; flex-direction: column; }
         .video-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
@@ -225,44 +225,32 @@ title: Αρχική
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
-        <!-- ΕΝΟΤΗΤΑ 2: ΒΙΝΤΕΟ (Ενσωματωμένα) -->
+        <!-- =================================================== -->
+        <!-- ΕΝΟΤΗΤΑ 2: ΒΙΝΤΕΟ (ΔΥΝΑΜΙΚΑ ΑΠΟ _data/videos.yml) -->
+        <!-- =================================================== -->
         <h2 class="section-title"><i class="far fa-play-circle"></i> Τελευταία Βίντεο</h2>
         <section class="video-grid">
             
-            <!-- Βίντεο 1 -->
-            <a href="/download/four/index.html" class="video-card">
-                <img src="/download/four/photo4.png" alt="«Δολοφόνος» οδηγός βυτιοφόρου προσπερνάει σε στροφή">
-                <span class="video-title">«Δολοφόνος» οδηγός βυτιοφόρου προσπερνάει σε στροφή</span>
+            {% for video in site.data.videos %}
+            <a href="{{ video.url }}" class="video-card">
+                <img src="{{ video.image }}" alt="{{ video.title }}">
+                <span class="video-title">{{ video.title }}</span>
                 <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
             </a>
 
-            <!-- Διαφήμιση 4 -->
+            <!-- Δυναμική προσθήκη διαφήμισης μετά το 1ο και το 3ο βίντεο της λίστας -->
+            {% if forloop.index == 1 or forloop.index == 3 %}
             <div class="ad-container">
                 <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
+            {% endif %}
 
-            <!-- Βίντεο 2 -->
-            <a href="/download/one/index.html" class="video-card">
-                <img src="/download/one/photo1.png" alt="Δουλεύω όλο το χρόνο για 4 μέρες διακοπές">
-                <span class="video-title">Δουλεύω όλο το χρόνο για 4 μέρες διακοπές</span>
-                <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
-            </a>
-
-            <!-- Διαφήμιση 5 -->
-            <div class="ad-container">
-                <ins class="adsbygoogle" style="display:block; text-align:center; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-
-            <!-- Βίντεο 3 -->
-            <a href="/download/three/index.html" class="video-card">
-                <img src="/download/three/photo3.png" alt="Η Λατινοπούλου αποκάλεσε έναν Ρομά γύφτο">
-                <span class="video-title">Η Λατινοπούλου αποκάλεσε έναν Ρομά γύφτο</span>
-                <span class="play-btn"><i class="fas fa-play"></i> Δείτε το</span>
-            </a>
+            {% endfor %}
 
         </section>
+        <!-- =================================================== -->
+
     </div>
 
     <!-- Sticky Ad - Roll Up από Κάτω -->
