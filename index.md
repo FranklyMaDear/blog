@@ -5,7 +5,7 @@ title: Αρχική
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Franklymadear News</title>
     
     <!-- Social Sharing Meta Tags -->
@@ -86,7 +86,7 @@ title: Αρχική
 
         /* Lead Story – Πρώτο άρθρο */
         .lead-card { border-left: 4px solid var(--accent-news); }
-        .lead-card .post-image-wrap img { height: 280px; }
+        .lead-card .post-image-wrap img { aspect-ratio: 16/9; height: auto; width: 100%; }
         .lead-card .post-content { padding: 30px 20px 18px; }
         .lead-card h2 { font-size: 24px; }
         .lead-card .post-excerpt { font-size: 14.5px; -webkit-line-clamp: 3; }
@@ -94,7 +94,7 @@ title: Αρχική
         .lead-card .source-name { font-size: 14px; }
 
         .post-image-wrap { position: relative; }
-        .post-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+        .post-card img { width: 100%; aspect-ratio: 16/9; height: auto; object-fit: cover; display: block; }
         .post-avatar { position: absolute; left: 14px; bottom: -18px; width: 44px; height: 44px; border-radius: 50%; background: var(--accent-news); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; border: 3px solid var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
         .post-content { padding: 26px 16px 16px; }
         .post-card h2 { font-size: 19px; font-weight: 800; margin-bottom: 4px; line-height: 1.32; color: var(--primary); }
@@ -117,9 +117,9 @@ title: Αρχική
         .separator-ad { margin-top: 24px; margin-bottom: 24px; }
         .posts-grid + .ad-container, .video-grid .ad-container { flex: 0 0 auto; width: 100%; }
 
-        /* ΒΙΝΤΕΟ – Streaming cards με duration badge */
-        .video-grid { display: flex; flex-direction: row; overflow-x: auto; gap: 14px; margin-bottom: 20px; padding-bottom: 8px; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; }
-        .video-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: block; transition: 0.25s; flex: 0 0 160px; width: 160px; scroll-snap-align: start; position: relative; }
+        /* ΒΙΝΤΕΟ – Κάθετη διάταξη, grid 2 στήλες (mobile) */
+        .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+        .video-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: block; transition: 0.25s; position: relative; }
         .video-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: #3a3a46; }
         .video-thumb { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; }
         .video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.8); transition: 0.3s; }
@@ -130,6 +130,9 @@ title: Αρχική
         .duration-badge { position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); color: #fff; padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
         .video-content { padding: 10px 10px 12px; }
         .video-title { font-weight: 700; font-size: 12.5px; color: var(--primary); line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Διαφημίσεις μέσα στο video-grid γίνονται πλήρους πλάτους */
+        .video-grid > .ad-container { grid-column: 1 / -1; width: 100%; margin: 8px 0; }
 
         /* POP UP ΕΙΣΟΔΟΥ */
         .entry-overlay { position: fixed; inset: 0; background: radial-gradient(ellipse at center, rgba(30,4,6,0.96), rgba(4,4,6,0.98)); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 20px; transition: opacity 0.4s ease, visibility 0.4s ease; }
@@ -154,12 +157,15 @@ title: Αρχική
 
         /* DESKTOP/TABLET */
         @media (min-width: 600px) {
-            .video-card { flex: 0 0 190px; width: 190px; }
             .posts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
             .lead-card { grid-column: 1 / -1; display: flex; flex-direction: row; }
             .lead-card .post-image-wrap { flex: 1; }
-            .lead-card .post-image-wrap img { height: 100%; min-height: 300px; }
+            .lead-card .post-image-wrap img { aspect-ratio: auto; height: 100%; min-height: 300px; }
             .lead-card .post-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 30px; }
+            .video-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (min-width: 900px) {
+            .video-grid { grid-template-columns: repeat(4, 1fr); }
         }
     </style>
 </head>
