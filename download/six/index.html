@@ -52,21 +52,76 @@
     </script>
     <!-- ================================================================= -->
 
-    <!-- ============ ΔΙΑΦΗΜΙΣΤΙΚΟ SCRIPT ============ -->
+    <!-- ============ ΔΙΑΦΗΜΙΣΤΙΚΟ SCRIPT (ΒΑΣΙΚΟ) ============ -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-    <!-- ============================================== -->
+    <!-- ========================================================= -->
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter', sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px 20px 100px 20px; color:#1a1a2e; } /* Προστέθηκε padding-bottom για να μη κρύβει περιεχόμενο το pop-up */
+        body { font-family:'Inter', sans-serif; background:#f4f7f9; display:flex; flex-direction:column; align-items:center; padding:20px 20px 100px 20px; color:#1a1a2e; }
         .main-container { width:100%; max-width:480px; background:#fff; border-radius:24px; padding:24px; box-shadow:0 20px 60px rgba(0,0,0,0.08); }
-        .video-section { margin:0 0 20px 0; background:#f8fafc; border-radius:20px; border:1px solid #e9edf4; overflow:hidden; }
-        .video-wrapper { position:relative; width:100%; aspect-ratio:9/16; background:#000; border-radius:12px; overflow:hidden; }
-        .video-wrapper iframe { position:absolute; top:0; left:0; width:100%; height:100%; border:0; }
         
+        /* VIDEO SECTION – THUMBNAIL + PLAY BUTTON */
+        .video-section { margin:0 0 20px 0; background:#f8fafc; border-radius:20px; border:1px solid #e9edf4; overflow:hidden; }
+        .video-wrapper-custom {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 9/16;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .video-thumbnail {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('https://blog.franklymadear.com/download/six/photo6.png');
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+        .play-button {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            width: 64px; height: 64px;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: #fff;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, background 0.2s;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        .play-button:hover { transform: translate(-50%, -50%) scale(1.08); background: rgba(255, 0, 0, 0.85); border-color: #ff0000; }
+        .play-button i { margin-left: 4px; }
+
+        .yt-cta { margin:12px 0 0 0; text-align:center; }
+        .yt-cta a { display:inline-flex; align-items:center; gap:8px; background:#ff0000; color:#fff; padding:12px 28px; border-radius:60px; font-weight:700; text-decoration:none; }
+
+        /* ΔΙΑΦΗΜΙΣΗ IN-ARTICLE */
+        .ad-container-inarticle {
+            margin: 20px 0 16px 0;
+            background: #fafbfc;
+            border-radius: 16px;
+            padding: 12px 8px;
+            border: 1px solid #eef2f6;
+            text-align: center;
+        }
+        .ad-container-inarticle ins {
+            display: block !important;
+            text-align: center !important;
+        }
+
         /* SHARE BUTTONS STYLING */
         .share-section { margin: 15px 0 25px 0; text-align: center; }
         .share-section h4 { margin-bottom: 12px; font-size: 0.95rem; color: #0f172a; font-weight: 600; }
@@ -82,12 +137,11 @@
         .btn-wa { background: #25d366; }
         .btn-vb { background: #7360f2; }
 
-        .yt-cta { margin:16px 0; text-align:center; }
-        .yt-cta a { display:inline-flex; align-items:center; gap:8px; background:#ff0000; color:#fff; padding:12px 28px; border-radius:60px; font-weight:700; text-decoration:none; }
         .comments-section { margin:24px 0; background:#fff; border:1px solid #eef2f6; border-radius:20px; padding:20px 16px; }
         .comments-header { margin-bottom:18px; border-bottom:2px solid #f1f5f9; padding-bottom:12px; }
         .comments-header h3 { color:#0f172a; font-size:1.2rem; font-weight:700; display:flex; align-items:center; gap:8px; }
         #disqus_thread { min-height:50px; }
+
         .games-section { margin:24px 0; background:#f8fafc; padding:18px; border-radius:20px; border:1px solid #eef2f6; text-align:center; }
         .game-card { display:flex; align-items:center; gap:14px; background:#fff; padding:12px 16px; border-radius:18px; margin-bottom:12px; text-decoration:none; color:#1e293b; border:1px solid #e9edf4; }
         .game-icon { width:42px; height:42px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:#fff; }
@@ -96,55 +150,18 @@
         .game-desc { font-size:0.75rem; color:#64748b; }
         .play-now-btn { font-size:0.75rem; background:#3b82f6; color:#fff; padding:6px 16px; border-radius:30px; font-weight:600; }
         .footer-credit { text-align:center; padding:20px 0 5px; font-size:0.75rem; color:#94a3b8; }
-
-        /* STICKY POP-UP AD STYLING */
-        .popup-ad-wrapper {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: #ffffff;
-            box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            padding: 15px 10px 10px;
-            transform: translateY(100%);
-            animation: slideUpAd 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            animation-delay: 1s; /* Εμφανίζεται 1 δευτερόλεπτο μετά τη φόρτωση */
-        }
-        .popup-ad-close {
-            position: absolute;
-            top: -40px;
-            right: 15px;
-            background: #fff;
-            color: #333;
-            border: none;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s;
-        }
-        .popup-ad-close:hover { background: #f1f5f9; }
-        @keyframes slideUpAd {
-            to { transform: translateY(0); }
-        }
-        .ad-container-inner { width: 100%; max-width: 480px; text-align: center; }
     </style>
 </head>
 <body>
 <div class="main-container">
     
-    <!-- ============ ΒΙΝΤΕΟ ΣΤΗΝ ΚΟΡΥΦΗ (ΧΩΡΙΣ SCROLL) ============ -->
+    <!-- ============ ΒΙΝΤΕΟ ΜΕ THUMBNAIL & PLAY ============ -->
     <div class="video-section">
-        <div class="video-wrapper">
-            <iframe src="https://youtube.com/shorts/aKThxZMyV2o?is=ghRHsTP_3W-_L8wZ" allowfullscreen loading="lazy"></iframe>
+        <div class="video-wrapper-custom" id="videoWrapper">
+            <div class="video-thumbnail"></div>
+            <button class="play-button" id="playBtn" aria-label="Παίξε βίντεο">
+                <i class="fas fa-play"></i>
+            </button>
         </div>
         <div class="yt-cta">
             <a href="https://www.youtube.com/@zamanfou67?sub_confirmation=1" target="_blank">
@@ -152,6 +169,20 @@
             </a>
         </div>
     </div>
+
+    <!-- ============ ΝΕΑ ΔΙΑΦΗΜΙΣΗ IN-ARTICLE (ΕΝΤΟΣ ΠΕΡΙΕΧΟΜΕΝΟΥ) ============ -->
+    <div class="ad-container-inarticle">
+        <ins class="adsbygoogle"
+             style="display:block; text-align:center;"
+             data-ad-layout="in-article"
+             data-ad-format="fluid"
+             data-ad-client="ca-pub-3186700611266549"
+             data-ad-slot="5220069446"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <!-- ============================================================ -->
 
     <!-- ============ ΚΟΥΜΠΙΑ ΚΟΙΝΟΠΟΙΗΣΗΣ SOCIAL ============ -->
     <div class="share-section">
@@ -180,7 +211,6 @@
     <!-- ============ ΣΧΟΛΙΑ DISQUS ============ -->
     <div class="comments-section">
         <div class="comments-header"><h3><i class="far fa-comment-dots"></i> Σχολίασε εδώ</h3></div>
-        
         <div id="disqus_thread"></div>
         <script>
             var disqus_config = function () {
@@ -217,17 +247,42 @@
     <div class="footer-credit">© FranklyMadeAr Games</div>
 </div>
 
-<!-- ============ POP-UP ΔΙΑΦΗΜΙΣΗ ΜΕ ΚΟΥΜΠΙ ΚΛΕΙΣΙΜΑΤΟΣ ============ -->
-<div class="popup-ad-wrapper" id="sticky-ad">
-    <button class="popup-ad-close" onclick="document.getElementById('sticky-ad').style.display='none'" title="Κλείσιμο διαφήμισης">
-        <i class="fas fa-times"></i>
-    </button>
-    <div class="ad-container-inner">
-        <ins class="adsbygoogle ad-responsive" style="display:block" data-ad-client="ca-pub-3186700611266549" data-ad-slot="6147389372" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-</div>
-<!-- =============================================================== -->
+<!-- ============ JAVASCRIPT ΓΙΑ ΤΟ PLAY ============ -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const wrapper = document.getElementById('videoWrapper');
+        const playBtn = document.getElementById('playBtn');
+
+        function loadVideo() {
+            const iframe = document.createElement('iframe');
+            // Χρησιμοποιούμε το embed URL με autoplay=1 και κρατάμε την παράμετρο is όπως δόθηκε
+            iframe.src = 'https://www.youtube.com/embed/aKThxZMyV2o?autoplay=1&is=ghRHsTP_3W-_L8wZ';
+            iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.border = '0';
+            wrapper.innerHTML = '';
+            wrapper.appendChild(iframe);
+        }
+
+        playBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            loadVideo();
+        });
+
+        // Προαιρετικά: κλικ οπουδήποτε στο wrapper (εκτός από το κουμπί) ξεκινά το βίντεο
+        wrapper.addEventListener('click', function(e) {
+            if (e.target === wrapper || e.target.classList.contains('video-thumbnail')) {
+                loadVideo();
+            }
+        });
+    });
+</script>
+<!-- ================================================ -->
 
 <!-- ============ DISQUS COMMENT COUNTER ============ -->
 <script id="dsq-count-scr" src="//franklymadear.disqus.com/count.js" async></script>
