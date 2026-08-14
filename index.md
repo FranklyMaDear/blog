@@ -4,536 +4,211 @@ title: Αρχική
 <!DOCTYPE html>
 <html lang="el">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Franklymadear News</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Open Graph & Twitter Card -->
-    <meta property="og:title" content="Franklymadear News – Ενημέρωση Βίντεο" />
-    <meta property="og:description" content="Ειδήσεις, βίντεο και αναλύσεις από τον κόσμο της ενημέρωσης." />
-    <meta property="og:image" content="https://blog.franklymadear.com/index.png" />
-    <meta property="og:url" content="https://blog.franklymadear.com/" />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Franklymadear News – Ενημέρωση Βίντεο" />
-    <meta name="twitter:description" content="Ειδήσεις, βίντεο και αναλύσεις από τον κόσμο της ενημέρωσης." />
-    <meta name="twitter:image" content="https://blog.franklymadear.com/index.png" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
 
     <style>
-        /* ----- ΒΑΣΗ ----- */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root {
-            --bg-body: #0a0d14;
-            --bg-card: #151e2a;
-            --bg-header: #0f1620;
-            --primary: #ffffff;
-            --accent: #ff3b7f;
-            --secondary: #00e5ff;
-            --text-muted: #8a9bb5;
-            --border-color: #2a3648;
-            --shadow: 0 8px 24px rgba(0,0,0,0.6);
+        /* ΝΕΑΝΙΚΟ 3D DESIGN ΜΕ ΜΟΝΤΕΡΝΑ ΧΡΩΜΑΤΑ */
+        :root { 
+            --bg-body: #f4f5f8; 
+            --bg-card: #ffffff; 
+            --primary: #4f46e5; /* Έντονο Indigo */
+            --accent: #f43f5e; /* Νεανικό Ροζ/Κόκκινο */
+            --text-main: #0f172a; 
+            --text-muted: #64748b; 
+            --shadow-3d: 0 6px 0 #cbd5e1;
+            --shadow-3d-active: 0 2px 0 #cbd5e1;
+            --radius-lg: 24px;
+            --radius-md: 18px;
         }
-        html { font-size: 16px; }
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg-body);
-            color: var(--primary);
-            line-height: 1.6;
-            overflow: hidden;
-            padding-bottom: 80px;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; overflow: hidden; padding-bottom: 80px; }
         body.unlocked { overflow: auto; }
         a { text-decoration: none; color: inherit; }
+        
+        /* Container */
         .container { max-width: 720px; margin: 0 auto; padding: 0 16px; }
 
-        /* ----- HEADER ----- */
-        header {
-            background: var(--bg-header);
-            padding: 14px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 2px solid var(--border-color);
-            backdrop-filter: blur(10px);
-        }
-        .nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-weight: 900;
-            font-size: 24px;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .menu {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .menu a {
-            font-weight: 600;
-            font-size: 14px;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid var(--border-color);
-            border-radius: 0;
-            color: var(--primary);
-            min-height: 44px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: 0.2s;
-        }
-        .menu a:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-        }
-        .menu .games-btn {
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            border: none;
-            color: #fff;
-            font-weight: 700;
-        }
-        .menu .games-btn:hover {
-            transform: scale(1.04);
-            box-shadow: 0 0 20px rgba(255,59,127,0.4);
-        }
+        /* Header - Σαν App Bar */
+        header { background: var(--bg-card); padding: 16px 0; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid #e2e8f0; border-radius: 0 0 24px 24px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 16px;}
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; color: var(--text-main); letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+        .menu a { font-weight: 700; font-size: 14px; background: #f1f5f9; color: var(--primary); padding: 10px 20px; border-radius: 50px; transition: 0.2s; box-shadow: 0 3px 0 #cbd5e1; display: inline-block;}
+        .menu a:active { transform: translateY(3px); box-shadow: 0 0 0 #cbd5e1; }
+        
+        /* Hero - Πιο Pop Αισθητική */
+        .hero { text-align: center; padding: 24px 12px; margin-bottom: 10px; }
+        .hero h1 { font-size: 32px; font-weight: 900; color: var(--text-main); letter-spacing: -1px; text-transform: uppercase; }
+        .hero p { font-size: 16px; color: var(--text-muted); font-weight: 600; margin-top: 6px; }
 
-        /* ----- HERO ----- */
-        .hero {
-            text-align: center;
-            padding: 32px 12px 24px;
-        }
-        .hero h1 {
-            font-size: 30px;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fff 30%, var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .hero p {
-            font-size: 16px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
+        /* Section Titles */
+        .section-title { font-size: 20px; font-weight: 900; margin-bottom: 20px; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--primary); font-size: 24px; }
 
-        /* ----- SECTION TITLES ----- */
-        .section-title {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid var(--accent);
-            padding-left: 12px;
-        }
-        .section-title i {
-            -webkit-text-fill-color: initial;
-            color: var(--secondary);
-        }
+        /* ΑΡΘΡΑ - 3D Κάρτες */
+        .posts-grid { display: flex; flex-direction: column; gap: 24px; margin-bottom: 32px; }
+        .post-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; border: 2px solid #e2e8f0; box-shadow: var(--shadow-3d); transition: all 0.15s ease-out; display: block; }
+        .post-card:active { transform: translateY(4px); box-shadow: var(--shadow-3d-active); }
+        .post-card img { width: 100%; height: 220px; object-fit: cover; display: block; border-bottom: 2px solid #e2e8f0; }
+        .post-content { padding: 20px; }
+        .post-meta { font-size: 12px; background: #fee2e2; color: var(--accent); padding: 4px 10px; border-radius: 8px; font-weight: 800; text-transform: uppercase; display: inline-block; margin-bottom: 10px; letter-spacing: 0.5px; }
+        .post-card h2 { font-size: 20px; font-weight: 900; margin-bottom: 8px; line-height: 1.3; }
+        .post-excerpt { font-size: 15px; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 12px; font-weight: 500; }
+        .read-more { font-weight: 800; font-size: 15px; color: var(--primary); display: inline-flex; align-items: center; gap: 6px; }
 
-        /* ----- POSTS (κάθετη λίστα, τετράγωνες εικόνες) ----- */
-        .posts-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            margin-bottom: 24px;
-        }
-        .post-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: 0.25s ease;
-        }
-        .post-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
-        .post-card img {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            display: block;
-        }
-        .post-content {
-            padding: 18px;
-        }
-        .post-meta {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .post-card h2 {
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 6px;
-            line-height: 1.3;
-        }
-        .post-card h2 a:hover {
-            color: var(--accent);
-        }
-        .post-excerpt {
-            font-size: 15px;
-            color: var(--text-muted);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 10px;
-        }
-        .read-more {
-            font-weight: 700;
-            font-size: 14px;
-            color: var(--secondary);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            transition: 0.2s;
-            min-height: 44px;
-        }
-        .read-more:hover {
-            color: var(--accent);
-            gap: 10px;
-        }
+        /* ΔΙΑΦΗΜΙΣΕΙΣ - Προσαρμοσμένες στο UI */
+        .ad-container { margin: 12px 0 24px; width: 100%; background: #e2e8f0; border-radius: var(--radius-md); text-align: center; padding: 16px; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); }
+        .ad-container::before { content: 'ΔΙΑΦΗΜΙΣΗ'; font-size: 11px; color: #64748b; font-weight: 800; display: block; margin-bottom: 8px; letter-spacing: 1px; }
+        .separator-ad { margin-top: 32px; margin-bottom: 32px; }
 
-        /* ----- VIDEOS (επίσης κάθετα, τετράγωνα) ----- */
-        .video-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-            margin-bottom: 24px;
-        }
-        .video-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: 0.25s ease;
-            display: flex;
-            flex-direction: column;
-        }
-        .video-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--secondary);
-        }
-        .video-card img {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            display: block;
-        }
-        .video-content {
-            padding: 16px 18px 18px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .video-title {
-            font-weight: 700;
-            font-size: 17px;
-            color: #fff;
-            line-height: 1.3;
-        }
-        .play-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: var(--accent);
-            color: #fff;
-            padding: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-            min-height: 48px;
-            width: 100%;
-            border-radius: 0;
-        }
-        .video-card:hover .play-btn {
-            background: var(--secondary);
-            color: #0a0d14;
-        }
+        /* ΒΙΝΤΕΟ - 3D Video Cards */
+        .video-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px; }
+        .video-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; border: 2px solid #e2e8f0; box-shadow: var(--shadow-3d); display: flex; flex-direction: column; transition: all 0.15s ease-out; }
+        .video-card:active { transform: translateY(4px); box-shadow: var(--shadow-3d-active); }
+        .video-card img { width: 100%; height: 220px; object-fit: cover; display: block; border-bottom: 2px solid #e2e8f0; }
+        .video-content { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .video-title { font-weight: 800; font-size: 17px; color: var(--text-main); line-height: 1.3; margin-bottom: 16px; display: block; min-height: 44px; }
+        
+        /* 3D Κουμπί Αναπαραγωγής */
+        .play-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: linear-gradient(135deg, var(--primary), #818cf8); color: #fff; padding: 14px; border-radius: 14px; font-weight: 800; font-size: 15px; text-transform: uppercase; box-shadow: 0 4px 0 #3730a3; transition: all 0.1s; width: 100%; border: none; }
+        .video-card:active .play-btn { transform: translateY(4px); box-shadow: 0 0 0 #3730a3; }
 
-        /* ----- ADS ----- */
-        .ad-container {
-            margin: 8px 0 16px;
-            background: var(--bg-card);
-            text-align: center;
-            padding: 16px;
-            border: 1px dashed var(--border-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0;
-        }
-        .ad-container::before {
-            content: 'ΔΙΑΦΗΜΙΣΗ';
-            font-size: 10px;
-            color: var(--text-muted);
-            font-weight: 700;
-            display: block;
-            margin-bottom: 6px;
-            letter-spacing: 1px;
-        }
-        .separator-ad {
-            margin-top: 24px;
-            margin-bottom: 24px;
-        }
+        /* POP UP ΕΙΣΟΔΟΥ - Εντυπωσιακό & 3D */
+        .entry-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 20px; transition: opacity 0.4s ease, visibility 0.4s ease; }
+        .entry-overlay.hidden { opacity: 0; visibility: hidden; }
+        .entry-modal { background: var(--bg-body); padding: 32px 24px; border-radius: var(--radius-lg); text-align: center; max-width: 400px; width: 100%; border: 4px solid var(--primary); box-shadow: 0 12px 0 var(--primary); transform: translateY(-10px); }
+        .entry-modal h2 { color: var(--text-main); font-size: 28px; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
+        .entry-modal h2 span { color: var(--accent); }
+        
+        /* Κεντρικό 3D Κουμπί Εισόδου */
+        .btn-enter { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 24px; padding: 18px; font-size: 16px; font-weight: 900; color: #fff; border-radius: 16px; border: none; cursor: pointer; background: linear-gradient(135deg, var(--accent), #e11d48); box-shadow: 0 6px 0 #be123c; transition: all 0.15s ease-out; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-enter:active { transform: translateY(6px); box-shadow: 0 0 0 #be123c; }
 
-        /* ----- STICKY ADS ----- */
-        .sticky-ad {
-            position: fixed;
-            left: 0;
-            width: 100%;
-            background: var(--bg-card);
-            padding: 6px;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.7);
-            z-index: 9999;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            transition: transform 0.5s cubic-bezier(0.16,1,0.3,1);
-            border: 1px solid var(--border-color);
-        }
-        .sticky-top {
-            top: 0;
-            transform: translateY(-100%);
-            border-bottom: 2px solid var(--accent);
-        }
+        /* STICKY ADS - Μοντέρνα παρουσίαση */
+        .sticky-ad { position: fixed; left: 0; width: 100%; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); padding: 8px; box-shadow: 0 -4px 20px rgba(0,0,0,0.1); z-index: 9999; text-align: center; display: flex; justify-content: center; transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        .sticky-top { top: 0; transform: translateY(-100%); border-bottom: 3px solid var(--accent); border-radius: 0 0 20px 20px; }
         .sticky-top.show { transform: translateY(0); }
-        .sticky-bottom {
-            bottom: 0;
-            transform: translateY(100%);
-            border-top: 2px solid var(--accent);
-        }
+        .sticky-bottom { bottom: 0; transform: translateY(100%); border-top: 3px solid var(--accent); border-radius: 20px 20px 0 0; }
         .sticky-bottom.show { transform: translateY(0); }
-        .sticky-close {
-            position: absolute;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            width: 32px;
-            height: 32px;
-            font-size: 16px;
-            cursor: pointer;
-            top: -16px;
-            right: 14px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0;
-            transition: 0.2s;
-        }
-        .sticky-close:hover {
-            transform: scale(1.1);
-            background: #fff;
-            color: var(--accent);
-        }
+        .sticky-close { position: absolute; background: var(--text-main); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 14px; cursor: pointer; top: -15px; right: 16px; box-shadow: 0 4px 0 #000; transition: 0.15s; font-weight: bold; }
+        .sticky-close:active { transform: translateY(4px); box-shadow: 0 0 0 #000; }
+        
+        /* FOOTER */
+        footer { text-align: center; padding: 32px 16px; background: var(--text-main); color: #94a3b8; font-size: 14px; font-weight: 600; border-radius: 24px 24px 0 0; }
+        footer span { color: #ffffff; font-weight: 800; }
 
-        /* ----- POPUP ----- */
-        .entry-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.92);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            padding: 20px;
-            transition: opacity 0.4s ease, visibility 0.4s ease;
-        }
-        .entry-overlay.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-        .entry-modal {
-            background: var(--bg-card);
-            padding: 30px 28px 32px;
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
-            border-top: 6px solid var(--accent);
-            border-radius: 0;
-        }
-        .entry-modal h2 {
-            font-size: 28px;
-            font-weight: 900;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 18px;
-        }
-        .btn-enter {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            margin-top: 18px;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: 800;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            background: linear-gradient(135deg, var(--accent), var(--secondary));
-            transition: 0.25s ease;
-            min-height: 56px;
-            border-radius: 0;
-        }
-        .btn-enter:hover {
-            transform: scale(1.04);
-            box-shadow: 0 0 30px rgba(255,59,127,0.5);
-        }
-
-        /* ----- FOOTER ----- */
-        footer {
-            text-align: center;
-            padding: 24px 16px;
-            background: var(--bg-header);
-            color: var(--text-muted);
-            font-size: 14px;
-            margin-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-        footer span { color: #fff; font-weight: 700; }
-
-        /* ----- RESPONSIVE (μόνο για tablet 2 στήλες στα βίντεο αν θες, αλλά όχι υποχρεωτικό) ----- */
+        /* DESKTOP/TABLET */
         @media (min-width: 600px) {
-            .video-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 18px;
-            }
-            .video-card {
-                margin-bottom: 0;
-            }
+            .video-grid { grid-template-columns: repeat(2, 1fr); }
+            .posts-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .ad-container { grid-column: 1 / -1; } /* Οι διαφημίσεις πιάνουν όλο το πλάτος */
         }
-        /* Αλλά σε κινητό μένουν κάθετα */
     </style>
 </head>
 <body>
-
-    <!-- POPUP ΕΙΣΟΔΟΥ -->
+    <!-- Οθόνη Υποδοχής -->
     <div class="entry-overlay" id="entryOverlay">
         <div class="entry-modal">
-            <h2>Franklymadear <span style="-webkit-text-fill-color: var(--secondary);">News</span></h2>
-            <div style="min-height: 200px; border:1px solid var(--border-color); display:flex; align-items:center; justify-content:center; background:var(--bg-body);">
+            <h2>Franklymadear <span>News</span></h2>
+            <div style="min-height: 200px; border-radius:16px; border:2px dashed #cbd5e1; display:flex; align-items:center; justify-content:center; background:#f8fafc; overflow: hidden;">
                 <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
-            <button class="btn-enter" onclick="enterPage()">ΣΥΝΕΧΕΙΑ ΣΤΟ BLOG <i class="fas fa-arrow-right"></i></button>
+            <button class="btn-enter" onclick="enterPage()">
+                ΣΥΝΕΧΕΙΑ <i class="fas fa-rocket"></i>
+            </button>
         </div>
     </div>
 
-    <!-- STICKY TOP AD -->
+    <!-- Sticky Διαφήμιση Πάνω -->
     <div class="sticky-ad sticky-top" id="topAd">
         <button class="sticky-close" onclick="this.parentElement.classList.remove('show')"><i class="fas fa-times"></i></button>
         <ins class="adsbygoogle" style="display:block; width:100%; height:50px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <!-- HEADER -->
     <header>
         <div class="container nav">
-            <div class="logo">Franklymadear<span style="color:var(--secondary);">.</span></div>
+            <div class="logo">Franklymadear<span>.</span></div>
             <div class="menu">
                 <a href="/"><i class="fas fa-home"></i> Αρχική</a>
-                <a href="/games" class="games-btn"><i class="fas fa-gamepad"></i> FranklyGames</a>
             </div>
         </div>
     </header>
 
-    <!-- HERO -->
     <section class="hero">
         <div class="container">
             <h1>Η Ενημέρωση Αλλιώς</h1>
-            <p>Ειδήσεις &amp; Αποκλειστικά Βίντεο</p>
+            <p>Ειδήσεις & Αποκλειστικά Βίντεο</p>
         </div>
     </section>
 
     <div class="container">
-
-        <!-- ΑΡΘΡΑ -->
-        <h2 class="section-title"><i class="far fa-newspaper"></i> Τελευταία Νέα</h2>
+        <!-- ΕΝΟΤΗΤΑ 1: ΑΡΘΡΑ -->
+        <h2 class="section-title"><i class="fas fa-bolt"></i> Τελευταία Νέα</h2>
         <section class="posts-grid">
-
-            <article class="post-card">
-                <img src="/post/four/photo7.png" alt="SHOWBIZ" />
+            
+            <!-- Άρθρο 1 -->
+            <a href="/post/four/index.html" class="post-card">
+                <img src="/post/four/photo7.png" alt="SHOWBIZ">
                 <div class="post-content">
-                    <span class="post-meta">12 Αυγούστου 2026</span>
-                    <h2><a href="/post/four/index.html">💥 SHOWBIZ EXPLOSION</a></h2>
-                    <p class="post-excerpt">10 Σοκαριστικές Αλήθειες &amp; Ανατροπές που Συμβαίνουν Τώρα!</p>
-                    <a href="/post/four/index.html" class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></a>
+                    <span class="post-meta">12 Αυγ 2026</span>
+                    <h2>💥 SHOWBIZ EXPLOSION</h2>
+                    <p class="post-excerpt">10 Σοκαριστικές Αλήθειες & Ανατροπές που Συμβαίνουν Τώρα!</p>
+                    <span class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></span>
                 </div>
-            </article>
-
-            <!-- ad ενδιάμεσα -->
+            </a>
+            
+            <!-- 1η Διαφήμιση -->
             <div class="ad-container"><ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
-
-            <article class="post-card">
-                <img src="/post/one/photo4.png" alt="Προσωπικός Βοηθός" />
+            
+            <!-- Άρθρο 2 -->
+            <a href="/post/one/index.html" class="post-card">
+                <img src="/post/one/photo4.png" alt="Προσωπικός Βοηθός">
                 <div class="post-content">
-                    <span class="post-meta">12 Αυγούστου 2026</span>
-                    <h2><a href="/post/one/index.html">Έως 1.939 ευρώ τον μήνα για τον Προσωπικό Βοηθό</a></h2>
+                    <span class="post-meta">12 Αυγ 2026</span>
+                    <h2>Έως 1.939 ευρώ τον μήνα για τον Προσωπικό Βοηθό</h2>
                     <p class="post-excerpt">Σημαντικές εξελίξεις φέρνει το Υπουργείο Κοινωνικής Συνοχής.</p>
-                    <a href="/post/one/index.html" class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></a>
+                    <span class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></span>
                 </div>
-            </article>
-
+            </a>
+            
+            <!-- 2η Διαφήμιση -->
             <div class="ad-container"><ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
-
-            <article class="post-card">
-                <img src="/post/two/photo5.png" alt="Πυρκαγιές" />
+            
+            <!-- Άρθρο 3 -->
+            <a href="/post/two/index.html" class="post-card">
+                <img src="/post/two/photo5.png" alt="Πυρκαγιές">
                 <div class="post-content">
-                    <span class="post-meta">11 Αυγούστου 2026</span>
-                    <h2><a href="/post/two/index.html">🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται</a></h2>
+                    <span class="post-meta">11 Αυγ 2026</span>
+                    <h2>🚨 ΩΡΑ ΜΗΔΕΝ: Η Ελλάδα φλέγεται</h2>
                     <p class="post-excerpt">Οι πύρινες φλόγες καταπίνουν τα πάντα. Κατηγορία 5.</p>
-                    <a href="/post/two/index.html" class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></a>
+                    <span class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></span>
                 </div>
-            </article>
-
+            </a>
+            
+            <!-- 3η Διαφήμιση -->
             <div class="ad-container"><ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
-
-            <article class="post-card">
-                <img src="/post/three/photo6.png" alt="Σεισμοί" />
+            
+            <!-- Άρθρο 4 -->
+            <a href="/post/three/index.html" class="post-card">
+                <img src="/post/three/photo6.png" alt="Σεισμοί">
                 <div class="post-content">
-                    <span class="post-meta">10 Αυγούστου 2026</span>
-                    <h2><a href="/post/three/index.html">Η θεωρία του Σοκ στον Εγκέλαδο</a></h2>
+                    <span class="post-meta">10 Αυγ 2026</span>
+                    <h2>Η θεωρία του Σοκ στον Εγκέλαδο</h2>
                     <p class="post-excerpt">Η χρονική και γεωγραφική σύμπτωση των φονικών σεισμών.</p>
-                    <a href="/post/three/index.html" class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></a>
+                    <span class="read-more">Διαβάστε <i class="fas fa-arrow-right"></i></span>
                 </div>
-            </article>
+            </a>
         </section>
 
         <!-- ΚΕΝΤΡΙΚΗ ΔΙΑΦΗΜΙΣΗ -->
@@ -542,22 +217,22 @@ title: Αρχική
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
-        <!-- ΒΙΝΤΕΟ (κάθετα, όχι scroll) -->
-        <h2 class="section-title"><i class="far fa-play-circle"></i> Τελευταία Βίντεο</h2>
-        <div class="video-grid">
-
+        <!-- ΕΝΟΤΗΤΑ 2: ΒΙΝΤΕΟ -->
+        <h2 class="section-title"><i class="fas fa-play-circle"></i> Τελευταία Βίντεο</h2>
+        <section class="video-grid">
+            
             {% for video in site.data.videos %}
             <a href="{{ video.url }}" class="video-card">
-                <img src="{{ video.image }}" alt="{{ video.title }}" />
+                <img src="{{ video.image }}" alt="{{ video.title }}">
                 <div class="video-content">
                     <span class="video-title">{{ video.title }}</span>
-                    <span class="play-btn"><i class="fas fa-play"></i> Παρακολούθηση</span>
+                    <button class="play-btn"><i class="fas fa-play"></i> Play Video</button>
                 </div>
             </a>
 
-            <!-- Ενδιάμεσες διαφημίσεις (μετά το 2ο και 4ο βίντεο) -->
-            {% if forloop.index == 2 or forloop.index == 4 %}
-            <div class="ad-container" style="margin:0;">
+            <!-- Διαφήμιση μετά το 1ο και 3ο βίντεο -->
+            {% if forloop.index == 1 or forloop.index == 3 %}
+            <div class="ad-container">
                 <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
@@ -565,31 +240,27 @@ title: Αρχική
 
             {% endfor %}
 
-        </div>
+        </section>
+    </div>
 
-    </div> <!-- /container -->
-
-    <!-- STICKY BOTTOM AD -->
+    <!-- Sticky Διαφήμιση Κάτω -->
     <div class="sticky-ad sticky-bottom" id="bottomAd">
         <button class="sticky-close" onclick="this.parentElement.classList.remove('show')"><i class="fas fa-times"></i></button>
         <ins class="adsbygoogle" style="display:block; width:100%; height:50px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <footer>
-        <div class="container">&copy; 2026 <span>Franklymadear</span> News.</div>
-    </footer>
+    <footer><div class="container">&copy; 2026 <span>Franklymadear</span> News. Built for Mobile.</div></footer>
 
     <script>
         function enterPage() {
             document.getElementById('entryOverlay').classList.add('hidden');
             document.body.classList.add('unlocked');
-            setTimeout(function() {
+            setTimeout(() => {
                 document.getElementById('topAd').classList.add('show');
                 document.getElementById('bottomAd').classList.add('show');
-            }, 800);
+            }, 600);
         }
     </script>
-
 </body>
 </html>
