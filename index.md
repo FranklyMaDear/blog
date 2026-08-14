@@ -31,9 +31,9 @@ title: Αρχική
             --bg-card: #16161c;
             --bg-card-hover: #202028;
             --primary: #ffffff;
-            --accent-news: #e50914;      /* Κόκκινο για ειδήσεις */
-            --accent-video: #00e5ff;     /* Neon Cyan για βίντεο */
-            --accent-2: #1db954;         /* Πράσινο για CTA */
+            --accent-news: #e50914;
+            --accent-video: #00e5ff;
+            --accent-2: #1db954;
             --text-main: #f2f2f4;
             --text-muted: #9a9aa5;
             --border: #26262f;
@@ -42,16 +42,43 @@ title: Αρχική
             --radius-lg: 16px;
             --radius-md: 10px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); line-height: 1.5; overflow: hidden; padding-bottom: 80px; }
-        body.unlocked { overflow: auto; }
+        
+        /* Οριζόντια προστασία για όλη τη σελίδα */
+        html, body {
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+            overflow-y: hidden;
+            padding-bottom: 80px;
+            margin: 0;
+            padding: 0;
+        }
+        body.unlocked {
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        img, video, iframe, ins {
+            max-width: 100%;
+            height: auto;
+        }
         a { text-decoration: none; color: inherit; }
         ::-webkit-scrollbar { height: 8px; width: 8px; }
         ::-webkit-scrollbar-thumb { background: #333340; border-radius: 8px; }
 
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; width: 100%; }
 
-        /* Header – Σκούρο, sticky, με accent γραμμή */
+        /* Header */
         header { background: linear-gradient(180deg, rgba(6,6,8,0.97), rgba(6,6,8,0.9)); padding: 14px 0; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); }
         .nav { display: flex; justify-content: space-between; align-items: center; }
         .logo { font-size: 22px; font-weight: 900; color: var(--primary); letter-spacing: -0.5px; text-transform: uppercase; }
@@ -59,12 +86,12 @@ title: Αρχική
         .menu a { font-weight: 700; font-size: 13px; background: rgba(255,255,255,0.06); color: var(--text-main); padding: 8px 18px; border-radius: 50px; transition: 0.2s; border: 1px solid var(--border); }
         .menu a:hover { background: var(--accent-news); border-color: var(--accent-news); color: #fff; }
 
-        /* Hero – Cinematic banner */
+        /* Hero */
         .hero { text-align: center; padding: 48px 12px 32px; background: radial-gradient(ellipse at top, rgba(229,9,20,0.15), transparent 60%); }
         .hero h1 { font-size: 32px; font-weight: 900; color: var(--primary); letter-spacing: -0.8px; }
         .hero p { font-size: 14px; color: var(--text-muted); margin-top: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
 
-        /* CTA Κουμπιά */
+        /* CTA κουμπιά */
         .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 0 16px 32px; }
         .cta-btn { display: inline-flex; align-items: center; gap: 8px; padding: 13px 24px; border-radius: 50px; font-weight: 800; font-size: 13.5px; letter-spacing: 0.2px; transition: 0.2s; border: 1px solid transparent; }
         .cta-btn i { font-size: 15px; }
@@ -73,18 +100,18 @@ title: Αρχική
         .cta-omen { background: linear-gradient(135deg, #8b5cf6, #4c1d95); color: #fff; }
         .cta-omen:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(139,92,246,0.4); }
 
-        /* Section Titles – με χρωματική γραμμή ανάλογα με την κατηγορία */
+        /* Τίτλοι ενοτήτων */
         .section-title { font-size: 19px; font-weight: 800; margin-bottom: 20px; color: var(--primary); padding-left: 14px; position: relative; display: flex; align-items: center; gap: 10px; }
         .section-title::before { content: ''; position: absolute; left: 0; top: 2px; bottom: 2px; width: 4px; background: linear-gradient(180deg, var(--accent-news), var(--accent-video)); border-radius: 4px; }
         .section-title .fa-newspaper { color: var(--accent-news); }
         .section-title .fa-play-circle { color: var(--accent-video); }
 
-        /* ΑΡΘΡΑ – Κάθετη ροή με Lead Story */
+        /* ΑΡΘΡΑ */
         .posts-grid { display: flex; flex-direction: column; gap: 22px; margin-bottom: 24px; }
-        .post-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: 0.25s; position: relative; }
+        .post-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: 0.25s; position: relative; width: 100%; }
         .post-card:hover { box-shadow: var(--shadow-md); background: var(--bg-card-hover); border-color: #3a3a46; }
 
-        /* Lead Story – Πρώτο άρθρο */
+        /* Lead Story */
         .lead-card { border-left: 4px solid var(--accent-news); }
         .lead-card .post-image-wrap img { aspect-ratio: 16/9; height: auto; width: 100%; }
         .lead-card .post-content { padding: 30px 20px 18px; }
@@ -93,7 +120,7 @@ title: Αρχική
         .lead-card .post-avatar { width: 52px; height: 52px; font-size: 20px; bottom: -22px; }
         .lead-card .source-name { font-size: 14px; }
 
-        .post-image-wrap { position: relative; }
+        .post-image-wrap { position: relative; width: 100%; }
         .post-card img { width: 100%; aspect-ratio: 16/9; height: auto; object-fit: cover; display: block; }
         .post-avatar { position: absolute; left: 14px; bottom: -18px; width: 44px; height: 44px; border-radius: 50%; background: var(--accent-news); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; border: 3px solid var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
         .post-content { padding: 26px 16px 16px; }
@@ -115,11 +142,10 @@ title: Αρχική
         .ad-container { margin: 8px 0 16px; width: 100%; background: #101014; border-radius: var(--radius-md); text-align: center; padding: 16px; border: 1px dashed #33333d; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .ad-container::before { content: 'ΔΙΑΦΗΜΙΣΗ'; font-size: 10px; color: #5a5a66; font-weight: 700; display: block; margin-bottom: 6px; letter-spacing: 1px; }
         .separator-ad { margin-top: 24px; margin-bottom: 24px; }
-        .posts-grid + .ad-container, .video-grid .ad-container { flex: 0 0 auto; width: 100%; }
 
-        /* ΒΙΝΤΕΟ – Κάθετη διάταξη, grid 2 στήλες (mobile) */
+        /* ΒΙΝΤΕΟ */
         .video-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
-        .video-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: block; transition: 0.25s; position: relative; }
+        .video-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); border: 1px solid var(--border); display: block; transition: 0.25s; position: relative; width: 100%; }
         .video-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: #3a3a46; }
         .video-thumb { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; }
         .video-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; filter: brightness(0.8); transition: 0.3s; }
@@ -143,13 +169,28 @@ title: Αρχική
         .btn-enter:hover { background: #ff0a17; transform: scale(1.02); }
 
         /* STICKY ADS */
-        .sticky-ad { position: fixed; left: 0; width: 100%; background: #101014; padding: 6px; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); z-index: 9999; text-align: center; display: flex; justify-content: center; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); border-color: var(--border); }
+        .sticky-ad { position: fixed; left: 0; width: 100%; max-width: 100vw; overflow: hidden; background: #101014; padding: 6px; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); z-index: 9999; text-align: center; display: flex; justify-content: center; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); border-color: var(--border); }
         .sticky-top { top: 0; transform: translateY(-100%); border-bottom: 2px solid var(--accent-news); }
         .sticky-top.show { transform: translateY(0); }
         .sticky-bottom { bottom: 0; transform: translateY(100%); border-top: 2px solid var(--accent-news); }
         .sticky-bottom.show { transform: translateY(0); }
-        .sticky-close { position: absolute; background: var(--accent-news); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; font-size: 12px; cursor: pointer; top: -13px; right: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.4); transition: 0.2s; }
+
+        /* Κουμπί κλεισίματος (Χ) */
+        .sticky-close { position: absolute; background: var(--accent-news); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; font-size: 12px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.4); transition: 0.2s; z-index: 10; }
         .sticky-close:hover { transform: scale(1.1); }
+
+        /* Το Χ στην πάνω διαφήμιση τοποθετείται ΚΑΤΩ ΔΕΞΙΑ */
+        .sticky-top .sticky-close {
+            top: auto;
+            bottom: 8px;
+            right: 8px;
+        }
+        /* Το Χ στην κάτω διαφήμιση παραμένει πάνω δεξιά (προαιρετικά) */
+        .sticky-bottom .sticky-close {
+            top: 8px;
+            right: 8px;
+            bottom: auto;
+        }
 
         /* FOOTER */
         footer { text-align: center; padding: 28px 16px; background: #050506; color: var(--text-muted); font-size: 13px; margin-top: 20px; border-top: 1px solid var(--border); }
