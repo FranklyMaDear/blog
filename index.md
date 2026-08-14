@@ -1,3 +1,7 @@
+---
+layout: default
+title: Αρχική
+---
 <!DOCTYPE html>
 <html lang="el">
 <head>
