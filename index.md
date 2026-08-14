@@ -168,24 +168,71 @@ title: Αρχική
         .btn-enter { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; margin-top: 16px; padding: 16px; font-size: 15px; font-weight: 800; color: #fff; border-radius: 50px; border: none; cursor: pointer; background: var(--accent-news); transition: 0.2s; }
         .btn-enter:hover { background: #ff0a17; transform: scale(1.02); }
 
-        /* STICKY ADS */
-        .sticky-ad { position: fixed; left: 0; width: 100%; max-width: 100vw; overflow: hidden; background: #101014; padding: 6px; box-shadow: 0 -4px 20px rgba(0,0,0,0.5); z-index: 9999; text-align: center; display: flex; justify-content: center; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); border-color: var(--border); }
-        .sticky-top { top: 0; transform: translateY(-100%); border-bottom: 2px solid var(--accent-news); }
+        /* STICKY ADS – Ύψος 15% της οθόνης */
+        .sticky-ad {
+            position: fixed;
+            left: 0;
+            width: 100%;
+            max-width: 100vw;
+            height: 15vh;               /* 15% του ύψους οθόνης */
+            min-height: 60px;           /* ελάχιστο ύψος για ευχρηστία */
+            overflow: hidden;
+            background: #101014;
+            padding: 0;                 /* αφαιρούμε το padding για να μην ξεπερνά το 15% */
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border-color: var(--border);
+        }
+
+        .sticky-top {
+            top: 0;
+            transform: translateY(-100%);
+            border-bottom: 2px solid var(--accent-news);
+        }
         .sticky-top.show { transform: translateY(0); }
-        .sticky-bottom { bottom: 0; transform: translateY(100%); border-top: 2px solid var(--accent-news); }
+
+        .sticky-bottom {
+            bottom: 0;
+            transform: translateY(100%);
+            border-top: 2px solid var(--accent-news);
+        }
         .sticky-bottom.show { transform: translateY(0); }
 
+        /* Το εσωτερικό της διαφήμισης γεμίζει το 15% */
+        .sticky-ad .adsbygoogle {
+            display: block;
+            width: 100%;
+            height: 100% !important;   /* επιβάλλουμε ύψος 100% του container */
+        }
+
         /* Κουμπί κλεισίματος (Χ) */
-        .sticky-close { position: absolute; background: var(--accent-news); color: #fff; border: none; width: 26px; height: 26px; border-radius: 50%; font-size: 12px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.4); transition: 0.2s; z-index: 10; }
+        .sticky-close {
+            position: absolute;
+            background: var(--accent-news);
+            color: #fff;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transition: 0.2s;
+            z-index: 10;
+        }
         .sticky-close:hover { transform: scale(1.1); }
 
         /* Το Χ στην πάνω διαφήμιση τοποθετείται ΚΑΤΩ ΔΕΞΙΑ */
         .sticky-top .sticky-close {
-            top: auto;
             bottom: 8px;
             right: 8px;
+            top: auto;
         }
-        /* Το Χ στην κάτω διαφήμιση παραμένει πάνω δεξιά (προαιρετικά) */
+        /* Το Χ στην κάτω διαφήμιση παραμένει πάνω δεξιά */
         .sticky-bottom .sticky-close {
             top: 8px;
             right: 8px;
@@ -226,7 +273,7 @@ title: Αρχική
     <!-- Sticky Διαφήμιση Πάνω -->
     <div class="sticky-ad sticky-top" id="topAd">
         <button class="sticky-close" onclick="this.parentElement.classList.remove('show')"><i class="fas fa-times"></i></button>
-        <ins class="adsbygoogle" style="display:block; width:100%; height:50px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+        <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
@@ -400,7 +447,7 @@ title: Αρχική
     <!-- Sticky Διαφήμιση Κάτω -->
     <div class="sticky-ad sticky-bottom" id="bottomAd">
         <button class="sticky-close" onclick="this.parentElement.classList.remove('show')"><i class="fas fa-times"></i></button>
-        <ins class="adsbygoogle" style="display:block; width:100%; height:50px;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
+        <ins class="adsbygoogle" style="display:block; width:100%;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-3186700611266549" data-ad-slot="5220069446"></ins>
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
