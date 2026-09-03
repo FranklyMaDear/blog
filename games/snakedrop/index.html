@@ -323,6 +323,65 @@
     margin-bottom: 15px;
     overflow: hidden;
   }
+
+  /* ===== ΝΕΑ: Roll-up Banner ===== */
+  #rollupBanner {
+    position: fixed;
+    top: -100vh;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    background: #111;
+    z-index: 2000;
+    transition: top 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid #333;
+  }
+  #rollupBanner.show {
+    top: 0;
+  }
+  #rollupBanner .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #ff4d6d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 2001;
+  }
+
+  /* ===== ΝΕΑ: End modal ad & countdown ===== */
+  #endAdContainer {
+    width: 100%;
+    min-height: 250px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
+  }
+  #endAdCountdown {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .btn-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* ===== ΝΕΑ: Share logo (hidden) ===== */
+  #shareLogo { display: none; }
 </style>
 </head>
 <body>
@@ -336,6 +395,20 @@
          data-ad-format="auto"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
+
+  <!-- ===== ΝΕΑ: Roll-up Banner ===== -->
+  <div id="rollupBanner">
+    <button class="close-btn" onclick="document.getElementById('rollupBanner').classList.remove('show')">×</button>
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; height:100%;"
+         data-ad-client="ca-pub-3186700611266549"
+         data-ad-slot="5220069446"
+         data-ad-format="auto"></ins>
+  </div>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+  <!-- Hidden logo for share -->
+  <img id="shareLogo" src="photo.png" alt="logo">
 
 <div id="wrap">
   <canvas id="game"></canvas>
@@ -404,11 +477,19 @@
       </div>
     </div>
 
-    <!-- End Modal -->
+    <!-- End Modal (modified with ad & countdown) -->
     <div class="overlay hidden" id="endModal">
       <div class="center-msg">
         <h1 id="endTitle">Game Over</h1>
         <p id="endBody">Your score: 0</p>
+        <div id="endAdContainer">
+          <ins class="adsbygoogle"
+               style="display:block; width:100%; height:250px;"
+               data-ad-client="ca-pub-3186700611266549"
+               data-ad-slot="5220069446"
+               data-ad-format="auto"></ins>
+        </div>
+        <p id="endAdCountdown">Advertisement in 5s</p>
         <button class="btn btn-alt hidden" id="continueBtn">Continue (25 coins) 🎬</button>
         <button class="btn btn-alt hidden" id="watchAdContinue">🎬 Watch Ad to Continue</button>
         <button class="btn" id="restartBtn">Play Again</button>
@@ -2318,7 +2399,49 @@ function endGame(survived, diedEarly){
       continueBtn.classList.add('hidden');
       watchAdContinueBtn.classList.add('hidden');
   }
-  document.getElementById('endModal').classList.remove('hidden');
+  
+  // ===== ΝΕΑ: Show end ad + countdown =====
+  const endModal = document.getElementById('endModal');
+  endModal.classList.remove('hidden');
+  
+  // Disable all buttons initially
+  continueBtn.classList.add('btn-disabled');
+  watchAdContinueBtn.classList.add('btn-disabled');
+  document.getElementById('restartBtn').classList.add('btn-disabled');
+  
+  // Inject ad into endAdContainer
+  const endAdContainer = document.getElementById('endAdContainer');
+  endAdContainer.innerHTML = '';
+  const ins = document.createElement('ins');
+  ins.className = 'adsbygoogle';
+  ins.style.display = 'block';
+  ins.style.width = '100%';
+  ins.style.height = '250px';
+  ins.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
+  ins.setAttribute('data-ad-slot', '5220069446');
+  ins.setAttribute('data-ad-format', 'auto');
+  endAdContainer.appendChild(ins);
+  try {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+  } catch (e) {}
+
+  // Start countdown of 5 seconds
+  const countdownEl = document.getElementById('endAdCountdown');
+  let count = 5;
+  countdownEl.textContent = `Advertisement in ${count}s`;
+  const countdownInterval = setInterval(() => {
+    count--;
+    if (count <= 0) {
+      clearInterval(countdownInterval);
+      countdownEl.textContent = 'Ad complete!';
+      // Enable buttons
+      continueBtn.classList.remove('btn-disabled');
+      watchAdContinueBtn.classList.remove('btn-disabled');
+      document.getElementById('restartBtn').classList.remove('btn-disabled');
+    } else {
+      countdownEl.textContent = `Advertisement in ${count}s`;
+    }
+  }, 1000);
 }
 
 initWorld('endless');
@@ -2394,6 +2517,7 @@ document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
   convertPointsToCoins();
 });
 
+// ===== ΝΕΑ: Share with photo.png =====
 document.getElementById('btnShare').addEventListener('click', async () => {
   const shareData = {
     title: 'Snake Drop – Games by Aziram',
@@ -2401,11 +2525,16 @@ document.getElementById('btnShare').addEventListener('click', async () => {
     url: window.location.href
   };
   try {
-    if (navigator.share) {
+    const img = document.getElementById('shareLogo');
+    if (img && img.src && img.src !== window.location.href) { // check if image exists
+      const blob = await fetch(img.src).then(r => r.blob());
+      const file = new File([blob], 'photo.png', { type: blob.type });
+      shareData.files = [file];
+    }
+    if (navigator.canShare && navigator.canShare({ files: shareData.files })) {
       await navigator.share(shareData);
     } else {
-      await navigator.clipboard.writeText(shareData.url);
-      toast('Link copied!', '#4ade80');
+      await navigator.share({ title: shareData.title, text: shareData.text, url: shareData.url });
     }
   } catch (err) {
     try {
@@ -2431,6 +2560,12 @@ document.getElementById('adBubble').addEventListener('click', () => {
 spawnObstacles();
 for(let i=0;i<120;i++) spawnCube();
 frame(0);
+
+// ===== ΝΕΑ: Show roll-up banner after 1 second =====
+setTimeout(() => {
+  const banner = document.getElementById('rollupBanner');
+  if(banner) banner.classList.add('show');
+}, 1000);
 
 })();
 </script>
