@@ -7,6 +7,18 @@
 <!-- Google AdSense Script -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
 
+<!-- ===== ΝΕΟ: Prewarm για να φορτώνει πάντα η πρώτη διαφήμιση ===== -->
+<script>
+  window.addEventListener('load', function() {
+    try {
+      (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-3186700611266549",
+        enable_page_level_ads: true
+      });
+    } catch (e) {}
+  });
+</script>
+
 <!-- ===== ΝΕΑ: Meta tags για Social & Αρχική Οθόνη ===== -->
 <meta property="og:title" content="Snake Drop – Games by Aziram" />
 <meta property="og:description" content="Merge cubes, grow your snake and climb the leaderboard!" />
@@ -1594,7 +1606,7 @@ wrap.addEventListener('pointerup', joyRelease);
 wrap.addEventListener('pointercancel', joyRelease);
 
 // ==========================================
-// AD REWARD SYSTEM (Google AdSense) - ΔΙΟΡΘΩΜΕΝΟ (1000ms)
+// AD REWARD SYSTEM (Google AdSense) - ΔΙΟΡΘΩΜΕΝΟ (1500ms)
 // ==========================================
 function showRewardedAd(callback) {
     // Pause the game so the player cannot cheat
@@ -1621,12 +1633,12 @@ function showRewardedAd(callback) {
     ins.setAttribute('data-ad-format', 'auto');
     container.appendChild(ins);
     
-    // ---------- Η ΑΛΛΑΓΗ ΠΟΥ ΛΥΝΕΙ ΤΟ ΠΡΟΒΛΗΜΑ ----------
+    // ---------- Η ΑΛΛΑΓΗ ΠΟΥ ΛΥΝΕΙ ΤΟ ΠΡΟΒΛΗΜΑ (1500ms) ----------
     setTimeout(() => {
         try {
             (adsbygoogle = window.adsbygoogle || []).push({});
         } catch (e) {}
-    }, 1000);
+    }, 1500);
     // ------------------------------------------------------
     
     // Start a 5-second timer to mimic a rewarded video ad
@@ -2446,12 +2458,12 @@ function endGame(survived, diedEarly){
   ins.setAttribute('data-ad-format', 'auto');
   endAdContainer.appendChild(ins);
   
-  // ---------- Η ΑΛΛΑΓΗ ΠΟΥ ΛΥΝΕΙ ΤΟ ΠΡΟΒΛΗΜΑ ΣΤΟ END GAME ----------
+  // ---------- Η ΑΛΛΑΓΗ ΠΟΥ ΛΥΝΕΙ ΤΟ ΠΡΟΒΛΗΜΑ ΣΤΟ END GAME (1500ms) ----------
   setTimeout(() => {
       try {
           (adsbygoogle = window.adsbygoogle || []).push({});
       } catch (e) {}
-  }, 1000);
+  }, 1500);
   // ------------------------------------------------------------------
 
   // Start countdown of 5 seconds
@@ -2546,33 +2558,60 @@ document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
   convertPointsToCoins();
 });
 
-// ===== ΝΕΑ: Share with photo.png =====
+// ===== ΝΕΟ: Universal Share με εικόνα & τίτλο για όλους τους Browsers =====
 document.getElementById('btnShare').addEventListener('click', async () => {
-  const shareData = {
-    title: 'Snake Drop – Games by Aziram',
-    text: 'Play Snake Drop! Merge cubes, grow your snake and climb the leaderboard!',
-    url: window.location.href
-  };
-  try {
-    const img = document.getElementById('shareLogo');
-    if (img && img.src && img.src !== window.location.href) { // check if image exists
-      const blob = await fetch(img.src).then(r => r.blob());
-      const file = new File([blob], 'photo.png', { type: blob.type });
-      shareData.files = [file];
-    }
-    if (navigator.canShare && navigator.canShare({ files: shareData.files })) {
-      await navigator.share(shareData);
-    } else {
-      await navigator.share({ title: shareData.title, text: shareData.text, url: shareData.url });
-    }
-  } catch (err) {
+    const shareText = 'Snake Drop – Games by Aziram';
+    const shareUrl = window.location.href;
+    
+    // 1. Προσπάθεια για Native Share με αρχείο (Κινητά - iOS/Android)
     try {
-      await navigator.clipboard.writeText(shareData.url);
-      toast('Link copied!', '#4ade80');
-    } catch(e2) {
-      toast('Share not available', '#ff4d6d');
+        if (navigator.share && navigator.canShare) {
+            const img = document.getElementById('shareLogo');
+            if (img && img.src) {
+                const blob = await fetch(img.src).then(r => r.blob());
+                const file = new File([blob], 'photo.png', { type: blob.type });
+                if (navigator.canShare({ files: [file] })) {
+                    await navigator.share({ title: shareText, text: shareText, url: shareUrl, files: [file] });
+                    return; // Επιτυχία! 
+                }
+            }
+            // 2. Native share χωρίς αρχείο (Αν δεν υποστηρίζει αρχεία)
+            await navigator.share({ title: shareText, text: shareText, url: shareUrl });
+            return;
+        }
+    } catch (err) {
+        // Αν ο χρήστης ακυρώσει ή αποτύχει, συνεχίζουμε στο Fallback
     }
-  }
+
+    // 3. Fallback για Desktop Browsers και Εφαρμογές:
+    // Επειδή τα Social Media "διαβάζουν" το og:image και og:title,
+    // αρκεί να στείλουμε το link!
+    const waLink = `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`;
+    const fbLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    const twLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+    
+    const choice = prompt('Διάλεξε πλατφόρμα κοινοποίησης:\n1. WhatsApp\n2. Facebook\n3. Twitter/X\n4. Αντιγραφή Συνδέσμου', '1');
+    
+    if (choice === '1') {
+        window.open(waLink, '_blank');
+    } else if (choice === '2') {
+        window.open(fbLink, '_blank');
+    } else if (choice === '3') {
+        window.open(twLink, '_blank');
+    } else if (choice === '4') {
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            toast('Ο σύνδεσμος αντιγράφηκε!', '#4ade80');
+        } catch(e2) {
+            toast('Δεν βρέθηκε πρόσβαση σε clipboard', '#ff4d6d');
+        }
+    } else {
+        // Αν ακυρώσει το prompt, απλώς αντιγράφουμε
+        try {
+            await navigator.clipboard.writeText(shareUrl);
+            toast('Ο σύνδεσμος αντιγράφηκε!', '#4ade80');
+        } catch(e2) {}
+    }
 });
 
 document.getElementById('adBubble').addEventListener('click', () => {
