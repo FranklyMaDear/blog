@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="el">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>Snake Drop Games by Aziram</title>
-<!-- Google AdSense -->
+<!-- Google AdSense Script -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
 <style>
   :root{
@@ -276,18 +276,7 @@
   .shop-item.owned .price { color: #4ade80; font-weight: 800; font-size: 11px; }
   .shop-item .price { color: #111; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px; }
 
-  /* AdSense ad containers */
-  .adsbygoogle {
-    display: block;
-    width: 100%;
-    height: auto;
-    min-height: 100px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    margin: 10px 0;
-  }
-
-  /* Sticky Bottom Banner */
+  /* Sticky Bottom Banner (Always Visible) */
   #bottomBanner {
     position: fixed;
     bottom: 0;
@@ -319,9 +308,20 @@
     justify-content: center;
     z-index: 1001;
   }
-  #bottomBanner ins {
-    max-width: 100%;
-    height: 50px;
+
+  /* Ad Overlay Styles */
+  #adOverlay .center-msg { min-width: 320px; max-width: 90vw; }
+  #adContainer {
+    width: 100%;
+    min-height: 250px;
+    max-height: 300px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;
   }
 </style>
 </head>
@@ -372,6 +372,7 @@
 
     <div class="toast" id="toast"></div>
 
+    <!-- Start Modal -->
     <div class="overlay" id="startModal">
       <div class="center-msg">
         <h1>Snake Drop <span>Games by Aziram</span></h1>
@@ -400,32 +401,17 @@
         <button id="btnShare" class="btn-alt" style="margin-top:14px; width:100%; padding:12px; border-radius:16px; font-size:16px; font-weight:800; border:none; cursor:pointer; background:linear-gradient(180deg,#60a5fa,#3b82f6); color:#fff; box-shadow:0 6px 0 #1d4ed8;">
           📤 Share Game
         </button>
-        <!-- AdSense Banner -->
-        <ins class="adsbygoogle" style="display:block; width:100%; height:100px; background:#222; border-radius:8px;"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="5220069446"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
       </div>
     </div>
 
+    <!-- End Modal -->
     <div class="overlay hidden" id="endModal">
       <div class="center-msg">
         <h1 id="endTitle">Game Over</h1>
         <p id="endBody">Your score: 0</p>
-        <button class="btn btn-alt hidden" id="continueBtn">Continue 🎬</button>
+        <button class="btn btn-alt hidden" id="continueBtn">Continue (25 coins) 🎬</button>
         <button class="btn btn-alt hidden" id="watchAdContinue">🎬 Watch Ad to Continue</button>
         <button class="btn" id="restartBtn">Play Again</button>
-        <!-- AdSense Banner -->
-        <ins class="adsbygoogle" style="display:block; width:100%; height:100px; background:#222; border-radius:8px;"
-             data-ad-client="ca-pub-3186700611266549"
-             data-ad-slot="5220069446"
-             data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
       </div>
     </div>
 
@@ -447,6 +433,7 @@
       </div>
     </div>
 
+    <!-- Shop Modal -->
     <div class="overlay hidden" id="shopModal">
       <div class="shop-card">
         <h2>🛍️ eShop</h2>
@@ -462,18 +449,18 @@
       </div>
     </div>
 
-    <!-- Stylish Buy Modal -->
+    <!-- Buy Modal -->
     <div class="overlay hidden" id="buyModal">
       <div class="center-msg" style="min-width:280px; border:2px solid #ffd23f; box-shadow:0 0 30px rgba(255,210,63,0.35), 0 24px 60px #000c;">
         <h1 style="font-size:22px; margin-bottom:8px;" id="buyTitle">Buy item?</h1>
         <p style="color:#ffd23f; font-size:15px; margin-bottom:18px;" id="buyDesc">Choose how to pay</p>
         <button class="btn" id="buyPay50" style="margin-bottom:10px;">💰 Pay 50 coins</button>
-        <button class="btn btn-alt" id="buyPayAd" style="margin-bottom:10px;">🎬 Watch Ad (25 coins)</button>
+        <button class="btn btn-alt" id="buyPayAd" style="margin-bottom:10px;">🎬 Watch Ad (Free)</button>
         <button class="btn btn-danger" id="buyCancel" style="margin-bottom:0;">Cancel</button>
       </div>
     </div>
 
-    <!-- Mini Map Modal -->
+    <!-- Map Modal -->
     <div class="overlay hidden" id="mapModal">
       <div class="center-msg" style="min-width:300px; max-width:90vw;">
         <h1 style="font-size:20px; margin-bottom:10px;">🗺️ Live Map</h1>
@@ -483,23 +470,15 @@
       </div>
     </div>
 
-    <!-- Ad Overlay -->
+    <!-- AD REWARD OVERLAY -->
     <div class="overlay hidden" id="adOverlay">
-      <div class="center-msg" style="min-width:300px;">
+      <div class="center-msg">
         <h2 style="margin-bottom:10px;">Advertisement</h2>
-        <div style="min-height:200px; background:#222; border-radius:12px; display:flex; align-items:center; justify-content:center;">
-          <ins class="adsbygoogle" style="display:block; width:100%; height:200px;"
-               data-ad-client="ca-pub-3186700611266549"
-               data-ad-slot="5220069446"
-               data-ad-format="auto"></ins>
-          <script>
-              (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
+        <div id="adContainer">
+          <!-- Adsense gets injected here -->
         </div>
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
-        <button class="btn hidden" id="adContinueBtn">Continue</button>
-        <button class="btn btn-alt hidden" id="adRewardBtn">Claim Reward</button>
-        <button class="btn btn-danger hidden" id="adCancelBtn">Cancel</button>
+        <button class="btn btn-alt hidden" id="adRewardBtn" style="margin-bottom:0;">Claim Reward</button>
       </div>
     </div>
 
@@ -520,6 +499,7 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let W, H, DPR;
 const CAMERA_ZOOM = 1.05;
+let gamePaused = false; // Control for ads
 
 function resize(){
   DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -544,9 +524,7 @@ const NAMES = [
 ];
 const VALUES = [2,4,8,16,32,64,128,256,512,1024,2048,5096];
 
-// ==========================================
 // AUDIO SYSTEM
-// ==========================================
 let audioCtx = null;
 let muted = false;
 
@@ -638,9 +616,7 @@ function playSound(type) {
     }
 }
 
-// ==========================================
 // MUSIC
-// ==========================================
 let musicNodes = [];
 let musicInterval = null;
 let currentMusicId = 'music_none';
@@ -695,9 +671,7 @@ function startMusic(id) {
     }, p.step * 1000);
 }
 
-// ==========================================
-// SHOP & SAVES (localStorage)
-// ==========================================
+// SHOP & SAVES
 const SHOP_DATA = {
   cubes: [
       { id: 'multi', name: 'Multi', icon: '🎨' },
@@ -857,7 +831,7 @@ function renderShop() {
             <div style="font-size:28px;">${item.icon}</div>
             <h3>${item.name}</h3>
             <div class="price">${status}</div>
-            ${!isOwned && !isFree ? '<div style="font-size:10px;color:#0d9488;margin-top:2px;">🎬 Ad = 25🪙</div>' : ''}
+            ${!isOwned && !isFree ? '<div style="font-size:10px;color:#0d9488;margin-top:2px;">🎬 Ad = Free</div>' : ''}
         `;
         
         div.onclick = () => {
@@ -922,7 +896,7 @@ function completePurchase(cost) {
     updatePointsUI();
     renderShop();
     document.getElementById('buyModal').classList.add('hidden');
-    toast('Bought & equipped ' + pendingBuyItem.name + (cost === 25 ? ' (Ad)' : ''));
+    toast('Bought & equipped ' + pendingBuyItem.name);
     pendingBuyItem = null;
     pendingBuyProps = null;
 }
@@ -930,7 +904,21 @@ function completePurchase(cost) {
 document.getElementById('buyPay50').onclick = () => completePurchase(50);
 document.getElementById('buyPayAd').onclick = () => {
     document.getElementById('buyModal').classList.add('hidden');
-    showRewardedAd(() => completePurchase(25));
+    // Reward the user with the item completely free via ad
+    showRewardedAd(() => {
+        if (!pendingBuyItem || !pendingBuyProps) return;
+        save[pendingBuyProps.owned].push(pendingBuyItem.id);
+        save[pendingBuyProps.equip] = pendingBuyItem.id;
+        if (activeShopTab === 'cubes') {
+            for (const k in textureCache) delete textureCache[k];
+        }
+        saveGame();
+        updatePointsUI();
+        renderShop();
+        toast('Bought & equipped ' + pendingBuyItem.name + ' (Ad)');
+        pendingBuyItem = null;
+        pendingBuyProps = null;
+    });
 };
 document.getElementById('buyCancel').onclick = () => {
     document.getElementById('buyModal').classList.add('hidden');
@@ -995,9 +983,7 @@ document.getElementById('btnMute').onclick = () => {
     toast(muted ? 'Sound OFF' : 'Sound ON', muted ? '#ff4d6d' : '#4ade80');
 };
 
-// ==========================================
-// CUBE COLORS & TEXTURES
-// ==========================================
+// TEXTURES
 function roundRectCtx(g, x, y, w, h, r){
   g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r);
   g.arcTo(x+w,y+h,x,y+h,r); g.arcTo(x,y+h,x,y,r); g.arcTo(x,y,x+w,y,r); g.closePath();
@@ -1477,6 +1463,7 @@ let joyStartX = 0, joyStartY = 0, joyActive = false, joyPointerId = null;
 
 wrap.addEventListener('pointerdown', (e) => {
   getAudioCtx();
+  if (gamePaused) return;
   if (e.target.closest('button') || e.target.closest('.hud .leaderboard') || e.target.closest('.pw') || e.target.closest('.overlay:not(.hidden)')) return;
   if (!running) return;
   
@@ -1506,90 +1493,76 @@ wrap.addEventListener('pointerup', joyRelease);
 wrap.addEventListener('pointercancel', joyRelease);
 
 // ==========================================
-// AD SYSTEM (Google AdSense)
+// AD REWARD SYSTEM (Google AdSense)
 // ==========================================
-function showInterstitialAd(callback) {
-    const overlay = document.getElementById('adOverlay');
-    const msg = document.getElementById('adMsg');
-    const continueBtn = document.getElementById('adContinueBtn');
-    const rewardBtn = document.getElementById('adRewardBtn');
-    const cancelBtn = document.getElementById('adCancelBtn');
-    overlay.classList.remove('hidden');
-    msg.textContent = 'Advertisement';
-    continueBtn.classList.add('hidden');
-    rewardBtn.classList.add('hidden');
-    cancelBtn.classList.add('hidden');
-
-    let countdown = 5;
-    const interval = setInterval(() => {
-        msg.textContent = `Loading... ${countdown}s`;
-        countdown--;
-        if (countdown <= 0) {
-            clearInterval(interval);
-            msg.textContent = 'Advertisement';
-            continueBtn.classList.remove('hidden');
-        }
-    }, 1000);
-
-    continueBtn.onclick = () => {
-        clearInterval(interval);
-        overlay.classList.add('hidden');
-        if (callback) callback();
-    };
-}
-
 function showRewardedAd(callback) {
+    // Pause the game so the player cannot cheat
+    gamePaused = true;
     const overlay = document.getElementById('adOverlay');
+    const container = document.getElementById('adContainer');
     const msg = document.getElementById('adMsg');
     const rewardBtn = document.getElementById('adRewardBtn');
-    const cancelBtn = document.getElementById('adCancelBtn');
-    const continueBtn = document.getElementById('adContinueBtn');
+    
+    // Show overlay
     overlay.classList.remove('hidden');
-    msg.textContent = 'Watch ad to earn reward...';
-    continueBtn.classList.add('hidden');
+    msg.textContent = 'Loading ad...';
     rewardBtn.classList.add('hidden');
-    cancelBtn.classList.remove('hidden');
-
+    
+    // Inject AdSense ad
+    container.innerHTML = '';
+    const ins = document.createElement('ins');
+    ins.className = 'adsbygoogle';
+    ins.style.display = 'block';
+    ins.style.width = '100%';
+    ins.style.minHeight = '250px';
+    ins.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
+    ins.setAttribute('data-ad-slot', '5220069446');
+    ins.setAttribute('data-ad-format', 'auto');
+    container.appendChild(ins);
+    
+    try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {}
+    
+    // Start a 5-second timer to mimic a rewarded video ad
     let countdown = 5;
-    const interval = setInterval(() => {
+    const timer = setInterval(() => {
         msg.textContent = `Advertisement in ${countdown}s`;
         countdown--;
         if (countdown <= 0) {
-            clearInterval(interval);
+            clearInterval(timer);
             msg.textContent = 'Ad complete! Claim your reward.';
             rewardBtn.classList.remove('hidden');
-            cancelBtn.classList.add('hidden');
         }
     }, 1000);
-
+    
     rewardBtn.onclick = () => {
-        clearInterval(interval);
+        clearInterval(timer);
         overlay.classList.add('hidden');
+        gamePaused = false; // Resume game
         if (callback) callback();
     };
-
-    cancelBtn.onclick = () => {
-        clearInterval(interval);
-        overlay.classList.add('hidden');
-        toast('Ad cancelled', '#ff4d6d');
-    };
-}
-
-function watchAd(callback) {
-    showRewardedAd(callback);
 }
 
 // ==========================================
-// POWERUPS
+// POWERUPS (Rewarded Ads)
 // ==========================================
 function setupPowerupBtn(btnId, type, msg, color) {
     document.getElementById(btnId).addEventListener('pointerdown', (e) => {
         e.stopPropagation();
-        if(!player || !player.alive) return;
+        if(!player || !player.alive || gamePaused) return;
         if(player[type + 'Cd'] > 0) return;
         
         if (save.coins < 25) {
-            toast('Need 25 coins!', '#ff4d6d');
+            toast('Not enough coins! Watch ad?', '#ff4d6d');
+            // Auto-trigger rewarded ad for power-up
+            showRewardedAd(() => {
+                player[type + 'T'] = 5.0;
+                player[type + 'Cd'] = 20.0;
+                toast(msg + ' (Ad)', color);
+                screenShake = 0.15;
+                updateCooldownVisual(document.getElementById(btnId), player, type);
+            });
             return;
         }
         save.coins -= 25;
@@ -1617,13 +1590,21 @@ setupPowerupBtn('pwShield', 'shield', 'Shield Active!', '#7b61ff');
   btn.addEventListener('pointerdown', (e) => {
     e.stopPropagation();
     e.preventDefault();
-    if (!player || !player.alive) return;
+    if (!player || !player.alive || gamePaused) return;
     if (player.boostCd > 0) return;
     if (player.boostT > 0) return;
 
     if (save.coins < 25) {
-      toast('Need 25 coins!', '#ff4d6d');
-      return;
+        toast('Not enough coins! Watch ad?', '#ff4d6d');
+        showRewardedAd(() => {
+            player.boostT = 4.0;
+            player.boostCd = 10.0;
+            player.baseSpeed = 1.8;
+            player.boostSpeed = 4.2;
+            toast('Speed Boost! (Ad)', '#ffd23f');
+            updateCooldownVisual(btn, player, 'boost');
+        });
+        return;
     }
     save.coins -= 25;
     saveGame();
@@ -2242,6 +2223,12 @@ function frame(ts){
   const dt = Math.min((ts-lastT)/1000, 0.05);
   lastT = ts;
 
+  // Pause game if ad is open
+  if (gamePaused) {
+    requestAnimationFrame(frame);
+    return;
+  }
+
   if(running && floorItems.length < 8) {
     itemSpawnTimer -= dt;
     if(itemSpawnTimer <= 0) { spawnFloorItem(); itemSpawnTimer = rnd(4, 7); }
@@ -2307,7 +2294,7 @@ function startGame(mode){
     running = true;
   }
 
-  showInterstitialAd(doStart);
+  doStart();
 }
 
 function endGame(survived, diedEarly){
@@ -2332,8 +2319,6 @@ function endGame(survived, diedEarly){
       watchAdContinueBtn.classList.add('hidden');
   }
   document.getElementById('endModal').classList.remove('hidden');
-
-  showInterstitialAd(() => {});
 }
 
 initWorld('endless');
@@ -2354,7 +2339,16 @@ document.getElementById('continueBtn').addEventListener('click', () => {
         player.shieldT = 3.0; 
         running = true;
     } else {
-        toast('Not enough coins!', '#ff4d6d');
+        toast('Not enough coins! Watch ad.', '#ff4d6d');
+        showRewardedAd(() => {
+            hasContinued = true;
+            document.getElementById('endModal').classList.add('hidden');
+            player.alive = true;
+            player.path = [{x: ARENA/2, y: ARENA/2}];
+            player.segments = [{value: startVal, t:0}]; 
+            player.shieldT = 3.0; 
+            running = true;
+        });
     }
 });
 
@@ -2393,7 +2387,6 @@ document.getElementById('btnEndless').addEventListener('click', () => startGame(
 document.getElementById('restartBtn').addEventListener('click', () => {
     document.getElementById('endModal').classList.add('hidden');
     document.getElementById('startModal').classList.remove('hidden');
-    showInterstitialAd(() => {});
 });
 
 document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
