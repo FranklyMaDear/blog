@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>Snake Drop Games by Aziram</title>
-<!-- Google AdSense Script -->
+<!-- Google AdSense -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
 <style>
   :root{
@@ -286,9 +286,57 @@
     border-radius: 12px;
     margin: 10px 0;
   }
+
+  /* Sticky Bottom Banner */
+  #bottomBanner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    border-top: 1px solid #333;
+    padding: 5px;
+  }
+  #bottomBanner .close-btn {
+    position: absolute;
+    top: -8px;
+    right: 8px;
+    background: #ff4d6d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+  }
+  #bottomBanner ins {
+    max-width: 100%;
+    height: 50px;
+  }
 </style>
 </head>
 <body>
+  <!-- Sticky Bottom Banner -->
+  <div id="bottomBanner">
+    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; height:50px;"
+         data-ad-client="ca-pub-3186700611266549"
+         data-ad-slot="5220069446"
+         data-ad-format="auto"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+
 <div id="wrap">
   <canvas id="game"></canvas>
   <div class="hud">
@@ -352,7 +400,7 @@
         <button id="btnShare" class="btn-alt" style="margin-top:14px; width:100%; padding:12px; border-radius:16px; font-size:16px; font-weight:800; border:none; cursor:pointer; background:linear-gradient(180deg,#60a5fa,#3b82f6); color:#fff; box-shadow:0 6px 0 #1d4ed8;">
           📤 Share Game
         </button>
-        <!-- AdSense Banner Here -->
+        <!-- AdSense Banner -->
         <ins class="adsbygoogle" style="display:block; width:100%; height:100px; background:#222; border-radius:8px;"
              data-ad-client="ca-pub-3186700611266549"
              data-ad-slot="5220069446"
@@ -368,8 +416,9 @@
         <h1 id="endTitle">Game Over</h1>
         <p id="endBody">Your score: 0</p>
         <button class="btn btn-alt hidden" id="continueBtn">Continue 🎬</button>
+        <button class="btn btn-alt hidden" id="watchAdContinue">🎬 Watch Ad to Continue</button>
         <button class="btn" id="restartBtn">Play Again</button>
-        <!-- AdSense Banner Here -->
+        <!-- AdSense Banner -->
         <ins class="adsbygoogle" style="display:block; width:100%; height:100px; background:#222; border-radius:8px;"
              data-ad-client="ca-pub-3186700611266549"
              data-ad-slot="5220069446"
@@ -434,7 +483,7 @@
       </div>
     </div>
 
-    <!-- Ad Overlay for interstitial / rewarded ads -->
+    <!-- Ad Overlay -->
     <div class="overlay hidden" id="adOverlay">
       <div class="center-msg" style="min-width:300px;">
         <h2 style="margin-bottom:10px;">Advertisement</h2>
@@ -450,6 +499,7 @@
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
         <button class="btn hidden" id="adContinueBtn">Continue</button>
         <button class="btn btn-alt hidden" id="adRewardBtn">Claim Reward</button>
+        <button class="btn btn-danger hidden" id="adCancelBtn">Cancel</button>
       </div>
     </div>
 
@@ -485,22 +535,17 @@ const ARENA = 5500;
 const SPACING = 24;          
 const BASE_R = 14;           
 const NAMES = [
-  // English
   "Nova","Pixel","Shadow","Blitz","Echo","Frost","Viper","Orbit","Quark","Zen","Ace","Bolt","Drift","Hex","Ion",
   "Chris_P_Bacon","noodle.exe","xXHunterXx","kojima_fan","B.Juice","TheAfterLife",
-  // Greek
   "Αλέξης","Μαρία","Νίκος","Ελένη","Γιώργος","Σοφία","Δημήτρης","Άννα",
-  // Russian
   "Алекс","Маша","Иван","Оля","Дима","Катя","Сергей","Наташа","Макс","Юля",
-  // Chinese
   "小明","小红","阿杰","小龙","星星","月亮","飞飞","乐乐","浩然","思思",
-  // Spanish / others
   "Diego","Lucia","Carlos","Sofia","Mateo","Valentina","Kai","Yuki","Hiro","Mina","Lars","Ingrid","Omar","Layla"
 ];
 const VALUES = [2,4,8,16,32,64,128,256,512,1024,2048,5096];
 
 // ==========================================
-// AUDIO SYSTEM (Safe Lazy Load)
+// AUDIO SYSTEM
 // ==========================================
 let audioCtx = null;
 let muted = false;
@@ -540,7 +585,6 @@ function tone(freq0, freq1, dur, wave, vol, delay) {
 
 function playSound(type) {
     const s = save.equippedSound || 'snd_default';
-    // Collision / cut sounds
     if (type === 'hammer' || type === 'cut') {
         if (s === 'snd_impact') {
             tone(120, 40, 0.18, 'square', 0.4);
@@ -595,7 +639,7 @@ function playSound(type) {
 }
 
 // ==========================================
-// BACKGROUND MUSIC (simple procedural loops)
+// MUSIC
 // ==========================================
 let musicNodes = [];
 let musicInterval = null;
@@ -652,7 +696,7 @@ function startMusic(id) {
 }
 
 // ==========================================
-// SHOP SYSTEM & SAVES (localStorage only)
+// SHOP & SAVES (localStorage)
 // ==========================================
 const SHOP_DATA = {
   cubes: [
@@ -758,7 +802,6 @@ function saveGame() {
 
 updatePointsUI();
 
-// Πόντοι συσσωρεύονται κανονικά.
 function addPoints(amount) {
     if (amount <= 0) return;
     const oldPoints = save.points;
@@ -852,7 +895,6 @@ document.getElementById('btnCloseShop').onclick = () => {
     document.getElementById('shopModal').classList.add('hidden');
 };
 
-// Stylish Buy Modal logic
 let pendingBuyItem = null;
 let pendingBuyProps = null;
 
@@ -940,7 +982,6 @@ document.getElementById('btnCloseMap').onclick = () => {
   document.getElementById('mapModal').classList.add('hidden');
 };
 
-// Sound mute / unmute button
 document.getElementById('btnMute').onclick = () => {
     muted = !muted;
     const btn = document.getElementById('btnMute');
@@ -955,7 +996,7 @@ document.getElementById('btnMute').onclick = () => {
 };
 
 // ==========================================
-// CUBE COLORS & 2D TEXTURES
+// CUBE COLORS & TEXTURES
 // ==========================================
 function roundRectCtx(g, x, y, w, h, r){
   g.beginPath(); g.moveTo(x+r,y); g.arcTo(x+w,y,x+w,y+h,r);
@@ -963,18 +1004,7 @@ function roundRectCtx(g, x, y, w, h, r){
 }
 
 const MULTI_COLORS = {
-  2: '#22c55e',    // green
-  4: '#f97316',    // orange
-  8: '#3b82f6',    // blue
-  16: '#a855f7',   // purple
-  32: '#ef4444',   // red
-  64: '#06b6d4',   // cyan
-  128: '#eab308',  // yellow
-  256: '#ec4899',  // pink
-  512: '#84cc16',  // lime
-  1024: '#f59e0b', // amber
-  2048: '#6366f1', // indigo
-  5096: '#f43f5e'  // rose
+  2: '#22c55e', 4: '#f97316', 8: '#3b82f6', 16: '#a855f7', 32: '#ef4444', 64: '#06b6d4', 128: '#eab308', 256: '#ec4899', 512: '#84cc16', 1024: '#f59e0b', 2048: '#6366f1', 5096: '#f43f5e'
 };
 
 function getDominantColor(value) {
@@ -985,10 +1015,7 @@ function getDominantColor(value) {
   if (skin === 'whitegreen') return '#388E3C';
   if (skin === 'zebra') return '#222222';
   if (skin === 'neon') return '#111111';
-  if (skin === 'rainbow') {
-      const colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#8b00ff'];
-      return colors[Math.max(0, Math.log2(value)-1) % colors.length];
-  }
+  if (skin === 'rainbow') return ['#ff0000','#ff7f00','#ffff00','#00ff00','#00ffff','#0000ff','#8b00ff'][Math.max(0, Math.log2(value)-1) % 7];
   if (skin === 'gold') return '#F57F17';
   if (skin === 'ice') return '#00BCD4';
   if (skin === 'lava') return '#FF5722';
@@ -1445,7 +1472,6 @@ function spawnFloorItem() {
   floorItems.push({ x, y, type: types[Math.floor(Math.random() * types.length)], life: 15.0, angle: 0 });
 }
 
-// Full Screen Joystick Handler
 const wrap = document.getElementById('wrap');
 let joyStartX = 0, joyStartY = 0, joyActive = false, joyPointerId = null;
 
@@ -1483,55 +1509,78 @@ wrap.addEventListener('pointercancel', joyRelease);
 // AD SYSTEM (Google AdSense)
 // ==========================================
 function showInterstitialAd(callback) {
-    // Show an ad overlay, then after a delay call callback
     const overlay = document.getElementById('adOverlay');
     const msg = document.getElementById('adMsg');
-    const contBtn = document.getElementById('adContinueBtn');
+    const continueBtn = document.getElementById('adContinueBtn');
     const rewardBtn = document.getElementById('adRewardBtn');
+    const cancelBtn = document.getElementById('adCancelBtn');
     overlay.classList.remove('hidden');
-    msg.textContent = 'Loading ad...';
-    contBtn.classList.add('hidden');
+    msg.textContent = 'Advertisement';
+    continueBtn.classList.add('hidden');
     rewardBtn.classList.add('hidden');
-    
-    // Simulate ad loading (AdSense loads automatically), wait 5 seconds
-    setTimeout(() => {
-        msg.textContent = 'Advertisement';
-        contBtn.classList.remove('hidden');
-        contBtn.onclick = () => {
-            overlay.classList.add('hidden');
-            if (callback) callback();
-        };
-    }, 5000);
+    cancelBtn.classList.add('hidden');
+
+    let countdown = 5;
+    const interval = setInterval(() => {
+        msg.textContent = `Loading... ${countdown}s`;
+        countdown--;
+        if (countdown <= 0) {
+            clearInterval(interval);
+            msg.textContent = 'Advertisement';
+            continueBtn.classList.remove('hidden');
+        }
+    }, 1000);
+
+    continueBtn.onclick = () => {
+        clearInterval(interval);
+        overlay.classList.add('hidden');
+        if (callback) callback();
+    };
 }
 
 function showRewardedAd(callback) {
-    // Show ad, then allow claim reward after 5 seconds
     const overlay = document.getElementById('adOverlay');
     const msg = document.getElementById('adMsg');
-    const contBtn = document.getElementById('adContinueBtn');
     const rewardBtn = document.getElementById('adRewardBtn');
+    const cancelBtn = document.getElementById('adCancelBtn');
+    const continueBtn = document.getElementById('adContinueBtn');
     overlay.classList.remove('hidden');
     msg.textContent = 'Watch ad to earn reward...';
-    contBtn.classList.add('hidden');
+    continueBtn.classList.add('hidden');
     rewardBtn.classList.add('hidden');
-    
-    setTimeout(() => {
-        msg.textContent = 'Ad complete! Claim your reward.';
-        rewardBtn.classList.remove('hidden');
-        rewardBtn.onclick = () => {
-            overlay.classList.add('hidden');
-            if (callback) callback();
-        };
-    }, 5000);
+    cancelBtn.classList.remove('hidden');
+
+    let countdown = 5;
+    const interval = setInterval(() => {
+        msg.textContent = `Advertisement in ${countdown}s`;
+        countdown--;
+        if (countdown <= 0) {
+            clearInterval(interval);
+            msg.textContent = 'Ad complete! Claim your reward.';
+            rewardBtn.classList.remove('hidden');
+            cancelBtn.classList.add('hidden');
+        }
+    }, 1000);
+
+    rewardBtn.onclick = () => {
+        clearInterval(interval);
+        overlay.classList.add('hidden');
+        if (callback) callback();
+    };
+
+    cancelBtn.onclick = () => {
+        clearInterval(interval);
+        overlay.classList.add('hidden');
+        toast('Ad cancelled', '#ff4d6d');
+    };
 }
 
-// Override the old watchAd function
-function watchAd(callback, rewardId) {
+function watchAd(callback) {
     showRewardedAd(callback);
 }
 
 // ==========================================
-// Powerup Buttons & Boost (same as before)
+// POWERUPS
 // ==========================================
 function setupPowerupBtn(btnId, type, msg, color) {
     document.getElementById(btnId).addEventListener('pointerdown', (e) => {
@@ -1681,16 +1730,12 @@ function killSnake(snake){
   });
   if(snake.isPlayer){ playSound('cut'); endGame(false, true); } 
   else {
-    if (player && player.alive) {
-      killsCount++;
-    }
+    if (player && player.alive) killsCount++;
     const idx = bots.indexOf(snake);
     if(idx>=0) bots.splice(idx,1);
     
     if (isWin30) {
-      if (bots.length === 0) {
-        endGame(true, false);
-      }
+      if (bots.length === 0) endGame(true, false);
       renderLeaderboard();
       return;
     }
@@ -1737,7 +1782,7 @@ function resolveCombat(){
             if(b.segments.length === 0) killSnake(b);
           } else if(aVal < bVal){
             if(a.shieldT>0){ continue; }
-            if(i===0){ killSnake(a); } else { killSnake(a); }
+            killSnake(a);
             a.reactT = 0.15; b.reactT = 0.15;
           }
           break;
@@ -2262,7 +2307,6 @@ function startGame(mode){
     running = true;
   }
 
-  // Show interstitial before starting
   showInterstitialAd(doStart);
 }
 
@@ -2279,25 +2323,43 @@ function endGame(survived, diedEarly){
   document.getElementById('endBody').textContent = `Your score: ${player.score}  |  Points: ${save.points}` + (isWin30 ? `  |  Kills: ${killsCount}/${killsNeeded}` : '');
   
   const continueBtn = document.getElementById('continueBtn');
+  const watchAdContinueBtn = document.getElementById('watchAdContinue');
   if(diedEarly && !isEndless && !isWin30 && timeLeft > 0 && !hasContinued) {
       continueBtn.classList.remove('hidden');
+      watchAdContinueBtn.classList.remove('hidden');
   } else {
       continueBtn.classList.add('hidden');
+      watchAdContinueBtn.classList.add('hidden');
   }
   document.getElementById('endModal').classList.remove('hidden');
 
-  // Show interstitial after game end
   showInterstitialAd(() => {});
 }
 
-// Background init before game starts so it doesn't crash on load
 initWorld('endless');
 running = false; 
 document.getElementById('startModal').classList.remove('hidden');
 document.getElementById('endModal').classList.add('hidden');
 
 document.getElementById('continueBtn').addEventListener('click', () => {
-    showRewardedAd(function() {
+    if (save.coins >= 25) {
+        save.coins -= 25;
+        saveGame();
+        updatePointsUI();
+        hasContinued = true;
+        document.getElementById('endModal').classList.add('hidden');
+        player.alive = true;
+        player.path = [{x: ARENA/2, y: ARENA/2}];
+        player.segments = [{value: startVal, t:0}]; 
+        player.shieldT = 3.0; 
+        running = true;
+    } else {
+        toast('Not enough coins!', '#ff4d6d');
+    }
+});
+
+document.getElementById('watchAdContinue').addEventListener('click', () => {
+    showRewardedAd(() => {
         hasContinued = true;
         document.getElementById('endModal').classList.add('hidden');
         player.alive = true;
@@ -2362,7 +2424,6 @@ document.getElementById('btnShare').addEventListener('click', async () => {
   }
 });
 
-// Start Modal X16 ad bubble
 document.getElementById('adBubble').addEventListener('click', () => {
     showRewardedAd(() => {
         startVal = 32; 
