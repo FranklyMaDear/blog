@@ -4,17 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>Snake Drop Games by Aziram</title>
-
-<!-- PWA / Add to Home Screen -->
-<link rel="manifest" href='data:application/manifest+json,{"name":"Snake Drop Games by Aziram","short_name":"Snake Drop","start_url":".","display":"standalone","background_color":"#1f2842","theme_color":"#1f2842","icons":[{"src":"photo.png","sizes":"512x512","type":"image/png"}]}'>
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="photo.png">
-
-<!-- Google AdSense Script (Το δικό σου) -->
+<!-- Google AdSense Script -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-
 <style>
   :root{
     --line:#23263066;
@@ -318,7 +309,7 @@
     z-index: 1001;
   }
 
-  /* Ad Overlay & Custom Ad Box Styles (ΝΕΟ) */
+  /* Ad Overlay Styles */
   #adOverlay .center-msg { min-width: 320px; max-width: 90vw; }
   #adContainer {
     width: 100%;
@@ -333,18 +324,41 @@
     overflow: hidden;
   }
 
-  #adRewardBtn {
-    background: linear-gradient(180deg, #4ade80, #22c55e);
-    color: #fff;
-    box-shadow: 0 6px 0 #15803d;
-    margin-bottom: 0;
-    margin-top: 15px;
-    font-size: 18px;
-    padding: 15px;
+  /* ===== ΝΕΑ: Roll-up Banner ===== */
+  #rollupBanner {
+    position: fixed;
+    top: -100vh;
+    left: 0;
+    width: 100%;
+    height: 25vh;
+    background: #111;
+    z-index: 2000;
+    transition: top 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-bottom: 1px solid #333;
   }
-  #adRewardBtn:active { box-shadow: 0 2px 0 #15803d; transform: translateY(3px); }
+  #rollupBanner.show {
+    top: 0;
+  }
+  #rollupBanner .close-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #ff4d6d;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 2001;
+  }
 
-  /* End modal ad & countdown */
+  /* ===== ΝΕΑ: End modal ad & countdown ===== */
   #endAdContainer {
     width: 100%;
     min-height: 250px;
@@ -356,10 +370,17 @@
     margin-bottom: 15px;
     overflow: hidden;
   }
-  #endAdCountdown { color: #aaa; font-size: 14px; margin-bottom: 10px; }
-  .btn-disabled { opacity: 0.5; pointer-events: none; }
+  #endAdCountdown {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .btn-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 
-  /* Share logo (hidden) */
+  /* ===== ΝΕΑ: Share logo (hidden) ===== */
   #shareLogo { display: none; }
 </style>
 </head>
@@ -374,6 +395,17 @@
          data-ad-format="auto"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
+
+  <!-- ===== ΝΕΑ: Roll-up Banner ===== -->
+  <div id="rollupBanner">
+    <button class="close-btn" onclick="document.getElementById('rollupBanner').classList.remove('show')">×</button>
+    <ins class="adsbygoogle"
+         style="display:block; width:100%; height:100%;"
+         data-ad-client="ca-pub-3186700611266549"
+         data-ad-slot="5220069446"
+         data-ad-format="auto"></ins>
+  </div>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
   <!-- Hidden logo for share -->
   <img id="shareLogo" src="photo.png" alt="logo">
@@ -519,12 +551,12 @@
       </div>
     </div>
 
-    <!-- AD REWARD OVERLAY (AdSense) -->
+    <!-- AD REWARD OVERLAY -->
     <div class="overlay hidden" id="adOverlay">
       <div class="center-msg">
-        <h2 style="margin-bottom:10px;">Reward</h2>
+        <h2 style="margin-bottom:10px;">Advertisement</h2>
         <div id="adContainer">
-          <!-- AdSense gets injected here -->
+          <!-- Adsense gets injected here -->
         </div>
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
         <button class="btn btn-alt hidden" id="adRewardBtn" style="margin-bottom:0;">Claim Reward</button>
@@ -953,7 +985,8 @@ function completePurchase(cost) {
 document.getElementById('buyPay50').onclick = () => completePurchase(50);
 document.getElementById('buyPayAd').onclick = () => {
     document.getElementById('buyModal').classList.add('hidden');
-    showRewardAd(() => {
+    // Reward the user with the item completely free via ad
+    showRewardedAd(() => {
         if (!pendingBuyItem || !pendingBuyProps) return;
         save[pendingBuyProps.owned].push(pendingBuyItem.id);
         save[pendingBuyProps.equip] = pendingBuyItem.id;
@@ -966,7 +999,7 @@ document.getElementById('buyPayAd').onclick = () => {
         toast('Bought & equipped ' + pendingBuyItem.name + ' (Ad)');
         pendingBuyItem = null;
         pendingBuyProps = null;
-    }, true); // Full Screen
+    });
 };
 document.getElementById('buyCancel').onclick = () => {
     document.getElementById('buyModal').classList.add('hidden');
@@ -1541,11 +1574,9 @@ wrap.addEventListener('pointerup', joyRelease);
 wrap.addEventListener('pointercancel', joyRelease);
 
 // ==========================================
-// AD REWARD SYSTEM (Google Adsense)
+// AD REWARD SYSTEM (Google AdSense)
 // ==========================================
-let adTimerInterval = null;
-
-function showRewardAd(callback, isFullScreen = false) {
+function showRewardedAd(callback) {
     // Pause the game so the player cannot cheat
     gamePaused = true;
     const overlay = document.getElementById('adOverlay');
@@ -1555,11 +1586,10 @@ function showRewardAd(callback, isFullScreen = false) {
     
     // Show overlay
     overlay.classList.remove('hidden');
-    
     msg.textContent = 'Loading ad...';
     rewardBtn.classList.add('hidden');
     
-    // ===== Εισαγωγή Google Adsense =====
+    // Inject AdSense ad
     container.innerHTML = '';
     const ins = document.createElement('ins');
     ins.className = 'adsbygoogle';
@@ -1576,20 +1606,19 @@ function showRewardAd(callback, isFullScreen = false) {
     } catch (e) {}
     
     // Start a 5-second timer to mimic a rewarded video ad
-    if (adTimerInterval) clearInterval(adTimerInterval);
     let countdown = 5;
-    adTimerInterval = setInterval(() => {
+    const timer = setInterval(() => {
         msg.textContent = `Advertisement in ${countdown}s`;
         countdown--;
         if (countdown <= 0) {
-            clearInterval(adTimerInterval);
+            clearInterval(timer);
             msg.textContent = 'Ad complete! Claim your reward.';
             rewardBtn.classList.remove('hidden');
         }
     }, 1000);
     
     rewardBtn.onclick = () => {
-        clearInterval(adTimerInterval);
+        clearInterval(timer);
         overlay.classList.add('hidden');
         gamePaused = false; // Resume game
         if (callback) callback();
@@ -1607,13 +1636,14 @@ function setupPowerupBtn(btnId, type, msg, color) {
         
         if (save.coins < 25) {
             toast('Not enough coins! Watch ad?', '#ff4d6d');
-            showRewardAd(() => {
+            // Auto-trigger rewarded ad for power-up
+            showRewardedAd(() => {
                 player[type + 'T'] = 5.0;
                 player[type + 'Cd'] = 20.0;
                 toast(msg + ' (Ad)', color);
                 screenShake = 0.15;
                 updateCooldownVisual(document.getElementById(btnId), player, type);
-            }, false); // Popup
+            });
             return;
         }
         save.coins -= 25;
@@ -1647,14 +1677,14 @@ setupPowerupBtn('pwShield', 'shield', 'Shield Active!', '#7b61ff');
 
     if (save.coins < 25) {
         toast('Not enough coins! Watch ad?', '#ff4d6d');
-        showRewardAd(() => {
+        showRewardedAd(() => {
             player.boostT = 4.0;
             player.boostCd = 10.0;
             player.baseSpeed = 1.8;
             player.boostSpeed = 4.2;
             toast('Speed Boost! (Ad)', '#ffd23f');
             updateCooldownVisual(btn, player, 'boost');
-        }, false); // Popup
+        });
         return;
     }
     save.coins -= 25;
@@ -2370,7 +2400,7 @@ function endGame(survived, diedEarly){
       watchAdContinueBtn.classList.add('hidden');
   }
   
-  // ===== Show end ad + countdown =====
+  // ===== ΝΕΑ: Show end ad + countdown =====
   const endModal = document.getElementById('endModal');
   endModal.classList.remove('hidden');
   
@@ -2433,7 +2463,7 @@ document.getElementById('continueBtn').addEventListener('click', () => {
         running = true;
     } else {
         toast('Not enough coins! Watch ad.', '#ff4d6d');
-        showRewardAd(() => {
+        showRewardedAd(() => {
             hasContinued = true;
             document.getElementById('endModal').classList.add('hidden');
             player.alive = true;
@@ -2441,12 +2471,12 @@ document.getElementById('continueBtn').addEventListener('click', () => {
             player.segments = [{value: startVal, t:0}]; 
             player.shieldT = 3.0; 
             running = true;
-        }, true); // Full Screen
+        });
     }
 });
 
 document.getElementById('watchAdContinue').addEventListener('click', () => {
-    showRewardAd(() => {
+    showRewardedAd(() => {
         hasContinued = true;
         document.getElementById('endModal').classList.add('hidden');
         player.alive = true;
@@ -2454,7 +2484,7 @@ document.getElementById('watchAdContinue').addEventListener('click', () => {
         player.segments = [{value: startVal, t:0}]; 
         player.shieldT = 3.0; 
         running = true;
-    }, true); // Full Screen
+    });
 });
 
 document.getElementById('btn5Min').addEventListener('click', () => startGame('5min'));
@@ -2487,7 +2517,7 @@ document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
   convertPointsToCoins();
 });
 
-// ===== Share with photo.png =====
+// ===== ΝΕΑ: Share with photo.png =====
 document.getElementById('btnShare').addEventListener('click', async () => {
   const shareData = {
     title: 'Snake Drop – Games by Aziram',
@@ -2517,19 +2547,25 @@ document.getElementById('btnShare').addEventListener('click', async () => {
 });
 
 document.getElementById('adBubble').addEventListener('click', () => {
-    showRewardAd(() => {
+    showRewardedAd(() => {
         startVal = 32; 
         const startCube = document.getElementById('startCubeVal');
         startCube.innerText = '32';
         startCube.style.background = 'linear-gradient(145deg, #c084fc, #a855f7)';
         startCube.style.boxShadow = '6px 6px 0 rgba(0,0,0,0.25), -4px -4px 0 rgba(255,255,255,0.15) inset, 0 12px 24px rgba(0,0,0,0.35)';
         document.getElementById('adBubble').style.display = 'none';
-    }, true); // Full Screen
+    });
 });
 
 spawnObstacles();
 for(let i=0;i<120;i++) spawnCube();
 frame(0);
+
+// ===== ΝΕΑ: Show roll-up banner after 1 second =====
+setTimeout(() => {
+  const banner = document.getElementById('rollupBanner');
+  if(banner) banner.classList.add('show');
+}, 1000);
 
 })();
 </script>
