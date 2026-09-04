@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="photo.png">
 
-<!-- Google AdSense Script -->
+<!-- Google AdSense Script (Το δικό σου, με τα δύο slots) -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
 
 <style>
@@ -285,7 +285,7 @@
   .shop-item.owned .price { color: #4ade80; font-weight: 800; font-size: 11px; }
   .shop-item .price { color: #111; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px; }
 
-  /* Sticky Bottom Banner (Always Visible) */
+  /* Sticky Bottom Banner */
   #bottomBanner {
     position: fixed;
     bottom: 0;
@@ -318,12 +318,19 @@
     z-index: 1001;
   }
 
-  /* Ad Overlay Styles */
-  #adOverlay .center-msg { min-width: 320px; max-width: 90vw; }
+  /* ===== ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (Autorelaxed) ===== */
+  #adOverlay { z-index: 50; }
+  #adOverlay .center-msg {
+    min-width: 90vw;
+    max-width: 600px;
+    padding: 20px;
+    border: 2px solid #4ecdc4;
+    box-shadow: 0 0 30px rgba(78, 205, 196, 0.3), 0 24px 60px #000c;
+  }
   #adContainer {
     width: 100%;
-    min-height: 250px;
-    max-height: 300px;
+    min-height: 200px;
+    max-height: 400px;
     background: rgba(255,255,255,0.05);
     border-radius: 12px;
     display: flex;
@@ -332,42 +339,19 @@
     margin-bottom: 15px;
     overflow: hidden;
   }
+  #adMsg { color: #aaa; font-size: 14px; margin-top: 15px; }
+  #adRewardBtn {
+    background: linear-gradient(180deg, #4ecdc4, #2bb5ac);
+    color: #fff;
+    box-shadow: 0 6px 0 #1b8a82;
+    margin-bottom: 0;
+    margin-top: 15px;
+    font-size: 18px;
+    padding: 15px;
+  }
+  #adRewardBtn:active { box-shadow: 0 2px 0 #1b8a82; transform: translateY(3px); }
 
-  /* ===== ΝΕΑ: Roll-up Banner ===== */
-  #rollupBanner {
-    position: fixed;
-    top: -100vh;
-    left: 0;
-    width: 100%;
-    height: 25vh;
-    background: #111;
-    z-index: 2000;
-    transition: top 0.5s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-bottom: 1px solid #333;
-  }
-  #rollupBanner.show {
-    top: 0;
-  }
-  #rollupBanner .close-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #ff4d6d;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-    cursor: pointer;
-    z-index: 2001;
-  }
-
-  /* ===== ΝΕΑ: End modal ad & countdown ===== */
+  /* End modal ad & countdown */
   #endAdContainer {
     width: 100%;
     min-height: 250px;
@@ -379,17 +363,10 @@
     margin-bottom: 15px;
     overflow: hidden;
   }
-  #endAdCountdown {
-    color: #aaa;
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-  .btn-disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
+  #endAdCountdown { color: #aaa; font-size: 14px; margin-bottom: 10px; }
+  .btn-disabled { opacity: 0.5; pointer-events: none; }
 
-  /* ===== ΝΕΑ: Share logo (hidden) ===== */
+  /* Share logo (hidden) */
   #shareLogo { display: none; }
 </style>
 </head>
@@ -404,17 +381,6 @@
          data-ad-format="auto"></ins>
     <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
   </div>
-
-  <!-- ===== ΝΕΑ: Roll-up Banner ===== -->
-  <div id="rollupBanner">
-    <button class="close-btn" onclick="document.getElementById('rollupBanner').classList.remove('show')">×</button>
-    <ins class="adsbygoogle"
-         style="display:block; width:100%; height:100%;"
-         data-ad-client="ca-pub-3186700611266549"
-         data-ad-slot="5220069446"
-         data-ad-format="auto"></ins>
-  </div>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 
   <!-- Hidden logo for share -->
   <img id="shareLogo" src="photo.png" alt="logo">
@@ -486,7 +452,7 @@
       </div>
     </div>
 
-    <!-- End Modal (modified with ad & countdown) -->
+    <!-- End Modal -->
     <div class="overlay hidden" id="endModal">
       <div class="center-msg">
         <h1 id="endTitle">Game Over</h1>
@@ -560,12 +526,12 @@
       </div>
     </div>
 
-    <!-- AD REWARD OVERLAY -->
+    <!-- ΝΕΟ AD REWARD OVERLAY -->
     <div class="overlay hidden" id="adOverlay">
       <div class="center-msg">
-        <h2 style="margin-bottom:10px;">Advertisement</h2>
+        <h2 style="margin-bottom:10px;">Reward Unlocked!</h2>
         <div id="adContainer">
-          <!-- Adsense gets injected here -->
+          <!-- Autorelaxed AdSense gets injected here -->
         </div>
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
         <button class="btn btn-alt hidden" id="adRewardBtn" style="margin-bottom:0;">Claim Reward</button>
@@ -994,8 +960,7 @@ function completePurchase(cost) {
 document.getElementById('buyPay50').onclick = () => completePurchase(50);
 document.getElementById('buyPayAd').onclick = () => {
     document.getElementById('buyModal').classList.add('hidden');
-    // Reward the user with the item completely free via ad
-    showRewardedAd(() => {
+    showRewardAd(() => {
         if (!pendingBuyItem || !pendingBuyProps) return;
         save[pendingBuyProps.owned].push(pendingBuyItem.id);
         save[pendingBuyProps.equip] = pendingBuyItem.id;
@@ -1583,9 +1548,11 @@ wrap.addEventListener('pointerup', joyRelease);
 wrap.addEventListener('pointercancel', joyRelease);
 
 // ==========================================
-// AD REWARD SYSTEM (Google AdSense)
+// ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (Autorelaxed Google Adsense)
 // ==========================================
-function showRewardedAd(callback) {
+let adTimerInterval = null;
+
+function showRewardAd(callback) {
     // Pause the game so the player cannot cheat
     gamePaused = true;
     const overlay = document.getElementById('adOverlay');
@@ -1595,19 +1562,20 @@ function showRewardedAd(callback) {
     
     // Show overlay
     overlay.classList.remove('hidden');
+    
     msg.textContent = 'Loading ad...';
     rewardBtn.classList.add('hidden');
     
-    // Inject AdSense ad
+    // ===== Εισαγωγή Google Autorelaxed Ad =====
     container.innerHTML = '';
     const ins = document.createElement('ins');
     ins.className = 'adsbygoogle';
     ins.style.display = 'block';
     ins.style.width = '100%';
-    ins.style.minHeight = '250px';
+    ins.style.height = '250px'; // Προσαρμοσμένο ύψος για το autorelaxed
     ins.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
-    ins.setAttribute('data-ad-slot', '5220069446');
-    ins.setAttribute('data-ad-format', 'auto');
+    ins.setAttribute('data-ad-slot', '6826169932'); // Νέο Slot
+    ins.setAttribute('data-ad-format', 'autorelaxed');
     container.appendChild(ins);
     
     try {
@@ -1615,19 +1583,20 @@ function showRewardedAd(callback) {
     } catch (e) {}
     
     // Start a 5-second timer to mimic a rewarded video ad
+    if (adTimerInterval) clearInterval(adTimerInterval);
     let countdown = 5;
-    const timer = setInterval(() => {
+    adTimerInterval = setInterval(() => {
         msg.textContent = `Advertisement in ${countdown}s`;
         countdown--;
         if (countdown <= 0) {
-            clearInterval(timer);
+            clearInterval(adTimerInterval);
             msg.textContent = 'Ad complete! Claim your reward.';
             rewardBtn.classList.remove('hidden');
         }
     }, 1000);
     
     rewardBtn.onclick = () => {
-        clearInterval(timer);
+        clearInterval(adTimerInterval);
         overlay.classList.add('hidden');
         gamePaused = false; // Resume game
         if (callback) callback();
@@ -1645,8 +1614,7 @@ function setupPowerupBtn(btnId, type, msg, color) {
         
         if (save.coins < 25) {
             toast('Not enough coins! Watch ad?', '#ff4d6d');
-            // Auto-trigger rewarded ad for power-up
-            showRewardedAd(() => {
+            showRewardAd(() => {
                 player[type + 'T'] = 5.0;
                 player[type + 'Cd'] = 20.0;
                 toast(msg + ' (Ad)', color);
@@ -1686,7 +1654,7 @@ setupPowerupBtn('pwShield', 'shield', 'Shield Active!', '#7b61ff');
 
     if (save.coins < 25) {
         toast('Not enough coins! Watch ad?', '#ff4d6d');
-        showRewardedAd(() => {
+        showRewardAd(() => {
             player.boostT = 4.0;
             player.boostCd = 10.0;
             player.baseSpeed = 1.8;
@@ -2409,7 +2377,7 @@ function endGame(survived, diedEarly){
       watchAdContinueBtn.classList.add('hidden');
   }
   
-  // ===== ΝΕΑ: Show end ad + countdown =====
+  // ===== Show end ad + countdown =====
   const endModal = document.getElementById('endModal');
   endModal.classList.remove('hidden');
   
@@ -2472,7 +2440,7 @@ document.getElementById('continueBtn').addEventListener('click', () => {
         running = true;
     } else {
         toast('Not enough coins! Watch ad.', '#ff4d6d');
-        showRewardedAd(() => {
+        showRewardAd(() => {
             hasContinued = true;
             document.getElementById('endModal').classList.add('hidden');
             player.alive = true;
@@ -2485,7 +2453,7 @@ document.getElementById('continueBtn').addEventListener('click', () => {
 });
 
 document.getElementById('watchAdContinue').addEventListener('click', () => {
-    showRewardedAd(() => {
+    showRewardAd(() => {
         hasContinued = true;
         document.getElementById('endModal').classList.add('hidden');
         player.alive = true;
@@ -2526,7 +2494,7 @@ document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
   convertPointsToCoins();
 });
 
-// ===== ΝΕΑ: Share with photo.png =====
+// ===== Share with photo.png =====
 document.getElementById('btnShare').addEventListener('click', async () => {
   const shareData = {
     title: 'Snake Drop – Games by Aziram',
@@ -2556,7 +2524,7 @@ document.getElementById('btnShare').addEventListener('click', async () => {
 });
 
 document.getElementById('adBubble').addEventListener('click', () => {
-    showRewardedAd(() => {
+    showRewardAd(() => {
         startVal = 32; 
         const startCube = document.getElementById('startCubeVal');
         startCube.innerText = '32';
@@ -2569,12 +2537,6 @@ document.getElementById('adBubble').addEventListener('click', () => {
 spawnObstacles();
 for(let i=0;i<120;i++) spawnCube();
 frame(0);
-
-// ===== ΝΕΑ: Show roll-up banner after 1 second =====
-setTimeout(() => {
-  const banner = document.getElementById('rollupBanner');
-  if(banner) banner.classList.add('show');
-}, 1000);
 
 })();
 </script>
