@@ -106,7 +106,7 @@
 
   .overlay { position: fixed; inset: 0; background: rgba(11, 12, 16, .85); display: flex; align-items: center; justify-content: center; z-index: 30; backdrop-filter: blur(4px); pointer-events: auto; }
   
-  /* Μετακίνηση του μενού προς τα πάνω για να μη καλύπτεται από το ad */
+  /* Μετακίνηση του μενού προς τα πάνω */
   #startModal .center-msg {
     transform: translateY(-12vh);
   }
@@ -299,12 +299,13 @@
     justify-content: center;
     z-index: 1000;
     pointer-events: none;
+    transition: opacity 0.3s;
   }
   #bottomBanner > * {
     pointer-events: auto;
   }
 
-  /* ===== ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD ===== */
+  /* REWARD SYSTEM */
   #adOverlay { z-index: 50; }
   #adOverlay .center-msg {
     min-width: 90vw;
@@ -313,9 +314,9 @@
     border: 2px solid #4ecdc4;
     box-shadow: 0 0 30px rgba(78, 205, 196, 0.3), 0 24px 60px #000c;
   }
-  #adContainer {
+  #adContainer, #endAdContainer {
     width: 100%;
-    min-height: 200px;
+    min-height: 250px;
     background: rgba(255,255,255,0.05);
     border-radius: 12px;
     display: flex;
@@ -336,17 +337,6 @@
   }
   #adRewardBtn:active { box-shadow: 0 2px 0 #1b8a82; transform: translateY(3px); }
 
-  #endAdContainer {
-    width: 100%;
-    min-height: 250px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 15px;
-    overflow: hidden;
-  }
   #endAdCountdown { color: #aaa; font-size: 14px; margin-bottom: 10px; }
   .btn-disabled { opacity: 0.5; pointer-events: none; }
 
@@ -355,7 +345,7 @@
 </style>
 </head>
 <body>
-  <!-- Sticky Bottom Banner (Νέο Video Ad Script) -->
+  <!-- Video Ad Banner -->
   <div id="bottomBanner">
     <script>
     (function(fxsfe){
@@ -446,9 +436,7 @@
       <div class="center-msg">
         <h1 id="endTitle">Game Over</h1>
         <p id="endBody">Your score: 0</p>
-        <div id="endAdContainer">
-          <!-- Νέο Reward Script θα φορτωθεί εδώ -->
-        </div>
+        <div id="endAdContainer"></div>
         <p id="endAdCountdown">Advertisement in 5s</p>
         <button class="btn btn-alt hidden" id="continueBtn">Continue (25 coins) 🎬</button>
         <button class="btn btn-alt hidden" id="watchAdContinue">🎬 Watch Ad to Continue</button>
@@ -511,13 +499,11 @@
       </div>
     </div>
 
-    <!-- ΝΕΟ AD REWARD OVERLAY -->
+    <!-- AD REWARD OVERLAY -->
     <div class="overlay hidden" id="adOverlay">
       <div class="center-msg">
         <h2 style="margin-bottom:10px;">Reward Unlocked!</h2>
-        <div id="adContainer">
-          <!-- Νέο Reward Script θα φορτωθεί εδώ -->
-        </div>
+        <div id="adContainer"></div>
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
         <button class="btn btn-alt hidden" id="adRewardBtn" style="margin-bottom:0;">Claim Reward</button>
       </div>
@@ -966,7 +952,6 @@ document.getElementById('buyCancel').onclick = () => {
     pendingBuyProps = null;
 };
 
-// Mini Map
 function drawMiniMap() {
   const canvas = document.getElementById('miniMap');
   if (!canvas) return;
@@ -1540,11 +1525,20 @@ let adTimerInterval = null;
 function loadRewardAdScript(containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    const s = document.createElement('script');
-    s.src = "//sadpicture.com/chD/9.6BbP2C5klIS/WsQb9lNlzdM/4gNDDlUHyxNZSo0/3vMZzNgu0ANxT_IZ5v";
-    s.async = true;
-    s.referrerPolicy = 'no-referrer-when-downgrade';
-    container.appendChild(s);
+    
+    // Δημιουργία Iframe για την απομόνωση και σωστή φόρτωση του script (αποτρέπει το λευκό πλαίσιο)
+    const iframe = document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.height = '100%';
+    iframe.style.border = 'none';
+    iframe.style.overflow = 'hidden';
+    container.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    // Χρήση σπασμένου closing tag </scr'+'ipt> για να μην σπάσει τον HTML parser
+    doc.write('<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;height:100%;}</style></head><body><script>(function(yzxi){var d = document,s = d.createElement("script"),l = d.scripts[d.scripts.length - 1];s.settings = yzxi || {};s.src = "//sadpicture.com/chD/9.6BbP2C5klIS/WsQb9lNlzdM/4gNDDlUHyxNZSo0/3vMZzNgu0ANxT_IZ5v";s.async = true;s.referrerPolicy = "no-referrer-when-downgrade";l.parentNode.insertBefore(s, l);})({});</scr'+'ipt></body></html>');
+    doc.close();
 }
 
 function showRewardAd(callback) {
@@ -2325,6 +2319,10 @@ function startGame(mode){
     document.getElementById('endModal').classList.add('hidden');
     document.getElementById('winDiffModal').classList.add('hidden');
     document.getElementById('joyCenter').style.display = 'block';
+    
+    // Κρύψε το διαφημιστικό banner του βίντεο κατά την διάρκεια του παιχνιδιού
+    document.getElementById('bottomBanner').classList.add('hidden');
+    
     running = true;
   }
 
@@ -2360,7 +2358,7 @@ function endGame(survived, diedEarly){
   watchAdContinueBtn.classList.add('btn-disabled');
   document.getElementById('restartBtn').classList.add('btn-disabled');
   
-  // Φόρτωση του νέου Reward Script
+  // Φόρτωση του Iframe Reward Script στην οθόνη τέλους (αν επιθυμείς και εκεί)
   loadRewardAdScript('endAdContainer');
 
   const countdownEl = document.getElementById('endAdCountdown');
@@ -2397,6 +2395,9 @@ document.getElementById('continueBtn').addEventListener('click', () => {
         player.segments = [{value: startVal, t:0}]; 
         player.shieldT = 3.0; 
         running = true;
+        
+        // Απόκρυψη banner αν συνεχίσει
+        document.getElementById('bottomBanner').classList.add('hidden');
     } else {
         toast('Not enough coins! Watch ad.', '#ff4d6d');
         showRewardAd(() => {
@@ -2407,6 +2408,7 @@ document.getElementById('continueBtn').addEventListener('click', () => {
             player.segments = [{value: startVal, t:0}]; 
             player.shieldT = 3.0; 
             running = true;
+            document.getElementById('bottomBanner').classList.add('hidden');
         });
     }
 });
@@ -2420,6 +2422,7 @@ document.getElementById('watchAdContinue').addEventListener('click', () => {
         player.segments = [{value: startVal, t:0}]; 
         player.shieldT = 3.0; 
         running = true;
+        document.getElementById('bottomBanner').classList.add('hidden');
     });
 });
 
@@ -2443,9 +2446,12 @@ document.getElementById('btnWinCancel').addEventListener('click', () => {
   document.getElementById('winDiffModal').classList.add('hidden');
 });
 document.getElementById('btnEndless').addEventListener('click', () => startGame('endless'));
+
 document.getElementById('restartBtn').addEventListener('click', () => {
     document.getElementById('endModal').classList.add('hidden');
     document.getElementById('startModal').classList.remove('hidden');
+    // Επανεμφάνιση του διαφημιστικού banner του βίντεο στην αρχική
+    document.getElementById('bottomBanner').classList.remove('hidden');
 });
 
 document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
