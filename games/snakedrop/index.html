@@ -12,22 +12,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="photo.png">
 
-<!-- ============================================== -->
-<!-- ΠΑΛΙΟ SCRIPT (ntmm): Το βάζουμε ΕΔΩ για να βγαίνει ΕΞΩ από το πλαίσιο, ως pop-up -->
-<!-- ============================================== -->
-<script>
-(function(ntmm){
-var d = document,
-    s = d.createElement('script'),
-    l = d.scripts[d.scripts.length - 1];
-s.settings = ntmm || {};
-s.src = "\/\/conventionalresponse.com\/bmXeVCsqd.G\/l\/0\/YWWtcw\/lesmi9cu-Z\/UQlckAP_TrcVznO\/D\/Qw2MOzDLE\/twN\/z\/Mr4sNkDeYA4hNvQD";
-s.async = true;
-s.referrerPolicy = 'no-referrer-when-downgrade';
-l.parentNode.insertBefore(s, l);
-})({})
-</script>
-
 <style>
   :root{
     --line:#23263066;
@@ -121,6 +105,11 @@ l.parentNode.insertBefore(s, l);
   .pw.holding .boost-ring { opacity: 1; filter: drop-shadow(0 0 6px #ffd23f); }
 
   .overlay { position: fixed; inset: 0; background: rgba(11, 12, 16, .85); display: flex; align-items: center; justify-content: center; z-index: 30; backdrop-filter: blur(4px); pointer-events: auto; }
+  
+  /* Μετακίνηση του μενού προς τα πάνω για να μη καλύπτεται από το ad */
+  #startModal .center-msg {
+    transform: translateY(-12vh);
+  }
   
   .center-msg{
     background: linear-gradient(165deg, #252836 0%, #1a1c26 50%, #14161f 100%);
@@ -298,6 +287,23 @@ l.parentNode.insertBefore(s, l);
   .shop-item.owned .price { color: #4ade80; font-weight: 800; font-size: 11px; }
   .shop-item .price { color: #111; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px; }
 
+  /* Sticky Bottom Banner for Video Ad */
+  #bottomBanner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 1000;
+    pointer-events: none;
+  }
+  #bottomBanner > * {
+    pointer-events: auto;
+  }
+
   /* ===== ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD ===== */
   #adOverlay { z-index: 50; }
   #adOverlay .center-msg {
@@ -309,8 +315,7 @@ l.parentNode.insertBefore(s, l);
   }
   #adContainer {
     width: 100%;
-    min-height: 250px;
-    max-height: 400px;
+    min-height: 200px;
     background: rgba(255,255,255,0.05);
     border-radius: 12px;
     display: flex;
@@ -331,7 +336,6 @@ l.parentNode.insertBefore(s, l);
   }
   #adRewardBtn:active { box-shadow: 0 2px 0 #1b8a82; transform: translateY(3px); }
 
-  /* End modal ad & countdown */
   #endAdContainer {
     width: 100%;
     min-height: 250px;
@@ -351,6 +355,21 @@ l.parentNode.insertBefore(s, l);
 </style>
 </head>
 <body>
+  <!-- Sticky Bottom Banner (Νέο Video Ad Script) -->
+  <div id="bottomBanner">
+    <script>
+    (function(fxsfe){
+    var d = document,
+        s = d.createElement('script'),
+        l = d.scripts[d.scripts.length - 1];
+    s.settings = fxsfe || {};
+    s.src = "\/\/conventionalresponse.com\/b.XPVlsCdaGclN0MY_WJcE\/semmW9\/uiZNUqlkkrPhTccizAOIDiQK2\/O\/DMEstfNZzAM\/4ENeD-YU4oNBQL";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    l.parentNode.insertBefore(s, l);
+    })({})
+    </script>
+  </div>
 
   <!-- Hidden logo for share -->
   <img id="shareLogo" src="photo.png" alt="logo">
@@ -428,7 +447,7 @@ l.parentNode.insertBefore(s, l);
         <h1 id="endTitle">Game Over</h1>
         <p id="endBody">Your score: 0</p>
         <div id="endAdContainer">
-          <!-- ΕΔΩ ΘΑ ΜΠΕΙ ΤΟ ΝΕΟ SCRIPT (mxzfbw) -->
+          <!-- Νέο Reward Script θα φορτωθεί εδώ -->
         </div>
         <p id="endAdCountdown">Advertisement in 5s</p>
         <button class="btn btn-alt hidden" id="continueBtn">Continue (25 coins) 🎬</button>
@@ -497,7 +516,7 @@ l.parentNode.insertBefore(s, l);
       <div class="center-msg">
         <h2 style="margin-bottom:10px;">Reward Unlocked!</h2>
         <div id="adContainer">
-          <!-- ΕΔΩ ΘΑ ΜΠΕΙ ΤΟ ΝΕΟ SCRIPT (mxzfbw) -->
+          <!-- Νέο Reward Script θα φορτωθεί εδώ -->
         </div>
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
         <button class="btn btn-alt hidden" id="adRewardBtn" style="margin-bottom:0;">Claim Reward</button>
@@ -521,7 +540,7 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 let W, H, DPR;
 const CAMERA_ZOOM = 1.05;
-let gamePaused = false; // Control for ads
+let gamePaused = false; 
 
 function resize(){
   DPR = Math.min(window.devicePixelRatio || 1, 2);
@@ -1514,31 +1533,33 @@ wrap.addEventListener('pointerup', joyRelease);
 wrap.addEventListener('pointercancel', joyRelease);
 
 // ==========================================
-// ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (mxzfbw script for inside, ntmm for popup)
+// ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD
 // ==========================================
 let adTimerInterval = null;
 
+function loadRewardAdScript(containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    const s = document.createElement('script');
+    s.src = "//sadpicture.com/chD/9.6BbP2C5klIS/WsQb9lNlzdM/4gNDDlUHyxNZSo0/3vMZzNgu0ANxT_IZ5v";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    container.appendChild(s);
+}
+
 function showRewardAd(callback) {
-    // Pause the game so the player cannot cheat
     gamePaused = true;
     const overlay = document.getElementById('adOverlay');
-    const container = document.getElementById('adContainer');
     const msg = document.getElementById('adMsg');
     const rewardBtn = document.getElementById('adRewardBtn');
     
-    // Show overlay
     overlay.classList.remove('hidden');
-    
     msg.textContent = 'Loading ad...';
     rewardBtn.classList.add('hidden');
     
-    // ===== Εισαγωγή ΝΕΟΥ Script (mxzfbw) ΜΕΣΑ ΣΤΟ ΠΛΑΙΣΙΟ =====
-    container.innerHTML = '';
-    const script = document.createElement('script');
-    script.innerHTML = `(function(mxzfbw){var d = document,s = d.createElement('script'),l = d.scripts[d.scripts.length - 1];s.settings = mxzfbw || {};s.src = "\\/\\/sadpicture.com\\/cfDi9.6\\/b-2\\/5tlsSQWiQU9wNFzOMp4eNpDcUnyeN\\/Sz0I3TMuzqgW0-NwTAIJ5A";s.async = true;s.referrerPolicy = 'no-referrer-when-downgrade';l.parentNode.insertBefore(s, l);})({})`;
-    container.appendChild(script);
+    // Φόρτωση του νέου Reward Script
+    loadRewardAdScript('adContainer');
     
-    // Start a 5-second timer to mimic a rewarded video ad
     if (adTimerInterval) clearInterval(adTimerInterval);
     let countdown = 5;
     adTimerInterval = setInterval(() => {
@@ -1554,7 +1575,7 @@ function showRewardAd(callback) {
     rewardBtn.onclick = () => {
         clearInterval(adTimerInterval);
         overlay.classList.add('hidden');
-        gamePaused = false; // Resume game
+        gamePaused = false; 
         if (callback) callback();
     };
 }
@@ -2237,7 +2258,6 @@ function frame(ts){
   const dt = Math.min((ts-lastT)/1000, 0.05);
   lastT = ts;
 
-  // Pause game if ad is open
   if (gamePaused) {
     requestAnimationFrame(frame);
     return;
@@ -2333,23 +2353,16 @@ function endGame(survived, diedEarly){
       watchAdContinueBtn.classList.add('hidden');
   }
   
-  // ===== Show end ad + countdown =====
   const endModal = document.getElementById('endModal');
   endModal.classList.remove('hidden');
   
-  // Disable all buttons initially
   continueBtn.classList.add('btn-disabled');
   watchAdContinueBtn.classList.add('btn-disabled');
   document.getElementById('restartBtn').classList.add('btn-disabled');
   
-  // Inject the NEW mxzfbw script into endAdContainer
-  const endAdContainer = document.getElementById('endAdContainer');
-  endAdContainer.innerHTML = '';
-  const endScript = document.createElement('script');
-  endScript.innerHTML = `(function(mxzfbw){var d = document,s = d.createElement('script'),l = d.scripts[d.scripts.length - 1];s.settings = mxzfbw || {};s.src = "\\/\\/sadpicture.com\\/cfDi9.6\\/b-2\\/5tlsSQWiQU9wNFzOMp4eNpDcUnyeN\\/Sz0I3TMuzqgW0-NwTAIJ5A";s.async = true;s.referrerPolicy = 'no-referrer-when-downgrade';l.parentNode.insertBefore(s, l);})({})`;
-  endAdContainer.appendChild(endScript);
+  // Φόρτωση του νέου Reward Script
+  loadRewardAdScript('endAdContainer');
 
-  // Start countdown of 5 seconds
   const countdownEl = document.getElementById('endAdCountdown');
   let count = 5;
   countdownEl.textContent = `Advertisement in ${count}s`;
@@ -2358,7 +2371,6 @@ function endGame(survived, diedEarly){
     if (count <= 0) {
       clearInterval(countdownInterval);
       countdownEl.textContent = 'Ad complete!';
-      // Enable buttons
       continueBtn.classList.remove('btn-disabled');
       watchAdContinueBtn.classList.remove('btn-disabled');
       document.getElementById('restartBtn').classList.remove('btn-disabled');
@@ -2441,7 +2453,6 @@ document.getElementById('btnConvertCoins').addEventListener('click', (e) => {
   convertPointsToCoins();
 });
 
-// ===== Share with photo.png =====
 document.getElementById('btnShare').addEventListener('click', async () => {
   const shareData = {
     title: 'Snake Drop – Games by Aziram',
@@ -2450,7 +2461,7 @@ document.getElementById('btnShare').addEventListener('click', async () => {
   };
   try {
     const img = document.getElementById('shareLogo');
-    if (img && img.src && img.src !== window.location.href) { // check if image exists
+    if (img && img.src && img.src !== window.location.href) {
       const blob = await fetch(img.src).then(r => r.blob());
       const file = new File([blob], 'photo.png', { type: blob.type });
       shareData.files = [file];
