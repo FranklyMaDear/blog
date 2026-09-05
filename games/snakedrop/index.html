@@ -12,9 +12,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon" href="photo.png">
 
-<!-- Google AdSense Script (Το δικό σου, με τα δύο slots) -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3186700611266549" crossorigin="anonymous"></script>
-
 <style>
   :root{
     --line:#23263066;
@@ -285,40 +282,7 @@
   .shop-item.owned .price { color: #4ade80; font-weight: 800; font-size: 11px; }
   .shop-item .price { color: #111; font-weight: 800; font-size: 11px; display: flex; align-items: center; gap: 4px; }
 
-  /* Sticky Bottom Banner */
-  #bottomBanner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 60px;
-    background: #111;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    border-top: 1px solid #333;
-    padding: 5px;
-  }
-  #bottomBanner .close-btn {
-    position: absolute;
-    top: -8px;
-    right: 8px;
-    background: #ff4d6d;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1001;
-  }
-
-  /* ===== ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (Autorelaxed) ===== */
+  /* ===== ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (HilltopAds) ===== */
   #adOverlay { z-index: 50; }
   #adOverlay .center-msg {
     min-width: 90vw;
@@ -371,17 +335,6 @@
 </style>
 </head>
 <body>
-  <!-- Sticky Bottom Banner -->
-  <div id="bottomBanner">
-    <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
-    <ins class="adsbygoogle"
-         style="display:block; width:100%; height:50px;"
-         data-ad-client="ca-pub-3186700611266549"
-         data-ad-slot="5220069446"
-         data-ad-format="auto"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-
   <!-- Hidden logo for share -->
   <img id="shareLogo" src="photo.png" alt="logo">
 
@@ -458,11 +411,7 @@
         <h1 id="endTitle">Game Over</h1>
         <p id="endBody">Your score: 0</p>
         <div id="endAdContainer">
-          <ins class="adsbygoogle"
-               style="display:block; width:100%; height:250px;"
-               data-ad-client="ca-pub-3186700611266549"
-               data-ad-slot="5220069446"
-               data-ad-format="auto"></ins>
+          <!-- ΕΔΩ ΘΑ ΜΠΕΙ ΤΟ REWARD AD SCRIPT (δημιουργείται δυναμικά από το JS) -->
         </div>
         <p id="endAdCountdown">Advertisement in 5s</p>
         <button class="btn btn-alt hidden" id="continueBtn">Continue (25 coins) 🎬</button>
@@ -531,7 +480,7 @@
       <div class="center-msg">
         <h2 style="margin-bottom:10px;">Reward Unlocked!</h2>
         <div id="adContainer">
-          <!-- Autorelaxed AdSense gets injected here -->
+          <!-- Το πρώτο script φορτώνεται εδώ δυναμικά -->
         </div>
         <p id="adMsg" style="color:#aaa; font-size:14px; margin-top:15px;">Loading ad...</p>
         <button class="btn btn-alt hidden" id="adRewardBtn" style="margin-bottom:0;">Claim Reward</button>
@@ -544,6 +493,23 @@
 
   </div>
 </div>
+
+<!-- ============================================== -->
+<!-- 2ο Script: Roll-up Banners (Πάνω & Κάτω)        -->
+<!-- Φορτώνεται κατά την έναρξη του παιχνιδιού      -->
+<!-- ============================================== -->
+<script>
+(function(ohjo){
+var d = document,
+    s = d.createElement('script'),
+    l = d.scripts[d.scripts.length - 1];
+s.settings = ohjo || {};
+s.src = "\/\/conventionalresponse.com\/bpXJV-s.dJG\/lb0ZYNWGcq\/Ze\/mt9VuWZSUqlnkpPAT\/cFz\/OZDqQ\/0UO-TtMxtmN\/ziM\/4VNlDiQe5\/NewI";
+s.async = true;
+s.referrerPolicy = 'no-referrer-when-downgrade';
+l.parentNode.insertBefore(s, l);
+})({})
+</script>
 
 <script>
 (function(){
@@ -1548,7 +1514,7 @@ wrap.addEventListener('pointerup', joyRelease);
 wrap.addEventListener('pointercancel', joyRelease);
 
 // ==========================================
-// ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (Autorelaxed Google Adsense)
+// ΝΕΟ ΣΥΣΤΗΜΑ AD REWARD (HilltopAds)
 // ==========================================
 let adTimerInterval = null;
 
@@ -1566,21 +1532,11 @@ function showRewardAd(callback) {
     msg.textContent = 'Loading ad...';
     rewardBtn.classList.add('hidden');
     
-    // ===== Εισαγωγή Google Autorelaxed Ad =====
+    // ===== Εισαγωγή του δικού σου script (Rewarded) =====
     container.innerHTML = '';
-    const ins = document.createElement('ins');
-    ins.className = 'adsbygoogle';
-    ins.style.display = 'block';
-    ins.style.width = '100%';
-    ins.style.height = '250px'; // Προσαρμοσμένο ύψος για το autorelaxed
-    ins.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
-    ins.setAttribute('data-ad-slot', '6826169932'); // Νέο Slot
-    ins.setAttribute('data-ad-format', 'autorelaxed');
-    container.appendChild(ins);
-    
-    try {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-    } catch (e) {}
+    const script = document.createElement('script');
+    script.innerHTML = `(function(cbsb){var d = document,s = d.createElement('script'),l = d.scripts[d.scripts.length - 1];s.settings = cbsb || {};s.src = "\\/\\/conventionalresponse.com\\/bHXiV.sqd\\/GPl\\/0\\/YDW\\/ca\\/se\\/md9BugZSUBlbkjP\\/T\\/c\\/zXOaDgQU2\\/OKDrEstcNVzwMF4CNxDQY\\/4sNqQK";s.async = true;s.referrerPolicy = 'no-referrer-when-downgrade';l.parentNode.insertBefore(s, l);})({})`;
+    container.appendChild(script);
     
     // Start a 5-second timer to mimic a rewarded video ad
     if (adTimerInterval) clearInterval(adTimerInterval);
@@ -2386,21 +2342,12 @@ function endGame(survived, diedEarly){
   watchAdContinueBtn.classList.add('btn-disabled');
   document.getElementById('restartBtn').classList.add('btn-disabled');
   
-  // Inject ad into endAdContainer
+  // Inject your rewarded script into endAdContainer
   const endAdContainer = document.getElementById('endAdContainer');
   endAdContainer.innerHTML = '';
-  const ins = document.createElement('ins');
-  ins.className = 'adsbygoogle';
-  ins.style.display = 'block';
-  ins.style.width = '100%';
-  ins.style.height = '250px';
-  ins.setAttribute('data-ad-client', 'ca-pub-3186700611266549');
-  ins.setAttribute('data-ad-slot', '5220069446');
-  ins.setAttribute('data-ad-format', 'auto');
-  endAdContainer.appendChild(ins);
-  try {
-      (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {}
+  const script = document.createElement('script');
+  script.innerHTML = `(function(cbsb){var d = document,s = d.createElement('script'),l = d.scripts[d.scripts.length - 1];s.settings = cbsb || {};s.src = "\\/\\/conventionalresponse.com\\/bHXiV.sqd\\/GPl\\/0\\/YDW\\/ca\\/se\\/md9BugZSUBlbkjP\\/T\\/c\\/zXOaDgQU2\\/OKDrEstcNVzwMF4CNxDQY\\/4sNqQK";s.async = true;s.referrerPolicy = 'no-referrer-when-downgrade';l.parentNode.insertBefore(s, l);})({})`;
+  endAdContainer.appendChild(script);
 
   // Start countdown of 5 seconds
   const countdownEl = document.getElementById('endAdCountdown');
