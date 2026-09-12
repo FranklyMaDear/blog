@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Μεροκάματα Τρίκαλα - Φίκι</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 15px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header-bar h1 {
+            font-size: 1.2rem;
+            color: #1f2937;
+            margin: 0;
+        }
+        .lang-btn {
+            background: #e5e7eb;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #374151;
+            font-weight: 600;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .submit-btn {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            background: #1d4ed8;
+        }
+        .workers-list {
+            margin-top: 30px;
+        }
+        .worker-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .call-btn {
+            display: block;
+            text-align: center;
+            background: #10b981;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Header και Αλλαγή Γλώσσας -->
+    <div class="header-bar">
+        <h1 id="titleText">Εργασία - Ν. Τρικάλων</h1>
+        <button class="lang-btn" onclick="toggleLanguage()">Shqip</button>
+    </div>
+
+    <!-- Φόρμα Καταχώρησης Αγγελίας -->
+    <h2 id="formTitle" style="font-size: 1.1rem; color: #4b5563;">Δήλωσε Διαθεσιμότητα</h2>
+    
+    <form id="jobForm">
+        <div class="form-group">
+            <label id="lblNome">Όνομα / Emri:</label>
+            <input type="text" id="name" placeholder="π.χ. Γιάννης" required>
+        </div>
+
+        <div class="form-group">
+            <label id="lblPhone">Τηλέφωνο / Telefoni:</label>
+            <input type="tel" id="phone" placeholder="π.χ. 69..." required>
+        </div>
+
+        <div class="form-group">
+            <label id="lblJob">Είδος Εργασίας / Lloji i punës:</label>
+            <select id="jobType" required>
+                <option value="χωράφια">Χωράφια / Αγροτικά (Bujqësi)</option>
+                <option value="καθαριότητα">Καθαριότητα (Pastrim)</option>
+                <option value="κήποι">Κηπουρικά (Kopshtari)</option>
+                <option value="ηλικιωμένοι">Φροντίδα Ηλικιωμένων (Kujdes për të moshuar)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label id="lblLocation">Περιοχή / Zona:</label>
+            <select id="location" required>
+                <option value="fiki">Φίκι</option>
+                <option value="trikala">Τρίκαλα Κέντρο</option>
+                <option value="kalampaka">Καλαμπάκα</option>
+                <option value="xwria">Γύρω Χωριά</option>
+            </select>
+        </div>
+
+        <button type="submit" class="submit-btn" id="btnSubmit">Δημοσίευση</button>
+    </form>
+
+    <!-- Λίστα με τις τελευταίες αγγελίες -->
+    <div class="workers-list">
+        <h2 id="listTitle" style="font-size: 1.1rem; color: #4b5563;">Διαθέσιμοι Εργάτες</h2>
+        
+        <!-- Παράδειγμα κάρτας εργάτη (Αυτό αργότερα θα δημιουργείται αυτόματα από το Cloudflare) -->
+        <div class="worker-card">
+            <h3 style="margin: 0 0 5px 0;">Μαρία</h3>
+            <p style="margin: 0; color: #6b7280; font-size: 0.9rem;">Καθαριότητα • Φίκι</p>
+            <a href="tel:+306900000000" class="call-btn">📞 Κάλεσε Τώρα</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Απλό JavaScript για την αλλαγή γλώσσας
+    let isGreek = true;
+
+    function toggleLanguage() {
+        isGreek = !isGreek;
+        const btn = document.querySelector('.lang-btn');
+        
+        if (isGreek) {
+            btn.textContent = "Shqip";
+            document.getElementById('titleText').textContent = "Εργασία - Ν. Τρικάλων";
+            document.getElementById('formTitle').textContent = "Δήλωσε Διαθεσιμότητα";
+            document.getElementById('btnSubmit').textContent = "Δημοσίευση";
+            document.getElementById('listTitle').textContent = "Διαθέσιμοι Εργάτες";
+        } else {
+            btn.textContent = "Ελληνικά";
+            document.getElementById('titleText').textContent = "Punë - Trikala";
+            document.getElementById('formTitle').textContent = "Publiko Njoftimin";
+            document.getElementById('btnSubmit').textContent = "Publiko";
+            document.getElementById('listTitle').textContent = "Punëtorë të Gatshëm";
+        }
+    }
+
+    // Αργότερα εδώ θα βάλουμε τον κώδικα fetch() που θα στέλνει τα δεδομένα στο Cloudflare Workers
+    document.getElementById('jobForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert("Τα δεδομένα θα στέλνονται στο Backend!");
+    });
+</script>
+
+</body>
+</html>
