@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Εργασία - Τρίκαλα & Περίχωρα</title>
+    <title>Εργασία - Νομός Τρικάλων</title>
     <style>
         :root {
             --primary: #0f172a;
@@ -32,36 +32,21 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
-        /* Header & Language Toggle */
+        /* Header */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
             border-bottom: 2px solid #f1f5f9;
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
 
         .header h1 {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             color: var(--primary);
             margin: 0;
         }
 
-        .lang-btn {
-            background: #e2e8f0;
-            color: var(--primary);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .lang-btn:hover { background: #cbd5e1; }
-
-        /* Role Selection (Home Screen) */
+        /* Role Selection */
         .role-selection {
             display: flex;
             flex-direction: column;
@@ -82,7 +67,7 @@
 
         .role-btn:hover {
             border-color: var(--accent);
-            background: #f0fdf4; /* Ελαφρύ πράσινο/μπλε για hover */
+            background: #f0fdf4;
         }
 
         .role-icon {
@@ -102,7 +87,7 @@
             font-size: 0.95rem;
         }
 
-        /* Forms (Hidden by default) */
+        /* Forms */
         .screen { display: none; }
         .screen.active { display: block; }
 
@@ -130,20 +115,31 @@
             font-size: 0.95rem;
         }
 
-        input, select {
+        input, select, textarea {
             width: 100%;
             padding: 14px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
-            font-size: 16px; /* 16px για να μην κάνει auto-zoom στα iPhone */
+            font-size: 16px;
             box-sizing: border-box;
             background-color: #f8fafc;
+            font-family: inherit;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent);
             background-color: #ffffff;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        optgroup {
+            font-weight: bold;
+            color: #0f172a;
         }
 
         .submit-btn {
@@ -170,28 +166,27 @@
     
     <!-- HEADER -->
     <div class="header">
-        <h1 class="translatable" data-el="Εργασία - Ν. Τρικάλων" data-sq="Punë - Trikala">Εργασία - Ν. Τρικάλων</h1>
-        <button class="lang-btn" onclick="toggleLanguage()" id="langToggle">Shqip</button>
+        <h1>Εργασία - Νομός Τρικάλων</h1>
     </div>
 
     <!-- ΟΘΟΝΗ 1: ΕΠΙΛΟΓΗ ΡΟΛΟΥ -->
     <div id="screen-home" class="screen active">
-        <h2 class="translatable" data-el="Τι ψάχνετε;" data-sq="Çfarë po kërkoni?" style="text-align:center; margin-bottom: 25px;">Τι ψάχνετε;</h2>
+        <h2 style="text-align:center; margin-bottom: 25px;">Τι ψάχνετε;</h2>
         
         <div class="role-selection">
             <button class="role-btn" onclick="showScreen('screen-worker')">
                 <div class="role-icon">👷‍♂️</div>
                 <div class="role-text">
-                    <h3 class="translatable" data-el="Ψάχνω για Εργασία" data-sq="Kërkoj Punë">Ψάχνω για Εργασία</h3>
-                    <p class="translatable" data-el="Είμαι τεχνίτης, εργάτης ή προσφέρω υπηρεσίες" data-sq="Jam teknik, punëtor ose ofroj shërbime">Είμαι τεχνίτης, εργάτης ή προσφέρω υπηρεσίες</p>
+                    <h3>Ψάχνω για Εργασία</h3>
+                    <p>Είμαι τεχνίτης, εργάτης ή προσφέρω υπηρεσίες</p>
                 </div>
             </button>
 
             <button class="role-btn" onclick="showScreen('screen-employer')">
                 <div class="role-icon">🏡</div>
                 <div class="role-text">
-                    <h3 class="translatable" data-el="Είμαι Εργοδότης" data-sq="Jam Punëdhënës">Είμαι Εργοδότης</h3>
-                    <p class="translatable" data-el="Ψάχνω άτομο για εργασία, μερεμέτια ή χωράφια" data-sq="Kërkoj njeri për punë, riparime ose bujqësi">Ψάχνω άτομο για εργασία, μερεμέτια ή χωράφια</p>
+                    <h3>Είμαι Εργοδότης</h3>
+                    <p>Ψάχνω άτομο για εργασία, εστίαση ή χωράφια</p>
                 </div>
             </button>
         </div>
@@ -199,158 +194,191 @@
 
     <!-- ΟΘΟΝΗ 2: ΦΟΡΜΑ ΕΡΓΑΤΗ -->
     <div id="screen-worker" class="screen">
-        <button class="back-btn" onclick="showScreen('screen-home')">← <span class="translatable" data-el="Πίσω" data-sq="Kthehu">Πίσω</span></button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω</button>
         
-        <h2 class="translatable" data-el="Δήλωση Εργασίας" data-sq="Deklarim Punësimi">Δήλωση Εργασίας</h2>
+        <h2>Δήλωση Εργασίας (Ψάχνω Δουλειά)</h2>
         
         <form id="workerForm">
             <div class="form-group">
-                <label class="translatable" data-el="Όνομα:" data-sq="Emri:">Όνομα:</label>
+                <label>Όνομα (ή Επωνυμία):</label>
                 <input type="text" required>
             </div>
 
             <div class="form-group">
-                <label class="translatable" data-el="Τηλέφωνο:" data-sq="Telefoni:">Τηλέφωνο:</label>
+                <label>Τηλέφωνο επικοινωνίας:</label>
                 <input type="tel" required>
             </div>
 
             <div class="form-group">
-                <label class="translatable" data-el="Τι εργασία κάνετε;" data-sq="Çfarë pune bëni?">Τι εργασία κάνετε;</label>
-                <select class="job-category" required>
-                    <!-- Οι επιλογές κατηγοριών μπαίνουν μέσω JavaScript για να είναι ενιαίες -->
-                </select>
+                <label>Ειδικότητα / Είδος εργασίας:</label>
+                <select class="job-category" required></select>
             </div>
 
             <div class="form-group">
-                <label class="translatable" data-el="Περιοχή:" data-sq="Zona:">Περιοχή:</label>
+                <label>Περιοχή που εξυπηρετείτε / μένετε:</label>
                 <select class="location-select" required></select>
             </div>
+            
+            <div class="form-group">
+                <label>Σχόλια / Λεπτομέρειες (Προαιρετικό):</label>
+                <textarea placeholder="π.χ. Διαθέτω δικό μου όχημα, έχω εμπειρία 5 χρόνια κ.λπ."></textarea>
+            </div>
 
-            <button type="submit" class="submit-btn translatable" data-el="Καταχώρηση Προφίλ" data-sq="Publiko Profilin">Καταχώρηση Προφίλ</button>
+            <button type="submit" class="submit-btn">Καταχώρηση Προφίλ</button>
         </form>
     </div>
 
     <!-- ΟΘΟΝΗ 3: ΦΟΡΜΑ ΕΡΓΟΔΟΤΗ -->
     <div id="screen-employer" class="screen">
-        <button class="back-btn" onclick="showScreen('screen-home')">← <span class="translatable" data-el="Πίσω" data-sq="Kthehu">Πίσω</span></button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω</button>
         
-        <h2 class="translatable" data-el="Αναζήτηση Εργάτη" data-sq="Kërkim Punëtori">Αναζήτηση Εργάτη</h2>
+        <h2>Αναζήτηση Προσωπικού (Ψάχνω Εργάτη)</h2>
         
         <form id="employerForm">
             <div class="form-group">
-                <label class="translatable" data-el="Όνομα:" data-sq="Emri:">Όνομα:</label>
+                <label>Όνομα / Επιχείρηση:</label>
                 <input type="text" required>
             </div>
 
             <div class="form-group">
-                <label class="translatable" data-el="Τηλέφωνο:" data-sq="Telefoni:">Τηλέφωνο:</label>
+                <label>Τηλέφωνο επικοινωνίας:</label>
                 <input type="tel" required>
             </div>
 
             <div class="form-group">
-                <label class="translatable" data-el="Τι ειδικότητα ψάχνετε;" data-sq="Çfarë specialiteti kërkoni?">Τι ειδικότητα ψάχνετε;</label>
+                <label>Τι ειδικότητα ψάχνετε;</label>
                 <select class="job-category" required></select>
             </div>
 
             <div class="form-group">
-                <label class="translatable" data-el="Περιοχή που θα γίνει η δουλειά:" data-sq="Zona ku do bëhet puna:">Περιοχή που θα γίνει η δουλειά:</label>
+                <label>Τοποθεσία εργασίας:</label>
                 <select class="location-select" required></select>
             </div>
+            
+            <div class="form-group">
+                <label>Περαιτέρω λεπτομέρειες / Παροχές (Προαιρετικό):</label>
+                <textarea placeholder="π.χ. Ωράριο 08:00 - 16:00, παρέχεται διατροφή, αμοιβή συζητήσιμη."></textarea>
+            </div>
 
-            <button type="submit" class="submit-btn translatable" data-el="Δημοσίευση Αγγελίας" data-sq="Publiko Njoftimin">Δημοσίευση Αγγελίας</button>
+            <button type="submit" class="submit-btn">Δημοσίευση Αγγελίας</button>
         </form>
     </div>
 
 </div>
 
 <script>
-    // 1. ΔΕΔΟΜΕΝΑ: Κατηγορίες Εργασιών
-    const jobCategories = [
-        { el: "Χωράφια / Αγροτικά", sq: "Bujqësi / Arë" },
-        { el: "Χτίσιμο - Γκρέμισμα - Σοβάτισμα", sq: "Ndërtim - Prishje - Suvatim" },
-        { el: "Υδραυλικός", sq: "Hidraulik" },
-        { el: "Ηλεκτρολόγος", sq: "Elektricist" },
-        { el: "Ψυκτικός (Κλιματιστικά/Ψυγεία)", sq: "Teknik Frigoriferësh / Kondicionerësh" },
-        { el: "Τοποθέτηση Τηλεόρασης", sq: "Montim Televizori" },
-        { el: "Συναρμολόγηση Επίπλων", sq: "Montim Mobiljesh" },
-        { el: "Επισκευή Πλυντηρίου", sq: "Riparim Rrobalarëse" },
-        { el: "Επισκευή Στεγνωτηρίου", sq: "Riparim Tharëse" },
-        { el: "Βάψιμο", sq: "Lyerje" },
-        { el: "Κλάδεμα", sq: "Krasitje" },
-        { el: "Σκεπές", sq: "Çati" },
-        { el: "Πλακάκια - Μάρμαρα", sq: "Pllaka - Mermere" },
-        { el: "Μονώσεις", sq: "Izolime" },
-        { el: "Κηπουρικά", sq: "Kopshtari" },
-        { el: "Καθαριότητα", sq: "Pastrim" },
-        { el: "Φροντίδα Ηλικιωμένων", sq: "Kujdes për të moshuar" },
-        { el: "Ανακαίνιση", sq: "Rinovim" }
-    ];
+    // 1. ΔΕΔΟΜΕΝΑ: Κατηγορίες Εργασιών (Ομαδοποιημένες)
+    const jobsData = {
+        "Εστίαση & Αναψυχή": [
+            "Καφετέρια Barista", "Καφετέρια Service", "Εστιατόριο Κουζίνα", 
+            "Εστιατόριο Service", "Καφενείο", "Τσιπουράδικο"
+        ],
+        "Αγροτικές Εργασίες": [
+            "Χωράφια / Αγροτικά", "Κηπουρικά", "Κλάδεμα"
+        ],
+        "Τεχνικές - Οικοδομικές Εργασίες": [
+            "Χτίσιμο - Γκρέμισμα - Σοβάτισμα", "Υδραυλικός", "Ηλεκτρολόγος", 
+            "Ψυκτικός (Κλιματιστικά/Ψυγεία)", "Πλακάκια - Μάρμαρα", 
+            "Σκεπές", "Μονώσεις", "Ανακαίνιση", "Βάψιμο"
+        ],
+        "Οικιακές Υπηρεσίες & Μικροεργασίες": [
+            "Καθαριότητα", "Φροντίδα Ηλικιωμένων", "Συναρμολόγηση Επίπλων", 
+            "Τοποθέτηση Τηλεόρασης", "Επισκευή Πλυντηρίου", "Επισκευή Στεγνωτηρίου"
+        ]
+    };
 
-    // 1β. ΔΕΔΟΜΕΝΑ: Περιοχές
-    const locations = [
-        { el: "Φίκι", sq: "Fiki" },
-        { el: "Τρίκαλα (Κέντρο)", sq: "Trikala (Qendër)" },
-        { el: "Καλαμπάκα", sq: "Kalambaka" },
-        { el: "Πύλη", sq: "Pili" },
-        { el: "Φαρκαδόνα", sq: "Farkadona" },
-        { el: "Άλλο Χωριό Ν. Τρικάλων", sq: "Fshat tjetër (Trikala)" }
-    ];
+    // 2. ΔΕΔΟΜΕΝΑ: Περιοχές / Δήμοι Ν. Τρικάλων (Ομαδοποιημένα)
+    const locationsData = {
+        "Δήμος Τρικκαίων": [
+            "Τρίκαλα (Κέντρο)", "Αγία Κυριακή", "Αρδάνι", "Βαλτινό", "Γενέσι", "Γλίνος", 
+            "Γοργογύρι", "Δενδροχώρι", "Διαλεκτό", "Διπόταμο", "Ελληνόκαστρο", "Ζηλευτή", 
+            "Κάτω Ελάτη", "Κεφαλόβρυσο", "Κρηνίτσα", "Λιόπρασο", "Λόγγος", "Μεγάλα Καλύβια", 
+            "Μεγάλο Κεφαλόβρυσο", "Μεγαλοχώρι", "Μικρό Κεφαλόβρυσο", "Ξυλοπάροικο", 
+            "Παλαιόπυργος", "Πατουλιά", "Πλάτανος", "Πρίνος", "Ρίζωμα", "Σπαθάδες", 
+            "Φωτάδα", "Χρυσαυγή"
+        ],
+        "Δήμος Μετεώρων": [
+            "Καλαμπάκα", "Αγία Παρασκευή (Ασπροποτάμου)", "Αγία Παρασκευή (Κλεινοβού)", 
+            "Αγιόφυλλο", "Αγνάντια", "Αηδόνα", "Αμάραντο", "Αμπελοχώρι", "Ανθούσα", 
+            "Ασπροκκλησιά", "Αύρα", "Αχλαδέα", "Βασιλική", "Βλαχάβα", "Γαύρος", 
+            "Γερακάρι", "Γλυκομηλιά", "Θεόπετρα", "Θεοτόκος", "Κακοπλεύρι", "Καλλιθέα", 
+            "Καλλιρρόη", "Καλομοίρα", "Καστανέα", "Καστράκι", "Κατάφυτο", "Κλεινό", 
+            "Κονισκός", "Κορυδαλλός", "Κρανέα", "Κρύα Βρύση", "Λογγάς", "Μαλακάσι", 
+            "Ματονέρι", "Μαυρέλι", "Μεγάλη Κερασιά", "Ορθοβούνι", "Παναγία", "Περιστέρα", 
+            "Πεύκη", "Πολυθέα", "Σαρακήνα", "Στεφάνι", "Τρυγόνα", "Φλαμπουρέσι", 
+            "Χαλίκι", "Χρυσομηλιά"
+        ],
+        "Δήμος Πύλης": [
+            "Πύλη", "Άγιος Νικόλαος", "Άγιος Προκόπιος", "Αθαμανία", "Αρματολικό", 
+            "Βαθύρρευμα", "Βαλκάνο", "Γόμφοι", "Δέση", "Δροσερό", "Δροσοχώρι", 
+            "Ελάτη", "Ελευθεροχώρι", "Καρτέρι", "Κορυφή", "Κοτρώνι", "Λιβαδοχώρι", 
+            "Λυγαριά", "Μεσοχώρα", "Μοσχόφυτο", "Μουριά", "Μυρόφυλλο", "Νέα Πεύκη", 
+            "Νεράιδα", "Νεραϊδοχώρι", "Παλαιοκαρυά", "Παλαιομονάστηρο", "Παράμερο", 
+            "Παραπόταμος", "Παχτούρι", "Περτούλι", "Πετροχώρι", "Πηγή", "Πιάλεια", 
+            "Πολυνέρι", "Πύρρα", "Ροποτό", "Στουρναραίικα", "Φήκη (Φίκι)", "Φιλύρα"
+        ],
+        "Δήμος Φαρκαδόνας": [
+            "Φαρκαδόνα", "Αχλαδοχώρι", "Γεωργανάδες", "Γριζάνο", "Διάσελλο", "Ζάρκο", 
+            "Κεραμίδι", "Κρήνη", "Νομή", "Οιχαλία (Νεοχώρι)", "Παναγίτσα", "Πετρόπορος", 
+            "Πετρωτό", "Πηνειάδα", "Ταξιάρχες", "Φανερωμένη"
+        ]
+    };
 
-    // 2. ΠΛΗΘΥΣΜΟΣ ΤΩΝ DROPDOWNS ΣΤΟ ΦΟΡΤΩΜΑ
-    function populateSelects(lang) {
-        // Γέμισμα Κατηγοριών
+    // 3. ΣΥΝΑΡΤΗΣΗ ΓΕΜΙΣΜΑΤΟΣ ΤΩΝ ΛΙΣΤΩΝ (Με OptGroups)
+    function populateDropdowns() {
+        // Γέμισμα Ειδικοτήτων
         document.querySelectorAll('.job-category').forEach(select => {
-            select.innerHTML = '<option value="" disabled selected>-- Επιλογή / Zgjidh --</option>';
-            jobCategories.forEach(job => {
-                const text = lang === 'el' ? job.el : job.sq;
-                const value = job.el; // Κρατάμε το ελληνικό value για το backend μας
-                select.innerHTML += `<option value="${value}">${text}</option>`;
-            });
+            select.innerHTML = '<option value="" disabled selected>-- Επιλέξτε Ειδικότητα --</option>';
+            for (const [groupName, jobs] of Object.entries(jobsData)) {
+                let optgroup = document.createElement('optgroup');
+                optgroup.label = groupName;
+                jobs.forEach(job => {
+                    let option = document.createElement('option');
+                    option.value = job;
+                    option.textContent = job;
+                    optgroup.appendChild(option);
+                });
+                select.appendChild(optgroup);
+            }
         });
 
-        // Γέμισμα Περιοχών
+        // Γέμισμα Τοποθεσιών
         document.querySelectorAll('.location-select').forEach(select => {
-            select.innerHTML = '<option value="" disabled selected>-- Επιλογή / Zgjidh --</option>';
-            locations.forEach(loc => {
-                const text = lang === 'el' ? loc.el : loc.sq;
-                const value = loc.el;
-                select.innerHTML += `<option value="${value}">${text}</option>`;
-            });
+            select.innerHTML = '<option value="" disabled selected>-- Επιλέξτε Περιοχή --</option>';
+            // Προσθήκη γενικής επιλογής
+            select.innerHTML += '<option value="Όλος ο Νομός">Όλος ο Νομός Τρικάλων</option>';
+            
+            for (const [municipality, locations] of Object.entries(locationsData)) {
+                let optgroup = document.createElement('optgroup');
+                optgroup.label = municipality;
+                
+                // Ταξινόμηση αλφαβητικά μέσα στον δήμο για ευκολία
+                locations.sort((a, b) => a.localeCompare(b, 'el')).forEach(loc => {
+                    let option = document.createElement('option');
+                    option.value = loc;
+                    option.textContent = loc;
+                    optgroup.appendChild(option);
+                });
+                select.appendChild(optgroup);
+            }
         });
     }
 
-    // 3. ΕΝΑΛΛΑΓΗ ΟΘΟΝΩΝ (Home -> Forms)
+    // 4. ΕΝΑΛΛΑΓΗ ΟΘΟΝΩΝ
     function showScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
+        window.scrollTo(0,0); // Πάει στην αρχή της σελίδας όταν αλλάζει οθόνη
     }
 
-    // 4. ΕΝΑΛΛΑΓΗ ΓΛΩΣΣΑΣ (Ελληνικά - Αλβανικά)
-    let currentLang = 'el';
-
-    function toggleLanguage() {
-        currentLang = (currentLang === 'el') ? 'sq' : 'el';
-        
-        // Αλλαγή κειμένου στο κουμπί
-        document.getElementById('langToggle').innerText = currentLang === 'el' ? 'Shqip' : 'Ελληνικά';
-
-        // Αλλαγή όλων των στατικών κειμένων με την κλάση "translatable"
-        document.querySelectorAll('.translatable').forEach(el => {
-            el.innerText = el.getAttribute(`data-${currentLang}`);
-        });
-
-        // Ξαναγεμίζουμε τις λίστες (dropdowns) στη νέα γλώσσα
-        populateSelects(currentLang);
-    }
-
-    // Εκτέλεση κατά την εκκίνηση για να γεμίσουν τα Selects
+    // Εκτέλεση κατά την εκκίνηση
     window.onload = () => {
-        populateSelects('el');
+        populateDropdowns();
     };
 
-    // Προσωρινή αποτροπή αποστολής φόρμας
-    document.getElementById('workerForm').addEventListener('submit', e => { e.preventDefault(); alert('Έτοιμο για σύνδεση με το backend!'); });
-    document.getElementById('employerForm').addEventListener('submit', e => { e.preventDefault(); alert('Έτοιμο για σύνδεση με το backend!'); });
+    // Αποτροπή προσωρινής αποστολής
+    document.getElementById('workerForm').addEventListener('submit', e => { e.preventDefault(); alert('Έτοιμο για σύνδεση με το Cloudflare!'); });
+    document.getElementById('employerForm').addEventListener('submit', e => { e.preventDefault(); alert('Έτοιμο για σύνδεση με το Cloudflare!'); });
 </script>
 
 </body>
