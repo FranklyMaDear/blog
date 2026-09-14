@@ -1,449 +1,75 @@
-<!DOCTYPE html>
-<html lang="el">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Εργασία - Νομός Τρικάλων</title>
-    <style>
-        :root {
-            --primary: #0f172a;
-            --accent: #2563eb;
-            --accent-hover: #1d4ed8;
-            --bg-color: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #334155;
-            --text-muted: #64748b;
-        }
+async function handleFormSubmit(e, formType) {
+    e.preventDefault();
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px 15px;
-        }
+    // 1. Έλεγχος περιοχών
+    const containerId = formType === 'worker' ? 'worker-locations' : 'employer-locations';
+    const checkedBoxes = document.querySelectorAll(`#${containerId} .com-checkbox:checked`);
+    if (checkedBoxes.length === 0) {
+        alert('Παρακαλώ επιλέξτε τουλάχιστον μία περιοχή ή δήμο.');
+        return;
+    }
 
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-        }
+    // 2. Έλεγχος Ειδικότητας/Εργασίας
+    const specialty = document.getElementById(formType === 'worker' ? 'w_specialty' : 'e_specialty').value;
+    const task = document.getElementById(formType === 'worker' ? 'w_task' : 'e_task').value;
+    if (!specialty && !task) {
+        alert('Παρακαλώ επιλέξτε τουλάχιστον μία Ειδικότητα Ή ένα Είδος Εργασίας.');
+        return;
+    }
 
-        .header {
-            text-align: center;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
+    // 3. Έλεγχος Επικοινωνίας
+    const phone = document.getElementById(formType === 'worker' ? 'w_phone' : 'e_phone').value.trim();
+    const email = document.getElementById(formType === 'worker' ? 'w_email' : 'e_email').value.trim();
+    if (!phone && !email) {
+        alert('Πρέπει να συμπληρώσετε τουλάχιστον ένα τηλέφωνο ή ένα e-mail επικοινωνίας.');
+        return;
+    }
 
-        .header h1 {
-            font-size: 1.4rem;
-            color: var(--primary);
-            margin: 0;
-        }
-
-        /* Επιλογή Ρόλου */
-        .role-selection { display: flex; flex-direction: column; gap: 15px; }
-        .role-btn {
-            display: flex; align-items: center; padding: 20px;
-            background: #ffffff; border: 2px solid #e2e8f0;
-            border-radius: 12px; cursor: pointer; text-align: left;
-        }
-        .role-btn:hover { border-color: var(--accent); background: #f0fdf4; }
-        .role-icon { font-size: 2.5rem; margin-right: 20px; }
-        .role-text h3 { margin: 0 0 5px 0; color: var(--primary); font-size: 1.2rem; }
-        .role-text p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
-
-        .screen { display: none; }
-        .screen.active { display: block; }
-
-        .back-btn {
-            background: none; border: none; color: var(--text-muted);
-            font-size: 1rem; cursor: pointer; margin-bottom: 20px;
-            padding: 0; display: flex; align-items: center;
-        }
-        .back-btn:hover { color: var(--primary); }
-
-        /* Πλαίσια (Fieldsets) */
-        fieldset {
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 18px;
-            margin-bottom: 22px;
-            background: #f8fafc;
-        }
-        legend {
-            font-weight: bold;
-            color: var(--accent);
-            background: #ffffff;
-            padding: 4px 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1.05rem;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group:last-child { margin-bottom: 0; }
-        
-        label.main-label {
-            display: block; margin-bottom: 6px; font-weight: 600;
-            color: var(--primary); font-size: 0.95rem;
-        }
-
-        input[type="text"], input[type="tel"], input[type="email"], select, textarea {
-            width: 100%; padding: 12px; border: 1px solid #cbd5e1;
-            border-radius: 8px; font-size: 16px; box-sizing: border-box;
-            background-color: #ffffff; font-family: inherit;
-        }
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--accent);
-            outline: none;
-        }
-        textarea { resize: vertical; min-height: 70px; }
-
-        /* Custom Checkbox Dropdown */
-        .location-selector {
-            border: 1px solid #cbd5e1; border-radius: 8px; background: #ffffff;
-            max-height: 250px; overflow-y: auto; padding: 10px;
-        }
-        .municipality-group { border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 8px; }
-        .municipality-group:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        
-        .municipality-header { display: flex; justify-content: space-between; align-items: center; }
-        .checkbox-label {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 1rem; cursor: pointer; flex-grow: 1; color: var(--primary);
-        }
-        .checkbox-label input[type="checkbox"] {
-            width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer;
-        }
-        .toggle-btn {
-            background: #e2e8f0; border: none; border-radius: 6px; font-size: 1rem;
-            cursor: pointer; padding: 6px 12px; font-weight: bold;
-        }
-        .communities-list {
-            display: none; flex-direction: column; gap: 10px;
-            padding-left: 30px; padding-top: 10px;
-        }
-
-        .submit-btn {
-            width: 100%; background: var(--accent); color: white;
-            border: none; padding: 16px; font-size: 1.1rem;
-            font-weight: bold; border-radius: 8px; cursor: pointer;
-            margin-top: 10px;
-        }
-        .submit-btn:hover { background: var(--accent-hover); }
-        .contact-note { font-size: 0.85rem; color: #dc2626; margin-bottom: 10px; }
-
-    </style>
-</head>
-<body>
-
-<div class="container">
-    
-    <div class="header">
-        <h1>Εργασία - Νομός Τρικάλων</h1>
-    </div>
-
-    <!-- ΕΠΙΛΟΓΗ ΡΟΛΟΥ -->
-    <div id="screen-home" class="screen active">
-        <h2 style="text-align:center; margin-bottom: 25px;">Τι ψάχνετε;</h2>
-        <div class="role-selection">
-            <button class="role-btn" onclick="showScreen('screen-worker')">
-                <div class="role-icon">👷‍♂️</div>
-                <div class="role-text">
-                    <h3>Ψάχνω για Εργασία</h3>
-                    <p>Προσφέρω τις υπηρεσίες μου ή ψάχνω μεροκάματο</p>
-                </div>
-            </button>
-            <button class="role-btn" onclick="showScreen('screen-employer')">
-                <div class="role-icon">🏡</div>
-                <div class="role-text">
-                    <h3>Είμαι Εργοδότης</h3>
-                    <p>Ψάχνω άτομο για δουλειά, χωράφια, τεχνικά, σπίτι</p>
-                </div>
-            </button>
-        </div>
-    </div>
-
-    <!-- ΦΟΡΜΑ ΕΡΓΑΤΗ -->
-    <div id="screen-worker" class="screen">
-        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω στην αρχική</button>
-        <h2>Δήλωση Εργασίας (Ψάχνω Δουλειά)</h2>
-        <form id="workerForm">
-            
-            <fieldset>
-                <legend>Στοιχεία & Σχόλια</legend>
-                <div class="form-group">
-                    <label class="main-label">Όνομα / Επώνυμο:</label>
-                    <input type="text" id="w_name" required>
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Λεπτομέρειες (Προαιρετικό):</label>
-                    <textarea id="w_comments" placeholder="π.χ. Έχω δικό μου όχημα, εμπειρία 5 χρόνια..."></textarea>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Ειδικότητες</legend>
-                <div class="form-group">
-                    <label class="main-label">Διαλέξτε την κύρια ειδικότητά σας (αν υπάρχει):</label>
-                    <select class="specialty-select" id="w_specialty"></select>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Είδος Εργασίας</legend>
-                <div class="form-group">
-                    <label class="main-label">Τι είδους εργασίες / μικροδουλειές αναλαμβάνετε;</label>
-                    <select class="task-select" id="w_task"></select>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Περιοχές Εξυπηρέτησης</legend>
-                <div class="form-group">
-                    <label class="main-label">Σε ποιες περιοχές μπορείτε να δουλέψετε;</label>
-                    <div class="location-selector" id="worker-locations"></div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Τρόποι Επικοινωνίας</legend>
-                <p class="contact-note">* Συμπληρώστε <strong>τουλάχιστον ένα</strong> από τα δύο, ώστε να μπορούν να σας βρουν.</p>
-                <div class="form-group">
-                    <label class="main-label">Τηλέφωνο (Προαιρετικό):</label>
-                    <input type="tel" id="w_phone" placeholder="π.χ. 69...">
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Email (Προαιρετικό):</label>
-                    <input type="email" id="w_email" placeholder="π.χ. onoma@mail.com">
-                </div>
-            </fieldset>
-
-            <button type="submit" class="submit-btn">Δημοσίευση Προφίλ</button>
-        </form>
-    </div>
-
-    <!-- ΦΟΡΜΑ ΕΡΓΟΔΟΤΗ -->
-    <div id="screen-employer" class="screen">
-        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω στην αρχική</button>
-        <h2>Αναζήτηση Προσωπικού</h2>
-        <form id="employerForm">
-            
-            <fieldset>
-                <legend>Στοιχεία Επιχείρησης / Ιδιώτη</legend>
-                <div class="form-group">
-                    <label class="main-label">Όνομα Ιδιώτη ή Επιχείρησης:</label>
-                    <input type="text" id="e_name" required>
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Παροχές / Ωράριο / Λεπτομέρειες:</label>
-                    <textarea id="e_comments" placeholder="π.χ. Ψάχνω άτομο για 8ωρο, παρέχεται φαγητό..."></textarea>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Ειδικότητες</legend>
-                <div class="form-group">
-                    <label class="main-label">Ψάχνετε επαγγελματία με συγκεκριμένη ειδικότητα;</label>
-                    <select class="specialty-select" id="e_specialty"></select>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Είδος Εργασίας</legend>
-                <div class="form-group">
-                    <label class="main-label">Τι δουλειά θέλετε να γίνει;</label>
-                    <select class="task-select" id="e_task"></select>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Τοποθεσία Εργασίας</legend>
-                <div class="form-group">
-                    <label class="main-label">Σε ποιες περιοχές / χωριά βρίσκεται η δουλειά;</label>
-                    <div class="location-selector" id="employer-locations"></div>
-                </div>
-            </fieldset>
-
-            <fieldset>
-                <legend>Τρόποι Επικοινωνίας</legend>
-                <p class="contact-note">* Συμπληρώστε <strong>τουλάχιστον ένα</strong> από τα δύο.</p>
-                <div class="form-group">
-                    <label class="main-label">Τηλέφωνο (Προαιρετικό):</label>
-                    <input type="tel" id="e_phone">
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Email (Προαιρετικό):</label>
-                    <input type="email" id="e_email">
-                </div>
-            </fieldset>
-
-            <button type="submit" class="submit-btn">Δημοσίευση Αγγελίας</button>
-        </form>
-    </div>
-
-</div>
-
-<script>
-    // 1. ΔΕΔΟΜΕΝΑ: Ειδικότητες (Επαγγέλματα)
-    const specialtiesData = {
-        "Εστίαση": ["Καφετέρια Barista", "Καφετέρια Service", "Εστιατόριο Κουζίνα", "Εστιατόριο Service", "Καφενείο", "Τσιπουράδικο"],
-        "Τεχνίτες / Κατασκευές": ["Χτίσιμο - Γκρέμισμα - Σοβάτισμα", "Υδραυλικός", "Ηλεκτρολόγος", "Ψυκτικός (Κλιματιστικά/Ψυγεία)", "Πλακάκια - Μάρμαρα", "Σκεπές", "Μονώσεις", "Ανακαίνιση", "Βάψιμο"]
+    // 4. Μάζεμα όλων των δεδομένων
+    const formData = {
+        name: document.getElementById(formType === 'worker' ? 'w_name' : 'e_name').value.trim(),
+        specialty: specialty,
+        task: task,
+        locations: Array.from(checkedBoxes).map(cb => cb.value),
+        phone: phone,
+        email: email,
+        comments: document.getElementById(formType === 'worker' ? 'w_comments' : 'e_comments').value.trim()
     };
 
-    // 2. ΔΕΔΟΜΕΝΑ: Είδος Εργασίας (Μικροδουλειές & Γενικά)
-    const tasksData = {
-        "Αγροτικά & Εξωτερικά": ["Χωράφια / Αγροτικά", "Κηπουρικά", "Κλάδεμα"],
-        "Οικιακά & Φροντίδα": ["Καθαριότητα", "Φροντίδα Ηλικιωμένων", "Κούρεμα στην οικία"],
-        "Φροντίδα Κατοικιδίων & Ζώων": ["Τάισμα Σκύλου", "Βόλτα Σκύλου", "Τάισμα Κότες"],
-        "Μικροεργασίες / Μερεμέτια": ["Συναρμολόγηση Επίπλων", "Τοποθέτηση Τηλεόρασης", "Επισκευή Πλυντηρίου", "Επισκευή Στεγνωτηρίου"]
-    };
+    // 5. Το σωστό URL του Cloudflare Worker που φτιάξαμε
+    const workerUrl = formType === 'worker' 
+        ? 'https://jobs.kafevolta.workers.dev/api/worker' 
+        : 'https://jobs.kafevolta.workers.dev/api/employer';
 
-    // 3. ΔΕΔΟΜΕΝΑ: Περιοχές
-    const locationsData = {
-        "Δήμος Τρικκαίων": ["Τρίκαλα (Κέντρο)", "Αγία Κυριακή", "Αρδάνι", "Βαλτινό", "Γενέσι", "Γλίνος", "Γοργογύρι", "Δενδροχώρι", "Διαλεκτό", "Διπόταμο", "Ελληνόκαστρο", "Ζηλευτή", "Κάτω Ελάτη", "Κεφαλόβρυσο", "Κρηνίτσα", "Λιόπρασο", "Λόγγος", "Μεγάλα Καλύβια", "Μεγάλο Κεφαλόβρυσο", "Μεγαλοχώρι", "Μικρό Κεφαλόβρυσο", "Ξυλοπάροικο", "Παλαιόπυργος", "Πατουλιά", "Πλάτανος", "Πρίνος", "Ρίζωμα", "Σπαθάδες", "Φωτάδα", "Χρυσαυγή"],
-        "Δήμος Μετεώρων": ["Καλαμπάκα", "Αγία Παρασκευή (Ασπροποτάμου)", "Αγία Παρασκευή (Κλεινοβού)", "Αγιόφυλλο", "Αγνάντια", "Αηδόνα", "Αμάραντο", "Αμπελοχώρι", "Ανθούσα", "Ασπροκκλησιά", "Αύρα", "Αχλαδέα", "Βασιλική", "Βλαχάβα", "Γαύρος", "Γερακάρι", "Γλυκομηλιά", "Θεόπετρα", "Θεοτόκος", "Κακοπλεύρι", "Καλλιθέα", "Καλλιρρόη", "Καλομοίρα", "Καστανέα", "Καστράκι", "Κατάφυτο", "Κλεινό", "Κονισκός", "Κορυδαλλός", "Κρανέα", "Κρύα Βρύση", "Λογγάς", "Μαλακάσι", "Ματονέρι", "Μαυρέλι", "Μεγάλη Κερασιά", "Ορθοβούνι", "Παναγία", "Περιστέρα", "Πεύκη", "Πολυθέα", "Σαρακήνα", "Στεφάνι", "Τρυγόνα", "Φλαμπουρέσι", "Χαλίκι", "Χρυσομηλιά"],
-        "Δήμος Πύλης": ["Πύλη", "Άγιος Νικόλαος", "Άγιος Προκόπιος", "Αθαμανία", "Αρματολικό", "Βαθύρρευμα", "Βαλκάνο", "Γόμφοι", "Δέση", "Δροσερό", "Δροσοχώρι", "Ελάτη", "Ελευθεροχώρι", "Καρτέρι", "Κορυφή", "Κοτρώνι", "Λιβαδοχώρι", "Λυγαριά", "Μεσοχώρα", "Μοσχόφυτο", "Μουριά", "Μυρόφυλλο", "Νέα Πεύκη", "Νεράιδα", "Νεραϊδοχώρι", "Παλαιοκαρυά", "Παλαιομονάστηρο", "Παράμερο", "Παραπόταμος", "Παχτούρι", "Περτούλι", "Πετροχώρι", "Πηγή", "Πιάλεια", "Πολυνέρι", "Πύρρα", "Ροποτό", "Στουρναραίικα", "Φήκη (Φίκι)", "Φιλύρα"],
-        "Δήμος Φαρκαδόνας": ["Φαρκαδόνα", "Αχλαδοχώρι", "Γεωργανάδες", "Γριζάνο", "Διάσελλο", "Ζάρκο", "Κεραμίδι", "Κρήνη", "Νομή", "Οιχαλία (Νεοχώρι)", "Παναγίτσα", "Πετρόπορος", "Πετρωτό", "Πηνειάδα", "Ταξιάρχες", "Φανερωμένη"]
-    };
+    // 6. Αποστολή στη βάση
+    try {
+        // Αλλάζουμε το κουμπί για να δείξουμε ότι φορτώνει
+        const btn = e.target.querySelector('button[type="submit"]');
+        const originalText = btn.innerText;
+        btn.innerText = 'Αποστολή...';
+        btn.disabled = true;
 
-    function populateDropdowns() {
-        // Γέμισμα Ειδικοτήτων
-        document.querySelectorAll('.specialty-select').forEach(select => {
-            select.innerHTML = '<option value="">-- Δεν ψάχνω / Δεν έχω συγκεκριμένη ειδικότητα --</option>';
-            for (const [group, items] of Object.entries(specialtiesData)) {
-                let optgroup = document.createElement('optgroup');
-                optgroup.label = group;
-                items.forEach(item => optgroup.innerHTML += `<option value="${item}">${item}</option>`);
-                select.appendChild(optgroup);
-            }
+        const response = await fetch(workerUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
         });
 
-        // Γέμισμα Είδους Εργασίας
-        document.querySelectorAll('.task-select').forEach(select => {
-            select.innerHTML = '<option value="">-- Χωρίς επιλογή --</option>';
-            for (const [group, items] of Object.entries(tasksData)) {
-                let optgroup = document.createElement('optgroup');
-                optgroup.label = group;
-                items.forEach(item => optgroup.innerHTML += `<option value="${item}">${item}</option>`);
-                select.appendChild(optgroup);
-            }
-        });
-    }
-
-    function buildLocationSelectors() {
-        const containers = [document.getElementById('worker-locations'), document.getElementById('employer-locations')];
-        containers.forEach((container, index) => {
-            let html = '';
-            for (const [municipality, locations] of Object.entries(locationsData)) {
-                const sortedLocs = locations.sort((a, b) => a.localeCompare(b, 'el'));
-                const munId = `mun_${index}_${municipality.replace(/\s+/g, '')}`;
-                
-                html += `
-                <div class="municipality-group">
-                    <div class="municipality-header">
-                        <label class="checkbox-label">
-                            <input type="checkbox" class="mun-checkbox" data-target="${munId}" value="${municipality}">
-                            <strong>${municipality}</strong>
-                        </label>
-                        <button type="button" class="toggle-btn" onclick="toggleAccordion('${munId}')">▼</button>
-                    </div>
-                    <div class="communities-list" id="${munId}">
-                `;
-                
-                sortedLocs.forEach(loc => {
-                    html += `
-                        <label class="checkbox-label">
-                            <input type="checkbox" class="com-checkbox" data-parent="${munId}" value="${loc}">
-                            ${loc}
-                        </label>
-                    `;
-                });
-                html += `</div></div>`;
-            }
-            container.innerHTML = html;
-        });
-
-        attachCheckboxLogic();
-    }
-
-    function toggleAccordion(id) {
-        const el = document.getElementById(id);
-        el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function attachCheckboxLogic() {
-        document.querySelectorAll('.mun-checkbox').forEach(munCb => {
-            munCb.addEventListener('change', function() {
-                const targetId = this.getAttribute('data-target');
-                document.querySelectorAll(`#${targetId} .com-checkbox`).forEach(cb => {
-                    cb.checked = this.checked;
-                });
-            });
-        });
-
-        document.querySelectorAll('.com-checkbox').forEach(comCb => {
-            comCb.addEventListener('change', function() {
-                const parentId = this.getAttribute('data-parent');
-                const parentCb = document.querySelector(`.mun-checkbox[data-target="${parentId}"]`);
-                const siblings = Array.from(document.querySelectorAll(`#${parentId} .com-checkbox`));
-                
-                parentCb.checked = siblings.every(cb => cb.checked);
-                parentCb.indeterminate = siblings.some(cb => cb.checked) && !siblings.every(cb => cb.checked);
-            });
-        });
-    }
-
-    function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    window.onload = () => {
-        populateDropdowns();
-        buildLocationSelectors();
-    };
-
-    // Έλεγχος υποβολής φόρμας
-    function handleFormSubmit(e, formType) {
-        e.preventDefault();
-        
-        // Έλεγχος Τοποθεσίας
-        const containerId = formType === 'worker' ? 'worker-locations' : 'employer-locations';
-        const checkedBoxes = document.querySelectorAll(`#${containerId} .com-checkbox:checked`);
-        if (checkedBoxes.length === 0) {
-            alert('Παρακαλώ επιλέξτε τουλάχιστον μία περιοχή ή δήμο.');
-            return;
+        if (response.ok) {
+            alert('Η καταχώρηση ολοκληρώθηκε με επιτυχία!');
+            e.target.reset(); // Καθαρίζει τα πεδία κειμένου
+            // Καθαρίζει τα τικ από τα checkboxes
+            document.querySelectorAll(`#${containerId} .com-checkbox`).forEach(cb => cb.checked = false);
+        } else {
+            alert('Υπήρξε πρόβλημα κατά την αποθήκευση. Δοκιμάστε ξανά.');
         }
 
-        // Έλεγχος αν διάλεξε είτε Ειδικότητα είτε Είδος Εργασίας
-        const specialty = document.getElementById(formType === 'worker' ? 'w_specialty' : 'e_specialty').value;
-        const task = document.getElementById(formType === 'worker' ? 'w_task' : 'e_task').value;
-        if (!specialty && !task) {
-            alert('Παρακαλώ επιλέξτε τουλάχιστον μία Ειδικότητα Ή ένα Είδος Εργασίας.');
-            return;
-        }
+        // Επαναφέρουμε το κουμπί
+        btn.innerText = originalText;
+        btn.disabled = false;
 
-        // Έλεγχος Επικοινωνίας (Τηλέφωνο ή Email)
-        const phone = document.getElementById(formType === 'worker' ? 'w_phone' : 'e_phone').value.trim();
-        const email = document.getElementById(formType === 'worker' ? 'w_email' : 'e_email').value.trim();
-        if (!phone && !email) {
-            alert('Πρέπει να συμπληρώσετε τουλάχιστον ένα τηλέφωνο ή ένα e-mail επικοινωνίας.');
-            return;
-        }
-
-        alert('Η φόρμα σας είναι πλήρης και έτοιμη για αποθήκευση στο Cloudflare!');
+    } catch (error) {
+        console.error('Σφάλμα:', error);
+        alert('Αδυναμία σύνδεσης. Ελέγξτε το ίντερνετ σας.');
     }
-
-    document.getElementById('workerForm').addEventListener('submit', (e) => handleFormSubmit(e, 'worker'));
-    document.getElementById('employerForm').addEventListener('submit', (e) => handleFormSubmit(e, 'employer'));
-</script>
-
-</body>
-</html>
+}
