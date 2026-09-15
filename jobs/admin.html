@@ -1,54 +1,354 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Ergasia Trikala</title>
-    <style>
-        body { font-family: sans-serif; background: #f1f5f9; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 15px; background: #e2e8f0; border: none; cursor: pointer; font-weight: bold; }
-        .tab-btn.active { background: #2563eb; color: white; }
-        .panel { display: none; } .panel.active { display: block; }
-        table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; }
-        .del-btn { background: #dc2626; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin · Ergasia Trikala</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --danger: #dc2626;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #334155;
+      --muted: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a, #1e3a5f);
+      color: white;
+      padding: 24px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .header h1 { font-size: 1.4rem; font-weight: 700; }
+    .header .stats {
+      display: flex;
+      gap: 16px;
+      font-size: 0.9rem;
+    }
+    .stat-pill {
+      background: rgba(255,255,255,0.15);
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+    .tabs {
+      display: flex;
+      background: #f8fafc;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 16px;
+      background: none;
+      border: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: var(--muted);
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+      background: white;
+    }
+    .panel { display: none; padding: 20px; }
+    .panel.active { display: block; }
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .toolbar input {
+      padding: 10px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      min-width: 220px;
+    }
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: inherit;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-danger {
+      background: #fef2f2;
+      color: var(--danger);
+      border: 1px solid #fecaca;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+    .btn-danger:hover { background: #fee2e2; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th {
+      text-align: left;
+      padding: 12px 10px;
+      background: #f8fafc;
+      color: var(--muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    tr:hover td { background: #f8fafc; }
+    .urgent-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .photo-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .empty {
+      text-align: center;
+      padding: 40px;
+      color: var(--muted);
+    }
+    .badge {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      margin: 1px;
+    }
+    @media (max-width: 700px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      thead { display: none; }
+      tr {
+        margin-bottom: 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px;
+      }
+      td {
+        border: none;
+        padding: 6px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+      td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--muted);
+        margin-right: 12px;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-    <h1 style="text-align:center;">Πίνακας Ελέγχου</h1>
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('workers')">Εργάτες</button>
-        <button class="tab-btn" onclick="switchTab('employers')">Εργοδότες</button>
+  <div class="container">
+    <div class="header">
+      <h1>Πίνακας Ελέγχου · Ergasia Trikala</h1>
+      <div class="stats">
+        <span class="stat-pill" id="statWorkers">Εργάτες: —</span>
+        <span class="stat-pill" id="statEmployers">Εργοδότες: —</span>
+      </div>
     </div>
-    <div id="workers" class="panel active"><table><tbody id="w-tbody"></tbody></table></div>
-    <div id="employers" class="panel"><table><tbody id="e-tbody"></tbody></table></div>
-</div>
-<script>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('workers')">👷 Εργάτες</button>
+      <button class="tab-btn" onclick="switchTab('employers')">🏢 Εργοδότες</button>
+    </div>
+
+    <div id="workers" class="panel active">
+      <div class="toolbar">
+        <input type="text" id="searchWorkers" placeholder="Αναζήτηση..." oninput="filterTable('workers')">
+        <button class="btn btn-primary" onclick="load()">↻ Ανανέωση</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Όνομα</th>
+              <th>Ειδικότητα</th>
+              <th>Περιοχές</th>
+              <th>Επικοινωνία</th>
+              <th>Ημ/νία</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="w-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="employers" class="panel">
+      <div class="toolbar">
+        <input type="text" id="searchEmployers" placeholder="Αναζήτηση..." oninput="filterTable('employers')">
+        <button class="btn btn-primary" onclick="load()">↻ Ανανέωση</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Όνομα</th>
+              <th>Ειδικότητα</th>
+              <th>Περιοχές</th>
+              <th>Επικοινωνία</th>
+              <th>Ημ/νία</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="e-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
     const API = "https://jobs.kafevolta.workers.dev";
-    function switchTab(t) { 
-        document.querySelectorAll('.tab-btn, .panel').forEach(e => e.classList.remove('active'));
-        document.querySelector(`.tab-btn[onclick="switchTab('${t}')"]`).classList.add('active');
-        document.getElementById(t).classList.add('active');
+    let workersData = [];
+    let employersData = [];
+
+    function switchTab(t) {
+      document.querySelectorAll(".tab-btn, .panel").forEach(e => e.classList.remove("active"));
+      document.querySelector(`.tab-btn[onclick="switchTab('${t}')"]`).classList.add("active");
+      document.getElementById(t).classList.add("active");
     }
+
     async function load() {
-        try {
-            const [wr, er] = await Promise.all([fetch(`${API}/api/workers`), fetch(`${API}/api/employers`)]);
-            render('w-tbody', await wr.json(), 'worker'); render('e-tbody', await er.json(), 'employer');
-        } catch(e) { alert("Σφάλμα φόρτωσης"); }
+      try {
+        const [wr, er] = await Promise.all([
+          fetch(`${API}/api/workers`),
+          fetch(`${API}/api/employers`)
+        ]);
+        workersData = await wr.json();
+        employersData = await er.json();
+        if (!Array.isArray(workersData)) workersData = [];
+        if (!Array.isArray(employersData)) employersData = [];
+
+        document.getElementById("statWorkers").textContent = `Εργάτες: ${workersData.length}`;
+        document.getElementById("statEmployers").textContent = `Εργοδότες: ${employersData.length}`;
+
+        render("w-tbody", workersData, "worker");
+        render("e-tbody", employersData, "employer");
+      } catch (e) {
+        alert("Σφάλμα φόρτωσης δεδομένων");
+      }
     }
-    function render(id, data, type) {
-        document.getElementById(id).innerHTML = `<tr><th>Όνομα</th><th>Ειδικότητα</th><th>Επικοινωνία</th><th>Ενέργεια</th></tr>` + 
-        data.map(r => `<tr><td>${r.name} ${r.is_urgent ? '🔴' : ''}</td><td>${r.specialty||r.task}</td><td>${r.phone}</td>
-        <td><button class="del-btn" onclick="del(${r.id}, '${type}')">Διαγραφή</button></td></tr>`).join('');
+
+    function render(tbodyId, data, type) {
+      const tbody = document.getElementById(tbodyId);
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty">Δεν υπάρχουν αγγελίες</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.map(r => {
+        let locs = [];
+        try { locs = JSON.parse(r.locations || "[]"); } catch { locs = []; }
+        const photo = r.photo_url || r.logo_url || "";
+        const date = r.created_at ? new Date(r.created_at).toLocaleDateString("el-GR") : "—";
+
+        return `
+          <tr data-search="${(r.name + " " + (r.specialty||"") + " " + (r.task||"") + " " + locs.join(" ")).toLowerCase()}">
+            <td data-label="">
+              ${photo ? `<img src="${photo}" class="photo-thumb" onerror="this.style.display='none'">` : "—"}
+            </td>
+            <td data-label="Όνομα">
+              ${r.is_urgent ? '<span class="urgent-dot" title="Επείγον"></span>' : ""}
+              <strong>${escapeHtml(r.name)}</strong>
+            </td>
+            <td data-label="Ειδικότητα">${escapeHtml(r.specialty || r.task || "—")}</td>
+            <td data-label="Περιοχές">${locs.slice(0,3).map(l => `<span class="badge">${escapeHtml(l)}</span>`).join("")}${locs.length > 3 ? "…" : ""}</td>
+            <td data-label="Επικοινωνία">
+              ${r.phone ? `<a href="tel:${r.phone}">${escapeHtml(r.phone)}</a>` : "—"}
+              ${r.email ? `<br><small>${escapeHtml(r.email)}</small>` : ""}
+            </td>
+            <td data-label="Ημ/νία">${date}</td>
+            <td data-label="">
+              <button class="btn btn-danger" onclick="del(${r.id}, '${type}')">Διαγραφή</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
     }
+
+    function filterTable(type) {
+      const q = (document.getElementById(type === "workers" ? "searchWorkers" : "searchEmployers").value || "").toLowerCase();
+      const tbody = document.getElementById(type === "workers" ? "w-tbody" : "e-tbody");
+      tbody.querySelectorAll("tr").forEach(tr => {
+        const s = tr.getAttribute("data-search") || "";
+        tr.style.display = !q || s.includes(q) ? "" : "none";
+      });
+    }
+
     async function del(id, type) {
-        if(!confirm('Διαγραφή;')) return;
-        await fetch(`${API}/`, { method: 'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id, type, pin:'ADMIN999'}) });
-        load();
+      if (!confirm("Σίγουρα διαγραφή αυτής της αγγελίας;")) return;
+      try {
+        const res = await fetch(`${API}/`, {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, type, pin: "ADMIN999" })
+        });
+        if (res.ok) {
+          load();
+        } else {
+          const data = await res.json();
+          alert(data.error || "Σφάλμα");
+        }
+      } catch {
+        alert("Αδυναμία σύνδεσης");
+      }
     }
+
+    function escapeHtml(str) {
+      if (!str) return "";
+      return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
     window.onload = load;
-</script>
+  </script>
 </body>
 </html>
