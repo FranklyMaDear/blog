@@ -5,21 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Εργασία - Νομός Τρικάλων</title>
     <style>
-        :root {
-            --primary: #0f172a; --accent: #2563eb; --accent-hover: #1d4ed8;
-            --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #334155; --text-muted: #64748b;
-        }
+        :root { --primary: #0f172a; --accent: #2563eb; --accent-hover: #1d4ed8; --bg-color: #f8fafc; --card-bg: #ffffff; --text-main: #334155; --text-muted: #64748b; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px 15px; }
-        .container { max-width: 700px; margin: 0 auto; background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .container { max-width: 750px; margin: 0 auto; background: var(--card-bg); padding: 25px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
         .header { text-align: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px; }
         .header h1 { font-size: 1.5rem; color: var(--primary); margin: 0; }
-        
-        .screen { display: none; }
-        .screen.active { display: block; }
-        
+        .screen { display: none; } .screen.active { display: block; }
         .back-btn { background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer; margin-bottom: 20px; padding: 0; display: flex; align-items: center; }
-        .back-btn:hover { color: var(--primary); }
-
+        
         .btn-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-bottom: 30px; }
         .action-btn { display: flex; align-items: center; padding: 20px; background: #fff; border: 2px solid #e2e8f0; border-radius: 12px; cursor: pointer; text-align: left; }
         .action-btn:hover { border-color: var(--accent); background: #f0fdf4; }
@@ -31,10 +24,13 @@
         legend { font-weight: bold; color: var(--accent); background: #ffffff; padding: 4px 12px; border: 2px solid #e2e8f0; border-radius: 8px; }
         .form-group { margin-bottom: 15px; }
         label.main-label { display: block; margin-bottom: 6px; font-weight: 600; color: var(--primary); font-size: 0.95rem; }
-        input[type="text"], input[type="tel"], input[type="email"], select, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box; font-family: inherit; }
-        .submit-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 16px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; }
-        .submit-btn:hover { background: var(--accent-hover); }
+        input[type="text"], input[type="tel"], input[type="email"], select, textarea { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
         
+        .checkbox-row { display: flex; align-items: center; gap: 10px; background: #fee2e2; padding: 10px; border-radius: 8px; border: 1px solid #fca5a5; color: #991b1b; font-weight: bold; }
+        .checkbox-row input { width: 20px; height: 20px; accent-color: #dc2626; }
+        .submit-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 16px; font-size: 1.1rem; font-weight: bold; border-radius: 8px; cursor: pointer; }
+
+        /* Τοποθεσίες */
         .location-selector { border: 1px solid #cbd5e1; border-radius: 8px; background: #ffffff; max-height: 250px; overflow-y: auto; padding: 10px; }
         .municipality-group { border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 8px; }
         .municipality-header { display: flex; justify-content: space-between; align-items: center; }
@@ -42,369 +38,296 @@
         .toggle-btn { background: #e2e8f0; border: none; border-radius: 6px; padding: 6px 12px; font-weight: bold; cursor: pointer; }
         .communities-list { display: none; flex-direction: column; gap: 10px; padding-left: 30px; padding-top: 10px; }
         
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        /* Προβολή Αγγελιών */
+        .tabs { display: flex; gap: 10px; margin-bottom: 15px; }
         .tab-btn { flex: 1; padding: 12px; background: #e2e8f0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .tab-btn.active { background: var(--accent); color: white; }
         
-        .ad-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
+        .filter-bar { background: #f1f5f9; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .filter-bar input, .filter-bar select { flex: 1; min-width: 150px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
+
+        .ad-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.03); position: relative; }
+        .ad-card.urgent { border-left: 5px solid #ef4444; }
+        .urgent-badge { background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-bottom: 10px; display: inline-block; }
+        
+        .ad-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .ad-logo { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid #e2e8f0; margin-left: 10px; }
         .ad-title { font-size: 1.2rem; color: var(--primary); font-weight: bold; margin: 0 0 5px 0; }
         .ad-specialty { color: var(--accent); font-weight: 600; margin-bottom: 10px; font-size: 0.95rem; }
-        .ad-locations { margin-bottom: 10px; }
         .badge { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; margin: 2px; }
         .ad-contact { background: #f8fafc; padding: 10px; border-radius: 8px; margin-top: 15px; font-size: 0.95rem; }
+        
+        .card-actions { display: flex; gap: 10px; margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px; }
+        .icon-btn { background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; color: #64748b; font-weight: 600; }
+        .icon-btn:hover { color: var(--primary); }
+        .icon-btn.fav-active { color: #ef4444; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <div class="header">
-        <h1>Εργασία - Νομός Τρικάλων</h1>
-    </div>
+    <div class="header"><h1>Εργασία - Νομός Τρικάλων</h1></div>
 
-    <!-- ΑΡΧΙΚΗ ΟΘΟΝΗ -->
     <div id="screen-home" class="screen active">
         <h2 style="text-align:center; margin-bottom: 20px;">Δημόσιες Αγγελίες</h2>
         <div class="btn-grid">
             <button class="action-btn" onclick="openPublicView('workers')">
                 <div class="btn-icon">🔍</div>
-                <div class="btn-text">
-                    <h3>Δείτε Προφίλ Εργατών</h3>
-                    <p>Βρείτε άτομα που αναζητούν εργασία</p>
-                </div>
+                <div class="btn-text"><h3>Προφίλ Εργατών</h3><p>Βρείτε άτομα που αναζητούν εργασία</p></div>
             </button>
             <button class="action-btn" onclick="openPublicView('employers')">
                 <div class="btn-icon">🏢</div>
-                <div class="btn-text">
-                    <h3>Δείτε Αγγελίες Εργοδοτών</h3>
-                    <p>Βρείτε ανοιχτές θέσεις εργασίας</p>
-                </div>
+                <div class="btn-text"><h3>Αγγελίες Εργοδοτών</h3><p>Βρείτε ανοιχτές θέσεις εργασίας</p></div>
             </button>
         </div>
-
         <h2 style="text-align:center; margin-bottom: 20px; border-top: 2px solid #f1f5f9; padding-top: 20px;">Δημοσίευση Αγγελίας</h2>
         <div class="btn-grid">
             <button class="action-btn" onclick="showScreen('screen-worker')">
                 <div class="btn-icon">👷‍♂️</div>
-                <div class="btn-text">
-                    <h3>Ψάχνω για Εργασία</h3>
-                    <p>Δημιουργήστε το δικό σας προφίλ</p>
-                </div>
+                <div class="btn-text"><h3>Ψάχνω για Εργασία</h3><p>Δημιουργήστε το δικό σας προφίλ</p></div>
             </button>
             <button class="action-btn" onclick="showScreen('screen-employer')">
                 <div class="btn-icon">🏡</div>
-                <div class="btn-text">
-                    <h3>Είμαι Εργοδότης</h3>
-                    <p>Καταχωρήστε την αγγελία σας</p>
-                </div>
+                <div class="btn-text"><h3>Είμαι Εργοδότης</h3><p>Καταχωρήστε την αγγελία σας</p></div>
             </button>
         </div>
     </div>
 
-    <!-- ΔΗΜΟΣΙΑ ΠΡΟΒΟΛΗ ΑΓΓΕΛΙΩΝ -->
+    <!-- ΠΡΟΒΟΛΗ & ΦΙΛΤΡΑ -->
     <div id="screen-ads" class="screen">
         <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω στην αρχική</button>
-        
         <div class="tabs">
             <button id="tab-workers" class="tab-btn active" onclick="loadAds('workers')">Εργάτες / Επαγγελματίες</button>
-            <button id="tab-employers" class="tab-btn" onclick="loadAds('employers')">Θέσεις από Εργοδότες</button>
+            <button id="tab-employers" class="tab-btn" onclick="loadAds('employers')">Θέσεις Εργοδοτών</button>
+        </div>
+        
+        <div class="filter-bar">
+            <input type="text" id="searchInput" placeholder="Αναζήτηση (π.χ. Τρίκαλα, Υδραυλικός)..." onkeyup="filterCards()">
+            <select id="filterFavs" onchange="filterCards()">
+                <option value="all">Όλες οι αγγελίες</option>
+                <option value="favs">Μόνο τα Αγαπημένα μου</option>
+            </select>
         </div>
 
-        <div id="ads-container">
-            <p style="text-align:center; color:#64748b;">Φόρτωση αγγελιών...</p>
-        </div>
+        <div id="ads-container"><p style="text-align:center;">Φόρτωση...</p></div>
     </div>
 
     <!-- ΦΟΡΜΑ ΕΡΓΑΤΗ -->
     <div id="screen-worker" class="screen">
-        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω στην αρχική</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω</button>
         <h2>Δήλωση Εργασίας (Ψάχνω Δουλειά)</h2>
         <form id="workerForm">
             <fieldset>
-                <legend>Στοιχεία & Σχόλια</legend>
-                <div class="form-group">
-                    <label class="main-label">Όνομα / Επώνυμο:</label>
-                    <input type="text" id="w_name" required>
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Λεπτομέρειες (Προαιρετικό):</label>
-                    <textarea id="w_comments" placeholder="π.χ. Έχω δικό μου όχημα..."></textarea>
-                </div>
+                <legend>Στοιχεία</legend>
+                <div class="form-group"><label class="main-label">Όνομα / Επώνυμο:</label><input type="text" id="w_name" required></div>
+                <div class="form-group"><label class="main-label">Λεπτομέρειες:</label><textarea id="w_comments"></textarea></div>
             </fieldset>
-
             <fieldset>
-                <legend>Ειδικότητες & Εργασία</legend>
-                <div class="form-group">
-                    <label class="main-label">Κύρια ειδικότητα (αν υπάρχει):</label>
-                    <select class="specialty-select" id="w_specialty"></select>
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Τι είδους μικροδουλειές αναλαμβάνετε;</label>
-                    <select class="task-select" id="w_task"></select>
-                </div>
+                <legend>Ειδικότητα & Περιοχές</legend>
+                <div class="form-group"><select class="specialty-select" id="w_specialty"></select></div>
+                <div class="form-group"><select class="task-select" id="w_task"></select></div>
+                <div class="form-group"><div class="location-selector" id="worker-locations"></div></div>
             </fieldset>
-
             <fieldset>
-                <legend>Περιοχές Εξυπηρέτησης</legend>
-                <div class="form-group">
-                    <div class="location-selector" id="worker-locations"></div>
-                </div>
+                <legend>Επικοινωνία & Ρυθμίσεις</legend>
+                <div class="form-group"><label class="main-label">Τηλέφωνο:</label><input type="tel" id="w_phone"></div>
+                <div class="form-group"><label class="main-label">PIN Διαγραφής:</label><input type="text" id="w_pin" required maxlength="4"></div>
+                <div class="checkbox-row"><input type="checkbox" id="w_urgent"> Άμεσα Διαθέσιμος (Επείγον)</div>
             </fieldset>
-
-            <fieldset>
-                <legend>Επικοινωνία & Ασφάλεια</legend>
-                <div class="form-group">
-                    <label class="main-label">Τηλέφωνο (Προαιρετικό):</label>
-                    <input type="tel" id="w_phone">
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Email (Προαιρετικό):</label>
-                    <input type="email" id="w_email">
-                </div>
-                <div class="form-group">
-                    <label class="main-label">PIN Διαγραφής (Απαραίτητο):</label>
-                    <input type="text" id="w_pin" placeholder="π.χ. 1234 (για να μπορείτε να τη σβήσετε)" maxlength="4" required>
-                </div>
-            </fieldset>
-
             <button type="submit" class="submit-btn">Δημοσίευση Προφίλ</button>
         </form>
     </div>
 
     <!-- ΦΟΡΜΑ ΕΡΓΟΔΟΤΗ -->
     <div id="screen-employer" class="screen">
-        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω στην αρχική</button>
+        <button class="back-btn" onclick="showScreen('screen-home')">← Πίσω</button>
         <h2>Αναζήτηση Προσωπικού</h2>
         <form id="employerForm">
             <fieldset>
-                <legend>Στοιχεία Επιχείρησης / Ιδιώτη</legend>
-                <div class="form-group">
-                    <label class="main-label">Όνομα Ιδιώτη ή Επιχείρησης:</label>
-                    <input type="text" id="e_name" required>
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Παροχές / Λεπτομέρειες:</label>
-                    <textarea id="e_comments" placeholder="π.χ. Ψάχνω άτομο για 8ωρο..."></textarea>
-                </div>
+                <legend>Στοιχεία Επιχείρησης</legend>
+                <div class="form-group"><label class="main-label">Όνομα / Επιχείρηση:</label><input type="text" id="e_name" required></div>
+                <div class="form-group"><label class="main-label">Λογότυπο (Προαιρετικό URL εικόνας):</label><input type="text" id="e_logo" placeholder="π.χ. https://site.com/logo.png"></div>
+                <div class="form-group"><label class="main-label">Λεπτομέρειες:</label><textarea id="e_comments"></textarea></div>
             </fieldset>
-
             <fieldset>
-                <legend>Αναζήτηση Ειδικότητας</legend>
-                <div class="form-group">
-                    <select class="specialty-select" id="e_specialty"></select>
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Ή επιλέξτε Είδος Εργασίας:</label>
-                    <select class="task-select" id="e_task"></select>
-                </div>
+                <legend>Αναζήτηση & Περιοχές</legend>
+                <div class="form-group"><select class="specialty-select" id="e_specialty"></select></div>
+                <div class="form-group"><select class="task-select" id="e_task"></select></div>
+                <div class="form-group"><div class="location-selector" id="employer-locations"></div></div>
             </fieldset>
-
             <fieldset>
-                <legend>Τοποθεσία Εργασίας</legend>
-                <div class="form-group">
-                    <div class="location-selector" id="employer-locations"></div>
-                </div>
+                <legend>Επικοινωνία & Ρυθμίσεις</legend>
+                <div class="form-group"><label class="main-label">Τηλέφωνο:</label><input type="tel" id="e_phone"></div>
+                <div class="form-group"><label class="main-label">PIN Διαγραφής:</label><input type="text" id="e_pin" required maxlength="4"></div>
+                <div class="checkbox-row"><input type="checkbox" id="e_urgent"> Επείγουσα Ανάγκη Προσωπικού</div>
             </fieldset>
-
-            <fieldset>
-                <legend>Επικοινωνία & Ασφάλεια</legend>
-                <div class="form-group">
-                    <label class="main-label">Τηλέφωνο (Προαιρετικό):</label>
-                    <input type="tel" id="e_phone">
-                </div>
-                <div class="form-group">
-                    <label class="main-label">Email (Προαιρετικό):</label>
-                    <input type="email" id="e_email">
-                </div>
-                <div class="form-group">
-                    <label class="main-label">PIN Διαγραφής (Απαραίτητο):</label>
-                    <input type="text" id="e_pin" placeholder="π.χ. 1234 (για να μπορείτε να τη σβήσετε)" maxlength="4" required>
-                </div>
-            </fieldset>
-
             <button type="submit" class="submit-btn">Δημοσίευση Αγγελίας</button>
         </form>
     </div>
-
 </div>
 
 <script>
     const API_URL = "https://jobs.kafevolta.workers.dev/api";
+    let currentData = [];
+    let currentViewType = '';
 
     const specialtiesData = {
         "Εστίαση": ["Καφετέρια Barista", "Καφετέρια Service", "Εστιατόριο Κουζίνα", "Εστιατόριο Service", "Καφενείο", "Τσιπουράδικο"],
         "Τεχνίτες / Κατασκευές": ["Χτίσιμο - Σοβάτισμα", "Υδραυλικός", "Ηλεκτρολόγος", "Ψυκτικός", "Πλακάκια", "Σκεπές", "Ανακαίνιση", "Βάψιμο"]
     };
-
     const tasksData = {
         "Αγροτικά & Εξωτερικά": ["Χωράφια / Αγροτικά", "Κηπουρικά", "Κλάδεμα"],
         "Οικιακά & Φροντίδα": ["Καθαριότητα", "Φροντίδα Ηλικιωμένων"],
-        "Μικροεργασίες": ["Συναρμολόγηση Επίπλων", "Τοποθέτηση Τηλεόρασης", "Επισκευή Συσκευών"]
+        "Μικροεργασίες": ["Συναρμολόγηση", "Μερεμέτια"]
     };
-
     const locationsData = {
-        "Δήμος Τρικκαίων": ["Τρίκαλα (Κέντρο)", "Αγία Κυριακή", "Αρδάνι", "Βαλτινό", "Γενέσι", "Γλίνος", "Γοργογύρι", "Δενδροχώρι", "Διαλεκτό", "Διπόταμο", "Ελληνόκαστρο", "Ζηλευτή", "Κάτω Ελάτη", "Κεφαλόβρυσο", "Κρηνίτσα", "Λιόπρασο", "Λόγγος", "Μεγάλα Καλύβια", "Μεγάλο Κεφαλόβρυσο", "Μεγαλοχώρι", "Μικρό Κεφαλόβρυσο", "Ξυλοπάροικο", "Παλαιόπυργος", "Πατουλιά", "Πλάτανος", "Πρίνος", "Ρίζωμα", "Σπαθάδες", "Φωτάδα", "Χρυσαυγή"],
-        "Δήμος Μετεώρων": ["Καλαμπάκα", "Αγία Παρασκευή (Ασπροποτάμου)", "Αγία Παρασκευή (Κλεινοβού)", "Αγιόφυλλο", "Αγνάντια", "Αηδόνα", "Αμάραντο", "Αμπελοχώρι", "Ανθούσα", "Ασπροκκλησιά", "Αύρα", "Αχλαδέα", "Βασιλική", "Βλαχάβα", "Γαύρος", "Γερακάρι", "Γλυκομηλιά", "Θεόπετρα", "Θεοτόκος", "Κακοπλεύρι", "Καλλιθέα", "Καλλιρρόη", "Καλομοίρα", "Καστανέα", "Καστράκι", "Κατάφυτο", "Κλεινό", "Κονισκός", "Κορυδαλλός", "Κρανέα", "Κρύα Βρύση", "Λογγάς", "Μαλακάσι", "Ματονέρι", "Μαυρέλι", "Μεγάλη Κερασιά", "Ορθοβούνι", "Παναγία", "Περιστέρα", "Πεύκη", "Πολυθέα", "Σαρακήνα", "Στεφάνι", "Τρυγόνα", "Φλαμπουρέσι", "Χαλίκι", "Χρυσομηλιά"],
-        "Δήμος Πύλης": ["Πύλη", "Άγιος Νικόλαος", "Άγιος Προκόπιος", "Αθαμανία", "Αρματολικό", "Βαθύρρευμα", "Βαλκάνο", "Γόμφοι", "Δέση", "Δροσερό", "Δροσοχώρι", "Ελάτη", "Ελευθεροχώρι", "Καρτέρι", "Κορυφή", "Κοτρώνι", "Λιβαδοχώρι", "Λυγαριά", "Μεσοχώρα", "Μοσχόφυτο", "Μουριά", "Μυρόφυλλο", "Νέα Πεύκη", "Νεράιδα", "Νεραϊδοχώρι", "Παλαιοκαρυά", "Παλαιομονάστηρο", "Παράμερο", "Παραπόταμος", "Παχτούρι", "Περτούλι", "Πετροχώρι", "Πηγή", "Πιάλεια", "Πολυνέρι", "Πύρρα", "Ροποτό", "Στουρναραίικα", "Φήκη", "Φιλύρα"],
-        "Δήμος Φαρκαδόνας": ["Φαρκαδόνα", "Αχλαδοχώρι", "Γεωργανάδες", "Γριζάνο", "Διάσελλο", "Ζάρκο", "Κεραμίδι", "Κρήνη", "Νομή", "Οιχαλία (Νεοχώρι)", "Παναγίτσα", "Πετρόπορος", "Πετρωτό", "Πηνειάδα", "Ταξιάρχες", "Φανερωμένη"]
+        "Δήμος Τρικκαίων": ["Τρίκαλα (Κέντρο)", "Αγία Κυριακή", "Μεγάλα Καλύβια", "Μεγαλοχώρι", "Ρίζωμα"],
+        "Δήμος Μετεώρων": ["Καλαμπάκα", "Καστράκι", "Παναγία", "Χρυσομηλιά"],
+        "Δήμος Πύλης": ["Πύλη", "Ελάτη", "Γόμφοι", "Περτούλι", "Πύρρα", "Στουρναραίικα", "Φήκη", "Φιλύρα"],
+        "Δήμος Φαρκαδόνας": ["Φαρκαδόνα", "Ζάρκο", "Οιxαλία", "Ταξιάρχες", "Φανερωμένη"]
     };
 
-    function populateDropdowns() {
-        document.querySelectorAll('.specialty-select').forEach(select => {
-            select.innerHTML = '<option value="">-- Χωρίς Ειδικότητα --</option>';
-            for (const [group, items] of Object.entries(specialtiesData)) {
-                let optgroup = document.createElement('optgroup');
-                optgroup.label = group;
-                items.forEach(item => optgroup.innerHTML += `<option value="${item}">${item}</option>`);
-                select.appendChild(optgroup);
+    function initForms() {
+        document.querySelectorAll('.specialty-select').forEach(sel => {
+            sel.innerHTML = '<option value="">-- Ειδικότητα --</option>';
+            for(const [g, items] of Object.entries(specialtiesData)){
+                let opt = document.createElement('optgroup'); opt.label = g;
+                items.forEach(i => opt.innerHTML += `<option value="${i}">${i}</option>`); sel.appendChild(opt);
             }
         });
-
-        document.querySelectorAll('.task-select').forEach(select => {
-            select.innerHTML = '<option value="">-- Χωρίς επιλογή --</option>';
-            for (const [group, items] of Object.entries(tasksData)) {
-                let optgroup = document.createElement('optgroup');
-                optgroup.label = group;
-                items.forEach(item => optgroup.innerHTML += `<option value="${item}">${item}</option>`);
-                select.appendChild(optgroup);
+        document.querySelectorAll('.task-select').forEach(sel => {
+            sel.innerHTML = '<option value="">-- Εργασία --</option>';
+            for(const [g, items] of Object.entries(tasksData)){
+                let opt = document.createElement('optgroup'); opt.label = g;
+                items.forEach(i => opt.innerHTML += `<option value="${i}">${i}</option>`); sel.appendChild(opt);
             }
         });
-    }
-
-    function buildLocationSelectors() {
-        const containers = [document.getElementById('worker-locations'), document.getElementById('employer-locations')];
-        containers.forEach((container, index) => {
+        ['worker-locations', 'employer-locations'].forEach((id, idx) => {
             let html = '';
-            for (const [municipality, locations] of Object.entries(locationsData)) {
-                const munId = `mun_${index}_${municipality.replace(/\s+/g, '')}`;
-                html += `
-                <div class="municipality-group">
-                    <div class="municipality-header">
-                        <label class="checkbox-label">
-                            <input type="checkbox" class="mun-checkbox" data-target="${munId}" value="${municipality}">
-                            <strong>${municipality}</strong>
-                        </label>
-                        <button type="button" class="toggle-btn" onclick="toggleAccordion('${munId}')">▼</button>
-                    </div>
-                    <div class="communities-list" id="${munId}">
-                `;
-                locations.forEach(loc => {
-                    html += `<label class="checkbox-label"><input type="checkbox" class="com-checkbox" data-parent="${munId}" value="${loc}"> ${loc}</label>`;
-                });
+            for(const [mun, locs] of Object.entries(locationsData)){
+                const mId = `m_${idx}_${mun.replace(/\s+/g,'')}`;
+                html += `<div class="municipality-group"><div class="municipality-header"><label class="checkbox-label"><input type="checkbox" class="mun-checkbox" data-target="${mId}"> <strong>${mun}</strong></label><button type="button" class="toggle-btn" onclick="document.getElementById('${mId}').style.display = document.getElementById('${mId}').style.display === 'flex' ? 'none' : 'flex'">▼</button></div><div class="communities-list" id="${mId}">`;
+                locs.forEach(l => html += `<label class="checkbox-label"><input type="checkbox" class="com-checkbox" data-parent="${mId}" value="${l}"> ${l}</label>`);
                 html += `</div></div>`;
             }
-            container.innerHTML = html;
+            document.getElementById(id).innerHTML = html;
         });
-        attachCheckboxLogic();
+        document.querySelectorAll('.mun-checkbox').forEach(cb => cb.addEventListener('change', function(){
+            document.querySelectorAll(`#${this.dataset.target} .com-checkbox`).forEach(c => c.checked = this.checked);
+        }));
     }
 
-    function toggleAccordion(id) {
-        const el = document.getElementById(id);
-        el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
-    }
+    function showScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); window.scrollTo(0,0); }
 
-    function attachCheckboxLogic() {
-        document.querySelectorAll('.mun-checkbox').forEach(munCb => {
-            munCb.addEventListener('change', function() {
-                const targetId = this.getAttribute('data-target');
-                document.querySelectorAll(`#${targetId} .com-checkbox`).forEach(cb => cb.checked = this.checked);
-            });
-        });
-    }
-
-    function showScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        window.scrollTo(0,0);
-    }
-
-    function openPublicView(type) {
-        showScreen('screen-ads');
-        loadAds(type);
-    }
+    function openPublicView(type) { showScreen('screen-ads'); loadAds(type); }
 
     async function loadAds(type) {
+        currentViewType = type;
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(`tab-${type}`).classList.add('active');
-        
         const container = document.getElementById('ads-container');
-        container.innerHTML = '<p style="text-align:center;">Φόρτωση δεδομένων...</p>';
-
+        container.innerHTML = '<p style="text-align:center;">Φόρτωση...</p>';
         try {
-            const response = await fetch(`${API_URL}/${type}`);
-            const data = await response.json();
+            const res = await fetch(`${API_URL}/${type}`);
+            currentData = await res.json();
+            renderCards();
+        } catch(e) { container.innerHTML = '<p style="text-align:center;color:red;">Σφάλμα.</p>'; }
+    }
+
+    function renderCards() {
+        const container = document.getElementById('ads-container');
+        const search = document.getElementById('searchInput').value.toLowerCase();
+        const favFilter = document.getElementById('filterFavs').value;
+        const favs = JSON.parse(localStorage.getItem('savedAds') || '[]');
+
+        container.innerHTML = '';
+        let count = 0;
+
+        currentData.forEach(ad => {
+            let locs = []; try { locs = JSON.parse(ad.locations); } catch(e) { locs = [ad.locations]; }
+            const searchStr = `${ad.name} ${ad.specialty} ${ad.task} ${locs.join(' ')}`.toLowerCase();
+            const isFav = favs.includes(`${currentViewType}_${ad.id}`);
             
-            if (data.length === 0) {
-                container.innerHTML = '<p style="text-align:center;">Δεν υπάρχουν αγγελίες αυτή τη στιγμή.</p>';
-                return;
+            if (search && !searchStr.includes(search)) return;
+            if (favFilter === 'favs' && !isFav) return;
+
+            count++;
+            const locBadges = locs.map(l => `<span class="badge">${l}</span>`).join('');
+            const card = document.createElement('div');
+            card.className = `ad-card ${ad.is_urgent ? 'urgent' : ''}`;
+            
+            let logoHtml = '';
+            if (ad.logo_url && currentViewType === 'employers') {
+                logoHtml = `<img src="${ad.logo_url}" class="ad-logo" onerror="this.style.display='none'">`;
             }
 
-            container.innerHTML = '';
-            data.forEach(ad => {
-                let locs = [];
-                try { locs = JSON.parse(ad.locations); } catch(e) { locs = [ad.locations]; }
-                const locBadges = locs.map(l => `<span class="badge">${l}</span>`).join('');
-                
-                const card = document.createElement('div');
-                card.className = 'ad-card';
-                card.innerHTML = `
-                    <h3 class="ad-title">${ad.name}</h3>
-                    <div class="ad-specialty">${ad.specialty || ad.task || 'Γενικών Καθηκόντων'}</div>
-                    <div class="ad-locations">${locBadges}</div>
-                    <p style="margin-bottom: 0;">${ad.comments || ''}</p>
-                    <div class="ad-contact">
-                        <strong>Επικοινωνία:</strong> ${ad.phone || '-'} ${ad.email ? ' | ' + ad.email : ''}
+            card.innerHTML = `
+                ${ad.is_urgent ? '<div class="urgent-badge">⚡ ΕΠΕΙΓΟΝ</div>' : ''}
+                <div class="ad-header">
+                    <div>
+                        <h3 class="ad-title">${ad.name}</h3>
+                        <div class="ad-specialty">${ad.specialty || ad.task || 'Γενικών Καθηκόντων'}</div>
                     </div>
-                `;
-                container.appendChild(card);
-            });
-        } catch (error) {
-            container.innerHTML = '<p style="text-align:center; color:red;">Σφάλμα φόρτωσης.</p>';
-        }
+                    ${logoHtml}
+                </div>
+                <div class="ad-locations">${locBadges}</div>
+                <p style="margin-bottom:0;">${ad.comments || ''}</p>
+                <div class="ad-contact">📞 ${ad.phone || 'Μη διαθέσιμο'}</div>
+                <div class="card-actions">
+                    <button class="icon-btn ${isFav ? 'fav-active' : ''}" onclick="toggleFav('${currentViewType}_${ad.id}', this)">
+                        ${isFav ? '❤️ Αγαπημένο' : '🤍 Αποθήκευση'}
+                    </button>
+                    <button class="icon-btn" onclick="shareAd('${ad.name}', '${ad.specialty || ad.task}')">📤 Κοινοποίηση</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        if (count === 0) container.innerHTML = '<p style="text-align:center;">Δεν βρέθηκαν αποτελέσματα.</p>';
     }
 
-    async function handleFormSubmit(e, formType) {
+    function filterCards() { renderCards(); }
+
+    function toggleFav(id, btn) {
+        let favs = JSON.parse(localStorage.getItem('savedAds') || '[]');
+        if (favs.includes(id)) { favs = favs.filter(f => f !== id); btn.innerHTML = '🤍 Αποθήκευση'; btn.classList.remove('fav-active'); } 
+        else { favs.push(id); btn.innerHTML = '❤️ Αγαπημένο'; btn.classList.add('fav-active'); }
+        localStorage.setItem('savedAds', JSON.stringify(favs));
+    }
+
+    function shareAd(name, spec) {
+        const text = `Δες αυτή την αγγελία: ${name} - ${spec} στο Ergasia Trikala!`;
+        if (navigator.share) { navigator.share({ title: 'Ergasia Trikala', text: text, url: window.location.href }); } 
+        else { alert("Αντιγράψτε τον σύνδεσμο της σελίδας για να τον μοιραστείτε!"); }
+    }
+
+    async function handleFormSubmit(e, type) {
         e.preventDefault();
-        
-        const containerId = formType === 'worker' ? 'worker-locations' : 'employer-locations';
-        const checkedBoxes = document.querySelectorAll(`#${containerId} .com-checkbox:checked`);
-        if (checkedBoxes.length === 0) return alert('Επιλέξτε τουλάχιστον μία περιοχή.');
+        const cId = type === 'worker' ? 'worker-locations' : 'employer-locations';
+        const checked = document.querySelectorAll(`#${cId} .com-checkbox:checked`);
+        if (checked.length === 0) return alert('Επιλέξτε περιοχή.');
 
-        const formData = {
-            name: document.getElementById(formType === 'worker' ? 'w_name' : 'e_name').value.trim(),
-            specialty: document.getElementById(formType === 'worker' ? 'w_specialty' : 'e_specialty').value,
-            task: document.getElementById(formType === 'worker' ? 'w_task' : 'e_task').value,
-            locations: Array.from(checkedBoxes).map(cb => cb.value),
-            phone: document.getElementById(formType === 'worker' ? 'w_phone' : 'e_phone').value.trim(),
-            email: document.getElementById(formType === 'worker' ? 'w_email' : 'e_email').value.trim(),
-            comments: document.getElementById(formType === 'worker' ? 'w_comments' : 'e_comments').value.trim(),
-            pin: document.getElementById(formType === 'worker' ? 'w_pin' : 'e_pin').value.trim()
+        const fd = {
+            name: document.getElementById(type==='worker'?'w_name':'e_name').value,
+            specialty: document.getElementById(type==='worker'?'w_specialty':'e_specialty').value,
+            task: document.getElementById(type==='worker'?'w_task':'e_task').value,
+            locations: Array.from(checked).map(c => c.value),
+            phone: document.getElementById(type==='worker'?'w_phone':'e_phone').value,
+            comments: document.getElementById(type==='worker'?'w_comments':'e_comments').value,
+            pin: document.getElementById(type==='worker'?'w_pin':'e_pin').value,
+            is_urgent: document.getElementById(type==='worker'?'w_urgent':'e_urgent').checked
         };
+        if(type === 'employer') fd.logo_url = document.getElementById('e_logo').value;
 
-        const workerUrl = formType === 'worker' ? `${API_URL}/worker` : `${API_URL}/employer`;
-        const btn = e.target.querySelector('button[type="submit"]');
-        const originalText = btn.innerText;
-        btn.innerText = 'Αποστολή...'; btn.disabled = true;
-
+        const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = 'Αποστολή...'; btn.disabled = true;
         try {
-            const response = await fetch(workerUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                alert('Η αγγελία καταχωρήθηκε!');
-                e.target.reset();
-                showScreen('screen-home');
-            } else { alert('Πρόβλημα κατά την αποθήκευση.'); }
-        } catch (error) { alert('Αδυναμία σύνδεσης.'); }
-        
-        btn.innerText = originalText; btn.disabled = false;
+            const r = await fetch(`${API_URL}/${type}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(fd) });
+            if (r.ok) { alert('Η αγγελία ανέβηκε!'); e.target.reset(); showScreen('screen-home'); } else alert('Σφάλμα.');
+        } catch(e) { alert('Αδυναμία σύνδεσης.'); }
+        btn.innerText = 'Δημοσίευση'; btn.disabled = false;
     }
 
-    window.onload = () => { populateDropdowns(); buildLocationSelectors(); };
-    document.getElementById('workerForm').addEventListener('submit', (e) => handleFormSubmit(e, 'worker'));
-    document.getElementById('employerForm').addEventListener('submit', (e) => handleFormSubmit(e, 'employer'));
+    window.onload = initForms;
+    document.getElementById('workerForm').addEventListener('submit', e => handleFormSubmit(e, 'worker'));
+    document.getElementById('employerForm').addEventListener('submit', e => handleFormSubmit(e, 'employer'));
 </script>
 </body>
 </html>
