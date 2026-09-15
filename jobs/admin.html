@@ -3,157 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Πίνακας Ελέγχου (Admin) - Ergasia Trikala</title>
+    <title>Admin - Ergasia Trikala</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f1f5f9; margin: 0; padding: 20px; color: #334155; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        h1 { text-align: center; color: #0f172a; margin-bottom: 30px; }
-        
+        body { font-family: sans-serif; background: #f1f5f9; margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 15px; font-size: 1.1rem; cursor: pointer; border: none; background: #e2e8f0; border-radius: 8px; font-weight: bold; }
+        .tab-btn { flex: 1; padding: 15px; background: #e2e8f0; border: none; cursor: pointer; font-weight: bold; }
         .tab-btn.active { background: #2563eb; color: white; }
-        
-        .panel { display: none; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .panel.active { display: block; }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f8fafc; font-weight: 600; color: #0f172a; }
-        
-        .delete-btn { background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
-        .delete-btn:hover { background: #b91c1c; }
-        .badge { background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; display: inline-block; margin-bottom: 4px; }
+        .panel { display: none; } .panel.active { display: block; }
+        table { width: 100%; border-collapse: collapse; } th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        .del-btn { background: #dc2626; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <h1>Πίνακας Ελέγχου Αγγελιών</h1>
-    
+    <h1 style="text-align:center;">Πίνακας Ελέγχου</h1>
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('workers')">Προφίλ Εργατών</button>
-        <button class="tab-btn" onclick="switchTab('employers')">Αγγελίες Εργοδοτών</button>
+        <button class="tab-btn active" onclick="switchTab('workers')">Εργάτες</button>
+        <button class="tab-btn" onclick="switchTab('employers')">Εργοδότες</button>
     </div>
-
-    <div id="workers-panel" class="panel active">
-        <table>
-            <thead>
-                <tr>
-                    <th>Όνομα</th>
-                    <th>Ειδικότητα / Εργασία</th>
-                    <th>Περιοχές</th>
-                    <th>Επικοινωνία</th>
-                    <th>Ενέργειες</th>
-                </tr>
-            </thead>
-            <tbody id="workers-tbody">
-                <tr><td colspan="5">Φόρτωση δεδομένων...</td></tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div id="employers-panel" class="panel">
-        <table>
-            <thead>
-                <tr>
-                    <th>Επιχείρηση/Ιδιώτης</th>
-                    <th>Αναζητά</th>
-                    <th>Περιοχές</th>
-                    <th>Επικοινωνία</th>
-                    <th>Ενέργειες</th>
-                </tr>
-            </thead>
-            <tbody id="employers-tbody">
-                <tr><td colspan="5">Φόρτωση δεδομένων...</td></tr>
-            </tbody>
-        </table>
-    </div>
+    <div id="workers" class="panel active"><table><tbody id="w-tbody"></tbody></table></div>
+    <div id="employers" class="panel"><table><tbody id="e-tbody"></tbody></table></div>
 </div>
-
 <script>
-    const API_URL = "https://jobs.kafevolta.workers.dev/api";
-    const MASTER_PIN = "ADMIN999";
-
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.panel').forEach(panel => panel.classList.remove('active'));
-        
-        if (tab === 'workers') {
-            document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
-            document.getElementById('workers-panel').classList.add('active');
-        } else {
-            document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
-            document.getElementById('employers-panel').classList.add('active');
-        }
+    const API = "https://jobs.kafevolta.workers.dev";
+    function switchTab(t) { 
+        document.querySelectorAll('.tab-btn, .panel').forEach(e => e.classList.remove('active'));
+        document.querySelector(`.tab-btn[onclick="switchTab('${t}')"]`).classList.add('active');
+        document.getElementById(t).classList.add('active');
     }
-
-    async function loadData() {
+    async function load() {
         try {
-            const wRes = await fetch(`${API_URL}/workers`);
-            const workers = await wRes.json();
-            renderTable('workers-tbody', workers, 'worker');
-
-            const eRes = await fetch(`${API_URL}/employers`);
-            const employers = await eRes.json();
-            renderTable('employers-tbody', employers, 'employer');
-        } catch (error) {
-            alert('Σφάλμα σύνδεσης με τη βάση δεδομένων.');
-        }
+            const [wr, er] = await Promise.all([fetch(`${API}/api/workers`), fetch(`${API}/api/employers`)]);
+            render('w-tbody', await wr.json(), 'worker'); render('e-tbody', await er.json(), 'employer');
+        } catch(e) { alert("Σφάλμα φόρτωσης"); }
     }
-
-    function renderTable(tbodyId, data, type) {
-        const tbody = document.getElementById(tbodyId);
-        tbody.innerHTML = '';
-
-        if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5">Δεν υπάρχουν καταχωρήσεις.</td></tr>`;
-            return;
-        }
-
-        data.forEach(row => {
-            let locs = [];
-            try { locs = JSON.parse(row.locations); } catch(e) { locs = [row.locations]; }
-            
-            const locBadges = locs.map(l => `<span class="badge">${l}</span>`).join(' ');
-            
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td><strong>${row.name}</strong><br><small>${row.comments || ''}</small></td>
-                <td>${row.specialty || row.task || '-'}</td>
-                <td>${locBadges}</td>
-                <td>${row.phone || ''} <br> ${row.email || ''}</td>
-                <td>
-                    <button class="delete-btn" onclick="deleteAd(${row.id}, '${type}')">Διαγραφή</button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
+    function render(id, data, type) {
+        document.getElementById(id).innerHTML = `<tr><th>Όνομα</th><th>Ειδικότητα</th><th>Επικοινωνία</th><th>Ενέργεια</th></tr>` + 
+        data.map(r => `<tr><td>${r.name} ${r.is_urgent ? '🔴' : ''}</td><td>${r.specialty||r.task}</td><td>${r.phone}</td>
+        <td><button class="del-btn" onclick="del(${r.id}, '${type}')">Διαγραφή</button></td></tr>`).join('');
     }
-
-    async function deleteAd(id, type) {
-        if (!confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε οριστικά αυτή την αγγελία;')) return;
-
-        try {
-            const response = await fetch("https://jobs.kafevolta.workers.dev/", {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id: id, type: type, pin: MASTER_PIN })
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                alert('Η αγγελία διαγράφηκε επιτυχώς.');
-                loadData();
-            } else {
-                alert('Σφάλμα: ' + result.error);
-            }
-        } catch (error) {
-            alert('Αδυναμία επικοινωνίας με τον server.');
-        }
+    async function del(id, type) {
+        if(!confirm('Διαγραφή;')) return;
+        await fetch(`${API}/`, { method: 'DELETE', headers:{'Content-Type':'application/json'}, body: JSON.stringify({id, type, pin:'ADMIN999'}) });
+        load();
     }
-
-    window.onload = loadData;
+    window.onload = load;
 </script>
-
 </body>
 </html>
